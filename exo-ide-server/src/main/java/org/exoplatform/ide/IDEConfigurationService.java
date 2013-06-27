@@ -23,7 +23,6 @@ import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.Workspace;
 
-import org.everrest.core.impl.provider.json.JsonException;
 import org.exoplatform.ide.conversationstate.IdeUser;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
 import org.exoplatform.services.log.ExoLogger;
@@ -31,8 +30,11 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -98,7 +100,7 @@ public class IDEConfigurationService {
             IdeUser user = new IdeUser(userId, identity.getRoles(), request.getSession().getId(), workspaces);
             LOG.info(user.toString());
             result.put("user", user);
-            final Map<String, Object> userSettings = getUserSettings();
+            final Map<String, Object> userSettings = Collections.emptyMap();
             result.put("userSettings", userSettings);
             result.put("vfsId", vfsId);
             result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path("v2").build(wsName).toString());
@@ -107,9 +109,19 @@ public class IDEConfigurationService {
             throw new WebApplicationException(e);
         }
     }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"developer"})
+    public String getConfiguration() {
+        return "{}"; //TODO: small hack add for supporting previous version of IDE. In 1.2 changed structure of user settings
+    }
 
-    public Map<String, Object> getUserSettings() throws JsonException, IOException {
-        return Collections.emptyMap();
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"developer"})
+    public void setConfiguration(String body) throws IOException {
+       // not impl yet
     }
 
 
