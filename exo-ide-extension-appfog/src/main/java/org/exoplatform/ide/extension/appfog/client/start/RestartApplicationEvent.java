@@ -31,17 +31,21 @@ public class RestartApplicationEvent extends GwtEvent<RestartApplicationHandler>
     public static final GwtEvent.Type<RestartApplicationHandler> TYPE = new GwtEvent.Type<RestartApplicationHandler>();
 
     private String applicationName;
+    
+    private String server;
 
     /**
      *
      */
     public RestartApplicationEvent() {
+        this.server = null;
     }
 
     /** @param applicationName */
-    public RestartApplicationEvent(String applicationName) {
+    public RestartApplicationEvent(String applicationName, String server) {
         super();
         this.applicationName = applicationName;
+        this.server = server;
     }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
@@ -59,6 +63,11 @@ public class RestartApplicationEvent extends GwtEvent<RestartApplicationHandler>
     /** @return the applicationName */
     public String getApplicationName() {
         return applicationName;
+    }
+    
+    /** @return the server */
+    public String getServer() {
+        return server;
     }
 
 }
