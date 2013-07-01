@@ -389,8 +389,6 @@ public class Transformer {
 
         @Override
         void handleOtherFinished(Processor other, ProcessorResult result) {
-            System.out.println("### " + other);
-
             Preconditions.checkState(
                     lineCount == 1, "Cannot retain more than one line if other side is finished");
 

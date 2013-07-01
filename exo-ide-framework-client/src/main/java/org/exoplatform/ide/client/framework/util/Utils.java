@@ -412,10 +412,7 @@ public class Utils {
     
     public static native String getFilePathToOpen() /*-{
       if ($wnd.path)
-      {
-        alert($wnd.path); 
         return $wnd.project + $wnd.path;
-      }
       else 
         return null;  
     }-*/;
