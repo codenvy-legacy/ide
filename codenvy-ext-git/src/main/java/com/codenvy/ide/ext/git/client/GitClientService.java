@@ -20,7 +20,6 @@ package com.codenvy.ide.ext.git.client;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.ext.git.shared.LogResponse;
 import com.codenvy.ide.ext.git.shared.*;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
@@ -300,7 +299,7 @@ public interface GitClientService {
      * @param callback
      *         callback
      */
-    void reset(@NotNull String vfsId, @NotNull String projectid, @NotNull String commit, @NotNull ResetRequest.ResetType resetType,
+    void reset(@NotNull String vfsId, @NotNull String projectid, @NotNull String commit, @Nullable ResetRequest.ResetType resetType,
                @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
@@ -327,6 +326,7 @@ public interface GitClientService {
      * @param projectid
      *         project's id (root of GIT repository)
      * @param projectName
+     *         project name
      * @param bare
      *         to create bare repository or not
      * @param callback
@@ -644,6 +644,7 @@ public interface GitClientService {
      * @param projectid
      *         project's id (root of GIT repository)
      * @param callback
+     *         callback
      * @throws RequestException
      */
     void getGitReadOnlyUrl(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<StringBuilder> callback)

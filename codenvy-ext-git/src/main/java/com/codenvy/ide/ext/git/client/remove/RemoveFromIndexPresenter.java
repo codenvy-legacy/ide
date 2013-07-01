@@ -141,7 +141,7 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
     private JsonArray<String> getFilePatterns() {
         String projectPath = project.getPath();
         // TODO we don't know selected item
-        String pattern = projectPath;
+        String pattern = "";
         //        String pattern = selectedItem.getPath().replaceFirst(projectPath, "");
 
         pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;

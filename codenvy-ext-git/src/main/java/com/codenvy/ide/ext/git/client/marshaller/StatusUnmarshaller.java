@@ -19,11 +19,12 @@
 package com.codenvy.ide.ext.git.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Status;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 
 /**
  * The unmarshaller for git status.
@@ -31,27 +32,39 @@ import com.google.gwt.json.client.JSONValue;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class StatusUnmarshaller implements Unmarshallable<Status>, Constants {
-    private Status status;
+    private DtoClientImpls.StatusImpl status;
 
     /**
      * Create unmarshaller.
      *
      * @param status
      */
-    public StatusUnmarshaller(Status status) {
+    public StatusUnmarshaller(DtoClientImpls.StatusImpl status) {
         this.status = status;
     }
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
-        if (response.getText() == null || response.getText().isEmpty()) {
+        String text = response.getText();
+        if (text == null || text.isEmpty()) {
             return;
         }
 
-        JSONValue json = JSONParser.parseStrict(response.getText());
-
-        System.out.println(json);
+        JSONObject json = JSONParser.parseStrict(text).isObject();
+        String value = json.toString();
+        DtoClientImpls.StatusImpl status = DtoClientImpls.StatusImpl.deserialize(value);
+        this.status.setAdded(status.getAdded());
+        this.status.setChanged(status.getChanged());
+        this.status.setBranchName(status.getBranchName());
+        this.status.setClean(status.clean());
+        this.status.setConflicting(status.getConflicting());
+        this.status.setMissing(status.getMissing());
+        this.status.setModified(status.getModified());
+        this.status.setRemoved(status.getRemoved());
+        this.status.setShortFormat(status.getShortFormat());
+        this.status.setUntracked(status.getUntracked());
+        this.status.setUntrackedFolders(status.getUntrackedFolders());
     }
 
     /** {@inheritDoc} */

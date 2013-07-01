@@ -442,13 +442,15 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void reset(@NotNull String vfsId, @NotNull String projectid, @NotNull String commit, @NotNull ResetRequest.ResetType resetType,
+    public void reset(@NotNull String vfsId, @NotNull String projectid, @NotNull String commit, @Nullable ResetRequest.ResetType resetType,
                       @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + RESET;
 
         DtoClientImpls.ResetRequestImpl resetRequest = DtoClientImpls.ResetRequestImpl.make();
         resetRequest.setCommit(commit);
-        resetRequest.setType(resetType);
+        if (resetType != null) {
+            resetRequest.setType(resetType);
+        }
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
