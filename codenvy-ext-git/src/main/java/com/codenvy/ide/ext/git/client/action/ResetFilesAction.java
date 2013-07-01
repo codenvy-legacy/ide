@@ -26,10 +26,12 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.reset.files.ResetFilesPresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import static com.codenvy.ide.ext.git.client.GitExtension.GIT_REPOSITORY_PROP;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+@Singleton
 public class ResetFilesAction extends Action {
     private ResetFilesPresenter presenter;
     private ResourceProvider    resourceProvider;

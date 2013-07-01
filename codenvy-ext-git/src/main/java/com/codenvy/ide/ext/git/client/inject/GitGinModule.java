@@ -39,6 +39,8 @@ import com.codenvy.ide.ext.git.client.reset.commit.ResetToCommitView;
 import com.codenvy.ide.ext.git.client.reset.commit.ResetToCommitViewImpl;
 import com.codenvy.ide.ext.git.client.reset.files.ResetFilesView;
 import com.codenvy.ide.ext.git.client.reset.files.ResetFilesViewImpl;
+import com.codenvy.ide.ext.git.client.url.ShowProjectGitReadOnlyUrlView;
+import com.codenvy.ide.ext.git.client.url.ShowProjectGitReadOnlyUrlViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -59,5 +61,6 @@ public class GitGinModule extends AbstractGinModule {
         bind(BranchView.class).to(BranchViewImpl.class).in(Singleton.class);
         bind(MergeView.class).to(MergeViewImpl.class).in(Singleton.class);
         bind(ResetFilesView.class).to(ResetFilesViewImpl.class).in(Singleton.class);
+        bind(ShowProjectGitReadOnlyUrlView.class).to(ShowProjectGitReadOnlyUrlViewImpl.class).in(Singleton.class);
     }
 }

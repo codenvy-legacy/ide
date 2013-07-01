@@ -23,7 +23,7 @@ import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.git.client.GitClientResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.client.status.StatusCommandPresenter;
+import com.codenvy.ide.ext.git.client.url.ShowProjectGitReadOnlyUrlPresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -32,14 +32,14 @@ import static com.codenvy.ide.ext.git.client.GitExtension.GIT_REPOSITORY_PROP;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
-public class ShowStatusAction extends Action {
-    private StatusCommandPresenter presenter;
-    private ResourceProvider       resourceProvider;
+public class ShowGitUrlAction extends Action {
+    private ShowProjectGitReadOnlyUrlPresenter presenter;
+    private ResourceProvider                   resourceProvider;
 
     @Inject
-    public ShowStatusAction(StatusCommandPresenter presenter, ResourceProvider resourceProvider, GitClientResources resources,
+    public ShowGitUrlAction(ShowProjectGitReadOnlyUrlPresenter presenter, ResourceProvider resourceProvider, GitClientResources resources,
                             GitLocalizationConstant constant) {
-        super(constant.statusControlTitle(), constant.statusControlPrompt(), resources.status());
+        super(constant.projectReadOnlyGitUrlPrompt(), constant.projectReadOnlyGitUrlPrompt(), resources.projectReadOnlyGitUrl());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }
@@ -47,7 +47,7 @@ public class ShowStatusAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        presenter.showStatus();
+        presenter.showDialog();
     }
 
     /** {@inheritDoc} */
