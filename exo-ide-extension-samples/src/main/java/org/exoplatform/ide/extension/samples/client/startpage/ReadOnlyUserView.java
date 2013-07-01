@@ -30,7 +30,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -93,10 +92,11 @@ public class ReadOnlyUserView extends ViewImpl {
             public void onClick(ClickEvent   event) {
                 UrlBuilder builder = new UrlBuilder();
                 if (workspaces.size() == 0)
-                    Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).buildString());
-                else
-                    Dialogs.getInstance().showInfo("Not implement yet. Wait for spec qualification");
-                // not implement yet
+                    Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("/login").buildString());
+                else if (workspaces.size() == 1)
+                    Window.Location.replace(workspaces.get(0));
+                else 
+                    Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("/private/select-tenant").buildString());
             }
         });
 

@@ -103,6 +103,7 @@ public class JavaScriptCodeController implements EditorFileContentChangedHandler
         final String mimeType = event.getFile().getMimeType();
         if (!mimeType.equals(MimeType.APPLICATION_JAVASCRIPT) && !mimeType.equals(MimeType.APPLICATION_X_JAVASCRIPT)
             && !mimeType.equals(MimeType.TEXT_JAVASCRIPT)) {
+            return;
         }
 
         editors.put(event.getFile().getId(), (Markable)event.getEditor());
