@@ -25,21 +25,46 @@ package com.codenvy.ide.extension.html.shared;
  * @version $Id: ApplicationInstance.java Jun 26, 2013 1:05:22 PM azatsarynnyy $
  */
 public interface ApplicationInstance {
+    /**
+     * Returns name of the runned application.
+     * 
+     * @return runned app's name
+     */
     String getName();
 
+    /**
+     * Set name of the runned application.
+     * 
+     * @param name runned app's name
+     */
     void setName(String name);
 
+    /**
+     * Returns port of the runned application.
+     * 
+     * @return runned app's port
+     */
     int getPort();
 
-    void setPort(int host);
+    /**
+     * Set port of the runned application.
+     * 
+     * @param port runned app's port
+     */
+    void setPort(int port);
 
     /**
-     * Lifetime of application instance in minutes. After this time instance may be stopped. Method may return -1 if lifetime of instance is
-     * unknown.
+     * Returns lifetime of application instance in minutes. After this time application may be stopped automatically. Method may return -1
+     * if lifetime of instance is unknown.
      * 
-     * @return application instance lifetime in minutes
+     * @return application lifetime, in minutes
      */
     int getLifetime();
 
+    /**
+     * Set application lifetime, in minutes.
+     * 
+     * @param lifetime application lifetime, in minutes
+     */
     void setLifetime(int lifetime);
 }

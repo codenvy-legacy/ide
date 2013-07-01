@@ -62,30 +62,34 @@ public class HtmlAppRunnerServlet extends HttpServlet {
             return;
         }
 
-        try {
-            String appId = null;
-            String projectPath = null;
-            String filePath = null;
-            final int secondSlashPosition = requestPath.indexOf('/', 1);
-            if (secondSlashPosition == -1) {
-                response.setStatus(SC_BAD_REQUEST);
-                return;
-            }
-            appId = requestPath.substring(1, secondSlashPosition);
-            filePath = requestPath.substring(secondSlashPosition + 1, requestPath.length());
-            if (filePath.isEmpty()) {
-                return;
-            }
-            RunnedApplication app = appRunner.getApplicationByName(appId);
-            projectPath = app.projectPath;
+        final int secondSlashPosition = requestPath.indexOf('/', 1);
+        if (secondSlashPosition == -1) {
+            response.setStatus(SC_BAD_REQUEST);
+            return;
+        }
 
-            ServletOutputStream outputStream = response.getOutputStream();
-            final byte[] fileContent = getFileContentByPath(projectPath, "/" + filePath);
-            outputStream.write(fileContent);
-            outputStream.close();
+        final String filePath = requestPath.substring(secondSlashPosition + 1, requestPath.length());
+        if (filePath.isEmpty()) {
+            response.setStatus(SC_BAD_REQUEST);
+            return;
+        }
+
+        byte[] fileContent;
+        try {
+            final String appName = requestPath.substring(1, secondSlashPosition);
+            final String projectPath = appRunner.getApplicationByName(appName).projectPath;
+            fileContent = getFileContentByPath(projectPath, "/" + filePath);
         } catch (ApplicationRunnerException e) {
             response.sendError(SC_NOT_FOUND, e.getMessage());
+            return;
+        } catch (IOException e) {
+            response.sendError(SC_NOT_FOUND, "File '" + filePath + "' not found. ");
+            return;
         }
+
+        ServletOutputStream outputStream = response.getOutputStream();
+        outputStream.write(fileContent);
+        outputStream.close();
     }
 
     private byte[] getFileContentByPath(String projectPath, String filePath) throws IOException {

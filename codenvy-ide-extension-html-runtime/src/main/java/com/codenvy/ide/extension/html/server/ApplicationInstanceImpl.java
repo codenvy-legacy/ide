@@ -27,15 +27,31 @@ import com.codenvy.ide.extension.html.shared.ApplicationInstance;
  * @version $Id: ApplicationInstanceImpl.java Jun 26, 2013 1:05:49 PM azatsarynnyy $
  */
 public class ApplicationInstanceImpl implements ApplicationInstance {
+    /** Application's port. */
     private String name;
+
+    /** Application's port. */
     private int    port     = 80;
+
+    /** Lifetime of application instance in minutes. After this time application may be stopped automatically. */
     private int    lifetime = -1;
 
+    /**
+     * Constructs new instance of {@link ApplicationInstanceImpl} with the given name and lifetime.
+     * 
+     * @param name app's name
+     * @param lifetime app's lifetime
+     */
     public ApplicationInstanceImpl(String name, int lifetime) {
         this.name = name;
         this.lifetime = lifetime;
     }
 
+    /**
+     * Constructs new instance of {@link ApplicationInstanceImpl} with the given name.
+     * 
+     * @param name app's name
+     */
     public ApplicationInstanceImpl(String name) {
         this.name = name;
     }
