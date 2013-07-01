@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.git.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
@@ -33,13 +34,13 @@ import com.google.gwt.json.client.JSONParser;
  */
 public class BranchUnmarshaller implements Unmarshallable<Branch>, Constants {
     /** Branch. */
-    private Branch branch;
+    private DtoClientImpls.BranchImpl branch;
 
     /**
      * @param branch
      *         branch
      */
-    public BranchUnmarshaller(Branch branch) {
+    public BranchUnmarshaller(DtoClientImpls.BranchImpl branch) {
         this.branch = branch;
     }
 
@@ -54,8 +55,7 @@ public class BranchUnmarshaller implements Unmarshallable<Branch>, Constants {
         if (object == null)
             return;
         if (object.containsKey(ACTIVE)) {
-            boolean active =
-                    (object.get(ACTIVE).isBoolean() != null) ? object.get(ACTIVE).isBoolean().booleanValue() : false;
+            boolean active = object.get(ACTIVE).isBoolean() != null && object.get(ACTIVE).isBoolean().booleanValue();
             branch.setActive(active);
         }
         if (object.containsKey(NAME)) {

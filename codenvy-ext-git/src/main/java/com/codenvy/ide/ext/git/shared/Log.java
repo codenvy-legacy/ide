@@ -24,21 +24,6 @@ import com.codenvy.ide.json.JsonArray;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: Log.java 68139 2011-04-08 15:06:00Z andrew00x $
  */
-public class Log {
-    protected JsonArray<Revision> commits;
-
-    public Log(JsonArray<Revision> commits) {
-        this.commits = commits;
-    }
-
-    public Log() {
-    }
-
-    public JsonArray<Revision> getCommits() {
-        return commits;
-    }
-
-    public void setCommits(JsonArray<Revision> commits) {
-        this.commits = commits;
-    }
+public interface Log {
+    JsonArray<Revision> getCommits();
 }

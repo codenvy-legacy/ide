@@ -22,6 +22,8 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -153,14 +155,15 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
      *
      * @return pattern of the files to be added
      */
-    private String[] getFilePatterns() {
+    private JsonArray<String> getFilePatterns() {
         String projectPath = project.getPath();
         // TODO we don't know selected item
         String pattern = projectPath;
         // String pattern = selectedItem.getPath().replaceFirst(projectPath, "");
 
         pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
-        return (pattern.length() == 0 || "/".equals(pattern)) ? new String[]{"."} : new String[]{pattern};
+
+        return (pattern.length() == 0 || "/".equals(pattern)) ? JsonCollections.createArray(".") : JsonCollections.createArray(pattern);
     }
 
     /**

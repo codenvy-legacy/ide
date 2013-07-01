@@ -148,7 +148,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
     public void onCheckoutClicked() {
         String name = selectedBranch.getDisplayName();
         String startingPoint = null;
-        boolean remote = selectedBranch.isRemote();
+        boolean remote = selectedBranch.remote();
         if (remote) {
             startingPoint = selectedBranch.getDisplayName();
         }
@@ -237,7 +237,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
     @Override
     public void onBranchSelected(@NotNull Branch branch) {
         selectedBranch = branch;
-        boolean enabled = !selectedBranch.isActive();
+        boolean enabled = !selectedBranch.active();
         view.setEnableCheckoutButton(enabled);
         view.setEnableDeleteButton(true);
         view.setEnableRenameButton(true);

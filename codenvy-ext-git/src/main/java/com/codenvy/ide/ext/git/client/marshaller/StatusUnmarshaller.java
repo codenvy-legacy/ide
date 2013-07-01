@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,41 +19,44 @@
 package com.codenvy.ide.ext.git.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
-import com.codenvy.ide.ext.git.shared.RepoInfo;
+import com.codenvy.ide.ext.git.shared.Status;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
 
 /**
- * Created by The eXo Platform SAS.
+ * The unmarshaller for git status.
  *
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: RepoInfoUnmarshaller.java Aug 13, 2012
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class RepoInfoUnmarshaller implements Unmarshallable<RepoInfo> {
-    private final DtoClientImpls.RepoInfoImpl repoInfo;
+public class StatusUnmarshaller implements Unmarshallable<Status>, Constants {
+    private Status status;
 
-    public RepoInfoUnmarshaller(DtoClientImpls.RepoInfoImpl repoInfo) {
-        this.repoInfo = repoInfo;
+    /**
+     * Create unmarshaller.
+     *
+     * @param status
+     */
+    public StatusUnmarshaller(Status status) {
+        this.status = status;
     }
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
-        JSONObject jsonObject = JSONParser.parseLenient(response.getText()).isObject();
-        JSONString jsonString = jsonObject.get("remoteUri").isString();
-        if (jsonString != null) {
-            repoInfo.setRemoteUri(jsonString.stringValue());
+        if (response.getText() == null || response.getText().isEmpty()) {
+            return;
         }
 
+        JSONValue json = JSONParser.parseStrict(response.getText());
+
+        System.out.println(json);
     }
 
     /** {@inheritDoc} */
     @Override
-    public RepoInfo getPayload() {
-        return repoInfo;
+    public Status getPayload() {
+        return status;
     }
 }

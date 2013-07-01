@@ -26,62 +26,22 @@ import com.codenvy.ide.json.JsonArray;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 2:41:39 PM anya $
  */
-public class Reference {
+public interface Reference {
     public enum RefType {
         LOCAL_BRANCH,
         REMOTE_BRANCH,
         TAG;
     }
 
-    /** Short name of the reference to display. */
-    private String               displayName;
-    /** Full name of the reference. */
-    private String               fullName;
-    /** Type of the reference. */
-    private RefType              refType;
-    private JsonArray<Reference> branches;
-
-    /**
-     * @param fullName
-     *         full name of the reference
-     * @param displayName
-     *         short name of the reference to display
-     * @param refType
-     *         type the reference
-     */
-    public Reference(String fullName, String displayName, RefType refType) {
-        this.displayName = displayName;
-        this.fullName = fullName;
-        this.refType = refType;
-    }
-
     /** @return the displayName */
-    public String getDisplayName() {
-        return displayName;
-    }
+    String getDisplayName();
 
     /** @return the fullName */
-    public String getFullName() {
-        return fullName;
-    }
+    String getFullName();
 
     /** @return the refType */
-    public RefType getRefType() {
-        return refType;
-    }
+    RefType getRefType();
 
     /** @return available branches */
-    public JsonArray<Reference> getBranches() {
-        return branches;
-    }
-
-    /**
-     * Set branches for node.
-     *
-     * @param branches
-     *         available branches
-     */
-    public void setBranches(JsonArray<Reference> branches) {
-        this.branches = branches;
-    }
+    JsonArray<Reference> getBranches();
 }

@@ -24,50 +24,10 @@ package com.codenvy.ide.ext.git.shared;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: BranchCreateRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class BranchCreateRequest extends GitRequest {
-    /** Name of branch to create. */
-    private String name;
-    /** The name of a commit at which to start the new branch. If <code>null</code> the HEAD will be used. */
-    private String startPoint;
-
-    /**
-     * @param name
-     *         name of branch to be created
-     * @param startPoint
-     *         name of a commit at which to start the new branch. If <code>null</code> the HEAD will be used
-     */
-    public BranchCreateRequest(String name, String startPoint) {
-        this.name = name;
-        this.startPoint = startPoint;
-    }
-
-    /** "Empty" request to create branch. Corresponding setters used to setup required behavior. */
-    public BranchCreateRequest() {
-    }
-
+public interface BranchCreateRequest extends GitRequest {
     /** @return name of branch to be created */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name
-     *         name of branch to be created
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+    String getName();
 
     /** @return name of a commit at which to start the new branch. If <code>null</code> the HEAD will be used */
-    public String getStartPoint() {
-        return startPoint;
-    }
-
-    /**
-     * @param startPoint
-     *         name of a commit at which to start the new branch. If <code>null</code> the HEAD will be used
-     */
-    public void setStartPoint(String startPoint) {
-        this.startPoint = startPoint;
-    }
+    String getStartPoint();
 }

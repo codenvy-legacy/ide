@@ -16,15 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.git.client.reset;
+package com.codenvy.ide.ext.git.client.reset.commit;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.client.marshaller.LogResponse;
 import com.codenvy.ide.ext.git.client.marshaller.LogResponseUnmarshaller;
+import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
+import com.codenvy.ide.ext.git.shared.LogResponse;
 import com.codenvy.ide.ext.git.shared.ResetRequest;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.resources.model.Project;
@@ -74,7 +75,8 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
     /** Show dialog. */
     public void showDialog() {
         projectId = resourceProvider.getActiveProject().getId();
-        LogResponseUnmarshaller unmarshaller = new LogResponseUnmarshaller(new LogResponse(), false);
+        DtoClientImpls.LogResponseImpl logResponse = DtoClientImpls.LogResponseImpl.make();
+        LogResponseUnmarshaller unmarshaller = new LogResponseUnmarshaller(logResponse, false);
 
         try {
             service.log(resourceProvider.getVfsId(), projectId, false, new AsyncRequestCallback<LogResponse>(unmarshaller) {

@@ -24,21 +24,6 @@ package com.codenvy.ide.ext.git.shared;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: RepoInfo.java Aug 10, 2012
  */
-public class RepoInfo {
-    private String remoteUri;
-
-    public RepoInfo(String remoteUri) {
-        this.remoteUri = remoteUri;
-    }
-
-    public RepoInfo() {
-    }
-
-    public String getRemoteUri() {
-        return remoteUri;
-    }
-
-    public void setRemoteUri(String remoteUri) {
-        this.remoteUri = remoteUri;
-    }
+public interface RepoInfo {
+    String getRemoteUri();
 }

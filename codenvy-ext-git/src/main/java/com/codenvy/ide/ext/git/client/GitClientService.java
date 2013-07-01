@@ -19,7 +19,8 @@
 package com.codenvy.ide.ext.git.client;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.git.client.marshaller.LogResponse;
+import com.codenvy.ide.annotations.Nullable;
+import com.codenvy.ide.ext.git.shared.LogResponse;
 import com.codenvy.ide.ext.git.shared.*;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
@@ -54,7 +55,7 @@ public interface GitClientService {
      *         callback
      * @throws RequestException
      */
-    void add(@NotNull String vfsId, @NotNull Project project, boolean update, String[] filePattern,
+    void add(@NotNull String vfsId, @NotNull Project project, boolean update, @Nullable JsonArray<String> filePattern,
              @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
@@ -73,7 +74,7 @@ public interface GitClientService {
      *         callback
      * @throws WebSocketException
      */
-    void addWS(@NotNull String vfsId, @NotNull Project project, boolean update, String[] filePattern,
+    void addWS(@NotNull String vfsId, @NotNull Project project, boolean update, @Nullable JsonArray<String> filePattern,
                @NotNull RequestCallback<String> callback) throws WebSocketException;
 
     /**
@@ -100,8 +101,8 @@ public interface GitClientService {
      *         callback
      * @throws RequestException
      */
-    void fetch(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, String[] refspec, boolean removeDeletedRefs,
-               @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void fetch(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, JsonArray<String> refspec,
+               boolean removeDeletedRefs, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Fetch changes from remote repository to local one (sends request over WebSocket).
@@ -127,8 +128,8 @@ public interface GitClientService {
      *         callback
      * @throws WebSocketException
      */
-    void fetchWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, String[] refspec, boolean removeDeletedRefs,
-                 @NotNull RequestCallback<String> callback) throws WebSocketException;
+    void fetchWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, JsonArray<String> refspec,
+                 boolean removeDeletedRefs, @NotNull RequestCallback<String> callback) throws WebSocketException;
 
     /**
      * Get the list of the branches. For now, all branches cannot be returned at once, so the parameter <code>remote</code> tells to get
@@ -279,7 +280,7 @@ public interface GitClientService {
      * @param callback
      *         callback
      */
-    void remove(@NotNull String vfsId, @NotNull String projectid, String[] files, boolean cached,
+    void remove(@NotNull String vfsId, @NotNull String projectid, JsonArray<String> files, boolean cached,
                 @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
@@ -402,7 +403,7 @@ public interface GitClientService {
      *         callback
      * @throws RequestException
      */
-    void push(@NotNull String vfsId, @NotNull Project project, String[] refSpec, @NotNull String remote, boolean force,
+    void push(@NotNull String vfsId, @NotNull Project project, JsonArray<String> refSpec, @NotNull String remote, boolean force,
               @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
@@ -423,7 +424,7 @@ public interface GitClientService {
      *         callback
      * @throws WebSocketException
      */
-    void pushWS(@NotNull String vfsId, @NotNull Project project, String[] refSpec, @NotNull String remote, boolean force,
+    void pushWS(@NotNull String vfsId, @NotNull Project project, JsonArray<String> refSpec, @NotNull String remote, boolean force,
                 @NotNull RequestCallback<String> callback) throws WebSocketException;
 
     /**
@@ -526,9 +527,9 @@ public interface GitClientService {
      * @param callback
      *         callback
      */
-    void diff(@NotNull String vfsId, @NotNull String projectid, String[] fileFilter, @NotNull DiffRequest.DiffType type, boolean noRenames,
-              int renameLimit, @NotNull String commitA, @NotNull String commitB, @NotNull AsyncRequestCallback<StringBuilder> callback)
-            throws RequestException;
+    void diff(@NotNull String vfsId, @NotNull String projectid, JsonArray<String> fileFilter, @NotNull DiffRequest.DiffType type,
+              boolean noRenames, int renameLimit, @NotNull String commitA, @NotNull String commitB,
+              @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
     /**
      * Compare commit with index or working tree (depends on {@link #cached}), get the diff for pointed file(s) or for the whole project in
@@ -553,9 +554,9 @@ public interface GitClientService {
      * @param callback
      *         callback
      */
-    void diff(@NotNull String vfsId, @NotNull String projectid, String[] fileFilter, @NotNull DiffRequest.DiffType type, boolean noRenames,
-              int renameLimit, @NotNull String commitA, boolean cached, @NotNull AsyncRequestCallback<StringBuilder> callback)
-            throws RequestException;
+    void diff(@NotNull String vfsId, @NotNull String projectid, JsonArray<String> fileFilter, @NotNull DiffRequest.DiffType type,
+              boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached,
+              @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
     /**
      * Get log of commits. The result is the list of {@link Revision}, which is returned by callback in

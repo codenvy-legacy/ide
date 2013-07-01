@@ -25,6 +25,7 @@ import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.marshaller.RevisionUnmarshaller;
 import com.codenvy.ide.ext.git.client.marshaller.RevisionUnmarshallerWS;
+import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -93,13 +94,16 @@ public class CommitPresenter implements CommitView.ActionDelegate {
         String message = view.getMessage();
         boolean all = view.isAllFilesInclued();
         boolean amend = view.isAmend();
-        RevisionUnmarshallerWS unmarshaller = new RevisionUnmarshallerWS(new Revision(null, message, 0, null));
+        DtoClientImpls.RevisionImpl revision = DtoClientImpls.RevisionImpl.make();
+        revision.setMessage(message);
+        revision.setCommitTime(0);
+        RevisionUnmarshallerWS unmarshaller = new RevisionUnmarshallerWS(revision);
 
         try {
             service.commitWS(resourceProvider.getVfsId(), project, message, all, amend, new RequestCallback<Revision>(unmarshaller) {
                 @Override
                 protected void onSuccess(Revision result) {
-                    if (!result.isFake()) {
+                    if (!result.fake()) {
                         onCommitSuccess(result);
                     } else {
                         console.print(result.getMessage());
@@ -119,14 +123,17 @@ public class CommitPresenter implements CommitView.ActionDelegate {
 
     /** Perform the commit to repository and process the response (sends request over HTTP). */
     private void doCommitREST(Project project, String message, boolean all, boolean amend) {
-        RevisionUnmarshaller unmarshaller = new RevisionUnmarshaller(new Revision(null, message, 0, null));
+        DtoClientImpls.RevisionImpl revision = DtoClientImpls.RevisionImpl.make();
+        revision.setMessage(message);
+        revision.setCommitTime(0);
+        RevisionUnmarshaller unmarshaller = new RevisionUnmarshaller(revision);
 
         try {
             service.commit(resourceProvider.getVfsId(), project, message, all, amend,
                            new AsyncRequestCallback<Revision>(unmarshaller) {
                                @Override
                                protected void onSuccess(Revision result) {
-                                   if (!result.isFake()) {
+                                   if (!result.fake()) {
                                        onCommitSuccess(result);
                                    } else {
                                        console.print(result.getMessage());
@@ -152,7 +159,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
      */
     private void onCommitSuccess(Revision revision) {
         DateTimeFormat formatter = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_MEDIUM);
-        String date = formatter.format(new Date(revision.getCommitTime()));
+        String date = formatter.format(new Date((long)revision.getCommitTime()));
         String message = constant.commitMessage(revision.getId(), date);
         message += (revision.getCommitter() != null && revision.getCommitter().getName() != null &&
                     !revision.getCommitter().getName().isEmpty())

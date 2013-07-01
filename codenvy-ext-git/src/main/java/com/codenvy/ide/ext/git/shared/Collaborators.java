@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import java.util.List;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * Created by The eXo Platform SAS.
@@ -27,7 +27,5 @@ import java.util.List;
  * @version $Id: ICollaborators.java Aug 6, 2012
  */
 public interface Collaborators {
-    List<GitHubUser> getCollaborators();
-
-    void setCollaborators(List<GitHubUser> collaborators);
+    JsonArray<GitHubUser> getCollaborators();
 }

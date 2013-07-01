@@ -22,6 +22,7 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.job.Job;
 import com.codenvy.ide.job.JobChangeEvent;
 import com.codenvy.ide.job.RequestStatusHandlerBase;
+import com.codenvy.ide.json.JsonArray;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -37,9 +38,9 @@ public class PushRequestHandler extends RequestStatusHandlerBase {
      * @param projectName
      * @param refSpec
      */
-    public PushRequestHandler(String projectName, String[] refSpec, EventBus eventBus, GitLocalizationConstant constant) {
+    public PushRequestHandler(String projectName, JsonArray<String> refSpec, EventBus eventBus, GitLocalizationConstant constant) {
         super(projectName, eventBus);
-        String[] split = refSpec[0].split(":");
+        String[] split = refSpec.get(0).split(":");
         this.localBranch = split[0];
         this.remoteBranch = split[1];
         this.constant = constant;

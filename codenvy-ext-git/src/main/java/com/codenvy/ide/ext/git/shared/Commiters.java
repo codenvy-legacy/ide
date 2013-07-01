@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import java.util.List;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * Created by The eXo Platform SAS.
@@ -27,7 +27,5 @@ import java.util.List;
  * @version $Id: Commiters.java Aug 3, 2012
  */
 public interface Commiters {
-    List<GitUser> getCommiters();
-
-    void setCommiters(List<GitUser> commiters);
+    JsonArray<GitUser> getCommiters();
 }

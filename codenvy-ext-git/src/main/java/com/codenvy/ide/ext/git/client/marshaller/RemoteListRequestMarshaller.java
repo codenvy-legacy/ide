@@ -49,7 +49,7 @@ public class RemoteListRequestMarshaller implements Marshallable, Constants {
         } else {
             jsonObject.put(REMOTE, JSONNull.getInstance());
         }
-        jsonObject.put(VERBOSE, JSONBoolean.getInstance(remoteListRequest.isVerbose()));
+        jsonObject.put(VERBOSE, JSONBoolean.getInstance(remoteListRequest.verbose()));
         return jsonObject.toString();
     }
 }

@@ -24,50 +24,10 @@ package com.codenvy.ide.ext.git.shared;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: MoveRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class MoveRequest extends GitRequest {
-    /** Source. */
-    private String source;
-    /** Target. */
-    private String target;
-
-    /**
-     * @param source
-     *         move source
-     * @param target
-     *         move target
-     */
-    public MoveRequest(String source, String target) {
-        this.source = source;
-        this.target = target;
-    }
-
-    /** "Empty" move request. Corresponding setters used to setup required parameters. */
-    public MoveRequest() {
-    }
-
+public interface MoveRequest extends GitRequest {
     /** @return source */
-    public String getSource() {
-        return source;
-    }
-
-    /**
-     * @param source
-     *         move source
-     */
-    public void setSource(String source) {
-        this.source = source;
-    }
+    String getSource();
 
     /** @return target */
-    public String getTarget() {
-        return target;
-    }
-
-    /**
-     * @param target
-     *         move target
-     */
-    public void setTarget(String target) {
-        this.target = target;
-    }
+    String getTarget();
 }

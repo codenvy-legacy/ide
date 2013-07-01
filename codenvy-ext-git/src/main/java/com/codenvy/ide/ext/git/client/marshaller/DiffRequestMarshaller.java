@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.git.client.marshaller;
 
 import com.codenvy.ide.ext.git.shared.DiffRequest;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.Marshallable;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
@@ -48,15 +49,17 @@ public class DiffRequestMarshaller implements Marshallable, Constants {
     public String marshal() {
         JSONObject jsonObject = new JSONObject();
 
-        if (diffRequest.getFileFilter() != null && diffRequest.getFileFilter().length > 0) {
+        JsonArray<String> fileFilter = diffRequest.getFileFilter();
+        if (fileFilter != null && !fileFilter.isEmpty()) {
             JSONArray array = new JSONArray();
-            for (int i = 0; i < diffRequest.getFileFilter().length; i++) {
-                array.set(i, new JSONString(diffRequest.getFileFilter()[i]));
+            for (int i = 0; i < fileFilter.size(); i++) {
+                String filter = fileFilter.get(i);
+                array.set(i, new JSONString(filter));
             }
             jsonObject.put(FILE_FILTER, array);
         }
-        jsonObject.put(NO_RENAMES, JSONBoolean.getInstance(diffRequest.isNoRenames()));
-        jsonObject.put(CACHED, JSONBoolean.getInstance(diffRequest.isCached()));
+        jsonObject.put(NO_RENAMES, JSONBoolean.getInstance(diffRequest.noRenames()));
+        jsonObject.put(CACHED, JSONBoolean.getInstance(diffRequest.cached()));
 
         if (diffRequest.getType() != null) {
             jsonObject.put(TYPE, new JSONString(diffRequest.getType().name()));

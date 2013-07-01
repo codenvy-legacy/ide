@@ -52,7 +52,7 @@ public class BranchCheckoutRequestMarshaller implements Marshallable, Constants 
             jsonObject.put(START_POINT, new JSONString(branchCheckoutRequest.getStartPoint()));
         }
 
-        jsonObject.put(CREATE_NEW, JSONBoolean.getInstance(branchCheckoutRequest.isCreateNew()));
+        jsonObject.put(CREATE_NEW, JSONBoolean.getInstance(branchCheckoutRequest.createNew()));
 
         return jsonObject.toString();
     }

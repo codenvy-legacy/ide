@@ -24,50 +24,10 @@ package com.codenvy.ide.ext.git.shared;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: BranchDeleteRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class BranchDeleteRequest extends GitRequest {
-    /** Name of branch to delete. */
-    private String  name;
-    /** If <code>true</code> delete branch {@link #name} even if it is not fully merged. It is corresponds to -D options in C git. */
-    private boolean force;
-
-    /**
-     * @param name
-     *         name of branch to delete
-     * @param force
-     *         if <code>true</code> delete branch {@link #name} even if it is not fully merged
-     */
-    public BranchDeleteRequest(String name, boolean force) {
-        this.name = name;
-        this.force = force;
-    }
-
-    /** "Empty" request to delete branch. Corresponding setters used to setup required behavior. */
-    public BranchDeleteRequest() {
-    }
-
+public interface BranchDeleteRequest extends GitRequest {
     /** @return name of branch to delete */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name
-     *         name of branch to delete
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+    String getName();
 
     /** @return if <code>true</code> then delete branch {@link #name} even if it is not fully merged */
-    public boolean isForce() {
-        return force;
-    }
-
-    /**
-     * @param force
-     *         if <code>true</code> delete branch {@link #name} even if it is not fully merged
-     */
-    public void setForce(boolean force) {
-        this.force = force;
-    }
+    boolean force();
 }

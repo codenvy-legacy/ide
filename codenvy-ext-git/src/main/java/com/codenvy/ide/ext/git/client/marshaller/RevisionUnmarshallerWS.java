@@ -19,7 +19,7 @@
 package com.codenvy.ide.ext.git.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.git.shared.GitUser;
+import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.rest.Unmarshallable;
@@ -33,13 +33,13 @@ import com.google.gwt.json.client.JSONValue;
  */
 public class RevisionUnmarshallerWS implements Unmarshallable<Revision>, Constants {
     /** Represents revision info. */
-    private Revision revision;
+    private DtoClientImpls.RevisionImpl revision;
 
     /**
      * @param revision
      *         revision information
      */
-    public RevisionUnmarshallerWS(Revision revision) {
+    public RevisionUnmarshallerWS(DtoClientImpls.RevisionImpl revision) {
         this.revision = revision;
     }
 
@@ -57,11 +57,8 @@ public class RevisionUnmarshallerWS implements Unmarshallable<Revision>, Constan
         if (revisionObject == null)
             return;
 
-        Boolean fake =
-                (revisionObject.get(FAKE) != null && revisionObject.get(FAKE).isBoolean() != null) ? revisionObject.get(FAKE)
-                                                                                                                   .isBoolean()
-                                                                                                                   .booleanValue()
-                                                                                                   : false;
+        Boolean fake = revisionObject.get(FAKE) != null && revisionObject.get(FAKE).isBoolean() != null
+                       && revisionObject.get(FAKE).isBoolean().booleanValue();
         revision.setFake(fake);
 
         String id =
@@ -89,7 +86,9 @@ public class RevisionUnmarshallerWS implements Unmarshallable<Revision>, Constan
                     ? committerObject
                             .get(EMAIL).isString().stringValue() : "";
 
-            GitUser gitUser = new GitUser(name, email);
+            DtoClientImpls.GitUserImpl gitUser = DtoClientImpls.GitUserImpl.make();
+            gitUser.setEmail(email);
+            gitUser.setName(name);
             revision.setCommitter(gitUser);
         }
     }

@@ -16,9 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.git.client.marshaller;
-
-import com.codenvy.ide.ext.git.shared.Log;
+package com.codenvy.ide.ext.git.shared;
 
 /**
  * The response with the log of commits.
@@ -26,20 +24,7 @@ import com.codenvy.ide.ext.git.shared.Log;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 14, 2011 4:32:17 PM anya $
  */
-public class LogResponse extends Log {
-    /** The text format of the log response. */
-    private String textLog;
-
+public interface LogResponse extends Log {
     /** @return the textLog text format of the log response */
-    public String getTextLog() {
-        return textLog;
-    }
-
-    /**
-     * @param textLog
-     *         the textLog text format of the log response
-     */
-    public void setTextLog(String textLog) {
-        this.textLog = textLog;
-    }
+    String getTextLog();
 }

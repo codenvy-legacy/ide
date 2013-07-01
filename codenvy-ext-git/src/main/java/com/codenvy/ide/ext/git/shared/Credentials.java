@@ -31,27 +31,12 @@ public interface Credentials {
      *
      * @return {@link String} login
      */
-    public String getLogin();
-
-    /**
-     * Set login.
-     *
-     * @param login
-     */
-    public void setLogin(String login);
+    String getLogin();
 
     /**
      * Get password.
      *
      * @return {@link String} password
      */
-    public String getPassword();
-
-    /**
-     * Set the password.
-     *
-     * @param password
-     *         password.
-     */
-    public void setPassword(String password);
+    String getPassword();
 }

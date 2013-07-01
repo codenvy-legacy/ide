@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.git.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -79,8 +80,13 @@ public class BranchListUnmarshaller implements Unmarshallable<JsonArray<Branch>>
                         (object.get(DISPLAY_NAME).isString() != null) ? object.get(DISPLAY_NAME).isString().stringValue()
                                                                       : displayName;
             }
+            DtoClientImpls.BranchImpl branch = DtoClientImpls.BranchImpl.make();
+            branch.setName(name);
+            branch.setActive(active);
+            branch.setDisplayName(displayName);
+            branch.setRemote(remote);
 
-            branches.add(new Branch(name, active, displayName, remote));
+            branches.add(branch);
         }
     }
 

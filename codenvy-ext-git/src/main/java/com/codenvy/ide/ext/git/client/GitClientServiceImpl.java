@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.git.client;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.ext.git.client.add.AddRequestHandler;
 import com.codenvy.ide.ext.git.client.clone.CloneRequestStatusHandler;
 import com.codenvy.ide.ext.git.client.commit.CommitRequestHandler;
@@ -27,6 +28,7 @@ import com.codenvy.ide.ext.git.client.init.InitRequestStatusHandler;
 import com.codenvy.ide.ext.git.client.marshaller.*;
 import com.codenvy.ide.ext.git.client.pull.PullRequestHandler;
 import com.codenvy.ide.ext.git.client.push.PushRequestHandler;
+import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.*;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
@@ -109,7 +111,11 @@ public class GitClientServiceImpl implements GitClientService {
                      @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + INIT;
 
-        InitRequest initRequest = new InitRequest(projectid, bare);
+        DtoClientImpls.InitRequestImpl initRequest = DtoClientImpls.InitRequestImpl.make();
+        initRequest.setBare(bare);
+        initRequest.setWorkingDir(projectid);
+
+        // TODO marshaller
         InitRequestMarshaller marshaller = new InitRequestMarshaller(initRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
@@ -123,7 +129,10 @@ public class GitClientServiceImpl implements GitClientService {
     @Override
     public void initWS(@NotNull String vfsId, @NotNull String projectid, @NotNull String projectName, boolean bare,
                        @NotNull RequestCallback<String> callback) throws WebSocketException {
-        InitRequest initRequest = new InitRequest(projectid, bare);
+        DtoClientImpls.InitRequestImpl initRequest = DtoClientImpls.InitRequestImpl.make();
+        initRequest.setBare(bare);
+        initRequest.setWorkingDir(projectid);
+        // TODO marshaller
         InitRequestMarshaller marshaller = new InitRequestMarshaller(initRequest);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
@@ -142,8 +151,11 @@ public class GitClientServiceImpl implements GitClientService {
                                 @NotNull AsyncRequestCallback<RepoInfo> callback) throws RequestException {
         String url = restServiceContext + CLONE;
 
-        CloneRequest cloneRequest = new CloneRequest(remoteUri, project.getId());
+        DtoClientImpls.CloneRequestImpl cloneRequest = DtoClientImpls.CloneRequestImpl.make();
         cloneRequest.setRemoteName(remoteName);
+        cloneRequest.setRemoteUri(remoteUri);
+        cloneRequest.setWorkingDir(project.getId());
+        // TODO marshaller
         CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -159,8 +171,11 @@ public class GitClientServiceImpl implements GitClientService {
     @Override
     public void cloneRepositoryWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remoteUri, @NotNull String remoteName,
                                   @NotNull RequestCallback<RepoInfo> callback) throws WebSocketException {
-        CloneRequest cloneRequest = new CloneRequest(remoteUri, project.getId());
+        DtoClientImpls.CloneRequestImpl cloneRequest = DtoClientImpls.CloneRequestImpl.make();
         cloneRequest.setRemoteName(remoteName);
+        cloneRequest.setRemoteUri(remoteUri);
+        cloneRequest.setWorkingDir(project.getId());
+        // TODO marshaller
         CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -189,11 +204,19 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void add(@NotNull String vfsId, @NotNull Project project, boolean update, String[] filePattern,
+    public void add(@NotNull String vfsId, @NotNull Project project, boolean update, @Nullable JsonArray<String> filePattern,
                     @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + ADD;
 
-        AddRequest addRequest = new AddRequest(filePattern, update);
+        DtoClientImpls.AddRequestImpl addRequest = DtoClientImpls.AddRequestImpl.make();
+        addRequest.setUpdate(update);
+        if (filePattern == null) {
+            addRequest.setFilepattern(AddRequest.DEFAULT_PATTERN);
+        } else {
+            addRequest.setFilepattern(filePattern);
+        }
+        // TODO marshaller
+
         AddRequestMarshaller marshaller = new AddRequestMarshaller(addRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -205,9 +228,16 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void addWS(@NotNull String vfsId, @NotNull Project project, boolean update, String[] filePattern,
+    public void addWS(@NotNull String vfsId, @NotNull Project project, boolean update, @Nullable JsonArray<String> filePattern,
                       @NotNull RequestCallback<String> callback) throws WebSocketException {
-        AddRequest addRequest = new AddRequest(filePattern, update);
+        DtoClientImpls.AddRequestImpl addRequest = DtoClientImpls.AddRequestImpl.make();
+        addRequest.setUpdate(update);
+        if (filePattern == null) {
+            addRequest.setFilepattern(AddRequest.DEFAULT_PATTERN);
+        } else {
+            addRequest.setFilepattern(filePattern);
+        }
+        // TODO marshaller
         AddRequestMarshaller marshaller = new AddRequestMarshaller(addRequest);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -227,7 +257,12 @@ public class GitClientServiceImpl implements GitClientService {
                        @NotNull AsyncRequestCallback<Revision> callback) throws RequestException {
         String url = restServiceContext + COMMIT;
 
-        CommitRequest commitRequest = new CommitRequest(message, all, amend);
+        DtoClientImpls.CommitRequestImpl commitRequest = DtoClientImpls.CommitRequestImpl.make();
+        commitRequest.setMessage(message);
+        commitRequest.setAmend(amend);
+        commitRequest.setAll(all);
+        // TODO marshaller
+
         CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -241,7 +276,11 @@ public class GitClientServiceImpl implements GitClientService {
     @Override
     public void commitWS(@NotNull String vfsId, @NotNull Project project, @NotNull String message, boolean all, boolean amend,
                          @NotNull RequestCallback<Revision> callback) throws WebSocketException {
-        CommitRequest commitRequest = new CommitRequest(message, all, amend);
+        DtoClientImpls.CommitRequestImpl commitRequest = DtoClientImpls.CommitRequestImpl.make();
+        commitRequest.setMessage(message);
+        commitRequest.setAmend(amend);
+        commitRequest.setAll(all);
+        // TODO marshaller
         CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -257,14 +296,15 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void push(@NotNull String vfsId, @NotNull Project project, String[] refSpec, @NotNull String remote, boolean force,
+    public void push(@NotNull String vfsId, @NotNull Project project, JsonArray<String> refSpec, @NotNull String remote, boolean force,
                      @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + PUSH;
-        PushRequest pushRequest = new PushRequest();
+
+        DtoClientImpls.PushRequestImpl pushRequest = DtoClientImpls.PushRequestImpl.make();
         pushRequest.setRemote(remote);
         pushRequest.setRefSpec(refSpec);
         pushRequest.setForce(force);
-
+        // TODO marshaller
         PushRequestMarshaller marshaller = new PushRequestMarshaller(pushRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -276,13 +316,13 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void pushWS(@NotNull String vfsId, @NotNull Project project, String[] refSpec, @NotNull String remote, boolean force,
+    public void pushWS(@NotNull String vfsId, @NotNull Project project, JsonArray<String> refSpec, @NotNull String remote, boolean force,
                        @NotNull RequestCallback<String> callback) throws WebSocketException {
-        PushRequest pushRequest = new PushRequest();
+        DtoClientImpls.PushRequestImpl pushRequest = DtoClientImpls.PushRequestImpl.make();
         pushRequest.setRemote(remote);
         pushRequest.setRefSpec(refSpec);
         pushRequest.setForce(force);
-
+        // TODO marshaller
         PushRequestMarshaller marshaller = new PushRequestMarshaller(pushRequest);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -302,7 +342,10 @@ public class GitClientServiceImpl implements GitClientService {
                            @NotNull AsyncRequestCallback<JsonArray<Remote>> callback) throws RequestException {
         String url = restServiceContext + REMOTE_LIST;
 
-        RemoteListRequest remoteListRequest = new RemoteListRequest(remoteName, verbose);
+        DtoClientImpls.RemoteListRequestImpl remoteListRequest = DtoClientImpls.RemoteListRequestImpl.make();
+        remoteListRequest.setRemote(remoteName);
+        remoteListRequest.setVerbose(verbose);
+        // TODO marshaller
         RemoteListRequestMarshaller marshaller = new RemoteListRequestMarshaller(remoteListRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
@@ -317,9 +360,9 @@ public class GitClientServiceImpl implements GitClientService {
                            @NotNull AsyncRequestCallback<JsonArray<Branch>> callback) throws RequestException {
         String url = restServiceContext + BRANCH_LIST;
 
-        BranchListRequest branchListRequest = new BranchListRequest();
+        DtoClientImpls.BranchListRequestImpl branchListRequest = DtoClientImpls.BranchListRequestImpl.make();
         branchListRequest.setListMode(remoteMode);
-
+        // TODO marshaller
         BranchListRequestMarshaller marshaller = new BranchListRequestMarshaller(branchListRequest);
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
@@ -345,7 +388,10 @@ public class GitClientServiceImpl implements GitClientService {
                              @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + BRANCH_DELETE;
 
-        BranchDeleteRequest branchDeleteRequest = new BranchDeleteRequest(name, force);
+        DtoClientImpls.BranchDeleteRequestImpl branchDeleteRequest = DtoClientImpls.BranchDeleteRequestImpl.make();
+        branchDeleteRequest.setName(name);
+        branchDeleteRequest.setForce(force);
+        // TODO marshaller
         BranchDeleteRequestMarshaller marshaller = new BranchDeleteRequestMarshaller(branchDeleteRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
@@ -372,7 +418,10 @@ public class GitClientServiceImpl implements GitClientService {
                              @NotNull AsyncRequestCallback<Branch> callback) throws RequestException {
         String url = restServiceContext + BRANCH_CREATE;
 
-        BranchCreateRequest branchCreateRequest = new BranchCreateRequest(name, startPoint);
+        DtoClientImpls.BranchCreateRequestImpl branchCreateRequest = DtoClientImpls.BranchCreateRequestImpl.make();
+        branchCreateRequest.setName(name);
+        branchCreateRequest.setStartPoint(startPoint);
+        // TODO marshaller
         BranchCreateRequestMarshaller marshaller = new BranchCreateRequestMarshaller(branchCreateRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
@@ -388,7 +437,11 @@ public class GitClientServiceImpl implements GitClientService {
                                boolean createNew, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + BRANCH_CHECKOUT;
 
-        BranchCheckoutRequest branchCheckoutRequest = new BranchCheckoutRequest(name, startPoint, createNew);
+        DtoClientImpls.BranchCheckoutRequestImpl branchCheckoutRequest = DtoClientImpls.BranchCheckoutRequestImpl.make();
+        branchCheckoutRequest.setName(name);
+        branchCheckoutRequest.setStartPoint(startPoint);
+        branchCheckoutRequest.setCreateNew(createNew);
+        // TODO marshaller
         BranchCheckoutRequestMarshaller marshaller = new BranchCheckoutRequestMarshaller(branchCheckoutRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
@@ -399,12 +452,14 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void remove(@NotNull String vfsId, @NotNull String projectid, String[] files, boolean cached,
+    public void remove(@NotNull String vfsId, @NotNull String projectid, JsonArray<String> files, boolean cached,
                        @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + REMOVE;
 
-        RmRequest rmRequest = new RmRequest(files);
+        DtoClientImpls.RmRequestImpl rmRequest = DtoClientImpls.RmRequestImpl.make();
+        rmRequest.setFiles(files);
         rmRequest.setCached(cached);
+        // TODO marshaller
         RemoveRequestMarshaller marshaller = new RemoveRequestMarshaller(rmRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
@@ -419,10 +474,10 @@ public class GitClientServiceImpl implements GitClientService {
                       @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + RESET;
 
-        ResetRequest resetRequest = new ResetRequest();
+        DtoClientImpls.ResetRequestImpl resetRequest = DtoClientImpls.ResetRequestImpl.make();
         resetRequest.setCommit(commit);
         resetRequest.setType(resetType);
-
+        // TODO marshaller
         ResetRequestMarshaller marshaller = new ResetRequestMarshaller(resetRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
@@ -437,7 +492,8 @@ public class GitClientServiceImpl implements GitClientService {
                     @NotNull AsyncRequestCallback<LogResponse> callback) throws RequestException {
         String url = restServiceContext + LOG;
 
-        LogRequest logRequest = new LogRequest();
+        DtoClientImpls.LogRequestImpl logRequest = DtoClientImpls.LogRequestImpl.make();
+        // TODO marshaller
         LogRequestMarshaller marshaller = new LogRequestMarshaller(logRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
@@ -459,8 +515,10 @@ public class GitClientServiceImpl implements GitClientService {
                           @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + REMOTE_ADD;
 
-        RemoteAddRequest remoteAddRequest = new RemoteAddRequest(name, repositoryURL);
-
+        DtoClientImpls.RemoteAddRequestImpl remoteAddRequest = DtoClientImpls.RemoteAddRequestImpl.make();
+        remoteAddRequest.setName(name);
+        remoteAddRequest.setUrl(repositoryURL);
+        // TODO marshaller
         RemoteAddRequestMarshaller marshaller = new RemoteAddRequestMarshaller(remoteAddRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
@@ -482,11 +540,16 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void fetch(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, String[] refspec, boolean removeDeletedRefs,
-                      @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+    public void fetch(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, JsonArray<String> refspec,
+                      boolean removeDeletedRefs, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + FETCH;
 
-        FetchRequest fetchRequest = new FetchRequest(refspec, remote, removeDeletedRefs, 0);
+        DtoClientImpls.FetchRequestImpl fetchRequest = DtoClientImpls.FetchRequestImpl.make();
+        fetchRequest.setRemote(remote);
+        fetchRequest.setRefSpec(refspec);
+        fetchRequest.setRemoveDeletedRefs(removeDeletedRefs);
+        fetchRequest.setTimeout(0);
+        // TODO marshaller
         FetchRequestMarshaller marshaller = new FetchRequestMarshaller(fetchRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -498,9 +561,14 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void fetchWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, String[] refspec,
+    public void fetchWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, JsonArray<String> refspec,
                         boolean removeDeletedRefs, @NotNull RequestCallback<String> callback) throws WebSocketException {
-        FetchRequest fetchRequest = new FetchRequest(refspec, remote, removeDeletedRefs, 0);
+        DtoClientImpls.FetchRequestImpl fetchRequest = DtoClientImpls.FetchRequestImpl.make();
+        fetchRequest.setRemote(remote);
+        fetchRequest.setRefSpec(refspec);
+        fetchRequest.setRemoveDeletedRefs(removeDeletedRefs);
+        fetchRequest.setTimeout(0);
+        // TODO marshaller
         FetchRequestMarshaller marshaller = new FetchRequestMarshaller(fetchRequest);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -520,7 +588,11 @@ public class GitClientServiceImpl implements GitClientService {
                      @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + PULL;
 
-        PullRequest pullRequest = new PullRequest(remote, refSpec, 0);
+        DtoClientImpls.PullRequestImpl pullRequest = DtoClientImpls.PullRequestImpl.make();
+        pullRequest.setRemote(remote);
+        pullRequest.setRefSpec(refSpec);
+        pullRequest.setTimeout(0);
+        // TODO marshaller
         PullRequestMarshaller marshaller = new PullRequestMarshaller(pullRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -534,7 +606,11 @@ public class GitClientServiceImpl implements GitClientService {
     @Override
     public void pullWS(@NotNull String vfsId, @NotNull Project project, @NotNull String refSpec, @NotNull String remote,
                        @NotNull RequestCallback<String> callback) throws WebSocketException {
-        PullRequest pullRequest = new PullRequest(remote, refSpec, 0);
+        DtoClientImpls.PullRequestImpl pullRequest = DtoClientImpls.PullRequestImpl.make();
+        pullRequest.setRemote(remote);
+        pullRequest.setRefSpec(refSpec);
+        pullRequest.setTimeout(0);
+        // TODO marshaller
         PullRequestMarshaller marshaller = new PullRequestMarshaller(pullRequest);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -550,20 +626,33 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void diff(@NotNull String vfsId, @NotNull String projectid, String[] fileFilter, @NotNull DiffRequest.DiffType type,
+    public void diff(@NotNull String vfsId, @NotNull String projectid, JsonArray<String> fileFilter, @NotNull DiffRequest.DiffType type,
                      boolean noRenames, int renameLimit, @NotNull String commitA, @NotNull String commitB,
                      @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException {
-        DiffRequest diffRequest = new DiffRequest(fileFilter, type, noRenames, renameLimit, commitA, commitB);
+        DtoClientImpls.DiffRequestImpl diffRequest = DtoClientImpls.DiffRequestImpl.make();
+        diffRequest.setFileFilter(fileFilter);
+        diffRequest.setType(type);
+        diffRequest.setNoRenames(noRenames);
+        diffRequest.setRenameLimit(renameLimit);
+        diffRequest.setCommitA(commitA);
+        diffRequest.setCommitB(commitB);
+
         diff(diffRequest, vfsId, projectid, callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void diff(@NotNull String vfsId, @NotNull String projectid, String[] fileFilter, @NotNull DiffRequest.DiffType type,
-                     boolean noRenames,
-                     int renameLimit, @NotNull String commitA, boolean cached, @NotNull AsyncRequestCallback<StringBuilder> callback)
-            throws RequestException {
-        DiffRequest diffRequest = new DiffRequest(fileFilter, type, noRenames, renameLimit, commitA, cached);
+    public void diff(@NotNull String vfsId, @NotNull String projectid, JsonArray<String> fileFilter, @NotNull DiffRequest.DiffType type,
+                     boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached,
+                     @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+        DtoClientImpls.DiffRequestImpl diffRequest = DtoClientImpls.DiffRequestImpl.make();
+        diffRequest.setFileFilter(fileFilter);
+        diffRequest.setType(type);
+        diffRequest.setNoRenames(noRenames);
+        diffRequest.setRenameLimit(renameLimit);
+        diffRequest.setCommitA(commitA);
+        diffRequest.setCached(cached);
+
         diff(diffRequest, vfsId, projectid, callback);
     }
 
@@ -572,13 +661,15 @@ public class GitClientServiceImpl implements GitClientService {
      *
      * @param diffRequest
      *         request for diff
-     * @param href
-     *         working directory's href
+     * @param vfsId
+     *         virtual file system id
+     * @param projectid
+     *         project id
      * @param callback
      *         callback
      * @throws RequestException
      */
-    protected void diff(DiffRequest diffRequest, String vfsId, String projectid, AsyncRequestCallback<StringBuilder> callback)
+    private void diff(DiffRequest diffRequest, String vfsId, String projectid, AsyncRequestCallback<StringBuilder> callback)
             throws RequestException {
         String url = restServiceContext + DIFF;
 
@@ -596,7 +687,9 @@ public class GitClientServiceImpl implements GitClientService {
                       @NotNull AsyncRequestCallback<MergeResult> callback) throws RequestException {
         String url = restServiceContext + MERGE;
 
-        MergeRequest mergeRequest = new MergeRequest(commit);
+        DtoClientImpls.MergeRequestImpl mergeRequest = DtoClientImpls.MergeRequestImpl.make();
+        mergeRequest.setCommit(commit);
+        // TODO marshaller
         MergeRequestMarshaller marshaller = new MergeRequestMarshaller(mergeRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;

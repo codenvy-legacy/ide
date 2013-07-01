@@ -24,34 +24,8 @@ package com.codenvy.ide.ext.git.shared;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: Remote.java 67651 2011-03-25 16:15:36Z andrew00x $
  */
-public class Remote {
-    /** Remote name. */
-    private String name;
-    /** Remote repository url. */
-    private String url;
+public interface Remote {
+    String getName();
 
-    /**
-     * @param name
-     *         remote name
-     * @param url
-     *         repository url
-     */
-    public Remote(String name, String url) {
-        this.name = name;
-        this.url = url;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    /** @see java.lang.Object#toString() */
-    @Override
-    public String toString() {
-        return "Remote [name=" + name + ", url=" + url + "]";
-    }
+    String getUrl();
 }

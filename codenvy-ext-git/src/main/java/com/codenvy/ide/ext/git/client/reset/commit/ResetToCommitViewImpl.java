@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.git.client.reset;
+package com.codenvy.ide.ext.git.client.reset.commit;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.git.client.GitClientResources;
@@ -133,7 +133,7 @@ public class ResetToCommitViewImpl extends DialogBox implements ResetToCommitVie
             @Override
             public String getValue(Revision revision) {
                 return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_MEDIUM).format(
-                        new Date(revision.getCommitTime()));
+                        new Date((long)revision.getCommitTime()));
             }
         };
         Column<Revision, String> commiterColumn = new Column<Revision, String>(new TextCell()) {

@@ -47,7 +47,7 @@ public class CommitRequestMarshaller implements Marshallable, Constants {
     public String marshal() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(MESSAGE, new JSONString(commitRequest.getMessage()));
-        jsonObject.put(ALL, JSONBoolean.getInstance(commitRequest.isAll()));
+        jsonObject.put(ALL, JSONBoolean.getInstance(commitRequest.all()));
         return jsonObject.toString();
     }
 }

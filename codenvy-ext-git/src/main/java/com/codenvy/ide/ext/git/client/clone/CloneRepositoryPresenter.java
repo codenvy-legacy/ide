@@ -24,6 +24,7 @@ import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.marshaller.RepoInfoUnmarshaller;
 import com.codenvy.ide.ext.git.client.marshaller.RepoInfoUnmarshallerWS;
+import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.RepoInfo;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
@@ -98,7 +99,8 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      *         folder (root of GIT repository)
      */
     private void cloneRepository(final String remoteUri, String remoteName, final Project project) {
-        RepoInfoUnmarshallerWS unmarshallerWS = new RepoInfoUnmarshallerWS(new RepoInfo());
+        DtoClientImpls.RepoInfoImpl repoInfo = DtoClientImpls.RepoInfoImpl.make();
+        RepoInfoUnmarshallerWS unmarshallerWS = new RepoInfoUnmarshallerWS(repoInfo);
         try {
             service.cloneRepositoryWS(resourceProvider.getVfsId(), project, remoteUri, remoteName,
                                       new RequestCallback<RepoInfo>(unmarshallerWS) {
@@ -131,7 +133,8 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      *         folder (root of GIT repository)
      */
     private void cloneRepositoryREST(final String remoteUri, String remoteName, final Project project) {
-        RepoInfoUnmarshaller unmarshaller = new RepoInfoUnmarshaller(new RepoInfo());
+        DtoClientImpls.RepoInfoImpl repoInfo = DtoClientImpls.RepoInfoImpl.make();
+        RepoInfoUnmarshaller unmarshaller = new RepoInfoUnmarshaller(repoInfo);
         try {
             service.cloneRepository(resourceProvider.getVfsId(), project, remoteUri, remoteName,
                                     new AsyncRequestCallback<RepoInfo>(unmarshaller) {

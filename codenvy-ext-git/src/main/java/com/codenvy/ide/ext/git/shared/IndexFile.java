@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,13 +19,15 @@
 package com.codenvy.ide.ext.git.shared;
 
 /**
- * Created by The eXo Platform SAS.
+ * Git file in index. Used for work with index (remove, reset).
  *
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: GutHubUser.java Aug 6, 2012
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id: Apr 13, 2011 11:57:38 AM anya $
  */
-public class GutHubUser extends GitUser {
-    public GutHubUser(String name) {
-        super(name);
-    }
+public interface IndexFile {
+    /** @return the indexed if <code>true</code> file is in index */
+    boolean indexed();
+
+    /** @return file path */
+    String getPath();
 }

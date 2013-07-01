@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.git.client.marshaller;
 
 import com.codenvy.ide.ext.git.shared.RmRequest;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.Marshallable;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
@@ -47,11 +48,13 @@ public class RemoveRequestMarshaller implements Marshallable, Constants {
     @Override
     public String marshal() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(CACHED, JSONBoolean.getInstance(rmRequest.getCached()));
-        if (rmRequest.getFiles() != null && rmRequest.getFiles().length > 0) {
+        jsonObject.put(CACHED, JSONBoolean.getInstance(rmRequest.cached()));
+        JsonArray<String> files = rmRequest.getFiles();
+        if (files != null && !files.isEmpty()) {
             JSONArray array = new JSONArray();
-            for (int i = 0; i < rmRequest.getFiles().length; i++) {
-                array.set(i, new JSONString(rmRequest.getFiles()[i]));
+            for (int i = 0; i < files.size(); i++) {
+                String file = files.get(i);
+                array.set(i, new JSONString(file));
             }
             jsonObject.put(FILES, array);
         }

@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.git.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -68,7 +69,11 @@ public class RemoteListUnmarshaller implements Unmarshallable<JsonArray<Remote>>
             if (object.containsKey(URL)) {
                 url = (object.get(URL).isString() != null) ? object.get(URL).isString().stringValue() : url;
             }
-            remotes.add(new Remote(name, url));
+            DtoClientImpls.RemoteImpl remote = DtoClientImpls.RemoteImpl.make();
+            remote.setName(name);
+            remote.setUrl(url);
+
+            remotes.add(remote);
         }
     }
 

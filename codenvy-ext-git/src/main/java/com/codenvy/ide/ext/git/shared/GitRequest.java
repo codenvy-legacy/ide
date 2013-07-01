@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import java.util.Map;
+import com.codenvy.ide.json.JsonStringMap;
 
 /**
  * Abstract request to {@link org.exoplatform.ide.git.server.GitConnection}.
@@ -26,20 +26,7 @@ import java.util.Map;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: GitRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public abstract class GitRequest {
-    /** Opaque set of request attributes. If some attribute not need value then empty string or <code>null</code> may be used. */
-    private Map<String, String> attributes;
-
+public interface GitRequest {
     /** @return set of request attributes */
-    public Map<String, String> getAttributes() {
-        return attributes;
-    }
-
-    /**
-     * @param attributes
-     *         set of request attributes
-     */
-    public void setAttributes(Map<String, String> attributes) {
-        this.attributes = attributes;
-    }
+    JsonStringMap<String> getAttributes();
 }

@@ -24,6 +24,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.git.client.GitClientResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
+import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Reference;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -40,8 +41,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.ext.git.client.merge.MergePresenter.LOCAL_BRANCES_TITLE;
-import static com.codenvy.ide.ext.git.client.merge.MergePresenter.REMOTE_BRANCES_TITLE;
+import static com.codenvy.ide.ext.git.client.merge.MergePresenter.LOCAL_BRANCHES_TITLE;
+import static com.codenvy.ide.ext.git.client.merge.MergePresenter.REMOTE_BRANCHES_TITLE;
 import static com.codenvy.ide.ext.git.shared.Reference.RefType.LOCAL_BRANCH;
 import static com.codenvy.ide.ext.git.shared.Reference.RefType.REMOTE_BRANCH;
 
@@ -64,15 +65,15 @@ public class MergeViewImpl extends DialogBox implements MergeView {
     @UiField
     ScrollPanel               referencesPanel;
     @UiField(provided = true)
-    final         GitClientResources      res;
+    final         GitClientResources           res;
     @UiField(provided = true)
-    final         GitLocalizationConstant locale;
+    final         GitLocalizationConstant      locale;
     @UiField(provided = true)
-    final         Resources               coreRes;
-    private       Tree<Reference>         references;
-    private       ActionDelegate          delegate;
-    private final Reference               localBranches;
-    private final Reference               remoteBranches;
+    final         Resources                    coreRes;
+    private       Tree<Reference>              references;
+    private       ActionDelegate               delegate;
+    private final DtoClientImpls.ReferenceImpl localBranches;
+    private final DtoClientImpls.ReferenceImpl remoteBranches;
 
     /**
      * Create view.
@@ -139,16 +140,27 @@ public class MergeViewImpl extends DialogBox implements MergeView {
         });
         this.referencesPanel.add(references.asWidget());
 
-        Reference root = references.getModel().getRoot();
+        DtoClientImpls.ReferenceImpl root = (DtoClientImpls.ReferenceImpl)references.getModel().getRoot();
         if (root == null) {
-            root = new Reference(null, null, null);
+            root = DtoClientImpls.ReferenceImpl.make();
             references.getModel().setRoot(root);
         }
 
-        localBranches = new Reference(LOCAL_BRANCES_TITLE, LOCAL_BRANCES_TITLE, LOCAL_BRANCH);
-        remoteBranches = new Reference(REMOTE_BRANCES_TITLE, REMOTE_BRANCES_TITLE, REMOTE_BRANCH);
+        localBranches = DtoClientImpls.ReferenceImpl.make();
+        localBranches.setDisplayName(LOCAL_BRANCHES_TITLE);
+        localBranches.setFullName(LOCAL_BRANCHES_TITLE);
+        localBranches.setRefType(LOCAL_BRANCH);
 
-        root.setBranches(JsonCollections.createArray(localBranches, remoteBranches));
+        remoteBranches = DtoClientImpls.ReferenceImpl.make();
+        remoteBranches.setDisplayName(REMOTE_BRANCHES_TITLE);
+        remoteBranches.setFullName(REMOTE_BRANCHES_TITLE);
+        remoteBranches.setRefType(REMOTE_BRANCH);
+
+        JsonArray<Reference> branches = JsonCollections.createArray();
+        branches.add(localBranches);
+        branches.add(remoteBranches);
+
+        root.setBranches(branches);
     }
 
     /** {@inheritDoc} */

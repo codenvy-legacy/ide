@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.git.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.RepoInfo;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.rest.Unmarshallable;
@@ -31,9 +32,9 @@ import com.google.gwt.json.client.JSONString;
  * @version $Id: RepoInfoUnmarshallerWS.java Nov 21, 2012 3:02:52 PM azatsarynnyy $
  */
 public class RepoInfoUnmarshallerWS implements Unmarshallable<RepoInfo> {
-    private final RepoInfo repoInfo;
+    private final DtoClientImpls.RepoInfoImpl repoInfo;
 
-    public RepoInfoUnmarshallerWS(RepoInfo repoInfo) {
+    public RepoInfoUnmarshallerWS(DtoClientImpls.RepoInfoImpl repoInfo) {
         this.repoInfo = repoInfo;
     }
 

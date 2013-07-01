@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.git.client.reset;
+package com.codenvy.ide.ext.git.client.reset.commit;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
@@ -29,7 +29,7 @@ import com.codenvy.ide.json.JsonArray;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public interface ResetToCommitView extends View<ResetToCommitView.ActionDelegate> {
-    /** Needs for delegate some function into CloneRepository view. */
+    /** Needs for delegate some function into ResetToCommit view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Reset button. */
         void onResetClicked();

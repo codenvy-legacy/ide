@@ -27,6 +27,7 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.marshaller.BranchListUnmarshaller;
 import com.codenvy.ide.ext.git.client.marshaller.Merge;
 import com.codenvy.ide.ext.git.client.marshaller.MergeUnmarshaller;
+import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.MergeResult;
 import com.codenvy.ide.ext.git.shared.Reference;
@@ -52,8 +53,8 @@ import static com.codenvy.ide.ext.git.shared.Reference.RefType.REMOTE_BRANCH;
  */
 @Singleton
 public class MergePresenter implements MergeView.ActionDelegate {
-    public static final String LOCAL_BRANCES_TITLE  = "Local Branches";
-    public static final String REMOTE_BRANCES_TITLE = "Remote Branches";
+    public static final String LOCAL_BRANCHES_TITLE  = "Local Branches";
+    public static final String REMOTE_BRANCHES_TITLE = "Remote Branches";
     private MergeView               view;
     private GitClientService        service;
     private ResourceProvider        resourceProvider;
@@ -103,8 +104,11 @@ public class MergePresenter implements MergeView.ActionDelegate {
                                        JsonArray<Reference> references = JsonCollections.createArray();
                                        for (int i = 0; i < result.size(); i++) {
                                            Branch branch = result.get(i);
-                                           if (!branch.isActive()) {
-                                               Reference reference = new Reference(branch.getName(), branch.getDisplayName(), LOCAL_BRANCH);
+                                           if (!branch.active()) {
+                                               DtoClientImpls.ReferenceImpl reference = DtoClientImpls.ReferenceImpl.make();
+                                               reference.setFullName(branch.getName());
+                                               reference.setDisplayName(branch.getDisplayName());
+                                               reference.setRefType(LOCAL_BRANCH);
                                                references.add(reference);
                                            }
                                        }
@@ -134,9 +138,11 @@ public class MergePresenter implements MergeView.ActionDelegate {
                                        JsonArray<Reference> references = JsonCollections.createArray();
                                        for (int i = 0; i < result.size(); i++) {
                                            Branch branch = result.get(i);
-                                           if (!branch.isActive()) {
-                                               Reference reference =
-                                                       new Reference(branch.getName(), branch.getDisplayName(), REMOTE_BRANCH);
+                                           if (!branch.active()) {
+                                               DtoClientImpls.ReferenceImpl reference = DtoClientImpls.ReferenceImpl.make();
+                                               reference.setFullName(branch.getName());
+                                               reference.setDisplayName(branch.getDisplayName());
+                                               reference.setRefType(REMOTE_BRANCH);
                                                references.add(reference);
                                            }
                                        }
@@ -233,8 +239,8 @@ public class MergePresenter implements MergeView.ActionDelegate {
     @Override
     public void onReferenceSelected(@NotNull Reference reference) {
         selectedReference = reference;
-        boolean isEnabled = !selectedReference.getDisplayName().equals(LOCAL_BRANCES_TITLE) &
-                            !selectedReference.getDisplayName().equals(REMOTE_BRANCES_TITLE);
+        boolean isEnabled = !selectedReference.getDisplayName().equals(LOCAL_BRANCHES_TITLE) &
+                            !selectedReference.getDisplayName().equals(REMOTE_BRANCHES_TITLE);
         view.setEnableMergeButton(isEnabled);
     }
 }

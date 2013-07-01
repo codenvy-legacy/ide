@@ -24,31 +24,7 @@ package com.codenvy.ide.ext.git.shared;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: TagDeleteRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class TagDeleteRequest extends GitRequest {
-    /** Tag to delete. */
-    private String name;
-
-    /**
-     * @param name
-     *         name of tag to delete
-     */
-    public TagDeleteRequest(String name) {
-        this.name = name;
-    }
-
-    public TagDeleteRequest() {
-    }
-
+public interface TagDeleteRequest extends GitRequest {
     /** @return name of tag to delete */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name
-     *         name of tag to delete
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+    String getName();
 }

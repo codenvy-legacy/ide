@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.git.client.marshaller;
 
 import com.codenvy.ide.ext.git.shared.FetchRequest;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.Marshallable;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
@@ -47,10 +48,12 @@ public class FetchRequestMarshaller implements Marshallable, Constants {
     @Override
     public String marshal() {
         JSONObject jsonObject = new JSONObject();
-        if (fetchRequest.getRefSpec() != null || fetchRequest.getRefSpec().length > 0) {
+        JsonArray<String> refSpec = fetchRequest.getRefSpec();
+        if (refSpec != null && !refSpec.isEmpty()) {
             JSONArray array = new JSONArray();
-            for (int i = 0; i < fetchRequest.getRefSpec().length; i++) {
-                array.set(i, new JSONString(fetchRequest.getRefSpec()[i]));
+            for (int i = 0; i < refSpec.size(); i++) {
+                String spec = refSpec.get(i);
+                array.set(i, new JSONString(spec));
             }
             jsonObject.put(REF_SPEC, array);
         }
@@ -59,7 +62,7 @@ public class FetchRequestMarshaller implements Marshallable, Constants {
             jsonObject.put(REMOTE, new JSONString(fetchRequest.getRemote()));
         }
 
-        jsonObject.put(REMOVE_DELETED_REFS, JSONBoolean.getInstance(fetchRequest.isRemoveDeletedRefs()));
+        jsonObject.put(REMOVE_DELETED_REFS, JSONBoolean.getInstance(fetchRequest.removeDeletedRefs()));
 
         return jsonObject.toString();
     }

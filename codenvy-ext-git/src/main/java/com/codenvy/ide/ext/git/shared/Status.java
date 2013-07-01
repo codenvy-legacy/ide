@@ -18,54 +18,32 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import java.util.Set;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * @author <a href="mailto:dvishinskiy@codenvy.com">Dmitriy Vyshinskiy</a>
  * @version $Id: Status.java 68135 2011-04-08 14:23:36Z andrew00x $
  */
 public interface Status {
-    boolean isClean();
-
-    void setClean(Boolean clean);
+    boolean clean();
 
     boolean getShortFormat();
 
-    void setShortFormat(Boolean shortFormat);
-
     String getBranchName();
 
-    void setBranchName(String branchName);
+    JsonArray<String> getAdded();
 
-    Set<String> getAdded();
+    JsonArray<String> getChanged();
 
-    void setAdded(Set<String> added);
+    JsonArray<String> getRemoved();
 
-    Set<String> getChanged();
+    JsonArray<String> getMissing();
 
-    void setChanged(Set<String> changed);
+    JsonArray<String> getModified();
 
-    Set<String> getRemoved();
+    JsonArray<String> getUntracked();
 
-    void setRemoved(Set<String> removed);
+    JsonArray<String> getUntrackedFolders();
 
-    Set<String> getMissing();
-
-    void setMissing(Set<String> missing);
-
-    Set<String> getModified();
-
-    void setModified(Set<String> modified);
-
-    Set<String> getUntracked();
-
-    void setUntracked(Set<String> untracked);
-
-    Set<String> getUntrackedFolders();
-
-    void setUntrackedFolders(Set<String> untrackedFolders);
-
-    Set<String> getConflicting();
-
-    void setConflicting(Set<String> conflicting);
+    JsonArray<String> getConflicting();
 }

@@ -47,7 +47,7 @@ public class BranchDeleteRequestMarshaller implements Marshallable, Constants {
     public String marshal() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(NAME, new JSONString(branchDeleteRequest.getName()));
-        jsonObject.put(FORCE, JSONBoolean.getInstance(branchDeleteRequest.isForce()));
+        jsonObject.put(FORCE, JSONBoolean.getInstance(branchDeleteRequest.force()));
 
         return jsonObject.toString();
     }

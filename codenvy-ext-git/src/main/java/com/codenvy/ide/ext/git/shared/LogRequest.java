@@ -24,7 +24,7 @@ package com.codenvy.ide.ext.git.shared;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: LogRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class LogRequest extends GitRequest {
+public interface LogRequest extends GitRequest {
     // TODO
     // private List<String> fileFilter;
     // private boolean noRenames = true;

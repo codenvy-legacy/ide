@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.git.client.marshaller;
 
 import com.codenvy.ide.ext.git.shared.AddRequest;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.Marshallable;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
@@ -47,11 +48,13 @@ public class AddRequestMarshaller implements Marshallable, Constants {
     @Override
     public String marshal() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(UPDATE, JSONBoolean.getInstance(addRequest.isUpdate()));
-        if (addRequest.getFilepattern() != null && addRequest.getFilepattern().length > 0) {
+        jsonObject.put(UPDATE, JSONBoolean.getInstance(addRequest.update()));
+        JsonArray<String> filepattern = addRequest.getFilepattern();
+        if (filepattern != null && !filepattern.isEmpty()) {
             JSONArray filePatternArray = new JSONArray();
-            for (int i = 0; i < addRequest.getFilepattern().length; i++) {
-                filePatternArray.set(i, new JSONString(addRequest.getFilepattern()[i]));
+            for (int i = 0; i < filepattern.size(); i++) {
+                String pattern = filepattern.get(i);
+                filePatternArray.set(i, new JSONString(pattern));
             }
             jsonObject.put(FILE_PATTERN, filePatternArray);
         }

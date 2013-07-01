@@ -19,7 +19,8 @@
 package com.codenvy.ide.ext.git.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.git.shared.GitUser;
+import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
+import com.codenvy.ide.ext.git.shared.LogResponse;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -35,7 +36,7 @@ import com.google.gwt.json.client.JSONParser;
  */
 public class LogResponseUnmarshaller implements Unmarshallable<LogResponse>, Constants {
     /** Log response. */
-    private LogResponse logResponse;
+    private DtoClientImpls.LogResponseImpl logResponse;
 
     /** If <code>true</code> - the response is in text format, else - the list of revisions in JSON format is returned. */
     private boolean isText;
@@ -46,7 +47,7 @@ public class LogResponseUnmarshaller implements Unmarshallable<LogResponse>, Con
      * @param isText
      *         if <code>true</code> - the response is in text format
      */
-    public LogResponseUnmarshaller(LogResponse logResponse, boolean isText) {
+    public LogResponseUnmarshaller(DtoClientImpls.LogResponseImpl logResponse, boolean isText) {
         this.logResponse = logResponse;
         this.isText = isText;
     }
@@ -87,7 +88,11 @@ public class LogResponseUnmarshaller implements Unmarshallable<LogResponse>, Con
                     (long)((revisionObject.get(COMMIT_TIME) != null && revisionObject.get(COMMIT_TIME).isNumber() != null)
                            ? revisionObject.get(COMMIT_TIME).isNumber().doubleValue() : 0);
 
-            Revision revision = new Revision(id, message, commitTime, null);
+            DtoClientImpls.RevisionImpl revision = DtoClientImpls.RevisionImpl.make();
+            revision.setId(id);
+            revision.setMessage(message);
+            revision.setCommitTime(commitTime);
+
             if (revisionObject.get(COMMITTER) != null && revisionObject.get(COMMITTER).isObject() != null) {
                 JSONObject committerObject = revisionObject.get(COMMITTER).isObject();
                 String name =
@@ -99,7 +104,10 @@ public class LogResponseUnmarshaller implements Unmarshallable<LogResponse>, Con
                         ? committerObject
                                 .get(EMAIL).isString().stringValue() : "";
 
-                GitUser gitUser = new GitUser(name, email);
+                DtoClientImpls.GitUserImpl gitUser = DtoClientImpls.GitUserImpl.make();
+                gitUser.setEmail(email);
+                gitUser.setName(name);
+
                 revision.setCommitter(gitUser);
             }
             revisions.add(revision);

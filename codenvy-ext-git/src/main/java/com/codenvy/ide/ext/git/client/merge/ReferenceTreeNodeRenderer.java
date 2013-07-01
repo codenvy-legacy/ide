@@ -30,9 +30,6 @@ import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
-import static com.codenvy.ide.ext.git.shared.Reference.RefType.LOCAL_BRANCH;
-import static com.codenvy.ide.ext.git.shared.Reference.RefType.REMOTE_BRANCH;
-
 /**
  * The rendered for reference node.
  *
@@ -89,9 +86,10 @@ public class ReferenceTreeNodeRenderer implements NodeRenderer<Reference> {
         SpanElement root = Elements.createSpanElement(css.referenceRoot());
 
         DivElement icon;
-        if (LOCAL_BRANCH.equals(data.getRefType())) {
+
+        if (data.getFullName().equals(MergePresenter.LOCAL_BRANCHES_TITLE)) {
             icon = Elements.createDivElement(css.localBranchesIcon());
-        } else if (REMOTE_BRANCH.equals(data.getRefType())) {
+        } else if (data.getFullName().equals(MergePresenter.REMOTE_BRANCHES_TITLE)) {
             icon = Elements.createDivElement(css.remoteBranchesIcon());
         } else {
             icon = Elements.createDivElement(css.branchIcon());

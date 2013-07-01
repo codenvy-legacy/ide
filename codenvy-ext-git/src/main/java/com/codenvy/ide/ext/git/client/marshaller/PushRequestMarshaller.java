@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.git.client.marshaller;
 
 import com.codenvy.ide.ext.git.shared.PushRequest;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.Marshallable;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
@@ -48,11 +49,13 @@ public class PushRequestMarshaller implements Marshallable, Constants {
     public String marshal() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(REMOTE, new JSONString(pushRequest.getRemote()));
-        jsonObject.put(FORCE, JSONBoolean.getInstance(pushRequest.isForce()));
-        if (pushRequest.getRefSpec() != null && pushRequest.getRefSpec().length > 0) {
+        jsonObject.put(FORCE, JSONBoolean.getInstance(pushRequest.force()));
+        JsonArray<String> refSpec = pushRequest.getRefSpec();
+        if (refSpec != null && !refSpec.isEmpty()) {
             JSONArray array = new JSONArray();
-            for (int i = 0; i < pushRequest.getRefSpec().length; i++) {
-                array.set(i, new JSONString(pushRequest.getRefSpec()[i]));
+            for (int i = 0; i < refSpec.size(); i++) {
+                String spec = refSpec.get(i);
+                array.set(i, new JSONString(spec));
             }
             jsonObject.put(REF_SPEC, array);
         }

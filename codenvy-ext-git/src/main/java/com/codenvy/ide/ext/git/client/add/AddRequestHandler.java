@@ -31,9 +31,9 @@ import com.google.web.bindery.event.shared.EventBus;
 public class AddRequestHandler extends RequestStatusHandlerBase {
     private GitLocalizationConstant constant;
 
-    /** @param pojectName */
-    public AddRequestHandler(String pojectName, EventBus eventBus, GitLocalizationConstant constant) {
-        super(pojectName, eventBus);
+    /** @param projectName */
+    public AddRequestHandler(String projectName, EventBus eventBus, GitLocalizationConstant constant) {
+        super(projectName, eventBus);
         this.constant = constant;
     }
 
