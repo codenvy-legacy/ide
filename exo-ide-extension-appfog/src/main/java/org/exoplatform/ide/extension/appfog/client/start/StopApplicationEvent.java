@@ -31,15 +31,18 @@ public class StopApplicationEvent extends GwtEvent<StopApplicationHandler> {
     public static final GwtEvent.Type<StopApplicationHandler> TYPE = new GwtEvent.Type<StopApplicationHandler>();
 
     private String applicationName;
+    
+    private String server;
 
     /**
      *
      */
     public StopApplicationEvent() {
+        this.server = null;
     }
 
     /** @param applicationName */
-    public StopApplicationEvent(String applicationName) {
+    public StopApplicationEvent(String applicationName, String server) {
         super();
         this.applicationName = applicationName;
     }
@@ -59,6 +62,11 @@ public class StopApplicationEvent extends GwtEvent<StopApplicationHandler> {
     /** @return the applicationName */
     public String getApplicationName() {
         return applicationName;
+    }
+    
+    /** @return the server */
+    public String getServer() {
+        return server;
     }
 
 }

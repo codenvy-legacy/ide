@@ -155,20 +155,20 @@ public class EditSessions implements Startable {
         } catch (ItemNotFoundException e) {
             LOG.error(e.getMessage(), e);
             return GetFileContentsResponseImpl.make().setFileExists(false);
-        } catch (VirtualFileSystemException e) {
-            LOG.error(e.getMessage(), e);
-            throw new CollaborationEditorException(e);
-        } catch (IOException e) {
+        } catch (VirtualFileSystemException | IOException e) {
             LOG.error(e.getMessage(), e);
             throw new CollaborationEditorException(e);
         }
 
         if (editSession.addCollaborator(userId)) {
-            Set<String> sendTo = new HashSet<String>(participants.getAllParticipantIds(((FileEditSessionImpl)editSession).getWorkspace()));
-            sendTo.remove(userId);
-            if (!sendTo.isEmpty()) {
-                WSUtil.broadcastToClients(NewFileCollaboratorImpl.make().setPath(path).setEditSessionId(
-                        editSession.getFileEditSessionKey()).setParticipant(participants.getParticipant(userId)).toJson(), sendTo);
+            if (!participants.getUser(userId).isReadOnly()) {
+                Set<String> sendTo =
+                        new HashSet<String>(participants.getAllParticipantIds(((FileEditSessionImpl)editSession).getWorkspace()));
+                sendTo.remove(userId);
+                if (!sendTo.isEmpty()) {
+                    WSUtil.broadcastToClients(NewFileCollaboratorImpl.make().setPath(path).setEditSessionId(
+                            editSession.getFileEditSessionKey()).setParticipant(participants.getParticipant(userId)).toJson(), sendTo);
+                }
             }
         }
         FileContentsImpl fileContents = FileContentsImpl.make().setPath(path).setFileEditSessionKey(
@@ -306,6 +306,10 @@ public class EditSessions implements Startable {
         ServerToClientDocOpsImpl broadcastedDocOps = ServerToClientDocOpsImpl.make();
 
         VersionedDocument.ConsumeResult result;
+
+//        if(participants.getUser(authorId).isAnonymous()){
+//            return broadcastedDocOps;
+//        }
         try {
             result = editSession.consume(deserializeDocOps(serializedDocOps), authorId, ccRevision, selection);
         } catch (VersionedDocument.DocumentOperationException e) {
@@ -386,8 +390,9 @@ public class EditSessions implements Startable {
 
     public GetEditSessionCollaboratorsResponse getEditSessionCollaborators(GetEditSessionCollaborators sessionParticipantsRequest) {
         FileEditSession editSession = findEditSession(sessionParticipantsRequest.getEditSessionId());
+        Set<String> collaborators = editSession.getCollaborators();
         return GetEditSessionCollaboratorsResponseImpl.make().setParticipants(
-                participants.getParticipants(editSession.getCollaborators()));
+                participants.getParticipants(collaborators));
     }
 
     public GetOpenedFilesInWorkspaceResponse getOpenedFiles() {

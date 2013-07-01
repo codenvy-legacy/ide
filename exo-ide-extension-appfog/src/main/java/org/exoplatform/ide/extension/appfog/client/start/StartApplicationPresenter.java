@@ -48,6 +48,12 @@ import java.util.List;
 public class StartApplicationPresenter extends GitPresenter implements StartApplicationHandler, StopApplicationHandler,
                                                                        RestartApplicationHandler {
 
+    /** Name of the server. */
+    private String serverName;
+    
+    /** The name of application. */
+    private String appName;
+    
     public StartApplicationPresenter() {
         IDE.addHandler(StartApplicationEvent.TYPE, this);
         IDE.addHandler(StopApplicationEvent.TYPE, this);
@@ -61,10 +67,12 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
      * .extension.cloudfoundry.client.start.StopApplicationEvent) */
     @Override
     public void onStopApplication(StopApplicationEvent event) {
+        serverName = event.getServer();
         if (event.getApplicationName() == null) {
             checkIsStopped();
         } else {
-            stopApplication(event.getApplicationName());
+            appName = event.getApplicationName();
+            stopApplication(appName);
         }
     }
 
@@ -104,10 +112,12 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
      * .extension.cloudfoundry.client.start.StartApplicationEvent) */
     @Override
     public void onStartApplication(StartApplicationEvent event) {
+        serverName = event.getServer();
         if (event.getApplicationName() == null && makeSelectionCheck()) {
             checkIsStarted();
         } else {
-            startApplication(event.getApplicationName());
+            appName = event.getApplicationName();
+            startApplication(appName);
         }
     }
 
@@ -180,11 +190,14 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
     private void startApplication(String name) {
 //      final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
-        final ProjectModel projectModel = getSelectedProject();
+        final String projectId;
 
-        final String server = projectModel.getProperty("appfog-target").getValue().get(0);
-        final String appName = (name == null) ? projectModel.getProperty("appfog-application").getValue().get(0) : name;
-        final String projectId = projectModel.getId();
+        if (selectedItem != null && getSelectedProject() != null && getSelectedProject().getPropertyValue("appfog-application") != null
+            && appName.equals((String)getSelectedProject().getPropertyValue("appfog-application"))) {
+            projectId = getSelectedProject().getId();
+        } else {
+            projectId = null;
+        }
 
         try {
             AutoBean<AppfogApplication> appfogApplication =
@@ -193,7 +206,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
             AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
                     new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
 
-            AppfogClientService.getInstance().startApplication(null, null, appName, server,
+            AppfogClientService.getInstance().startApplication(vfs.getId(), projectId, appName, serverName,
                                                                new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller,
                                                                                                                  startLoggedInHandler,
                                                                                                                  null) {
@@ -301,14 +314,17 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
     private void stopApplication(final String name) {
 //      final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
-        final ProjectModel projectModel = getSelectedProject();
+        final String projectId;
 
-        final String server = projectModel.getProperty("appfog-target").getValue().get(0);
-        final String appName = (name == null) ? projectModel.getProperty("appfog-application").getValue().get(0) : name;
-        final String projectId = projectModel.getId();
+        if (selectedItem != null && getSelectedProject() != null && getSelectedProject().getPropertyValue("appfog-application") != null
+            && appName.equals((String)getSelectedProject().getPropertyValue("appfog-application"))) {
+            projectId = getSelectedProject().getId();
+        } else {
+            projectId = null;
+        }        
 
         try {
-            AppfogClientService.getInstance().stopApplication(null, null, appName, server,
+            AppfogClientService.getInstance().stopApplication(null, null, appName, serverName,
                                                               new AppfogAsyncRequestCallback<String>(null, stopLoggedInHandler, null) {
                                                                   @Override
                                                                   protected void onSuccess(String result) {
@@ -356,9 +372,9 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
     /** @see org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationHandler#onRestartApplication(org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationEvent) */
     @Override
     public void onRestartApplication(RestartApplicationEvent event) {
-
-        restartApplication(event.getApplicationName());
-
+        serverName = event.getServer();
+        appName = event.getApplicationName();
+        restartApplication(appName);
     }
 
     private LoggedInHandler restartLoggedInHandler = new LoggedInHandler() {
@@ -370,11 +386,14 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
     private void restartApplication(String name) {
 //      final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
-        final ProjectModel projectModel = getSelectedProject();
+        final String projectId;
 
-        final String server = projectModel.getProperty("appfog-target").getValue().get(0);
-        final String appName = (name == null) ? projectModel.getProperty("appfog-application").getValue().get(0) : name;
-        final String projectId = projectModel.getId();
+        if (selectedItem != null && getSelectedProject() != null && getSelectedProject().getPropertyValue("appfog-application") != null
+            && appName.equals((String)getSelectedProject().getPropertyValue("appfog-application"))) {
+            projectId = getSelectedProject().getId();
+        } else {
+            projectId = null;
+        }
 
         try {
             AutoBean<AppfogApplication> appfogApplication =
@@ -383,7 +402,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
             AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
                     new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
 
-            AppfogClientService.getInstance().restartApplication(null, null, appName, server,
+            AppfogClientService.getInstance().restartApplication(null, null, appName, serverName,
                                                                  new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller,
                                                                                                                    restartLoggedInHandler,
                                                                                                                    null) {

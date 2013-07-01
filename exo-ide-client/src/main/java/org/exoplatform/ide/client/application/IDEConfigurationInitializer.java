@@ -23,20 +23,30 @@ import com.codenvy.ide.factory.client.FactorySpec10;
 import com.codenvy.ide.factory.client.receive.StartWithInitParamsEvent;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window.Location;
+import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.command.ui.AddToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
+import org.exoplatform.gwtframework.ui.client.component.IconButton;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
@@ -54,6 +64,7 @@ import org.exoplatform.ide.client.model.Settings;
 import org.exoplatform.ide.client.model.SettingsService;
 import org.exoplatform.ide.client.model.SettingsServiceImpl;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
+import org.exoplatform.ide.extension.samples.client.startpage.ReadOnlyUserView;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -85,6 +96,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
     private String               initialActiveFile;
 
+    protected ReadOnlyUserView   readOnlyUserView;
+
     /** @param controls */
     public IDEConfigurationInitializer(ControlsRegistration controls) {
         super();
@@ -104,7 +117,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                            try {
                                                                                applicationConfiguration = result.getIdeConfiguration();
                                                                                applicationSettings = result.getSettings();
-                                                                               IDE.userId = result.getUserInfo().getName();
+                                                                               IDE.user = result.getUserInfo();
 
                                                                                // TODO: small hack need because currently user on client
                                                                                // must have it least one role
@@ -112,8 +125,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                                    || result.getUserInfo().getRoles().size() == 0)
                                                                                    result.getUserInfo()
                                                                                          .setRoles(Arrays.asList("not-in-role"));
-                                                                               
-                                                                               IDE.userRole = result.getUserInfo().getRoles();
+
 
                                                                                controls.initControls(result.getUserInfo().getRoles());
 
@@ -198,12 +210,19 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                     protected void onSuccess(ItemWrapper result) {
                                                         if (result.getItem() != null && result.getItem() instanceof ProjectModel) {
                                                             ProjectModel projectModel = (ProjectModel)result.getItem();
+                                                            initialOpenedProject = projectModel.getId();
                                                             String file = Utils.getFilePathToOpen();
                                                             IDE.fireEvent(new OpenProjectEvent(projectModel));
                                                             if (file != null && !file.isEmpty())
-                                                            {
                                                                 openFile(file, projectModel);
-                                                            } 
+                                                            else {
+                                                                initialActiveFile = null;
+                                                                initialOpenedFiles.clear();
+                                                                new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject,
+                                                                                            initialOpenedFiles, initialActiveFile);
+                                                            }
+
+
                                                         }
                                                     }
 
@@ -217,7 +236,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
             }
 
         }
-        
+
         else {
             Map<String, List<String>> parameterMap = Location.getParameterMap();
             if (parameterMap != null && parameterMap.get(FactorySpec10.VERSION_PARAMETER) != null
@@ -242,7 +261,11 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                     if (result.getItem() != null && result.getItem() instanceof FileModel) {
                                                         FileModel fileModel = (FileModel)result.getItem();
                                                         fileModel.setProject(projectModel);
-                                                        IDE.fireEvent(new OpenFileEvent((FileModel)fileModel));
+                                                        initialActiveFile = fileModel.getId();
+                                                        initialOpenedFiles.clear();
+                                                        initialOpenedFiles.add(fileModel.getId());
+                                                        new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject,
+                                                                                    initialOpenedFiles, initialActiveFile);
                                                     }
                                                 }
 
@@ -291,6 +314,30 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
         IDE.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", toolbarItems, controls.getRegisteredControls()));
         IDE.fireEvent(new SetToolbarItemsEvent("exoIDEStatusbar", controls.getStatusBarControls(), controls
                                                                                                            .getRegisteredControls()));
+
+
+        if (IDE.isRoUser()) {
+            IconButton iconButton =
+                                    new IconButton(new Image(IDEImageBundle.INSTANCE.readonly()),
+                                                   new Image(IDEImageBundle.INSTANCE.readonly()));
+            iconButton.setSize("89px", "29px");
+            iconButton.getElement().getStyle().setMarginTop(-4, Unit.PX);
+            iconButton.getElement().getStyle().setBackgroundImage("none");
+            iconButton.setHandleMouseEvent(false);
+            iconButton.addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    if (IDE.isRoUser()) {
+                        if (readOnlyUserView == null)
+                            readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
+                        IDE.getInstance().openView(readOnlyUserView);
+                    }
+                }
+            });
+
+            IDE.fireEvent(new AddToolbarItemsEvent(iconButton));
+        }
     }
 
 }

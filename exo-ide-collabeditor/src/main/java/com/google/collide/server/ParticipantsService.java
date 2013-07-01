@@ -26,6 +26,8 @@ import com.google.collide.server.participants.LoggedInUser;
 import com.google.collide.server.participants.Participants;
 
 import org.everrest.websockets.WSConnection;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 
 import javax.inject.Inject;
 import javax.ws.rs.POST;
@@ -54,11 +56,13 @@ public class ParticipantsService {
     @Path("add")
     public String addParticipant(@Context SecurityContext securityContext, @Context WSConnection connection) {
         String workspace = getWorkspaceId();
+        ConversationState state = ConversationState.getCurrent();
+        Identity identity = state.getIdentity();
         Principal principal = securityContext.getUserPrincipal();
-        LoggedInUser user = new LoggedInUser(principal != null ? principal.getName() : "anonymous",
+        LoggedInUser user = new LoggedInUser(identity.getUserId(),
                                              // HTTP session ID is easiest way to identify users with the same name,
                                              connection.getHttpSession().getId(),
-                                             workspace);
+                                             workspace, identity.getRoles().isEmpty());
         // if they use different browsers.
         Set<String> participantsToBroadcast = participants.getAllParticipantIds(workspace);
         participants.addParticipant(user);

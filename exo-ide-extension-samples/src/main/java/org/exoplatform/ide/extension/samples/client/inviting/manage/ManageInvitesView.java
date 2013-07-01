@@ -145,7 +145,7 @@ public class ManageInvitesView extends ViewImpl implements ManageInvitePresenter
         userListWidget = new UserListWidget((Element)userListElement.cast());
 
         //add self to invites for indicating that we are owner of this workspace
-        invites.add(new UserInvitations("owner", IDE.userId, "OWNER"));
+        invites.add(new UserInvitations("owner", IDE.user.getName(), "OWNER"));
 
         Collections.sort(invites, new InvitesComparator());
 

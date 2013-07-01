@@ -90,4 +90,5 @@
     <replace-with class="org.exoplatform.ide.extension.samples.client.github.ssh.GenerateGitHubSshKeyView">
         <when-type-is class="org.exoplatform.ide.extension.samples.client.github.ssh.GenerateGitHubSshKeyPresenter.Display" />
     </replace-with>
+
 </module>

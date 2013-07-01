@@ -49,7 +49,7 @@ public final class BootstrapSession {
 
     /** @return The user's handle. This is his name or email. */
     public String getUsername() {
-        return IDE.userId;
+        return IDE.user.getName();
     }
 
     /** @return The user's unique ID (obfuscated GAIA ID). */

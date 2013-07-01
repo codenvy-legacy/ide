@@ -126,7 +126,9 @@ class CollaboratorCursorController {
     }
 
     void handleSelectionChange(String clientId, @Nullable DocumentSelection selection) {
-        handleSelectionChangeWithUserId(participantModel.getUserId(clientId), selection);
+        if(participantModel != null){
+           handleSelectionChangeWithUserId(participantModel.getUserId(clientId), selection);
+        }
     }
 
     private void handleSelectionChangeWithUserId(String userId,

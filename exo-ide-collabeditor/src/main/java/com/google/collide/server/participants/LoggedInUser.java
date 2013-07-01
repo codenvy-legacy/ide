@@ -20,20 +20,21 @@ package com.google.collide.server.participants;
 
 /** A logged in user. */
 public final class LoggedInUser {
-    private final String name;
+    private final String  name;
     /**
      * Unique user identifier. Even if the same user (with the same username) logged in from different browser this id
      * must be unique for each user.
      */
-    private final String id;
-
+    private final String  id;
     /** Workspace id which user logged in. */
-    private final String workspace; // At the moment user may be logged in to only one workspace at the time.
+    private final String  workspace; // At the moment user may be logged in to only one workspace at the time.
+    private       boolean readOnly;
 
-    public LoggedInUser(String name, String id, String workspace) {
+    public LoggedInUser(String name, String id, String workspace, boolean readOnly) {
         this.name = name;
         this.id = id;
         this.workspace = workspace;
+        this.readOnly = readOnly;
     }
 
     public String getName() {
@@ -50,5 +51,9 @@ public final class LoggedInUser {
 
     public boolean isLoggedIn(String workspace) {
         return this.workspace.equals(workspace);
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
     }
 }

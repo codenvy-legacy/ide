@@ -18,9 +18,7 @@
  */
 package org.exoplatform.ide.conversationstate;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * Created by The eXo Platform SAS.
@@ -32,6 +30,8 @@ public class IdeUser {
     private String userId;
 
     private Collection<String> roles;
+    
+    private Collection<String> workspaces;
 
     private String clientId;
 
@@ -47,10 +47,11 @@ public class IdeUser {
      *         the roles to set
      * @param clientId
      */
-    public IdeUser(String userId, Collection<String> roles, String clientId) {
+    public IdeUser(String userId, Collection<String> roles, String clientId, Collection<String> workspaces) {
         this.userId = userId;
         this.roles = roles;
         this.clientId = clientId;
+        this.workspaces = workspaces;
     }
 
     /** @return the userId */
@@ -90,6 +91,14 @@ public class IdeUser {
      */
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+    
+    public Collection<String> getWorkspaces() {
+        return workspaces;
+    }
+    
+    public void setWorkspaces(Collection<String> workspaces) {
+        this.workspaces = workspaces;
     }
     
     

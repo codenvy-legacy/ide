@@ -19,12 +19,10 @@
 package org.exoplatform.ide;
 
 import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.organization.client.UserManager;
+import com.codenvy.organization.exception.OrganizationServiceException;
+import com.codenvy.organization.model.Workspace;
 
-import org.everrest.core.impl.provider.json.ArrayValue;
-import org.everrest.core.impl.provider.json.JsonException;
-import org.everrest.core.impl.provider.json.JsonParser;
-import org.everrest.core.impl.provider.json.JsonValue;
-import org.everrest.core.impl.provider.json.ObjectValue;
 import org.exoplatform.ide.conversationstate.IdeUser;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
 import org.exoplatform.services.log.ExoLogger;
@@ -45,12 +43,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -61,13 +57,19 @@ import java.util.Map;
 @Path("{ws-name}/configuration")
 public class IDEConfigurationService {
 
-    private static Log LOG = ExoLogger.getLogger(IDEConfigurationService.class);
+    private static Log        LOG = ExoLogger.getLogger(IDEConfigurationService.class);
+
+    private final UserManager userManager;
+
+    public IDEConfigurationService() throws OrganizationServiceException {
+        userManager = new UserManager();
+    }
 
     @PathParam("ws-name")
     private String wsName;
+
     /**
-     * periodic request to prevent session expiration
-     * TODO: need find better solutions
+     * periodic request to prevent session expiration TODO: need find better solutions
      */
     @GET
     @Path("ping")
@@ -84,14 +86,22 @@ public class IDEConfigurationService {
             String vfsId = (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
             Map<String, Object> result = new HashMap<String, Object>();
             ConversationState curentState = ConversationState.getCurrent();
-            if (curentState != null) {
-                Identity identity = curentState.getIdentity();
-                IdeUser user = new IdeUser(identity.getUserId(), identity.getRoles(), request.getSession().getId());
-                LOG.info(user.toString());
-                result.put("user", user);
-                final Map<String, Object> userSettings = getUserSettings();
-                result.put("userSettings", userSettings);
+            Identity identity = curentState.getIdentity();
+            String userId = identity.getUserId();
+            List<String> workspaces = new ArrayList<String>();
+            try {
+                for (Workspace workspace : userManager.getUserWorkspaces(userId)) {
+                    workspaces.add(uriInfo.getBaseUriBuilder().replacePath(null).path("ide").path(workspace.getName()).build().toString());
+                }
             }
+            catch (OrganizationServiceException e) {
+                //ignore 
+            }
+            IdeUser user = new IdeUser(userId, identity.getRoles(), request.getSession().getId(), workspaces);
+            LOG.info(user.toString());
+            result.put("user", user);
+            final Map<String, Object> userSettings = Collections.emptyMap();
+            result.put("userSettings", userSettings);
             result.put("vfsId", vfsId);
             result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path("v2").build(wsName).toString());
             return result;
@@ -99,94 +109,20 @@ public class IDEConfigurationService {
             throw new WebApplicationException(e);
         }
     }
-
+    
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"developer"})
     public String getConfiguration() {
-        try {
-            String conf = readSettings();
-            return conf;
-        } catch (Exception e) {
-            throw new WebApplicationException(e, 404);
-        }
+        return "{}"; //TODO: small hack add for supporting previous version of IDE. In 1.2 changed structure of user settings
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({"developer"})
     public void setConfiguration(String body) throws IOException {
-        writeSettings(body);
+       // not impl yet
     }
 
 
-    // ------Implementation---------
-
-    /**
-     * Get user setting as Map.
-     *
-     * @return map of user settings
-     * @throws JsonException
-     * @throws IOException
-     */
-    public Map<String, Object> getUserSettings() throws JsonException, IOException {
-        String userConfiguration = readSettings();
-        final Map<String, Object> userSettings = new HashMap<String, Object>();
-
-        final JsonParser jsonParser = new JsonParser();
-        jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(userConfiguration.getBytes())));
-        JsonValue jsonValue = jsonParser.getJsonObject();
-
-        Iterator<String> iterator = jsonValue.getKeys();
-        while (iterator.hasNext()) {
-            String key = iterator.next();
-            JsonValue value = jsonValue.getElement(key);
-            if (value.isObject()) {
-                ObjectValue ob = (ObjectValue)value;
-                Map<String, String> map = new HashMap<String, String>();
-                Iterator<String> obIterator = ob.getKeys();
-                while (obIterator.hasNext()) {
-                    String k = obIterator.next();
-                    map.put(k, ob.getElement(k).getStringValue());
-                }
-                userSettings.put(key, map);
-            } else if (value.isArray()) {
-                List<String> list = new ArrayList<String>();
-                ArrayValue ar = (ArrayValue)value;
-                Iterator<JsonValue> arrIterator = ar.getElements();
-
-                while (arrIterator.hasNext()) {
-                    list.add(arrIterator.next().getStringValue());
-
-                }
-                userSettings.put(key, list);
-            } else if (value.isString()) {
-                userSettings.put(key, value.getStringValue());
-            } else if (value.isBoolean()) {
-                userSettings.put(key, value.getBooleanValue());
-            } else if (value.isNumeric()) {
-                userSettings.put(key, value.getNumberValue());
-            }
-
-        }
-        return userSettings;
-    }
-
-    /**
-     * Write the user settings to a file.
-     *
-     * @param data
-     * @throws IOException
-     */
-    protected void writeSettings(String data) throws IOException {
-    }
-
-    /**
-     * Read the user settings from file and return it.
-     *
-     * @return user settings
-     * @throws IOException
-     */
-    protected String readSettings() throws IOException {
-        return "{}"; //TODO: small hack add for supporting previous version of IDE. In 1.2 changed structure of user settings
-    }
 }

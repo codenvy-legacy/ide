@@ -42,6 +42,7 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.job.Job;
+import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.job.Job.JobStatus;
 import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -222,6 +223,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, VfsChangedHan
     }
 
     private void resolveDependencies(ProjectModel... projects) {
+        JobManager.get();
         for (ProjectModel projectModel : projects) {
             //for each project create own update status handler and assign for each their project id
             statusHandler.put(projectModel.getId(), new UpdateDependencyStatusHandler(projectModel.getName()));
