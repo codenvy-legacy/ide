@@ -23,7 +23,7 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -163,7 +163,14 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
 
         pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
 
-        return (pattern.length() == 0 || "/".equals(pattern)) ? JsonCollections.createArray(".") : JsonCollections.createArray(pattern);
+        JsoArray<String> patterns = JsoArray.create();
+        if (pattern.isEmpty() || "/".equals(pattern)) {
+            patterns.add(".");
+        } else {
+            patterns.add(pattern);
+        }
+
+        return patterns;
     }
 
     /**

@@ -29,7 +29,7 @@ import com.codenvy.ide.json.JsonCollections;
  */
 public interface AddRequest extends GitRequest {
     /** Default file pattern that will be used if {@link #filepattern} is not set. All content of working tree will be added in index. */
-    JsonArray<String> DEFAULT_PATTERN = JsonCollections.createArray();
+    JsonArray<String> DEFAULT_PATTERN = JsonCollections.createArray(".");
 
     /** @return files to add content from */
     JsonArray<String> getFilepattern();

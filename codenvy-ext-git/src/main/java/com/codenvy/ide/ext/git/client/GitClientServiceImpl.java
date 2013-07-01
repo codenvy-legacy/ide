@@ -115,12 +115,9 @@ public class GitClientServiceImpl implements GitClientService {
         initRequest.setBare(bare);
         initRequest.setWorkingDir(projectid);
 
-        // TODO marshaller
-        InitRequestMarshaller marshaller = new InitRequestMarshaller(initRequest);
-
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).data(marshaller.marshal())
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).data(initRequest.serialize())
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).delay(2000)
                     .requestStatusHandler(new InitRequestStatusHandler(projectName, eventBus, constant)).send(callback);
     }
@@ -132,14 +129,12 @@ public class GitClientServiceImpl implements GitClientService {
         DtoClientImpls.InitRequestImpl initRequest = DtoClientImpls.InitRequestImpl.make();
         initRequest.setBare(bare);
         initRequest.setWorkingDir(projectid);
-        // TODO marshaller
-        InitRequestMarshaller marshaller = new InitRequestMarshaller(initRequest);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
         callback.setStatusHandler(new InitRequestStatusHandler(projectName, eventBus, constant));
 
         MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, INIT + params);
-        builder.data(marshaller.marshal()).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON);
+        builder.data(initRequest.serialize()).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON);
         Message message = builder.build();
 
         wsMessageBus.send(message, callback);
@@ -155,14 +150,12 @@ public class GitClientServiceImpl implements GitClientService {
         cloneRequest.setRemoteName(remoteName);
         cloneRequest.setRemoteUri(remoteUri);
         cloneRequest.setWorkingDir(project.getId());
-        // TODO marshaller
-        CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
 
         AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true)
                     .requestStatusHandler(new CloneRequestStatusHandler(project.getName(), remoteUri, eventBus, constant))
-                    .data(marshaller.marshal())
+                    .data(cloneRequest.serialize())
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
                     .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
     }
@@ -175,14 +168,12 @@ public class GitClientServiceImpl implements GitClientService {
         cloneRequest.setRemoteName(remoteName);
         cloneRequest.setRemoteUri(remoteUri);
         cloneRequest.setWorkingDir(project.getId());
-        // TODO marshaller
-        CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         callback.setStatusHandler(new CloneRequestStatusHandler(project.getName(), remoteUri, eventBus, constant));
 
         MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, CLONE + params);
-        builder.data(marshaller.marshal())
+        builder.data(cloneRequest.serialize())
                .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
                .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON);
         Message message = builder.build();
@@ -215,13 +206,10 @@ public class GitClientServiceImpl implements GitClientService {
         } else {
             addRequest.setFilepattern(filePattern);
         }
-        // TODO marshaller
-
-        AddRequestMarshaller marshaller = new AddRequestMarshaller(addRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).data(marshaller.marshal())
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).data(addRequest.serialize())
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
                     .requestStatusHandler(new AddRequestHandler(project.getName(), eventBus, constant)).send(callback);
     }
@@ -237,14 +225,12 @@ public class GitClientServiceImpl implements GitClientService {
         } else {
             addRequest.setFilepattern(filePattern);
         }
-        // TODO marshaller
-        AddRequestMarshaller marshaller = new AddRequestMarshaller(addRequest);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         callback.setStatusHandler(new AddRequestHandler(project.getName(), eventBus, constant));
 
         MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, ADD + params);
-        builder.data(marshaller.marshal())
+        builder.data(addRequest.serialize())
                .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON);
         Message message = builder.build();
 
@@ -261,13 +247,10 @@ public class GitClientServiceImpl implements GitClientService {
         commitRequest.setMessage(message);
         commitRequest.setAmend(amend);
         commitRequest.setAll(all);
-        // TODO marshaller
-
-        CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).data(marshaller.marshal())
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).data(commitRequest.serialize())
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
                     .requestStatusHandler(new CommitRequestHandler(project.getName(), message, eventBus, constant)).send(callback);
     }
@@ -280,14 +263,12 @@ public class GitClientServiceImpl implements GitClientService {
         commitRequest.setMessage(message);
         commitRequest.setAmend(amend);
         commitRequest.setAll(all);
-        // TODO marshaller
-        CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         callback.setStatusHandler(new CommitRequestHandler(project.getName(), message, eventBus, constant));
 
         MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, COMMIT + params);
-        builder.data(marshaller.marshal())
+        builder.data(commitRequest.serialize())
                .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON);
         Message requestMessage = builder.build();
 
@@ -362,11 +343,10 @@ public class GitClientServiceImpl implements GitClientService {
 
         DtoClientImpls.BranchListRequestImpl branchListRequest = DtoClientImpls.BranchListRequestImpl.make();
         branchListRequest.setListMode(remoteMode);
-        // TODO marshaller
-        BranchListRequestMarshaller marshaller = new BranchListRequestMarshaller(branchListRequest);
+
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).data(marshaller.marshal())
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).data(branchListRequest.serialize())
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
@@ -391,12 +371,10 @@ public class GitClientServiceImpl implements GitClientService {
         DtoClientImpls.BranchDeleteRequestImpl branchDeleteRequest = DtoClientImpls.BranchDeleteRequestImpl.make();
         branchDeleteRequest.setName(name);
         branchDeleteRequest.setForce(force);
-        // TODO marshaller
-        BranchDeleteRequestMarshaller marshaller = new BranchDeleteRequestMarshaller(branchDeleteRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(branchDeleteRequest.serialize())
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
@@ -421,12 +399,10 @@ public class GitClientServiceImpl implements GitClientService {
         DtoClientImpls.BranchCreateRequestImpl branchCreateRequest = DtoClientImpls.BranchCreateRequestImpl.make();
         branchCreateRequest.setName(name);
         branchCreateRequest.setStartPoint(startPoint);
-        // TODO marshaller
-        BranchCreateRequestMarshaller marshaller = new BranchCreateRequestMarshaller(branchCreateRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(branchCreateRequest.serialize())
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
                     .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
     }
@@ -441,12 +417,10 @@ public class GitClientServiceImpl implements GitClientService {
         branchCheckoutRequest.setName(name);
         branchCheckoutRequest.setStartPoint(startPoint);
         branchCheckoutRequest.setCreateNew(createNew);
-        // TODO marshaller
-        BranchCheckoutRequestMarshaller marshaller = new BranchCheckoutRequestMarshaller(branchCheckoutRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(branchCheckoutRequest.serialize())
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
@@ -459,12 +433,10 @@ public class GitClientServiceImpl implements GitClientService {
         DtoClientImpls.RmRequestImpl rmRequest = DtoClientImpls.RmRequestImpl.make();
         rmRequest.setFiles(files);
         rmRequest.setCached(cached);
-        // TODO marshaller
-        RemoveRequestMarshaller marshaller = new RemoveRequestMarshaller(rmRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(rmRequest.serialize())
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
@@ -477,12 +449,10 @@ public class GitClientServiceImpl implements GitClientService {
         DtoClientImpls.ResetRequestImpl resetRequest = DtoClientImpls.ResetRequestImpl.make();
         resetRequest.setCommit(commit);
         resetRequest.setType(resetType);
-        // TODO marshaller
-        ResetRequestMarshaller marshaller = new ResetRequestMarshaller(resetRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(resetRequest.serialize())
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
@@ -493,16 +463,13 @@ public class GitClientServiceImpl implements GitClientService {
         String url = restServiceContext + LOG;
 
         DtoClientImpls.LogRequestImpl logRequest = DtoClientImpls.LogRequestImpl.make();
-        // TODO marshaller
-        LogRequestMarshaller marshaller = new LogRequestMarshaller(logRequest);
-
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
         if (isTextFormat) {
-            AsyncRequest.build(RequestBuilder.POST, url + "?" + params).data(marshaller.marshal())
+            AsyncRequest.build(RequestBuilder.POST, url + "?" + params).data(logRequest.serialize())
                         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
         } else {
-            AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
+            AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(logRequest.serialize())
                         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
                         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
         }
@@ -520,6 +487,8 @@ public class GitClientServiceImpl implements GitClientService {
         remoteAddRequest.setUrl(repositoryURL);
         // TODO marshaller
         RemoteAddRequestMarshaller marshaller = new RemoteAddRequestMarshaller(remoteAddRequest);
+        // System.out.println(marshaller.marshal());
+        // System.out.println(remoteAddRequest.serialize());
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
@@ -551,6 +520,8 @@ public class GitClientServiceImpl implements GitClientService {
         fetchRequest.setTimeout(0);
         // TODO marshaller
         FetchRequestMarshaller marshaller = new FetchRequestMarshaller(fetchRequest);
+        // System.out.println(marshaller.marshal());
+        // System.out.println(fetchRequest.serialize());
 
         String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
 
@@ -570,6 +541,8 @@ public class GitClientServiceImpl implements GitClientService {
         fetchRequest.setTimeout(0);
         // TODO marshaller
         FetchRequestMarshaller marshaller = new FetchRequestMarshaller(fetchRequest);
+        // System.out.println(marshaller.marshal());
+        // System.out.println(fetchRequest.serialize());
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         callback.setStatusHandler(new FetchRequestHandler(project.getName(), refspec, eventBus, constant));
@@ -594,6 +567,8 @@ public class GitClientServiceImpl implements GitClientService {
         pullRequest.setTimeout(0);
         // TODO marshaller
         PullRequestMarshaller marshaller = new PullRequestMarshaller(pullRequest);
+        // System.out.println(marshaller.marshal());
+        // System.out.println(pullRequest.serialize());
 
         String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
 
@@ -612,6 +587,8 @@ public class GitClientServiceImpl implements GitClientService {
         pullRequest.setTimeout(0);
         // TODO marshaller
         PullRequestMarshaller marshaller = new PullRequestMarshaller(pullRequest);
+        // System.out.println(marshaller.marshal());
+        // System.out.println(pullRequest.serialize());
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         callback.setStatusHandler(new PullRequestHandler(project.getName(), refSpec, eventBus, constant));
@@ -669,11 +646,15 @@ public class GitClientServiceImpl implements GitClientService {
      *         callback
      * @throws RequestException
      */
-    private void diff(DiffRequest diffRequest, String vfsId, String projectid, AsyncRequestCallback<StringBuilder> callback)
+    private void diff(DtoClientImpls.DiffRequestImpl diffRequest, String vfsId, String projectid,
+                      AsyncRequestCallback<StringBuilder> callback)
             throws RequestException {
         String url = restServiceContext + DIFF;
 
         DiffRequestMarshaller marshaller = new DiffRequestMarshaller(diffRequest);
+        // TODO need to check
+        // System.out.println(marshaller.marshal());
+        // System.out.println(diffRequest.serialize());
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
@@ -689,12 +670,10 @@ public class GitClientServiceImpl implements GitClientService {
 
         DtoClientImpls.MergeRequestImpl mergeRequest = DtoClientImpls.MergeRequestImpl.make();
         mergeRequest.setCommit(commit);
-        // TODO marshaller
-        MergeRequestMarshaller marshaller = new MergeRequestMarshaller(mergeRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(mergeRequest.serialize())
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
                     .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
     }
