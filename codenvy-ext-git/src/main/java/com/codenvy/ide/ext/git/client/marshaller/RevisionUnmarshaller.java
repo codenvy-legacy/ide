@@ -45,52 +45,26 @@ public class RevisionUnmarshaller implements Unmarshallable<Revision>, Constants
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) {
-        if (response.getText() == null || response.getText().isEmpty()) {
+        String text = response.getText();
+        if (text == null || text.isEmpty()) {
             return;
         }
 
-        JSONValue json = JSONParser.parseStrict(response.getText());
+        JSONValue json = JSONParser.parseStrict(text);
         if (json == null)
             return;
         JSONObject revisionObject = json.isObject();
         if (revisionObject == null)
             return;
 
-        Boolean fake = revisionObject.get(FAKE) != null && revisionObject.get(FAKE).isBoolean() != null
-                       && revisionObject.get(FAKE).isBoolean().booleanValue();
-        revision.setFake(fake);
-
-        String id =
-                (revisionObject.get(ID) != null && revisionObject.get(ID).isString() != null) ? revisionObject.get(ID)
-                                                                                                              .isString().stringValue()
-                                                                                              : "";
-        revision.setId(id);
-        String message =
-                (revisionObject.get(MESSAGE) != null && revisionObject.get(MESSAGE).isString() != null)
-                ? revisionObject
-                        .get(MESSAGE).isString().stringValue() : "";
-        revision.setMessage(message);
-        long commitTime =
-                (long)((revisionObject.get(COMMIT_TIME) != null && revisionObject.get(COMMIT_TIME).isNumber() != null)
-                       ? revisionObject.get(COMMIT_TIME).isNumber().doubleValue() : 0);
-        revision.setCommitTime(commitTime);
-        if (revisionObject.get(COMMITTER) != null && revisionObject.get(COMMITTER).isObject() != null) {
-            JSONObject committerObject = revisionObject.get(COMMITTER).isObject();
-            String name =
-                    (committerObject.containsKey(NAME) && committerObject.get(NAME).isString() != null)
-                    ? committerObject
-                            .get(NAME).isString().stringValue() : "";
-            String email =
-                    (committerObject.containsKey(EMAIL) && committerObject.get(EMAIL).isString() != null)
-                    ? committerObject
-                            .get(EMAIL).isString().stringValue() : "";
-
-            DtoClientImpls.GitUserImpl gitUser = DtoClientImpls.GitUserImpl.make();
-            gitUser.setEmail(email);
-            gitUser.setName(name);
-
-            revision.setCommitter(gitUser);
-        }
+        String value = revisionObject.toString();
+        DtoClientImpls.RevisionImpl revision = DtoClientImpls.RevisionImpl.deserialize(value);
+        this.revision.setId(revision.getId());
+        this.revision.setCommitTime(revision.getCommitTime());
+        this.revision.setMessage(revision.getMessage());
+        this.revision.setBranch(revision.getBranch());
+        this.revision.setCommitter(revision.getCommitter());
+        this.revision.setFake(revision.fake());
     }
 
     /** {@inheritDoc} */

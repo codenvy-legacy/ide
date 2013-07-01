@@ -25,7 +25,6 @@ import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.marshaller.BranchListUnmarshaller;
-import com.codenvy.ide.ext.git.client.marshaller.Merge;
 import com.codenvy.ide.ext.git.client.marshaller.MergeUnmarshaller;
 import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Branch;
@@ -172,7 +171,8 @@ public class MergePresenter implements MergeView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onMergeClicked() {
-        MergeUnmarshaller unmarshaller = new MergeUnmarshaller(new Merge(), constant);
+        DtoClientImpls.MergeResultImpl mergeResult = DtoClientImpls.MergeResultImpl.make();
+        MergeUnmarshaller unmarshaller = new MergeUnmarshaller(mergeResult);
 
         try {
             service.merge(resourceProvider.getVfsId(), projectId, selectedReference.getDisplayName(),

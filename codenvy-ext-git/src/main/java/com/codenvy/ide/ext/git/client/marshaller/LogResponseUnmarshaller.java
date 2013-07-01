@@ -55,17 +55,18 @@ public class LogResponseUnmarshaller implements Unmarshallable<LogResponse>, Con
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
-        if (response.getText() == null || response.getText().isEmpty()) {
+        String text = response.getText();
+        if (text == null || text.isEmpty()) {
             return;
         }
 
         if (isText) {
-            logResponse.setTextLog(response.getText());
+            logResponse.setTextLog(text);
             return;
         }
 
         JsonArray<Revision> revisions = JsonCollections.createArray();
-        JSONObject logObject = JSONParser.parseStrict(response.getText()).isObject();
+        JSONObject logObject = JSONParser.parseStrict(text).isObject();
         if (logObject == null)
             return;
 
@@ -75,41 +76,8 @@ public class LogResponseUnmarshaller implements Unmarshallable<LogResponse>, Con
 
         for (int i = 0; i < array.size(); i++) {
             JSONObject revisionObject = array.get(i).isObject();
-            String id =
-                    (revisionObject.get(ID) != null && revisionObject.get(ID).isString() != null) ? revisionObject.get(ID)
-                                                                                                                  .isString()
-                                                                                                                  .stringValue()
-                                                                                                  : "";
-            String message =
-                    (revisionObject.get(MESSAGE) != null && revisionObject.get(MESSAGE).isString() != null)
-                    ? revisionObject
-                            .get(MESSAGE).isString().stringValue() : "";
-            long commitTime =
-                    (long)((revisionObject.get(COMMIT_TIME) != null && revisionObject.get(COMMIT_TIME).isNumber() != null)
-                           ? revisionObject.get(COMMIT_TIME).isNumber().doubleValue() : 0);
-
-            DtoClientImpls.RevisionImpl revision = DtoClientImpls.RevisionImpl.make();
-            revision.setId(id);
-            revision.setMessage(message);
-            revision.setCommitTime(commitTime);
-
-            if (revisionObject.get(COMMITTER) != null && revisionObject.get(COMMITTER).isObject() != null) {
-                JSONObject committerObject = revisionObject.get(COMMITTER).isObject();
-                String name =
-                        (committerObject.containsKey(NAME) && committerObject.get(NAME).isString() != null)
-                        ? committerObject
-                                .get(NAME).isString().stringValue() : "";
-                String email =
-                        (committerObject.containsKey(EMAIL) && committerObject.get(EMAIL).isString() != null)
-                        ? committerObject
-                                .get(EMAIL).isString().stringValue() : "";
-
-                DtoClientImpls.GitUserImpl gitUser = DtoClientImpls.GitUserImpl.make();
-                gitUser.setEmail(email);
-                gitUser.setName(name);
-
-                revision.setCommitter(gitUser);
-            }
+            String value = revisionObject.toString();
+            DtoClientImpls.RevisionImpl revision = DtoClientImpls.RevisionImpl.deserialize(value);
             revisions.add(revision);
         }
         logResponse.setCommits(revisions);

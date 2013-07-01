@@ -25,7 +25,6 @@ import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.rest.Unmarshallable;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONString;
 
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
@@ -42,10 +41,9 @@ public class RepoInfoUnmarshallerWS implements Unmarshallable<RepoInfo> {
     @Override
     public void unmarshal(Message response) throws UnmarshallerException {
         JSONObject jsonObject = JSONParser.parseLenient(response.getBody()).isObject();
-        JSONString jsonString = jsonObject.get("remoteUri").isString();
-        if (jsonString != null) {
-            repoInfo.setRemoteUri(jsonString.stringValue());
-        }
+        String value = jsonObject.toString();
+        DtoClientImpls.RepoInfoImpl repoInfo = DtoClientImpls.RepoInfoImpl.deserialize(value);
+        this.repoInfo.setRemoteUri(repoInfo.getRemoteUri());
     }
 
     /** {@inheritDoc} */

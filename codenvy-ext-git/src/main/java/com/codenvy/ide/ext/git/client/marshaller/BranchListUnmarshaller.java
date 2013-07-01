@@ -49,11 +49,12 @@ public class BranchListUnmarshaller implements Unmarshallable<JsonArray<Branch>>
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
-        if (response.getText() == null || response.getText().isEmpty()) {
+        String text = response.getText();
+        if (text == null || text.isEmpty()) {
             return;
         }
 
-        JSONArray array = JSONParser.parseStrict(response.getText()).isArray();
+        JSONArray array = JSONParser.parseStrict(text).isArray();
 
         if (array == null || array.size() <= 0)
             return;
@@ -62,30 +63,8 @@ public class BranchListUnmarshaller implements Unmarshallable<JsonArray<Branch>>
             JSONObject object = array.get(i).isObject();
             if (object == null)
                 continue;
-            String name = "";
-            String displayName = "";
-            boolean active = false;
-            boolean remote = false;
-            if (object.containsKey(ACTIVE)) {
-                active = (object.get(ACTIVE).isBoolean() != null) && object.get(ACTIVE).isBoolean().booleanValue();
-            }
-            if (object.containsKey(REMOTE)) {
-                remote = (object.get(REMOTE).isBoolean() != null) && object.get(REMOTE).isBoolean().booleanValue();
-            }
-            if (object.containsKey(NAME)) {
-                name = (object.get(NAME).isString() != null) ? object.get(NAME).isString().stringValue() : name;
-            }
-            if (object.containsKey(DISPLAY_NAME)) {
-                displayName =
-                        (object.get(DISPLAY_NAME).isString() != null) ? object.get(DISPLAY_NAME).isString().stringValue()
-                                                                      : displayName;
-            }
-            DtoClientImpls.BranchImpl branch = DtoClientImpls.BranchImpl.make();
-            branch.setName(name);
-            branch.setActive(active);
-            branch.setDisplayName(displayName);
-            branch.setRemote(remote);
-
+            String value = object.toString();
+            DtoClientImpls.BranchImpl branch = DtoClientImpls.BranchImpl.deserialize(value);
             branches.add(branch);
         }
     }

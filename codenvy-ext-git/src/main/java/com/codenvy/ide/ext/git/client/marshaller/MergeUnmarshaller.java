@@ -19,15 +19,11 @@
 package com.codenvy.ide.ext.git.client.marshaller;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
+import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.MergeResult;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
@@ -39,74 +35,46 @@ import com.google.gwt.json.client.JSONParser;
  */
 public class MergeUnmarshaller implements Unmarshallable<MergeResult>, Constants {
     /** Result of merge operation. */
-    private Merge                   merge;
-    private GitLocalizationConstant constant;
+    private DtoClientImpls.MergeResultImpl merge;
 
     /**
      * @param merge
      *         result of merge operation
      */
-    public MergeUnmarshaller(@NotNull Merge merge, @NotNull GitLocalizationConstant constant) {
+    public MergeUnmarshaller(@NotNull DtoClientImpls.MergeResultImpl merge) {
         this.merge = merge;
-        this.constant = constant;
     }
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
-        try {
-            if (response.getText() == null || response.getText().isEmpty()) {
-                return;
-            }
-
-            JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
-
-            if (jsonObject == null) {
-                return;
-            }
-
-            if (jsonObject.containsKey(CONFLICTS) && jsonObject.get(CONFLICTS).isArray() != null) {
-                JSONArray array = jsonObject.get(CONFLICTS).isArray();
-                merge.setConflicts(getJsonArray(array));
-            }
-            if (jsonObject.containsKey(MERGED_COMMITS) && jsonObject.get(MERGED_COMMITS).isArray() != null) {
-                JSONArray array = jsonObject.get(MERGED_COMMITS).isArray();
-                merge.setMergedCommits(getJsonArray(array));
-            }
-            if (jsonObject.containsKey(MERGE_STATUS) && jsonObject.get(MERGE_STATUS).isString() != null) {
-                merge.setMergeStatus(MergeResult.MergeStatus.valueOf(jsonObject.get(MERGE_STATUS).isString().stringValue()));
-            }
-            if (jsonObject.containsKey(NEW_HEAD) && jsonObject.get(NEW_HEAD).isString() != null) {
-                merge.setNewHead(jsonObject.get(NEW_HEAD).isString().stringValue());
-            }
-        } catch (Exception e) {
-            throw new UnmarshallerException(constant.mergeUnmarshallerFailed(), e);
+        String text = response.getText();
+        if (text == null || text.isEmpty()) {
+            return;
         }
-    }
 
-    /**
-     * Get array from JSON array.
-     *
-     * @param jsonArray
-     *         JSON array
-     * @return array of {@link String}
-     */
-    @Nullable
-    private JsonArray<String> getJsonArray(@NotNull JSONArray jsonArray) {
-        if (jsonArray.size() == 0) {
-            return null;
+        JSONObject jsonObject = JSONParser.parseStrict(text).isObject();
+
+        if (jsonObject == null) {
+            return;
         }
-        JsonArray<String> array = JsonCollections.createArray();
-        for (int i = 0; i < jsonArray.size(); i++) {
-            String value = jsonArray.get(i).isString().stringValue();
-            array.add(value);
+
+        String s = jsonObject.toString();
+        DtoClientImpls.MergeResultImpl mergeResult = DtoClientImpls.MergeResultImpl.deserialize(s);
+        if (mergeResult.hasConflicts()) {
+            merge.setConflicts(mergeResult.getConflicts());
         }
-        return array;
+        if (mergeResult.hasFailed()) {
+            merge.setFailed(mergeResult.getFailed());
+        }
+        merge.setMergedCommits(mergeResult.getMergedCommits());
+        merge.setMergeStatus(mergeResult.getMergeStatus());
+        merge.setNewHead(mergeResult.getNewHead());
     }
 
     /** {@inheritDoc} */
     @Override
-    public Merge getPayload() {
+    public MergeResult getPayload() {
         return merge;
     }
 }

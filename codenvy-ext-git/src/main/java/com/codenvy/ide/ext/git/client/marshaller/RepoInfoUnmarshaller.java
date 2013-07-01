@@ -25,7 +25,6 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONString;
 
 /**
  * Created by The eXo Platform SAS.
@@ -44,11 +43,9 @@ public class RepoInfoUnmarshaller implements Unmarshallable<RepoInfo> {
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         JSONObject jsonObject = JSONParser.parseLenient(response.getText()).isObject();
-        JSONString jsonString = jsonObject.get("remoteUri").isString();
-        if (jsonString != null) {
-            repoInfo.setRemoteUri(jsonString.stringValue());
-        }
-
+        String value = jsonObject.toString();
+        DtoClientImpls.RepoInfoImpl repoInfo = DtoClientImpls.RepoInfoImpl.deserialize(value);
+        this.repoInfo.setRemoteUri(repoInfo.getRemoteUri());
     }
 
     /** {@inheritDoc} */
