@@ -54,6 +54,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import static com.codenvy.ide.extension.html.client.HtmlRuntimeExtension.APP_RUNNER_PATH;
+import static com.codenvy.ide.extension.html.client.HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS;
 
 /**
  * Manager for running/stopping HTML applications.
@@ -96,7 +97,7 @@ public class RunStopApplicationManager implements RunApplicationHandler, StopApp
         if (currentProject != null && ProjectType.JAVASCRIPT.value().equals(currentProject.getProjectType())) {
             runApplication();
         } else {
-            Dialogs.getInstance().showInfo(HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.notHtmlProject());
+            Dialogs.getInstance().showInfo(HTML_LOCALIZATION_CONSTANTS.notHtmlProject());
         }
     }
 
@@ -140,20 +141,25 @@ public class RunStopApplicationManager implements RunApplicationHandler, StopApp
                                                            runnedApplication = result;
                                                            IDE.fireEvent(new ApplicationStartedEvent(runnedApplication));
                                                            final String url = Window.Location.getProtocol() + "//"
-                                                                                  + Window.Location.getHost()
-                                                                                  + "/ide/" + Utils.getWorkspaceName() + "/"
-                                                                                  + APP_RUNNER_PATH
-                                                                                  + runnedApplication.getName();
+                                                                              + Window.Location.getHost()
+                                                                              + "/ide/" + Utils.getWorkspaceName() + "/"
+                                                                              + APP_RUNNER_PATH
+                                                                              + runnedApplication.getName();
                                                            final String link = "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>";
-                                                           IDE.fireEvent(new OutputEvent(HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.applicationStartedUrl(result.getName(),
-                                                                                                                                                                link), Type.INFO));
+                                                           IDE.fireEvent(new OutputEvent(
+                                                                                         HTML_LOCALIZATION_CONSTANTS.applicationStartedUrl(result.getName(),
+                                                                                                                                           link),
+                                                                                         Type.INFO));
                                                        }
 
                                                        @Override
                                                        protected void onFailure(Throwable exception) {
-                                                           String message = (exception.getMessage() != null && !exception.getMessage().isEmpty()) ?
+                                                           String message =
+                                                                            (exception.getMessage() != null && !exception.getMessage()
+                                                                                                                         .isEmpty()) ?
                                                                                 " : " + exception.getMessage() : "";
-                                                           IDE.fireEvent(new OutputEvent(HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.startApplicationFailed()
+                                                           IDE.fireEvent(new OutputEvent(
+                                                                                         HTML_LOCALIZATION_CONSTANTS.startApplicationFailed()
                                                                                              + message, OutputMessage.Type.ERROR));
                                                        }
                                                    });
@@ -169,8 +175,7 @@ public class RunStopApplicationManager implements RunApplicationHandler, StopApp
                 @Override
                 protected void onSuccess(Object result) {
                     IDE.fireEvent(new ApplicationStoppedEvent(runnedApplication));
-                    IDE.fireEvent(new OutputEvent(
-                                                  HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.projectStoppedMessage(currentProject.getName()),
+                    IDE.fireEvent(new OutputEvent(HTML_LOCALIZATION_CONSTANTS.projectStoppedMessage(currentProject.getName()),
                                                   Type.INFO));
                     runnedApplication = null;
                 }
@@ -178,7 +183,7 @@ public class RunStopApplicationManager implements RunApplicationHandler, StopApp
                 @Override
                 protected void onFailure(Throwable exception) {
                     String message = (exception.getMessage() != null) ? exception.getMessage()
-                        : HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.stopApplicationFailed();
+                        : HTML_LOCALIZATION_CONSTANTS.stopApplicationFailed();
                     IDE.fireEvent(new OutputEvent(message, OutputMessage.Type.WARNING));
 
                     if (exception instanceof ServerException) {
