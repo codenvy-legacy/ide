@@ -45,7 +45,8 @@ public class GitExtension {
     public GitExtension(GitClientResources resources, ActionManager actionManager, CloneRepositoryAction cloneAction,
                         InitRepositoryAction initAction, DeleteRepositoryAction deleteAction, AddToIndexAction addToIndexAction,
                         ResetToCommitAction resetToCommitAction, RemoveFromIndexAction removeFromIndexAction, CommitAction commitAction,
-                        ShowBranchesAction showBranchesAction, ShowMergeAction showMergeAction, ResetFilesAction resetFilesAction) {
+                        ShowBranchesAction showBranchesAction, ShowMergeAction showMergeAction, ResetFilesAction resetFilesAction,
+                        ShowStatusAction showStatusAction) {
         resources.gitCSS().ensureInjected();
 
         DefaultActionGroup mainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
@@ -89,5 +90,8 @@ public class GitExtension {
         commandGroup.add(showMergeAction);
         actionManager.registerAction("GitResetFiles", resetFilesAction);
         commandGroup.add(resetFilesAction);
+
+        actionManager.registerAction("GitStatus", showStatusAction);
+        historyGroup.add(showStatusAction);
     }
 }
