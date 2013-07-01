@@ -109,7 +109,7 @@ public class GitClientServiceImpl extends GitClientService {
 
     public static final String BRANCH_DELETE     =  "/git/branch-delete";
 
-    public static final String BRANCH_RENAME     =  "/ide/git/branch-rename";
+    public static final String BRANCH_RENAME     =  "/git/branch-rename";
 
     public static final String CLONE             =  "/git/clone";
 
