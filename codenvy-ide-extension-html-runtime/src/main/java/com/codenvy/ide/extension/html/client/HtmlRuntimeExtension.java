@@ -38,6 +38,8 @@ public class HtmlRuntimeExtension extends Extension implements InitializeService
 
     public static final HtmlExtensionLocalizationConstant HTML_LOCALIZATION_CONSTANTS = GWT.create(HtmlExtensionLocalizationConstant.class);
 
+    public static final String                           APP_RUNNER_PATH             = "_htmlapprunner/";
+
     /**
      * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
      *      .client.framework.application.event.InitializeServicesEvent)

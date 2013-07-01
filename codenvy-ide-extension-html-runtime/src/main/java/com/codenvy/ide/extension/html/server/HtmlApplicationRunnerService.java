@@ -20,6 +20,7 @@ package com.codenvy.ide.extension.html.server;
 
 import com.codenvy.ide.extension.html.shared.ApplicationInstance;
 
+import org.exoplatform.ide.vfs.impl.fs.LocalFSMountStrategy;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -27,19 +28,15 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
 /**
  * Provide access to {@link ApplicationRunner} through HTTP.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: HtmlApplicationRunnerService.java Jun 26, 2013 1:14:54 PM azatsarynnyy $
- *
  */
 @Path("{ws-name}/html/runner")
 public class HtmlApplicationRunnerService {
@@ -50,20 +47,17 @@ public class HtmlApplicationRunnerService {
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
 
-    @PathParam("ws-name")
-    String                            wsName;
+    @Inject
+    private LocalFSMountStrategy      fsMountStrategy;
 
     @Path("run")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public ApplicationInstance runApplication(@QueryParam("vfsid") String vfsId,
-                                              @QueryParam("projectid") String projectId,
-                                              @Context UriInfo uriInfo)
-                                                                       throws ApplicationRunnerException, VirtualFileSystemException {
+                                              @QueryParam("projectid") String projectId) throws ApplicationRunnerException,
+                                                                                        VirtualFileSystemException {
         VirtualFileSystem vfs = vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null;
-        ApplicationInstance app = runner.runApplication(wsName, vfs, projectId);
-        app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
-                              .queryParam("name", app.getName()).build(wsName).toString());
+        ApplicationInstance app = runner.runApplication(vfs, projectId, fsMountStrategy.getMountPath().getPath());
         return app;
     }
 

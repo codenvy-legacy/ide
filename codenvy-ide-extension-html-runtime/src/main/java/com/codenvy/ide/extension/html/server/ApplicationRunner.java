@@ -28,37 +28,38 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationRunner.java Jun 26, 2013 2:23:09 PM azatsarynnyy $
- *
  */
 public interface ApplicationRunner {
     /**
      * Run HTML application.
-     *
-     * @param wsName
-     *         user's workspace name
-     * @param vfs
-     *         virtual file system that contains project
-     * @param projectId
-     *         ID of project folder
-     * @return description of runned application
-     * @throws ApplicationRunnerException
-     *         if any error occur when try to deploy application
-     * @throws VirtualFileSystemException
-     *         if any error occur when try to access application files over Virtual File System
+     * 
+     * @param vfs virtual file system that contains project
+     * @param projectId ID of project folder
+     * @param wsMountPath mount path for the project's workspace
+     * @return description of the runned application
+     * @throws ApplicationRunnerException if any error occur when try to deploy application
+     * @throws VirtualFileSystemException if any error occur when try to access application files over Virtual File System
      * @see HtmlApplicationRunnerService#stopApplication(String)
      * @see ApplicationInstance
      */
-    ApplicationInstance runApplication(String wsName, VirtualFileSystem vfs, String projectId) throws ApplicationRunnerException,
-                                                                                       VirtualFileSystemException;
+    ApplicationInstance runApplication(VirtualFileSystem vfs, String projectId, String wsMountPath) throws ApplicationRunnerException,
+                                                                                                   VirtualFileSystemException;
 
     /**
      * Stop HTML application.
-     *
-     * @param name
-     *         name of application to stop
-     * @throws ApplicationRunnerException
-     *         if any error occur when try to stop application
+     * 
+     * @param name name of application to stop
+     * @throws ApplicationRunnerException if any error occur when try to stop application
      * @see ApplicationInstance#getName()
      */
     void stopApplication(String name) throws ApplicationRunnerException;
+
+    /**
+     * Returns runned application by name.
+     * 
+     * @param name name of the runned application
+     * @return description of the runned application
+     * @throws ApplicationRunnerException if application wasn't found
+     */
+    RunnedApplication getApplicationByName(String name) throws ApplicationRunnerException;
 }

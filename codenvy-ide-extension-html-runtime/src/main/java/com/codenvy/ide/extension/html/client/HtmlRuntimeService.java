@@ -55,7 +55,7 @@ public abstract class HtmlRuntimeService {
      * @throws RequestException
      */
     public abstract void start(String vfsId, String projectId, AsyncRequestCallback<ApplicationInstance> callback)
-                                                                                                                 throws RequestException;
+                                                                                                                  throws RequestException;
 
     /**
      * Stop running HTML application.

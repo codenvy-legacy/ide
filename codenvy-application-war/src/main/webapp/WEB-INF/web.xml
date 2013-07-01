@@ -102,8 +102,8 @@
    </servlet>
 
    <servlet>
-      <servlet-name>HtmlAppServlet</servlet-name>
-      <servlet-class>com.codenvy.ide.extension.html.server.HtmlAppServlet</servlet-class>
+      <servlet-name>HtmlAppRunnerServlet</servlet-name>
+      <servlet-class>com.codenvy.ide.extension.html.server.HtmlAppRunnerServlet</servlet-class>
    </servlet>
    
    <servlet>
@@ -153,8 +153,8 @@
    </servlet-mapping>
 
    <servlet-mapping>
-      <servlet-name>HtmlAppServlet</servlet-name>
-      <url-pattern>/_apprunner/*</url-pattern>
+      <servlet-name>HtmlAppRunnerServlet</servlet-name>
+      <url-pattern>/_htmlapprunner/*</url-pattern>
    </servlet-mapping>
 
     <security-constraint>

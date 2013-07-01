@@ -18,35 +18,26 @@
  */
 package com.codenvy.ide.extension.html.server;
 
-import javax.ws.rs.core.Application;
-
-import java.util.HashSet;
-import java.util.Set;
-
 /**
- * JAX-RS application for running HTML applications.
+ * Class represents runned HTML-application.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: AppRunnerApplication.java Jun 26, 2013 1:12:46 PM azatsarynnyy $
+ * @version $Id: RunnedApplication.java Jul 1, 2013 11:55:48 AM azatsarynnyy $
  */
-public class AppRunnerApplication extends Application {
-    private final Set<Class< ? >> classes;
-    private final Set<Object>     objects;
+class RunnedApplication {
+    final String name;
+    final String projectName;
+    final long   expirationTime;
+    final String projectPath;
 
-    public AppRunnerApplication() {
-        classes = new HashSet<Class< ? >>(1);
-        classes.add(HtmlApplicationRunnerService.class);
-        objects = new HashSet<Object>(1);
-        objects.add(new ApplicationRunnerExceptionMapper());
+    RunnedApplication(String name, long expirationTime, String projectName, String projectPath) {
+        this.name = name;
+        this.expirationTime = expirationTime;
+        this.projectName = projectName;
+        this.projectPath = projectPath;
     }
 
-    @Override
-    public Set<Class< ? >> getClasses() {
-        return classes;
-    }
-
-    @Override
-    public Set<Object> getSingletons() {
-        return objects;
+    boolean isExpired() {
+        return expirationTime < System.currentTimeMillis();
     }
 }

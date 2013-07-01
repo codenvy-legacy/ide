@@ -24,10 +24,8 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationRunnerExceptionMapper.java Jun 26, 2013 2:23:34 PM azatsarynnyy $
- *
  */
 @Provider
 public class ApplicationRunnerExceptionMapper implements ExceptionMapper<ApplicationRunnerException> {

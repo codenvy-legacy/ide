@@ -41,7 +41,7 @@ public class HtmlRuntimeServiceImpl extends HtmlRuntimeService {
 
     private static final String STOP_APPLICATION = BASE_URL + "/stop";
 
-    private final String wsName;
+    private final String        wsName;
 
     /** REST service context. */
     private final String        restContext;

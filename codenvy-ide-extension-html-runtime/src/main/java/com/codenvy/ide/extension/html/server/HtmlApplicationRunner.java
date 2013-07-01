@@ -41,26 +41,24 @@ import static com.codenvy.commons.lang.NameGenerator.generate;
 import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
 
 /**
- * {@link ApplicationRunner} for run HTML applications at ...
+ * {@link ApplicationRunner} for running HTML applications.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: LocalApplicationRunner.java Jun 26, 2013 1:12:02 PM azatsarynnyy $
+ * @version $Id: HtmlApplicationRunner.java Jun 26, 2013 1:12:02 PM azatsarynnyy $
  */
-public class LocalApplicationRunner implements ApplicationRunner {
+public class HtmlApplicationRunner implements ApplicationRunner {
     /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
-    private static final int               DEFAULT_APPLICATION_LIFETIME = 10;
+    private static final int                     DEFAULT_APPLICATION_LIFETIME = 10;
 
-    private static final Log               LOG                          = ExoLogger.getLogger(LocalApplicationRunner.class);
+    private static final Log                     LOG                          = ExoLogger.getLogger(HtmlApplicationRunner.class);
 
-    private static final String            DEFAULT_SERVER               = "https://www.codenvy.com/ide/";
+    private final int                            applicationLifetime;
+    private final long                           applicationLifetimeMillis;
 
-    private final int                      applicationLifetime;
-    private final long                     applicationLifetimeMillis;
+    private final Map<String, RunnedApplication> applications;
+    private final ScheduledExecutorService       applicationTerminator;
 
-    private final Map<String, Application> applications;
-    private final ScheduledExecutorService applicationTerminator;
-
-    public LocalApplicationRunner(InitParams initParams) {
+    public HtmlApplicationRunner(InitParams initParams) {
         this(parseApplicationLifeTime(readValueParam(initParams, "html-application-lifetime")));
     }
 
@@ -74,39 +72,44 @@ public class LocalApplicationRunner implements ApplicationRunner {
         return DEFAULT_APPLICATION_LIFETIME;
     }
 
-    protected LocalApplicationRunner(int applicationLifetime) {
+    protected HtmlApplicationRunner(int applicationLifetime) {
         if (applicationLifetime < 1) {
             throw new IllegalArgumentException("Invalid application lifetime: " + 1);
         }
         this.applicationLifetime = applicationLifetime;
         this.applicationLifetimeMillis = applicationLifetime * 60 * 1000;
 
-        this.applications = new ConcurrentHashMap<String, Application>();
+        this.applications = new ConcurrentHashMap<String, RunnedApplication>();
         this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
         this.applicationTerminator.scheduleAtFixedRate(new TerminateApplicationTask(), 1, 1, TimeUnit.MINUTES);
     }
 
+    /**
+     * @see com.codenvy.ide.extension.html.server.ApplicationRunner#runApplication(org.exoplatform.ide.vfs.server.VirtualFileSystem,
+     *      java.lang.String, java.lang.String)
+     */
     @Override
-    public ApplicationInstance runApplication(String wsName, VirtualFileSystem vfs, String projectId) throws ApplicationRunnerException,
-                                                                                      VirtualFileSystemException {
+    public ApplicationInstance runApplication(VirtualFileSystem vfs, String projectId, String wsMountPath) throws ApplicationRunnerException,
+                                                                                                          VirtualFileSystemException {
         Item project = vfs.getItem(projectId, false, PropertyFilter.NONE_FILTER);
         if (project.getItemType() != ItemType.PROJECT) {
             throw new ApplicationRunnerException("Item '" + project.getPath() + "' is not a project. ");
         }
 
         final String name = generate("app-", 16);
-        final String host = DEFAULT_SERVER + wsName + "/_appruner/" + name;
         final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
 
-        applications.put(name, new Application(name, expired, project.getName(), vfs.getInfo().getId(), projectId));
+        applications.put(name, new RunnedApplication(name, expired, project.getName(), wsMountPath + project.getPath()));
         LOG.info("EVENT#run-started# PROJECT#" + project.getName() + "# TYPE#HTML#");
         LOG.info("EVENT#project-deployed# PROJECT#" + project.getName() + "# TYPE#HTML# PAAS#LOCAL#");
-        return new ApplicationInstanceImpl(name, host, null, applicationLifetime);
+
+        return new ApplicationInstanceImpl(name, applicationLifetime);
     }
 
+    /** @see com.codenvy.ide.extension.html.server.ApplicationRunner#stopApplication(java.lang.String) */
     @Override
     public void stopApplication(String name) throws ApplicationRunnerException {
-        Application application = applications.get(name);
+        RunnedApplication application = applications.get(name);
         if (application != null) {
             try {
                 LOG.debug("Stop application {}.", name);
@@ -120,11 +123,22 @@ public class LocalApplicationRunner implements ApplicationRunner {
         }
     }
 
+    /** @see com.codenvy.ide.extension.html.server.ApplicationRunner#getApplicationByName(java.lang.String) */
+    @Override
+    public RunnedApplication getApplicationByName(String name) throws ApplicationRunnerException {
+        RunnedApplication application = applications.get(name);
+        if (application != null) {
+            return application;
+        } else {
+            throw new ApplicationRunnerException("Application '" + name + "' not found. ");
+        }
+    }
+
     private class TerminateApplicationTask implements Runnable {
         @Override
         public void run() {
             List<String> stopped = new ArrayList<String>();
-            for (Application app : applications.values()) {
+            for (RunnedApplication app : applications.values()) {
                 if (app.isExpired()) {
                     try {
                         stopApplication(app.name);
@@ -137,26 +151,6 @@ public class LocalApplicationRunner implements ApplicationRunner {
             }
             applications.keySet().removeAll(stopped);
             LOG.debug("{} applications removed. ", stopped.size());
-        }
-    }
-
-    private static class Application {
-        final String name;
-        final String projectName;
-        final long  expirationTime;
-        final String vfsId;
-        final String projectId;
-
-        Application(String name, long expirationTime, String projectName, String vfsId, String projectId) {
-            this.name = name;
-            this.expirationTime = expirationTime;
-            this.projectName = projectName;
-            this.vfsId = vfsId;
-            this.projectId = projectId;
-        }
-
-        boolean isExpired() {
-            return expirationTime < System.currentTimeMillis();
         }
     }
 }

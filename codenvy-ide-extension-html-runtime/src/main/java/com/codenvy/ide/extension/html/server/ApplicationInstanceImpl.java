@@ -21,30 +21,23 @@ package com.codenvy.ide.extension.html.server;
 import com.codenvy.ide.extension.html.shared.ApplicationInstance;
 
 /**
+ * Default implementation of {@link ApplicationInstance}.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationInstanceImpl.java Jun 26, 2013 1:05:49 PM azatsarynnyy $
- *
  */
 public class ApplicationInstanceImpl implements ApplicationInstance {
     private String name;
-    private String host;
+    private int    port     = 80;
+    private int    lifetime = -1;
 
-    private int port = 80;
-    private String stopURL;
-    private int lifetime = -1;
-
-    public ApplicationInstanceImpl(String name, String host, String stopURL, int lifetime) {
+    public ApplicationInstanceImpl(String name, int lifetime) {
         this.name = name;
-        this.host = host;
-        this.stopURL = stopURL;
         this.lifetime = lifetime;
     }
 
-    public ApplicationInstanceImpl(String name, String host, String stopURL) {
+    public ApplicationInstanceImpl(String name) {
         this.name = name;
-        this.host = host;
-        this.stopURL = stopURL;
     }
 
     public ApplicationInstanceImpl() {
@@ -61,16 +54,6 @@ public class ApplicationInstanceImpl implements ApplicationInstance {
     }
 
     @Override
-    public String getHost() {
-        return host;
-    }
-
-    @Override
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    @Override
     public int getPort() {
         return port;
     }
@@ -78,16 +61,6 @@ public class ApplicationInstanceImpl implements ApplicationInstance {
     @Override
     public void setPort(int port) {
         this.port = port;
-    }
-
-    @Override
-    public String getStopURL() {
-        return stopURL;
-    }
-
-    @Override
-    public void setStopURL(String stopURL) {
-        this.stopURL = stopURL;
     }
 
     @Override
@@ -104,9 +77,7 @@ public class ApplicationInstanceImpl implements ApplicationInstance {
     public String toString() {
         return "ApplicationInstanceImpl{" +
                "name='" + name + '\'' +
-               ", host='" + host + '\'' +
                ", port=" + port +
-               ", stopURL='" + stopURL + '\'' +
                ", lifetime=" + lifetime +
                '}';
     }
