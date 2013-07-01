@@ -1,0 +1,82 @@
+<!--
+
+    Copyright (C) 2012 eXo Platform SAS.
+
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:c="urn:import:com.codenvy.ide.ui"
+             xmlns:l='urn:import:com.google.gwt.user.cellview.client'>
+    <ui:with field='resource' type='com.codenvy.ide.ext.aws.client.AWSResource'/>
+    <ui:with field='constant' type='com.codenvy.ide.ext.aws.client.AWSLocalizationConstant'/>
+    <ui:style>
+        .alignBtn {
+            float: right;
+        }
+
+        .spacing {
+            margin-bottom: 10px;
+        }
+
+        .emptyBorder {
+            margin: 6px;
+        }
+
+        .space {
+            margin-right: 5px;
+        }
+    </ui:style>
+    <g:DockLayoutPanel unit="PX" width="1000px" height="600px" addStyleNames="{resource.awsCss.login} {style.emptyBorder}">
+        <g:south size="26.0">
+            <g:FlowPanel>
+                <c:Button ui:field="btnClose" width="90px" height="18px" text="Close" type="DEFAULT"/>
+            </g:FlowPanel>
+        </g:south>
+        <g:north size="32.0">
+            <g:FlowPanel>
+                <c:Button ui:field="btnTerminate" width="90px" height="18px" text="Terminate" addStyleNames="{style.alignBtn}"
+                          type="DEFAULT"/>
+                <c:Button ui:field="btnReboot" width="90px" height="18px" text="Reboot"
+                          addStyleNames="{style.alignBtn} {style.space}" type="DEFAULT"/>
+                <c:Button ui:field="btnStop" width="90px" height="18px" text="Stop"
+                          addStyleNames="{style.alignBtn} {style.space}" type="DEFAULT"/>
+                <c:Button ui:field="btnStart" width="90px" height="18px" text="Start"
+                          addStyleNames="{style.alignBtn} {style.space}" type="DEFAULT"/>
+            </g:FlowPanel>
+        </g:north>
+        <g:north size="425.0">
+            <g:DockLayoutPanel unit="PX" width="100%" height="100%" styleName="{style.spacing}">
+                <g:center>
+                    <g:ScrollPanel width="100%" height="400px">
+                        <l:CellTable ui:field="ec2Instances" width="100%" height="100%"/>
+                    </g:ScrollPanel>
+                </g:center>
+            </g:DockLayoutPanel>
+        </g:north>
+        <g:north size="140.0">
+            <g:DockLayoutPanel unit="PX" width="100%" height="100%" styleName="{style.spacing}">
+                <g:center>
+                    <g:ScrollPanel width="100%" height="110px">
+                        <l:CellTable ui:field="ec2Tags" width="100%" height="100%"/>
+                    </g:ScrollPanel>
+                </g:center>
+            </g:DockLayoutPanel>
+        </g:north>
+    </g:DockLayoutPanel>
+</ui:UiBinder>
