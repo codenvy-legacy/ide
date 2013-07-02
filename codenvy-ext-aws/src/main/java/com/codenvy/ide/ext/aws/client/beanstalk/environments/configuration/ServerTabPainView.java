@@ -19,30 +19,34 @@
 package com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration;
 
 import com.codenvy.ide.api.mvp.View;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface EditConfigurationView extends View<EditConfigurationView.ActionDelegate> {
+public interface ServerTabPainView extends View<ServerTabPainView.ActionDelegate> {
     interface ActionDelegate {
-        void onApplyButtonCLicked();
 
-        void onCancelButtonClicked();
     }
 
-    AcceptsOneWidget addServerTabPain(String tabText);
+    void setEc2InstanceTypes(JsonArray<String> instanceTypes);
 
-    AcceptsOneWidget addLoadBalancerTabPain(String tabText);
+    String getEc2InstanceType();
 
-    AcceptsOneWidget addContainerTabPain(String tabText);
+    void setEc2SecurityGroup(String securityGroup);
 
-    void focusInFirstTab();
+    String getEc2SecurityGroup();
 
-    boolean isShown();
+    void setKeyPair(String keyPair);
 
-    void showDialog();
+    String getKeyPair();
 
-    void close();
+    void setMonitoringInterval(JsonArray<String> interval);
+
+    String getMonitoringInterval();
+
+    void setAmiId(String amiId);
+
+    String getAmiId();
 }

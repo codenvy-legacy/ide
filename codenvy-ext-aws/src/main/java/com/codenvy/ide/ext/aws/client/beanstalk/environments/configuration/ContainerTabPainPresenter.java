@@ -19,6 +19,11 @@
 package com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration;
 
 import com.codenvy.ide.api.mvp.Presenter;
+import com.codenvy.ide.ext.aws.dto.client.DtoClientImpls;
+import com.codenvy.ide.ext.aws.shared.beanstalk.ConfigurationOption;
+import com.codenvy.ide.ext.aws.shared.beanstalk.ConfigurationOptionInfo;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -28,13 +33,14 @@ import com.google.inject.Singleton;
  * @version $Id: $
  */
 @Singleton
-public class ContainerTabPainPresenter implements Presenter, ContainerTabPainView.ActionDelegate {
+public class ContainerTabPainPresenter implements Presenter, ContainerTabPainView.ActionDelegate, HasConfigurationProperty {
     private ContainerTabPainView view;
 
     @Inject
-
     public ContainerTabPainPresenter(ContainerTabPainView view) {
         this.view = view;
+
+        this.view.setDelegate(this);
     }
 
     @Override
@@ -43,7 +49,47 @@ public class ContainerTabPainPresenter implements Presenter, ContainerTabPainVie
     }
 
     @Override
-    public void onApplyButtonClicked() {
+    public JsonArray<ConfigurationOption> getConfigurationOptions() {
+        JsonArray<ConfigurationOption> options = JsonCollections.createArray();
 
+        DtoClientImpls.ConfigurationOptionImpl initialHeapOpt = DtoClientImpls.ConfigurationOptionImpl.make();
+        initialHeapOpt.setName("Xms");
+        initialHeapOpt.setValue(view.getInitialHeapSize());
+
+        DtoClientImpls.ConfigurationOptionImpl maxHeapSizeOpt = DtoClientImpls.ConfigurationOptionImpl.make();
+        maxHeapSizeOpt.setName("Xmx");
+        maxHeapSizeOpt.setValue(view.getMaxHeapSize());
+
+        DtoClientImpls.ConfigurationOptionImpl maxPermGenOpt = DtoClientImpls.ConfigurationOptionImpl.make();
+        maxPermGenOpt.setName("XX:MaxPermSize");
+        maxPermGenOpt.setValue(view.getMaxPermGenSize());
+
+        DtoClientImpls.ConfigurationOptionImpl jvmCommandLineOpt = DtoClientImpls.ConfigurationOptionImpl.make();
+        jvmCommandLineOpt.setName("JVM Options");
+        jvmCommandLineOpt.setValue(view.getJVMCommandLineOpt());
+
+        options.add(initialHeapOpt);
+        options.add(maxHeapSizeOpt);
+        options.add(maxPermGenOpt);
+        options.add(jvmCommandLineOpt);
+
+        return options;
+    }
+
+    @Override
+    public void setConfiguration(JsonArray<ConfigurationOption> configuration, JsonArray<ConfigurationOptionInfo> configurationOptionInfo) {
+        for (int i = 0; i < configuration.size(); i++) {
+            ConfigurationOption option = configuration.get(i);
+
+            if (option.getName().equals("Xms")) {
+                view.setInitialHeapSize(option.getValue());
+            } else if (option.getName().equals("Xmx")) {
+                view.setMaxHeapSize(option.getValue());
+            } else if (option.getName().equals("XX:MaxPermSize")) {
+                view.setMaxPermGenSize(option.getValue());
+            } else if (option.getName().equals("JVM Options")) {
+                view.setJVMCommandLineOpt(option.getValue());
+            }
+        }
     }
 }

@@ -89,6 +89,13 @@ public class EnvironmentTabPainViewImpl extends Composite implements Environment
         initEnvironmentCellTable();
 
         initWidget(widget);
+
+        editConfigurationButton.setEnabled(false);
+//        editConfigurationButton.setVisible(false);
+        restartEnvironmentButton.setEnabled(false);
+        rebuildEnvironmentButton.setEnabled(false);
+        terminateEnvironmentButton.setEnabled(false);
+        logsEnvironmentButton.setEnabled(false);
     }
 
     public class LinkCell extends AbstractSafeHtmlCell<String> {
@@ -191,6 +198,11 @@ public class EnvironmentTabPainViewImpl extends Composite implements Environment
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
                 selectedEnvironment = ((SingleSelectionModel<EnvironmentInfo>)selectionModel).getSelectedObject();
+                editConfigurationButton.setEnabled(true);
+                restartEnvironmentButton.setEnabled(true);
+                rebuildEnvironmentButton.setEnabled(true);
+                terminateEnvironmentButton.setEnabled(true);
+                logsEnvironmentButton.setEnabled(true);
             }
         });
 

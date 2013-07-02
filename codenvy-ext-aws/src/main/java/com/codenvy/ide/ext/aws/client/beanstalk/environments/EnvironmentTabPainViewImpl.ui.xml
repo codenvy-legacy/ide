@@ -16,11 +16,11 @@
     <g:DockLayoutPanel unit="PX" width="595px" height="265px" addStyleNames="{resource.awsCss.login} {style.emptyBorder}">
         <g:north size="30.0">
             <g:FlowPanel>
-                <c:Button ui:field="editConfigurationButton" width="90px" text="Edit" type="DEFAULT" />
-                <c:Button ui:field="restartEnvironmentButton" width="90px" text="Restart" type="DEFAULT" />
-                <c:Button ui:field="rebuildEnvironmentButton" width="90px" text="Rebuild" type="DEFAULT" />
-                <c:Button ui:field="terminateEnvironmentButton" width="90px" text="Terminate" type="DEFAULT" />
-                <c:Button ui:field="logsEnvironmentButton" width="90px" text="Snapshot logs" type="DEFAULT" />
+                <c:Button ui:field="editConfigurationButton" width="90px" height="18px" text="Edit" type="DEFAULT" />
+                <c:Button ui:field="restartEnvironmentButton" width="90px"  height="18px" text="Restart" type="DEFAULT" />
+                <c:Button ui:field="rebuildEnvironmentButton" width="90px"  height="18px" text="Rebuild" type="DEFAULT" />
+                <c:Button ui:field="terminateEnvironmentButton" width="90px"  height="18px" text="Terminate" type="DEFAULT" />
+                <c:Button ui:field="logsEnvironmentButton" width="100px"  height="18px" text="Snapshot logs" type="DEFAULT" />
             </g:FlowPanel>
         </g:north>
         <g:center>

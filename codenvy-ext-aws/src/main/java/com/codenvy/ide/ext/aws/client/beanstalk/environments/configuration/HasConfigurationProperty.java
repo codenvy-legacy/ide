@@ -18,31 +18,16 @@
  */
 package com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration;
 
-import com.codenvy.ide.api.mvp.View;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.codenvy.ide.ext.aws.shared.beanstalk.ConfigurationOption;
+import com.codenvy.ide.ext.aws.shared.beanstalk.ConfigurationOptionInfo;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface EditConfigurationView extends View<EditConfigurationView.ActionDelegate> {
-    interface ActionDelegate {
-        void onApplyButtonCLicked();
+public interface HasConfigurationProperty {
+    JsonArray<ConfigurationOption> getConfigurationOptions();
 
-        void onCancelButtonClicked();
-    }
-
-    AcceptsOneWidget addServerTabPain(String tabText);
-
-    AcceptsOneWidget addLoadBalancerTabPain(String tabText);
-
-    AcceptsOneWidget addContainerTabPain(String tabText);
-
-    void focusInFirstTab();
-
-    boolean isShown();
-
-    void showDialog();
-
-    void close();
+    void setConfiguration(JsonArray<ConfigurationOption> configuration, JsonArray<ConfigurationOptionInfo> configurationOptionInfo);
 }

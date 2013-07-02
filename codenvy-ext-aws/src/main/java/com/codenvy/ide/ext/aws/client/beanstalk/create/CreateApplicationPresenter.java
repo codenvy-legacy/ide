@@ -88,6 +88,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     public void showDialog() {
         if (!view.isShown()) {
             view.showDialog();
+            view.showCreateApplicationStep();
             getSolutionStacks();
         }
     }

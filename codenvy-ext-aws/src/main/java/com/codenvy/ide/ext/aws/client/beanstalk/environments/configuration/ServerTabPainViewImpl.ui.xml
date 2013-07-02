@@ -36,16 +36,6 @@
             font-weight: bold;
         }
 
-        .labelTitle {
-            font-size: 12px;
-            font-family: Verdana, Bitstream Vera Sans, sans-serif;
-            font-weight: bold;
-            border-bottom: 1px solid #DBDFE5;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            color: #597EAA;
-        }
-
         .middle {
             margin-top: 3px;
         }
@@ -74,36 +64,32 @@
     <g:DockLayoutPanel unit="PX" width="950px" height="350px" addStyleNames="{resource.awsCss.login} {style.emptyBorder}">
         <g:center>
             <g:FlowPanel styleName="{style.padding}">
-                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle}" text="EC2 Instance Health Check">
-                </g:Label>
                 <g:FlowPanel width="100%" height="30px">
-                    <g:Label text="{locale.editConfigurationAppHealthCheckUrl}" addStyleNames="{style.labelH} {style.middle}"
+                    <g:Label text="{constant.editConfigurationEC2InstanceType}" addStyleNames="{style.labelH} {style.middle}"
                              width="35%" />
-                    <g:TextBox ui:field="appHealthCheckUrlField" width="60%" height="22px"
+                    <g:ListBox ui:field="ec2InstanceTypeField" width="60%" height="22px"
+                                  addStyleNames="{style.left} {style.space}" />
+                </g:FlowPanel>
+                <g:FlowPanel width="100%" height="30px">
+                    <g:Label text="{constant.editConfigurationEC2SecurityGroups}" addStyleNames="{style.labelH} {style.middle}"
+                             width="35%" />
+                    <g:TextBox ui:field="ec2SecurityGroupsField" width="60%" height="22px"
                                  addStyleNames="{style.textinput} {style.left} {style.space}" />
                 </g:FlowPanel>
                 <g:FlowPanel width="100%" height="30px">
-                    <g:Label text="{locale.editConfigurationHealthCheckInterval}" addStyleNames="{style.labelH} {style.middle}"
-                             width="35%" />
-                    <g:TextBox ui:field="healthCheckIntervalField" width="60%" height="22px"
+                    <g:Label text="{constant.editConfigurationKeyName}" addStyleNames="{style.labelH} {style.middle}" width="35%" />
+                    <g:TextBox ui:field="keyNameField" width="60%" height="22px"
                                  addStyleNames="{style.textinput} {style.left} {style.space}" />
                 </g:FlowPanel>
                 <g:FlowPanel width="100%" height="30px">
-                    <g:Label text="{locale.editConfigurationHealthCheckTimeout}" addStyleNames="{style.labelH} {style.middle}"
+                    <g:Label text="{constant.editConfigurationMonitoringInterval}" addStyleNames="{style.labelH} {style.middle}"
                              width="35%" />
-                    <g:TextBox ui:field="healthCheckTimeoutField" width="60%" height="22px"
-                                 addStyleNames="{style.textinput} {style.left} {style.space}" />
+                    <g:ListBox ui:field="monitoringIntervalField" width="60%" height="22px"
+                                  addStyleNames="{style.left} {style.space}" />
                 </g:FlowPanel>
                 <g:FlowPanel width="100%" height="30px">
-                    <g:Label text="{locale.editConfigurationHealthyThreshold}" addStyleNames="{style.labelH} {style.middle}"
-                             width="35%" />
-                    <g:TextBox ui:field="healthyThresholdField" width="60%" height="22px"
-                                 addStyleNames="{style.textinput} {style.left} {style.space}" />
-                </g:FlowPanel>
-                <g:FlowPanel width="100%" height="30px">
-                    <g:Label text="{locale.editConfigurationUnhealthyThreshold}" addStyleNames="{style.labelH} {style.middle}"
-                             width="35%" />
-                    <g:TextBox ui:field="unhealthyThresholdField" width="60%" height="22px"
+                    <g:Label text="{constant.editConfigurationImageId}" addStyleNames="{style.labelH} {style.middle}" width="35%" />
+                    <g:TextBox ui:field="imageIdField" width="60%" height="22px"
                                  addStyleNames="{style.textinput} {style.left} {style.space}" />
                 </g:FlowPanel>
             </g:FlowPanel>

@@ -29,10 +29,11 @@ import com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration.EditC
 import com.codenvy.ide.ext.aws.client.beanstalk.environments.rebuild.RebuildEnvironmentPresenter;
 import com.codenvy.ide.ext.aws.client.beanstalk.environments.restart.RestartEnvironmentPresenter;
 import com.codenvy.ide.ext.aws.client.beanstalk.environments.terminate.TerminateEnvironmentPresenter;
-import com.codenvy.ide.ext.aws.client.login.LoginPresenter;
+import com.codenvy.ide.ext.aws.client.marshaller.EnvironmentsInfoListUnmarshaller;
 import com.codenvy.ide.ext.aws.shared.beanstalk.EnvironmentInfo;
 import com.codenvy.ide.ext.aws.shared.beanstalk.InstanceLog;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -62,7 +63,6 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
     private AWSLocalizationConstant constant;
 
     @Inject
-
     public EnvironmentTabPainPresenter(EnvironmentTabPainView view, EventBus eventBus, ConsolePart console,
                                        BeanstalkClientService service, ResourceProvider resourceProvider,
                                        EditConfigurationPresenter editConfigurationPresenter,
@@ -85,7 +85,7 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
 
     @Override
     public void onEditConfigurationButtonClicked(EnvironmentInfo environment) {
-        editConfigurationPresenter.showDialog();
+        editConfigurationPresenter.showDialog(environment);
     }
 
     @Override
@@ -174,9 +174,11 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
     }
 
     public void getEnvironments() {
+        JsonArray<EnvironmentInfo> environmentInfoJsonArray = JsonCollections.createArray();
+        EnvironmentsInfoListUnmarshaller unmarshaller = new EnvironmentsInfoListUnmarshaller(environmentInfoJsonArray);
         try {
             service.getEnvironments(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
-                                    new AsyncRequestCallback<JsonArray<EnvironmentInfo>>() {
+                                    new AsyncRequestCallback<JsonArray<EnvironmentInfo>>(unmarshaller) {
                                         @Override
                                         protected void onSuccess(JsonArray<EnvironmentInfo> result) {
                                             List<EnvironmentInfo> environmentInfoList = new ArrayList<EnvironmentInfo>(result.size());

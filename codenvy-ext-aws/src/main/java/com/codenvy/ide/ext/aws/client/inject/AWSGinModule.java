@@ -25,8 +25,7 @@ import com.codenvy.ide.ext.aws.client.beanstalk.create.CreateApplicationView;
 import com.codenvy.ide.ext.aws.client.beanstalk.create.CreateApplicationViewImpl;
 import com.codenvy.ide.ext.aws.client.beanstalk.environments.EnvironmentTabPainView;
 import com.codenvy.ide.ext.aws.client.beanstalk.environments.EnvironmentTabPainViewImpl;
-import com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration.EditConfigurationView;
-import com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration.EditConfigurationViewImpl;
+import com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration.*;
 import com.codenvy.ide.ext.aws.client.beanstalk.environments.launch.LaunchEnvironmentView;
 import com.codenvy.ide.ext.aws.client.beanstalk.environments.launch.LaunchEnvironmentViewImpl;
 import com.codenvy.ide.ext.aws.client.beanstalk.environments.rebuild.RebuildEnvironmentView;
@@ -95,7 +94,10 @@ public class AWSGinModule extends AbstractGinModule {
         bind(TerminateEnvironmentView.class).to(TerminateEnvironmentViewImpl.class).in(Singleton.class);
 
         //TODO
-//        bind(EditConfigurationView.class).to(EditConfigurationViewImpl.class).in(Singleton.class);
+        bind(EditConfigurationView.class).to(EditConfigurationViewImpl.class).in(Singleton.class);
+        bind(ContainerTabPainView.class).to(ContainerTabPainViewImpl.class).in(Singleton.class);
+        bind(ServerTabPainView.class).to(ServerTabPainViewImpl.class).in(Singleton.class);
+        bind(LoadBalancerTabPainView.class).to(LoadBalancerTabPainViewImpl.class).in(Singleton.class);
 
         bind(CreateVersionView.class).to(CreateVersionViewImpl.class).in(Singleton.class);
         bind(DeleteVersionView.class).to(DeleteVersionViewImpl.class).in(Singleton.class);

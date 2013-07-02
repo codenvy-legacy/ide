@@ -11,7 +11,7 @@
 
         .floatRight {
             float: right;
-            margin-left: 5px;
+            margin: 2px;
         }
 
         .labelH {
@@ -43,6 +43,14 @@
             margin-bottom: 20px;
             font-weight: bold;
         }
+
+        .left {
+            float: left;
+        }
+
+        .padding0 {
+            padding: 0px !important;
+        }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="550px" height="320px" addStyleNames="{resource.awsCss.login} {style.emptyBorder}">
         <g:center>
@@ -53,24 +61,24 @@
                     <g:FlowPanel width="100%" height="30px">
                         <g:Label text="{constant.createApplicationNameField}" addStyleNames="{style.labelH} {style.middle}"
                                  width="22%"/>
-                        <g:TextBox ui:field="appNameField" width="76%" height="22px" addStyleNames="{style.right}"/>
+                        <g:TextBox ui:field="appNameField" width="76%" height="22px" addStyleNames="{style.left} {style.padding0}"/>
                     </g:FlowPanel>
                     <g:FlowPanel width="100%" height="30px">
                         <g:Label text="{constant.createApplicationDescriptionField}" addStyleNames="{style.labelH} {style.middle}"
                                  width="22%"/>
-                        <g:TextBox ui:field="appDescField" width="76%" height="22px" addStyleNames="{style.right}"/>
+                        <g:TextBox ui:field="appDescField" width="76%" height="22px" addStyleNames="{style.left} {style.padding0}"/>
                     </g:FlowPanel>
                     <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle}" text="{constant.createApplicationS3Title}">
                     </g:Label>
                     <g:FlowPanel width="100%" height="30px">
                         <g:Label text="{constant.createApplicationS3BucketField}" addStyleNames="{style.labelH} {style.middle}"
                                  width="22%"/>
-                        <g:TextBox ui:field="s3BucketField" width="76%" height="22px" addStyleNames="{style.right}"/>
+                        <g:TextBox ui:field="s3BucketField" width="76%" height="22px" addStyleNames="{style.left} {style.padding0}"/>
                     </g:FlowPanel>
                     <g:FlowPanel width="100%" height="30px">
                         <g:Label text="{constant.createApplicationS3KeyField}" addStyleNames="{style.labelH} {style.middle}"
                                  width="22%"/>
-                        <g:TextBox ui:field="s3KeyField" width="76%" height="22px" addStyleNames="{style.right}"/>
+                        <g:TextBox ui:field="s3KeyField" width="76%" height="22px" addStyleNames="{style.left} {style.padding0}"/>
                     </g:FlowPanel>
                 </g:FlowPanel>
                 <g:FlowPanel ui:field="createEnvironmentStep" width="100%" height="100%" visible="false">
@@ -80,16 +88,16 @@
                     </g:FlowPanel>
                     <g:FlowPanel width="100%" height="30px">
                         <g:Label text="{constant.launchEnvironmentName}" addStyleNames="{style.labelH} {style.middle}" width="30%"/>
-                        <g:TextBox ui:field="envNameField" width="69%" height="22px" addStyleNames="{style.right}"/>
+                        <g:TextBox ui:field="envNameField" width="67%" height="22px" addStyleNames="{style.left} {style.padding0}"/>
                     </g:FlowPanel>
                     <g:FlowPanel width="100%" height="30px">
                         <g:Label text="{constant.launchEnvironmentDescription}" addStyleNames="{style.labelH} {style.middle}" width="30%"/>
-                        <g:TextBox ui:field="envDescField" width="69%" height="22px" addStyleNames="{style.right}"/>
+                        <g:TextBox ui:field="envDescField" width="67%" height="22px" addStyleNames="{style.left} {style.padding0}"/>
                     </g:FlowPanel>
                     <g:FlowPanel width="100%" height="30px">
                         <g:Label text="{constant.launchEnvironmentSolutionStack}" addStyleNames="{style.labelH} {style.middle}"
                                  width="30%"/>
-                        <g:ListBox ui:field="solutionStack" width="69%" height="22px" addStyleNames="{style.right}"/>
+                        <g:ListBox ui:field="solutionStack" width="68%" height="22px" addStyleNames="{style.left} {style.padding0}"/>
                     </g:FlowPanel>
                 </g:FlowPanel>
             </g:FlowPanel>

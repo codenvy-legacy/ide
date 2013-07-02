@@ -170,10 +170,10 @@
                 </g:FlowPanel>
             </g:center>
         </g:SplitLayoutPanel>
-        <g:DockLayoutPanel>
-            <g:south size="46.0">
+        <g:DockLayoutPanel height="46px">
+            <g:north size="46.0">
                 <c:Button ui:field="btnClose" type="SUCCESS" height="22px" width="60px" text="Close"/>
-            </g:south>
+            </g:north>
         </g:DockLayoutPanel>
     </g:FlowPanel>
 </ui:UiBinder>

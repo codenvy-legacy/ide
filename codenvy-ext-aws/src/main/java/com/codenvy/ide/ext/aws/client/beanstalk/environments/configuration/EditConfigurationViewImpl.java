@@ -26,10 +26,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.TabPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -72,17 +69,23 @@ public class EditConfigurationViewImpl extends DialogBox implements EditConfigur
 
     @Override
     public AcceptsOneWidget addServerTabPain(String tabText) {
-        return null;
+        SimplePanel panel = new SimplePanel();
+        configurationTabPanel.add(panel, tabText);
+        return panel;
     }
 
     @Override
     public AcceptsOneWidget addLoadBalancerTabPain(String tabText) {
-        return null;
+        SimplePanel panel = new SimplePanel();
+        configurationTabPanel.add(panel, tabText);
+        return panel;
     }
 
     @Override
     public AcceptsOneWidget addContainerTabPain(String tabText) {
-        return null;
+        SimplePanel panel = new SimplePanel();
+        configurationTabPanel.add(panel, tabText);
+        return panel;
     }
 
     @Override
@@ -115,7 +118,7 @@ public class EditConfigurationViewImpl extends DialogBox implements EditConfigur
 
     @UiHandler("okButton")
     public void onOkButtonClicked(ClickEvent event) {
-        delegate.onOkButtonClicked();
+        delegate.onApplyButtonCLicked();
     }
 
     @UiHandler("cancelButton")

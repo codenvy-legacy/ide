@@ -67,7 +67,7 @@ public class AWSExtension {
         aws.add(beanstalkManagementAction);
         aws.add(createApplicationManagementAction);
 
-//        DefaultActionGroup projectPaaS = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PROJECT_PAAS);
-//        projectPaaS.add();
+        DefaultActionGroup projectPaaS = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PROJECT_PAAS);
+        projectPaaS.add(beanstalkManagementAction);
     }
 }

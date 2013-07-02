@@ -96,7 +96,7 @@ public class DeleteVersionViewImpl extends DialogBox implements DeleteVersionVie
     @Override
     public void close() {
         this.isShown = false;
-        this.close();
+        this.hide();
     }
 
     @Override

@@ -26,6 +26,21 @@ import com.codenvy.ide.api.mvp.View;
  */
 public interface ContainerTabPainView extends View<ContainerTabPainView.ActionDelegate> {
     interface ActionDelegate {
-        void onApplyButtonClicked();
     }
+
+    void setInitialHeapSize(String heapSize);
+
+    String getInitialHeapSize();
+
+    void setMaxHeapSize(String maxHeapSize);
+
+    String getMaxHeapSize();
+
+    void setMaxPermGenSize(String maxPermGenSize);
+
+    String getMaxPermGenSize();
+
+    void setJVMCommandLineOpt(String jvmCommandLineOpt);
+
+    String getJVMCommandLineOpt();
 }

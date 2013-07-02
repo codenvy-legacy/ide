@@ -19,30 +19,33 @@
 package com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration;
 
 import com.codenvy.ide.api.mvp.View;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 /**
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface EditConfigurationView extends View<EditConfigurationView.ActionDelegate> {
+public interface LoadBalancerTabPainView extends View<LoadBalancerTabPainView.ActionDelegate> {
     interface ActionDelegate {
-        void onApplyButtonCLicked();
 
-        void onCancelButtonClicked();
     }
 
-    AcceptsOneWidget addServerTabPain(String tabText);
+    void setHealthCheckUrl(String healthCheckUrl);
 
-    AcceptsOneWidget addLoadBalancerTabPain(String tabText);
+    String getHealthCheckUrl();
 
-    AcceptsOneWidget addContainerTabPain(String tabText);
+    void setHealthCheckInterval(String healthCheckInterval);
 
-    void focusInFirstTab();
+    String getHealthCheckInterval();
 
-    boolean isShown();
+    void setHealthCheckTimeOut(String healthCheckTimeOut);
 
-    void showDialog();
+    String getHealthCheckTimeOut();
 
-    void close();
+    void setHealthCheckCountThreshold(String healthCheckCountThreshold);
+
+    String getHealthCheckCountThreshold();
+
+    void setUnhealthyCheckCountThreshold(String unhealthyCheckCountThreshold);
+
+    String getUnhealthyCheckCountThreshold();
 }

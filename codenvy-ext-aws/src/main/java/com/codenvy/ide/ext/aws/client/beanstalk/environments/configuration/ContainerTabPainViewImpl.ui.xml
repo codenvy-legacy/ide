@@ -77,25 +77,25 @@
                 <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle}" text="Container Options">
                 </g:Label>
                 <g:FlowPanel width="100%" height="30px">
-                    <g:Label text="{locale.editConfigurationInitialJVMHeapSize}" addStyleNames="{style.labelH} {style.middle}"
+                    <g:Label text="{constant.editConfigurationInitialJVMHeapSize}" addStyleNames="{style.labelH} {style.middle}"
                              width="35%" />
                     <g:TextBox ui:field="initialJVMHeapSizeField" width="60%" height="22px"
                                  addStyleNames="{style.textinput} {style.left} {style.space}" />
                 </g:FlowPanel>
                 <g:FlowPanel width="100%" height="30px">
-                    <g:Label text="{locale.editConfigurationMaximumJVMHeapSize}" addStyleNames="{style.labelH} {style.middle}"
+                    <g:Label text="{constant.editConfigurationMaximumJVMHeapSize}" addStyleNames="{style.labelH} {style.middle}"
                              width="35%" />
                     <g:TextBox ui:field="maximumJVMHeapSizeField" width="60%" height="22px"
                                  addStyleNames="{style.textinput} {style.left} {style.space}" />
                 </g:FlowPanel>
                 <g:FlowPanel width="100%" height="30px">
-                    <g:Label text="{locale.editConfigurationMaxPermSize}" addStyleNames="{style.labelH} {style.middle}"
+                    <g:Label text="{constant.editConfigurationMaxPermSize}" addStyleNames="{style.labelH} {style.middle}"
                              width="35%" />
                     <g:TextBox ui:field="maxPermSizeField" width="60%" height="22px"
                                  addStyleNames="{style.textinput} {style.left} {style.space}" />
                 </g:FlowPanel>
                 <g:FlowPanel width="100%" height="30px">
-                    <g:Label text="{locale.editConfigurationJVMOptions}" addStyleNames="{style.labelH} {style.middle}"
+                    <g:Label text="{constant.editConfigurationJVMOptions}" addStyleNames="{style.labelH} {style.middle}"
                              width="35%" />
                     <g:TextBox ui:field="jvmOptionsField" width="60%" height="22px"
                                  addStyleNames="{style.textinput} {style.left} {style.space}" />

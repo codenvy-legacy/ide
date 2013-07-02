@@ -19,7 +19,6 @@
 package com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration;
 
 import com.codenvy.ide.ext.aws.client.AWSLocalizationConstant;
-import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -34,22 +33,25 @@ import com.google.inject.Singleton;
  * @version $Id: $
  */
 @Singleton
-public class ContainerTabPainViewImpl extends Composite implements ContainerTabPainView {
-    interface ContainerTabPainViewImplUiBinder extends UiBinder<Widget, ContainerTabPainViewImpl> {}
+public class LoadBalancerTabPainViewImpl extends Composite implements LoadBalancerTabPainView {
+    interface LoadBalancerTabPainViewImplUiBinder extends UiBinder<Widget, LoadBalancerTabPainViewImpl> {}
 
-    private static ContainerTabPainViewImplUiBinder uiBinder = GWT.create(ContainerTabPainViewImplUiBinder.class);
-
-    @UiField
-    TextBox initialJVMHeapSizeField;
+    private static LoadBalancerTabPainViewImplUiBinder uiBinder = GWT.create(LoadBalancerTabPainViewImplUiBinder.class);
 
     @UiField
-    TextBox maximumJVMHeapSizeField;
+    TextBox appHealthCheckUrlField;
 
     @UiField
-    TextBox maxPermSizeField;
+    TextBox healthCheckIntervalField;
 
     @UiField
-    TextBox jvmOptionsField;
+    TextBox healthCheckTimeoutField;
+
+    @UiField
+    TextBox healthyThresholdField;
+
+    @UiField
+    TextBox unhealthyThresholdField;
 
     @UiField(provided = true)
     AWSLocalizationConstant constant;
@@ -57,7 +59,7 @@ public class ContainerTabPainViewImpl extends Composite implements ContainerTabP
     private ActionDelegate delegate;
 
     @Inject
-    protected ContainerTabPainViewImpl(AWSLocalizationConstant constant) {
+    protected LoadBalancerTabPainViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
 
         Widget widget = uiBinder.createAndBindUi(this);
@@ -66,43 +68,53 @@ public class ContainerTabPainViewImpl extends Composite implements ContainerTabP
     }
 
     @Override
-    public void setInitialHeapSize(String heapSize) {
-        initialJVMHeapSizeField.setText(heapSize);
+    public void setHealthCheckUrl(String healthCheckUrl) {
+        appHealthCheckUrlField.setText(healthCheckUrl);
     }
 
     @Override
-    public String getInitialHeapSize() {
-        return initialJVMHeapSizeField.getText();
+    public String getHealthCheckUrl() {
+        return appHealthCheckUrlField.getText();
     }
 
     @Override
-    public void setMaxHeapSize(String maxHeapSize) {
-        maximumJVMHeapSizeField.setText(maxHeapSize);
+    public void setHealthCheckInterval(String healthCheckInterval) {
+        healthCheckIntervalField.setText(healthCheckInterval);
     }
 
     @Override
-    public String getMaxHeapSize() {
-        return maximumJVMHeapSizeField.getText();
+    public String getHealthCheckInterval() {
+        return healthCheckIntervalField.getText();
     }
 
     @Override
-    public void setMaxPermGenSize(String maxPermGenSize) {
-        maximumJVMHeapSizeField.setText(maxPermGenSize);
+    public void setHealthCheckTimeOut(String healthCheckTimeOut) {
+        healthCheckTimeoutField.setText(healthCheckTimeOut);
     }
 
     @Override
-    public String getMaxPermGenSize() {
-        return maximumJVMHeapSizeField.getText();
+    public String getHealthCheckTimeOut() {
+        return healthCheckTimeoutField.getText();
     }
 
     @Override
-    public void setJVMCommandLineOpt(String jvmCommandLineOpt) {
-        jvmOptionsField.setText(jvmCommandLineOpt);
+    public void setHealthCheckCountThreshold(String healthCheckCountThreshold) {
+        healthyThresholdField.setText(healthCheckCountThreshold);
     }
 
     @Override
-    public String getJVMCommandLineOpt() {
-        return jvmOptionsField.getText();
+    public String getHealthCheckCountThreshold() {
+        return healthyThresholdField.getText();
+    }
+
+    @Override
+    public void setUnhealthyCheckCountThreshold(String unhealthyCheckCountThreshold) {
+        unhealthyThresholdField.setText(unhealthyCheckCountThreshold);
+    }
+
+    @Override
+    public String getUnhealthyCheckCountThreshold() {
+        return unhealthyThresholdField.getText();
     }
 
     @Override

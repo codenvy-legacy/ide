@@ -108,8 +108,6 @@ public class EnvironmentStatusChecker {
                 outputEvents();
             }
 
-            GWT.log("Timer start!");
-
             checkEnvironmentStatus(new AsyncCallback<Boolean>() {
                 @Override
                 public void onFailure(Throwable caught) {
