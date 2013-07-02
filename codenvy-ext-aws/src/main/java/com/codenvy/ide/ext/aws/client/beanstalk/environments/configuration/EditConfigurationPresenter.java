@@ -18,9 +18,33 @@
  */
 package com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 /**
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class EditConfigurationPresenter {
+@Singleton
+public class EditConfigurationPresenter implements EditConfigurationView.ActionDelegate {
+    private EditConfigurationView view;
+
+    @Inject
+    protected EditConfigurationPresenter(EditConfigurationView view) {
+
+        this.view = view;
+
+        this.view.setDelegate(this);
+    }
+
+    public void showDialog() {
+        if (!view.isShown()) {
+            view.showDialog();
+        }
+    }
+
+    @Override
+    public void onCancelButtonClicked() {
+
+    }
 }

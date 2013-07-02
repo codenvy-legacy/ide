@@ -26,6 +26,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -52,12 +53,6 @@ public class EditConfigurationViewImpl extends DialogBox implements EditConfigur
     @UiField
     Button cancelButton;
 
-    private ServerTabPain serverTabPain;
-
-    private LoadBalancerTabPain loadBalancerTabPain;
-
-    private ContainerTabPain containerTabPain;
-
     @UiField(provided = true)
     AWSLocalizationConstant constant;
 
@@ -73,98 +68,26 @@ public class EditConfigurationViewImpl extends DialogBox implements EditConfigur
 
         this.setText(constant.environmentConfigurationTitle());
         this.setWidget(widget);
-
-        serverTabPain = new ServerTabPain();
-        configurationTabPanel.add(serverTabPain, constant.serverTab());
-
-        loadBalancerTabPain = new LoadBalancerTabPain();
-        configurationTabPanel.add(loadBalancerTabPain, constant.loadBalancerTab());
-
-        containerTabPain = new ContainerTabPain();
-        configurationTabPanel.add(containerTabPain, constant.containerTab());
-    }
-
-    //Server tab
-    @Override
-    public String getEC2InstanceType() {
-        return serverTabPain.getEC2InstanceType();
     }
 
     @Override
-    public void setEC2InstanceTypeValues(JsonArray<String> values, String selectedValue) {
-        serverTabPain.setEC2InstanceTypeValues(values, selectedValue);
+    public AcceptsOneWidget addServerTabPain(String tabText) {
+        return null;
     }
 
     @Override
-    public void setEC2SecurityGroups(String group) {
-        serverTabPain.setEC2SecurityGroups(group);
+    public AcceptsOneWidget addLoadBalancerTabPain(String tabText) {
+        return null;
     }
 
     @Override
-    public void setKeyName(String keyName) {
-        serverTabPain.setKeyName(keyName);
+    public AcceptsOneWidget addContainerTabPain(String tabText) {
+        return null;
     }
 
     @Override
-    public String getMonitoringInterval() {
-        return serverTabPain.getMonitoringInterval();
-    }
-
-    @Override
-    public void setMonitoringIntervalValues(JsonArray<String> values, String selectedValue) {
-        serverTabPain.setMonitoringIntervalValues(values, selectedValue);
-    }
-
-    @Override
-    public void setImageId(String amiId) {
-        serverTabPain.setImageId(amiId);
-    }
-
-    //Load balancer tab
-    @Override
-    public void setAppHealthCheckCheckUrl(String value) {
-        loadBalancerTabPain.setAppHealthCheckUrl(value);
-    }
-
-    @Override
-    public void setHealthCheckInterval(String value) {
-        loadBalancerTabPain.setHealthCheckInterval(value);
-    }
-
-    @Override
-    public void setHealthCheckTimeout(String value) {
-        loadBalancerTabPain.setHealthCheckTimeout(value);
-    }
-
-    @Override
-    public void setHealthyThreshold(String value) {
-        loadBalancerTabPain.setHealthyThreshold(value);
-    }
-
-    @Override
-    public void setUnhealthyThreshold(String value) {
-        loadBalancerTabPain.setUnhealthyThreshold(value);
-    }
-
-    //Container tab
-    @Override
-    public void setInitialJVMHeapSizeField(String value) {
-        containerTabPain.setInitialJVMHeapSizeField(value);
-    }
-
-    @Override
-    public void setMaximumJVMHeapSizeField(String value) {
-        containerTabPain.setMaximumJVMHeapSizeField(value);
-    }
-
-    @Override
-    public void setMaxPermSizeField(String value) {
-        containerTabPain.setMaxPermSizeField(value);
-    }
-
-    @Override
-    public void setJVMOptionsField(String value) {
-        containerTabPain.setJVMOptionsField(value);
+    public void focusInFirstTab() {
+        configurationTabPanel.selectTab(0);
     }
 
     @Override

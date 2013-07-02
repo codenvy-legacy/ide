@@ -77,6 +77,13 @@ public class ManageApplicationViewImpl extends DialogBox implements ManageApplic
     }
 
     @Override
+    public AcceptsOneWidget addEnvironmentTabPain(String tabText) {
+        SimplePanel panel = new SimplePanel();
+        applicationTabPanel.add(panel, tabText);
+        return panel;
+    }
+
+    @Override
     public boolean isShown() {
         return isShown;
     }

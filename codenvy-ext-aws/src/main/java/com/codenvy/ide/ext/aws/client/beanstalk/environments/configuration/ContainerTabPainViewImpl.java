@@ -32,8 +32,8 @@ import com.google.inject.Singleton;
  * @version $Id: $
  */
 @Singleton
-public class ContainerTabPain extends Composite {
-    interface ContainerTabPainUiBinder extends UiBinder<Widget, ContainerTabPain> {}
+public class ContainerTabPainViewImpl extends Composite {
+    interface ContainerTabPainUiBinder extends UiBinder<Widget, ContainerTabPainViewImpl> {}
 
     private static ContainerTabPainUiBinder uiBinder = GWT.create(ContainerTabPainUiBinder.class);
 
@@ -50,7 +50,7 @@ public class ContainerTabPain extends Composite {
     TextBox jvmOptionsField;
 
     @Inject
-    protected ContainerTabPain() {
+    protected ContainerTabPainViewImpl() {
         Widget widget = uiBinder.createAndBindUi(this);
 
         this.initWidget(widget);

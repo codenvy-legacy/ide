@@ -19,7 +19,7 @@
 package com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.json.JsonArray;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 /**
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
@@ -27,45 +27,16 @@ import com.codenvy.ide.json.JsonArray;
  */
 public interface EditConfigurationView extends View<EditConfigurationView.ActionDelegate> {
     interface ActionDelegate {
-        void onOkButtonClicked();
-
         void onCancelButtonClicked();
     }
 
-    //Server tab
-    String getEC2InstanceType();
+    AcceptsOneWidget addServerTabPain(String tabText);
 
-    void setEC2InstanceTypeValues(JsonArray<String> values, String selectedValue);
+    AcceptsOneWidget addLoadBalancerTabPain(String tabText);
 
-    void setEC2SecurityGroups(String group);
+    AcceptsOneWidget addContainerTabPain(String tabText);
 
-    void setKeyName(String keyName);
-
-    String getMonitoringInterval();
-
-    void setMonitoringIntervalValues(JsonArray<String> values, String selectedValue);
-
-    void setImageId(String amiId);
-
-    //Load Balancer tab
-    void setAppHealthCheckCheckUrl(String value);
-
-    void setHealthCheckInterval(String value);
-
-    void setHealthCheckTimeout(String value);
-
-    void setHealthyThreshold(String value);
-
-    void setUnhealthyThreshold(String value);
-
-    //Container tab
-    void setInitialJVMHeapSizeField(String value);
-
-    void setMaximumJVMHeapSizeField(String value);
-
-    void setMaxPermSizeField(String value);
-
-    void setJVMOptionsField(String value);
+    void focusInFirstTab();
 
     boolean isShown();
 

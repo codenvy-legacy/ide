@@ -16,31 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.aws.client.beanstalk.manage;
+package com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration;
 
-import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.api.mvp.Presenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface ManageApplicationView extends View<ManageApplicationView.ActionDelegate> {
-    interface ActionDelegate {
-        void onCloseButtonClicked();
+@Singleton
+public class ContainerTabPainPresenter implements Presenter, ContainerTabPainView.ActionDelegate {
+    private ContainerTabPainView view;
+
+    @Inject
+
+    public ContainerTabPainPresenter(ContainerTabPainView view) {
+        this.view = view;
     }
 
-    AcceptsOneWidget addMainTabPain(String tabText);
+    @Override
+    public void go(AcceptsOneWidget container) {
+        container.setWidget(view);
+    }
 
-    AcceptsOneWidget addVersionTabPain(String tabText);
+    @Override
+    public void onApplyButtonClicked() {
 
-    AcceptsOneWidget addEnvironmentTabPain(String tabText);
-
-    void focusInFirstTab();
-
-    boolean isShown();
-
-    void showDialog();
-
-    void close();
+    }
 }

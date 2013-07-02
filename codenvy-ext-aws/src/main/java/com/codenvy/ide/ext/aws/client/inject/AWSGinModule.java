@@ -23,6 +23,8 @@ import com.codenvy.ide.ext.aws.client.beanstalk.BeanstalkClientService;
 import com.codenvy.ide.ext.aws.client.beanstalk.BeanstalkClientServiceImpl;
 import com.codenvy.ide.ext.aws.client.beanstalk.create.CreateApplicationView;
 import com.codenvy.ide.ext.aws.client.beanstalk.create.CreateApplicationViewImpl;
+import com.codenvy.ide.ext.aws.client.beanstalk.environments.EnvironmentTabPainView;
+import com.codenvy.ide.ext.aws.client.beanstalk.environments.EnvironmentTabPainViewImpl;
 import com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration.EditConfigurationView;
 import com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration.EditConfigurationViewImpl;
 import com.codenvy.ide.ext.aws.client.beanstalk.environments.launch.LaunchEnvironmentView;
@@ -91,7 +93,9 @@ public class AWSGinModule extends AbstractGinModule {
         bind(RebuildEnvironmentView.class).to(RebuildEnvironmentViewImpl.class).in(Singleton.class);
         bind(RestartEnvironmentView.class).to(RestartEnvironmentViewImpl.class).in(Singleton.class);
         bind(TerminateEnvironmentView.class).to(TerminateEnvironmentViewImpl.class).in(Singleton.class);
-        bind(EditConfigurationView.class).to(EditConfigurationViewImpl.class).in(Singleton.class);
+
+        //TODO
+//        bind(EditConfigurationView.class).to(EditConfigurationViewImpl.class).in(Singleton.class);
 
         bind(CreateVersionView.class).to(CreateVersionViewImpl.class).in(Singleton.class);
         bind(DeleteVersionView.class).to(DeleteVersionViewImpl.class).in(Singleton.class);
@@ -100,6 +104,7 @@ public class AWSGinModule extends AbstractGinModule {
         bind(ManageApplicationView.class).to(ManageApplicationViewImpl.class).in(Singleton.class);
         bind(MainTabPainView.class).to(MainTabPainViewImpl.class).in(Singleton.class);
         bind(VersionTabPainView.class).to(VersionTabPainViewImpl.class).in(Singleton.class);
+        bind(EnvironmentTabPainView.class).to(EnvironmentTabPainViewImpl.class).in(Singleton.class);
 
 
     }
