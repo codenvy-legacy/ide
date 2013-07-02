@@ -230,7 +230,7 @@ public interface GitClientService {
      * @param callback
      *         callback
      */
-    void remoteList(@NotNull String vfsId, @NotNull String projectid, @NotNull String remoteName, boolean verbose,
+    void remoteList(@NotNull String vfsId, @NotNull String projectid, @Nullable String remoteName, boolean verbose,
                     @NotNull AsyncRequestCallback<JsonArray<Remote>> callback) throws RequestException;
 
     /**

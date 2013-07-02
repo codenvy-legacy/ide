@@ -25,7 +25,10 @@ import com.codenvy.ide.ext.git.client.clone.CloneRequestStatusHandler;
 import com.codenvy.ide.ext.git.client.commit.CommitRequestHandler;
 import com.codenvy.ide.ext.git.client.fetch.FetchRequestHandler;
 import com.codenvy.ide.ext.git.client.init.InitRequestStatusHandler;
-import com.codenvy.ide.ext.git.client.marshaller.*;
+import com.codenvy.ide.ext.git.client.marshaller.DiffRequestMarshaller;
+import com.codenvy.ide.ext.git.client.marshaller.FetchRequestMarshaller;
+import com.codenvy.ide.ext.git.client.marshaller.PullRequestMarshaller;
+import com.codenvy.ide.ext.git.client.marshaller.PushRequestMarshaller;
 import com.codenvy.ide.ext.git.client.pull.PullRequestHandler;
 import com.codenvy.ide.ext.git.client.push.PushRequestHandler;
 import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
@@ -319,19 +322,19 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void remoteList(@NotNull String vfsId, @NotNull String projectid, @NotNull String remoteName, boolean verbose,
+    public void remoteList(@NotNull String vfsId, @NotNull String projectid, @Nullable String remoteName, boolean verbose,
                            @NotNull AsyncRequestCallback<JsonArray<Remote>> callback) throws RequestException {
         String url = restServiceContext + REMOTE_LIST;
 
         DtoClientImpls.RemoteListRequestImpl remoteListRequest = DtoClientImpls.RemoteListRequestImpl.make();
-        remoteListRequest.setRemote(remoteName);
+        if (remoteName != null) {
+            remoteListRequest.setRemote(remoteName);
+        }
         remoteListRequest.setVerbose(verbose);
-        // TODO marshaller
-        RemoteListRequestMarshaller marshaller = new RemoteListRequestMarshaller(remoteListRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(remoteListRequest.serialize())
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
@@ -487,14 +490,10 @@ public class GitClientServiceImpl implements GitClientService {
         DtoClientImpls.RemoteAddRequestImpl remoteAddRequest = DtoClientImpls.RemoteAddRequestImpl.make();
         remoteAddRequest.setName(name);
         remoteAddRequest.setUrl(repositoryURL);
-        // TODO marshaller
-        RemoteAddRequestMarshaller marshaller = new RemoteAddRequestMarshaller(remoteAddRequest);
-        // System.out.println(marshaller.marshal());
-        // System.out.println(remoteAddRequest.serialize());
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(remoteAddRequest.serialize())
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 

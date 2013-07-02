@@ -24,13 +24,14 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.marshaller.RemoteListUnmarshaller;
+import com.codenvy.ide.ext.git.client.remote.add.AddRemoteRepositoryPresenter;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -42,28 +43,40 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RemotePresenter implements RemoteView.ActionDelegate {
-    private RemoteView              view;
-    private GitClientService        service;
-    private ResourceProvider        resourceProvider;
-    private GitLocalizationConstant constant;
-    private ConsolePart             console;
-    private Remote                  selectedRemote;
-    private Project                 project;
+    private RemoteView                   view;
+    private GitClientService             service;
+    private ResourceProvider             resourceProvider;
+    private GitLocalizationConstant      constant;
+    private ConsolePart                  console;
+    private AddRemoteRepositoryPresenter addRemoteRepositoryPresenter;
+    private Remote                       selectedRemote;
+    private String                       projectId;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param service
+     * @param resourceProvider
+     * @param constant
+     * @param console
+     * @param addRemoteRepositoryPresenter
+     */
     @Inject
     public RemotePresenter(RemoteView view, GitClientService service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
-                           ConsolePart console) {
+                           ConsolePart console, AddRemoteRepositoryPresenter addRemoteRepositoryPresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
         this.console = console;
+        this.addRemoteRepositoryPresenter = addRemoteRepositoryPresenter;
     }
 
     /** Show dialog. */
     public void showDialog() {
-        project = resourceProvider.getActiveProject();
+        projectId = resourceProvider.getActiveProject().getId();
         getRemotes();
     }
 
@@ -74,7 +87,7 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
     private void getRemotes() {
         RemoteListUnmarshaller unmarshaller = new RemoteListUnmarshaller(JsonCollections.<Remote>createArray());
         try {
-            service.remoteList(resourceProvider.getVfsId(), project.getId(), null, true,
+            service.remoteList(resourceProvider.getVfsId(), projectId, null, true,
                                new AsyncRequestCallback<JsonArray<Remote>>(unmarshaller) {
                                    @Override
                                    protected void onSuccess(JsonArray<Remote> result) {
@@ -107,7 +120,18 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onAddClicked() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        addRemoteRepositoryPresenter.showDialog(new AsyncCallback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                getRemotes();
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                String errorMessage = caught.getMessage() != null ? caught.getMessage() : constant.remoteAddFailed();
+                console.print(errorMessage);
+            }
+        });
     }
 
     /** {@inheritDoc} */
@@ -122,7 +146,7 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
         boolean needToDelete = Window.confirm(constant.deleteRemoteRepositoryQuestion(name));
         if (needToDelete) {
             try {
-                service.remoteDelete(resourceProvider.getVfsId(), project.getId(), name, new AsyncRequestCallback<String>() {
+                service.remoteDelete(resourceProvider.getVfsId(), projectId, name, new AsyncRequestCallback<String>() {
                     @Override
                     protected void onSuccess(String result) {
                         getRemotes();

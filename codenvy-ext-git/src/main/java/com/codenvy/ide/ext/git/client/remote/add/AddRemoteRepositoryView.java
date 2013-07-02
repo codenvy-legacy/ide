@@ -16,18 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.git.client.init;
+package com.codenvy.ide.ext.git.client.remote.add;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 
 /**
- * The view of {@link InitRepositoryView}.
+ * The view of {@link AddRemoteRepositoryPresenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface InitRepositoryView extends View<InitRepositoryView.ActionDelegate> {
-    /** Needs for delegate some function into InitRepository view. */
+public interface AddRemoteRepositoryView extends View<AddRemoteRepositoryView.ActionDelegate> {
+    /** Needs for delegate some function into AddRemoteRepository view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Ok button. */
         void onOkClicked();
@@ -39,32 +39,29 @@ public interface InitRepositoryView extends View<InitRepositoryView.ActionDelega
         void onValueChanged();
     }
 
-    /**
-     * Return which type of repository must be.
-     *
-     * @return <code>true</code> if the repository must be bare, and <code>false</code> otherwise
-     */
-    boolean isBare();
-
-    /**
-     * Set value of the bare field.
-     *
-     * @param isBare
-     *         state of the field
-     */
-    void setBare(boolean isBare);
-
-    /** @return work directory */
+    /** @return repository name */
     @NotNull
-    String getWorkDir();
+    String getName();
 
     /**
-     * Set value of workDir field.
+     * Set value of name field.
      *
-     * @param workDir
-     *         work directory
+     * @param name
+     *         repository name
      */
-    void setWorkDir(@NotNull String workDir);
+    void setName(@NotNull String name);
+
+    /** @return repository url */
+    @NotNull
+    String getUrl();
+
+    /**
+     * Set value of url field.
+     *
+     * @param url
+     *         repository url
+     */
+    void setUrl(@NotNull String url);
 
     /**
      * Change the enable state of the ok button.
