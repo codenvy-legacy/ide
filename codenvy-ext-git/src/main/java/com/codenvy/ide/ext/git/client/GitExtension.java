@@ -20,12 +20,15 @@ package com.codenvy.ide.ext.git.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.ext.git.client.action.*;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.ui.action.Anchor.BEFORE;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
 
 /**
  * Extension add Git support to the IDE Application.
@@ -46,14 +49,15 @@ public class GitExtension {
                         InitRepositoryAction initAction, DeleteRepositoryAction deleteAction, AddToIndexAction addToIndexAction,
                         ResetToCommitAction resetToCommitAction, RemoveFromIndexAction removeFromIndexAction, CommitAction commitAction,
                         ShowBranchesAction showBranchesAction, ShowMergeAction showMergeAction, ResetFilesAction resetFilesAction,
-                        ShowStatusAction showStatusAction, ShowGitUrlAction showGitUrlAction) {
+                        ShowStatusAction showStatusAction, ShowGitUrlAction showGitUrlAction, ShowRemoteAction showRemoteAction) {
         resources.gitCSS().ensureInjected();
 
         DefaultActionGroup mainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
 
         DefaultActionGroup git = new DefaultActionGroup(GIT_GROUP_MAIN_MENU, true, actionManager);
         actionManager.registerAction(GIT_GROUP_MAIN_MENU, git);
-        mainMenu.add(git);
+        Constraints beforeWindow = new Constraints(BEFORE, GROUP_WINDOW);
+        mainMenu.add(git, beforeWindow);
 
         DefaultActionGroup commandGroup = new DefaultActionGroup(COMMAND_GROUP_MAIN_MENU, false, actionManager);
         actionManager.registerAction(COMMAND_GROUP_MAIN_MENU, commandGroup);
@@ -88,6 +92,10 @@ public class GitExtension {
         commandGroup.add(showBranchesAction);
         actionManager.registerAction("GitMerge", showMergeAction);
         commandGroup.add(showMergeAction);
+        DefaultActionGroup remoteGroup = new DefaultActionGroup("GitRemoteGroup", true, actionManager);
+        remoteGroup.getTemplatePresentation().setIcon(resources.remote());
+        actionManager.registerAction("GitRemoteGroup", remoteGroup);
+        commandGroup.add(remoteGroup);
         actionManager.registerAction("GitResetFiles", resetFilesAction);
         commandGroup.add(resetFilesAction);
 
@@ -95,5 +103,8 @@ public class GitExtension {
         historyGroup.add(showStatusAction);
         actionManager.registerAction("GitUrl", showGitUrlAction);
         historyGroup.add(showGitUrlAction);
+
+        actionManager.registerAction("GitRemote", showRemoteAction);
+        remoteGroup.add(showRemoteAction);
     }
 }
