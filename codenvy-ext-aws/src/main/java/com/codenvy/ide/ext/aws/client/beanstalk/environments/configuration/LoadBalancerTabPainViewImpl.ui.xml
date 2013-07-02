@@ -20,7 +20,8 @@
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:c="urn:import:com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration">
     <ui:with field='resource' type='com.codenvy.ide.ext.aws.client.AWSResource'/>
     <ui:with field='constant' type='com.codenvy.ide.ext.aws.client.AWSLocalizationConstant'/>
     <ui:style>
@@ -71,7 +72,7 @@
             margin-right: 5px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="850px" height="265px" addStyleNames="{resource.awsCss.login} {style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="700px" height="230px" addStyleNames="{resource.awsCss.login} {style.emptyBorder}">
         <g:center>
             <g:FlowPanel styleName="{style.padding}">
                 <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle}" text="EC2 Instance Health Check">
@@ -79,31 +80,31 @@
                 <g:FlowPanel width="100%" height="30px">
                     <g:Label text="{constant.editConfigurationAppHealthCheckUrl}" addStyleNames="{style.labelH} {style.middle}"
                              width="240px" />
-                    <g:TextBox ui:field="appHealthCheckUrlField" width="500px" height="22px"
+                    <c:ModifiableTextBox ui:field="appHealthCheckUrlField" width="410px" height="22px"
                                  addStyleNames="{style.textinput} {style.left} {style.space}" />
                 </g:FlowPanel>
                 <g:FlowPanel width="100%" height="30px">
                     <g:Label text="{constant.editConfigurationHealthCheckInterval}" addStyleNames="{style.labelH} {style.middle}"
                              width="240px" />
-                    <g:TextBox ui:field="healthCheckIntervalField" width="500px" height="22px"
+                    <c:ModifiableTextBox ui:field="healthCheckIntervalField" width="410px" height="22px"
                                  addStyleNames="{style.textinput} {style.left} {style.space}" />
                 </g:FlowPanel>
                 <g:FlowPanel width="100%" height="30px">
                     <g:Label text="{constant.editConfigurationHealthCheckTimeout}" addStyleNames="{style.labelH} {style.middle}"
                              width="240px" />
-                    <g:TextBox ui:field="healthCheckTimeoutField" width="500px" height="22px"
+                    <c:ModifiableTextBox ui:field="healthCheckTimeoutField" width="410px" height="22px"
                                  addStyleNames="{style.textinput} {style.left} {style.space}" />
                 </g:FlowPanel>
                 <g:FlowPanel width="100%" height="30px">
                     <g:Label text="{constant.editConfigurationHealthyThreshold}" addStyleNames="{style.labelH} {style.middle}"
                              width="240px" />
-                    <g:TextBox ui:field="healthyThresholdField" width="500px" height="22px"
+                    <c:ModifiableTextBox ui:field="healthyThresholdField" width="410px" height="22px"
                                  addStyleNames="{style.textinput} {style.left} {style.space}" />
                 </g:FlowPanel>
                 <g:FlowPanel width="100%" height="30px">
                     <g:Label text="{constant.editConfigurationUnhealthyThreshold}" addStyleNames="{style.labelH} {style.middle}"
                              width="240px" />
-                    <g:TextBox ui:field="unhealthyThresholdField" width="500px" height="22px"
+                    <c:ModifiableTextBox ui:field="unhealthyThresholdField" width="410px" height="22px"
                                  addStyleNames="{style.textinput} {style.left} {style.space}" />
                 </g:FlowPanel>
             </g:FlowPanel>

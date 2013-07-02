@@ -41,7 +41,7 @@
             margin-right: 5px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="880px" height="315px" addStyleNames="{resource.awsCss.login} {style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="730px" height="315px" addStyleNames="{resource.awsCss.login} {style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
                 <c:Button ui:field="cancelButton" width="50px" height="18px" text="{constant.cancelButton}" addStyleNames="{style.alignBtn}"
@@ -50,7 +50,7 @@
                           addStyleNames="{style.alignBtn} {style.space}" type="SUCCESS"/>
             </g:FlowPanel>
         </g:south>
-        <g:north size="320.0">
+        <g:north size="290.0">
             <g:DockLayoutPanel unit="PX" width="100%" height="100%" styleName="{style.spacing}">
                 <g:center>
                     <g:TabPanel width="270px" ui:field="configurationTabPanel"/>

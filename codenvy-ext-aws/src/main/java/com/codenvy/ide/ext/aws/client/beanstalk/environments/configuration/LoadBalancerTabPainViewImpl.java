@@ -20,8 +20,10 @@ package com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration;
 
 import com.codenvy.ide.ext.aws.client.AWSLocalizationConstant;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -34,24 +36,25 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class LoadBalancerTabPainViewImpl extends Composite implements LoadBalancerTabPainView {
-    interface LoadBalancerTabPainViewImplUiBinder extends UiBinder<Widget, LoadBalancerTabPainViewImpl> {}
+    interface LoadBalancerTabPainViewImplUiBinder extends UiBinder<Widget, LoadBalancerTabPainViewImpl> {
+    }
 
     private static LoadBalancerTabPainViewImplUiBinder uiBinder = GWT.create(LoadBalancerTabPainViewImplUiBinder.class);
 
     @UiField
-    TextBox appHealthCheckUrlField;
+    ModifiableTextBox appHealthCheckUrlField;
 
     @UiField
-    TextBox healthCheckIntervalField;
+    ModifiableTextBox healthCheckIntervalField;
 
     @UiField
-    TextBox healthCheckTimeoutField;
+    ModifiableTextBox healthCheckTimeoutField;
 
     @UiField
-    TextBox healthyThresholdField;
+    ModifiableTextBox healthyThresholdField;
 
     @UiField
-    TextBox unhealthyThresholdField;
+    ModifiableTextBox unhealthyThresholdField;
 
     @UiField(provided = true)
     AWSLocalizationConstant constant;
@@ -120,5 +123,64 @@ public class LoadBalancerTabPainViewImpl extends Composite implements LoadBalanc
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
+    }
+
+    @Override
+    public void resetModifiedFields() {
+        appHealthCheckUrlField.setModified(false);
+        healthCheckIntervalField.setModified(false);
+        healthCheckTimeoutField.setModified(false);
+        healthyThresholdField.setModified(false);
+        unhealthyThresholdField.setModified(false);
+    }
+
+    @Override
+    public boolean isHealthCheckUrlModified() {
+        return appHealthCheckUrlField.isModified();
+    }
+
+    @Override
+    public boolean isHealthCheckIntervalModified() {
+        return healthCheckIntervalField.isModified();
+    }
+
+    @Override
+    public boolean isHealthCheckTimeOutModified() {
+        return healthCheckTimeoutField.isModified();
+    }
+
+    @Override
+    public boolean isHealthCheckCountThresholdModified() {
+        return healthyThresholdField.isModified();
+    }
+
+    @Override
+    public boolean isUnhealthyCheckCountThresholdModified() {
+        return unhealthyThresholdField.isModified();
+    }
+
+    @UiHandler("appHealthCheckUrlField")
+    public void onAppHealthCheckUrlFieldChanged(KeyUpEvent event) {
+        appHealthCheckUrlField.setModified(true);
+    }
+
+    @UiHandler("healthCheckIntervalField")
+    public void onHealthCheckIntervalFieldChanged(KeyUpEvent event) {
+        healthCheckIntervalField.setModified(true);
+    }
+
+    @UiHandler("healthCheckTimeoutField")
+    public void onHealthCheckTimeoutFieldChanged(KeyUpEvent event) {
+        healthCheckTimeoutField.setModified(true);
+    }
+
+    @UiHandler("healthyThresholdField")
+    public void onHealthyThresholdFieldChanged(KeyUpEvent event) {
+        healthyThresholdField.setModified(true);
+    }
+
+    @UiHandler("unhealthyThresholdField")
+    public void onUnhealthyThresholdFieldChanged(KeyUpEvent event) {
+        unhealthyThresholdField.setModified(true);
     }
 }

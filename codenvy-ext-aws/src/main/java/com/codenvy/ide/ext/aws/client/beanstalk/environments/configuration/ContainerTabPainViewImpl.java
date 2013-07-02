@@ -19,12 +19,12 @@
 package com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration;
 
 import com.codenvy.ide.ext.aws.client.AWSLocalizationConstant;
-import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -40,16 +40,16 @@ public class ContainerTabPainViewImpl extends Composite implements ContainerTabP
     private static ContainerTabPainViewImplUiBinder uiBinder = GWT.create(ContainerTabPainViewImplUiBinder.class);
 
     @UiField
-    TextBox initialJVMHeapSizeField;
+    ModifiableTextBox initialJVMHeapSizeField;
 
     @UiField
-    TextBox maximumJVMHeapSizeField;
+    ModifiableTextBox maximumJVMHeapSizeField;
 
     @UiField
-    TextBox maxPermSizeField;
+    ModifiableTextBox maxPermSizeField;
 
     @UiField
-    TextBox jvmOptionsField;
+    ModifiableTextBox jvmOptionsField;
 
     @UiField(provided = true)
     AWSLocalizationConstant constant;
@@ -87,12 +87,12 @@ public class ContainerTabPainViewImpl extends Composite implements ContainerTabP
 
     @Override
     public void setMaxPermGenSize(String maxPermGenSize) {
-        maximumJVMHeapSizeField.setText(maxPermGenSize);
+        maxPermSizeField.setText(maxPermGenSize);
     }
 
     @Override
     public String getMaxPermGenSize() {
-        return maximumJVMHeapSizeField.getText();
+        return maxPermSizeField.getText();
     }
 
     @Override
@@ -109,4 +109,54 @@ public class ContainerTabPainViewImpl extends Composite implements ContainerTabP
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
+
+    @Override
+    public void resetModifiedFields() {
+        initialJVMHeapSizeField.setModified(false);
+        maximumJVMHeapSizeField.setModified(false);
+        maxPermSizeField.setModified(false);
+        jvmOptionsField.setModified(false);
+    }
+
+    @Override
+    public boolean isInitialHeapSizeModified() {
+        return initialJVMHeapSizeField.isModified();
+    }
+
+    @Override
+    public boolean isMaxHeapSizeModified() {
+        return maximumJVMHeapSizeField.isModified();
+    }
+
+    @Override
+    public boolean isMaxPermGenSizeModified() {
+        return maxPermSizeField.isModified();
+    }
+
+    @Override
+    public boolean isJVMCommandLineOptModified() {
+        return jvmOptionsField.isModified();
+    }
+
+    @UiHandler("initialJVMHeapSizeField")
+    public void onInitialJVMHeapSizeFieldChanged(KeyUpEvent event) {
+        initialJVMHeapSizeField.setModified(true);
+    }
+
+    @UiHandler("maximumJVMHeapSizeField")
+    public void onMaximumJVMHeapSizeFieldChanged(KeyUpEvent event) {
+        maximumJVMHeapSizeField.setModified(true);
+    }
+
+    @UiHandler("maxPermSizeField")
+    public void onMaxPermSizeFieldChanged(KeyUpEvent event) {
+        maxPermSizeField.setModified(true);
+    }
+
+    @UiHandler("jvmOptionsField")
+    public void onJvmOptionsFieldChanged(KeyUpEvent event) {
+        jvmOptionsField.setModified(true);
+    }
+
+
 }

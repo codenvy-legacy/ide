@@ -28,19 +28,29 @@ public interface ContainerTabPainView extends View<ContainerTabPainView.ActionDe
     interface ActionDelegate {
     }
 
+    void resetModifiedFields();
+
     void setInitialHeapSize(String heapSize);
 
     String getInitialHeapSize();
+
+    boolean isInitialHeapSizeModified();
 
     void setMaxHeapSize(String maxHeapSize);
 
     String getMaxHeapSize();
 
+    boolean isMaxHeapSizeModified();
+
     void setMaxPermGenSize(String maxPermGenSize);
 
     String getMaxPermGenSize();
 
+    boolean isMaxPermGenSizeModified();
+
     void setJVMCommandLineOpt(String jvmCommandLineOpt);
 
     String getJVMCommandLineOpt();
+
+    boolean isJVMCommandLineOptModified();
 }

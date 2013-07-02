@@ -29,23 +29,35 @@ public interface LoadBalancerTabPainView extends View<LoadBalancerTabPainView.Ac
 
     }
 
+    void resetModifiedFields();
+
     void setHealthCheckUrl(String healthCheckUrl);
 
     String getHealthCheckUrl();
+
+    boolean isHealthCheckUrlModified();
 
     void setHealthCheckInterval(String healthCheckInterval);
 
     String getHealthCheckInterval();
 
+    boolean isHealthCheckIntervalModified();
+
     void setHealthCheckTimeOut(String healthCheckTimeOut);
 
     String getHealthCheckTimeOut();
+
+    boolean isHealthCheckTimeOutModified();
 
     void setHealthCheckCountThreshold(String healthCheckCountThreshold);
 
     String getHealthCheckCountThreshold();
 
+    boolean isHealthCheckCountThresholdModified();
+
     void setUnhealthyCheckCountThreshold(String unhealthyCheckCountThreshold);
 
     String getUnhealthyCheckCountThreshold();
+
+    boolean isUnhealthyCheckCountThresholdModified();
 }

@@ -35,6 +35,7 @@ import com.codenvy.ide.ext.aws.shared.beanstalk.EnvironmentInfo;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -59,11 +60,6 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
     private LoadBalancerTabPainPresenter       loadBalancerTabPainPresenter;
     private EnvironmentInfo                    environmentInfo;
     private JsonArray<ConfigurationOptionInfo> configurationOptionInfoList;
-
-//    private JsonStringMap<ConfigurationOption> modifiedOptionsMap;
-//
-//    /** List of modified configuration options to save. */
-//    private JsonArray<ConfigurationOption> modifiedOptionsList;
 
     @Inject
     protected EditConfigurationPresenter(EditConfigurationView view, BeanstalkClientService service,
@@ -169,14 +165,6 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
     }
 
     private void showConfiguration(Configuration envConfiguration) {
-//        modifiedOptionsList = JsonCollections.createArray();
-//        modifiedOptionsMap = JsonCollections.createStringMap();
-//
-//        for (int i = 0; i < envConfiguration.getOptions().size(); i++) {
-//            ConfigurationOption option = envConfiguration.getOptions().get(i);
-//            modifiedOptionsMap.put(option.getName(), option);
-//        }
-
         serverTabPainPresenter.setConfiguration(envConfiguration.getOptions(), configurationOptionInfoList);
         containerTabPainPresenter.setConfiguration(envConfiguration.getOptions(), null);
         loadBalancerTabPainPresenter.setConfiguration(envConfiguration.getOptions(), null);
@@ -184,7 +172,7 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
 
     @Override
     public void onApplyButtonCLicked() {
-        JsonArray<ConfigurationOption> options = JsonCollections.createArray();
+        JsonArray<ConfigurationOption> options = JsoArray.create();
 
         options.addAll(serverTabPainPresenter.getConfigurationOptions());
         options.addAll(containerTabPainPresenter.getConfigurationOptions());
@@ -222,6 +210,6 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
 
     @Override
     public void onCancelButtonClicked() {
-
+        view.close();
     }
 }

@@ -18,46 +18,20 @@
  */
 package com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration;
 
-import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.json.JsonArray;
+import com.google.gwt.user.client.ui.ListBox;
 
 /**
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface ServerTabPainView extends View<ServerTabPainView.ActionDelegate> {
-    interface ActionDelegate {
+public class ModifiableListBox extends ListBox {
+    private boolean modified;
+
+    public boolean isModified() {
+        return modified;
     }
 
-    void resetModifiedFields();
-
-    void setEc2InstanceTypes(JsonArray<String> instanceTypes, String valueToSelect);
-
-    String getEc2InstanceType();
-
-    boolean isEc2InstanceTypeModified();
-
-    void setEc2SecurityGroup(String securityGroup);
-
-    String getEc2SecurityGroup();
-
-    boolean isEc2SecurityGroupModified();
-
-    void setKeyPair(String keyPair);
-
-    String getKeyPair();
-
-    boolean isHeyPairModified();
-
-    void setMonitoringInterval(JsonArray<String> interval, String valueForSelect);
-
-    String getMonitoringInterval();
-
-    boolean isMonitoringIntervalModified();
-
-    void setAmiId(String amiId);
-
-    String getAmiId();
-
-    boolean isAmiIdModified();
+    public void setModified(boolean modified) {
+        this.modified = modified;
+    }
 }

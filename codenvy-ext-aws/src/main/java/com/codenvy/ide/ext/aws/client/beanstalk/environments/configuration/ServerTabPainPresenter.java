@@ -35,6 +35,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class ServerTabPainPresenter implements Presenter, ServerTabPainView.ActionDelegate, HasConfigurationProperty {
     private ServerTabPainView view;
+    private JsonArray<ConfigurationOption> configuration;
 
     @Inject
     public ServerTabPainPresenter(ServerTabPainView view) {
@@ -52,50 +53,70 @@ public class ServerTabPainPresenter implements Presenter, ServerTabPainView.Acti
     public JsonArray<ConfigurationOption> getConfigurationOptions() {
         JsonArray<ConfigurationOption> options = JsonCollections.createArray();
 
-        DtoClientImpls.ConfigurationOptionImpl instanceTypeOpt = DtoClientImpls.ConfigurationOptionImpl.make();
-        instanceTypeOpt.setName("InstanceType");
-        instanceTypeOpt.setValue(view.getEc2InstanceType());
+        for (int i = 0; i < configuration.size(); i++) {
+            ConfigurationOption option = configuration.get(i);
 
-        DtoClientImpls.ConfigurationOptionImpl securityGroupOpt = DtoClientImpls.ConfigurationOptionImpl.make();
-        securityGroupOpt.setName("SecurityGroups");
-        securityGroupOpt.setValue(view.getEc2SecurityGroup());
+            if ("InstanceType".equals(option.getName()) && view.isEc2InstanceTypeModified()) {
+                DtoClientImpls.ConfigurationOptionImpl dtoOption = DtoClientImpls.ConfigurationOptionImpl.make();
+                dtoOption.setNamespace(option.getNamespace());
+                dtoOption.setName("InstanceType");
+                dtoOption.setValue(view.getEc2InstanceType());
+                options.add(dtoOption);
+            }
 
-        DtoClientImpls.ConfigurationOptionImpl keyPairOpt = DtoClientImpls.ConfigurationOptionImpl.make();
-        keyPairOpt.setName("EC2KeyName");
-        keyPairOpt.setValue(view.getKeyPair());
+            if ("SecurityGroups".equals(option.getName()) && view.isEc2SecurityGroupModified()) {
+                DtoClientImpls.ConfigurationOptionImpl dtoOption = DtoClientImpls.ConfigurationOptionImpl.make();
+                dtoOption.setNamespace(option.getNamespace());
+                dtoOption.setName("SecurityGroups");
+                dtoOption.setValue(view.getEc2SecurityGroup());
+                options.add(dtoOption);
+            }
 
-        DtoClientImpls.ConfigurationOptionImpl monitoringIntervalOpt = DtoClientImpls.ConfigurationOptionImpl.make();
-        monitoringIntervalOpt.setName("MonitoringInterval");
-        monitoringIntervalOpt.setValue(view.getMonitoringInterval());
+            if ("EC2KeyName".equals(option.getName()) && view.isHeyPairModified()) {
+                DtoClientImpls.ConfigurationOptionImpl dtoOption = DtoClientImpls.ConfigurationOptionImpl.make();
+                dtoOption.setNamespace(option.getNamespace());
+                dtoOption.setName("EC2KeyName");
+                dtoOption.setValue(view.getKeyPair());
+                options.add(dtoOption);
+            }
 
-        DtoClientImpls.ConfigurationOptionImpl imageIdOpt = DtoClientImpls.ConfigurationOptionImpl.make();
-        imageIdOpt.setName("ImageId");
-        imageIdOpt.setValue(view.getAmiId());
+            if ("MonitoringInterval".equals(option.getName()) && view.isMonitoringIntervalModified()) {
+                DtoClientImpls.ConfigurationOptionImpl dtoOption = DtoClientImpls.ConfigurationOptionImpl.make();
+                dtoOption.setNamespace(option.getNamespace());
+                dtoOption.setName("MonitoringInterval");
+                dtoOption.setValue(view.getMonitoringInterval());
+                options.add(dtoOption);
+            }
 
-        options.add(instanceTypeOpt);
-        options.add(securityGroupOpt);
-        options.add(keyPairOpt);
-        options.add(monitoringIntervalOpt);
-        options.add(imageIdOpt);
+            if ("ImageId".equals(option.getName()) && view.isAmiIdModified()) {
+                DtoClientImpls.ConfigurationOptionImpl dtoOption = DtoClientImpls.ConfigurationOptionImpl.make();
+                dtoOption.setNamespace(option.getNamespace());
+                dtoOption.setName("ImageId");
+                dtoOption.setValue(view.getAmiId());
+                options.add(dtoOption);
+            }
+        }
 
         return options;
     }
 
     @Override
     public void setConfiguration(JsonArray<ConfigurationOption> configuration, JsonArray<ConfigurationOptionInfo> configurationOptionInfo) {
+        view.resetModifiedFields();
+        this.configuration = configuration;
         for (int i = 0; i < configuration.size(); i++) {
             ConfigurationOption option = configuration.get(i);
 
             if (option.getName().equals("InstanceType")) {
                 JsonArray<String> valueOptions = getValueOptionsForConfigurationOption(option, configurationOptionInfo);
-                view.setEc2InstanceTypes(valueOptions);
+                view.setEc2InstanceTypes(valueOptions, option.getValue());
             } else if (option.getName().equals("SecurityGroups")) {
                 view.setEc2SecurityGroup(option.getValue());
             } else if (option.getName().equals("EC2KeyName")) {
                 view.setKeyPair(option.getValue());
             } else if (option.getName().equals("MonitoringInterval")) {
                 JsonArray<String> valueOptions = getValueOptionsForConfigurationOption(option, configurationOptionInfo);
-                view.setMonitoringInterval(valueOptions);
+                view.setMonitoringInterval(valueOptions, option.getValue());
             } else if (option.getName().equals("ImageId")) {
                 view.setAmiId(option.getValue());
             }

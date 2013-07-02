@@ -35,6 +35,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class ContainerTabPainPresenter implements Presenter, ContainerTabPainView.ActionDelegate, HasConfigurationProperty {
     private ContainerTabPainView view;
+    private JsonArray<ConfigurationOption> configuration;
 
     @Inject
     public ContainerTabPainPresenter(ContainerTabPainView view) {
@@ -52,32 +53,49 @@ public class ContainerTabPainPresenter implements Presenter, ContainerTabPainVie
     public JsonArray<ConfigurationOption> getConfigurationOptions() {
         JsonArray<ConfigurationOption> options = JsonCollections.createArray();
 
-        DtoClientImpls.ConfigurationOptionImpl initialHeapOpt = DtoClientImpls.ConfigurationOptionImpl.make();
-        initialHeapOpt.setName("Xms");
-        initialHeapOpt.setValue(view.getInitialHeapSize());
+        for (int i = 0; i < configuration.size(); i++) {
+            ConfigurationOption option = configuration.get(i);
 
-        DtoClientImpls.ConfigurationOptionImpl maxHeapSizeOpt = DtoClientImpls.ConfigurationOptionImpl.make();
-        maxHeapSizeOpt.setName("Xmx");
-        maxHeapSizeOpt.setValue(view.getMaxHeapSize());
+            if ("Xms".equals(option.getName()) && view.isInitialHeapSizeModified()) {
+                DtoClientImpls.ConfigurationOptionImpl dtoOption = DtoClientImpls.ConfigurationOptionImpl.make();
+                dtoOption.setNamespace(option.getNamespace());
+                dtoOption.setName("Xms");
+                dtoOption.setValue(view.getInitialHeapSize());
+                options.add(dtoOption);
+            }
 
-        DtoClientImpls.ConfigurationOptionImpl maxPermGenOpt = DtoClientImpls.ConfigurationOptionImpl.make();
-        maxPermGenOpt.setName("XX:MaxPermSize");
-        maxPermGenOpt.setValue(view.getMaxPermGenSize());
+            if ("Xmx".equals(option.getName()) && view.isMaxHeapSizeModified()) {
+                DtoClientImpls.ConfigurationOptionImpl dtoOption = DtoClientImpls.ConfigurationOptionImpl.make();
+                dtoOption.setNamespace(option.getNamespace());
+                dtoOption.setName("Xmx");
+                dtoOption.setValue(view.getMaxHeapSize());
+                options.add(dtoOption);
+            }
 
-        DtoClientImpls.ConfigurationOptionImpl jvmCommandLineOpt = DtoClientImpls.ConfigurationOptionImpl.make();
-        jvmCommandLineOpt.setName("JVM Options");
-        jvmCommandLineOpt.setValue(view.getJVMCommandLineOpt());
+            if ("XX:MaxPermSize".equals(option.getName()) && view.isMaxPermGenSizeModified()) {
+                DtoClientImpls.ConfigurationOptionImpl dtoOption = DtoClientImpls.ConfigurationOptionImpl.make();
+                dtoOption.setNamespace(option.getNamespace());
+                dtoOption.setName("XX:MaxPermSize");
+                dtoOption.setValue(view.getMaxPermGenSize());
+                options.add(dtoOption);
+            }
 
-        options.add(initialHeapOpt);
-        options.add(maxHeapSizeOpt);
-        options.add(maxPermGenOpt);
-        options.add(jvmCommandLineOpt);
+            if ("JVM Options".equals(option.getName()) && view.isJVMCommandLineOptModified()) {
+                DtoClientImpls.ConfigurationOptionImpl dtoOption = DtoClientImpls.ConfigurationOptionImpl.make();
+                dtoOption.setNamespace(option.getNamespace());
+                dtoOption.setName("JVM Options");
+                dtoOption.setValue(view.getJVMCommandLineOpt());
+                options.add(dtoOption);
+            }
+        }
 
         return options;
     }
 
     @Override
     public void setConfiguration(JsonArray<ConfigurationOption> configuration, JsonArray<ConfigurationOptionInfo> configurationOptionInfo) {
+        view.resetModifiedFields();
+        this.configuration = configuration;
         for (int i = 0; i < configuration.size(); i++) {
             ConfigurationOption option = configuration.get(i);
 

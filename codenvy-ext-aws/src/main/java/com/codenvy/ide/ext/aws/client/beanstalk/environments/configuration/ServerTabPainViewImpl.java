@@ -21,8 +21,11 @@ package com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration;
 import com.codenvy.ide.ext.aws.client.AWSLocalizationConstant;
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -33,24 +36,25 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ServerTabPainViewImpl extends Composite implements ServerTabPainView {
-    interface ServerTabPainViewImplUiBinder extends UiBinder<Widget, ServerTabPainViewImpl> {}
+    interface ServerTabPainViewImplUiBinder extends UiBinder<Widget, ServerTabPainViewImpl> {
+    }
 
     private static ServerTabPainViewImplUiBinder uiBinder = GWT.create(ServerTabPainViewImplUiBinder.class);
 
     @UiField
-    ListBox ec2InstanceTypeField;
+    ModifiableListBox ec2InstanceTypeField;
 
     @UiField
-    TextBox ec2SecurityGroupsField;
+    ModifiableTextBox ec2SecurityGroupsField;
 
     @UiField
-    TextBox keyNameField;
+    ModifiableTextBox keyNameField;
 
     @UiField
-    ListBox monitoringIntervalField;
+    ModifiableListBox monitoringIntervalField;
 
     @UiField
-    TextBox imageIdField;
+    ModifiableTextBox imageIdField;
 
     @UiField(provided = true)
     AWSLocalizationConstant constant;
@@ -67,12 +71,18 @@ public class ServerTabPainViewImpl extends Composite implements ServerTabPainVie
     }
 
     @Override
-    public void setEc2InstanceTypes(JsonArray<String> instanceTypes) {
+    public void setEc2InstanceTypes(JsonArray<String> instanceTypes, String valueToSelect) {
         ec2InstanceTypeField.clear();
+        int indexToSelect = 0;
 
         for (int i = 0; i < instanceTypes.size(); i++) {
             ec2InstanceTypeField.addItem(instanceTypes.get(i));
+            if (instanceTypes.get(i).equals(valueToSelect)) {
+                indexToSelect = i;
+            }
         }
+
+        ec2InstanceTypeField.setSelectedIndex(indexToSelect);
     }
 
     @Override
@@ -101,12 +111,18 @@ public class ServerTabPainViewImpl extends Composite implements ServerTabPainVie
     }
 
     @Override
-    public void setMonitoringInterval(JsonArray<String> interval) {
+    public void setMonitoringInterval(JsonArray<String> interval, String valueForSelect) {
         monitoringIntervalField.clear();
+        int indexToSelect = 0;
 
         for (int i = 0; i < interval.size(); i++) {
             monitoringIntervalField.addItem(interval.get(i));
+            if (interval.get(i).equals(valueForSelect)) {
+                indexToSelect = i;
+            }
         }
+
+        monitoringIntervalField.setSelectedIndex(indexToSelect);
     }
 
     public String getMonitoringInterval() {
@@ -126,5 +142,64 @@ public class ServerTabPainViewImpl extends Composite implements ServerTabPainVie
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
+    }
+
+    @Override
+    public void resetModifiedFields() {
+        ec2InstanceTypeField.setModified(false);
+        ec2SecurityGroupsField.setModified(false);
+        keyNameField.setModified(false);
+        monitoringIntervalField.setModified(false);
+        imageIdField.setModified(false);
+    }
+
+    @Override
+    public boolean isEc2InstanceTypeModified() {
+        return ec2InstanceTypeField.isModified();
+    }
+
+    @Override
+    public boolean isEc2SecurityGroupModified() {
+        return ec2SecurityGroupsField.isModified();
+    }
+
+    @Override
+    public boolean isHeyPairModified() {
+        return keyNameField.isModified();
+    }
+
+    @Override
+    public boolean isMonitoringIntervalModified() {
+        return monitoringIntervalField.isModified();
+    }
+
+    @Override
+    public boolean isAmiIdModified() {
+        return imageIdField.isModified();
+    }
+
+    @UiHandler("ec2InstanceTypeField")
+    public void onEc2InstanceTypeFieldChanged(ChangeEvent event) {
+        ec2InstanceTypeField.setModified(true);
+    }
+
+    @UiHandler("ec2SecurityGroupsField")
+    public void onEc2SecurityGroupsFieldChanged(KeyUpEvent event) {
+        ec2SecurityGroupsField.setModified(true);
+    }
+
+    @UiHandler("keyNameField")
+    public void onKeyNameFieldChanged(KeyUpEvent event) {
+        keyNameField.setModified(true);
+    }
+
+    @UiHandler("monitoringIntervalField")
+    public void onMonitoringIntervalFieldChanged(ChangeEvent event) {
+        monitoringIntervalField.setModified(true);
+    }
+
+    @UiHandler("imageIdField")
+    public void onImageIdFieldChanged(KeyUpEvent event) {
+        imageIdField.setModified(true);
     }
 }

@@ -29,6 +29,7 @@ import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.websocket.MessageBus;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;

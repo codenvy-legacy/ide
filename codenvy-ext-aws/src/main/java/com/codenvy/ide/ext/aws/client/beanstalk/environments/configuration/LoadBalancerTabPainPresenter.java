@@ -35,6 +35,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class LoadBalancerTabPainPresenter implements Presenter, LoadBalancerTabPainView.ActionDelegate, HasConfigurationProperty {
     private LoadBalancerTabPainView view;
+    private JsonArray<ConfigurationOption> configuration;
+    private JsonArray<ConfigurationOption> modifiedOptions = JsonCollections.createArray();
 
     @Inject
     public LoadBalancerTabPainPresenter(LoadBalancerTabPainView view) {
@@ -45,37 +47,57 @@ public class LoadBalancerTabPainPresenter implements Presenter, LoadBalancerTabP
     public JsonArray<ConfigurationOption> getConfigurationOptions() {
         JsonArray<ConfigurationOption> options = JsonCollections.createArray();
 
-        DtoClientImpls.ConfigurationOptionImpl healthCheckUrlOpt = DtoClientImpls.ConfigurationOptionImpl.make();
-        healthCheckUrlOpt.setName("Application Healthcheck URL");
-        healthCheckUrlOpt.setValue(view.getHealthCheckUrl());
+        for (int i = 0; i < configuration.size(); i++) {
+            ConfigurationOption option = configuration.get(i);
 
-        DtoClientImpls.ConfigurationOptionImpl intervalOpt = DtoClientImpls.ConfigurationOptionImpl.make();
-        intervalOpt.setName("Interval");
-        intervalOpt.setValue(view.getHealthCheckUrl());
+            if ("Application Healthcheck URL".equals(option.getName()) && view.isHealthCheckUrlModified()) {
+                DtoClientImpls.ConfigurationOptionImpl dtoOption = DtoClientImpls.ConfigurationOptionImpl.make();
+                dtoOption.setNamespace(option.getNamespace());
+                dtoOption.setName("Application Healthcheck URL");
+                dtoOption.setValue(view.getHealthCheckUrl());
+                options.add(dtoOption);
+            }
 
-        DtoClientImpls.ConfigurationOptionImpl timeoutOpt = DtoClientImpls.ConfigurationOptionImpl.make();
-        timeoutOpt.setName("Timeout");
-        timeoutOpt.setValue(view.getHealthCheckUrl());
+            if ("Interval".equals(option.getName()) && view.isHealthCheckIntervalModified()) {
+                DtoClientImpls.ConfigurationOptionImpl dtoOption = DtoClientImpls.ConfigurationOptionImpl.make();
+                dtoOption.setNamespace(option.getNamespace());
+                dtoOption.setName("Interval");
+                dtoOption.setValue(view.getHealthCheckInterval());
+                options.add(dtoOption);
+            }
 
-        DtoClientImpls.ConfigurationOptionImpl healthyThresholdOpt = DtoClientImpls.ConfigurationOptionImpl.make();
-        healthyThresholdOpt.setName("HealthyThreshold");
-        healthyThresholdOpt.setValue(view.getHealthCheckUrl());
+            if ("Timeout".equals(option.getName()) && view.isHealthCheckTimeOutModified()) {
+                DtoClientImpls.ConfigurationOptionImpl dtoOption = DtoClientImpls.ConfigurationOptionImpl.make();
+                dtoOption.setNamespace(option.getNamespace());
+                dtoOption.setName("Timeout");
+                dtoOption.setValue(view.getHealthCheckTimeOut());
+                options.add(dtoOption);
+            }
 
-        DtoClientImpls.ConfigurationOptionImpl unHealthyThresholdOpt = DtoClientImpls.ConfigurationOptionImpl.make();
-        unHealthyThresholdOpt.setName("UnhealthyThreshold");
-        unHealthyThresholdOpt.setValue(view.getHealthCheckUrl());
+            if ("HealthyThreshold".equals(option.getName()) && view.isHealthCheckCountThresholdModified()) {
+                DtoClientImpls.ConfigurationOptionImpl dtoOption = DtoClientImpls.ConfigurationOptionImpl.make();
+                dtoOption.setNamespace(option.getNamespace());
+                dtoOption.setName("HealthyThreshold");
+                dtoOption.setValue(view.getHealthCheckCountThreshold());
+                options.add(dtoOption);
+            }
 
-        options.add(healthCheckUrlOpt);
-        options.add(intervalOpt);
-        options.add(timeoutOpt);
-        options.add(healthyThresholdOpt);
-        options.add(unHealthyThresholdOpt);
+            if ("UnhealthyThreshold".equals(option.getName()) && view.isUnhealthyCheckCountThresholdModified()) {
+                DtoClientImpls.ConfigurationOptionImpl dtoOption = DtoClientImpls.ConfigurationOptionImpl.make();
+                dtoOption.setNamespace(option.getNamespace());
+                dtoOption.setName("UnhealthyThreshold");
+                dtoOption.setValue(view.getUnhealthyCheckCountThreshold());
+                options.add(dtoOption);
+            }
+        }
 
         return options;
     }
 
     @Override
     public void setConfiguration(JsonArray<ConfigurationOption> configuration, JsonArray<ConfigurationOptionInfo> configurationOptionInfo) {
+        view.resetModifiedFields();
+        this.configuration = configuration;
         for (int i = 0; i < configuration.size(); i++) {
             ConfigurationOption option = configuration.get(i);
             if (option.getName().equals("Application Healthcheck URL")) {
