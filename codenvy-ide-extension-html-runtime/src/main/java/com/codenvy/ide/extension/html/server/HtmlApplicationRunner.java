@@ -101,7 +101,6 @@ public class HtmlApplicationRunner implements ApplicationRunner {
 
         applications.put(name, new RunnedApplication(name, expired, project.getName(), wsMountPath + project.getPath()));
         LOG.info("EVENT#run-started# PROJECT#" + project.getName() + "# TYPE#HTML#");
-        LOG.info("EVENT#project-deployed# PROJECT#" + project.getName() + "# TYPE#HTML# PAAS#LOCAL#");
 
         return new ApplicationInstanceImpl(name, applicationLifetime);
     }
