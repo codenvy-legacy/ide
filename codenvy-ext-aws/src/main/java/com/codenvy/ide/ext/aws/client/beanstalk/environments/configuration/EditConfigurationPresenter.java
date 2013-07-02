@@ -97,6 +97,7 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
     public void showDialog(EnvironmentInfo environmentInfo) {
         this.environmentInfo = environmentInfo;
         if (!view.isShown()) {
+            view.focusInFirstTab();
             view.showDialog();
             getConfigurationOptions();
         }
