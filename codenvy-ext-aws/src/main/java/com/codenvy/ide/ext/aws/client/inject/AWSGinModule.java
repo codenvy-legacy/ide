@@ -93,7 +93,6 @@ public class AWSGinModule extends AbstractGinModule {
         bind(RestartEnvironmentView.class).to(RestartEnvironmentViewImpl.class).in(Singleton.class);
         bind(TerminateEnvironmentView.class).to(TerminateEnvironmentViewImpl.class).in(Singleton.class);
 
-        //TODO
         bind(EditConfigurationView.class).to(EditConfigurationViewImpl.class).in(Singleton.class);
         bind(ContainerTabPainView.class).to(ContainerTabPainViewImpl.class).in(Singleton.class);
         bind(ServerTabPainView.class).to(ServerTabPainViewImpl.class).in(Singleton.class);

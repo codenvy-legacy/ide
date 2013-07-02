@@ -30,6 +30,7 @@ import com.codenvy.ide.ext.aws.client.beanstalk.environments.rebuild.RebuildEnvi
 import com.codenvy.ide.ext.aws.client.beanstalk.environments.restart.RestartEnvironmentPresenter;
 import com.codenvy.ide.ext.aws.client.beanstalk.environments.terminate.TerminateEnvironmentPresenter;
 import com.codenvy.ide.ext.aws.client.marshaller.EnvironmentsInfoListUnmarshaller;
+import com.codenvy.ide.ext.aws.client.marshaller.EnvironmentsLogListUnmarshaller;
 import com.codenvy.ide.ext.aws.shared.beanstalk.EnvironmentInfo;
 import com.codenvy.ide.ext.aws.shared.beanstalk.InstanceLog;
 import com.codenvy.ide.json.JsonArray;
@@ -129,8 +130,11 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
             return;
         }
 
+        JsonArray<InstanceLog> instanceLogs = JsonCollections.createArray();
+        EnvironmentsLogListUnmarshaller unmarshaller = new EnvironmentsLogListUnmarshaller(instanceLogs);
+
         try {
-            service.getEnvironmentLogs(environment.getId(), new AsyncRequestCallback<JsonArray<InstanceLog>>() {
+            service.getEnvironmentLogs(environment.getId(), new AsyncRequestCallback<JsonArray<InstanceLog>>(unmarshaller) {
                 @Override
                 protected void onSuccess(JsonArray<InstanceLog> result) {
                     if (result.size() == 0) {

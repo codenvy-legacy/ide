@@ -25,7 +25,6 @@ import com.codenvy.ide.ext.aws.client.AwsAsyncRequestCallback;
 import com.codenvy.ide.ext.aws.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.aws.client.login.LoginPresenter;
 import com.codenvy.ide.ext.aws.client.marshaller.InstanceListInfoUnmarshaller;
-import com.codenvy.ide.ext.aws.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.aws.shared.ec2.InstanceInfo;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -34,9 +33,6 @@ import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>

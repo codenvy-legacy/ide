@@ -19,7 +19,6 @@
 package com.codenvy.ide.ext.aws.client.beanstalk.manage;
 
 import com.codenvy.ide.ext.aws.client.beanstalk.environments.EnvironmentTabPainPresenter;
-import com.codenvy.ide.ext.aws.client.beanstalk.environments.EnvironmentTabPainView;
 import com.codenvy.ide.ext.aws.client.beanstalk.versions.VersionTabPainPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;

@@ -22,7 +22,6 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.aws.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.aws.shared.beanstalk.EventsList;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;

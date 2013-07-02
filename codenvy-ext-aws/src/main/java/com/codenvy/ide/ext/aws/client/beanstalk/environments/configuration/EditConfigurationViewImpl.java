@@ -19,7 +19,6 @@
 package com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration;
 
 import com.codenvy.ide.ext.aws.client.AWSLocalizationConstant;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.ui.Button;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;

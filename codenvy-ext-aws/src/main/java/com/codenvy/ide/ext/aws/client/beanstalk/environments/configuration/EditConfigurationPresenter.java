@@ -34,7 +34,6 @@ import com.codenvy.ide.ext.aws.shared.beanstalk.ConfigurationOptionInfo;
 import com.codenvy.ide.ext.aws.shared.beanstalk.EnvironmentInfo;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
