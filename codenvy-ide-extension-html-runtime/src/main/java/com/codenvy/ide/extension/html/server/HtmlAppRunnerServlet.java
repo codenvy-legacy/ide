@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.extension.html.server;
 
+import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.container.ExoContainerContext;
 
 import javax.servlet.ServletException;
@@ -26,9 +27,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
 
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
@@ -42,15 +44,16 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 @SuppressWarnings("serial")
 public class HtmlAppRunnerServlet extends HttpServlet {
 
-    private static final int  BUFFER_SIZE = 100 * 1024; // 100 kB
-
     private ApplicationRunner appRunner;
+
+    private MimeTypeResolver  mimeTypeResolver;
 
     /** @see javax.servlet.GenericServlet#init() */
     @Override
     public void init() throws ServletException {
         super.init();
         appRunner = ((ApplicationRunner)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ApplicationRunner.class));
+        mimeTypeResolver = new MimeTypeResolver();
     }
 
     /** @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse) */
@@ -69,6 +72,8 @@ public class HtmlAppRunnerServlet extends HttpServlet {
         }
 
         final String filePath = requestPath.substring(secondSlashPosition + 1, requestPath.length());
+        
+        
         if (filePath.isEmpty()) {
             response.setStatus(SC_BAD_REQUEST);
             return;
@@ -78,6 +83,11 @@ public class HtmlAppRunnerServlet extends HttpServlet {
         try {
             final String appName = requestPath.substring(1, secondSlashPosition);
             final String projectPath = appRunner.getApplicationByName(appName).projectPath;
+           
+            final java.io.File childFile = new java.io.File(projectPath, "/" + filePath);
+            if (!(childFile.toPath().normalize().startsWith(projectPath))) {
+                throw new InvalidPathException(String.format("Invalid relative path %s", filePath), projectPath);
+            }
             fileContent = getFileContentByPath(projectPath, "/" + filePath);
         } catch (ApplicationRunnerException e) {
             response.sendError(SC_NOT_FOUND, e.getMessage());
@@ -87,24 +97,13 @@ public class HtmlAppRunnerServlet extends HttpServlet {
             return;
         }
 
+        response.setContentType(mimeTypeResolver.getMimeType(filePath.substring(filePath.lastIndexOf("/") + 1)));
         ServletOutputStream outputStream = response.getOutputStream();
         outputStream.write(fileContent);
-        outputStream.close();
+        outputStream.flush();
     }
 
     private byte[] getFileContentByPath(String projectPath, String filePath) throws IOException {
-        final File ioFile = new File(projectPath + filePath);
-        FileInputStream fileInputStream = new FileInputStream(ioFile);
-
-        final byte[] buffer = new byte[BUFFER_SIZE];
-        int lengthToRead = buffer.length;
-        int offset = 0;
-        int readCount;
-        while ((readCount = fileInputStream.read(buffer, offset, lengthToRead)) > 0) {
-            offset += readCount;
-            lengthToRead -= readCount;
-        }
-        fileInputStream.close();
-        return buffer;
+        return Files.readAllBytes(Paths.get(projectPath + filePath));
     }
 }
