@@ -107,7 +107,6 @@ public class RunAppControl extends SimpleControl implements IDEControl,
                                 || ProjectType.JSP.value().equals(projectType)
                                 || ProjectType.WAR.value().equals(projectType);
         setVisible(isJavaProject);
-        setEnabled(isJavaProject);
         setShowInContextMenu(isJavaProject);
     }
 
@@ -124,7 +123,6 @@ public class RunAppControl extends SimpleControl implements IDEControl,
     @Override
     public void onItemsSelected(ItemsSelectedEvent event) {
         if (event.getSelectedItems().size() != 1) {
-            setEnabled(false);
             setVisible(false);
         } else {
             setVisible(true);
