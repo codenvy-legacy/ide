@@ -9,18 +9,24 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.nio.file.Files;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class AclMain {
+public class AclUpdaterMain {
 
-    public AclMain(java.io.File root, java.io.File list) throws Exception {
+    public AclUpdaterMain(java.io.File root, java.io.File list) throws Exception {
         BufferedReader reader = new BufferedReader(new FileReader(list));
         String line;
         while ((line = reader.readLine()) != null) {
+            line = line.trim();
             java.io.File vfsRoot = getVfsRootFolder(root, line);
+            if (!vfsRoot.exists()) {
+                System.out.printf("Directory '%s' does not exists.%n", vfsRoot);
+                System.exit(1);
+            }
             java.io.File aclDir = new java.io.File(vfsRoot, MountPoint.ACL_DIR);
             if (!(aclDir.exists() || aclDir.mkdirs())) {
                 System.out.println("Cannot create directory for ACL.");
@@ -31,7 +37,16 @@ public class AclMain {
             DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(aclFile)));
             getACL().write(dos);
             dos.close();
-            System.out.printf("Successfully write ACL for %s%n", line);
+            java.io.File cacheResetDir = new java.io.File(vfsRoot, MountPoint.SERVICE_DIR + java.io.File.separatorChar + "cache");
+            if (!(cacheResetDir.exists() || cacheResetDir.mkdirs())) {
+                System.out.println("Cannot create directory.");
+                System.exit(1);
+            }
+            java.nio.file.Path resetFilePath = new java.io.File(cacheResetDir, "reset").toPath();
+            if (!Files.exists(resetFilePath)) {
+                Files.createFile(resetFilePath);
+            }
+            System.out.printf("Successfully write ACL for %s at %s%n", line, vfsRoot);
         }
     }
 
@@ -42,7 +57,7 @@ public class AclMain {
         }
         java.io.File root = new java.io.File(args[0]);
         if (!root.isDirectory()) {
-            System.out.println("Directory not exists or not directory.");
+            System.out.printf("Directory '%s' not exists or not directory.%n", root);
             System.exit(1);
         }
         java.io.File list = new java.io.File(args[1]);
@@ -50,7 +65,7 @@ public class AclMain {
             System.out.println("File not exists or not regular file.");
             System.exit(1);
         }
-        new AclMain(root, list);
+        new AclUpdaterMain(root, list);
     }
 
     private AccessControlList getACL() {

@@ -1,2 +1,2 @@
 #!/bin/sh
-java -cp target/dependency/*:target/classes org.exoplatform.ide.vfs.impl.fs.AclMain $@
+java -cp target/dependency/*:target/classes org.exoplatform.ide.vfs.impl.fs.AclUpdaterMain $@

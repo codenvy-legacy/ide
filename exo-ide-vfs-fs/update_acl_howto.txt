@@ -1,2 +1,2 @@
-1. Run mvn dependency:copy-dependencies
+1. Run mvn clean install dependency:copy-dependencies
 2. Run script update_acl.sh <path_to_root_directory_for_all_vfs> <path_to_file_contains_list_workspaces>
