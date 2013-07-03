@@ -32,8 +32,6 @@ import com.codenvy.ide.ext.appfog.client.marshaller.ProvisionedServiceUnmarshall
 import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogProvisionedService;
 import com.codenvy.ide.ext.appfog.shared.AppfogServices;
-import com.codenvy.ide.ext.appfog.shared.AppfogSystemService;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -42,8 +40,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
-
-import java.util.LinkedHashMap;
 
 /**
  * Presenter for creating new service.
@@ -145,13 +141,7 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
             service.services(AppFogExtension.DEFAULT_SERVER, new AsyncRequestCallback<AppfogServices>(unmarshaller) {
                 @Override
                 protected void onSuccess(AppfogServices result) {
-                    LinkedHashMap<String, String> values = new LinkedHashMap<String, String>();
-                    JsonArray<AppfogSystemService> systems = result.getAppfogSystemService();
-                    for (int i = 0; i < systems.size(); i++) {
-                        AppfogSystemService service = systems.get(i);
-                        values.put(service.getVendor(), service.getDescription());
-                    }
-                    view.setServices(values);
+                    view.setServices(result.getAppfogSystemService());
                 }
 
                 @Override

@@ -20,6 +20,8 @@ package com.codenvy.ide.ext.appfog.client.services;
 
 import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.AppfogResources;
+import com.codenvy.ide.ext.appfog.shared.AppfogSystemService;
+import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -31,11 +33,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * The implementation of {@link CreateServiceView}.
@@ -95,17 +92,12 @@ public class CreateServiceViewImpl extends DialogBox implements CreateServiceVie
 
     /** {@inheritDoc} */
     @Override
-    public void setServices(LinkedHashMap<String, String> values) {
+    public void setServices(JsonArray<AppfogSystemService> services) {
         servicesField.clear();
-        Set<Map.Entry<String, String>> s = values.entrySet();
-
-        Iterator<Map.Entry<String, String>> it = s.iterator();
-
-        while (it.hasNext()) {
-            Map.Entry<String, String> en = it.next();
-            servicesField.addItem(en.getValue(), en.getKey());
+        for (int i = 0; i < services.size(); i++) {
+            AppfogSystemService service = services.get(i);
+            servicesField.addItem(service.getVendor(), service.getDescription());
         }
-        servicesField.setSelectedIndex(0);
     }
 
     /** {@inheritDoc} */

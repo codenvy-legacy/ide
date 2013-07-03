@@ -19,8 +19,8 @@
 package com.codenvy.ide.extension.cloudfoundry.client.services;
 
 import com.codenvy.ide.api.mvp.View;
-
-import java.util.LinkedHashMap;
+import com.codenvy.ide.extension.cloudfoundry.shared.SystemService;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * The view of {@link CreateServicePresenter}.
@@ -50,7 +50,7 @@ public interface CreateServiceView extends View<CreateServiceView.ActionDelegate
      * @param services
      *         available services
      */
-    void setServices(LinkedHashMap<String, String> services);
+    void setServices(JsonArray<SystemService> services);
 
     /**
      * Returns service's name.

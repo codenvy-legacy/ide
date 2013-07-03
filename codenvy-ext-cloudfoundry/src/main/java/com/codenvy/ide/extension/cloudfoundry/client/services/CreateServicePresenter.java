@@ -31,8 +31,6 @@ import com.codenvy.ide.extension.cloudfoundry.client.marshaller.ProvisionedServi
 import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
-import com.codenvy.ide.extension.cloudfoundry.shared.SystemService;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
@@ -40,8 +38,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
-
-import java.util.LinkedHashMap;
 
 /**
  * Presenter for creating new service.
@@ -146,13 +142,7 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
             service.services(null, paasProvider, new AsyncRequestCallback<CloudFoundryServices>(unmarshaller) {
                 @Override
                 protected void onSuccess(CloudFoundryServices result) {
-                    LinkedHashMap<String, String> values = new LinkedHashMap<String, String>();
-                    JsonArray<SystemService> systems = result.getSystem();
-                    for (int i = 0; i < systems.size(); i++) {
-                        SystemService service = systems.get(i);
-                        values.put(service.getVendor(), service.getDescription());
-                    }
-                    view.setServices(values);
+                    view.setServices(result.getSystem());
                 }
 
                 @Override

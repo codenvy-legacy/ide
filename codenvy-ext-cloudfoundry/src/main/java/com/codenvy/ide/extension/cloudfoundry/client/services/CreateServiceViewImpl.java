@@ -20,6 +20,8 @@ package com.codenvy.ide.extension.cloudfoundry.client.services;
 
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
+import com.codenvy.ide.extension.cloudfoundry.shared.SystemService;
+import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -31,11 +33,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  * The implementation of {@link CreateServiceView}.
@@ -95,17 +92,12 @@ public class CreateServiceViewImpl extends DialogBox implements CreateServiceVie
 
     /** {@inheritDoc} */
     @Override
-    public void setServices(LinkedHashMap<String, String> values) {
+    public void setServices(JsonArray<SystemService> services) {
         servicesField.clear();
-        Set<Entry<String, String>> s = values.entrySet();
-
-        Iterator<Entry<String, String>> it = s.iterator();
-
-        while (it.hasNext()) {
-            Entry<String, String> en = it.next();
-            servicesField.addItem(en.getValue(), en.getKey());
+        for (int i = 0; i < services.size(); i++) {
+            SystemService service = services.get(i);
+            servicesField.addItem(service.getVendor(), service.getDescription());
         }
-        servicesField.setSelectedIndex(0);
     }
 
     /** {@inheritDoc} */
