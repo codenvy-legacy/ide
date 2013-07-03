@@ -58,7 +58,7 @@
 
         .downArrow::AFTER {
             content: "\25BE";
-            display : inline;
+            display: inline;
         }
 
         .aws-action-grad {
@@ -88,92 +88,99 @@
         .right {
             float: right;
         }
+
+        .padding5 {
+            padding: 5px;
+        }
     </ui:style>
-    <g:FlowPanel>
-        <g:SplitLayoutPanel width="1200px" height="750px">
-            <g:west size="260">
-                <g:FlowPanel>
-                    <g:FlowPanel styleName="{style.borderBottom}" height="60px">
-                        <g:Label text="Buckets" styleName="{style.buckets}" width="100%"/>
-                        <c:Button ui:field="btnCreate" width="100px" height="20px" text="{constant.createBucketButton}"
-                                  styleName="{style.leftAlign} {style.aws-action-grad}" type="DEFAULT"/>
-                        <g:MenuBar styleName="{style.aws-action-grad} {style.leftAlign2}">
-                            <g:MenuItem text="Actions" styleName="{style.downArrow}" height="17px">
-                                <g:MenuBar vertical="true">
-                                    <g:MenuItem ui:field="createBucketAction">
-                                        <div>
-                                            <img src="{resource.newBucket.getSafeUri}"/>
-                                            <ui:msg description="action.createBucketAction">Create Bucket</ui:msg>
-                                        </div>
-                                    </g:MenuItem>
-                                    <g:MenuItem ui:field="deleteBucketAction">
-                                        <div>
-                                            <img src="{resource.delete.getSafeUri}"/>
-                                            <ui:msg description="action.deleteBucketAction">Delete</ui:msg>
-                                        </div>
-                                    </g:MenuItem>
-                                </g:MenuBar>
-                            </g:MenuItem>
-                        </g:MenuBar>
-                    </g:FlowPanel>
-                    <g:ScrollPanel verticalScrollPosition="0" styleName="{style.marginTop}">
-                        <l:CellTable width="100%" height="100%" ui:field="s3BucketCellTable"/>
-                    </g:ScrollPanel>
-                </g:FlowPanel>
-            </g:west>
-            <g:center>
-                <g:FlowPanel width="100%">
-                    <g:FlowPanel width="100%" height="60px" styleName="{style.borderBottom}">
-                        <g:FlowPanel addStyleNames="{style.buckets}" height="16px">
-                            <g:Label text="Objects" styleName="{style.labelH} {style.rightSpacing}"/>
-                            <g:Label styleName="{style.right} " ui:field="bucketId"/>
+    <g:DockLayoutPanel width="1200px" height="780px">
+        <g:north size="750.0">
+            <g:SplitLayoutPanel width="1200px" height="750px">
+                <g:west size="260">
+                    <g:FlowPanel>
+                        <g:FlowPanel styleName="{style.borderBottom}" height="60px">
+                            <g:Label text="Buckets" styleName="{style.buckets}" width="100%"/>
+                            <c:Button ui:field="btnCreate" width="100px" height="20px" text="{constant.createBucketButton}"
+                                      styleName="{style.leftAlign} {style.aws-action-grad}" type="DEFAULT"/>
+                            <g:MenuBar styleName="{style.aws-action-grad} {style.leftAlign2}">
+                                <g:MenuItem text="Actions" styleName="{style.downArrow}" height="17px">
+                                    <g:MenuBar vertical="true">
+                                        <g:MenuItem ui:field="createBucketAction">
+                                            <div>
+                                                <img src="{resource.newBucket.getSafeUri}"/>
+                                                <ui:msg description="action.createBucketAction">Create Bucket</ui:msg>
+                                            </div>
+                                        </g:MenuItem>
+                                        <g:MenuItem ui:field="deleteBucketAction">
+                                            <div>
+                                                <img src="{resource.delete.getSafeUri}"/>
+                                                <ui:msg description="action.deleteBucketAction">Delete</ui:msg>
+                                            </div>
+                                        </g:MenuItem>
+                                    </g:MenuBar>
+                                </g:MenuItem>
+                            </g:MenuBar>
                         </g:FlowPanel>
-                        <c:Button width="60px" height="20px" styleName="{style.leftAlign} {style.aws-action-grad}" ui:field="btnUpload"
-                                  text="{constant.uploadButton}"/>
-                        <c:Button width="60px" height="20px" styleName="{style.leftAlign} {style.aws-action-grad}"
-                                  ui:field="btnRefreshObjects"
-                                  text="{constant.refreshButton}"/>
-                        <g:MenuBar styleName="{style.aws-action-grad} {style.leftAlign2}">
-                            <g:MenuItem text="Actions" styleName="{style.downArrow}" height="17px">
-                                <g:MenuBar vertical="true">
-                                    <g:MenuItem ui:field="downloadObjectAction">
-                                        <div>
-                                            <img src="{resource.download.getSafeUri}"/>
-                                            <ui:msg description="action.download">Download</ui:msg>
-                                        </div>
-                                    </g:MenuItem>
-                                    <g:MenuItem ui:field="uploadProjectAction">
-                                        <div>
-                                            <img src="{resource.upload.getSafeUri}"/>
-                                            <ui:msg description="action.uploadProject">Upload Project</ui:msg>
-                                        </div>
-                                    </g:MenuItem>
-                                    <g:MenuItem ui:field="deleteObjectAction">
-                                        <div>
-                                            <img src="{resource.delete.getSafeUri}"/>
-                                            <ui:msg description="action.delete">Delete</ui:msg>
-                                        </div>
-                                    </g:MenuItem>
-                                    <g:MenuItem ui:field="refreshObjectsAction">
-                                        <div>
-                                            <img src="{resource.s3Refresh.getSafeUri}"/>
-                                            <ui:msg description="action.refresh">Refresh</ui:msg>
-                                        </div>
-                                    </g:MenuItem>
-                                </g:MenuBar>
-                            </g:MenuItem>
-                        </g:MenuBar>
+                        <g:ScrollPanel verticalScrollPosition="0" styleName="{style.marginTop}">
+                            <l:CellTable width="100%" height="100%" ui:field="s3BucketCellTable"/>
+                        </g:ScrollPanel>
                     </g:FlowPanel>
-                    <g:ScrollPanel width="100%" ui:field="scrollPanel">
-                        <l:CellTable ui:field="s3ObjectCellTable" width="100%" height="100%"/>
-                    </g:ScrollPanel>
-                </g:FlowPanel>
-            </g:center>
-        </g:SplitLayoutPanel>
-        <g:DockLayoutPanel height="46px">
-            <g:north size="46.0">
-                <c:Button ui:field="btnClose" type="SUCCESS" height="22px" width="60px" text="Close"/>
-            </g:north>
-        </g:DockLayoutPanel>
-    </g:FlowPanel>
+                </g:west>
+                <g:center>
+                    <g:FlowPanel width="100%">
+                        <g:FlowPanel width="100%" height="60px" styleName="{style.borderBottom}">
+                            <g:FlowPanel addStyleNames="{style.buckets}" height="16px">
+                                <g:Label text="Objects" styleName="{style.labelH} {style.rightSpacing}"/>
+                                <g:Label styleName="{style.right} " ui:field="bucketId"/>
+                            </g:FlowPanel>
+                            <c:Button width="60px" height="20px" styleName="{style.leftAlign} {style.aws-action-grad}" ui:field="btnUpload"
+                                      text="{constant.uploadButton}"/>
+                            <c:Button width="60px" height="20px" styleName="{style.leftAlign} {style.aws-action-grad}"
+                                      ui:field="btnRefreshObjects"
+                                      text="{constant.refreshButton}"/>
+                            <g:MenuBar styleName="{style.aws-action-grad} {style.leftAlign2}">
+                                <g:MenuItem text="Actions" styleName="{style.downArrow}" height="17px">
+                                    <g:MenuBar vertical="true">
+                                        <g:MenuItem ui:field="downloadObjectAction">
+                                            <div>
+                                                <img src="{resource.download.getSafeUri}"/>
+                                                <ui:msg description="action.download">Download</ui:msg>
+                                            </div>
+                                        </g:MenuItem>
+                                        <g:MenuItem ui:field="uploadProjectAction">
+                                            <div>
+                                                <img src="{resource.upload.getSafeUri}"/>
+                                                <ui:msg description="action.uploadProject">Upload Project</ui:msg>
+                                            </div>
+                                        </g:MenuItem>
+                                        <g:MenuItem ui:field="deleteObjectAction">
+                                            <div>
+                                                <img src="{resource.delete.getSafeUri}"/>
+                                                <ui:msg description="action.delete">Delete</ui:msg>
+                                            </div>
+                                        </g:MenuItem>
+                                        <g:MenuItem ui:field="refreshObjectsAction">
+                                            <div>
+                                                <img src="{resource.s3Refresh.getSafeUri}"/>
+                                                <ui:msg description="action.refresh">Refresh</ui:msg>
+                                            </div>
+                                        </g:MenuItem>
+                                    </g:MenuBar>
+                                </g:MenuItem>
+                            </g:MenuBar>
+                        </g:FlowPanel>
+                        <g:ScrollPanel width="100%" ui:field="scrollPanel">
+                            <l:CellTable ui:field="s3ObjectCellTable" width="100%" height="100%"/>
+                        </g:ScrollPanel>
+                    </g:FlowPanel>
+                </g:center>
+            </g:SplitLayoutPanel>
+        </g:north>
+        <g:south size="30.0">
+            <g:FlowPanel>
+                <c:Button ui:field="btnClose" type="SUCCESS" height="18px" width="60px" text="Close"
+                          addStyleNames="{style.right} {style.padding5}"/>
+            </g:FlowPanel>
+        </g:south>
+    </g:DockLayoutPanel>
 </ui:UiBinder>
