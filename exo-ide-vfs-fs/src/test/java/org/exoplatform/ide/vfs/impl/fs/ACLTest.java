@@ -174,7 +174,6 @@ public class ACLTest extends LocalFileSystemTest {
         // File is protected and default principal 'admin' has not update_acl permission.
         // Replace default principal by principal who has write permission.
         ConversationState user = new ConversationState(new Identity("andrew"));
-        user.setAttribute("currentTenant", ConversationState.getCurrent().getAttribute("currentTenant"));
         ConversationState.setCurrent(user);
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, acl.getBytes(), null);
         assertEquals(204, response.getStatus());
@@ -226,7 +225,7 @@ public class ACLTest extends LocalFileSystemTest {
         Map<String, List<String>> h = new HashMap<String, List<String>>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
 
-        String requestPath = SERVICE_URI + "acl/" + lockedFileId + '?' + "lockToken=" + lockToken;
+        String requestPath = SERVICE_URI + "acl/" + lockedFileId + '?' + "lockToken=" + lockToken + "&override=" + true;
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, acl.getBytes(), null);
 
         assertEquals(204, response.getStatus());

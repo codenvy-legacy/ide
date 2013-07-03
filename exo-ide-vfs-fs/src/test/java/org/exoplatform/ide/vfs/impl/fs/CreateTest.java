@@ -163,7 +163,6 @@ public class CreateTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "file/" + protectedFolderId + '?' + "name=" + name;
         // Replace default principal by principal who has write permission.
         ConversationState user = new ConversationState(new Identity("andrew"));
-        user.setAttribute("currentTenant", ConversationState.getCurrent().getAttribute("currentTenant"));
         ConversationState.setCurrent(user);
         // --
         ContainerResponse response =

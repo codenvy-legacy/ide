@@ -24,7 +24,6 @@ import com.codenvy.commons.lang.NamedThreadFactory;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -49,13 +48,13 @@ import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
  * @version $Id: $
  */
 public class CleanableSearcherProvider implements SearcherProvider {
-    private final ConcurrentMap<File, CleanableSearcher> instances;
+    private final ConcurrentMap<java.io.File, CleanableSearcher> instances;
     private final ExecutorService                        executor;
 
     public CleanableSearcherProvider() {
         executor = Executors.newFixedThreadPool(1 + Runtime.getRuntime().availableProcessors(),
                                                 new NamedThreadFactory("LocalVirtualFileSystem-CleanableSearcher-", true));
-        instances = new ConcurrentHashMap<File, CleanableSearcher>();
+        instances = new ConcurrentHashMap<java.io.File, CleanableSearcher>();
     }
 
     @Override

@@ -99,7 +99,6 @@ public class ExportTest extends LocalFileSystemTest {
         String path = SERVICE_URI + "export/" + protectedFolderId;
         // Replace default principal by principal who has read permission.
         ConversationState user = new ConversationState(new Identity("andrew"));
-        user.setAttribute("currentTenant", ConversationState.getCurrent().getAttribute("currentTenant"));
         ConversationState.setCurrent(user);
         ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
