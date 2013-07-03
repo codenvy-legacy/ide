@@ -97,6 +97,9 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
 
         this.setText(constant.createApplicationViewTitle());
         this.setWidget(widget);
+
+        envNameField.setEnabled(false);
+        envDescField.setEnabled(false);
     }
 
     @Override
