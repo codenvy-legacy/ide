@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.git.client.commit.CommitRequestHandler;
 import com.codenvy.ide.ext.git.client.fetch.FetchRequestHandler;
 import com.codenvy.ide.ext.git.client.init.InitRequestStatusHandler;
 import com.codenvy.ide.ext.git.client.marshaller.DiffRequestMarshaller;
-import com.codenvy.ide.ext.git.client.marshaller.PullRequestMarshaller;
 import com.codenvy.ide.ext.git.client.pull.PullRequestHandler;
 import com.codenvy.ide.ext.git.client.push.PushRequestHandler;
 import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
@@ -554,15 +553,10 @@ public class GitClientServiceImpl implements GitClientService {
         DtoClientImpls.PullRequestImpl pullRequest = DtoClientImpls.PullRequestImpl.make();
         pullRequest.setRemote(remote);
         pullRequest.setRefSpec(refSpec);
-        pullRequest.setTimeout(0);
-        // TODO marshaller
-        PullRequestMarshaller marshaller = new PullRequestMarshaller(pullRequest);
-        // System.out.println(marshaller.marshal());
-        // System.out.println(pullRequest.serialize());
 
         String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
 
-        AsyncRequest.build(POST, url + "?" + params, true).data(marshaller.marshal())
+        AsyncRequest.build(POST, url + "?" + params, true).data(pullRequest.serialize())
                     .header(CONTENTTYPE, APPLICATION_JSON)
                     .requestStatusHandler(new PullRequestHandler(project.getName(), refSpec, eventBus, constant)).send(callback);
     }
@@ -574,17 +568,12 @@ public class GitClientServiceImpl implements GitClientService {
         DtoClientImpls.PullRequestImpl pullRequest = DtoClientImpls.PullRequestImpl.make();
         pullRequest.setRemote(remote);
         pullRequest.setRefSpec(refSpec);
-        pullRequest.setTimeout(0);
-        // TODO marshaller
-        PullRequestMarshaller marshaller = new PullRequestMarshaller(pullRequest);
-        // System.out.println(marshaller.marshal());
-        // System.out.println(pullRequest.serialize());
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         callback.setStatusHandler(new PullRequestHandler(project.getName(), refSpec, eventBus, constant));
 
         MessageBuilder builder = new MessageBuilder(POST, PULL + params);
-        builder.data(marshaller.marshal())
+        builder.data(pullRequest.serialize())
                .header(CONTENTTYPE, APPLICATION_JSON);
         Message message = builder.build();
 

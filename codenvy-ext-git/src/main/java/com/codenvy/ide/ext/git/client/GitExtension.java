@@ -50,7 +50,7 @@ public class GitExtension {
                         ResetToCommitAction resetToCommitAction, RemoveFromIndexAction removeFromIndexAction, CommitAction commitAction,
                         ShowBranchesAction showBranchesAction, ShowMergeAction showMergeAction, ResetFilesAction resetFilesAction,
                         ShowStatusAction showStatusAction, ShowGitUrlAction showGitUrlAction, ShowRemoteAction showRemoteAction,
-                        PushAction pushAction, FetchAction fetchAction) {
+                        PushAction pushAction, FetchAction fetchAction, PullAction pullAction) {
         resources.gitCSS().ensureInjected();
 
         DefaultActionGroup mainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
@@ -109,6 +109,8 @@ public class GitExtension {
         remoteGroup.add(pushAction);
         actionManager.registerAction("GitFetch", fetchAction);
         remoteGroup.add(fetchAction);
+        actionManager.registerAction("GitPull", pullAction);
+        remoteGroup.add(pullAction);
         actionManager.registerAction("GitRemote", showRemoteAction);
         remoteGroup.add(showRemoteAction);
     }
