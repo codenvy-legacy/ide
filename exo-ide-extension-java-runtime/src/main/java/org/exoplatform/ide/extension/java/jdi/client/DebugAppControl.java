@@ -124,6 +124,10 @@ public class DebugAppControl extends SimpleControl implements IDEControl,
 
             ProjectModel project = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem
                 : ((ItemContext)selectedItem).getProject();
+            if (ProjectType.MultiModule.value().equals(project.getProjectType())
+                || ProjectType.JAR.value().equals(project.getProjectType())) {
+                setVisible(false);
+            }
             updateState(project.getProjectType());
         }
     }

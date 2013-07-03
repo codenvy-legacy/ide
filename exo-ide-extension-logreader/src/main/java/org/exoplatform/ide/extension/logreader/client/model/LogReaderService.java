@@ -75,7 +75,7 @@ public class LogReaderService {
      * @throws RequestException
      */
     public void getPrevLog(String token, AsyncRequestCallback<LogEntry> callback) throws RequestException {
-        String url = restContext + "/log-reader-service/prev-log?token=" + token;
+        String url = restContext + "/log-reader-service/prev-log?lrtoken=" + token;
         sendRequest(url, callback);
     }
 
@@ -88,7 +88,7 @@ public class LogReaderService {
      * @throws RequestException
      */
     public void getNextLog(String token, AsyncRequestCallback<LogEntry> callback) throws RequestException {
-        String url = restContext + "/log-reader-service/next-log?token=" + token;
+        String url = restContext + "/log-reader-service/next-log?lrtoken=" + token;
         sendRequest(url, callback);
     }
 
@@ -101,7 +101,7 @@ public class LogReaderService {
      * @throws RequestException
      */
     public void getLog(String token, AsyncRequestCallback<LogEntry> callback) throws RequestException {
-        String url = restContext + "/log-reader-service/log?token=" + token;
+        String url = restContext + "/log-reader-service/log?lrtoken=" + token;
         sendRequest(url, callback);
     }
 
