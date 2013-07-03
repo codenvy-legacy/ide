@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.git.client.commit.CommitRequestHandler;
 import com.codenvy.ide.ext.git.client.fetch.FetchRequestHandler;
 import com.codenvy.ide.ext.git.client.init.InitRequestStatusHandler;
 import com.codenvy.ide.ext.git.client.marshaller.DiffRequestMarshaller;
-import com.codenvy.ide.ext.git.client.marshaller.FetchRequestMarshaller;
 import com.codenvy.ide.ext.git.client.marshaller.PullRequestMarshaller;
 import com.codenvy.ide.ext.git.client.pull.PullRequestHandler;
 import com.codenvy.ide.ext.git.client.push.PushRequestHandler;
@@ -518,15 +517,10 @@ public class GitClientServiceImpl implements GitClientService {
         fetchRequest.setRemote(remote);
         fetchRequest.setRefSpec(refspec);
         fetchRequest.setRemoveDeletedRefs(removeDeletedRefs);
-        fetchRequest.setTimeout(0);
-        // TODO marshaller
-        FetchRequestMarshaller marshaller = new FetchRequestMarshaller(fetchRequest);
-        // System.out.println(marshaller.marshal());
-        // System.out.println(fetchRequest.serialize());
 
         String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
 
-        AsyncRequest.build(POST, url + "?" + params, true).data(marshaller.marshal())
+        AsyncRequest.build(POST, url + "?" + params, true).data(fetchRequest.serialize())
                     .header(CONTENTTYPE, APPLICATION_JSON)
                     .requestStatusHandler(new FetchRequestHandler(project.getName(), refspec, eventBus, constant)).send(callback);
     }
@@ -539,17 +533,12 @@ public class GitClientServiceImpl implements GitClientService {
         fetchRequest.setRemote(remote);
         fetchRequest.setRefSpec(refspec);
         fetchRequest.setRemoveDeletedRefs(removeDeletedRefs);
-        fetchRequest.setTimeout(0);
-        // TODO marshaller
-        FetchRequestMarshaller marshaller = new FetchRequestMarshaller(fetchRequest);
-        // System.out.println(marshaller.marshal());
-        // System.out.println(fetchRequest.serialize());
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         callback.setStatusHandler(new FetchRequestHandler(project.getName(), refspec, eventBus, constant));
 
         MessageBuilder builder = new MessageBuilder(POST, FETCH + params);
-        builder.data(marshaller.marshal())
+        builder.data(fetchRequest.serialize())
                .header(CONTENTTYPE, APPLICATION_JSON);
         Message message = builder.build();
 

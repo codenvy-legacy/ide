@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.git.client.push;
+package com.codenvy.ide.ext.git.client.fetch;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.git.client.GitClientResources;
@@ -29,6 +29,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -36,17 +37,19 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * The implementation of {@link PushToRemoteView}.
+ * The implementation of {@link FetchView}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class PushToRemoteViewImpl extends DialogBox implements PushToRemoteView {
-    interface PushToRemoteViewImplUiBinder extends UiBinder<Widget, PushToRemoteViewImpl> {
+public class FetchViewImpl extends DialogBox implements FetchView {
+    interface FetchViewImplUiBinder extends UiBinder<Widget, FetchViewImpl> {
     }
 
-    private static PushToRemoteViewImplUiBinder ourUiBinder = GWT.create(PushToRemoteViewImplUiBinder.class);
+    private static FetchViewImplUiBinder ourUiBinder = GWT.create(FetchViewImplUiBinder.class);
 
+    @UiField
+    CheckBox                  removeDeletedRefs;
     @UiField
     ListBox                   repository;
     @UiField
@@ -54,7 +57,7 @@ public class PushToRemoteViewImpl extends DialogBox implements PushToRemoteView 
     @UiField
     ListBox                   remoteBranch;
     @UiField
-    com.codenvy.ide.ui.Button btnPush;
+    com.codenvy.ide.ui.Button btnFetch;
     @UiField
     com.codenvy.ide.ui.Button btnCancel;
     @UiField(provided = true)
@@ -70,22 +73,42 @@ public class PushToRemoteViewImpl extends DialogBox implements PushToRemoteView 
      * @param locale
      */
     @Inject
-    protected PushToRemoteViewImpl(GitClientResources resources, GitLocalizationConstant locale) {
+    protected FetchViewImpl(GitClientResources resources, GitLocalizationConstant locale) {
         this.res = resources;
         this.locale = locale;
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText(locale.pushViewTitle());
+        this.setText(locale.fetchTitle());
         this.setWidget(widget);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isRemoveDeletedRefs() {
+        return removeDeletedRefs.getValue();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setRemoveDeleteRefs(boolean isRemoveDeleteRefs) {
+        removeDeletedRefs.setValue(isRemoveDeleteRefs);
     }
 
     /** {@inheritDoc} */
     @NotNull
     @Override
-    public String getRepository() {
+    public String getRepositoryName() {
         int index = repository.getSelectedIndex();
         return index != -1 ? repository.getItemText(index) : "";
+    }
+
+    /** {@inheritDoc} */
+    @NotNull
+    @Override
+    public String getRepositoryUrl() {
+        int index = repository.getSelectedIndex();
+        return repository.getValue(index);
     }
 
     /** {@inheritDoc} */
@@ -154,8 +177,8 @@ public class PushToRemoteViewImpl extends DialogBox implements PushToRemoteView 
 
     /** {@inheritDoc} */
     @Override
-    public void setEnablePushButton(boolean enabled) {
-        btnPush.setEnabled(enabled);
+    public void setEnableFetchButton(boolean enabled) {
+        btnFetch.setEnabled(enabled);
     }
 
     /** {@inheritDoc} */
@@ -177,9 +200,9 @@ public class PushToRemoteViewImpl extends DialogBox implements PushToRemoteView 
         this.delegate = delegate;
     }
 
-    @UiHandler("btnPush")
-    public void onPushClicked(ClickEvent event) {
-        delegate.onPushClicked();
+    @UiHandler("btnFetch")
+    public void onFetchClicked(ClickEvent event) {
+        delegate.onFetchClicked();
     }
 
     @UiHandler("btnCancel")

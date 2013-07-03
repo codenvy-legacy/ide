@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.git.client.push;
+package com.codenvy.ide.ext.git.client.fetch;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.ConsolePart;
@@ -43,14 +43,14 @@ import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_LOCAL;
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_REMOTE;
 
 /**
- * Presenter for pushing changes to remote repository.
+ * Presenter for fetching changes from remote repository.
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Apr 4, 2011 9:53:07 AM anya $
+ * @version $Id: Apr 20, 2011 1:33:17 PM anya $
  */
 @Singleton
-public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
-    private PushToRemoteView        view;
+public class FetchPresenter implements FetchView.ActionDelegate {
+    private FetchView               view;
     private GitClientService        service;
     private ResourceProvider        resourceProvider;
     private ConsolePart             console;
@@ -67,8 +67,8 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
      * @param constant
      */
     @Inject
-    public PushToRemotePresenter(PushToRemoteView view, GitClientService service, ResourceProvider resourceProvider, ConsolePart console,
-                                 GitLocalizationConstant constant) {
+    public FetchPresenter(FetchView view, GitClientService service, ResourceProvider resourceProvider, ConsolePart console,
+                          GitLocalizationConstant constant) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
@@ -80,6 +80,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
     /** Show dialog. */
     public void showDialog() {
         project = resourceProvider.getActiveProject();
+        view.setRemoveDeleteRefs(false);
         getRemotes();
     }
 
@@ -107,11 +108,13 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
                                        String errorMessage =
                                                exception.getMessage() != null ? exception.getMessage() : constant.remoteListFailed();
                                        Window.alert(errorMessage);
+                                       view.setEnableFetchButton(false);
                                    }
                                });
         } catch (RequestException e) {
             String errorMessage = e.getMessage() != null ? e.getMessage() : constant.remoteListFailed();
             Window.alert(errorMessage);
+            view.setEnableFetchButton(false);
         }
     }
 
@@ -142,13 +145,13 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
                                        String errorMessage =
                                                exception.getMessage() != null ? exception.getMessage() : constant.branchesListFailed();
                                        console.print(errorMessage);
-                                       view.setEnablePushButton(false);
+                                       view.setEnableFetchButton(false);
                                    }
                                });
         } catch (RequestException e) {
             String errorMessage = e.getMessage() != null ? e.getMessage() : constant.branchesListFailed();
             console.print(errorMessage);
-            view.setEnablePushButton(false);
+            view.setEnableFetchButton(false);
         }
     }
 
@@ -206,58 +209,59 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
 
     /** {@inheritDoc} */
     @Override
-    public void onPushClicked() {
-        final String repository = view.getRepository();
+    public void onFetchClicked() {
+        final String remoteUrl = view.getRepositoryUrl();
+        String remoteName = view.getRepositoryName();
+        boolean removeDeletedRefs = view.isRemoveDeletedRefs();
 
         try {
-            service.pushWS(resourceProvider.getVfsId(), project, getRefs(), repository, false, new RequestCallback<String>() {
+            service.fetchWS(resourceProvider.getVfsId(), project, remoteName, getRefs(), removeDeletedRefs, new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
-                    console.print(constant.pushSuccess(repository));
+                    console.print(constant.fetchSuccess(remoteUrl));
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    handleError(exception);
-                    if (repository.startsWith("https://")) {
-                        console.print(constant.useSshProtocol());
-                    }
+                    handleError(exception, remoteUrl);
                 }
             });
         } catch (WebSocketException e) {
-            doPushREST(repository);
+            doFetchREST(remoteName, removeDeletedRefs, remoteUrl);
         }
         view.close();
     }
 
-    /** Push changes to remote repository (sends request over HTTP). */
-    private void doPushREST(final String repository) {
+    /** Perform fetch from remote repository (sends request over HTTP). */
+    private void doFetchREST(String remoteName, boolean removeDeletedRefs, final String remoteUrl) {
         try {
-            service.push(resourceProvider.getVfsId(), project, getRefs(), repository, false, new AsyncRequestCallback<String>() {
-                @Override
-                protected void onSuccess(String result) {
-                    console.print(constant.pushSuccess(repository));
-                }
+            service.fetch(resourceProvider.getVfsId(), project, remoteName, getRefs(), removeDeletedRefs,
+                          new AsyncRequestCallback<String>() {
+                              @Override
+                              protected void onSuccess(String result) {
+                                  console.print(constant.fetchSuccess(remoteUrl));
+                              }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    handleError(exception);
-                    if (repository.startsWith("https://")) {
-                        console.print(constant.useSshProtocol());
-                    }
-                }
-            });
+                              @Override
+                              protected void onFailure(Throwable exception) {
+                                  handleError(exception, remoteUrl);
+                              }
+                          });
         } catch (RequestException e) {
-            handleError(e);
+            handleError(e, remoteUrl);
         }
     }
 
-    /** @return list of refs to push */
+    /** @return list of refs to fetch */
     private JsonArray<String> getRefs() {
         String localBranch = view.getLocalBranch();
         String remoteBranch = view.getRemoteBranch();
+        String remoteName = view.getRepositoryName();
+        String refs = localBranch.isEmpty() ? remoteBranch
+                                            : "refs/heads/" + remoteBranch + ":" + "refs/remotes/" + remoteName + "/" + remoteBranch;
         JsoArray<String> array = JsoArray.create();
-        array.add(localBranch + ":" + remoteBranch);
+        array.add(refs);
+
         return array;
     }
 
@@ -267,8 +271,8 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
      * @param t
      *         exception what happened
      */
-    private void handleError(Throwable t) {
-        String errorMessage = t.getMessage() != null ? t.getMessage() : constant.pushFail();
+    private void handleError(Throwable t, String remoteUrl) {
+        String errorMessage = (t.getMessage() != null) ? t.getMessage() : constant.fetchFail(remoteUrl);
         console.print(errorMessage);
     }
 
@@ -282,6 +286,6 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
     @Override
     public void onValueChanged() {
         boolean isDisable = view.isLocalBranchesEmpty() || view.isRemoteBranchesEmpty() || view.isRepositoriesEmpty();
-        view.setEnablePushButton(isDisable);
+        view.setEnableFetchButton(isDisable);
     }
 }

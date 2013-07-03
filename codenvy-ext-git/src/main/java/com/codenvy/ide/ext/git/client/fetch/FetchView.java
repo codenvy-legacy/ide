@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.git.client.push;
+package com.codenvy.ide.ext.git.client.fetch;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
@@ -24,15 +24,15 @@ import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
 
 /**
- * The view of {@link PushToRemotePresenter}.
+ * The view of {@link FetchPresenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface PushToRemoteView extends View<PushToRemoteView.ActionDelegate> {
-    /** Needs for delegate some function into PushToRemote view. */
+public interface FetchView extends View<FetchView.ActionDelegate> {
+    /** Needs for delegate some function into Fetch view. */
     public interface ActionDelegate {
-        /** Performs any actions appropriate in response to the user having pressed the Push button. */
-        void onPushClicked();
+        /** Performs any actions appropriate in response to the user having pressed the Fetch button. */
+        void onFetchClicked();
 
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         void onCancelClicked();
@@ -41,13 +41,32 @@ public interface PushToRemoteView extends View<PushToRemoteView.ActionDelegate> 
         void onValueChanged();
     }
 
+    /** @return <code>true</code> if need to delete remove refs, and <code>false</code> otherwise */
+    boolean isRemoveDeletedRefs();
+
     /**
-     * Returns selected repository.
+     * Set status of deleting remove refs.
      *
-     * @return repository.
+     * @param isRemoveDeleteRefs
+     *         <code>true</code> need to delete remove refs, <code>false</code> don't need
+     */
+    void setRemoveDeleteRefs(boolean isRemoveDeleteRefs);
+
+    /**
+     * Returns selected repository name.
+     *
+     * @return repository name.
      */
     @NotNull
-    String getRepository();
+    String getRepositoryName();
+
+    /**
+     * Returns selected repository url.
+     *
+     * @return repository url.
+     */
+    @NotNull
+    String getRepositoryUrl();
 
     /**
      * Sets available repositories.
@@ -96,7 +115,7 @@ public interface PushToRemoteView extends View<PushToRemoteView.ActionDelegate> 
      * @param enabled
      *         <code>true</code> to enable the button, <code>false</code> to disable it
      */
-    void setEnablePushButton(boolean enabled);
+    void setEnableFetchButton(boolean enabled);
 
     /** Close dialog. */
     void close();
