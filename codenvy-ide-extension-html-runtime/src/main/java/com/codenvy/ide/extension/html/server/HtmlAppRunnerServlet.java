@@ -27,9 +27,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
@@ -59,39 +61,49 @@ public class HtmlAppRunnerServlet extends HttpServlet {
     /** @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse) */
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final String requestPath = request.getPathInfo();
+        String requestPath = request.getPathInfo();
         if (requestPath == null) {
             response.setStatus(SC_BAD_REQUEST);
             return;
         }
 
+        String appName;
+        String filePath;
         final int secondSlashPosition = requestPath.indexOf('/', 1);
         if (secondSlashPosition == -1) {
-            response.setStatus(SC_BAD_REQUEST);
+            appName = requestPath.substring(1);
+            filePath = "";
+        } else {
+            appName = requestPath.substring(1, secondSlashPosition);
+            filePath = requestPath.substring(secondSlashPosition + 1, requestPath.length());
+        }
+
+        String projectPath;
+        try {
+            projectPath = appRunner.getApplicationByName(appName).projectPath;
+        } catch (ApplicationRunnerException e) {
+            response.sendError(SC_NOT_FOUND, e.getMessage());
             return;
         }
 
-        final String filePath = requestPath.substring(secondSlashPosition + 1, requestPath.length());
-        
-        
         if (filePath.isEmpty()) {
-            response.setStatus(SC_BAD_REQUEST);
-            return;
+            filePath = getIndexFileNameIfExist(projectPath);
+            if (filePath == null) {
+                response.setStatus(SC_BAD_REQUEST);
+                return;
+            }
         }
 
         byte[] fileContent;
         try {
-            final String appName = requestPath.substring(1, secondSlashPosition);
-            final String projectPath = appRunner.getApplicationByName(appName).projectPath;
-           
-            final java.io.File childFile = new java.io.File(projectPath, "/" + filePath);
+            final String requestedFilePath = projectPath + "/" + filePath;
+
+            final File childFile = new File(requestedFilePath);
             if (!(childFile.toPath().normalize().startsWith(projectPath))) {
                 throw new InvalidPathException(String.format("Invalid relative path %s", filePath), projectPath);
             }
-            fileContent = getFileContentByPath(projectPath, "/" + filePath);
-        } catch (ApplicationRunnerException e) {
-            response.sendError(SC_NOT_FOUND, e.getMessage());
-            return;
+
+            fileContent = getFileContentByPath(requestedFilePath);
         } catch (IOException e) {
             response.sendError(SC_NOT_FOUND, "File '" + filePath + "' not found. ");
             return;
@@ -103,7 +115,18 @@ public class HtmlAppRunnerServlet extends HttpServlet {
         outputStream.flush();
     }
 
-    private byte[] getFileContentByPath(String projectPath, String filePath) throws IOException {
-        return Files.readAllBytes(Paths.get(projectPath + filePath));
+    private String getIndexFileNameIfExist(String projectPath) {
+        final Path indexHtmFilePath = Paths.get(projectPath, "/index.htm");
+        final Path indexHtmlFilePath = Paths.get(projectPath, "/index.html");
+        if (Files.exists(indexHtmFilePath)) {
+            return indexHtmFilePath.getFileName().toString();
+        } else if (Files.exists(indexHtmlFilePath)) {
+            return indexHtmlFilePath.getFileName().toString();
+        }
+        return null;
+    }
+
+    private byte[] getFileContentByPath(String path) throws IOException {
+        return Files.readAllBytes(Paths.get(path));
     }
 }
