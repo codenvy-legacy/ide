@@ -144,7 +144,7 @@ public class RunStopApplicationManager implements RunApplicationHandler, StopApp
                                                                               + Window.Location.getHost()
                                                                               + "/ide/" + Utils.getWorkspaceName() + "/"
                                                                               + APP_RUNNER_PATH
-                                                                              + runnedApplication.getName();
+                                                                              + runnedApplication.getName() + "/";
                                                            final String link = "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>";
                                                            IDE.fireEvent(new OutputEvent(
                                                                                          HTML_LOCALIZATION_CONSTANTS.applicationStartedUrl(result.getName(),
