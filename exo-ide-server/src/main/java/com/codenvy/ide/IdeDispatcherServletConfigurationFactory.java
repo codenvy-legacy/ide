@@ -42,7 +42,8 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                              .execute(new Action() {
                                                  @Override
                                                  public void perform(HttpServletRequest request, HttpServletResponse response)
-                                                         throws ServletException, IOException {
+                                                                                                                              throws ServletException,
+                                                                                                                              IOException {
                                                      request.getRequestDispatcher("/favicon.ico").forward(request, response);
                                                  }
                                              })
@@ -68,17 +69,18 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                                      final String workspace = (String)request.getAttribute("ws");
                                                      final String requestPath = request.getPathInfo();
                                                      return requestPath.startsWith("/" + workspace + "/_app");
-                                                           
+
                                                  }
                                              })
                                              .execute(new Action() {
                                                  @Override
                                                  public void perform(HttpServletRequest request, HttpServletResponse response)
-                                                         throws ServletException, IOException {
+                                                                                                                              throws ServletException,
+                                                                                                                              IOException {
                                                      final String workspace = (String)request.getAttribute("ws");
                                                      final String requestPath = request.getPathInfo();
                                                      final String myPath = requestPath.substring(workspace.length() + 1);
-                                                     //System.out.printf("\t\t\t(1) %s => %s%n", requestPath, myPath);
+                                                     // System.out.printf("\t\t\t(1) %s => %s%n", requestPath, myPath);
                                                      request.getRequestDispatcher(myPath).forward(request, response);
                                                  }
                                              })
@@ -90,17 +92,17 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                                      final String workspace = (String)request.getAttribute("ws");
                                                      final String requestPath = request.getPathInfo();
                                                      return requestPath.startsWith("/" + workspace + "/_git");
-                                                           
+
                                                  }
                                              })
                                              .execute(new Action() {
                                                  @Override
                                                  public void perform(HttpServletRequest request, HttpServletResponse response)
-                                                         throws ServletException, IOException {
+                                                                                                                              throws ServletException,
+                                                                                                                              IOException {
                                                      final String workspace = (String)request.getAttribute("ws");
                                                      final String requestPath = request.getPathInfo();
                                                      final String myPath = requestPath.substring(workspace.length() + 1);
-                                                     //System.out.printf("\t\t\t(1) %s => %s%n", requestPath, myPath);
                                                      request.getRequestDispatcher(myPath).forward(request, response);
                                                  }
                                              })
@@ -110,44 +112,87 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                              .execute(new Action() {
                                                  @Override
                                                  public void perform(HttpServletRequest request, HttpServletResponse response)
-                                                         throws ServletException, IOException {
+                                                                                                                              throws ServletException,
+                                                                                                                              IOException {
                                                      final String workspace = (String)request.getAttribute("ws");
                                                      final String requestPath = request.getPathInfo();
-                                                     final int length = requestPath.length();
+//TODO need improve this code
                                                      String project = null;
                                                      String filePath = null;
-                                                     int p = workspace.length();
-                                                     int n = requestPath.indexOf('/', p);
-                                                     if (n < 0) {
-                                                         n = length;
-                                                     }
+                                                     if (request.getHeader("Referer") != null && !request.getHeader("Referer").isEmpty() && request.getHeader("Referer").contains("/ide/"))
+                                                     {
+                                                         String orginalUrl = request.getHeader("Referer");
+                                                         
+                                                         int i = orginalUrl.indexOf("?");
+                                                         if (i > 0)
+                                                             orginalUrl = orginalUrl.substring(0, i);
+                                                         
+                                                         if (orginalUrl.endsWith("/"))
+                                                             orginalUrl = orginalUrl.substring(0, orginalUrl.length()-1);
+                                                         
+                                                         String tmp = orginalUrl.substring(request.getRequestURL().length());
+                                                         int n = tmp.indexOf('/', 1);
+                                                         if (n > 0)
+                                                         {
+                                                             project = tmp.substring(0, n);
+                                                             filePath = tmp.substring(n);
+                                                         } else
+                                                             project = tmp;
 
-                                                     String tmp;
-                                                     if (n < length) {
-                                                         p = n + 1;
-                                                         n = requestPath.indexOf('/', p);
+                                                         request.setAttribute("project", project);
+                                                         request.setAttribute("path", filePath);
+                                                         final String myPath = "/_app/main";
+                                                         request.getRequestDispatcher(myPath).forward(request, response);
+                                                         return;
+                                                     }
+                                                     else {
+                                                         final int length = requestPath.length();
+                                                         int p = workspace.length();
+                                                         int n = requestPath.indexOf('/', p);
                                                          if (n < 0) {
                                                              n = length;
                                                          }
-                                                         tmp = requestPath.substring(p, n);
-                                                         if (!tmp.isEmpty()) {
-                                                             project = tmp;
-                                                         }
+
+                                                         String tmp;
                                                          if (n < length) {
-                                                             p = n;
-                                                             n = length;
+                                                             p = n + 1;
+                                                             n = requestPath.indexOf('/', p);
+                                                             if (n < 0) {
+                                                                 n = length;
+                                                             }
                                                              tmp = requestPath.substring(p, n);
                                                              if (!tmp.isEmpty()) {
-                                                                 filePath = tmp;
+                                                                 project = tmp;
+                                                             }
+                                                             if (n < length) {
+                                                                 p = n;
+                                                                 n = length;
+                                                                 tmp = requestPath.substring(p, n);
+                                                                 if (!tmp.isEmpty()) {
+                                                                     filePath = tmp;
+                                                                 }
                                                              }
                                                          }
                                                      }
+                                                     int trim = 0;
+                                                     if (project != null)
+                                                         trim = project.length();
+                                                     if (filePath != null)
+                                                         trim += filePath.length();
 
+                                                     if (trim > 0)
+                                                     {
+                                                         String wsUri = request.getRequestURL().toString();
+                                                         wsUri = wsUri.substring(0, wsUri.length() - trim);
+                                                         response.setContentType("text/html;charset=UTF-8");
+                                                         response.setCharacterEncoding("UTF-8");
+                                                         response.getWriter().write("<script>window.location.replace(\"" + wsUri
+                                                                                    + "\");</script>");
+                                                         return;
+                                                     }
                                                      request.setAttribute("project", project);
                                                      request.setAttribute("path", filePath);
-
                                                      final String myPath = "/_app/main";
-                                                     //System.out.printf("\t\t\t(2) %s => %s%n", requestPath, myPath);
                                                      request.getRequestDispatcher(myPath).forward(request, response);
                                                  }
                                              })

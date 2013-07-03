@@ -189,7 +189,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                     String authUrl = Utils.getAuthorizationContext()
                                      + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"
                                      + "&scope=https://www.google.com/m8/feeds"
-                                     + "&userId=" + IDE.userId
+                                     + "&userId=" + IDE.user.getName()
                                      + "&redirect_after_login=/w/" + Utils.getWorkspaceName();
                     JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500,
                                                                            InviteGoogleDevelopersPresenter.this);

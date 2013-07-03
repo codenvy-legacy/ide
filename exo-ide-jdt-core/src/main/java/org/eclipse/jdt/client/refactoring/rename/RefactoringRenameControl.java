@@ -20,6 +20,7 @@ package org.eclipse.jdt.client.refactoring.rename;
 
 import org.eclipse.jdt.client.JdtExtension;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.JavaControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
@@ -28,6 +29,7 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: RefactoringRenameControl.java Jan 18, 2013 11:32:03 AM azatsarynnyy $
  */
+@RolesAllowed("developer")
 public class RefactoringRenameControl extends JavaControl {
 
     public RefactoringRenameControl() {

@@ -203,13 +203,13 @@ public interface SamplesLocalizationConstant extends Messages {
 
     @Key("control.welcome.id")
     String welcomeControlId();
-
+    
     @Key("control.welcome.title")
     String welcomeControlTitle();
 
     @Key("control.welcome.prompt")
     String welcomeControlPrompt();
-
+    
     /*
      * LoadSamplesView
      */
@@ -275,4 +275,13 @@ public interface SamplesLocalizationConstant extends Messages {
     
     @Key("joinCodenvyTitle")
     String joinCodenvyTitle();
+    
+    @Key("switchWorkspaceMessage")
+    String switchWorkspaceMessage();
+    
+    @Key("switchWorkspaceTitle")
+    String switchWorkspaceTitle();
+
+    @Key("switchWorkspace")
+    String switchWorkspace();
 }

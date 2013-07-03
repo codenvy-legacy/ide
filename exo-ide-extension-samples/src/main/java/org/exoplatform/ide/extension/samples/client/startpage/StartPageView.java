@@ -105,5 +105,11 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
     public HasClickHandlers getInvitationsLink() {
         return invitationsLink;
     }
+    
+    
+    @Override
+    public void disableInvitationsLink() {
+        invitationsLink.getElement().setAttribute("style", " color: grey;cursor: default; text-decoration: none;");
+    }
 
 }

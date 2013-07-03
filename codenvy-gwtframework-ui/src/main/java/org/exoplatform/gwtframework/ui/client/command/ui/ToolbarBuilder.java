@@ -20,7 +20,8 @@
 
 package org.exoplatform.gwtframework.ui.client.command.ui;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
@@ -28,8 +29,7 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -38,7 +38,7 @@ import java.util.List;
  * @version $
  */
 
-public class ToolbarBuilder implements SetToolbarItemsHandler {
+public class ToolbarBuilder implements SetToolbarItemsHandler, AddToolbarItemsHandler {
 
     private HandlerManager eventBus;
 
@@ -48,6 +48,7 @@ public class ToolbarBuilder implements SetToolbarItemsHandler {
         this.eventBus = eventBus;
         this.toolbars = toolbars;
         eventBus.addHandler(SetToolbarItemsEvent.TYPE, this);
+        eventBus.addHandler(AddToolbarItemsEvent.TYPE, this);
     }
 
     public void onSetToolbarItems(SetToolbarItemsEvent event) {
@@ -104,6 +105,7 @@ public class ToolbarBuilder implements SetToolbarItemsHandler {
         addItems(toolbar, leftItems, event.getCommands(), false);
         addItems(toolbar, rightItems, event.getCommands(), true);
         toolbar.hideDuplicatedDelimiters();
+        
     }
 
     private void addItems(Toolbar toolbar, List<String> items, List<Control> controls, boolean right) {
@@ -154,6 +156,11 @@ public class ToolbarBuilder implements SetToolbarItemsHandler {
         }
 
         return null;
+    }
+
+    @Override
+    public void onAddToolbarItems(AddToolbarItemsEvent event) {
+        toolbars[0].addItem(event.getIconButton(), true);
     }
 
 }

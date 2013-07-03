@@ -20,11 +20,13 @@ package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
 import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.event.OrganizeImportsEvent;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
+@RolesAllowed("developer")
 public class OrganizeImportsControl extends JavaControl {
 
     /** @param id */

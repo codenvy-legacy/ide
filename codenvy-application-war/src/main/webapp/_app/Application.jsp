@@ -37,15 +37,17 @@
         }
         var hiddenFiles = ".*";
         var ws = "<%= request.getAttribute("ws")%>";
-        var project = "<%= request.getAttribute("project")%>";
-        var path = "<%= request.getAttribute("path")%>";
+        var project = <%= request.getAttribute("project") != null ? "\"" + request.getAttribute("project")  + "\"" : null%>;
+        var path = <%= request.getAttribute("path") != null ? "\"" + request.getAttribute("path")  + "\"" : null%>;
         var authorizationContext = "/rest";
         var authorizationErrorPageURL = "/ide/ide/error_oauth.html";
         var securityCheckURL = "/ide/j_security_check";
     </script>
 
-    <link rel="shortcut icon" href='<%= genIdeStaticResourceUrl(request, "favicon.ico")%>'/>
+    <link rel="shortcut icon" href="/images/favicon.ico"/>
+<!--
     <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "_app.nocache.js")%>'></script>
+-->
     <link type="text/css" rel="stylesheet" href='<%= genIdeStaticResourceUrl(request, "top-menu.css")%>' media="all"/>
     <link href='<%= genIdeStaticResourceUrl(request, "css/ide.css")%>' media="screen" rel="stylesheet" type="text/css"/>
 </head>
@@ -53,6 +55,16 @@
 <body>
 
 <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "browserNotSupported.js")%>'></script>
+
+<div id="ide-preloader" style="position: absolute; left:0px; right: 0px; top:0px; bottom: 0px; background-color: #FFFFFF; z-index: 900100;">
+	<div style="position:absolute; width:230px; height:90px; background-image: url('<%= genIdeStaticResourceUrl(request, "loader-background-element.png")%>'); left:50%; top:50%; margin-left:-115px; margin-top:-45px; text-align: center;">
+		<img src='<%= genIdeStaticResourceUrl(request, "ajax-loader-new.gif")%>' style="margin-top: 20px; margin-bottom: 10px;" />
+		<br>
+		<span style="font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 11px; text-align: center; color: #222222;">Loading IDE...</span>
+	</div>
+</div>
+
+<script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "_app.nocache.js")%>'></script>
 
 <div id="ide-menu-additions" align="right" class="ideMenuAdditions">
     <table cellspacing="0" cellpadding="0" border="0"

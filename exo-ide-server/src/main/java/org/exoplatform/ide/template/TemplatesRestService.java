@@ -44,6 +44,7 @@ import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -74,6 +75,7 @@ import java.util.regex.Pattern;
  * @version $Id: TemplatesRestService.java Apr 4, 2011 3:21:46 PM vereshchaka $
  */
 @Path("{ws-name}/templates")
+@RolesAllowed("developer")
 public class TemplatesRestService {
 
     private static final Pattern PATTERN_GROUP_ID = Pattern.compile(".*<groupId>groupId</groupId>.*");

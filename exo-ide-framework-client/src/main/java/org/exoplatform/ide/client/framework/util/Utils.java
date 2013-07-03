@@ -409,6 +409,13 @@ public class Utils {
     public static native String getProjectToOpen() /*-{
         return $wnd.project;
      }-*/;
+    
+    public static native String getFilePathToOpen() /*-{
+      if ($wnd.path)
+        return $wnd.project + $wnd.path;
+      else 
+        return null;  
+    }-*/;
 
     public static native String getWebSocketContext() /*-{
             function endsWith(str, suffix) {

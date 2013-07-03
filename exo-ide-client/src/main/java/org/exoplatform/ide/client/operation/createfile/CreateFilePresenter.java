@@ -34,6 +34,7 @@ import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.api.IDEProject;
 import org.exoplatform.ide.client.framework.template.FileTemplates;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -191,7 +192,9 @@ public class CreateFilePresenter implements CreateNewFileHandler, ItemsSelectedH
                 parent = new FolderModel((Project)item);
             }
 
-            if (item instanceof ItemContext) {
+            if (item instanceof IDEProject) {
+                project = (ProjectModel)item;
+            } else if (item instanceof ItemContext) {
                 project = ((ItemContext)item).getProject();
             }
         }

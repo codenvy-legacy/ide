@@ -119,7 +119,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
 
             @Override
             public void onSelection(SelectionEvent<AppfogApplication> event) {
-                IDE.fireEvent(new StopApplicationEvent(event.getSelectedItem().getName()));
+                IDE.fireEvent(new StopApplicationEvent(event.getSelectedItem().getName(), display.getServerSelectField().getValue()));
             }
         });
 
@@ -127,7 +127,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
 
             @Override
             public void onSelection(SelectionEvent<AppfogApplication> event) {
-                IDE.fireEvent(new StartApplicationEvent(event.getSelectedItem().getName()));
+                IDE.fireEvent(new StartApplicationEvent(event.getSelectedItem().getName(), display.getServerSelectField().getValue()));
             }
         });
 
@@ -135,7 +135,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
 
             @Override
             public void onSelection(SelectionEvent<AppfogApplication> event) {
-                IDE.fireEvent(new RestartApplicationEvent(event.getSelectedItem().getName()));
+                IDE.fireEvent(new RestartApplicationEvent(event.getSelectedItem().getName(), display.getServerSelectField().getValue()));
             }
         });
 

@@ -35,7 +35,7 @@
         "command": [
             "git status"
         ],
-        "path": "/{ws-name}/git/status",
+        "path": "/{ws-name}/git/status/",
         "method": "POST",
         "description": "Get status of working directory.",
         "params": [
@@ -52,8 +52,8 @@
                 "mandatory": true
             },
             {
-                "name": "shortFormat",
-                "type": "BODY",
+                "name": "short",
+                "type": "QUERY",
                 "options": [
                     "-s",
                     "--short"

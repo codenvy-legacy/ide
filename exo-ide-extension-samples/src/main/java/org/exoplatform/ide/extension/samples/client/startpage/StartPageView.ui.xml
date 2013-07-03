@@ -147,10 +147,11 @@
 						<g:Image resource="{resource.documentation}"></g:Image>
 					</div>
 					<div class="{style.floatLeft} {style.linkWithText}">
-						<g:Anchor ui:field="documentationLink" styleName="{style.a}"
-							text="{locale.documentationTitle}" target="_blank" href="./docs"></g:Anchor>
-						<g:Label text="{locale.documentationText}" styleName="{style.welcomeLabel}"></g:Label>
-					</div>
+                        <g:Anchor ui:field="documentationLink" styleName="{style.a}"
+                                  text="{locale.documentationTitle}"
+                                  target="_blank" href="http://docs.codenvy.com"></g:Anchor>
+                        <g:Label text="{locale.documentationText}" styleName="{style.welcomeLabel}"></g:Label>
+                    </div>
 				</div>
 			</div>
 			<div class="{style.clear}"></div>
