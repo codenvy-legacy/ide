@@ -42,7 +42,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  */
 public class NodeJsRuntimeServiceImpl extends NodeJsRuntimeService {
     
-    private static final String BASE_URL = Utils.getWorkspaceName() + "/node/runner"; 
+    private static final String BASE_URL = "/node/runner"; 
     
     private static final String LOGS = BASE_URL + "/logs";
 
