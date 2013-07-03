@@ -1,0 +1,107 @@
+<!--
+
+    Copyright (C) 2012 eXo Platform SAS.
+
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:c="urn:import:com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration">
+    <ui:with field='resource' type='com.codenvy.ide.ext.aws.client.AWSResource'/>
+    <ui:with field='constant' type='com.codenvy.ide.ext.aws.client.AWSLocalizationConstant'/>
+    <ui:style>
+        .padding {
+            padding: 15px;
+        }
+
+        .labelH {
+            margin-right: 5px;
+            font-size: 11px;
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+            float: left;
+            font-weight: bold;
+        }
+
+        .labelTitle {
+            font-size: 12px;
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+            font-weight: bold;
+            border-bottom: 1px solid #DBDFE5;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            color: #597EAA;
+        }
+
+        .middle {
+            margin-top: 3px;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .space {
+            margin-right: 5px;
+        }
+
+        .textinput {
+            background-color: #FFFFFF !important;
+            color: #000000 !important;
+        }
+
+        .emptyBorder {
+            margin: 6px;
+        }
+
+        .space {
+            margin-right: 5px;
+        }
+    </ui:style>
+    <g:DockLayoutPanel unit="PX" width="700px" height="230px" addStyleNames="{resource.awsCss.login} {style.emptyBorder}">
+        <g:center>
+            <g:FlowPanel styleName="{style.padding}">
+                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle}" text="Container Options">
+                </g:Label>
+                <g:FlowPanel width="100%" height="30px">
+                    <g:Label text="{constant.editConfigurationInitialJVMHeapSize}" addStyleNames="{style.labelH} {style.middle}"
+                             width="320px"/>
+                    <c:ModifiableTextBox ui:field="initialJVMHeapSizeField" width="330px" height="22px"
+                               addStyleNames="{style.textinput} {style.left} {style.space}"/>
+                </g:FlowPanel>
+                <g:FlowPanel width="100%" height="30px">
+                    <g:Label text="{constant.editConfigurationMaximumJVMHeapSize}" addStyleNames="{style.labelH} {style.middle}"
+                             width="320px"/>
+                    <c:ModifiableTextBox ui:field="maximumJVMHeapSizeField" width="330px" height="22px"
+                               addStyleNames="{style.textinput} {style.left} {style.space}"/>
+                </g:FlowPanel>
+                <g:FlowPanel width="100%" height="30px">
+                    <g:Label text="{constant.editConfigurationMaxPermSize}" addStyleNames="{style.labelH} {style.middle}"
+                             width="320px"/>
+                    <c:ModifiableTextBox ui:field="maxPermSizeField" width="330px" height="22px"
+                               addStyleNames="{style.textinput} {style.left} {style.space}"/>
+                </g:FlowPanel>
+                <g:FlowPanel width="100%" height="30px">
+                    <g:Label text="{constant.editConfigurationJVMOptions}" addStyleNames="{style.labelH} {style.middle}"
+                             width="320px"/>
+                    <c:ModifiableTextBox ui:field="jvmOptionsField" width="330px" height="22px"
+                               addStyleNames="{style.textinput} {style.left} {style.space}"/>
+                </g:FlowPanel>
+            </g:FlowPanel>
+        </g:center>
+    </g:DockLayoutPanel>
+</ui:UiBinder>
