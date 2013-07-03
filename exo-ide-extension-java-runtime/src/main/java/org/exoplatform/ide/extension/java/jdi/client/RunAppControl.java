@@ -25,6 +25,8 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
@@ -38,7 +40,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 
 @RolesAllowed("developer")
 public class RunAppControl extends SimpleControl implements IDEControl,
-                                                // ProjectClosedHandler, ProjectOpenedHandler,
+                                                ProjectOpenedHandler,
                                                 AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler {
     public static final String  ID     = DebuggerExtension.LOCALIZATION_CONSTANT.runAppControlId();
 
@@ -64,6 +66,7 @@ public class RunAppControl extends SimpleControl implements IDEControl,
         IDE.addHandler(AppStartedEvent.TYPE, this);
         IDE.addHandler(AppStoppedEvent.TYPE, this);
         IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
     }
 
     // /**
@@ -81,12 +84,19 @@ public class RunAppControl extends SimpleControl implements IDEControl,
     // * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
     // .project.ProjectOpenedEvent)
     // */
-    // @Override
-    // public void onProjectOpened(ProjectOpenedEvent event)
-    // {
-    // // String projectType = event.getProject().getProjectType();
-    // // updateStatus(projectType);
-    // }
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event)
+    {
+        String projectType = event.getProject().getProjectType();
+        boolean isJavaProject = ProjectResolver.SPRING.equals(projectType)
+                                || ProjectResolver.SERVLET_JSP.equals(projectType)
+                                || ProjectResolver.APP_ENGINE_JAVA.equals(projectType)
+                                || ProjectType.JAVA.value().equals(projectType)
+                                || ProjectType.JSP.value().equals(projectType)
+                                || ProjectType.WAR.value().equals(projectType)
+                                || ProjectType.MultiModule.value().equals(projectType);
+        setEnabled(isJavaProject);
+    }
 
     /** @param projectType */
     private void updateStatus(String projectType) {
