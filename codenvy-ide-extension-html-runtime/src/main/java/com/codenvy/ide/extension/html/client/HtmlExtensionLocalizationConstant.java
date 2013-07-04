@@ -16,24 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.php.client;
+package com.codenvy.ide.extension.html.client;
 
 /**
- * Interface to represent the messages contained in resource bundle: PhpExtensionLocalizationConstant.properties'.
+ * Interface to represent the messages contained in resource bundle: HtmlExtensionLocalizationConstant.properties'.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: PhpExtensionLocalizationConstant.java Apr 17, 2013 4:07:00 PM azatsarynnyy $
- *
+ * @version $Id: HtmlExtensionLocalizationConstant.java Jun 26, 2013 11:04:52 AM azatsarynnyy $
  */
-public interface PhpExtensionLocalizationConstant extends com.google.gwt.i18n.client.Messages {
+public interface HtmlExtensionLocalizationConstant extends com.google.gwt.i18n.client.Messages {
     @Key("run.application.control.title")
     String runApplicationControlTitle();
 
     @Key("run.application.control.prompt")
     String runApplicationControlPrompt();
-
-    @Key("starting.project.message")
-    String startingProjectMessage(String project);
 
     @Key("project.started.message")
     String projectStartedMessage(String project);
@@ -50,27 +46,12 @@ public interface PhpExtensionLocalizationConstant extends com.google.gwt.i18n.cl
     @Key("stop.application.control.prompt")
     String stopApplicationControlPrompt();
 
-    @Key("stopping.project.message")
-    String stoppingProjectMessage(String project);
-
     @Key("stop.application.failed")
     String stopApplicationFailed();
 
     @Key("project.stopped.message")
     String projectStoppedMessage(String project);
 
-    @Key("not.php.project")
-    String notPhpProject();
-
-    @Key("no.run.application")
-    String noRunningApplication();
-
-    @Key("show.logs.control.title")
-    String showLogsControlTitle();
-
-    @Key("show.logs.control.prompt")
-    String showLogsControlPrompt();
-
-    @Key("get.logs.error.message")
-    String getLogsErrorMessage();
+    @Key("not.html.project")
+    String notHtmlProject();
 }
