@@ -18,13 +18,16 @@
  */
 package com.codenvy.ide.commons.cache;
 
+import java.util.Map.Entry;
+
+
 /**
  * Cache abstraction.
- *
+ * 
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Cache<K, V> {
+public interface Cache<K, V> extends Iterable<Entry<K, V>> {
     V get(K key);
 
     V put(K key, V value);

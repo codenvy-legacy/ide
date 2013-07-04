@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.nodejs.client.logs;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -40,6 +41,7 @@ import org.exoplatform.ide.extension.nodejs.client.run.event.ApplicationStoppedH
  * @version $Id: ShowLogsControl.java Apr 18, 2013 4:23:56 PM vsvydenko $
  *
  */
+@RolesAllowed({"developer"})
 public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
                                                               ApplicationStartedHandler, ApplicationStoppedHandler {
     private static final String ID = "Run/Node.js Logs";

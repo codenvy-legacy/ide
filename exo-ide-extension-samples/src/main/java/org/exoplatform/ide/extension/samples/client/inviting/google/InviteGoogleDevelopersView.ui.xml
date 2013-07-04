@@ -1,235 +1,221 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder
-        xmlns:ui="urn:ui:com.google.gwt.uibinder"
-        xmlns:g="urn:import:com.google.gwt.user.client.ui"
-        xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
 
-    <ui:with field='resource' type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle'/>
+	<ui:with field='resource'
+		type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle' />
 
-    <ui:style type='org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersView.Style'>
-            /*
-                .inviteForm {
-                    position: absolute;
-                    left: 0px;
-                    top: 0px;
-                    right: 0px;
-                    bottom: 0px;
-                    background-image: url("invites/invite-background.png");
-                    background-repeat: repeat-x;
-                    background-color: #FFFFFF;
-                    border: #999999 1px solid;
-                    overflow: hidden;
-                }
-            */
-        .inviteTop {
-            position: absolute;
-            left: 0px;
-            top: 0px;
-            right: 0px;
-            height: 48px;
-            line-height: 48px;
-            font-family: lucida_granderegular, Arial, Tahoma, sans-serif;
-            font-size: 25px;
-            font-weight: 400;
-            color: #FFFFFF;
-            padding-left: 30px;
-        }
+	<ui:style
+		type='org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersView.Style'>
+			/*
+												                .inviteForm {
+												                    position: absolute;
+												                    left: 0px;
+												                    top: 0px;
+												                    right: 0px;
+												                    bottom: 0px;
+												                    background-image: url("invites/invite-background.png");
+												                    background-repeat: repeat-x;
+												                    background-color: #FFFFFF;
+												                    border: #999999 1px solid;
+												                    overflow: hidden;
+												                }
+												            */
+			.inviteTop {
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				right: 0px;
+				height: 48px;
+				line-height: 48px;
+				font-family: lucida_granderegular, Arial, Tahoma, sans-serif;
+				font-size: 25px;
+				font-weight: 400;
+				color: #FFFFFF;
+				padding-left: 30px;
+			}
+			
+			.inviteTopbarTitle {
+				position: absolute;
+				left: 30px;
+				right: 30px;
+				top: 60px;
+				height: 16px;
+				font-family: Verdana, Bitstream Vera Sans, sans-serif;
+				font-size: 12px;
+				font-weight: normal;
+				font-style: normal;
+				line-height: 16px;
+			}
+			
+			.inviteTopbar {
+				position: absolute;
+				left: 30px;
+				right: 32px;
+				top: 80px;
+				height: 20px;
+			}
+			
+			.inviteTopbarTextInput {
+				position: absolute;
+				color: #222222;
+				width: 100%;
+				height: 20px;
+				resize: false;
+				border-color: #ABADB3 #DBDFE5 #DBDFE5;
+				border-style: solid;
+				border-width: 1px;
+			}
+			
+			.inviteTopbarTextInputWithHint {
+				position: absolute;
+				color: #AAAAAA;
+				width: 100%;
+				height: 20px;
+				resize: false;
+				border-color: #ABADB3 #DBDFE5 #DBDFE5;
+				border-style: solid;
+				border-width: 1px;
+			}
+			
+			.inviteToolbar {
+				overflow: hidden;
+				position: absolute;
+				left: 30px;
+				top: 112px;
+				right: 30px;
+				height: 18px;
+				text-align: right;
+				font-family: Verdana, Bitstream Vera Sans, sans-serif;
+				font-size: 12px;
+				font-weight: normal;
+				font-style: normal;
+				line-height: 18px;
+				vertical-align: middle;
+			}
+			
+			.check {
+				margin-top: 0px;
+				margin-bottom: 0px;
+			}
+			
+			.right {
+				float: right;
+			}
+			
+			.left {
+				float: left;
+			}
+			
+			.rightMargin {
+				margin-right: 10px;
+			}
+			
+			.inviteUserList {
+				position: absolute;
+				left: 30px;
+				right: 30px;
+				top: 135px;
+				bottom: 70px;
+				overflow: hidden;
+				border: #999999 1px solid;
+			}
+			
+			.inviteUserListBody {
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				right: 0px;
+				bottom: 0px;
+				overflow: auto;
+			}
+			
+			.inviteUserListError {
+				color: #AAAAAA;
+				position: absolute;
+				left: 10px;
+				right: 10px;
+				top: 50%;
+				margin-top: -9px;
+				text-align: center;
+				font-family: Verdana, Bitstream Vera Sans, sans-serif;
+				font-size: 14px;
+				font-weight: normal;
+				font-style: normal;
+				line-height: 18px;
+				vertical-align: middle;
+			}
+			
+			.inviteMessage {
+				position: absolute;
+				left: 30px;
+				right: 30px;
+				bottom: 65px;
+				height: 50px;
+				overflow: hidden;
+				border: #999999 1px solid;
+				-moz-box-sizing: border-box;
+				-webkit-box-sizing: border-box;
+				box-sizing: border-box;
+				display: none;
+			}
+			
+			.inviteMessageText {
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				right: 0px;
+				bottom: 0px;
+				border: none;
+				resize: none;
+				width: 100%;
+				height: 100%;
+			}
+			
+			.inviteFooter {
+				position: absolute;
+				left: 30px;
+				right: 30px;
+				bottom: 25px;
+				height: 22px;
+			}
+		</ui:style>
 
-        .inviteTopbarTitle {
-            position: absolute;
-            left: 30px;
-            right: 30px;
-            top: 60px;
-            height: 16px;
+	<g:HTMLPanel styleName="{resource.css.inviteHeader48}">
+		<div class="{style.inviteTop}">Invite developers and start collaborate with Codenvy</div>
 
-            font-family: Verdana, Bitstream Vera Sans, sans-serif;
-            font-size: 12px;
-            font-weight: normal;
-            font-style: normal;
-            line-height: 16px;
-        }
+		<div class="{style.inviteTopbarTitle}">Enter email adresses manually:</div>
+		<div class="{style.inviteTopbar}">
+			<f:TextInput ui:field="emailsTextField" styleName="{style.inviteTopbarTextInput}"></f:TextInput>
+		</div>
 
-        .inviteTopbar {
-            position: absolute;
-            left: 30px;
-            right: 32px;
-            top: 80px;
-            height: 20px;
-
-        }
-
-        .inviteTopbarTextInput {
-            position: absolute;
-            color: #222222;
-            width: 100%;
-            height: 20px;
-            resize: false;
-            border-color: #ABADB3 #DBDFE5 #DBDFE5;
-            border-style: solid;
-            border-width: 1px;
-        }
-
-        .inviteTopbarTextInputWithHint {
-            position: absolute;
-            color: #AAAAAA;
-            width: 100%;
-            height: 20px;
-            resize: false;
-            border-color: #ABADB3 #DBDFE5 #DBDFE5;
-            border-style: solid;
-            border-width: 1px;
-        }
-
-        .inviteToolbar {
-            overflow: hidden;
-            position: absolute;
-            left: 30px;
-            top: 112px;
-            right: 30px;
-            height: 18px;
-            text-align: right;
-            font-family: Verdana, Bitstream Vera Sans, sans-serif;
-            font-size: 12px;
-            font-weight: normal;
-            font-style: normal;
-            line-height: 18px;
-            vertical-align: middle;
-        }
-
-        .check {
-            margin-top: 0px;
-            margin-bottom: 0px;
-        }
-
-        .right {
-            float: right;
-        }
-
-        .left {
-            float: left;
-        }
-
-        .rightMargin {
-            margin-right: 10px;
-        }
-
-        .inviteUserList {
-            position: absolute;
-            left: 30px;
-            right: 30px;
-            top: 135px;
-            bottom: 160px;
-            overflow: hidden;
-            border: #999999 1px solid;
-        }
-
-        .inviteUserListBody {
-            position: absolute;
-            left: 0px;
-            top: 0px;
-            right: 0px;
-            bottom: 0px;
-            overflow: auto;
-        }
-
-        .inviteUserListError {
-            color: #AAAAAA;
-            position: absolute;
-            left: 10px;
-            right: 10px;
-            top: 50%;
-            margin-top: -9px;
-            text-align: center;
-            font-family: Verdana, Bitstream Vera Sans, sans-serif;
-            font-size: 14px;
-            font-weight: normal;
-            font-style: normal;
-            line-height: 18px;
-            vertical-align: middle;
-        }
-
-        .inviteMessageTitle {
-            position: absolute;
-            left: 30px;
-            right: 30px;
-            bottom: 120px;
-            height: 20px;
-            overflow: auto;
-
-            font-family: Verdana, Bitstream Vera Sans, sans-serif;
-            font-size: 12px;
-            font-weight: normal;
-            font-style: normal;
-            line-height: 20px;
-        }
-
-        .inviteMessage {
-            position: absolute;
-            left: 30px;
-            right: 30px;
-            bottom: 65px;
-            height: 50px;
-            overflow: hidden;
-            border: #999999 1px solid;
-
-            -moz-box-sizing: border-box;
-            -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-        }
-
-        .inviteMessageText {
-            position: absolute;
-            left: 0px;
-            top: 0px;
-            right: 0px;
-            bottom: 0px;
-            border: none;
-            resize: none;
-            width: 100%;
-            height: 100%;
-        }
-
-        .inviteFooter {
-            position: absolute;
-            left: 30px;
-            right: 30px;
-            bottom: 25px;
-            height: 22px;
-        }
-
-    </ui:style>
-
-    <g:HTMLPanel styleName="{resource.css.inviteHeader48}">
-        <div class="{style.inviteTop}">Invite developers</div>
-
-        <div class="{style.inviteTopbarTitle}">Enter email adresses manually:</div>
-        <div class="{style.inviteTopbar}">
-            <f:TextInput ui:field="emailsTextField" styleName="{style.inviteTopbarTextInput}"></f:TextInput>
-        </div>
-
-        <div class="{style.inviteToolbar}">
-            <div class="{style.left}">Or import contacts from Google:</div>
-            <div class="{style.right}">Invite all</div>
-            <div class="{style.right}">
-                <g:CheckBox ui:field="checkAll" styleName="{style.check}"></g:CheckBox>
-            </div>
-        </div>
-        <div class="{style.inviteUserList}">
-            <div class="{style.inviteUserListBody}" ui:field="userListElement" style="display:none;"></div>
-            <div class="{style.inviteUserListError}" ui:field="userListErrorMessage" style="display:none;">Codenvy failed to get information
-                on your Google contacts
-            </div>
-        </div>
-        <div class="{style.inviteMessageTitle}">Write a personal message:</div>
-        <div class="{style.inviteMessage}">
-            <textarea ui:field="inviteMessage" class="{style.inviteMessageText}"></textarea>
-        </div>
-        <div class="{style.inviteFooter}">
-            <f:ImageButton ui:field="inviteButton" enabled="false" addStyleNames="{style.right}"
-                           text="Invite&nbsp;Developers" width="160px"></f:ImageButton>
-            <f:ImageButton ui:field="cancelButton" addStyleNames="{style.right},{style.rightMargin}"
-                           text="Cancel"></f:ImageButton>
-        </div>
-    </g:HTMLPanel>
+		<div ui:field="inviteToolbarDiv" class="{style.inviteToolbar}">
+			<div class="{style.left}">Or import contacts from Google:</div>
+			<div class="{style.right}">Invite all</div>
+			<div class="{style.right}">
+				<g:CheckBox ui:field="checkAll" styleName="{style.check}"></g:CheckBox>
+			</div>
+		</div>
+		<div ui:field="inviteUserListDiv" class="{style.inviteUserList}">
+			<div class="{style.inviteUserListBody}" ui:field="userListElement"></div>
+		</div>
+		<div ui:field="inviteMessageDiv" class="{style.inviteMessage}">
+			<textarea
+				placeholder="Optional: add a personal message to developers you are inviting to your workspace..."
+				ui:field="inviteMessage" class="{style.inviteMessageText}"></textarea>
+		</div>
+		<div class="{style.inviteFooter}">
+			<f:ImageButton ui:field="inviteButton" addStyleNames="{style.right}"
+				text="Invite collaborators" width="130px"></f:ImageButton>
+			<f:ImageButton ui:field="addMessageButton"
+				addStyleNames="{style.right},{style.rightMargin}" text="Add a message"
+				width="120px"></f:ImageButton>
+			<f:ImageButton ui:field="loadGmailContactsButton"
+				addStyleNames="{style.right},{style.rightMargin}" text="Show gmail contacts"
+				width="140px"></f:ImageButton>
+			<f:ImageButton ui:field="cancelButton"
+				addStyleNames="{style.right},{style.rightMargin}" text="Cancel"></f:ImageButton>
+		</div>
+	</g:HTMLPanel>
 
 </ui:UiBinder>

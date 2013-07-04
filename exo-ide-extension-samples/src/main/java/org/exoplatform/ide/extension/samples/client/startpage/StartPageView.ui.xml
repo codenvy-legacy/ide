@@ -1,206 +1,205 @@
-<!--
-
-    Copyright (C) 2012 eXo Platform SAS.
-
-    This is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Lesser General Public License as
-    published by the Free Software Foundation; either version 2.1 of
-    the License, or (at your option) any later version.
-
-    This software is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this software; if not, write to the Free
-    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-    02110-1301 USA, or see the FSF site: http://www.fsf.org.
-
--->
+<!-- Copyright (C) 2012 eXo Platform SAS. This is free software; you can 
+	redistribute it and/or modify it under the terms of the GNU Lesser General 
+	Public License as published by the Free Software Foundation; either version 
+	2.1 of the License, or (at your option) any later version. This software 
+	is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+	without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+	PURPOSE. See the GNU Lesser General Public License for more details. You 
+	should have received a copy of the GNU Lesser General Public License along 
+	with this software; if not, write to the Free Software Foundation, Inc., 
+	51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: 
+	http://www.fsf.org. -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder
-        xmlns:ui="urn:ui:com.google.gwt.uibinder"
-        xmlns:g="urn:import:com.google.gwt.user.client.ui"
-        >
+	<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-    <ui:with field='resource' type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle'/>
-    <ui:with field="locale" type="org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant"></ui:with>
+	<ui:with field='resource'
+		type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle' />
+	<ui:with field="locale"
+		type="org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant"></ui:with>
 
-    <!-- To make button look like link -->
-    <ui:style>
+	<!-- To make button look like link -->
+	<ui:style>
+		.a {
+			cursor: pointer;
+			border: none;
+			/* Disable the button-style */
+			background-color: transparent;
+			font-family: Verdana, Arial, sans-serif;
+			font-size: 18px;
+			font-weight: bold;
+			color: #5E5E5E;
+			text-decoration: none;
+			text-align: left;
+		}
+		
+		.a:visited {
+			color: #5E5E5E;
+		}
+		
+		.a:hover {
+			color: #5E5E5E;
+			text-decoration: underline;
+		}
+		
+		.hPanel {
+			margin-top: 0px;
+		}
+		
+		.scroll {
+			overflow-x: scroll;
+		}
+		
+		.img {
+			width: 80px;
+			height: 80px;
+			margin-left: 15px;
+			margin-right: 15px;
+		}
+		
+		.linkText {
+			margin-left: 0px;
+		}
+		
+		.welcomeLabel {
+			font-size: 12px;
+			color: #5E5E5E;
+			font-family: Verdana, Arial, sans-serif;
+		}
+		
+		.floatLeft {
+			float: left;
+		}
+		
+		.fbLikePanel {
+			position: absolute;
+			width: 110px;
+			height: 25px;
+			background: none;
+			border: none;
+			top: 28px;
+			right: 0px;
+			overflow: hidden;
+		}
+		
+		.googleOnePanel {
+			position: absolute;
+			width: 190px;
+			height: 480px;
+			background: none;
+			border: none;
+			top: 20px;
+			right: 0px;
+			overflow: hidden;
+		}
+		
+		.floatLeft {
+			float: left;
+		}
+		
+		.clear {
+			clear: both;
+		}
+		
+		.item {
+			float: left;
+			width: 50%;
+			margin: 10px 0;
+		}
+		
+		.height20px {
+			height: 20px;
+		}
+		
+		.linkWithText {
+			max-width: 60%;
+		}
+	</ui:style>
 
-        .a {
-            cursor: pointer;
-            border: none;
-            /* Disable the button-style */
-            background-color: transparent;
-            font-family: Verdana, Arial, sans-serif;
-            font-size: 18px;
-            font-weight: bold;
-            color: #5E5E5E;
-            text-decoration: none;
-            text-align: left;
-        }
+	<g:HTMLPanel>
+		<div class="{resource.css.welcomeHeader}">
+			<div class="{style.floatLeft}">
+				<g:Image ui:field="logo" resource="{resource.ideLogo}"
+					styleName="{resource.css.welcomeHeaderLogo}"></g:Image>
+			</div>
+			<div class="{style.floatLeft}">
+				<g:Label text="{locale.aboutIde}" styleName="{resource.css.welcomeHeaderText}"></g:Label>
+				<g:Frame ui:field="googleFrame"  styleName="{style.googleOnePanel}" ></g:Frame>
+				<g:Frame ui:field="fbFrame"  styleName="{style.fbLikePanel}" ></g:Frame>
+			</div>
+		</div>
 
-        .a:visited {
-            color: #5E5E5E;
-        }
-
-        .a:hover {
-            color: #5E5E5E;
-            text-decoration: underline;
-        }
-
-        .hPanel {
-            margin-top: 0px;
-        }
-
-        .scroll {
-            overflow-x: scroll;
-        }
-
-        .img {
-            width: 80px;
-            height: 80px;
-            margin-left: 15px;
-            margin-right: 15px;
-        }
-
-        .linkText {
-            margin-left: 0px;
-        }
-
-        .welcomeLabel {
-            font-size: 12px;
-            color: #5E5E5E;
-            font-family: Verdana, Arial, sans-serif;
-        }
-
-        .fbLikePanel {
-            position: absolute;
-            width: 100px;
-            height: 25px;
-            background: none;
-            border: none;
-            top: 28px;
-            right: 0px;
-            overflow: hidden;
-        }
-
-        .floatLeft {
-            float: left;
-        }
-
-        .clear {
-            clear: both;
-        }
-
-        .item {
-            float: left;
-            width: 50%;
-            margin: 10px 0;
-        }
-
-        .height20px {
-            height: 20px;
-        }
-
-        .linkWithText {
-            max-width: 60%;
-        }
-    </ui:style>
-
-    <g:HTMLPanel>
-        <div class="{resource.css.welcomeHeader}">
-            <div class="{style.floatLeft}">
-                <g:Image ui:field="logo" resource="{resource.ideLogo}"
-                         styleName="{resource.css.welcomeHeaderLogo}"></g:Image>
-            </div>
-            <div class="{style.floatLeft}">
-                <g:Label text="{locale.aboutIde}" styleName="{resource.css.welcomeHeaderText}"></g:Label>
-                <iframe class="{style.fbLikePanel}" src="/IDE/fblike.html" frameborder="0" marginheight="0px"
-                        marginwidth="0px;" style="overflow:hidden;" allowtransparency="true"></iframe>
-            </div>
-        </div>
-
-        <div class="{style.scroll} {resource.css.welcomeTopContainer}">
-            <div class="{style.height20px}"></div>
-            <div class="{style.hPanel}">
-                <div class="{style.item}">
-                    <div class="{style.floatLeft} {style.img}">
-                        <g:Image resource="{resource.welcomeProject}"></g:Image>
-                    </div>
-                    <div class="{style.floatLeft} {style.linkWithText}">
-                        <g:Anchor ui:field="projectLink" text="{locale.projectTitle}"
-                                  styleName="{style.a}"></g:Anchor>
-                        <g:Label text="{locale.projectText}"
-                                 styleName="{style.linkText} {style.welcomeLabel}"></g:Label>
-                    </div>
-                </div>
-                <div class="{style.item}">
-                    <div class="{style.floatLeft} {style.img}">
-                        <g:Image resource="{resource.documentation}"></g:Image>
-                    </div>
-                    <div class="{style.floatLeft} {style.linkWithText}">
+		<div class="{style.scroll} {resource.css.welcomeTopContainer}">
+			<div class="{style.height20px}"></div>
+			<div class="{style.hPanel}">
+				<div class="{style.item}">
+					<div class="{style.floatLeft} {style.img}">
+						<g:Image resource="{resource.welcomeProject}"></g:Image>
+					</div>
+					<div class="{style.floatLeft} {style.linkWithText}">
+						<g:Anchor ui:field="projectLink" text="{locale.projectTitle}"
+							styleName="{style.a}"></g:Anchor>
+						<g:Label text="{locale.projectText}" styleName="{style.linkText} {style.welcomeLabel}"></g:Label>
+					</div>
+				</div>
+				<div class="{style.item}">
+					<div class="{style.floatLeft} {style.img}">
+						<g:Image resource="{resource.documentation}"></g:Image>
+					</div>
+					<div class="{style.floatLeft} {style.linkWithText}">
                         <g:Anchor ui:field="documentationLink" styleName="{style.a}"
                                   text="{locale.documentationTitle}"
                                   target="_blank" href="http://docs.codenvy.com"></g:Anchor>
                         <g:Label text="{locale.documentationText}" styleName="{style.welcomeLabel}"></g:Label>
                     </div>
-                </div>
-            </div>
-            <div class="{style.clear}"></div>
-            <div class="{style.hPanel}">
-                <div class="{style.item}">
-                    <div class="{style.floatLeft} {style.img}">
-                        <g:Image resource="{resource.importFromGithub}"></g:Image>
-                    </div>
-                    <div class="{style.floatLeft} {style.linkWithText}">
-                        <g:Anchor ui:field="importLink" text="{locale.importTitle}"
-                                  styleName="{style.a}"></g:Anchor>
-                        <g:Label text="{locale.importText}"
-                                 styleName="{style.linkText}  {style.welcomeLabel}"></g:Label>
-                    </div>
-                </div>
-                <div class="{style.item}">
-                    <div class="{style.floatLeft} {style.img}">
-                        <g:Image resource="{resource.invitation}"></g:Image>
-                    </div>
-                    <div class="{style.floatLeft} {style.linkWithText}">
-                        <g:Anchor ui:field="invitationsLink" text="{locale.invitationTitle}"
-                                  styleName="{style.a}"></g:Anchor>
-                        <g:Label text="{locale.invitationText}" styleName="{style.linkText} {style.welcomeLabel}"></g:Label>
-                    </div>
-                </div>
-            </div>
-            <div class="{style.clear}"></div>
-            <div class="{style.hPanel}">
-                <div class="{style.item}">
-                    <div class="{style.floatLeft} {style.img}">
-                        <g:Image resource="{resource.welcomeClone}"></g:Image>
-                    </div>
-                    <div class="{style.floatLeft} {style.linkWithText}">
-                        <g:Anchor ui:field="cloneLink" text="{locale.cloneTitle}"
-                                  styleName="{style.a}"></g:Anchor>
-                        <g:Label text="{locale.cloneText}"
-                                 styleName="{style.linkText} {style.welcomeLabel}"></g:Label>
-                    </div>
-                </div>
-                <div class="{style.item}">
-                    <div class="{style.floatLeft} {style.img}">
-                        <g:Image resource="{resource.support}"></g:Image>
-                    </div>
-                    <div class="{style.floatLeft} {style.linkWithText}">
-                        <g:Anchor ui:field="supportLink" text="{locale.supportTitle}"
-                                  styleName="{style.a}"
-                                  href="javascript:UserVoice.showPopupWidget();"></g:Anchor>
-                        <g:Label text="{locale.supportText}"
-                                 styleName="{style.linkText} {style.welcomeLabel}"></g:Label>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </g:HTMLPanel>
-
+				</div>
+			</div>
+			<div class="{style.clear}"></div>
+			<div class="{style.hPanel}">
+				<div class="{style.item}">
+					<div class="{style.floatLeft} {style.img}">
+						<g:Image resource="{resource.importFromGithub}"></g:Image>
+					</div>
+					<div class="{style.floatLeft} {style.linkWithText}">
+						<g:Anchor ui:field="importLink" text="{locale.importTitle}"
+							styleName="{style.a}"></g:Anchor>
+						<g:Label text="{locale.importText}" styleName="{style.linkText}  {style.welcomeLabel}"></g:Label>
+					</div>
+				</div>
+				<div class="{style.item}">
+					<div class="{style.floatLeft} {style.img}">
+						<g:Image resource="{resource.invitation}"></g:Image>
+					</div>
+					<div class="{style.floatLeft} {style.linkWithText}">
+						<g:Anchor ui:field="invitationsLink" text="{locale.invitationTitle}"
+							styleName="{style.a}"></g:Anchor>
+						<g:Label text="{locale.invitationText}" styleName="{style.linkText} {style.welcomeLabel}"></g:Label>
+					</div>
+				</div>
+			</div>
+			<div class="{style.clear}"></div>
+			<div class="{style.hPanel}">
+				<div class="{style.item}">
+					<div class="{style.floatLeft} {style.img}">
+						<g:Image resource="{resource.welcomeClone}"></g:Image>
+					</div>
+					<div class="{style.floatLeft} {style.linkWithText}">
+						<g:Anchor ui:field="cloneLink" text="{locale.cloneTitle}"
+							styleName="{style.a}"></g:Anchor>
+						<g:Label text="{locale.cloneText}" styleName="{style.linkText} {style.welcomeLabel}"></g:Label>
+					</div>
+				</div>
+				<div class="{style.item}">
+					<div class="{style.floatLeft} {style.img}">
+						<g:Image resource="{resource.support}"></g:Image>
+					</div>
+					<div class="{style.floatLeft} {style.linkWithText}">
+						<g:Anchor ui:field="supportLink" text="{locale.supportTitle}"
+							styleName="{style.a}" href="javascript:UserVoice.showPopupWidget();"></g:Anchor>
+						<g:Label text="{locale.supportText}" styleName="{style.linkText} {style.welcomeLabel}"></g:Label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</g:HTMLPanel>
 </ui:UiBinder>

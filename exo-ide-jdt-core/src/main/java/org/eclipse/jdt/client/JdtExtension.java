@@ -82,6 +82,7 @@ import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesInfoList;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
@@ -97,47 +98,47 @@ import java.util.Set;
  * @version ${Id}: Jan 20, 2012 1:08:51 PM evgen $
  */
 public class JdtExtension extends Extension implements InitializeServicesHandler, UserInfoReceivedHandler,
-                                           ProjectClosedHandler, ApplicationSettingsReceivedHandler, ApplicationClosedHandler,
-                                           SupportedProjectResolver,
-                                           VfsChangedHandler {
+                                                       ProjectClosedHandler, ApplicationSettingsReceivedHandler, ApplicationClosedHandler,
+                                                       SupportedProjectResolver,
+                                                       VfsChangedHandler {
 
-    public static String                     DOC_CONTEXT;
+    public static String DOC_CONTEXT;
 
-    static String                            REST_CONTEXT;
+    static String REST_CONTEXT;
 
-    private static final HoverResources      resources             = GWT.create(HoverResources.class);
+    private static final HoverResources resources = GWT.create(HoverResources.class);
 
-    public static final String               JAVA_CODE_FORMATTER   = "JavaCodeFormatter";
+    public static final String JAVA_CODE_FORMATTER = "JavaCodeFormatter";
 
     /** Localization constants. */
     public static final LocalizationConstant LOCALIZATION_CONSTANT = GWT.create(LocalizationConstant.class);
 
-    private static JdtExtension              instance;
+    private static JdtExtension instance;
 
-    private static final Set<String>         projectTypes          = new HashSet<String>();
+    private static final Set<String> projectTypes = new HashSet<String>();
 
-    private ContentAssistHistory             contentAssistHistory;
+    private ContentAssistHistory contentAssistHistory;
 
-    private static final String[]            fqns                  = new String[]{//
-                                                                     "java.lang.Object",//
-            "java.lang.String",//
-            "java.lang.System",//
-            "java.lang.Boolean",//
-            "java.lang.Byte",//
-            "java.lang.Character",//
-            "java.lang.Class", "java.lang.Cloneable",//
-            "java.lang.Double",//
-            "java.lang.Error",//
-            "java.lang.Exception",//
-            "java.lang.Float",//
-            "java.lang.Integer",//
-            "java.lang.Long",//
-            "java.lang.RuntimeException",//
-            "java.io.Serializable",//
-            "java.lang.Short",//
-            "java.lang.StringBuffer",//
-            "java.lang.Throwable",//
-            "java.lang.Void"                                         };
+    private static final String[] fqns = new String[]{//
+                                                      "java.lang.Object",//
+                                                      "java.lang.String",//
+                                                      "java.lang.System",//
+                                                      "java.lang.Boolean",//
+                                                      "java.lang.Byte",//
+                                                      "java.lang.Character",//
+                                                      "java.lang.Class", "java.lang.Cloneable",//
+                                                      "java.lang.Double",//
+                                                      "java.lang.Error",//
+                                                      "java.lang.Exception",//
+                                                      "java.lang.Float",//
+                                                      "java.lang.Integer",//
+                                                      "java.lang.Long",//
+                                                      "java.lang.RuntimeException",//
+                                                      "java.io.Serializable",//
+                                                      "java.lang.Short",//
+                                                      "java.lang.StringBuffer",//
+                                                      "java.lang.Throwable",//
+                                                      "java.lang.Void"};
 
     static {
         projectTypes.add(ProjectResolver.SERVLET_JSP);
@@ -152,20 +153,20 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
 
     /**
      * The code template context type registry for the java editor.
-     * 
+     *
      * @since 3.0
      */
-    private ContextTypeRegistry              fCodeTemplateContextTypeRegistry;
+    private ContextTypeRegistry fCodeTemplateContextTypeRegistry;
 
-    private TemplateStore                    templateStore;
+    private TemplateStore templateStore;
 
-    private UserInfo                         userInfo;
+    private UserInfo userInfo;
 
-    private HashMap<String, String>          options               = new HashMap<String, String>();
+    private HashMap<String, String> options = new HashMap<String, String>();
 
-    private FormatterProfilePresenter        formatterProfileManager;
+    private FormatterProfilePresenter formatterProfileManager;
 
-    private JdtGinjector                     injector;
+    private JdtGinjector injector;
 
     private void initOptions() {
         options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
@@ -205,8 +206,8 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
         IDE.addHandler(ApplicationClosedEvent.TYPE, this);
         IDE.addHandler(VfsChangedEvent.TYPE, this);
-        // new CodeAssistantPresenter(this);
-        new JavaCodeController(this);
+//      new CodeAssistantPresenter(this);
+        new JavaCodeController(Utils.getRestContext(), Utils.getWorkspaceName(), this);
         new OutlinePresenter();
         new TypeInfoUpdater();
         new JavaClasspathResolver(this);
@@ -224,9 +225,8 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
 
         formatterProfileManager = new FormatterProfilePresenter(IDE.eventBus());
-        org.exoplatform.ide.client.framework.preference.Preferences.get()
-                                                                   .addPreferenceItem(
-                                                                                      new FormatterPreferenceItem(formatterProfileManager));
+        org.exoplatform.ide.client.framework.preference.Preferences.get().addPreferenceItem(
+                new FormatterPreferenceItem(formatterProfileManager));
         new QuickFixPresenter(IDE.eventBus(), this);
         new QuickOutlinePresenter(IDE.eventBus());
         injector = GWT.create(JdtGinjector.class);
@@ -234,21 +234,18 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         injector.getSetterGetterPresenter();
         TypeInfoStorage.get().clear();
         resources.hover().ensureInjected();
-        // new PackagesUpdater(IDE.eventBus(), this, TypeInfoStorage.get());
+//      new PackagesUpdater(IDE.eventBus(), this, TypeInfoStorage.get());
         new JavadocPresenter(IDE.eventBus(), resources);
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
-     *      .client.framework.application.event.InitializeServicesEvent)
-     */
+    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     * .client.framework.application.event.InitializeServicesEvent) */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        REST_CONTEXT = event.getApplicationConfiguration().getContext();
-        DOC_CONTEXT = REST_CONTEXT + "/ide/code-assistant/java/class-doc?fqn=";
+        DOC_CONTEXT = Utils.getRestContext() + Utils.getWorkspaceName() + "/code-assistant/java/class-doc?fqn=";
         new CreatePackagePresenter(VirtualFileSystem.getInstance());
         new CreateJavaClassPresenter(VirtualFileSystem.getInstance());
-        new RefactoringClientServiceImpl(REST_CONTEXT, event.getLoader(), IDE.messageBus());
+        new RefactoringClientServiceImpl(Utils.getRestContext(), Utils.getWorkspaceName(), event.getLoader(), IDE.messageBus());
     }
 
     private void loadWellKnownClasses(String[] fqns) {
@@ -278,7 +275,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         return instance;
     }
 
-    /** @return */
+    /** @return  */
     public ContextTypeRegistry getTemplateContextRegistry() {
         if (fCodeTemplateContextTypeRegistry == null) {
             fCodeTemplateContextTypeRegistry = new ContextTypeRegistry();
@@ -334,19 +331,19 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         return fCodeTemplateContextTypeRegistry;
     }
 
-    /** @return */
+    /** @return  */
     public TemplateStore getTemplateStore() {
         if (templateStore == null)
             templateStore = new TemplateStore();
         return templateStore;
     }
 
-    /** @return */
+    /** @return  */
     public ContentAssistHistory getContentAssistHistory() {
         if (contentAssistHistory == null) {
             Preferences preferences = GWT.create(Preferences.class);
             contentAssistHistory =
-                                   ContentAssistHistory.load(preferences, Preferences.CODEASSIST_LRU_HISTORY + userInfo.getName());
+                    ContentAssistHistory.load(preferences, Preferences.CODEASSIST_LRU_HISTORY + userInfo.getName());
 
             if (contentAssistHistory == null)
                 contentAssistHistory = new ContentAssistHistory();
@@ -355,33 +352,27 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         return contentAssistHistory;
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client
-     *      .framework.userinfo.event.UserInfoReceivedEvent)
-     */
+    /** @see org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client
+     * .framework.userinfo.event.UserInfoReceivedEvent) */
     @Override
     public void onUserInfoReceived(UserInfoReceivedEvent event) {
         userInfo = event.getUserInfo();
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
-     *      .project.ProjectClosedEvent)
-     */
+    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     * .project.ProjectClosedEvent) */
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         TypeInfoStorage.get().clear();
     }
 
-    /** @return */
+    /** @return  */
     public HashMap<String, String> getOptions() {
         return options;
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org
-     *      .exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent)
-     */
+    /** @see org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org
+     * .exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent) */
     @Override
     public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
         ApplicationSettings settings = event.getApplicationSettings();
@@ -395,10 +386,8 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         }
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.application.event.ApplicationClosedHandler#onApplicationClosed(org.exoplatform.ide
-     *      .client.framework.application.event.ApplicationClosedEvent)
-     */
+    /** @see org.exoplatform.ide.client.framework.application.event.ApplicationClosedHandler#onApplicationClosed(org.exoplatform.ide
+     * .client.framework.application.event.ApplicationClosedEvent) */
     @Override
     public void onApplicationClosed(ApplicationClosedEvent event) {
         if (userInfo == null)

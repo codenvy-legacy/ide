@@ -36,6 +36,9 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -63,18 +66,18 @@ public class ResourceLockedPresenter implements ActionDelegate, ParticipantsList
 
     private String path;
 
-    private boolean file;
-
+    private Item item;
     private String targetPaht;
 
     private Operation operation;
 
-    public ResourceLockedPresenter(SafeHtml message, CollaborationManager manager, String path, boolean isFile,
-                                   String targetPaht, Operation operation) {
+    public ResourceLockedPresenter(SafeHtml message, CollaborationManager manager, String path, Item item,
+                                   String targetPath, Operation operation) {
         this.manager = manager;
         this.path = path;
-        file = isFile;
-        this.targetPaht = targetPaht;
+        this.item = item;
+
+        this.targetPaht = targetPath;
         this.operation = operation;
         view = GWT.create(ResourceLockedView.class);
         view.setDelegate(this);
@@ -94,9 +97,9 @@ public class ResourceLockedPresenter implements ActionDelegate, ParticipantsList
         }
 
         SafeHtmlBuilder builder = new SafeHtmlBuilder();
-        if (file) {
+        if (item instanceof FileModel) {
             builder.appendHtmlConstant(MESSAGES.file(participants.size()));
-        } else {
+        } else  if (item instanceof FolderModel){
             builder.appendHtmlConstant(MESSAGES.folder(participants.size()));
         }
         view.setUserList(builder.toSafeHtml());

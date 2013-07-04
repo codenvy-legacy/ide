@@ -33,6 +33,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -42,19 +43,19 @@ import java.util.concurrent.locks.ReentrantLock;
  * @version $Id: $
  */
 public class UserProfileSshKeyStore implements SshKeyStore {
-    private static final int    PRIVATE                      = 0;
-    private static final int    PUBLIC                       = 1;
-    private static final String KEY_ATTRIBUTE_PREFIX         = "ssh.key.";
+    private static final int            PRIVATE                      = 0;
+    private static final int            PUBLIC                       = 1;
+    private static final String         KEY_ATTRIBUTE_PREFIX         = "ssh.key.";
     /** Prefix for attribute of user profile that store private SSH key. */
-    private static final String PRIVATE_KEY_ATTRIBUTE_PREFIX = KEY_ATTRIBUTE_PREFIX + "private.";
+    private static final String         PRIVATE_KEY_ATTRIBUTE_PREFIX = KEY_ATTRIBUTE_PREFIX + "private.";
     /** Prefix for attribute of user profile that store public SSH key. */
-    private static final String PUBLIC_KEY_ATTRIBUTE_PREFIX  = KEY_ATTRIBUTE_PREFIX + "public.";
+    private static final String         PUBLIC_KEY_ATTRIBUTE_PREFIX  = KEY_ATTRIBUTE_PREFIX + "public.";
 
-    private final UserManager userManager;
+    private final UserManager           userManager;
     // protected with lock
-    private final Cache<String, SshKey> cache = new SLRUCache<String, SshKey>(50, 100);
-    private final Lock                  lock  = new ReentrantLock();
-    private final JSch genJsch;
+    private final Cache<String, SshKey> cache                        = new SLRUCache<String, SshKey>(50, 100);
+    private final Lock                  lock                         = new ReentrantLock();
+    private final JSch                  genJsch;
 
     public UserProfileSshKeyStore(UserManager userManager) {
         this.userManager = userManager;
@@ -106,8 +107,8 @@ public class UserProfileSshKeyStore implements SshKeyStore {
                 if (keyAsString == null) {
                     // Try to find key for parent domain. This is required for openshift integration but may be useful for others also.
                     final String attributePrefix = i == PRIVATE ? PRIVATE_KEY_ATTRIBUTE_PREFIX : PUBLIC_KEY_ATTRIBUTE_PREFIX;
-                    for (Iterator<Map.Entry<String, String>> iterator = myUser.getProfile().getAttributes().entrySet().iterator();
-                         iterator.hasNext() && keyAsString == null; ) {
+                    for (Iterator<Map.Entry<String, String>> iterator = myUser.getProfile().getAttributes().entrySet().iterator(); iterator.hasNext()
+                                                                                                                                   && keyAsString == null;) {
                         Map.Entry<String, String> entry = iterator.next();
                         String attributeName = entry.getKey();
                         if (attributeName.startsWith(attributePrefix)) {
@@ -136,9 +137,17 @@ public class UserProfileSshKeyStore implements SshKeyStore {
 
     @Override
     public void genKeyPair(String host, String comment, String passPhrase) throws SshKeyStoreException {
+        genKeyPair(host, comment, passPhrase, null);
+    }
+
+    @Override
+    public void genKeyPair(String host, String comment, String passPhrase, String keyMail) throws SshKeyStoreException {
         lock.lock();
         try {
             final String userId = getUserId();
+            if (keyMail == null) {
+                keyMail = userId;
+            }
             final User myUser = userManager.getUserByAlias(userId);
             final String privateCacheKey = cacheKey(userId, host, PRIVATE);
             final String publicCacheKey = cacheKey(userId, host, PUBLIC);
@@ -167,7 +176,7 @@ public class UserProfileSshKeyStore implements SshKeyStore {
             final SshKey privateKey = new SshKey(privateCacheKey, buff.toByteArray());
             buff.reset();
             keyPair.writePublicKey(buff,
-                                   comment != null ? comment : (userId.indexOf('@') > 0 ? userId : (userId + "@ide.codenvy.local")));
+                                   comment != null ? comment : (keyMail.indexOf('@') > 0 ? keyMail : (keyMail + "@ide.codenvy.local")));
             final SshKey publicKey = new SshKey(publicCacheKey, buff.toByteArray());
             // Save keys in user attributes
             myUser.getProfile().setAttribute(sshPrivateKeyAttributeName, new String(privateKey.getBytes()));
@@ -189,8 +198,14 @@ public class UserProfileSshKeyStore implements SshKeyStore {
         try {
             final String userId = getUserId();
             final User myUser = userManager.getUserByAlias(userId);
-            cache.remove(cacheKey(userId, host, PRIVATE));
-            cache.remove(cacheKey(userId, host, PUBLIC));
+            Iterator<Entry<String, SshKey>> it = cache.iterator();
+            while (it.hasNext()) {
+                Entry<String, SshKey> el = it.next();
+                String[] cacheKey = parseCacheKey(el.getKey());
+                if (cacheKey[0].equals(userId) && cacheKey[1].endsWith(host)) {
+                    it.remove();
+                }
+            }
             myUser.getProfile().removeAttribute(sshKeyAttributeName(host, PRIVATE));
             myUser.getProfile().removeAttribute(sshKeyAttributeName(host, PUBLIC));
             userManager.updateUser(myUser);
@@ -235,15 +250,23 @@ public class UserProfileSshKeyStore implements SshKeyStore {
 
     /**
      * Name of attribute of user profile to store SSH key.
-     *
-     * @param host
-     *         host name
-     * @param i
-     *         <code>0</code> if key is private and <code>1</code> if key is public
+     * 
+     * @param host host name
+     * @param i <code>0</code> if key is private and <code>1</code> if key is public
      * @return user's profile attribute name
      */
     private String sshKeyAttributeName(String host, int i) {
         // Returns something like: ssh.key.private.codenvy.com or ssh.key.public.codenvy.com
         return (i == PRIVATE ? PRIVATE_KEY_ATTRIBUTE_PREFIX : PUBLIC_KEY_ATTRIBUTE_PREFIX) + host;
+    }
+
+    private String[] parseCacheKey(String cacheKey) {
+        String[] result = new String[3];
+        int firstColonIndex = cacheKey.indexOf(":");
+        int lastColonIndex = cacheKey.lastIndexOf(":");
+        result[0] = cacheKey.substring(0, firstColonIndex); // user
+        result[1] = cacheKey.substring(firstColonIndex, lastColonIndex);// host
+        result[2] = cacheKey.substring(lastColonIndex, cacheKey.length());// key type
+        return result;
     }
 }

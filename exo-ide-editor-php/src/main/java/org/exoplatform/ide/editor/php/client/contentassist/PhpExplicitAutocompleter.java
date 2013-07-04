@@ -24,6 +24,7 @@ import com.google.collide.client.code.autocomplete.SignalEventEssence;
 import com.google.collide.client.code.autocomplete.codegraph.ExplicitAutocompleter;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.selection.SelectionModel;
+import com.google.gwt.event.dom.client.KeyCodes;
 
 /**
  * Implementation that adds PHP-specific cases.
@@ -40,6 +41,49 @@ class PhpExplicitAutocompleter extends ExplicitAutocompleter {
     @Override
     protected ExplicitAction getExplicitAction(SelectionModel selectionModel, SignalEventEssence signal,
                                                boolean popupIsShown, DocumentParser parser) {
+
+//        if (checkEnterTrigger(signal)) {
+//            if (checkCursorBetweenCurlyBraces(selectionModel)) {
+//                String text = selectionModel.getCursorPosition().getLine().getText();
+//                int indent = StringUtils.lengthOfStartingWhitespace(text);
+//                String newLine = "\n" + StringUtils.getSpaces(indent);
+//                String emptyLine = newLine + "  ";
+//                return new ExplicitAction(new DefaultAutocompleteResult(emptyLine + newLine, "", emptyLine.length()));
+//            }
+//            if (checkCommentOpen(selectionModel)) {
+//                StringBuilder text = new StringBuilder("\n");
+//                String lineText = selectionModel.getCursorLine().getText();
+//                String spaces = StringUtils.getSpaces(lineText.lastIndexOf("/*") + 1);
+//                text.append(spaces).append("* \n").append(spaces).append("*/");
+//                return new ExplicitAction(new DefaultAutocompleteResult(text.toString(), "", spaces.length() + 3));
+//            }
+//
+//            if (checkCursorInComment(selectionModel, parser)) {
+//                StringBuilder text = new StringBuilder("\n");
+//                String lineText = selectionModel.getCursorLine().getText();
+//                String spaces = StringUtils.getSpaces(lineText.lastIndexOf("*"));
+//                text.append(spaces).append("* ");
+//                return new ExplicitAction(new DefaultAutocompleteResult(text.toString(), "", spaces.length() + 3));
+//            }
+//        }
+
+        // 'auto-complete as you type' feature
+        final char signalChar = signal.getChar();
+        if (signalChar != '{' && 
+            signalChar != ';' && 
+            signalChar != ' ' && 
+            signalChar != '(' && 
+            signalChar != ')' && 
+            signalChar != '\'' && 
+            signalChar != '"') {
+            
+            if (!popupIsShown && signalChar != 0 && KeyCodes.KEY_ENTER != signalChar) {
+                return ExplicitAction.DEFERRED_COMPLETE;
+            }
+            
+            return ExplicitAction.DEFAULT;
+        }
+        
         return super.getExplicitAction(selectionModel, signal, popupIsShown, parser);
     }
 }

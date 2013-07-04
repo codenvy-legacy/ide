@@ -24,8 +24,10 @@ import org.everrest.core.resource.AbstractResourceDescriptor;
 import org.exoplatform.ide.shell.server.CLIResourceFactory;
 import org.exoplatform.ide.shell.shared.CLIResource;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
@@ -39,10 +41,13 @@ import java.util.Set;
  */
 // Never be binded to RESTful framework by using eXoContainer.
 // This service must works as per-request resource.
-@Path("ide/cli")
+@Path("{ws-name}/cli")
 public class CLIResourcesService {
     @javax.inject.Inject
     private ResourceBinder binder;
+    
+    @PathParam("ws-name")
+    String wsName;
 
     @javax.inject.Inject
     private CLIResourceFactory cliResourceFactory;
@@ -51,6 +56,7 @@ public class CLIResourcesService {
     @Path("resources")
     @Produces(MediaType.APPLICATION_JSON)
     @SuppressWarnings("rawtypes")
+    @RolesAllowed({"developer"})
     public Set<CLIResource> getCLIResources() throws IOException {
         Set<CLIResource> result = new HashSet<CLIResource>();
         List<ObjectFactory<AbstractResourceDescriptor>> resources = binder.getResources();
@@ -59,43 +65,7 @@ public class CLIResourcesService {
             AbstractResourceDescriptor descriptor = (AbstractResourceDescriptor)array[i].getObjectModel();
             result.addAll(cliResourceFactory.getCLIResources(descriptor));
         }
-        // if (result.isEmpty())
-        // {
-        // Method method;
-        // try
-        // {
-        // method = binder.getClass().getMethod("getTenancyResources");
-        // Map<String, List<ObjectFactory<AbstractResourceDescriptor>>> map =
-        // (Map<String, List<ObjectFactory<AbstractResourceDescriptor>>>)method.invoke(binder);
-        // List<ObjectFactory<AbstractResourceDescriptor>> list = map.get(null);
-        // ObjectFactory[] array2 = list.toArray(new ObjectFactory[resources.size()]);
-        // for (int i = 0; i < array2.length; i++)
-        // {
-        // AbstractResourceDescriptor descriptor = (AbstractResourceDescriptor)array2[i].getObjectModel();
-        // result.addAll(cliResourceFactory.getCLIResources(descriptor));
-        // }
-        // }
-        // catch (SecurityException e)
-        // {
-        // e.printStackTrace();
-        // }
-        // catch (NoSuchMethodException e)
-        // {
-        // e.printStackTrace();
-        // }
-        // catch (IllegalArgumentException e)
-        // {
-        // e.printStackTrace();
-        // }
-        // catch (IllegalAccessException e)
-        // {
-        // e.printStackTrace();
-        // }
-        // catch (InvocationTargetException e)
-        // {
-        // e.printStackTrace();
-        // }
-        // }
+        
         return result;
     }
 }

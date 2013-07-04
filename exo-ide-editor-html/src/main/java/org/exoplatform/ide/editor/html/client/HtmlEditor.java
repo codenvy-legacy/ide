@@ -46,9 +46,7 @@ public class HtmlEditor extends CollabEditor {
         super(mimeType);
         CssAutocompleter cssAutocompleter = CssAutocompleter.create();
         HtmlAutocompleter htmlAutocompleter = HtmlAutocompleter.create(cssAutocompleter, new JavaScriptAutocompleter());
-
         editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(htmlAutocompleter);
-
         editorBundle.getAutocompleter().addContentAssitProcessor(
                 IDocument.DEFAULT_CONTENT_TYPE,
                 new HtmlContentAssistProcessor(new CssContentAssistProcessor(cssAutocompleter),

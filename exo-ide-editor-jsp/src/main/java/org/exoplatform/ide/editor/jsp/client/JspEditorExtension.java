@@ -37,6 +37,7 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
@@ -86,11 +87,11 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
     public void onInitializeServices(InitializeServicesEvent event) {
         CodeAssistantService service;
         if (JavaCodeAssistantService.get() == null)
-            service = new JavaCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
+            service = new JavaCodeAssistantService(Utils.getRestContext(), Utils.getWorkspaceName(), event.getLoader());
         else
             service = JavaCodeAssistantService.get();
 
-        String context = event.getApplicationConfiguration().getContext() + "/ide/code-assistant/java/class-doc?fqn=";
+        String context = Utils.getRestContext() + Utils.getWorkspaceName() +"/code-assistant/java/class-doc?fqn=";
         factory = new JavaTokenWidgetFactory(context);
         jspCodeAssistant = new JspCodeAssistant(service, factory, this);
 

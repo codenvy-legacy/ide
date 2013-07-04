@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.project;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -43,6 +44,7 @@ import java.util.List;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 8, 2011 2:12:50 PM anya $
  */
+@RolesAllowed({"developer"})
 public class ProjectPaaSControl extends SimpleControl implements IDEControl,
          ProjectOpenedHandler, ProjectClosedHandler, FolderRefreshedHandler,
          ItemsSelectedHandler

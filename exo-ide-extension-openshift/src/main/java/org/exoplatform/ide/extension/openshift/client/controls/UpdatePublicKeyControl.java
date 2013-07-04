@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.openshift.client.controls;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
@@ -30,6 +31,7 @@ import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 21, 2011 12:15:28 PM anya $
  */
+@RolesAllowed("developer")
 public class UpdatePublicKeyControl extends AbstractOpenShiftControl {
 
     public UpdatePublicKeyControl() {

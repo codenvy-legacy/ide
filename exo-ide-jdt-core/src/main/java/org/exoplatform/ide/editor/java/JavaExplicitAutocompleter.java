@@ -29,7 +29,6 @@ import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.regexp.shared.RegExp;
 
-
 import javax.annotation.Nonnull;
 
 /** Implementation that adds Java-specific cases. */
@@ -69,6 +68,9 @@ class JavaExplicitAutocompleter extends ExplicitAutocompleter {
                 text.append(spaces).append("* ");
                 return new ExplicitAction(new DefaultAutocompleteResult(text.toString(), "", spaces.length() + 3));
             }
+        }
+        if(signal.getChar() == '.'){
+            return ExplicitAction.DEFAULT;
         }
         return super.getExplicitAction(selectionModel, signal, popupIsShown, parser);
     }

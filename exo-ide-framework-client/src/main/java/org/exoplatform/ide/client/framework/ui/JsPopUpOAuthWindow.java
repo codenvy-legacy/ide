@@ -20,9 +20,6 @@ package org.exoplatform.ide.client.framework.ui;
 
 import com.google.gwt.user.client.Window;
 
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedEvent;
-
 /**
  * Created by The eXo Platform SAS.
  * 
@@ -31,29 +28,41 @@ import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedEvent
  */
 public class JsPopUpOAuthWindow {
 
-    private String authUrl;
+    public interface JsPopUpOAuthWindowCallback {
+        public void oAuthFinished(int authenticationStatus);
+    }
 
-    private String errorPageUrl;
+    private String                     authUrl;
 
-    //0 means that auth not performed, 1 means that auth failed, 2 means that auth successful
-    private int    authenticationStatus = 0;
+    private String                     errorPageUrl;
 
-    private int    popupWindowWidth;
+    // 0 means that auth not performed, 1 means that auth failed, 2 means that auth successful
+    private int                        authenticationStatus = 0;
 
-    private int    popupWindowHeight;
+    private int                        popupWindowWidth;
 
-    private int    clientWidth;
+    private int                        popupWindowHeight;
 
-    private int    clientHeight;
+    private int                        clientWidth;
 
-    public JsPopUpOAuthWindow(String authUrl, String errorPageUrl, int popupWindowWidth, int popupWindowHeight,
-                              int clientWidth, int clientHeight) {
+    private int                        clientHeight;
+
+    private JsPopUpOAuthWindowCallback callback;
+
+    public JsPopUpOAuthWindow(String authUrl,
+                              String errorPageUrl,
+                              int popupWindowWidth,
+                              int popupWindowHeight,
+                              int clientWidth,
+                              int clientHeight,
+                              JsPopUpOAuthWindowCallback callback) {
         this.authUrl = authUrl;
         this.errorPageUrl = errorPageUrl;
         this.popupWindowWidth = popupWindowWidth;
         this.popupWindowHeight = popupWindowHeight;
         this.clientWidth = clientWidth;
         this.clientHeight = clientHeight;
+        this.callback = callback;
     }
 
     public int getAuthenticationStatus() {
@@ -62,17 +71,24 @@ public class JsPopUpOAuthWindow {
 
     public void setAuthenticationStatus(int authenticationStatus) {
         this.authenticationStatus = authenticationStatus;
-        IDE.fireEvent(new OAuthLoginFinishedEvent(authenticationStatus));
+        if (this.callback != null) {
+            this.callback.oAuthFinished(this.authenticationStatus);
+        }
     }
 
-    public JsPopUpOAuthWindow(String authUrl, String errorPageUrl, int popupWindowWidth, int popupWindowHeight) {
-        this(authUrl, errorPageUrl, popupWindowWidth, popupWindowHeight, Window.getClientWidth(), Window.getClientHeight());
+    public JsPopUpOAuthWindow(String authUrl,
+                              String errorPageUrl,
+                              int popupWindowWidth,
+                              int popupWindowHeight,
+                              JsPopUpOAuthWindowCallback callback) {
+        this(authUrl, errorPageUrl, popupWindowWidth, popupWindowHeight, Window.getClientWidth(), Window.getClientHeight(), callback);
     }
 
     public void loginWithOAuth() {
         this.loginWithOAuth(authUrl, errorPageUrl, popupWindowWidth, popupWindowHeight, clientWidth, clientHeight);
     }
 
+    // @formatter:off
     private native void loginWithOAuth(String authUrl, String errorPageUrl, int popupWindowWidth,
                                        int popupWindowHeight, int clientWidth, int clientHeight) /*-{
                                        
@@ -87,7 +103,7 @@ public class JsPopUpOAuthWindow {
             var popup_close_handler = function () {
                 if (!popupWindow || popupWindow.closed) {
                     instance.@org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow::setAuthenticationStatus(I)(1); 
-                    //console.log("closed popup")
+                    console.log("closed popup")
                     popupWindow = null;
                     if (popupCloseHandlerIntervalId) {
                         window.clearInterval(popupCloseHandlerIntervalId);
@@ -100,20 +116,19 @@ public class JsPopUpOAuthWindow {
                     }
 
                     if (href) {
-                        //console.log(href);
+                        console.log(href);
                         var path = popupWindow.location.pathname;
-                        if (path == "/IDE/Application.html" // for local ide bundle
-                            || path == "/IDE/") {
+                        if (path == "/w/" + $wnd.ws) {
                             instance.@org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow::setAuthenticationStatus(I)(2);
                             popupWindow.close();
                             popupWindow = null;
                             if (popupCloseHandlerIntervalId) {
                                 window.clearInterval(popupCloseHandlerIntervalId);
-                                //console.log("stop interval " + popupCloseHandlerIntervalId);
+                                console.log("stop interval " + popupCloseHandlerIntervalId);
                             }
                         } else if (path.match("j_security_check$")) {
                             instance.@org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow::setAuthenticationStatus(I)(1);
-                            //console.log("login failed");
+                            console.log("login failed");
                             if (!errorFlag) {
                                 errorFlag = true;
                                 popupWindow.location.replace(errorPageUrl);
@@ -142,5 +157,5 @@ public class JsPopUpOAuthWindow {
             popupWindowHeight);
         popup.open_window();
     }-*/;
-
+   // @formatter:on
 }

@@ -34,7 +34,7 @@ import java.util.*;
  * @version $
  */
 
-@Path("ide/openshift/express")
+@Path("{ws-name}/openshift/express")
 public class MockExpressService {
 
     /** Created Namespace */

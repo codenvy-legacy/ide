@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.ssh.client.keymanager;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.ssh.client.SshClientBundle;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerEvent;
@@ -27,6 +28,7 @@ import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManag
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshKeyManagerControl May 17, 2011 5:22:50 PM evgen $
  */
+@RolesAllowed({"developer"})
 public class SshKeyManagerControl extends SimpleControl implements IDEControl {
     /** Control ID. */
     public static final String ID = "Window/Ssh Key Manager";

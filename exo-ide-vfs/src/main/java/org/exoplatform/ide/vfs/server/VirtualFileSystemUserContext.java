@@ -22,6 +22,10 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
 public abstract class VirtualFileSystemUserContext {
 
@@ -37,8 +41,19 @@ public abstract class VirtualFileSystemUserContext {
     private static class DefaultVirtualFileSystemUserContext extends VirtualFileSystemUserContext {
         public VirtualFileSystemUser getVirtualFileSystemUser() {
             final ConversationState cs = ConversationState.getCurrent();
-            final Identity identity = cs != null ? cs.getIdentity() : new Identity(VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL);
-            return new VirtualFileSystemUser(identity.getUserId(), identity.getGroups());
+
+            if (cs == null) {
+                return new VirtualFileSystemUser(VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL, Collections.<String>emptySet());
+            }
+            final Identity identity = cs.getIdentity();
+            final Set<String > groups = new HashSet<String>(2);
+            if (identity.getRoles().contains("developer")) {
+                groups.add("workspace/developer");
+            }
+            if (identity.getRoles().contains("admin")) {
+                groups.add("workspace/admin");
+            }
+            return new VirtualFileSystemUser(identity.getUserId(), groups);
         }
     }
 }

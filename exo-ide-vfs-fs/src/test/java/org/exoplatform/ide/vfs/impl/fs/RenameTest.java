@@ -20,11 +20,21 @@ package org.exoplatform.ide.vfs.impl.fs;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
-import org.exoplatform.ide.vfs.shared.*;
+import org.exoplatform.ide.vfs.shared.ExitCodes;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
+import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 
-import java.util.*;
-
-import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class RenameTest extends LocalFileSystemTest {
     private final String lockToken = "01234567890abcdef";

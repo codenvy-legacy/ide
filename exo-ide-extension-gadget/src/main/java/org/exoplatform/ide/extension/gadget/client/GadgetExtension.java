@@ -46,8 +46,7 @@ public class GadgetExtension extends Extension implements InitializeServicesHand
     }
 
     public void onInitializeServices(InitializeServicesEvent event) {
-        new GadgetService(event.getLoader(), event.getApplicationConfiguration().getContext(), event
-                .getApplicationConfiguration().getGadgetServer(), event.getApplicationConfiguration().getPublicContext());
+      
     }
 
 }

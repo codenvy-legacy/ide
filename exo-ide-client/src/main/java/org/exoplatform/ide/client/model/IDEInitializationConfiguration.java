@@ -32,8 +32,6 @@ public class IDEInitializationConfiguration {
 
     private IDEConfiguration ideConfiguration;
 
-    private boolean isDiscoverable;
-
     private ApplicationSettings settings;
 
     private UserInfo userInfo;
@@ -50,11 +48,10 @@ public class IDEInitializationConfiguration {
      * @param settings
      * @param userInfo
      */
-    public IDEInitializationConfiguration(IDEConfiguration ideConfiguration, boolean isDiscoverable,
+    public IDEInitializationConfiguration(IDEConfiguration ideConfiguration,
                                           ApplicationSettings settings, UserInfo userInfo) {
         super();
         this.ideConfiguration = ideConfiguration;
-        this.isDiscoverable = isDiscoverable;
         this.settings = settings;
         this.userInfo = userInfo;
     }
@@ -72,19 +69,7 @@ public class IDEInitializationConfiguration {
         this.ideConfiguration = ideConfiguration;
     }
 
-    /** @return the isDiscoverable */
-    public boolean isDiscoverable() {
-        return isDiscoverable;
-    }
-
-    /**
-     * @param isDiscoverable
-     *         the isDiscoverable to set
-     */
-    public void setDiscoverable(boolean isDiscoverable) {
-        this.isDiscoverable = isDiscoverable;
-    }
-
+ 
     /** @return the settings */
     public ApplicationSettings getSettings() {
         return settings;

@@ -34,7 +34,7 @@ import java.io.InputStream;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: MockJenkinsService.java Aug 18, 2011 5:41:57 PM vereshchaka $
  */
-@Path("ide/jenkins")
+@Path("{ws-name}/jenkins")
 public class MockJenkinsService {
     private static final int NUMBER_OF_BUILDS = 3;
 

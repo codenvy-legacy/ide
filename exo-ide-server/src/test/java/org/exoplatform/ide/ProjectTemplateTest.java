@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide;
 
-import com.codenvy.ide.commons.server.StringUtils;
+import com.codenvy.commons.lang.IoUtil;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
@@ -118,7 +118,7 @@ public class ProjectTemplateTest extends BaseTest {
         Assert.assertTrue(item instanceof Project);
         Project p = (Project)item;
         Assert.assertEquals("spring", p.getProjectType());
-        String pom = StringUtils.toString(vfs.getContent(p.getPath() + "/pom.xml", null).getStream());
+        String pom = IoUtil.readStream(vfs.getContent(p.getPath() + "/pom.xml", null).getStream());
         Assert.assertTrue(pom.contains("<artifactId>" + prj + "</artifactId>"));
         Assert.assertTrue(pom.contains("<groupId>com.localhost</groupId>"));
     }

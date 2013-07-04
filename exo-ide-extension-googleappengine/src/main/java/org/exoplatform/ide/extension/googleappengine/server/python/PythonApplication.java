@@ -20,25 +20,37 @@ package org.exoplatform.ide.extension.googleappengine.server.python;
 
 import com.google.appengine.repackaged.net.sourceforge.yamlbeans.YamlException;
 import com.google.appengine.repackaged.net.sourceforge.yamlbeans.YamlReader;
+import com.google.appengine.tools.admin.AppAdminFactory.ApplicationProcessingOptions;
 import com.google.appengine.tools.admin.Application;
 import com.google.appengine.tools.admin.GenericApplication;
 import com.google.appengine.tools.admin.ResourceLimits;
 import com.google.appengine.tools.admin.UpdateListener;
-import com.google.apphosting.utils.config.*;
+import com.google.apphosting.utils.config.AppEngineConfigException;
+import com.google.apphosting.utils.config.BackendsXml;
+import com.google.apphosting.utils.config.BackendsYamlReader;
+import com.google.apphosting.utils.config.CronXml;
+import com.google.apphosting.utils.config.CronYamlReader;
+import com.google.apphosting.utils.config.DosXml;
+import com.google.apphosting.utils.config.DosYamlReader;
+import com.google.apphosting.utils.config.IndexYamlReader;
+import com.google.apphosting.utils.config.IndexesXml;
+import com.google.apphosting.utils.config.QueueXml;
+import com.google.apphosting.utils.config.QueueYamlReader;
 
 import org.exoplatform.ide.extension.googleappengine.server.YamlAppInfo;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static com.codenvy.ide.commons.server.FileUtils.deleteRecursive;
-
-
-import static com.google.appengine.tools.admin.AppAdminFactory.ApplicationProcessingOptions;
+import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.exoplatform.ide</groupId>
 		<artifactId>exo-ide-parent</artifactId>
-		<version>2.3.3-SNAPSHOT</version>
+		<version>2.4.0-SNAPSHOT</version>
 	</parent>
 	<groupId>org.exoplatform.ide</groupId>
 	<artifactId>exo-ide-dev-resources</artifactId>
@@ -24,13 +24,13 @@
 						<phase>compile</phase>
 						<configuration>
 							<tasks>
-								<copy file="${basedir}/src/main/resources/eclipse/exo-ide-dev-mode.launch" tofile="${project.build.directory}/exo-ide-dev-mode.launch" />
-								<replace file="${project.build.directory}/exo-ide-dev-mode.launch" token="M2_REPO" value="${settings.localRepository}" />
-								<replace file="${project.build.directory}/exo-ide-dev-mode.launch" token="PARENT_PROJECT" value="${project.parent.basedir}" />
+								<copy file="${basedir}/src/main/resources/eclipse/codenvy-dev-mode.launch_" tofile="${project.build.directory}/codenvy-dev-mode-${user.name}.launch" />
+								<replace file="${project.build.directory}/codenvy-dev-mode-${user.name}.launch" token="M2_REPO" value="${settings.localRepository}" />
+								<replace file="${project.build.directory}/codenvy-dev-mode-${user.name}.launch" token="PARENT_PROJECT" value="${project.parent.basedir}" />
 								
-								<copy file="${basedir}/src/main/resources/eclipse/exo-ide-dev-mode-noserver.launch" tofile="${project.build.directory}/exo-ide-dev-mode-noserver.launch" />
-								<replace file="${project.build.directory}/exo-ide-dev-mode-noserver.launch" token="M2_REPO" value="${settings.localRepository}" />
-								<replace file="${project.build.directory}/exo-ide-dev-mode-noserver.launch" token="PARENT_PROJECT" value="${project.parent.basedir}" />
+								<copy file="${basedir}/src/main/resources/eclipse/codenvy-dev-mode-noserver.launch_" tofile="${project.build.directory}/codenvy-dev-mode-noserver-${user.name}.launch" />
+								<replace file="${project.build.directory}/codenvy-dev-mode-noserver-${user.name}.launch" token="M2_REPO" value="${settings.localRepository}" />
+								<replace file="${project.build.directory}/codenvy-dev-mode-noserver-${user.name}.launch" token="PARENT_PROJECT" value="${project.parent.basedir}" />
 							</tasks>
 						</configuration>
 					</execution>

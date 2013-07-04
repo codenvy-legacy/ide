@@ -23,7 +23,7 @@ import com.codenvy.eclipse.core.resources.IResource;
 import com.codenvy.eclipse.core.runtime.CoreException;
 import com.codenvy.eclipse.core.runtime.NullProgressMonitor;
 import com.codenvy.eclipse.core.runtime.Path;
-import com.codenvy.ide.commons.server.StringUtils;
+import com.codenvy.commons.lang.IoUtil;
 
 import org.junit.Test;
 
@@ -64,7 +64,7 @@ public class FileContentsTest extends ResourcesBaseTest {
 
     @Test
     public void testGetContents() throws Exception {
-        String actualContents = StringUtils.toString(fileResourceWithContent.getContents());
+        String actualContents = IoUtil.readStream(fileResourceWithContent.getContents());
         assertEquals(DEFAULT_CONTENT, actualContents);
     }
 
@@ -78,7 +78,7 @@ public class FileContentsTest extends ResourcesBaseTest {
         InputStream contentsStream = new ByteArrayInputStream(DEFAULT_CONTENT.getBytes());
         fileResourceWithoutContent.setContents(contentsStream, true, true, new NullProgressMonitor());
 
-        String actualContents = StringUtils.toString(fileResourceWithoutContent.getContents());
+        String actualContents = IoUtil.readStream(fileResourceWithoutContent.getContents());
         assertEquals(DEFAULT_CONTENT, actualContents);
     }
 
@@ -90,26 +90,26 @@ public class FileContentsTest extends ResourcesBaseTest {
 
     @Test
     public void testUpdateContents() throws Exception {
-        String existingContents = StringUtils.toString(fileResourceWithContent.getContents());
+        String existingContents = IoUtil.readStream(fileResourceWithContent.getContents());
         String expectedContents = "test_content_origin";
         assertFalse(existingContents.equals(expectedContents));
 
         InputStream contentStream = new ByteArrayInputStream(expectedContents.getBytes());
         fileResourceWithContent.setContents(contentStream, true, true, new NullProgressMonitor());
 
-        String actualContents = StringUtils.toString(fileResourceWithContent.getContents());
+        String actualContents = IoUtil.readStream(fileResourceWithContent.getContents());
         assertEquals(expectedContents, actualContents);
     }
 
     @Test
     public void testAppendContents() throws Exception {
-        String existingContents = StringUtils.toString(fileResourceWithContent.getContents());
+        String existingContents = IoUtil.readStream(fileResourceWithContent.getContents());
         String contentsToAppend = "test_append_content";
 
         InputStream contentStream = new ByteArrayInputStream(contentsToAppend.getBytes());
         fileResourceWithContent.appendContents(contentStream, true, true, new NullProgressMonitor());
 
-        String actualContents = StringUtils.toString(fileResourceWithContent.getContents());
+        String actualContents = IoUtil.readStream(fileResourceWithContent.getContents());
         assertEquals(existingContents + contentsToAppend, actualContents);
     }
 

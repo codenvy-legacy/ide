@@ -94,10 +94,8 @@ final class IntMapJsoView<T> extends JsoMapBase {
      * This function must be represented by JavaScriptObject and not normal java interfaces because
      * it's return data of different type depends on the input value.
      */
-    @SuppressWarnings("unused") // used in native method
     private static JavaScriptObject prefixer;
 
-    @SuppressWarnings("unused") // used in native method
     private static JavaScriptObject evaler;
 
     static {

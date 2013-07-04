@@ -30,6 +30,7 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
 
@@ -57,7 +58,7 @@ public class JavaEditorExtension extends Extension implements InitializeServices
     public void onInitializeServices(InitializeServicesEvent event) {
 
         if (JavaCodeAssistantService.get() == null)
-            new JavaCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
+            new JavaCodeAssistantService(Utils.getRestContext(), Utils.getWorkspaceName(), event.getLoader());
 
         IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_JAVA, new JavaCommentsModifier()));
     }

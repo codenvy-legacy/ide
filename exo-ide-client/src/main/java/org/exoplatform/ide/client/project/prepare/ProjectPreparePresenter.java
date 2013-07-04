@@ -85,7 +85,7 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
     @Override
     public void onConvertToProject(final ConvertToProjectEvent event) {
         folderId = event.getFolderId();
-        String url = Utils.getRestContext() + "/ide/project/prepare?vfsid=" + event.getVfsId() + "&folderid=" + event.getFolderId() +
+        String url = Utils.getRestContext() + Utils.getWorkspaceName() + "/project/prepare?vfsid=" + event.getVfsId() + "&folderid=" + event.getFolderId() +
                      (event.getProjectType() != null ? "&projecttype=" + event.getProjectType() : "");
         properties = event.getProperties();
         String data = JSONSerializer.PROPERTY_SERIALIZER.fromCollection(event.getProperties()).toString();
@@ -103,10 +103,9 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
                                 new Timer() {
                                     @Override
                                     public void run() {
-                                        openPreparedProject(event.getFolderId());
+                                        writeTarget(event.getFolderId());
                                     }
                                 }.schedule(500);
-                                writeTarget(event.getFolderId());
                             }
 
                             @Override

@@ -290,7 +290,7 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
 
     protected void download() {
         String url =
-                Utils.getRestContext() + "/ide/aws/s3/objects/" + currentBucketId + "?s3key="
+                Utils.getRestContext() +  Utils.getWorkspaceName() + "/aws/s3/objects/" + currentBucketId + "?s3key="
                 + display.getSelectedObject().getS3Key();
         Window.open(url, "", "");
     }

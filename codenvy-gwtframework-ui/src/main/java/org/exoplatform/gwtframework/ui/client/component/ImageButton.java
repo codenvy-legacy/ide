@@ -24,12 +24,28 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableElement;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.util.ImageFactory;
 
@@ -51,18 +67,64 @@ public class ImageButton extends Composite implements HasClickHandlers, HasText,
     interface ImageButtonUiBinder extends UiBinder<Widget, ImageButton> {
     }
 
-    private interface Style {
+    interface Style extends CssResource {
 
-        String HIDDEN = "imageButtonHidden";
+//        String HIDDEN = "imageButtonHidden";
+//
+//        String OVER = "imageButtonOver";
+//
+//        String DOWN = "imageButtonDown";
+//
+//        String DISABLED = "imageButtonDisabled";
 
-        String OVER = "imageButtonOver";
+        String imageButtonTitleTable();
 
-        String DOWN = "imageButtonDown";
+        String imageButtonDown();
 
-        String DISABLED = "imageButtonDisabled";
+        String imageButtonHidden();
 
+        String imageButtonRight();
+
+        String imageButtonLeft();
+
+        String imageButtonDisabled();
+
+        String imageButtonPanel();
+
+        String imageButtonOver();
+
+        String imageButtonText();
+
+        String imageButtonStretch();
+
+        String imageButtonTable();
+
+        String imageButtonIconPanel();
     }
 
+    interface Resources extends ClientBundle {
+        @Source("org/exoplatform/gwtframework/ui/client/component/image-button/image-button-22.css")
+        Style css();
+
+        @Source("org/exoplatform/gwtframework/ui/client/component/image-button/image-button-22-left.png")
+        ImageResource left();
+
+        @Source("org/exoplatform/gwtframework/ui/client/component/image-button/image-button-22-right.png")
+        ImageResource right();
+
+        @Source("org/exoplatform/gwtframework/ui/client/component/image-button/image-button-22-stretch.png")
+        @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Horizontal)
+        ImageResource stretch();
+    }
+
+    private static final Resources RESOURCES = GWT.create(Resources.class);
+
+    static {
+        RESOURCES.css().ensureInjected();
+    }
+
+    @UiField(provided = true)
+    Resources    res;
     @UiField
     TableElement table;
 
@@ -107,6 +169,7 @@ public class ImageButton extends Composite implements HasClickHandlers, HasText,
     }
 
     public ImageButton(String text, Image image, Image disabledImage) {
+        res = RESOURCES;
         this.image = image;
         this.disabledImage = disabledImage;
         this.text = text;
@@ -124,11 +187,11 @@ public class ImageButton extends Composite implements HasClickHandlers, HasText,
     }
 
     private void showElement(Element element) {
-        element.removeClassName(Style.HIDDEN);
+        element.removeClassName(RESOURCES.css().imageButtonHidden());
     }
 
     private void hideElement(Element element) {
-        element.addClassName(Style.HIDDEN);
+        element.addClassName(RESOURCES.css().imageButtonHidden());
     }
 
     public void setText(String text) {
@@ -209,13 +272,13 @@ public class ImageButton extends Composite implements HasClickHandlers, HasText,
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
 
-        table.removeClassName(Style.DOWN);
-        table.removeClassName(Style.OVER);
+        table.removeClassName(RESOURCES.css().imageButtonDown());
+        table.removeClassName(RESOURCES.css().imageButtonOver());
 
         if (enabled) {
-            table.removeClassName(Style.DISABLED);
+            table.removeClassName(RESOURCES.css().imageButtonDisabled());
         } else {
-            table.addClassName(Style.DISABLED);
+            table.addClassName(RESOURCES.css().imageButtonDisabled());
         }
 
         getElement().setAttribute("button-enabled", enabled + "");
@@ -229,25 +292,25 @@ public class ImageButton extends Composite implements HasClickHandlers, HasText,
 
     @Override
     public void onMouseOver(MouseOverEvent event) {
-        table.removeClassName(Style.DOWN);
-        table.addClassName(Style.OVER);
+        table.removeClassName(RESOURCES.css().imageButtonDown());
+        table.addClassName(RESOURCES.css().imageButtonOver());
     }
 
     @Override
     public void onMouseOut(MouseOutEvent event) {
-        table.removeClassName(Style.OVER);
+        table.removeClassName(RESOURCES.css().imageButtonOver());
     }
 
     @Override
     public void onMouseDown(MouseDownEvent event) {
-        table.removeClassName(Style.OVER);
-        table.addClassName(Style.DOWN);
+        table.removeClassName(RESOURCES.css().imageButtonOver());
+        table.addClassName(RESOURCES.css().imageButtonDown());
     }
 
     @Override
     public void onMouseUp(MouseUpEvent event) {
-        table.removeClassName(Style.DOWN);
-        table.addClassName(Style.OVER);
+        table.removeClassName(RESOURCES.css().imageButtonDown());
+        table.addClassName(RESOURCES.css().imageButtonOver());
     }
 
     @Override

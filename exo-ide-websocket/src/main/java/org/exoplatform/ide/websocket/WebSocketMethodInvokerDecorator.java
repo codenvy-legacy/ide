@@ -44,14 +44,11 @@ public class WebSocketMethodInvokerDecorator extends MethodInvokerDecorator {
     public Object invokeMethod(Object resource, GenericMethodResource genericMethodResource, ApplicationContext context) {
         WSConnection wsConnection = (WSConnection)org.everrest.core.impl.EnvironmentContext.getCurrent().get(WSConnection.class);
         if (wsConnection != null && ConversationState.getCurrent() == null) {
-            ConversationState.setCurrent(
-                    (ConversationState)wsConnection.getHttpSession().getAttribute(
-                            ExoIdeWebSocketServlet.CONVERSATION_STATE_SESSION_ATTRIBUTE_NAME)
-                                        );
+            ConversationState.setCurrent((ConversationState)wsConnection.getHttpSession().getAttribute(
+                    ExoIdeWebSocketServlet.CONVERSATION_STATE_SESSION_ATTRIBUTE_NAME));
             com.codenvy.commons.env.EnvironmentContext.setCurrent(
                     (com.codenvy.commons.env.EnvironmentContext)wsConnection.getHttpSession().getAttribute(
-                            ExoIdeWebSocketServlet.ENVIRONMENT_SESSION_ATTRIBUTE_NAME)
-                                                                 );
+                            ExoIdeWebSocketServlet.ENVIRONMENT_SESSION_ATTRIBUTE_NAME));
             try {
                 return super.invokeMethod(resource, genericMethodResource, context);
             } finally {

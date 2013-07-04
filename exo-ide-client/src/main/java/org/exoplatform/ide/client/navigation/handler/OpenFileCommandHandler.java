@@ -48,13 +48,23 @@ import org.exoplatform.ide.client.framework.event.CursorPosition;
 import org.exoplatform.ide.client.framework.event.FileOpenedEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.api.IDEProject;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Project;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -63,11 +73,13 @@ import java.util.Map;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpenedHandler, EditorFileClosedHandler {
+public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpenedHandler, EditorFileClosedHandler, ItemsSelectedHandler {
 
     private static final double MAX_FILE_CONTENT_LENGHT = 1000000;
 
     private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
+
+    private List<Item> selectedItems = new ArrayList<Item>();
 
     private CursorPosition cursorPosition;
 
@@ -75,6 +87,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
         IDE.addHandler(OpenFileEvent.TYPE, this);
         IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
         IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
     }
 
     /** @see org.exoplatform.ide.client.framework.event.OpenFileHandler#onOpenFile(org.exoplatform.ide.client.framework.event
@@ -97,10 +110,31 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
         } else {
             file = new FileModel();
             file.setId(event.getFileId());
+
+            ProjectModel project = null;
+            if (selectedItems != null && selectedItems.size() != 0) {
+                Item item = selectedItems.get(0);
+
+                if (item instanceof IDEProject) {
+                    project = (ProjectModel)item;
+                } else if (item instanceof ItemContext) {
+                    project = ((ItemContext)item).getProject();
+                }
+            }
+            
+            file.setProject(project);
         }
 
         getFileProperties(file);
 
+    }
+
+    /**
+     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+     */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        selectedItems = event.getSelectedItems();
     }
 
     private void getFileProperties(FileModel file) {
@@ -111,11 +145,12 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
                                                             protected void onSuccess(ItemWrapper result) {
 
                                                                 FileModel file = (FileModel)result.getItem();
-                                                                if(MAX_FILE_CONTENT_LENGHT < file.getLength()){
-                                                                    Dialogs.getInstance().showError("File opening failed. Size limit reached.");
+                                                                if (MAX_FILE_CONTENT_LENGHT < file.getLength()) {
+                                                                    Dialogs.getInstance()
+                                                                           .showError("File opening failed. Size limit reached.");
                                                                     return;
                                                                 }
-                                                                getFileContent(file);
+                                                                openFile(file);
                                                             }
 
                                                             @Override
@@ -127,25 +162,6 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
                                                         });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Parent folder not found."));
-        }
-    }
-
-    private void getFileContent(FileModel file) {
-        try {
-            VirtualFileSystem.getInstance().getContent(
-                    new AsyncRequestCallback<FileModel>(new FileContentUnmarshaller(file)) {
-                        @Override
-                        protected void onSuccess(FileModel result) {
-                            openFile(result);
-                        }
-
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            IDE.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource not found."));
-                        }
-                    });
-        } catch (RequestException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
         }
     }
 

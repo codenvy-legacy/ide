@@ -31,8 +31,50 @@ import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersHandler;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
-import org.exoplatform.ide.client.framework.editor.event.*;
-import org.exoplatform.ide.client.framework.event.*;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCollapseFoldEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCollapseFoldHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCopyTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCopyTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCutTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCutTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLineEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLineHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorExpandFoldEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorExpandFoldHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFoldSelectionEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFoldSelectionHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorPasteTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorPasteTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorSelectAllEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorSelectAllHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorUndoTypingEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorUndoTypingHandler;
+import org.exoplatform.ide.client.framework.event.FileSavedEvent;
+import org.exoplatform.ide.client.framework.event.FileSavedHandler;
+import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
+import org.exoplatform.ide.client.framework.event.SaveFileAsHandler;
+import org.exoplatform.ide.client.framework.event.SaveFileEvent;
 import org.exoplatform.ide.client.framework.module.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -40,16 +82,31 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.ui.api.event.*;
+import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.api.SelectionRange;
-import org.exoplatform.ide.editor.client.api.event.*;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorContextMenuEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -68,29 +125,19 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
                                          EditorExpandFoldHandler,
                                          EditorFoldSelectionHandler {
 
-    private static final String CLOSE_FILE = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT
-                                                                           .editorControllerAskCloseFile();
-
-    private ArrayList<String> ignoreContentChangedList = new ArrayList<String>();
-
-    private boolean closeFileAfterSaving = false;
-
+    private static final String            CLOSE_FILE               = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT
+                                                                                                    .editorControllerAskCloseFile();
+    private              ArrayList<String> ignoreContentChangedList = new ArrayList<String>();
+    private              boolean           closeFileAfterSaving     = false;
     private ApplicationSettings applicationSettings;
-
-    private FileModel activeFile;
-
+    private FileModel           activeFile;
     private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
-
     private Map<String, String> lockTokens;
-
     /** Key: View Id Value: EditorView instance */
-    private Map<String, EditorView> editorViewList = new HashMap<String, EditorView>();
-
-    private boolean waitForEditorInitialized = false;
-
-    private boolean isAfterSaveAs = false;
-
-    private SelectionRange selectionBeforeContextMenu = null;
+    private Map<String, EditorView> editorViewList             = new HashMap<String, EditorView>();
+    private boolean                 waitForEditorInitialized   = false;
+    private boolean                 isAfterSaveAs              = false;
+    private SelectionRange          selectionBeforeContextMenu = null;
 
     public EditorController() {
         IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
@@ -149,47 +196,28 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
                 fileId = entry.getKey();
             }
         }
-        
+
         FileModel file = openedFiles.get(fileId);
+        //TODO this mey happens in case multiple editors, like HTML, need fix this
+        if (file == null) {
+            return;
+        }
         if (ignoreContentChangedList.contains(file.getId())) {
             ignoreContentChangedList.remove(file.getId());
             return;
         }
-        
-        if (!(event.getEditor() instanceof CollabEditor && 
-                !MimeType.TEXT_HTML.equals(file.getMimeType()))) {
+
+        if (!(event.getEditor() instanceof CollabEditor &&
+              !MimeType.TEXT_HTML.equals(file.getMimeType()))) {
             file.setContentChanged(true);
             updateTabTitle(file);
         }
         file.setContent(event.getEditor().getText());
 
-        IDE.fireEvent(new EditorFileContentChangedEvent(activeFile, 
-                            event.getEditor().hasUndoChanges(), event.getEditor().hasRedoChanges()));
-        
-        /*
-        Editor editor = getEditorFromView(activeFile.getId());
-        if (editor == null || !event.getEditor().getId().equals(editor.getId())) {
-            return;
-        }
-
-        String path = activeFile.getId();
-
-        if (ignoreContentChangedList.contains(path)) {
-            ignoreContentChangedList.remove(path);
-            return;
-        }
-
-        if (!(editor instanceof CollabEditor && !MimeType.TEXT_HTML.equals(activeFile.getMimeType()))) {
-            activeFile.setContentChanged(true);
-            updateTabTitle(activeFile);
-        }
-        activeFile.setContent(editor.getText());
-
-        IDE.fireEvent(new EditorFileContentChangedEvent(activeFile, editor.hasUndoChanges(), editor.hasRedoChanges()));
-        */
+        IDE.fireEvent(new EditorFileContentChangedEvent(activeFile,
+                                                        event.getEditor().hasUndoChanges(), event.getEditor().hasRedoChanges()));
     }
 
-    
     public void onEditorFocusReceived(EditorFocusReceivedEvent event) {
         try {
             if (openedFiles.get(activeFile.getId()) != null) {
@@ -344,8 +372,10 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler#onEditorOpenFile(org.exoplatform.ide.client
-     * .framework.editor.event.EditorOpenFileEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler#onEditorOpenFile(org.exoplatform.ide.client
+     *      .framework.editor.event.EditorOpenFileEvent)
+     */
     public void onEditorOpenFile(EditorOpenFileEvent event) {
         FileModel file = event.getFile();
         if (file == null) {
@@ -380,6 +410,7 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
             }
 
             IDE.fireEvent(new EditorFileOpenedEvent(file, editorView.getEditor(), openedFiles));
+            
         } catch (EditorNotFoundException e) {
             e.printStackTrace();
             Dialogs.getInstance().showError("Editor for " + file.getMimeType() + " not found!");
@@ -393,13 +424,13 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
      * @return true if file is locked and client not have lock token, else return false
      */
     private boolean isReadOnly(FileModel file) {
-        if (file.isVersion()) {
-            return true;
-        } else if (file.isLocked()) {
-            return !(lockTokens.containsKey(file.getId()));
-        } else {
-            return false;
+
+        Set<String> permissions = file.getProject().getPermissions();
+        if (permissions != null) {
+            return (!(permissions.contains("write") || permissions.contains("all")));
         }
+
+        return false;
     }
 
     public void onFileSaved(FileSavedEvent event) {
@@ -446,7 +477,7 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
     public void onEditorReplaceFile(EditorReplaceFileEvent event) {
         FileModel oldFile = event.getFile();
         FileModel newFile = event.getNewFile();
-        
+
         if (newFile == null) {
             updateTabTitle(oldFile);
             return;
@@ -457,34 +488,38 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
 
         openedFiles.remove(oldFile.getId());
         openedFiles.put(newFile.getId(), newFile);
-        
+
         EditorView editorView = editorViewList.get(oldFile.getId());
         editorViewList.remove(oldFile.getId());
         editorViewList.put(newFile.getId(), editorView);
 
-        editorView.setFile(newFile);        
+        editorView.setFile(newFile);
         editorView.setIcon(new Image(ImageUtil.getIcon(newFile)));
         updateTabTitle(newFile);
-        
+
         if (activeFile != null && activeFile.getId().equals(oldFile.getId())) {
-            IDE.fireEvent(new EditorActiveFileChangedEvent(newFile, editorView.getEditor()));            
+            IDE.fireEvent(new EditorActiveFileChangedEvent(newFile, editorView.getEditor()));
         }
         //IDE.fireEvent(new EditorActiveFileChangedEvent(newFile, oldFileEditorView.getEditor()));
-        
+
         if (event.isUpdateContent() && newFile.getContent() != null) {
             //oldFileEditorView.getEditor().setText(newFile.getContent());
             editorView.getEditor().getDocument().set(newFile.getContent());
-        }    
+        }
     }
 
-    /** @see org.exoplatform.ide.client.event.edit.EditorDeleteCurrentLineHandler#onEditorDeleteCurrentLine(org.exoplatform.ide.client
-     * .event.edit.EditorDeleteCurrentLineEvent) */
+    /**
+     * @see org.exoplatform.ide.client.event.edit.EditorDeleteCurrentLineHandler#onEditorDeleteCurrentLine(org.exoplatform.ide.client
+     *      .event.edit.EditorDeleteCurrentLineEvent)
+     */
     public void onEditorDeleteCurrentLine(EditorDeleteCurrentLineEvent event) {
         getEditorFromView(activeFile.getId()).deleteCurrentLine();
     }
 
-    /** @see org.exoplatform.ide.client.editor.event.EditorGoToLineHandler#onEditorGoToLine(org.exoplatform.ide.client.editor.event
-     * .EditorGoToLineEvent) */
+    /**
+     * @see org.exoplatform.ide.client.editor.event.EditorGoToLineHandler#onEditorGoToLine(org.exoplatform.ide.client.editor.event
+     *      .EditorGoToLineEvent)
+     */
     public void onEditorGoToLine(EditorGoToLineEvent event) {
         EditorView activeEditorView = editorViewList.get(activeFile.getId());
         activeEditorView.getEditor().setCursorPosition(event.getLineNumber(), event.getColumnNumber());
@@ -536,8 +571,10 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
     //      IDE.fireEvent(new EditorTextFoundEvent(isFound));
     //   }
 
-    /** @see org.exoplatform.ide.client.editor.event.EditorSetFocusHandler#onEditorSetFocus(org.exoplatform.ide.client.editor.event
-     * .EditorSetFocusEvent) */
+    /**
+     * @see org.exoplatform.ide.client.editor.event.EditorSetFocusHandler#onEditorSetFocus(org.exoplatform.ide.client.editor.event
+     *      .EditorSetFocusEvent)
+     */
     public void onEditorSetFocus(EditorSetFocusEvent event) {
         getEditorFromView(activeFile.getId()).setFocus();
     }
@@ -554,8 +591,10 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
     // }
     // }
 
-    /** @see org.exoplatform.ide.client.framework.event.SaveFileAsHandler#onSaveFileAs(org.exoplatform.ide.client.framework.event
-     * .SaveFileAsEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.event.SaveFileAsHandler#onSaveFileAs(org.exoplatform.ide.client.framework.event
+     *      .SaveFileAsEvent)
+     */
     public void onSaveFileAs(SaveFileAsEvent event) {
         if (event.getDialogType().equals(SaveFileAsEvent.SaveDialogType.YES_CANCEL)) {
             closeFileAfterSaving = false;
@@ -564,8 +603,10 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         isAfterSaveAs = true;
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView().getType().equals("editor")) {
@@ -576,8 +617,10 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
-     * .client.framework.ui.api.event.ViewVisibilityChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
+     *      .client.framework.ui.api.event.ViewVisibilityChangedEvent)
+     */
     @Override
     public void onViewVisibilityChanged(final ViewVisibilityChangedEvent event) {
         if (event.getView().getType().equals("editor") && event.getView().isViewVisible()) {
@@ -587,11 +630,11 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
             }
 
             final EditorView editorView = (EditorView)event.getView();
-            if (editorView == null) {                
+            if (editorView == null) {
                 activeFile = null;
                 return;
             }
-            
+
             activeFile = editorView.getFile();
 
             Timer timer = new Timer() {
@@ -617,8 +660,10 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler#onClosingView(org.exoplatform.ide.client.framework.ui
-     * .api.event.ClosingViewEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler#onClosingView(org.exoplatform.ide.client.framework.ui
+     *      .api.event.ClosingViewEvent)
+     */
     @Override
     public void onClosingView(ClosingViewEvent event) {
         if (event.getView().getType().equals("editor")) {
@@ -726,8 +771,10 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
     // return 1;
     // }
 
-    /** @see org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler#onEditorContextMenu(org.exoplatform.ide.editor.client
-     * .api.event.EditorContextMenuEvent) */
+    /**
+     * @see org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler#onEditorContextMenu(org.exoplatform.ide.editor.client
+     *      .api.event.EditorContextMenuEvent)
+     */
     @Override
     public void onEditorContextMenu(EditorContextMenuEvent event) {
         // TODO rememeber selected text in editor, when context menu was called:
@@ -735,15 +782,19 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         IDE.fireEvent(new ShowContextMenuEvent(event.getX(), event.getY(), getEditorFromView(activeFile.getId())));
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorSelectAllHandler#onEditorSelectAll(org.exoplatform.ide.client
-     * .framework.editor.event.EditorSelectAllEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorSelectAllHandler#onEditorSelectAll(org.exoplatform.ide.client
+     *      .framework.editor.event.EditorSelectAllEvent)
+     */
     @Override
     public void onEditorSelectAll(EditorSelectAllEvent event) {
         getEditorFromView(activeFile.getId()).selectAll();
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextHandler#onEditorDeleteText(org.exoplatform.ide.client
-     * .framework.editor.event.EditorDeleteTextEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextHandler#onEditorDeleteText(org.exoplatform.ide.client
+     *      .framework.editor.event.EditorDeleteTextEvent)
+     */
     @Override
     public void onEditorDeleteText(EditorDeleteTextEvent event) {
         // TODO fixes the deselection problem, when context menu is called in editor:
@@ -757,29 +808,37 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         getEditorFromView(activeFile.getId()).delete();
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorPasteTextHandler#onEditorPasteText(org.exoplatform.ide.client
-     * .framework.editor.event.EditorPasteTextEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorPasteTextHandler#onEditorPasteText(org.exoplatform.ide.client
+     *      .framework.editor.event.EditorPasteTextEvent)
+     */
     @Override
     public void onEditorPasteText(EditorPasteTextEvent event) {
         getEditorFromView(activeFile.getId()).paste();
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorCopyTextHandler#onEditorCopyText(org.exoplatform.ide.client.framework
-     * .editor.event.EditorCopyTextEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorCopyTextHandler#onEditorCopyText(org.exoplatform.ide.client.framework
+     *      .editor.event.EditorCopyTextEvent)
+     */
     @Override
     public void onEditorCopyText(EditorCopyTextEvent event) {
         getEditorFromView(activeFile.getId()).copy();
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorCutTextHandler#onEditorCutText(org.exoplatform.ide.client.framework
-     * .editor.event.EditorCutTextEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorCutTextHandler#onEditorCutText(org.exoplatform.ide.client.framework
+     *      .editor.event.EditorCutTextEvent)
+     */
     @Override
     public void onEditorCutText(EditorCutTextEvent event) {
         getEditorFromView(activeFile.getId()).cut();
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorCollapseFoldHandler#onEditorCollapse(org.exoplatform.ide.client
-     * .framework.editor.event.EditorCollapseFoldEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorCollapseFoldHandler#onEditorCollapse(org.exoplatform.ide.client
+     *      .framework.editor.event.EditorCollapseFoldEvent)
+     */
     @Override
     public void onEditorCollapse(EditorCollapseFoldEvent event) {
         if (event.isCollapseAll()) {
@@ -789,7 +848,8 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorExpandFoldHandler#onEditorExpand(org.exoplatform.ide.client.framework.editor.event.EditorExpandFoldEvent) */
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorExpandFoldHandler#onEditorExpand(org.exoplatform.ide.client
+     * .framework.editor.event.EditorExpandFoldEvent) */
     @Override
     public void onEditorExpand(EditorExpandFoldEvent event) {
         if (event.isExpandAll()) {
@@ -799,7 +859,8 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFoldSelectionHandler#onEditorFoldSelection(org.exoplatform.ide.client.framework.editor.event.EditorFoldSelectionEvent) */
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFoldSelectionHandler#onEditorFoldSelection(org.exoplatform.ide
+     * .client.framework.editor.event.EditorFoldSelectionEvent) */
     @Override
     public void onEditorFoldSelection(EditorFoldSelectionEvent event) {
         getEditorFromView(activeFile.getId()).foldSelection();

@@ -18,34 +18,33 @@
  */
 package com.codenvy.ide.commons.cache;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
- * Segmented LRU cache. See for details <a href="http://en.wikipedia.org/wiki/Cache_algorithms#Segmented_LRU">Segmented
- * LRU cache</a>
+ * Segmented LRU cache. See for details <a href="http://en.wikipedia.org/wiki/Cache_algorithms#Segmented_LRU">Segmented LRU cache</a>
  * <p/>
  * Implementation is not threadsafe. In need concurrent access use {@link SynchronizedCache}
- *
+ * 
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class SLRUCache<K, V> implements Cache<K, V> {
+public class SLRUCache<K, V> implements Cache<K, V>, Iterable<Entry<K, V>> {
     private final Map<K, V> protectedSegment;
     private final Map<K, V> probationarySegment;
     private final int       protectedSize;
     private final int       probationarySize;
 
-    private int misses;
-    private int protectedHits;
-    private int probationaryHits;
+    private int             misses;
+    private int             protectedHits;
+    private int             probationaryHits;
 
     /**
-     * @param protectedSize
-     *         size of protected area.
-     * @param probationarySize
-     *         size of probationary area.
+     * @param protectedSize size of protected area.
+     * @param probationarySize size of probationary area.
      */
     public SLRUCache(int protectedSize, int probationarySize) {
         this.protectedSize = protectedSize;
@@ -128,9 +127,9 @@ public class SLRUCache<K, V> implements Cache<K, V> {
     }
 
     /**
-     * Should be called when remove value from cache. Typically this method should be called from methods {@link
-     * #put(Object, Object)}, {@link #remove(Object)} and {@link #clear()}.
-     * Example:
+     * Should be called when remove value from cache. Typically this method should be called from methods {@link #put(Object, Object)},
+     * {@link #remove(Object)} and {@link #clear()}. Example:
+     * 
      * <pre>
      *    class MyCache&lt;K, V&gt; implements Cache&lt;K, V&gt; {
      *       ...
@@ -144,11 +143,9 @@ public class SLRUCache<K, V> implements Cache<K, V> {
      *       ...
      *    }
      * </pre>
-     *
-     * @param key
-     *         key
-     * @param value
-     *         evicted value
+     * 
+     * @param key key
+     * @param value evicted value
      */
     protected void evict(K key, V value) {
         // nothing by default
@@ -165,5 +162,10 @@ public class SLRUCache<K, V> implements Cache<K, V> {
         System.out.printf("protected hits:    %d\n", protectedHits);
         System.out.printf("probationary hits: %d\n", probationaryHits);
         System.out.println("-------------------------------------------");
+    }
+
+    @SuppressWarnings("unchecked")
+    public Iterator<Entry<K, V>> iterator() {
+        return new CompoundIterator<Entry<K, V>>(protectedSegment.entrySet().iterator(), probationarySegment.entrySet().iterator());
     }
 }

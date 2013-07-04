@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.eclipse.core.resources.ResourcesPlugin;
 import com.codenvy.eclipse.resources.WorkspaceResource;
 
@@ -43,8 +44,12 @@ import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFileSystemContex
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.MembershipEntry;
 import org.junit.After;
 import org.junit.Before;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -76,12 +81,15 @@ public abstract class ResourcesBaseTest {
 
         eventListenerList = new EventListenerList();
         memoryContext = new MemoryFileSystemContext();
+        EnvironmentContext env = EnvironmentContext.getCurrent();
+        env.setVariable(EnvironmentContext.WORKSPACE_ID, ID);
+        env.setVariable(EnvironmentContext.WORKSPACE_NAME, ID);
 
         virtualFileSystemRegistry.registerProvider(ID, new MemoryFileSystemProvider(ID, memoryContext));
         vfs = virtualFileSystemRegistry.getProvider(ID).newInstance(null, eventListenerList);
         if (ws == null) {
             ws = new WorkspaceResource(vfs);
-            ResourcesPlugin.setDefaultWorkspace(ws);
+            ResourcesPlugin.addWorkspace(ws);
         } else {
             ws.setVfs(vfs);
         }
@@ -100,8 +108,8 @@ public abstract class ResourcesBaseTest {
         deployer.publish(new VirtualFileSystemApplication());
 
         // RUNTIME VARIABLES
-        ConversationState user = new ConversationState(new Identity("john"));
-        ConversationState.setCurrent(user);
+        ConversationState.setCurrent(new ConversationState(new Identity("ide", new ArrayList<MembershipEntry>(0), Arrays.asList("developer"))));
+        
 
     }
 

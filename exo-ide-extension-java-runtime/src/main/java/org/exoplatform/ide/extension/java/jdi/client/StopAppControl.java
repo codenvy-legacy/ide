@@ -19,16 +19,23 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.java.jdi.client.events.*;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
+@RolesAllowed("developer")
 public class StopAppControl extends SimpleControl implements IDEControl, AppStartedHandler, AppStoppedHandler,
-                                                             ProjectClosedHandler, ProjectOpenedHandler {
-    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.stopAppControlId();
+                                                 ProjectClosedHandler, ProjectOpenedHandler, ItemsSelectedHandler {
+    public static final String  ID     = DebuggerExtension.LOCALIZATION_CONSTANT.stopAppControlId();
 
     private static final String TITLE = "Stop Application";
 
@@ -53,6 +60,7 @@ public class StopAppControl extends SimpleControl implements IDEControl, AppStar
         IDE.addHandler(AppStoppedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
     }
 
     @Override
@@ -75,13 +83,14 @@ public class StopAppControl extends SimpleControl implements IDEControl, AppStar
 
     /** @param projectType */
     private void updateState(String projectType) {
-        boolean isJavaProject =
-                ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
-                || ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
-                || ProjectType.WAR.value().equals(projectType)
-                || ProjectType.JSP.value().equals(projectType);
+        boolean isJavaProject = ProjectResolver.SPRING.equals(projectType)
+                                || ProjectResolver.SERVLET_JSP.equals(projectType)
+                                || ProjectResolver.APP_ENGINE_JAVA.equals(projectType)
+                                || ProjectType.JAVA.value().equals(projectType)
+                                || ProjectType.WAR.value().equals(projectType)
+                                || ProjectType.JSP.value().equals(projectType);
         setVisible(isJavaProject);
-        setEnabled(false);
+        //setEnabled(isJavaProject);
         setShowInContextMenu(isJavaProject);
     }
 
@@ -91,5 +100,20 @@ public class StopAppControl extends SimpleControl implements IDEControl, AppStar
     public void onProjectClosed(ProjectClosedEvent event) {
         setVisible(false);
         setEnabled(false);
+    }
+    
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        if (event.getSelectedItems().size() != 1) {
+            /*setEnabled(false);
+            setVisible(false);*/
+        } else {
+            setVisible(true);
+            Item selectedItem = event.getSelectedItems().get(0);
+
+            ProjectModel project = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem
+                : ((ItemContext)selectedItem).getProject();
+            updateState(project.getProjectType());
+        }
     }
 }

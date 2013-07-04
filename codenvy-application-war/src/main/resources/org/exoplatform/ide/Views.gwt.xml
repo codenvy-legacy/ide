@@ -1,0 +1,264 @@
+<!--
+
+    Copyright (C) 2012 eXo Platform SAS.
+
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
+<!-- Copyright (C) 2010 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms 
+   of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, 
+   or (at your option) any later version. This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+   without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
+   License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
+   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF 
+   site: http://www.fsf.org. -->
+<module>
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name='org.exoplatform.ide.vfs.IDEVFS'/>
+    <inherits name="org.exoplatform.gwtframework.ui.UITextEditor"/>
+    <inherits name="com.codenvy.ide.Collaboration"/>
+
+    <!-- replace-with class="org.exoplatform.gwtframework.ui.client.component.BorderImpl">
+       <when-type-is class="org.exoplatform.gwtframework.ui.client.component.Border" />
+    </replace-with>
+    <replace-with class="org.exoplatform.gwtframework.ui.client.component.BorderIE">
+       <when-type-is class="org.exoplatform.gwtframework.ui.client.component.Border" />
+       <any>
+          <when-property-is name="user.agent" value="ie6" />
+          <when-property-is name="user.agent" value="ie8" />
+       </any>
+    </replace-with -->
+
+    <replace-with class="org.exoplatform.ide.client.progress.ui.ProgressView">
+        <when-type-is class="org.exoplatform.ide.client.progress.ProgressPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.progress.SingleJobView">
+        <when-type-is class="org.exoplatform.ide.client.progress.ProgressPresenter.SingleJobDisplay"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.createfile.CreateFileView">
+        <when-type-is class="org.exoplatform.ide.client.operation.createfile.CreateFilePresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.createfolder.CreateFolderView">
+        <when-type-is class="org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.navigator.NavigatorView">
+        <when-type-is class="org.exoplatform.ide.client.framework.project.NavigatorDisplay"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.search.SearchFilesView">
+        <when-type-is class="org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.search.SearchResultsViewExtended">
+        <when-type-is class="org.exoplatform.ide.client.operation.search.SearchResultsPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.properties.PropertiesView">
+        <when-type-is class="org.exoplatform.ide.client.properties.PropertiesPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.deleteitem.DeleteItemView">
+        <when-type-is class="org.exoplatform.ide.client.operation.deleteitem.DeleteItemsPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.geturl.GetItemURLView">
+        <when-type-is class="org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.workspace.ui.SelectWorkspaceView">
+        <when-type-is class="org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.outline.OutlineView">
+        <when-type-is class="org.exoplatform.ide.client.outline.OutlinePresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.preview.PreviewHTMLView">
+        <when-type-is class="org.exoplatform.ide.client.preview.PreviewHTMLPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.about.AboutIDEView">
+        <when-type-is class="org.exoplatform.ide.client.about.AboutIDEPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.restdiscovery.ui.RestServicesDiscoveryView">
+        <when-type-is class="org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.findtext.FindTextView">
+        <when-type-is class="org.exoplatform.ide.client.operation.findtext.FindTextPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.gotoline.GoToLineView">
+        <when-type-is class="org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.project.create.CreateProjectView">
+        <when-type-is class="org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.project.template.CreateProjectTemplateView">
+        <when-type-is class="org.exoplatform.ide.client.project.template.CreateProjectTemplatePresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplateView">
+        <when-type-is class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.editor.custom.OpenFileWithView">
+        <when-type-is class="org.exoplatform.ide.client.editor.custom.OpenFileWithPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.output.OutputView">
+        <when-type-is class="org.exoplatform.ide.client.output.OutputPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.toolbar.CustomizeToolbarView">
+        <when-type-is class="org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.hotkeys.CustomizeHotKeysView">
+        <when-type-is class="org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.hotkeys.show.ShowHotKeysView">
+        <when-type-is class="org.exoplatform.ide.client.hotkeys.show.ShowHotKeysPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.documentation.DocumentationView">
+        <when-type-is class="org.exoplatform.ide.client.documentation.DocumentationPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.template.ui.SaveAsTemplateView">
+        <when-type-is class="org.exoplatform.ide.client.template.SaveAsTemplatePresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.dialogs.AskForValueView">
+        <when-type-is class="org.exoplatform.ide.client.dialogs.AskForValueDialog.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.authentication.LoginView">
+        <when-type-is class="org.exoplatform.ide.client.authentication.LoginPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.openbypath.OpenFileByPathView">
+        <when-type-is class="org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLView">
+        <when-type-is class="org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.uploadzip.UploadZipView">
+        <when-type-is class="org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.versioning.VersionsListView">
+        <when-type-is class="org.exoplatform.ide.client.versioning.VersionsListPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.rename.RenameFileView">
+        <when-type-is class="org.exoplatform.ide.client.operation.rename.RenameFilePresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.rename.RenameFolderView">
+        <when-type-is class="org.exoplatform.ide.client.operation.rename.RenameFolderPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.permissions.PermissionsManagerView">
+        <when-type-is class="org.exoplatform.ide.client.permissions.PermissionsManagerPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.uploadzip.UploadZipView">
+        <when-type-is class="org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.extension.chromattic.client.ui.DeployNodeTypeView">
+        <when-type-is class="org.exoplatform.ide.extension.chromattic.client.ui.DeployNodeTypePresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.extension.chromattic.client.ui.GenerateNodeTypeView">
+        <when-type-is class="org.exoplatform.ide.extension.chromattic.client.ui.GenerateNodeTypePresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ChooseSourcePathView">
+        <when-type-is class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ChooseSourcePathPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ConfigureBuildPathView">
+        <when-type-is
+                class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ConfigureBuildPathPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFileView">
+        <when-type-is class="org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.uploadfile.UploadFileView">
+        <when-type-is class="org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.project.explorer.ProjectExplorerView">
+        <when-type-is class="org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.project.list.ShowProjectsView">
+        <when-type-is class="org.exoplatform.ide.client.project.list.ShowProjectsPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.project.resource.OpenResourceView">
+        <when-type-is class="org.exoplatform.ide.client.project.resource.OpenResourcePresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.project.properties.ProjectPropertiesView">
+        <when-type-is class="org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.project.properties.EditPropertyView">
+        <when-type-is class="org.exoplatform.ide.client.project.properties.EditPropertyPresenter.Display"/>
+    </replace-with>
+    
+    <replace-with class="org.exoplatform.ide.client.project.properties.EditPropertyFixedValuesView">
+        <when-type-is class="org.exoplatform.ide.client.project.properties.EditPropertyFixedValuesPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.debug.ShowImagesView">
+        <when-type-is class="org.exoplatform.ide.client.debug.ShowImagesPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.operation.search.SearchFilesView">
+        <when-type-is class="org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display"/>
+    </replace-with>
+    <replace-with class="org.exoplatform.ide.client.operation.search.SearchFilesView">
+        <when-type-is class="org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.preferences.PreferencesView">
+        <when-type-is class="org.exoplatform.ide.client.preferences.PreferencesPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.googlecontacts.InviteGoogleContactsView">
+        <when-type-is class="org.exoplatform.ide.client.googlecontacts.InviteGoogleContactsPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.client.project.prepare.ProjectPrepareView">
+        <when-type-is class="org.exoplatform.ide.client.project.prepare.ProjectPreparePresenter.Display"/>
+    </replace-with>
+</module>

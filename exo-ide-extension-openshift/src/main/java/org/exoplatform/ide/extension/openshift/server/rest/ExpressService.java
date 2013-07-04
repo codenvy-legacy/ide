@@ -55,7 +55,7 @@ import java.util.Set;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/openshift/express")
+@Path("{ws-name}/openshift/express")
 public class ExpressService {
     private static final Log LOG = ExoLogger.getLogger(ExpressService.class);
 

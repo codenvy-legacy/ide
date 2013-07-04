@@ -38,7 +38,7 @@ import java.util.Map;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-@Path("/ide/shell/configuration")
+@Path("{ws-name}/shell/configuration")
 public class DummyConfigurationService {
     @GET
     @Path("/init")

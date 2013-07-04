@@ -15,12 +15,12 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class DummySshKeyStore implements SshKeyStore {
-    private static final int PRIVATE = 0;
-    private static final int PUBLIC  = 1;
+    private static final int          PRIVATE = 0;
+    private static final int          PUBLIC  = 1;
 
-    private final Map<String, SshKey> myKeys = new HashMap<String, SshKey>();
-    private final Lock                lock   = new ReentrantLock();
-    private final JSch genJsch;
+    private final Map<String, SshKey> myKeys  = new HashMap<String, SshKey>();
+    private final Lock                lock    = new ReentrantLock();
+    private final JSch                genJsch;
 
     public DummySshKeyStore() {
         this.genJsch = new JSch();
@@ -73,9 +73,16 @@ public class DummySshKeyStore implements SshKeyStore {
 
     @Override
     public void genKeyPair(String host, String comment, String passPhrase) throws SshKeyStoreException {
+        genKeyPair(host, comment, passPhrase, null);
+    }
+
+    public void genKeyPair(String host, String comment, String passPhrase, String keyMail) throws SshKeyStoreException {
         lock.lock();
         try {
             final String userId = getUserId();
+            if (keyMail == null) {
+                keyMail = userId;
+            }
             final String privateKeyName = keyName(userId, host, PRIVATE);
             final String publicKeyName = keyName(userId, host, PUBLIC);
             // Be sure keys are not created yet.
@@ -99,7 +106,7 @@ public class DummySshKeyStore implements SshKeyStore {
             final SshKey privateKey = new SshKey(privateKeyName, buff.toByteArray());
             buff.reset();
             keyPair.writePublicKey(buff,
-                                   comment != null ? comment : (userId.indexOf('@') > 0 ? userId : (userId + "@ide.codenvy.local")));
+                                   comment != null ? comment : (keyMail.indexOf('@') > 0 ? keyMail : (keyMail + "@ide.codenvy.local")));
             final SshKey publicKey = new SshKey(publicKeyName, buff.toByteArray());
             myKeys.put(privateKeyName, privateKey);
             myKeys.put(publicKeyName, publicKey);

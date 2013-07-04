@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.shared.Folder;
 
 /**
@@ -145,7 +146,6 @@ public class RemoveFromIndexPresenter extends GitPresenter implements RemoveFile
     /** Perform removing from index (sends request over HTTP). */
     private void doRemove() {
         try {
-
             GitClientService.getInstance().remove(vfs.getId(), getSelectedProject().getId(), getFilePatterns(),
                                                   display.getFromIndexValue().getValue().booleanValue(),
                                                   new AsyncRequestCallback<String>() {
@@ -156,7 +156,14 @@ public class RemoveFromIndexPresenter extends GitPresenter implements RemoveFile
                                                               IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
                                                           }
                                                           else {
-                                                              IDE.fireEvent(new RefreshBrowserEvent());
+                                                              if (selectedItem instanceof ItemContext) {
+                                                                  IDE.fireEvent(new RefreshBrowserEvent(
+                                                                                                        ((ItemContext)selectedItem).getParent()));
+                                                              }
+                                                              else {
+                                                                  IDE.fireEvent(new RefreshBrowserEvent());
+                                                              }
+
                                                           }
                                                       }
 

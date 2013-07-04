@@ -20,6 +20,7 @@ package org.exoplatform.ide.git.client;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window;
 
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.loader.Loader;
@@ -97,56 +98,57 @@ import java.util.List;
  * @version $Id: Mar 23, 2011 11:52:24 AM anya $
  */
 public class GitClientServiceImpl extends GitClientService {
-    public static final String ADD               = "/ide/git/add";
+    
+    public static final String ADD               =  "/git/add";
 
-    public static final String BRANCH_LIST       = "/ide/git/branch-list";
+    public static final String BRANCH_LIST       =  "/git/branch-list";
 
-    public static final String BRANCH_CHECKOUT   = "/ide/git/branch-checkout";
+    public static final String BRANCH_CHECKOUT   =  "/git/branch-checkout";
 
-    public static final String BRANCH_CREATE     = "/ide/git/branch-create";
+    public static final String BRANCH_CREATE     =  "/git/branch-create";
 
-    public static final String BRANCH_DELETE     = "/ide/git/branch-delete";
+    public static final String BRANCH_DELETE     =  "/git/branch-delete";
 
-    public static final String BRANCH_RENAME     = "/ide/git/branch-rename";
+    public static final String BRANCH_RENAME     =  "/git/branch-rename";
 
-    public static final String CLONE             = "/ide/git/clone";
+    public static final String CLONE             =  "/git/clone";
 
-    public static final String COMMIT            = "/ide/git/commit";
+    public static final String COMMIT            =  "/git/commit";
 
-    public static final String DIFF              = "/ide/git/diff";
+    public static final String DIFF              =  "/git/diff";
 
-    public static final String FETCH             = "/ide/git/fetch";
+    public static final String FETCH             =  "/git/fetch";
 
-    public static final String INIT              = "/ide/git/init";
+    public static final String INIT              =  "/git/init";
 
-    public static final String LOG               = "/ide/git/log";
+    public static final String LOG               =  "/git/log";
 
-    public static final String MERGE             = "/ide/git/merge";
+    public static final String MERGE             =  "/git/merge";
 
-    public static final String STATUS            = "/ide/git/status";
+    public static final String STATUS            =  "/git/status";
 
-    public static final String RO_URL            = "/ide/git/read-only-url";
+    public static final String RO_URL            =  "/git/read-only-url";
 
-    public static final String PUSH              = "/ide/git/push";
+    public static final String PUSH              =  "/git/push";
 
-    public static final String PULL              = "/ide/git/pull";
+    public static final String PULL              =  "/git/pull";
 
-    public static final String REMOTE_LIST       = "/ide/git/remote-list";
+    public static final String REMOTE_LIST       =  "/git/remote-list";
 
-    public static final String REMOTE_ADD        = "/ide/git/remote-add";
+    public static final String REMOTE_ADD        =  "/git/remote-add";
 
-    public static final String REMOTE_DELETE     = "/ide/git/remote-delete";
+    public static final String REMOTE_DELETE     =  "/git/remote-delete";
 
-    public static final String REMOVE            = "/ide/git/rm";
+    public static final String REMOVE            =  "/git/rm";
 
-    public static final String RESET             = "/ide/git/reset";
+    public static final String RESET             =  "/git/reset";
 
-    public static final String COMMITERS         = "/ide/git/commiters";
+    public static final String COMMITERS         =  "/git/commiters";
 
-    public static final String DELETE_REPOSITORY = "/ide/git/delete-repository";
+    public static final String DELETE_REPOSITORY =  "/git/delete-repository";
 
     /** REST service context. */
-    private String             restServiceContext;
+    private final String             restServiceContext;
 
     /** Loader to be displayed. */
     private Loader             loader;
@@ -155,14 +157,18 @@ public class GitClientServiceImpl extends GitClientService {
 
     private MessageBus         wsMessageBus;
 
+    private final String wsName;
+
     /**
      * @param eventBus eventBus
      * @param restContext rest context
      * @param loader loader to show on server request
+     * @param restContext 
      */
-    public GitClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus) {
+    public GitClientServiceImpl(String restConetxt, String wsName, Loader loader, MessageBus wsMessageBus) {
+        this.wsName = wsName;
+        restServiceContext = restConetxt + wsName;
         this.loader = loader;
-        this.restServiceContext = restContext;
         this.wsMessageBus = wsMessageBus;
     }
 
@@ -200,7 +206,7 @@ public class GitClientServiceImpl extends GitClientService {
         callback.setStatusHandler(new InitRequestStatusHandler(projectName));
 
         RequestMessage message =
-                                 RequestMessageBuilder.build(RequestBuilder.POST, INIT + params).data(marshaller.marshal())
+                                 RequestMessageBuilder.build(RequestBuilder.POST, wsName + INIT + params).data(marshaller.marshal())
                                                       .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
@@ -245,7 +251,7 @@ public class GitClientServiceImpl extends GitClientService {
         callback.setStatusHandler(new CloneRequestStatusHandler(folder.getName(), remoteUri));
 
         RequestMessage message =
-                                 RequestMessageBuilder.build(RequestBuilder.POST, CLONE + params).data(marshaller.marshal())
+                                 RequestMessageBuilder.build(RequestBuilder.POST, wsName + CLONE + params).data(marshaller.marshal())
                                                       .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
                                                       .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).getRequestMessage();
         wsMessageBus.send(message, callback);
@@ -302,7 +308,7 @@ public class GitClientServiceImpl extends GitClientService {
         callback.setStatusHandler(new AddRequestHandler(project.getName()));
 
         RequestMessage message =
-                                 RequestMessageBuilder.build(RequestBuilder.POST, ADD + params).data(marshaller.marshal())
+                                 RequestMessageBuilder.build(RequestBuilder.POST, wsName + ADD + params).data(marshaller.marshal())
                                                       .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
@@ -342,7 +348,7 @@ public class GitClientServiceImpl extends GitClientService {
         callback.setStatusHandler(new CommitRequestHandler(project.getName(), message));
 
         RequestMessage requestMessage =
-                                        RequestMessageBuilder.build(RequestBuilder.POST, COMMIT + params).data(marshaller.marshal())
+                                        RequestMessageBuilder.build(RequestBuilder.POST, wsName + COMMIT + params).data(marshaller.marshal())
                                                              .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
         wsMessageBus.send(requestMessage, callback);
     }
@@ -389,7 +395,7 @@ public class GitClientServiceImpl extends GitClientService {
         callback.setStatusHandler(new PushRequestHandler(project.getName(), refSpec));
 
         RequestMessage message =
-                                 RequestMessageBuilder.build(RequestBuilder.POST, PUSH + params).data(marshaller.marshal())
+                                 RequestMessageBuilder.build(RequestBuilder.POST, wsName + PUSH + params).data(marshaller.marshal())
                                                       .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
@@ -657,7 +663,7 @@ public class GitClientServiceImpl extends GitClientService {
         callback.setStatusHandler(new FetchRequestHandler(project.getName(), refspec));
 
         RequestMessage message =
-                                 RequestMessageBuilder.build(RequestBuilder.POST, FETCH + params).data(marshaller.marshal())
+                                 RequestMessageBuilder.build(RequestBuilder.POST, wsName + FETCH + params).data(marshaller.marshal())
                                                       .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
@@ -696,7 +702,7 @@ public class GitClientServiceImpl extends GitClientService {
         callback.setStatusHandler(new PullRequestHandler(project.getName(), refSpec));
 
         RequestMessage message =
-                                 RequestMessageBuilder.build(RequestBuilder.POST, PULL + params).data(marshaller.marshal())
+                                 RequestMessageBuilder.build(RequestBuilder.POST, wsName + PULL + params).data(marshaller.marshal())
                                                       .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
         wsMessageBus.send(message, callback);
     }

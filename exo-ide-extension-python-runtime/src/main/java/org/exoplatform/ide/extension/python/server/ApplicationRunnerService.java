@@ -25,6 +25,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -33,17 +34,20 @@ import javax.ws.rs.core.UriInfo;
 
 /**
  * Provide access to {@link ApplicationRunner} through HTTP.
- *
+ * 
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/python/runner")
+@Path("{ws-name}/python/runner")
 public class ApplicationRunnerService {
     @Inject
-    private ApplicationRunner runner;
+    private ApplicationRunner         runner;
 
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
+    
+    @PathParam("ws-name")
+    String wsName;
 
     @Path("run")
     @GET
@@ -51,11 +55,12 @@ public class ApplicationRunnerService {
     public ApplicationInstance runApplication(@QueryParam("vfsid") String vfsId,
                                               @QueryParam("projectid") String projectId,
                                               @Context UriInfo uriInfo)
-            throws ApplicationRunnerException, VirtualFileSystemException {
-        ApplicationInstance app = runner.runApplication(
-                vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
+                                                                       throws ApplicationRunnerException, VirtualFileSystemException {
+        ApplicationInstance app =
+                                  runner.runApplication(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
+                                                        projectId);
         app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
-                              .queryParam("name", app.getName()).build().toString());
+                              .queryParam("name", app.getName()).build(wsName).toString());
         return app;
     }
 

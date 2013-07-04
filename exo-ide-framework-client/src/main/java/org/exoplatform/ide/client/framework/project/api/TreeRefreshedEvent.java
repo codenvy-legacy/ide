@@ -31,9 +31,9 @@ public class TreeRefreshedEvent extends GwtEvent<TreeRefreshedHandler> {
 
     public static final GwtEvent.Type<TreeRefreshedHandler> TYPE = new GwtEvent.Type<TreeRefreshedHandler>();
 
-    private FolderModel folder;
+    private FolderModel                                     folder;
 
-    private Item itemToSelect;
+    private Item                                            itemToSelect;
 
     public TreeRefreshedEvent(FolderModel folder) {
         this.folder = folder;
@@ -53,7 +53,7 @@ public class TreeRefreshedEvent extends GwtEvent<TreeRefreshedHandler> {
     }
 
     @Override
-    public com.google.gwt.event.shared.GwtEvent.Type<TreeRefreshedHandler> getAssociatedType() {
+    public GwtEvent.Type<TreeRefreshedHandler> getAssociatedType() {
         return TYPE;
     }
 

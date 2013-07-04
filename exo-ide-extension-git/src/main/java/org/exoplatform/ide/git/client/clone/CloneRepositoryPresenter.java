@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -125,9 +126,21 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
         display.getCloneButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                doClone(display.getRemoteUriValue().getValue(),//
-                        display.getRemoteNameValue().getValue(),//
-                        display.getProjectNameValue().getValue());
+                if (!display.getProjectNameValue().getValue().matches("(^[-.a-zA-Z0-9])([-._a-zA-Z0-9])*$")) {
+                    if (display.getProjectNameValue().getValue().startsWith("_")) {
+                        Dialogs.getInstance()
+                               .showInfo(GitExtension.MESSAGES.noIncorrectProjectNameTitle(),
+                                         GitExtension.MESSAGES.projectNameStartWith_Message());
+                    } else {
+                        Dialogs.getInstance()
+                               .showInfo(GitExtension.MESSAGES.noIncorrectProjectNameTitle(),
+                                         GitExtension.MESSAGES.noIncorrectProjectNameMessage());
+                    }
+                } else {
+                    doClone(display.getRemoteUriValue().getValue(),//
+                            display.getRemoteNameValue().getValue(),//
+                            display.getProjectNameValue().getValue());
+                }
             }
         });
 

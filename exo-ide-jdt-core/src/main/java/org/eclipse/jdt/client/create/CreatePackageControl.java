@@ -19,6 +19,7 @@
 package org.eclipse.jdt.client.create;
 
 import org.eclipse.jdt.client.event.CreatePackageEvent;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
@@ -27,6 +28,7 @@ import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
+@RolesAllowed({"developer"})
 public class CreatePackageControl extends JavaControl {
 
     private static final String ID = "File/New/New Package";

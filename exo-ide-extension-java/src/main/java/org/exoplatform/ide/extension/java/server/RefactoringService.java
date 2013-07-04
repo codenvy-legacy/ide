@@ -76,25 +76,25 @@ import java.util.concurrent.TimeUnit;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@Path("/ide/refactoring/java")
+@Path("{ws-name}/refactoring/java")
 public class RefactoringService {
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
 
     @Inject
-    private EventListenerList eventListenerList;
+    private EventListenerList         eventListenerList;
 
     /** Logger. */
-    private static final Log LOG = ExoLogger.getLogger(RefactoringService.class);
+    private static final Log          LOG = ExoLogger.getLogger(RefactoringService.class);
 
     private WorkspaceResource getWorkspace(String vfsid) {
         Object tenantName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
-        
+
         if (tenantName == null) {
             if (ResourcesPlugin.getDefaultWorkspace() == null) {
                 try {
                     VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null, eventListenerList);
-                    //ResourcesPlugin.setDefaultWorkspace(new WorkspaceResource(vfs));
+                    // ResourcesPlugin.setDefaultWorkspace(new WorkspaceResource(vfs));
                     ResourcesPlugin.setDefaultWorkspace(new ObservableWorkspace(vfs));
                 } catch (VirtualFileSystemException e) {
                     LOG.error("Can't initialize Workspace.", e);
@@ -103,7 +103,7 @@ public class RefactoringService {
         } else {
             try {
                 VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null, eventListenerList);
-                //ResourcesPlugin.addWorkspace(new WorkspaceResource(vfs));
+                // ResourcesPlugin.addWorkspace(new WorkspaceResource(vfs));
                 ResourcesPlugin.addWorkspace(new ObservableWorkspace(vfs));
             } catch (VirtualFileSystemException e) {
                 LOG.error("Can't initialize Workspace.", e);
@@ -111,13 +111,16 @@ public class RefactoringService {
         }
         return (WorkspaceResource)ResourcesPlugin.getWorkspace();
     }
-    
+
     @Path("rename")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     public List<Action> rename(@QueryParam("vfsid") String vfsid, @QueryParam("projectid") String projectid,
-                       @QueryParam("fqn") String fqn, @QueryParam("offset") int offset,
-                       @QueryParam("newName") String newname) throws CoreException {
+                               @QueryParam("fqn") String fqn, @QueryParam("offset") int offset,
+                               @QueryParam("newName") String newname) throws CoreException,
+                                                                     ItemNotFoundException,
+                                                                     PermissionDeniedException,
+                                                                     VirtualFileSystemException {
         WorkspaceResource workspace = getWorkspace(vfsid);
         IJavaProject project = getOrCreateJavaProject(workspace, projectid);
         if (project == null) {
@@ -145,6 +148,9 @@ public class RefactoringService {
                 IStatus status = renameSupport.preCheck();
                 if (status.isOK()) {
                     renameSupport.perform();
+                    Project proj = (Project)workspace.getVFS().getItem(projectid, false, PropertyFilter.ALL_FILTER);
+                    LOG.info("EVENT#user-code-refactor# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
+                             + "# FEATURE#rename#");
                     if (workspace instanceof ObservableWorkspace) {
                         return ((ObservableWorkspace)workspace).getActions();
                     } else {
@@ -172,7 +178,7 @@ public class RefactoringService {
 
     private RenameSupport getRenameSupport(String newname, IJavaElement element) throws CoreException {
         RenameSupport renameSupport;
-        
+
         switch (element.getElementType()) {
             case IJavaElement.COMPILATION_UNIT:
                 renameSupport = RenameSupport.create((ICompilationUnit)element, newname, RenameSupport.UPDATE_REFERENCES);
@@ -181,7 +187,7 @@ public class RefactoringService {
                 if (((IMethod)element).isConstructor()) {
                     renameSupport = RenameSupport.create(((IMethod)element).getDeclaringType(), newname, RenameSupport.UPDATE_REFERENCES);
                 } else {
-//            renameSupport = RenameSupport.create((IMethod)element, newname, RenameSupport.UPDATE_REFERENCES);
+                    // renameSupport = RenameSupport.create((IMethod)element, newname, RenameSupport.UPDATE_REFERENCES);
                     throw new UnsupportedOperationException("Currently we do not support renaming methods");
                 }
                 break;
@@ -202,7 +208,7 @@ public class RefactoringService {
                                                      RenameSupport.UPDATE_REFERENCES);
                 break;
             case IJavaElement.PACKAGE_FRAGMENT:
-                //renameSupport = RenameSupport.create( (IPackageFragment)element , newname, RenameSupport.UPDATE_REFERENCES);
+                // renameSupport = RenameSupport.create( (IPackageFragment)element , newname, RenameSupport.UPDATE_REFERENCES);
                 throw new UnsupportedOperationException("Currently we do not support renaming packages");
             default:
                 throw new IllegalArgumentException("Rename of element '" + element.getElementName() + "' is not supported");
@@ -266,32 +272,33 @@ public class RefactoringService {
             } else {
 
                 b.append("<classpathentry kind=\"src\" path=\"").append(JavaCodeAssistant.DEFAULT_SOURCE_FOLDER).append(
-                        "\"/>");
-                //            if (workspace.getRoot().getFolder(
-                //               new org.eclipse.core.runtime.Path(vfsProject.getPath() + "/src/test/java")).exists())
-                //            {
+                                                                                                                        "\"/>");
+                // if (workspace.getRoot().getFolder(
+                // new org.eclipse.core.runtime.Path(vfsProject.getPath() + "/src/test/java")).exists())
+                // {
                 b.append("<classpathentry kind=\"src\" path=\"").append("src/test/java").append("\"/>");
-                //            }
+                // }
             }
             sourcePath = b.toString();
 
-            workspace.getVFS().createFile(vfsProject.getId(), ".classpath", MediaType.TEXT_PLAIN_TYPE,
-                                          new ByteArrayInputStream(
-                                                  ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<classpath><classpathentry " +
-                                                   "kind=\"output\" path=\".target\"/>" +
-                                                   sourcePath + "</classpath>").getBytes()));
+            workspace.getVFS()
+                     .createFile(vfsProject.getId(), ".classpath", MediaType.TEXT_PLAIN_TYPE,
+                                 new ByteArrayInputStream(
+                                                          ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<classpath><classpathentry " +
+                                                           "kind=\"output\" path=\".target\"/>" +
+                                                           sourcePath + "</classpath>").getBytes()));
         } catch (CoreException e) {
             throw new WebApplicationException(e);
         } catch (ItemNotFoundException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
         } catch (InvalidArgumentException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
         } catch (ItemAlreadyExistException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
         } catch (PermissionDeniedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
         } catch (VirtualFileSystemException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
         }
     }
 

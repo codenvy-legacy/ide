@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
-import com.codenvy.ide.commons.server.FileUtils;
-import com.codenvy.ide.commons.server.ZipUtils;
-
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
@@ -30,14 +27,21 @@ import org.exoplatform.ide.vfs.shared.Principal;
 import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
-import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
+import static com.codenvy.commons.lang.ZipUtils.unzip;
 
 public class ExportTest extends LocalFileSystemTest {
     private String fileId;
@@ -86,7 +90,7 @@ public class ExportTest extends LocalFileSystemTest {
         assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
 
         java.io.File unzip = getIoFile(createDirectory(testRootPath, "__unzip__"));
-        ZipUtils.unzip(new ByteArrayInputStream(writer.getBody()), unzip);
+        unzip(new ByteArrayInputStream(writer.getBody()), unzip);
         compareDirectories(getIoFile(folderPath), unzip);
     }
 
@@ -95,14 +99,13 @@ public class ExportTest extends LocalFileSystemTest {
         String path = SERVICE_URI + "export/" + protectedFolderId;
         // Replace default principal by principal who has read permission.
         ConversationState user = new ConversationState(new Identity("andrew"));
-        user.setAttribute("currentTenant", ConversationState.getCurrent().getAttribute("currentTenant"));
         ConversationState.setCurrent(user);
         ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
         assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
 
         java.io.File unzip = getIoFile(createDirectory(testRootPath, "__unzip__"));
-        ZipUtils.unzip(new ByteArrayInputStream(writer.getBody()), unzip);
+        unzip(new ByteArrayInputStream(writer.getBody()), unzip);
         compareDirectories(getIoFile(protectedFolderPath), unzip);
     }
 
@@ -131,10 +134,10 @@ public class ExportTest extends LocalFileSystemTest {
         assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
 
         java.io.File unzip = getIoFile(createDirectory(testRootPath, "__unzip__"));
-        ZipUtils.unzip(new ByteArrayInputStream(writer.getBody()), unzip);
+        unzip(new ByteArrayInputStream(writer.getBody()), unzip);
 
         // Remove file from source folder and compare directories
-        assertTrue(FileUtils.deleteRecursive(getIoFile(myProtectedItemPath)));
+        assertTrue(deleteRecursive(getIoFile(myProtectedItemPath)));
         compareDirectories(getIoFile(folderPath), unzip);
     }
 
@@ -146,7 +149,7 @@ public class ExportTest extends LocalFileSystemTest {
         assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
 
         java.io.File unzip = getIoFile(createDirectory(testRootPath, "__unzip__"));
-        ZipUtils.unzip(new ByteArrayInputStream(writer.getBody()), unzip);
+        unzip(new ByteArrayInputStream(writer.getBody()), unzip);
         java.io.File dotProject = new java.io.File(unzip, ".project");
         Property[] properties = parseDotProjectFile(dotProject);
         assertEquals(2, properties.length);
@@ -184,7 +187,7 @@ public class ExportTest extends LocalFileSystemTest {
         assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
 
         java.io.File unzip = getIoFile(createDirectory(testRootPath, "__unzip__"));
-        ZipUtils.unzip(new ByteArrayInputStream(writer.getBody()), unzip);
+        unzip(new ByteArrayInputStream(writer.getBody()), unzip);
 
         // properties of parent project
         java.io.File dotProject = new java.io.File(unzip, ".project");

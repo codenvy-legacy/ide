@@ -1,0 +1,1092 @@
+[
+    {
+        "command": [
+            "git init"
+        ],
+        "path": "/{ws-name}/git/init",
+        "method": "POST",
+        "description": "Initialize new GIT repository.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "bare",
+                "type": "BODY",
+                "options": [
+                    "-b",
+                    "--bare"
+                ],
+                "hasArg": false,
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "command": [
+            "git status"
+        ],
+        "path": "/{ws-name}/git/status/",
+        "method": "POST",
+        "description": "Get status of working directory.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "short",
+                "type": "QUERY",
+                "options": [
+                    "-s",
+                    "--short"
+                ],
+                "hasArg": false,
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "git add"
+        ],
+        "path": "/{ws-name}/git/add",
+        "method": "POST",
+        "description": "Add file contents to the index.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "update",
+                "type": "BODY",
+                "options": [
+                    "-u",
+                    "--update"
+                ],
+                "hasArg": false,
+                "mandatory": false
+            },
+            {
+                "name": "filepattern",
+                "type": "BODY",
+                "options": [],
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "command": [
+            "git commit"
+        ],
+        "path": "/{ws-name}/git/commit",
+        "method": "POST",
+        "description": "Record changes to the repository.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "message",
+                "type": "BODY",
+                "options": [
+                    "-m",
+                    "--message"
+                ],
+                "hasArg": true,
+                "mandatory": true
+            },
+            {
+                "name": "all",
+                "type": "BODY",
+                "options": [
+                    "-a",
+                    "--all"
+                ],
+                "hasArg": false,
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "command": [
+            "git remote add"
+        ],
+        "path": "/{ws-name}/git/remote-add",
+        "method": "POST",
+        "description": "Adds a remote named <name> for the repository at <url>.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "name",
+                "type": "BODY",
+                "options": [
+                    "-n",
+                    "--name"
+                ],
+                "hasArg": true,
+                "mandatory": true
+            },
+            {
+                "name": "url",
+                "type": "BODY",
+                "options": [
+                    "-u",
+                    "--url"
+                ],
+                "hasArg": true,
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "git remote rm"
+        ],
+        "path": "/{ws-name}/git/remote-delete/{name}",
+        "method": "POST",
+        "description": "Remove the remote repository. All remote-tracking branches and configuration settings for the remote are removed.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "name",
+                "type": "PATH",
+                "options": [],
+                "hasArg": true,
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "git remote list"
+        ],
+        "path": "/{ws-name}/git/remote-list",
+        "method": "POST",
+        "description": "Show a list of existing remotes.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "verbose",
+                "type": "BODY",
+                "options": [
+                    "-v",
+                    "--verbose"
+                ],
+                "hasArg": false,
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "command": [
+            "git push"
+        ],
+        "path": "/{ws-name}/git/push",
+        "method": "POST",
+        "description": "Update remote refs along with associated objects.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "remote",
+                "type": "BODY",
+                "options": [
+                    "-r",
+                    "--remote"
+                ],
+                "hasArg": true,
+                "mandatory": true
+            },
+            {
+                "name": "refSpec",
+                "type": "BODY",
+                "options": [
+                    "-b",
+                    "--branch"
+                ],
+                "hasArg": true,
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "git pull"
+        ],
+        "path": "/{ws-name}/git/pull",
+        "method": "POST",
+        "description": "Fetch from and merge with another repository or a local branch.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "remote",
+                "type": "BODY",
+                "options": [
+                    "-r",
+                    "--remote"
+                ],
+                "hasArg": true,
+                "mandatory": true
+            },
+            {
+                "name": "refSpec",
+                "type": "BODY",
+                "options": [
+                    "-b",
+                    "--branch"
+                ],
+                "hasArg": true,
+                "mandatory": true
+            },
+            {
+                "name": "timeout",
+                "type": "BODY",
+                "options": [
+                    "-t",
+                    "--timeout"
+                ],
+                "hasArg": true,
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "command": [
+            "vmc login"
+        ],
+        "path": "/{ws-name}/cloudfoundry/login",
+        "method": "POST",
+        "description": "Login to Cloud Foundry",
+        "params": [
+            {
+                "name": "email",
+                "type": "BODY",
+                "options": [
+                    "-e",
+                    "--email"
+                ],
+                "hasArg": true,
+                "mandatory": true
+            },
+            {
+                "name": "password",
+                "type": "BODY",
+                "options": [
+                    "-p",
+                    "--passwd"
+                ],
+                "hasArg": true,
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "vmc delete"
+        ],
+        "path": "/{ws-name}/cloudfoundry/apps/delete",
+        "method": "POST",
+        "description": "Delete the Cloud Foundry application",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "name",
+                "type": "QUERY",
+                "options": [],
+                "hasArg": true,
+                "mandatory": false
+            },
+            {
+                "name": "delete-services",
+                "type": "QUERY",
+                "options": [
+                    "-d",
+                    "--delete-services"
+                ],
+                "hasArg": false,
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "command": [
+            "vmc start"
+        ],
+        "path": "/{ws-name}/cloudfoundry/apps/start",
+        "method": "POST",
+        "description": "Start the Cloud Foundry application",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "name",
+                "type": "QUERY",
+                "options": [],
+                "hasArg": true,
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "command": [
+            "vmc stop"
+        ],
+        "path": "/{ws-name}/cloudfoundry/apps/stop",
+        "method": "POST",
+        "description": "Stop the Cloud Foundry application",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "name",
+                "type": "QUERY",
+                "options": [],
+                "hasArg": true,
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "command": [
+            "vmc restart"
+        ],
+        "path": "/{ws-name}/cloudfoundry/apps/restart",
+        "method": "POST",
+        "description": "Restart the Cloud Foundry application",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "name",
+                "type": "QUERY",
+                "options": [],
+                "hasArg": true,
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "command": [
+            "vmc stats"
+        ],
+        "path": "/{ws-name}/cloudfoundry/apps/stats",
+        "method": "GET",
+        "description": "Display resource usage for the Cloud Foundry application",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "name",
+                "type": "QUERY",
+                "options": [],
+                "hasArg": true,
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "command": [
+            "vmc info"
+        ],
+        "path": "/{ws-name}/cloudfoundry/info/system",
+        "method": "GET",
+        "description": "Cloud Foundry system and account information"
+    },
+    {
+        "command": [
+            "vmc apps"
+        ],
+        "path": "/{ws-name}/cloudfoundry/apps",
+        "method": "GET",
+        "description": "List deployed applications on Cloud Foundry"
+    },
+    {
+        "command": [
+            "vmc targets"
+        ],
+        "path": "/{ws-name}/cloudfoundry/target/all",
+        "method": "GET",
+        "description": "List known targets and associated authorization tokens"
+    },
+    {
+        "command": [
+            "vmc set-target"
+        ],
+        "path": "/{ws-name}/cloudfoundry/target",
+        "method": "POST",
+        "description": "Sets a new target",
+        "params": [
+            {
+                "name": "target",
+                "type": "QUERY",
+                "options": [],
+                "hasArg": true,
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "vmc target"
+        ],
+        "path": "/{ws-name}/cloudfoundry/target",
+        "method": "GET",
+        "description": "Reports current target"
+    },
+    {
+        "command": [
+            "mvn clean package"
+        ],
+        "path": "/{ws-name}/maven/build",
+        "method": "GET",
+        "description": "Start project build.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg update"
+        ],
+        "path": "/{ws-name}/appengine/update",
+        "method": "GET",
+        "description": "Create or update an app version.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "bin",
+                "type": "QUERY",
+                "options": [
+                    "-w",
+                    "--war"
+                ],
+                "hasArg": true,
+                "mandatory": false
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg rollback"
+        ],
+        "path": "/{ws-name}/appengine/rollback",
+        "method": "GET",
+        "description": "Rollback an in-progress update.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg backend configure"
+        ],
+        "path": "/{ws-name}/appengine/backend/configure",
+        "method": "GET",
+        "description": "Configure the specified backend.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "backend_name",
+                "type": "QUERY",
+                "options": [],
+                "hasArg": true,
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg backend set_state"
+        ],
+        "path": "/{ws-name}/appengine/backend/set_state",
+        "method": "GET",
+        "description": "Set start/stop state of the specified backend.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "backend_name",
+                "type": "QUERY",
+                "options": [],
+                "hasArg": true,
+                "mandatory": true
+            },
+            {
+                "name": "backend_state",
+                "type": "QUERY",
+                "options": [
+                    "-s",
+                    "--state"
+                ],
+                "hasArg": true,
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg backend delete"
+        ],
+        "path": "/{ws-name}/appengine/backend/delete",
+        "method": "GET",
+        "description": "Delete the specified backend.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "backend_name",
+                "type": "QUERY",
+                "options": [],
+                "hasArg": true,
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg backend rollback"
+        ],
+        "path": "/{ws-name}/appengine/backend/rollback",
+        "method": "GET",
+        "description": "Roll back a previously in-progress update.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "backend_name",
+                "type": "QUERY",
+                "options": [],
+                "hasArg": true,
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg backend update"
+        ],
+        "path": "/{ws-name}/appengine/backend/update",
+        "method": "GET",
+        "description": "Update the specified backend.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "backend_name",
+                "type": "QUERY",
+                "options": [],
+                "hasArg": true,
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg backends update"
+        ],
+        "path": "/{ws-name}/appengine/backends/update_all",
+        "method": "GET",
+        "description": "Update all backend.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg backends rollback"
+        ],
+        "path": "/{ws-name}/appengine/backends/rollback",
+        "method": "GET",
+        "description": "Roll back all in-progress update.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg backends"
+        ],
+        "path": "/{ws-name}/appengine/backends/list",
+        "method": "GET",
+        "description": "List all backends.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg cron_info"
+        ],
+        "path": "/{ws-name}/appengine/cron/info",
+        "method": "GET",
+        "description": "Displays times for the next several runs of each cron job.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg update_cron"
+        ],
+        "path": "/{ws-name}/appengine/cron/update",
+        "method": "GET",
+        "description": "Update application cron jobs.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg resource_limits_info"
+        ],
+        "path": "/{ws-name}/appengine/resource_limits",
+        "method": "GET",
+        "description": "Display resource limits.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg request_logs"
+        ],
+        "path": "/{ws-name}/appengine/logs",
+        "method": "GET",
+        "description": "Write request logs in Apache common log format.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "num_days",
+                "type": "QUERY",
+                "options": [
+                    "-d",
+                    "--days"
+                ],
+                "hasArg": true,
+                "mandatory": true
+            },
+            {
+                "name": "log_severity",
+                "type": "QUERY",
+                "options": [
+                    "-s",
+                    "--severity"
+                ],
+                "hasArg": true,
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg update_dos"
+        ],
+        "path": "/{ws-name}/appengine/dos/update",
+        "method": "GET",
+        "description": "Update application DoS protection configuration.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg update_indexes"
+        ],
+        "path": "/{ws-name}/appengine/indexes/update",
+        "method": "GET",
+        "description": "Update application indexes.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg vacuum_indexes"
+        ],
+        "path": "/{ws-name}/appengine/vacuum_indexes",
+        "method": "GET",
+        "description": "Delete unused indexes from application.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg update_pagespeed"
+        ],
+        "path": "/{ws-name}/appengine/pagespeed/update",
+        "method": "GET",
+        "description": "Update page speed.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            }
+        ]
+    },
+    {
+        "command": [
+            "appcfg update_queues"
+        ],
+        "path": "/{ws-name}/appengine/queues/update",
+        "method": "GET",
+        "description": "Update application task queue definitions.",
+        "params": [
+            {
+                "name": "$vfsid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            },
+            {
+                "name": "$projectid",
+                "type": "QUERY",
+                "options": [],
+                "mandatory": true
+            }
+        ]
+    }
+]

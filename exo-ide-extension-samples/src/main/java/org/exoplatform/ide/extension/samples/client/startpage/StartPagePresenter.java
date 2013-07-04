@@ -36,14 +36,14 @@ import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
 
 /**
  * Presenter for welcome view.
- *
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: WelcomePresenter.java Aug 25, 2011 12:27:27 PM vereshchaka $
  */
 public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandler {
 
     public interface Display extends IsView {
-        
+
         HasClickHandlers getCloneLink();
 
         HasClickHandlers getProjectLink();
@@ -52,9 +52,13 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
 
         HasClickHandlers getInvitationsLink();
         
+        void disableInvitationsLink();
+
     }
 
-    private Display display;
+    private Display          display;
+
+    private ReadOnlyUserView readOnlyUserView;
 
     public StartPagePresenter() {
         IDE.addHandler(OpenStartPageEvent.TYPE, this);
@@ -65,14 +69,26 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         display.getCloneLink().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.fireEvent(new CloneRepositoryEvent());
+                if (IDE.isRoUser()) {
+                    if (readOnlyUserView == null)
+                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
+                    IDE.getInstance().openView(readOnlyUserView);
+                } else {
+                    IDE.fireEvent(new CloneRepositoryEvent());
+                }
             }
         });
 
         display.getProjectLink().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.fireEvent(new CreateProjectEvent());
+                if (IDE.isRoUser()) {
+                    if (readOnlyUserView == null)
+                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
+                    IDE.getInstance().openView(readOnlyUserView);
+                } else {
+                    IDE.fireEvent(new CreateProjectEvent());
+                }
             }
         });
 
@@ -80,20 +96,34 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
 
             @Override
             public void onClick(ClickEvent event) {
-                IDE.fireEvent(new ImportFromGithubEvent());
+                if (IDE.isRoUser()) {
+                    if (readOnlyUserView == null)
+                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
+                    IDE.getInstance().openView(readOnlyUserView);
+                } else {
+                    IDE.fireEvent(new ImportFromGithubEvent());
+                }
             }
         });
 
         display.getInvitationsLink().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.fireEvent(new InviteGoogleDevelopersEvent());
+                if (IDE.isRoUser()) {
+                    return;
+                } else {
+                    IDE.fireEvent(new InviteGoogleDevelopersEvent());
+                }
             }
         });
+        if (IDE.isRoUser())
+          display.disableInvitationsLink();
     }
 
-    /** @see org.exoplatform.ide.client.OpenStartPageHandler.OpenWelcomeHandler#onOpenStartPage(org.exoplatform.ide.client
-     * .OpenStartPageEvent.OpenWelcomeEvent) */
+    /**
+     * @see org.exoplatform.ide.client.OpenStartPageHandler.OpenWelcomeHandler#onOpenStartPage(org.exoplatform.ide.client
+     *      .OpenStartPageEvent.OpenWelcomeEvent)
+     */
     @Override
     public void onOpenStartPage(OpenStartPageEvent event) {
         if (display == null) {
@@ -108,8 +138,10 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {

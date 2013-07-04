@@ -18,13 +18,7 @@
  */
 package org.exoplatform.ide.client.authentication;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.Request;
@@ -33,6 +27,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.ui.Frame;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
@@ -41,10 +36,10 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.gwtframework.ui.client.window.Window;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -131,94 +126,100 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
      * 
      * @param asyncRequest
      */
-    public void showLoginDialog(final AsyncRequest asyncRequest) {
-        if (display != null) {
-            return;
-        }
-
-        display = GWT.create(Display.class);
-
-
-        display.getLoginGoogleButton().addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                String authUrl = Utils.getAuthorizationContext()
-                                 + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"
-                                 + "&scope=https://www.googleapis.com/auth/userinfo.profile"
-                                 + "&scope=https://www.googleapis.com/auth/userinfo.email"
-                                 + "&redirect_after_login="
-                                 + Utils.getAuthorizationPageURL();
-
-                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
-                authWindow.loginWithOAuth();
-                IDE.getInstance().closeView(display.asView().getId());
-
-            }
-        });
-
-        display.getLoginGitHubButton().addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                String authUrl = Utils.getAuthorizationContext()
-                                 + "/ide/oauth/authenticate?oauth_provider=github&mode=federated_login"
-                                 + "&scope=user&scope=repo&redirect_after_login="
-                                 + Utils.getAuthorizationPageURL();
-                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
-                authWindow.loginWithOAuth();
-                IDE.getInstance().closeView(display.asView().getId());
-
-            }
-        });
-
-        display.getLoginButton().addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                try {
-                    doLogin(asyncRequest);
-                } catch (Exception e) {
-                    Log.info("Exception > " + e.getMessage());
-                }
-            }
-        });
-
-        display.getCancelButton().addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                IDE.getInstance().closeView(display.asView().getId());
-            }
-        });
-
-        KeyPressHandler textFieldsKeyPressHandler = new KeyPressHandler() {
-            @Override
-            public void onKeyPress(KeyPressEvent event) {
-                if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-                    try {
-                        doLogin(asyncRequest);
-                    } catch (Exception e) {
-                        Log.info("Exception > " + e.getMessage());
-                    }
-                }
-            }
-        };
-
-        display.getLoginField().addValueChangeHandler(valueChangeHandler);
-        display.getLoginField().addKeyPressHandler(textFieldsKeyPressHandler);
-        display.getPasswordField().addValueChangeHandler(valueChangeHandler);
-        display.getPasswordField().addKeyPressHandler(textFieldsKeyPressHandler);
-
-        display.getLoginField().setValue(login);
-        display.getPasswordField().setValue(password);
-
-        if (!GWT.isScript() && login == null && password == null) {
-            display.getLoginField().setValue("ide");
-            display.getPasswordField().setValue("codenvy123");
-        }
-
-        checkForLoginButtonEnabled();
-
-        IDE.getInstance().openView(display.asView());
+    private void showLoginDialog(final AsyncRequest asyncRequest, final Response response) {
+          Window window = new Window("Login");
+          window.add(new Frame(Utils.getRestContext() + Utils.getWorkspaceName() + "/configuration/init"));
+          window.setHeight(435);
+          window.setWidth(580);
+          window.showCentered();
+          
+//        if (display != null) {
+//            return;
+//        }
+//
+//        display = GWT.create(Display.class);
+//
+//
+//        display.getLoginGoogleButton().addClickHandler(new ClickHandler() {
+//
+//            @Override
+//            public void onClick(ClickEvent event) {
+//                String authUrl = Utils.getAuthorizationContext()
+//                                 + "/" + Utils.getWorkspaceName() + "/oauth/authenticate?oauth_provider=google&mode=federated_login"
+//                                 + "&scope=https://www.googleapis.com/auth/userinfo.profile"
+//                                 + "&scope=https://www.googleapis.com/auth/userinfo.email"
+//                                 + "&redirect_after_login="
+//                                 + Utils.getAuthorizationPageURL();
+//
+//                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500, null);
+//                authWindow.loginWithOAuth();
+//                IDE.getInstance().closeView(display.asView().getId());
+//
+//            }
+//        });
+//
+//        display.getLoginGitHubButton().addClickHandler(new ClickHandler() {
+//
+//            @Override
+//            public void onClick(ClickEvent event) {
+//                String authUrl = Utils.getAuthorizationContext()
+//                                 + "/" + Utils.getWorkspaceName() + "/oauth/authenticate?oauth_provider=github&mode=federated_login"
+//                                 + "&scope=user&scope=repo&redirect_after_login="
+//                                 + Utils.getAuthorizationPageURL();
+//                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500, null);
+//                authWindow.loginWithOAuth();
+//                IDE.getInstance().closeView(display.asView().getId());
+//
+//            }
+//        });
+//
+//        display.getLoginButton().addClickHandler(new ClickHandler() {
+//            @Override
+//            public void onClick(ClickEvent event) {
+//                try {
+//                    doLogin(asyncRequest);
+//                } catch (Exception e) {
+//                    Log.info("Exception > " + e.getMessage());
+//                }
+//            }
+//        });
+//
+//        display.getCancelButton().addClickHandler(new ClickHandler() {
+//            @Override
+//            public void onClick(ClickEvent event) {
+//                IDE.getInstance().closeView(display.asView().getId());
+//            }
+//        });
+//
+//        KeyPressHandler textFieldsKeyPressHandler = new KeyPressHandler() {
+//            @Override
+//            public void onKeyPress(KeyPressEvent event) {
+//                if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+//                    try {
+//                        doLogin(asyncRequest);
+//                    } catch (Exception e) {
+//                        Log.info("Exception > " + e.getMessage());
+//                    }
+//                }
+//            }
+//        };
+//
+//        display.getLoginField().addValueChangeHandler(valueChangeHandler);
+//        display.getLoginField().addKeyPressHandler(textFieldsKeyPressHandler);
+//        display.getPasswordField().addValueChangeHandler(valueChangeHandler);
+//        display.getPasswordField().addKeyPressHandler(textFieldsKeyPressHandler);
+//
+//        display.getLoginField().setValue(login);
+//        display.getPasswordField().setValue(password);
+//
+//        if (!GWT.isScript() && login == null && password == null) {
+//            display.getLoginField().setValue("ide");
+//            display.getPasswordField().setValue("codenvy123");
+//        }
+//
+//        checkForLoginButtonEnabled();
+//
+//        IDE.getInstance().openView(display.asView());
     }
 
     /** Handle changing of the text in text fields. */
@@ -323,7 +324,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
         if (exception instanceof UnauthorizedException) {
             UnauthorizedException unauthorizedException = (UnauthorizedException)exception;
             AsyncRequest asyncRequest = unauthorizedException.getRequest();
-            showLoginDialog(asyncRequest);
+            showLoginDialog(asyncRequest, unauthorizedException.getResponse());
             return;
         }
     }

@@ -22,8 +22,14 @@
 package com.codenvy.ide.collaboration.dto.server;
 
 import com.codenvy.ide.dtogen.server.JsonSerializable;
-import com.google.gson.*;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 import java.util.Map;
 
@@ -36,7 +42,7 @@ public class DtoServerImpls {
     private DtoServerImpls() {
     }
 
-    public static final String CLIENT_SERVER_PROTOCOL_HASH = "7646fd5a2b173b74234103890b4b0db46740f9ed";
+    public static final String CLIENT_SERVER_PROTOCOL_HASH = "f191fc76b865ef0162270c080089003080f97d97";
 
     public static class ChatCodePointMessageImpl extends ChatMessageImpl
             implements com.codenvy.ide.collaboration.dto.ChatCodePointMessage, JsonSerializable {
@@ -221,11 +227,11 @@ public class DtoServerImpls {
             JsonPrimitive endLineOut = new JsonPrimitive(endLine);
             result.add("endLine", endLineOut);
 
-            JsonElement dateTimeOut = (dateTime == null) ? JsonNull.INSTANCE : new JsonPrimitive(dateTime);
-            result.add("dateTime", dateTimeOut);
-
             JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
             result.add("clientId", clientIdOut);
+
+            JsonElement dateTimeOut = (dateTime == null) ? JsonNull.INSTANCE : new JsonPrimitive(dateTime);
+            result.add("dateTime", dateTimeOut);
 
             JsonElement messageOut = (message == null) ? JsonNull.INSTANCE : new JsonPrimitive(message);
             result.add("message", messageOut);
@@ -287,16 +293,16 @@ public class DtoServerImpls {
                 dto.setEndLine(endLineOut);
             }
 
-            if (json.has("dateTime")) {
-                JsonElement dateTimeIn = json.get("dateTime");
-                java.lang.String dateTimeOut = gson.fromJson(dateTimeIn, java.lang.String.class);
-                dto.setDateTime(dateTimeOut);
-            }
-
             if (json.has("clientId")) {
                 JsonElement clientIdIn = json.get("clientId");
                 java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
                 dto.setClientId(clientIdOut);
+            }
+
+            if (json.has("dateTime")) {
+                JsonElement dateTimeIn = json.get("dateTime");
+                java.lang.String dateTimeOut = gson.fromJson(dateTimeIn, java.lang.String.class);
+                dto.setDateTime(dateTimeOut);
             }
 
             if (json.has("message")) {
@@ -344,31 +350,16 @@ public class DtoServerImpls {
             return new ChatMessageImpl();
         }
 
-        protected java.lang.String dateTime;
-        private   boolean          _hasDateTime;
         protected java.lang.String clientId;
         private   boolean          _hasClientId;
+        protected java.lang.String dateTime;
+        private   boolean          _hasDateTime;
         protected java.lang.String message;
         private   boolean          _hasMessage;
         protected java.lang.String projectId;
         private   boolean          _hasProjectId;
         protected java.lang.String userId;
         private   boolean          _hasUserId;
-
-        public boolean hasDateTime() {
-            return _hasDateTime;
-        }
-
-        @Override
-        public java.lang.String getDateTime() {
-            return dateTime;
-        }
-
-        public ChatMessageImpl setDateTime(java.lang.String v) {
-            _hasDateTime = true;
-            dateTime = v;
-            return this;
-        }
 
         public boolean hasClientId() {
             return _hasClientId;
@@ -382,6 +373,21 @@ public class DtoServerImpls {
         public ChatMessageImpl setClientId(java.lang.String v) {
             _hasClientId = true;
             clientId = v;
+            return this;
+        }
+
+        public boolean hasDateTime() {
+            return _hasDateTime;
+        }
+
+        @Override
+        public java.lang.String getDateTime() {
+            return dateTime;
+        }
+
+        public ChatMessageImpl setDateTime(java.lang.String v) {
+            _hasDateTime = true;
+            dateTime = v;
             return this;
         }
 
@@ -439,19 +445,19 @@ public class DtoServerImpls {
                 return false;
             }
             ChatMessageImpl other = (ChatMessageImpl)o;
-            if (this._hasDateTime != other._hasDateTime) {
-                return false;
-            }
-            if (this._hasDateTime) {
-                if (!this.dateTime.equals(other.dateTime)) {
-                    return false;
-                }
-            }
             if (this._hasClientId != other._hasClientId) {
                 return false;
             }
             if (this._hasClientId) {
                 if (!this.clientId.equals(other.clientId)) {
+                    return false;
+                }
+            }
+            if (this._hasDateTime != other._hasDateTime) {
+                return false;
+            }
+            if (this._hasDateTime) {
+                if (!this.dateTime.equals(other.dateTime)) {
                     return false;
                 }
             }
@@ -485,8 +491,8 @@ public class DtoServerImpls {
         @Override
         public int hashCode() {
             int hash = super.hashCode();
-            hash = hash * 31 + (_hasDateTime ? dateTime.hashCode() : 0);
             hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
+            hash = hash * 31 + (_hasDateTime ? dateTime.hashCode() : 0);
             hash = hash * 31 + (_hasMessage ? message.hashCode() : 0);
             hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
             hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
@@ -497,11 +503,11 @@ public class DtoServerImpls {
         public JsonElement toJsonElement() {
             JsonObject result = new JsonObject();
 
-            JsonElement dateTimeOut = (dateTime == null) ? JsonNull.INSTANCE : new JsonPrimitive(dateTime);
-            result.add("dateTime", dateTimeOut);
-
             JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
             result.add("clientId", clientIdOut);
+
+            JsonElement dateTimeOut = (dateTime == null) ? JsonNull.INSTANCE : new JsonPrimitive(dateTime);
+            result.add("dateTime", dateTimeOut);
 
             JsonElement messageOut = (message == null) ? JsonNull.INSTANCE : new JsonPrimitive(message);
             result.add("message", messageOut);
@@ -533,16 +539,16 @@ public class DtoServerImpls {
             ChatMessageImpl dto = new ChatMessageImpl();
             JsonObject json = jsonElem.getAsJsonObject();
 
-            if (json.has("dateTime")) {
-                JsonElement dateTimeIn = json.get("dateTime");
-                java.lang.String dateTimeOut = gson.fromJson(dateTimeIn, java.lang.String.class);
-                dto.setDateTime(dateTimeOut);
-            }
-
             if (json.has("clientId")) {
                 JsonElement clientIdIn = json.get("clientId");
                 java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
                 dto.setClientId(clientIdOut);
+            }
+
+            if (json.has("dateTime")) {
+                JsonElement dateTimeIn = json.get("dateTime");
+                java.lang.String dateTimeOut = gson.fromJson(dateTimeIn, java.lang.String.class);
+                dto.setDateTime(dateTimeOut);
             }
 
             if (json.has("message")) {
@@ -1869,27 +1875,12 @@ public class DtoServerImpls {
             return new ItemMovedDtoImpl();
         }
 
-        protected java.lang.String oldPath;
-        private   boolean          _hasOldPath;
         protected ItemImpl         movedItem;
         private   boolean          _hasMovedItem;
+        protected java.lang.String oldPath;
+        private   boolean          _hasOldPath;
         protected java.lang.String userId;
         private   boolean          _hasUserId;
-
-        public boolean hasOldPath() {
-            return _hasOldPath;
-        }
-
-        @Override
-        public java.lang.String oldPath() {
-            return oldPath;
-        }
-
-        public ItemMovedDtoImpl setOldPath(java.lang.String v) {
-            _hasOldPath = true;
-            oldPath = v;
-            return this;
-        }
 
         public boolean hasMovedItem() {
             return _hasMovedItem;
@@ -1903,6 +1894,21 @@ public class DtoServerImpls {
         public ItemMovedDtoImpl setMovedItem(ItemImpl v) {
             _hasMovedItem = true;
             movedItem = v;
+            return this;
+        }
+
+        public boolean hasOldPath() {
+            return _hasOldPath;
+        }
+
+        @Override
+        public java.lang.String oldPath() {
+            return oldPath;
+        }
+
+        public ItemMovedDtoImpl setOldPath(java.lang.String v) {
+            _hasOldPath = true;
+            oldPath = v;
             return this;
         }
 
@@ -1930,19 +1936,19 @@ public class DtoServerImpls {
                 return false;
             }
             ItemMovedDtoImpl other = (ItemMovedDtoImpl)o;
-            if (this._hasOldPath != other._hasOldPath) {
-                return false;
-            }
-            if (this._hasOldPath) {
-                if (!this.oldPath.equals(other.oldPath)) {
-                    return false;
-                }
-            }
             if (this._hasMovedItem != other._hasMovedItem) {
                 return false;
             }
             if (this._hasMovedItem) {
                 if (!this.movedItem.equals(other.movedItem)) {
+                    return false;
+                }
+            }
+            if (this._hasOldPath != other._hasOldPath) {
+                return false;
+            }
+            if (this._hasOldPath) {
+                if (!this.oldPath.equals(other.oldPath)) {
                     return false;
                 }
             }
@@ -1960,8 +1966,8 @@ public class DtoServerImpls {
         @Override
         public int hashCode() {
             int hash = super.hashCode();
-            hash = hash * 31 + (_hasOldPath ? oldPath.hashCode() : 0);
             hash = hash * 31 + (_hasMovedItem ? movedItem.hashCode() : 0);
+            hash = hash * 31 + (_hasOldPath ? oldPath.hashCode() : 0);
             hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
             return hash;
         }
@@ -1970,11 +1976,11 @@ public class DtoServerImpls {
         public JsonElement toJsonElement() {
             JsonObject result = new JsonObject();
 
-            JsonElement oldPathOut = (oldPath == null) ? JsonNull.INSTANCE : new JsonPrimitive(oldPath);
-            result.add("oldPath", oldPathOut);
-
             JsonElement movedItemOut = movedItem == null ? JsonNull.INSTANCE : movedItem.toJsonElement();
             result.add("movedItem", movedItemOut);
+
+            JsonElement oldPathOut = (oldPath == null) ? JsonNull.INSTANCE : new JsonPrimitive(oldPath);
+            result.add("oldPath", oldPathOut);
 
             JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
             result.add("userId", userIdOut);
@@ -2000,16 +2006,16 @@ public class DtoServerImpls {
             ItemMovedDtoImpl dto = new ItemMovedDtoImpl();
             JsonObject json = jsonElem.getAsJsonObject();
 
-            if (json.has("oldPath")) {
-                JsonElement oldPathIn = json.get("oldPath");
-                java.lang.String oldPathOut = gson.fromJson(oldPathIn, java.lang.String.class);
-                dto.setOldPath(oldPathOut);
-            }
-
             if (json.has("movedItem")) {
                 JsonElement movedItemIn = json.get("movedItem");
                 ItemImpl movedItemOut = ItemImpl.fromJsonElement(movedItemIn);
                 dto.setMovedItem(movedItemOut);
+            }
+
+            if (json.has("oldPath")) {
+                JsonElement oldPathIn = json.get("oldPath");
+                java.lang.String oldPathOut = gson.fromJson(oldPathIn, java.lang.String.class);
+                dto.setOldPath(oldPathOut);
             }
 
             if (json.has("userId")) {
@@ -2379,25 +2385,10 @@ public class DtoServerImpls {
             return new ParticipantInfoImpl();
         }
 
-        protected java.lang.String clientId;
-        private   boolean          _hasClientId;
         protected UserDetailsImpl  userDetails;
         private   boolean          _hasUserDetails;
-
-        public boolean hasClientId() {
-            return _hasClientId;
-        }
-
-        @Override
-        public java.lang.String getClientId() {
-            return clientId;
-        }
-
-        public ParticipantInfoImpl setClientId(java.lang.String v) {
-            _hasClientId = true;
-            clientId = v;
-            return this;
-        }
+        protected java.lang.String clientId;
+        private   boolean          _hasClientId;
 
         public boolean hasUserDetails() {
             return _hasUserDetails;
@@ -2414,25 +2405,40 @@ public class DtoServerImpls {
             return this;
         }
 
+        public boolean hasClientId() {
+            return _hasClientId;
+        }
+
+        @Override
+        public java.lang.String getClientId() {
+            return clientId;
+        }
+
+        public ParticipantInfoImpl setClientId(java.lang.String v) {
+            _hasClientId = true;
+            clientId = v;
+            return this;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (!(o instanceof ParticipantInfoImpl)) {
                 return false;
             }
             ParticipantInfoImpl other = (ParticipantInfoImpl)o;
-            if (this._hasClientId != other._hasClientId) {
-                return false;
-            }
-            if (this._hasClientId) {
-                if (!this.clientId.equals(other.clientId)) {
-                    return false;
-                }
-            }
             if (this._hasUserDetails != other._hasUserDetails) {
                 return false;
             }
             if (this._hasUserDetails) {
                 if (!this.userDetails.equals(other.userDetails)) {
+                    return false;
+                }
+            }
+            if (this._hasClientId != other._hasClientId) {
+                return false;
+            }
+            if (this._hasClientId) {
+                if (!this.clientId.equals(other.clientId)) {
                     return false;
                 }
             }
@@ -2442,8 +2448,8 @@ public class DtoServerImpls {
         @Override
         public int hashCode() {
             int hash = 1;
-            hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
             hash = hash * 31 + (_hasUserDetails ? userDetails.hashCode() : 0);
+            hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
             return hash;
         }
 
@@ -2451,11 +2457,11 @@ public class DtoServerImpls {
         public JsonElement toJsonElement() {
             JsonObject result = new JsonObject();
 
-            JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
-            result.add("clientId", clientIdOut);
-
             JsonElement userDetailsOut = userDetails == null ? JsonNull.INSTANCE : userDetails.toJsonElement();
             result.add("userDetails", userDetailsOut);
+
+            JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
+            result.add("clientId", clientIdOut);
             return result;
         }
 
@@ -2477,16 +2483,16 @@ public class DtoServerImpls {
             ParticipantInfoImpl dto = new ParticipantInfoImpl();
             JsonObject json = jsonElem.getAsJsonObject();
 
-            if (json.has("clientId")) {
-                JsonElement clientIdIn = json.get("clientId");
-                java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
-                dto.setClientId(clientIdOut);
-            }
-
             if (json.has("userDetails")) {
                 JsonElement userDetailsIn = json.get("userDetails");
                 UserDetailsImpl userDetailsOut = UserDetailsImpl.fromJsonElement(userDetailsIn);
                 dto.setUserDetails(userDetailsOut);
+            }
+
+            if (json.has("clientId")) {
+                JsonElement clientIdIn = json.get("clientId");
+                java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
+                dto.setClientId(clientIdOut);
             }
 
             return dto;
@@ -2837,6 +2843,182 @@ public class DtoServerImpls {
         }
 
         public static ProjectOpenedDtoImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
+
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
+    }
+
+    public static class ProjectOperationNotificationImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
+            implements com.codenvy.ide.collaboration.dto.ProjectOperationNotification, JsonSerializable {
+
+        private ProjectOperationNotificationImpl() {
+            super(14);
+        }
+
+        protected ProjectOperationNotificationImpl(int type) {
+            super(type);
+        }
+
+        public static ProjectOperationNotificationImpl make() {
+            return new ProjectOperationNotificationImpl();
+        }
+
+        protected java.lang.String clientId;
+        private   boolean          _hasClientId;
+        protected java.lang.String message;
+        private   boolean          _hasMessage;
+        protected java.lang.String projectId;
+        private   boolean          _hasProjectId;
+
+        public boolean hasClientId() {
+            return _hasClientId;
+        }
+
+        @Override
+        public java.lang.String clientId() {
+            return clientId;
+        }
+
+        public ProjectOperationNotificationImpl setClientId(java.lang.String v) {
+            _hasClientId = true;
+            clientId = v;
+            return this;
+        }
+
+        public boolean hasMessage() {
+            return _hasMessage;
+        }
+
+        @Override
+        public java.lang.String message() {
+            return message;
+        }
+
+        public ProjectOperationNotificationImpl setMessage(java.lang.String v) {
+            _hasMessage = true;
+            message = v;
+            return this;
+        }
+
+        public boolean hasProjectId() {
+            return _hasProjectId;
+        }
+
+        @Override
+        public java.lang.String projectId() {
+            return projectId;
+        }
+
+        public ProjectOperationNotificationImpl setProjectId(java.lang.String v) {
+            _hasProjectId = true;
+            projectId = v;
+            return this;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof ProjectOperationNotificationImpl)) {
+                return false;
+            }
+            ProjectOperationNotificationImpl other = (ProjectOperationNotificationImpl)o;
+            if (this._hasClientId != other._hasClientId) {
+                return false;
+            }
+            if (this._hasClientId) {
+                if (!this.clientId.equals(other.clientId)) {
+                    return false;
+                }
+            }
+            if (this._hasMessage != other._hasMessage) {
+                return false;
+            }
+            if (this._hasMessage) {
+                if (!this.message.equals(other.message)) {
+                    return false;
+                }
+            }
+            if (this._hasProjectId != other._hasProjectId) {
+                return false;
+            }
+            if (this._hasProjectId) {
+                if (!this.projectId.equals(other.projectId)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
+            hash = hash * 31 + (_hasMessage ? message.hashCode() : 0);
+            hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
+            return hash;
+        }
+
+        @Override
+        public JsonElement toJsonElement() {
+            JsonObject result = new JsonObject();
+
+            JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
+            result.add("clientId", clientIdOut);
+
+            JsonElement messageOut = (message == null) ? JsonNull.INSTANCE : new JsonPrimitive(message);
+            result.add("message", messageOut);
+
+            JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
+            result.add("projectId", projectIdOut);
+            result.add("_type", new JsonPrimitive(getType()));
+            return result;
+        }
+
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
+
+        @Override
+        public String toString() {
+            return toJson();
+        }
+
+        public static ProjectOperationNotificationImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
+
+            ProjectOperationNotificationImpl dto = new ProjectOperationNotificationImpl();
+            JsonObject json = jsonElem.getAsJsonObject();
+
+            if (json.has("clientId")) {
+                JsonElement clientIdIn = json.get("clientId");
+                java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
+                dto.setClientId(clientIdOut);
+            }
+
+            if (json.has("message")) {
+                JsonElement messageIn = json.get("message");
+                java.lang.String messageOut = gson.fromJson(messageIn, java.lang.String.class);
+                dto.setMessage(messageOut);
+            }
+
+            if (json.has("projectId")) {
+                JsonElement projectIdIn = json.get("projectId");
+                java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
+                dto.setProjectId(projectIdOut);
+            }
+
+            return dto;
+        }
+
+        public static ProjectOperationNotificationImpl fromJsonString(String jsonString) {
             if (jsonString == null) {
                 return null;
             }

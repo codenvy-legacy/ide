@@ -29,6 +29,7 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsync
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
+import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineWsRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.model.State;
 
 /**
@@ -145,7 +146,7 @@ public class BackendsHandler extends GoogleAppEnginePresenter implements UpdateB
     private void updateBackend() {
         try {
             GoogleAppEngineClientService.getInstance().updateBackend(currentVfs.getId(), currentProject.getId(),
-                                                                     backendName, new GoogleAppEngineAsyncRequestCallback<Object>() {
+                                                                     backendName, new GoogleAppEngineWsRequestCallback<Object>() {
 
                 @Override
                 protected void onSuccess(Object result) {
@@ -163,7 +164,7 @@ public class BackendsHandler extends GoogleAppEnginePresenter implements UpdateB
     private void updateAllBackends() {
         try {
             GoogleAppEngineClientService.getInstance().updateAllBackends(currentVfs.getId(), currentProject.getId(),
-                                                                         new GoogleAppEngineAsyncRequestCallback<Object>() {
+                                                                         new GoogleAppEngineWsRequestCallback<Object>() {
 
                                                                              @Override
                                                                              protected void onSuccess(Object result) {

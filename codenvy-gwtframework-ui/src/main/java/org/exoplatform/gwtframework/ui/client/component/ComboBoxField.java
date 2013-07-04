@@ -94,7 +94,7 @@ public class ComboBoxField extends Composite implements HasValue<String> {
             }
         });
 
-        suggestBox.getTextBox().setStyleName(resource.css().comboBoxInput(), true);
+        suggestBox.getValueBox().setStyleName(resource.css().comboBoxInput(), true);
         image.getElement().setAttribute("image-id", "suggest-image");
         image.addClickHandler(new ClickHandler() {
 
@@ -138,7 +138,7 @@ public class ComboBoxField extends Composite implements HasValue<String> {
             }
         });
 
-        return suggestBox.getTextBox().addKeyUpHandler(new KeyUpHandler() {
+        return suggestBox.getValueBox().addKeyUpHandler(new KeyUpHandler() {
             @Override
             public void onKeyUp(KeyUpEvent event) {
                 valueChangeHandler.onValueChange(new ValueChangeEventImpl(suggestBox.getText()));
@@ -173,7 +173,7 @@ public class ComboBoxField extends Composite implements HasValue<String> {
             return;
         }
         this.enabled = enabled;
-        suggestBox.getTextBox().setEnabled(enabled);
+        suggestBox.getValueBox().setEnabled(enabled);
         if (enabled) {
             getElement().removeClassName(resource.css().selectItemDisabled());
         } else {
@@ -209,7 +209,7 @@ public class ComboBoxField extends Composite implements HasValue<String> {
      *         - the name
      */
     public void setName(String name) {
-        suggestBox.getTextBox().setName(name);
+        suggestBox.getValueBox().setName(name);
     }
 
     /**
@@ -257,7 +257,7 @@ public class ComboBoxField extends Composite implements HasValue<String> {
         super.setHeight(height + "px");
         suggestBox.setHeight(height + "px");
         //need to keep input field inside the box
-        suggestBox.getTextBox().setHeight("100%");
+        suggestBox.getValueBox().setHeight("100%");
     }
 
     /** @see com.google.gwt.user.client.ui.UIObject#setHeight(java.lang.String) */
@@ -266,7 +266,7 @@ public class ComboBoxField extends Composite implements HasValue<String> {
         super.setHeight(height);
         suggestBox.setHeight(height);
         //need to keep input field inside the box
-        suggestBox.getTextBox().setHeight("100%");
+        suggestBox.getValueBox().setHeight("100%");
     }
 
    /*

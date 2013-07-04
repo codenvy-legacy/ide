@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
-import com.codenvy.ide.commons.server.FileUtils;
-import com.codenvy.ide.commons.server.ZipUtils;
-
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.test.mock.MockHttpServletRequest;
@@ -29,17 +26,26 @@ import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Principal;
 import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import static com.codenvy.commons.lang.IoUtil.copy;
+import static com.codenvy.commons.lang.ZipUtils.zipDir;
 
 public class ImportTest extends LocalFileSystemTest {
     private final byte[] existedFileContent = "existed file".getBytes();
@@ -87,14 +93,14 @@ public class ImportTest extends LocalFileSystemTest {
             }
         }
         // copy it to import destination.
-        FileUtils.copy(getIoFile(srcFolderPath + '/' + file), getIoFile(folderWithFilesPath + '/' + file), null);
+        copy(getIoFile(srcFolderPath + '/' + file), getIoFile(folderWithFilesPath + '/' + file), null);
         // Update content, will check it later.
         writeFile(folderWithFilesPath + '/' + file, existedFileContent);
         existedFile = folderWithFilesPath + '/' + file;
 
         java.io.File srcIoDir = getIoFile(srcFolderPath);
         java.io.File zipped = getIoFile(createFile(testRootPath, "__file__.zip", null));
-        ZipUtils.zipDir(srcIoDir.getAbsolutePath(), srcIoDir, zipped, null);
+        zipDir(srcIoDir.getAbsolutePath(), srcIoDir, zipped, null);
         FileInputStream in = new FileInputStream(zipped);
         zipFolder = new byte[(int)zipped.length()];
         in.read(zipFolder);

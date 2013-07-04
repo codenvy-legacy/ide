@@ -44,7 +44,7 @@ import java.util.Map;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-@Path("ide/aws/s3")
+@Path("{ws-name}/aws/s3")
 public class S3Service {
     @Inject
     private S3 s3;

@@ -89,8 +89,6 @@
         <when-property-is name="webide.clientOs" value="macintosh"/>
     </replace-with>
 
-    <replace-with class="com.codenvy.ide.client.util.logging.LogConfig.Enabled">
-        <when-type-is class="com.codenvy.ide.client.util.logging.LogConfig"/>
-    </replace-with>
+
 
 </module>

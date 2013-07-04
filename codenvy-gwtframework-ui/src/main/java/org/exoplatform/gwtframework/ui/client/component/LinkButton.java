@@ -18,8 +18,22 @@
  */
 package org.exoplatform.gwtframework.ui.client.component;
 
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HasText;
 
@@ -47,15 +61,38 @@ public class LinkButton extends Anchor implements HasText, MouseDownHandler, Mou
     /** Click handlers. */
     private List<ClickHandler> clickHandlers = new ArrayList<ClickHandler>();
 
-    private final class Style {
-        static final String MAIN = "linkButtonPanel";
+    private interface Style extends CssResource {
+//        static final String MAIN = "linkButtonPanel";
+//
+//        static final String OVER = "linkButtonOver";
+//
+//        static final String DOWN = "linkButtonDown";
+//
+//        static final String DISABLED = "linkButtonDisabled";
 
-        static final String OVER = "linkButtonOver";
+        String linkButtonHidden();
 
-        static final String DOWN = "linkButtonDown";
+        String linkButtonPanel();
 
-        static final String DISABLED = "linkButtonDisabled";
+        String linkButtonOver();
 
+        String linkButtonDown();
+
+        String linkButtonDisabled();
+    }
+
+    private interface Resources extends ClientBundle {
+        @Source("link-button/link-button-22.css")
+        Style css();
+
+        @Source("link-button/link-button-22.png")
+        ImageResource link();
+    }
+
+    private static final Resources RESOURCES = GWT.create(Resources.class);
+
+    static {
+        RESOURCES.css().ensureInjected();
     }
 
     public LinkButton() {
@@ -67,7 +104,7 @@ public class LinkButton extends Anchor implements HasText, MouseDownHandler, Mou
         setText(text);
 
         getElement().setAttribute("button-enabled", enabled + "");
-        setStylePrimaryName(Style.MAIN);
+        setStylePrimaryName(RESOURCES.css().linkButtonPanel());
 
         addDomHandler(this, MouseOverEvent.getType());
         addDomHandler(this, MouseOutEvent.getType());
@@ -79,28 +116,28 @@ public class LinkButton extends Anchor implements HasText, MouseDownHandler, Mou
     /** @see com.google.gwt.event.dom.client.MouseOutHandler#onMouseOut(com.google.gwt.event.dom.client.MouseOutEvent) */
     @Override
     public void onMouseOut(MouseOutEvent event) {
-        getElement().removeClassName(Style.OVER);
+        getElement().removeClassName(RESOURCES.css().linkButtonOver());
     }
 
     /** @see com.google.gwt.event.dom.client.MouseUpHandler#onMouseUp(com.google.gwt.event.dom.client.MouseUpEvent) */
     @Override
     public void onMouseUp(MouseUpEvent event) {
-        getElement().removeClassName(Style.DOWN);
-        getElement().addClassName(Style.OVER);
+        getElement().removeClassName(RESOURCES.css().linkButtonDown());
+        getElement().addClassName(RESOURCES.css().linkButtonOver());
     }
 
     /** @see com.google.gwt.event.dom.client.MouseOverHandler#onMouseOver(com.google.gwt.event.dom.client.MouseOverEvent) */
     @Override
     public void onMouseOver(MouseOverEvent event) {
-        getElement().removeClassName(Style.DOWN);
-        getElement().addClassName(Style.OVER);
+        getElement().removeClassName(RESOURCES.css().linkButtonDown());
+        getElement().addClassName(RESOURCES.css().linkButtonOver());
     }
 
     /** @see com.google.gwt.event.dom.client.MouseDownHandler#onMouseDown(com.google.gwt.event.dom.client.MouseDownEvent) */
     @Override
     public void onMouseDown(MouseDownEvent event) {
-        getElement().removeClassName(Style.OVER);
-        getElement().addClassName(Style.DOWN);
+        getElement().removeClassName(RESOURCES.css().linkButtonOver());
+        getElement().addClassName(RESOURCES.css().linkButtonDown());
     }
 
     /** @return the id */
@@ -144,13 +181,13 @@ public class LinkButton extends Anchor implements HasText, MouseDownHandler, Mou
         super.setEnabled(enabled);
         this.enabled = enabled;
 
-        getElement().removeClassName(Style.DOWN);
-        getElement().removeClassName(Style.OVER);
+        getElement().removeClassName(RESOURCES.css().linkButtonDown());
+        getElement().removeClassName(RESOURCES.css().linkButtonOver());
 
         if (enabled) {
-            getElement().removeClassName(Style.DISABLED);
+            getElement().removeClassName(RESOURCES.css().linkButtonDisabled());
         } else {
-            getElement().addClassName(Style.DISABLED);
+            getElement().addClassName(RESOURCES.css().linkButtonDisabled());
         }
         getElement().setAttribute("button-enabled", enabled + "");
     }

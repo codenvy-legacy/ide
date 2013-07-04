@@ -19,6 +19,7 @@
 package com.codenvy.ide.collaboration.chat.client;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
@@ -28,6 +29,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
+@RolesAllowed({"developer"})
 public class SendCodePointerControl extends SimpleControl implements IDEControl, ViewActivatedHandler {
 
     private static final String ID = "Edit/Send Code Pointer";

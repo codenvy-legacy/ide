@@ -39,7 +39,7 @@ import java.io.InputStream;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/jenkins")
+@Path("{ws-name}/jenkins")
 public class JenkinsService {
     @Inject
     private JenkinsClient jenkins;

@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.IDELoader;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.java.shared.DataSourceOptions;
 
 import java.util.List;
@@ -37,11 +38,11 @@ import java.util.List;
  */
 public class DatasourceClientService {
     
-    private static final String URL_GET_ALL = "/ide/data-source/java";
+    private static final String URL_GET_ALL = "/data-source/java";
     
-    private static final String URL_NEW_CONFIGURATION = "/ide/data-source/java/create";
+    private static final String URL_NEW_CONFIGURATION = "/data-source/java/create";
 
-    private static final String URL_SAVE_ALL = "/ide/data-source/java/configure";
+    private static final String URL_SAVE_ALL = "/data-source/java/configure";
 
     private static DatasourceClientService instance;
     
@@ -52,10 +53,13 @@ public class DatasourceClientService {
     private String restContext;
     
     public DatasourceClientService(String restContext) {
-        instance = this;
-        this.restContext = restContext;
+        instance = this;        
+        if (!restContext.endsWith("/")) {
+            restContext += "/";
+        }
+        this.restContext = restContext + Utils.getWorkspaceName();
     }
-   
+
     public void getAll(String vfsId, String projectId, final AsyncCallback<List<DataSourceOptions>> callback) {
         try {
             String params = "vfsid=" + vfsId + "&projectid=" + projectId;

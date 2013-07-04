@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.vfs.server.impl.memory.context;
 
-import com.codenvy.ide.commons.server.NameGenerator;
+import com.codenvy.commons.lang.NameGenerator;
 
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;

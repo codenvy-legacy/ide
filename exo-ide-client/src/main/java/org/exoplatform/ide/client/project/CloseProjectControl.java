@@ -39,7 +39,6 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @version $
  */
 
-@RolesAllowed({"developer"})
 public class CloseProjectControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
                                                                   ProjectClosedHandler, ViewActivatedHandler, ItemsSelectedHandler {
 

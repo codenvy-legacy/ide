@@ -24,6 +24,7 @@ import com.google.gwt.http.client.RequestException;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.jenkins.shared.Job;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 
@@ -41,15 +42,14 @@ public class JenkinsService {
 
     private static JenkinsService instance;
 
-    private static final String JENKINS = "/ide/jenkins";
+    private static final String JENKINS = Utils.getWorkspaceName() + "/jenkins";
 
     /**
      * @param restContext
      * @param loader
      */
-    public JenkinsService(String restContext, Loader loader) {
-        super();
-        this.restContext = restContext;
+    public JenkinsService(Loader loader) {
+        this.restContext = Utils.getRestContext();
         this.loader = loader;
         instance = this;
     }

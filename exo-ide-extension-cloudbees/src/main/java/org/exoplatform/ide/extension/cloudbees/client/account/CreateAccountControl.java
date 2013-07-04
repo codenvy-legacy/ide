@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.cloudbees.client.account;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientBundle;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
@@ -29,6 +30,7 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 10, 2012 4:32:40 PM anya $
  */
+@RolesAllowed({"developer"})
 public class CreateAccountControl extends SimpleControl implements IDEControl {
     private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.controlCreateAccountId();
 

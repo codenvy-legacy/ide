@@ -27,7 +27,7 @@ import com.codenvy.eclipse.core.resources.IResource;
 import com.codenvy.eclipse.core.runtime.IPath;
 import com.codenvy.eclipse.core.runtime.NullProgressMonitor;
 import com.codenvy.eclipse.core.runtime.Path;
-import com.codenvy.ide.commons.server.StringUtils;
+import com.codenvy.commons.lang.IoUtil;
 
 import org.junit.Test;
 
@@ -94,7 +94,7 @@ public class CreateTest extends ResourcesBaseTest {
         assertTrue(fileResource.getType() == IResource.FILE);
         assertEquals(originPath, fileResource.getFullPath());
 
-        String actualContents = StringUtils.toString(fileResource.getContents());
+        String actualContents = IoUtil.readStream(fileResource.getContents());
         assertEquals(actualContents, content);
     }
 

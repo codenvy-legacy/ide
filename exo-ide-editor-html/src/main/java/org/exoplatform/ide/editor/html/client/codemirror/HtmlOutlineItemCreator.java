@@ -47,4 +47,5 @@ public class HtmlOutlineItemCreator extends OutlineItemCreatorImpl {
     public String getTokenDisplayTitle(TokenBeenImpl token) {
         return token.getName();
     }
+
 }

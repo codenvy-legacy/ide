@@ -40,6 +40,10 @@
 
         <when-property-is name="mobile.user.agent" value="iphone"/>
     </replace-with>
+    
+    <replace-with class="com.codenvy.ide.client.util.logging.LogConfig.Enabled">
+        <when-type-is class="com.codenvy.ide.client.util.logging.LogConfig"/>
+    </replace-with>
     <source path=""/>
 
 </module>

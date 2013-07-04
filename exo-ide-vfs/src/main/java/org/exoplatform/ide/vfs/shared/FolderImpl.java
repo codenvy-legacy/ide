@@ -50,9 +50,9 @@ public class FolderImpl extends ItemImpl implements Folder {
      *         hyperlinks for retrieved or(and) manage item
      */
     @SuppressWarnings("rawtypes")
-    public FolderImpl(String id, String name, String mimeType, String path, String parentId, long creationDate,
+    public FolderImpl(String vfsId, String id, String name, String mimeType, String path, String parentId, long creationDate,
                       List<Property> properties, Map<String, Link> links) {
-        this(id, name, ItemType.FOLDER, mimeType, path, parentId, creationDate, properties, links);
+        this(vfsId, id, name, ItemType.FOLDER, mimeType, path, parentId, creationDate, properties, links);
     }
 
     /** Empty instance of Folder. */
@@ -63,9 +63,9 @@ public class FolderImpl extends ItemImpl implements Folder {
 
     // === For Project ===
 
-    protected FolderImpl(String id, String name, ItemType itemType, String mimeType, String path, String parentId,
+    protected FolderImpl(String vfsId, String id, String name, ItemType itemType, String mimeType, String path, String parentId,
                          long creationDate, List<Property> properties, Map<String, Link> links) {
-        super(id, name, itemType, mimeType, path, parentId, creationDate, properties, links);
+        super(vfsId, id, name, itemType, mimeType, path, parentId, creationDate, properties, links);
     }
 
     protected FolderImpl(ItemType itemType) {

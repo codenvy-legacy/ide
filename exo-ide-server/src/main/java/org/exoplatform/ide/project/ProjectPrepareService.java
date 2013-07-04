@@ -28,6 +28,7 @@ import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.xml.sax.SAXException;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.xml.parsers.ParserConfigurationException;
@@ -39,7 +40,8 @@ import java.util.List;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-@Path("/ide/project")
+@Path("{ws-name}/project")
+@RolesAllowed("developer")
 public class ProjectPrepareService {
     @Inject
     private LocalPathResolver localPathResolver;

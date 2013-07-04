@@ -391,7 +391,42 @@ public class Utils {
     }-*/;
 
     public static native String getRestContext() /*-{
-        return $wnd.appConfig.context;
+        function endsWith(str, suffix) {
+          return str.indexOf(suffix, str.length - suffix.length) !== -1;
+        }
+        rc = $wnd.appConfig.context;
+        
+        if (endsWith(rc,'/'))
+         return rc;
+        else
+         return rc + '/';  
     }-*/;
+
+    public static native String getWorkspaceName() /*-{
+        return $wnd.ws;
+    }-*/;
+    
+    public static native String getProjectToOpen() /*-{
+        return $wnd.project;
+     }-*/;
+    
+    public static native String getFilePathToOpen() /*-{
+      if ($wnd.path)
+        return $wnd.project + $wnd.path;
+      else 
+        return null;  
+    }-*/;
+
+    public static native String getWebSocketContext() /*-{
+            function endsWith(str, suffix) {
+            return str.indexOf(suffix, str.length - suffix.length) !== -1;
+          }
+          wsc = $wnd.appConfig.websocketContext;
+          
+          if (endsWith(wsc,'/'))
+           return wsc;
+          else
+           return wsc + '/';
+        }-*/;
 
 }

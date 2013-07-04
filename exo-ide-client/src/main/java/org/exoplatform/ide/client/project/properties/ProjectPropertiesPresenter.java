@@ -225,6 +225,7 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
             }
             editPropertyFixedValuePresenter.editProperty(selectedProperty, currentProject.getProperties(), projectTypes,
                                                          propertyEditCompleteHandler);
+
         } else {
             editPropertyPresenter.editProperty(selectedProperty, currentProject.getProperties(), propertyEditCompleteHandler);
         }
@@ -239,6 +240,11 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
                                                             };
 
     private void deleteSelectedProperty() {
+        if (selectedProperty.getName().equals(ProjectProperties.TYPE.value())
+            || selectedProperty.getName().equals(ProjectProperties.MIME_TYPE.value())) {
+            Dialogs.getInstance().showInfo("This property is required for your project and cannot be deleted.");
+            return;
+        }
         String name = PropertyUtil.getHumanReadableName(selectedProperty.getName());
         Dialogs.getInstance().ask("IDE", "Delete property <b>" + name + "</b>?", new BooleanValueReceivedHandler() {
             @Override
@@ -258,7 +264,18 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
 
     private void onPropertySelected(Property property) {
         selectedProperty = property;
-        display.setEditButtonEnabled(true);
+        if (!IDE.user.getRoles().contains("developer") && !IDE.user.getRoles().contains("admin"))
+        {
+            display.setEditButtonEnabled(false);
+            display.setDeleteButtonEnabled(false);
+            return;
+        }
+            
+        if (selectedProperty.getName().equals(ProjectProperties.MIME_TYPE.value())) {
+            display.setEditButtonEnabled(false);
+        } else {
+            display.setEditButtonEnabled(true);
+        }
         display.setDeleteButtonEnabled(true);
     }
 

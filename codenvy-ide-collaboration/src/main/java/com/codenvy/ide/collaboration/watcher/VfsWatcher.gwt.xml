@@ -27,6 +27,7 @@
     <inherits name="com.codenvy.ide.dtogen.DtoGen"/>
     <inherits name="com.codenvy.ide.json.Json"/>
     <inherits name="com.codenvy.ide.collaboration.dto.Dto"/>
+    <inherits name="com.codenvy.ide.Collaboration"/>
 
     <entry-point class='com.codenvy.ide.collaboration.watcher.client.VfsWatcherExtension'/>
     <source path="client"/>

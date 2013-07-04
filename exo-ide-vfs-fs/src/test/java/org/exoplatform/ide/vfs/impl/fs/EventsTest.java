@@ -18,20 +18,22 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
-import com.codenvy.ide.commons.server.FileUtils;
-
 import org.everrest.core.impl.ContainerResponse;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
+import org.exoplatform.ide.vfs.server.observation.ChangeEvent.ChangeType;
 import org.exoplatform.ide.vfs.server.observation.ChangeEventFilter;
 import org.exoplatform.ide.vfs.server.observation.EventListener;
 import org.exoplatform.ide.vfs.server.observation.ProjectUpdateListener;
 import org.exoplatform.ide.vfs.shared.Project;
-import org.exoplatform.services.security.ConversationState;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static org.exoplatform.ide.vfs.server.observation.ChangeEvent.ChangeType;
+import static com.codenvy.commons.lang.IoUtil.copy;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -247,20 +249,15 @@ public class EventsTest extends LocalFileSystemTest {
         java.io.File testRoot2 = new java.io.File(testFsIoRoot2, testRootPath);
         assertTrue(testRoot2.mkdirs());
         // copy all items to new virtual filesystem
-        FileUtils.copy(getIoFile(testRootPath), testRoot2, null);
+        copy(getIoFile(testRootPath), testRoot2, null);
 
         // Now have the same structure in two different workspaces (tenants).
         // This is the same what we have in cloud infrastructure.
 
         provider.mount(testFsIoRoot2);
 
-        ConversationState state = ConversationState.getCurrent();
         LocalFileSystem vfs1 = (LocalFileSystem)provider.newInstance(null, eventListenerList);
-        String previous = (String)state.getAttribute("currentTenant");
-        state.setAttribute("currentTenant", "my-ws2");
         LocalFileSystem vfs2 = (LocalFileSystem)provider.newInstance(null, eventListenerList);
-        // restore previous
-        state.setAttribute("currentTenant", previous);
 
         VirtualFile project1 = vfs1.getVirtualFileByPath(folderPath);
         VirtualFile project2 = vfs2.getVirtualFileByPath(folderPath);

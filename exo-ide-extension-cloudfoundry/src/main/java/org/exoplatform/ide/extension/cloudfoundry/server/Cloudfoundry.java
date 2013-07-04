@@ -20,6 +20,9 @@ package org.exoplatform.ide.extension.cloudfoundry.server;
 
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonParseException;
+import com.codenvy.commons.lang.IoUtil;
+import com.codenvy.commons.lang.NameGenerator;
+import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.ide.commons.server.*;
 
 import org.everrest.core.impl.provider.json.JsonException;
@@ -442,7 +445,7 @@ public class Cloudfoundry {
                 if ("file".equals(uri.getScheme())) {
                     path = new java.io.File(uri);
                 } else {
-                    path = FileUtils.downloadFile(null, "vmc_" + app, ".war", url);
+                    path = IoUtil.downloadFile(null, "vmc_" + app, ".war", url);
                     cleanup = true; // remove only downloaded file.
                 }
             }
@@ -517,7 +520,7 @@ public class Cloudfoundry {
             }
         } finally {
             if (path != null && cleanup) {
-                FileUtils.deleteRecursive(path);
+                IoUtil.deleteRecursive(path);
             }
             final long time = System.currentTimeMillis() - start;
             LOG.debug("createApplication END, time: {} ms", time);
@@ -803,7 +806,7 @@ public class Cloudfoundry {
                 if ("file".equals(uri.getScheme())) {
                     path = new java.io.File(uri);
                 } else {
-                    path = FileUtils.downloadFile(null, "vmc_" + app, ".war", url);
+                    path = IoUtil.downloadFile(null, "vmc_" + app, ".war", url);
                     cleanup = true;
                 }
                 uploadApplication(cloudfoundryCredential, app, vfs, projectId, path);
@@ -812,7 +815,7 @@ public class Cloudfoundry {
             }
         } finally {
             if (path != null && cleanup) {
-                FileUtils.deleteRecursive(path);
+                IoUtil.deleteRecursive(path);
             }
         }
 
@@ -2050,7 +2053,7 @@ public class Cloudfoundry {
         HttpURLConnection http = null;
         java.io.File uploadDir = null;
         try {
-            uploadDir = FileUtils.createTempDirectory(null, "vmc_" + app);
+            uploadDir = IoUtil.createTempDirectory(null, "vmc_" + app);
 
             if (path != null) {
                 if (path.isFile()) {
@@ -2059,13 +2062,13 @@ public class Cloudfoundry {
                         ZipUtils.unzip(path, uploadDir);
                     }
                 } else {
-                    FileUtils.copy(path, uploadDir, null);
+                    IoUtil.copy(path, uploadDir, null);
                 }
             } else {
                 Utils.copy(vfs, projectId, uploadDir);
             }
 
-            List<java.io.File> files = FileUtils.list(uploadDir, FileUtils.GIT_FILTER);
+            List<java.io.File> files = IoUtil.list(uploadDir, IoUtil.GIT_FILTER);
 
             long totalSize = 0;
             for (java.io.File f : files) {
@@ -2194,7 +2197,7 @@ public class Cloudfoundry {
             }
         } finally {
             if (uploadDir != null) {
-                FileUtils.deleteRecursive(uploadDir);
+                IoUtil.deleteRecursive(uploadDir);
             }
             if (zip != null) {
                 zip.delete();

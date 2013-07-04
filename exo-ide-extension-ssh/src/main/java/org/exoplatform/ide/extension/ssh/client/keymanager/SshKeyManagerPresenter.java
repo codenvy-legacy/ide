@@ -173,7 +173,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
 
             @Override
             public void onClick(ClickEvent event) {
-                new UploadSshKeyPresenter(configuration.getContext());
+                new UploadSshKeyPresenter();
             }
         });
 

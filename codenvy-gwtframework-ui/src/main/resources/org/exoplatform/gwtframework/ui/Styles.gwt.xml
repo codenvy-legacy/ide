@@ -24,19 +24,11 @@
     <stylesheet src='ui/menu/menu.css'/>
     <stylesheet src='ui/popup/popup-menu.css'/>
     <stylesheet src='ui/text-button/text-button.css'/>
-    <stylesheet src='ui/icon-button/icon-button.css'/>
-    <stylesheet src='ui/image-button/image-button-22.css'/>
     <stylesheet src='ui/link-button/link-button-22.css'/>
     <stylesheet src='ui/text-input/text-input.css'/>
     <stylesheet src='ui/loader/loader.css'/>
     <stylesheet src='ui/tab/tab.css'/>
     <stylesheet src='ui/tablayout/tablayout.css'/>
     <stylesheet src='ui/splitbar/splitbars.css'/>
-
-    <!--
-        <stylesheet src="eXoStyle/skin/default/style-compiled.css" />
-        <stylesheet src='gwt-style.css' />
-        <stylesheet src='gwtframework-styles.css' />
-     -->
 
 </module>

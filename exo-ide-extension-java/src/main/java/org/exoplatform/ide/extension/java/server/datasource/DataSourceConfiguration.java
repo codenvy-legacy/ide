@@ -19,7 +19,7 @@
 
 package org.exoplatform.ide.extension.java.server.datasource;
 
-import com.codenvy.ide.commons.server.NameGenerator;
+import com.codenvy.commons.lang.NameGenerator;
 import org.exoplatform.ide.extension.java.shared.DataSourceOption;
 import org.exoplatform.ide.extension.java.shared.DataSourceOptions;
 import org.exoplatform.ide.extension.java.shared.Dependency;

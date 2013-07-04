@@ -45,11 +45,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static com.codenvy.commons.lang.IoUtil.createTempDirectory;
+import static com.codenvy.commons.lang.NameGenerator.generate;
+import static com.codenvy.commons.lang.ZipUtils.unzip;
 import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
-import static com.codenvy.ide.commons.server.FileUtils.createTempDirectory;
-import static com.codenvy.ide.commons.server.FileUtils.deleteRecursive;
-import static com.codenvy.ide.commons.server.NameGenerator.generate;
-import static com.codenvy.ide.commons.server.ZipUtils.unzip;
+import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 
 /**
  * ApplicationRunner for deploy Node.js applications at Cloud Foundry.
@@ -117,14 +117,14 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             final Cloudfoundry cloudfoundry = cfServers.next();
             final String name = generate("app-", 16);
             try {
-                return doRunApplication(cloudfoundry, name, path);
+                return doRunApplication(cloudfoundry, name, path, project.getName());
             } catch (ApplicationRunnerException e) {
                 Throwable cause = e.getCause();
                 if (cause instanceof CloudfoundryException) {
                     if (200 == ((CloudfoundryException)cause).getExitCode()) {
                         // Login and try again.
                         login(cloudfoundry);
-                        return doRunApplication(cloudfoundry, name, path);
+                        return doRunApplication(cloudfoundry, name, path, project.getName());
                     }
                 }
                 throw e;
@@ -140,14 +140,17 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
     private ApplicationInstance doRunApplication(Cloudfoundry cloudfoundry,
                                                  String name,
-                                                 java.io.File appDir) throws ApplicationRunnerException {
+                                                 java.io.File appDir,
+                                                 String projectName) throws ApplicationRunnerException {
         try {
             final String target = cloudfoundry.getTarget();
             final CloudFoundryApplication cfApp = createApplication(cloudfoundry, target, name, appDir);
             final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
 
-            applications.put(name, new Application(name, target, expired));
+            applications.put(name, new Application(name, target, expired, projectName));
             LOG.debug("Start application {} at CF server {}", name, target);
+            LOG.info("EVENT#run-started# PROJECT#" + projectName + "# TYPE#nodejs#");
+            LOG.info("EVENT#project-deployed# PROJECT#" + projectName + "# TYPE#nodejs# PAAS#LOCAL#");
             return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
         } catch (Exception e) {
 
@@ -243,8 +246,9 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             String target = cloudfoundry.getTarget();
             cloudfoundry.stopApplication(target, name, null, null, "cloudfoundry");
             cloudfoundry.deleteApplication(target, name, null, null, "cloudfoundry", true);
-            applications.remove(name);
             LOG.debug("Stop application {}.", name);
+            LOG.info("EVENT#run-finished# PROJECT#" + applications.get(name).projectName + "# TYPE#nodejs#");
+            applications.remove(name);
         } catch (Exception e) {
             throw new ApplicationRunnerException(e.getMessage(), e);
         }
@@ -311,12 +315,14 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     private static class Application {
         final String name;
         final String server;
+        final String projectName;
         final long   expirationTime;
 
-        Application(String name, String server, long expirationTime) {
+        Application(String name, String server, long expirationTime, String projectName) {
             this.name = name;
             this.server = server;
             this.expirationTime = expirationTime;
+            this.projectName = projectName;
         }
 
         boolean isExpired() {

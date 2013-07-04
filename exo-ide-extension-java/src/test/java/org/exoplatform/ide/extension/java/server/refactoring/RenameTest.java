@@ -31,6 +31,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -61,6 +62,7 @@ public class RenameTest extends ResourcesBaseTest {
     }
 
     @Test
+    @Ignore
     public void renameTypeTest() throws VirtualFileSystemException, IOException, CoreException {
         RefactoringService r = new RefactoringService();
         r.rename(ID, project.getId(), "org.exoplatform.ide.client.IDE", 1046, "MyIde");

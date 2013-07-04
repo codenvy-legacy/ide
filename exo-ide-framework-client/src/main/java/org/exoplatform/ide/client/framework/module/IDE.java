@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.outline.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 
 import java.util.ArrayList;
@@ -42,8 +43,8 @@ public abstract class IDE {
 
     private static IDE instance;
 
-    public static String userId;
-
+    public static UserInfo user;
+    
     private static List<Extension> extensions = new ArrayList<Extension>();
 
     private static HandlerManager eventBus = new SafeHandlerManager();
@@ -220,4 +221,15 @@ public abstract class IDE {
     public abstract List<PaaS> getPaaSes();
 
     public abstract void registerPaaS(PaaS paas);
+
+    /**
+     * Return true if user not "developer" and not "admin" 
+     * 
+     * @return
+     */
+    public static boolean isRoUser() {
+        if (user == null)
+            return true;
+        return !user.getRoles().contains("developer") && !user.getRoles().contains("admin");
+    }
 }

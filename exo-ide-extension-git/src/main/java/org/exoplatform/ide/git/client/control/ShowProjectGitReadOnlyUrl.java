@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -29,6 +30,7 @@ import org.exoplatform.ide.git.client.init.ShowProjectGitReadOnlyUrlEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 18, 2011 10:21:02 AM anya $
  */
+@RolesAllowed("developer")
 public class ShowProjectGitReadOnlyUrl extends GitControl {
     public ShowProjectGitReadOnlyUrl() {
         super(GitExtension.MESSAGES.projectReadOnlyGitUrlId());

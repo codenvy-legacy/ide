@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.openshift.client.controls;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
@@ -29,6 +30,7 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 9, 2011 4:58:20 PM anya $
  */
+@RolesAllowed({"developer"})
 public class OpenShiftControlsGroup extends SimpleControl implements IDEControl {
 
     public OpenShiftControlsGroup() {

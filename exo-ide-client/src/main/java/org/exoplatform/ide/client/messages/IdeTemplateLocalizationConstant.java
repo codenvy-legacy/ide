@@ -100,7 +100,7 @@ public interface IdeTemplateLocalizationConstant extends Messages {
 
     @Key("createProjectFromTemplate.project.nameInvalid")
     String createProjectFromTemplateProjectNameInvalid();
-
+    
     @Key("createProjectFromTemplate.project.exists")
     String createProjectFromTemplateProjectExists(String projectName);
 
@@ -142,6 +142,15 @@ public interface IdeTemplateLocalizationConstant extends Messages {
 
     @Key("zeroturnaround")
     String zeroturnaround();
+    
+    @Key("noIncorrectProjectNameMessage")
+    String noIncorrectProjectNameMessage();
+    
+    @Key("noIncorrectProjectNameTitle")
+    String noIncorrectProjectNameTitle();
+    
+    @Key("projectNameStartWith_Message")
+    String projectNameStartWith_Message();
 
     /*
      * CreateProjectTemplateForm

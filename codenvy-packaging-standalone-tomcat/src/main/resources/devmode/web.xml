@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2010 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms 
+	of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, 
+	or (at your option) any later version. This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+	without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
+	License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
+	if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF 
+	site: http://www.fsf.org. -->
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0" metadata-complete="true">
+    <display-name>IDE</display-name>
+    <context-param>
+        <param-name>everrest.exoplatform.standalone.config</param-name>
+        <param-value>war:/WEB-INF/classes/conf/exo-configuration.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.everrest.exoplatform.servlet.EverrestExoContextListener$StandaloneContainerStarter</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.everrest.websockets.WSConnectionTracker</listener-class>
+    </listener>
+    <listener>
+        <listener-class>com.google.collide.server.FileEditSessionCleaner</listener-class>
+    </listener>
+    <listener>
+        <listener-class>com.codenvy.ide.collaboration.watcher.server.WatcherSessionCleaner</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>EverrestServlet</servlet-name>
+        <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ExoIdeWebSocketServlet</servlet-name>
+        <servlet-class>org.exoplatform.ide.websocket.ExoIdeWebSocketServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EverrestServlet</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ExoIdeWebSocketServlet</servlet-name>
+        <url-pattern>/websocket/*</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>SetCurrentIdentityFilter</filter-name>
+        <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
+    </filter>
+
+    <filter>
+        <filter-name>SetEnvironmentContextFilter</filter-name>
+        <filter-class>com.codenvy.ide.SetEnvironmentContextFilter</filter-class>
+    </filter>
+
+
+    <filter-mapping>
+        <filter-name>SetCurrentIdentityFilter</filter-name>
+        <url-pattern>/rest/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>SetCurrentIdentityFilter</filter-name>
+        <url-pattern>/websocket/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>SetEnvironmentContextFilter</filter-name>
+        <url-pattern>/rest/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>SetEnvironmentContextFilter</filter-name>
+        <url-pattern>/websocket/*</url-pattern>
+    </filter-mapping>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>api</web-resource-name>
+            <url-pattern>/login.html</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>developer</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>codenvy</realm-name>
+    </login-config>
+    
+    <security-role>
+        <description>the user role</description>
+        <role-name>developer</role-name>
+    </security-role>
+
+</web-app>

@@ -33,7 +33,7 @@ public class RemoveItemTreeIconEvent extends GwtEvent<RemoveItemTreeIconHandler>
 
     public static GwtEvent.Type<RemoveItemTreeIconHandler> TYPE = new Type<RemoveItemTreeIconHandler>();
 
-    private Map<Item, TreeIconPosition> iconsToRemove;
+    private Map<Item, TreeIconPosition>                    iconsToRemove;
 
     /** @param iconsToRemove */
     public RemoveItemTreeIconEvent(Map<Item, TreeIconPosition> iconsToRemove) {
@@ -43,7 +43,7 @@ public class RemoveItemTreeIconEvent extends GwtEvent<RemoveItemTreeIconHandler>
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
-    public com.google.gwt.event.shared.GwtEvent.Type<RemoveItemTreeIconHandler> getAssociatedType() {
+    public GwtEvent.Type<RemoveItemTreeIconHandler> getAssociatedType() {
         return TYPE;
     }
 

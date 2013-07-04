@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.logreader.client.control.LogReaderControl;
 import org.exoplatform.ide.extension.logreader.client.model.LogReaderService;
 
@@ -53,7 +54,7 @@ public class LogReaderExtension extends Extension implements InitializeServicesH
      * .client.framework.application.event.InitializeServicesEvent) */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new LogReaderService(event.getApplicationConfiguration().getContext(), event.getLoader());
+        new LogReaderService(Utils.getRestContext(), Utils.getWorkspaceName(), event.getLoader());
     }
 
 }

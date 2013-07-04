@@ -92,7 +92,7 @@ import java.util.List;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: GitService.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-@Path("ide/git")
+@Path("{ws-name}/git")
 public class GitService {
     private static final Log          LOG = ExoLogger.getLogger(GitService.class);
 
@@ -423,7 +423,7 @@ public class GitService {
     @Path("status")
     @POST
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Status status(@PathParam("short") boolean shortFormat) throws GitException,
+    public Status status(@QueryParam("short") boolean shortFormat) throws GitException,
                                                                  LocalPathResolveException,
                                                                  VirtualFileSystemException {
         if (!isGitRepository()) {

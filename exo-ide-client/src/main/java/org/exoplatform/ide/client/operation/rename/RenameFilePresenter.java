@@ -303,7 +303,7 @@ public class RenameFilePresenter extends ItemsOperationPresenter
 //                     Dialogs.getInstance().showError("Can't rename <b>" + i.getName() + "</b>. This file opened by other users.");
                             new ResourceLockedPresenter(
                                     new SafeHtmlBuilder().appendHtmlConstant("Can't rename file <b>").appendEscaped(
-                                            i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true,
+                                            i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), i,
                                     i.getPath(),
                                     Operation.RENAME);
                             return;
@@ -314,7 +314,7 @@ public class RenameFilePresenter extends ItemsOperationPresenter
 //               Dialogs.getInstance().showError("Can't rename <b>" + i.getName() + "</b>. This file opened by other users.");
                     new ResourceLockedPresenter(
                             new SafeHtmlBuilder().appendHtmlConstant("Can't rename file <b>").appendEscaped(
-                                    i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true,
+                                    i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), i,
                             i.getPath(), Operation.RENAME);
                     return;
                 }
@@ -324,7 +324,7 @@ public class RenameFilePresenter extends ItemsOperationPresenter
                                .showError("Can't rename <b>" + i.getName() + "</b>. This folder contains file(s) opened by other users.");
                         new ResourceLockedPresenter(
                                 new SafeHtmlBuilder().appendHtmlConstant("Can't rename folder <b>").appendEscaped(
-                                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path, false,
+                                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path, i,
                                 i.getPath(), Operation.RENAME);
                         return;
                     }

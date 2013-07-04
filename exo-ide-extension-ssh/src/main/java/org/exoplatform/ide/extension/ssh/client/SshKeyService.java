@@ -30,6 +30,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 
@@ -48,7 +49,7 @@ public class SshKeyService {
     /**
      *
      */
-    public SshKeyService(String restContext, int httpsPort, Loader loader) {
+    public SshKeyService(String restContext, Loader loader) {
         this.restContext = restContext;
         this.loader = loader;
         instance = this;
@@ -68,7 +69,7 @@ public class SshKeyService {
         loader.setMessage("Getting SSH keys....");
         loader.show();
         callback.setLoader(loader);
-        jsonp.requestObject(restContext + "/ide/ssh-keys/all", callback);
+        jsonp.requestObject(restContext + Utils.getWorkspaceName() + "/ssh-keys/all", callback);
     }
 
     /**
@@ -79,7 +80,7 @@ public class SshKeyService {
      * @throws RequestException
      */
     public void generateKey(String host, AsyncRequestCallback<GenKeyRequest> callback) throws RequestException {
-        String url = restContext + "/ide/ssh-keys/gen";
+        String url = restContext + Utils.getWorkspaceName() + "/ssh-keys/gen";
 
         GenKeyRequest genKeyRequestBean = SshKeyExtension.AUTO_BEAN_FACTORY.genKeyRequest().as();
         genKeyRequestBean.setHost(host);

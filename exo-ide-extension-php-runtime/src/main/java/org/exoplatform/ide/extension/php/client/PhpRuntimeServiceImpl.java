@@ -24,9 +24,12 @@ import com.google.gwt.http.client.RequestException;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.extension.php.shared.ApplicationInstance;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -37,16 +40,27 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  *
  */
 public class PhpRuntimeServiceImpl extends PhpRuntimeService {
-    private static final String LOGS = "/ide/php/runner/logs";
+    
+    private static final String BASE_URL = "/php/runner";
+    
+    private static final String LOGS = BASE_URL + "/logs";
 
-    private String restContext;
+    private static final String RUN_APPLICATION = BASE_URL + "/run";
 
-    private static final String RUN_APPLICATION = "/ide/php/runner/run";
+    private static final String STOP_APPLICATION = BASE_URL + "/stop";
 
-    private static final String STOP_APPLICATION = "/ide/php/runner/stop";
 
-    public PhpRuntimeServiceImpl(String restContext) {
+    private final String wsName;
+
+    private final String restContext;
+
+    private final MessageBus wsMessageBus;
+
+    public PhpRuntimeServiceImpl(String restContext, String wsName, MessageBus wsMessageBus) {
         this.restContext = restContext;
+        this.wsName = wsName;
+        this.wsMessageBus = wsMessageBus;
+        
     }
 
     /**
@@ -54,16 +68,13 @@ public class PhpRuntimeServiceImpl extends PhpRuntimeService {
      *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
      */
     @Override
-    public void start(String vfsId, ProjectModel project, AsyncRequestCallback<ApplicationInstance> callback)
-            throws RequestException {
-        String requestUrl = restContext + RUN_APPLICATION;
-
+    public void start(String vfsId, ProjectModel project, RequestCallback<ApplicationInstance> callback)
+            throws WebSocketException {
         StringBuilder params = new StringBuilder("?");
-        params.append("&vfsid=").append(vfsId).append("&projectid=").append(project.getId());
-
-        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString(), true)
-                    .requestStatusHandler(new StartApplicationStatusHandler(project.getName()))
-                    .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+        params.append("vfsid=").append(vfsId).append("&projectid=").append(project.getId());
+        RequestMessage message =
+            RequestMessageBuilder.build(RequestBuilder.GET, wsName + RUN_APPLICATION + params).getRequestMessage();
+        wsMessageBus.send(message, callback);
     }
 
     /**
@@ -72,12 +83,12 @@ public class PhpRuntimeServiceImpl extends PhpRuntimeService {
      */
     @Override
     public void stop(String name, AsyncRequestCallback<Object> callback) throws RequestException {
-        String requestUrl = restContext + STOP_APPLICATION;
+        String requestUrl = restContext + wsName + STOP_APPLICATION;
 
         StringBuilder params = new StringBuilder("?name=");
         params.append(name);
 
-        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString(), true)
+        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString())
                     .requestStatusHandler(new StopApplicationStatusHandler(name)).send(callback);
     }
 
@@ -86,7 +97,7 @@ public class PhpRuntimeServiceImpl extends PhpRuntimeService {
      */
     @Override
     public void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
-        String url = restContext + LOGS;
+        String url = restContext + wsName + LOGS;
         StringBuilder params = new StringBuilder("?name=");
         params.append(name);
 

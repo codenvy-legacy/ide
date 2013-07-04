@@ -20,6 +20,10 @@
 
 package org.exoplatform.gwtframework.ui.client.component;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -81,31 +85,63 @@ public class TextButton extends Composite {
 
     }
 
-    public static interface Style {
+    interface Style extends CssResource {
 
-        static final String PANEL = "exo-statusText-panel";
+        @ClassName("exo-statusText-table-left-over")
+        String exoStatusTextTableLeftOver();
 
-        static final String TABLE = "exo-statusText-table";
+        @ClassName("exo-statusText-table-middle-over")
+        String exoStatusTextTableMiddleOver();
 
-        static final String TABLE_LEFT = "exo-statusText-table-left";
+        @ClassName("exo-statusText-panel")
+        String exoStatusTextPanel();
 
-        static final String TABLE_LEFT_DOWN = "exo-statusText-table-left-down";
+        @ClassName("exo-statusText-table-right-over")
+        String exoStatusTextTableRightOver();
 
-        static final String TABLE_LEFT_OVER = "exo-statusText-table-left-over";
+        @ClassName("exo-statusText-table-middle-down")
+        String exoStatusTextTableMiddleDown();
 
-        static final String TABLE_MIDDLE = "exo-statusText-table-middle";
+        @ClassName("exo-statusText-table-left")
+        String exoStatusTextTableLeft();
 
-        static final String TABLE_MIDDLE_DOWN = "exo-statusText-table-middle-down";
+        @ClassName("exo-statusText-table-middle")
+        String exoStatusTextTableMiddle();
 
-        static final String TABLE_MIDDLE_OVER = "exo-statusText-table-middle-over";
+        @ClassName("exo-statusText-table-left-down")
+        String exoStatusTextTableLeftDown();
 
-        static final String TABLE_RIGHT = "exo-statusText-table-right";
+        @ClassName("exo-statusText-table")
+        String exoStatusTextTable();
 
-        static final String TABLE_RIGHT_DOWN = "exo-statusText-table-right-down";
+        @ClassName("exo-statusText-table-right")
+        String exoStatusTextTableRight();
 
-        static final String TABLE_RIGHT_OVER = "exo-statusText-table-right-over";
-
+        @ClassName("exo-statusText-table-right-down")
+        String exoStatusTextTableRightDown();
     }
+
+    interface Resources extends ClientBundle {
+        @Source("text-button/component-status-text.css")
+        Style css();
+
+        @Source("text-button/statusTextLeft.png")
+        ImageResource left();
+
+        @Source("text-button/statusTextRight.png")
+        ImageResource right();
+
+        @Source("text-button/statusTextMiddle.png")
+        @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Horizontal)
+        ImageResource middle();
+    }
+
+    private static final Resources RESOURCES = GWT.create(Resources.class);
+
+    static {
+        RESOURCES.css().ensureInjected();
+    }
+
 
     /** Command which will be executed when StatusText component will be clicked. */
     private Command command;
@@ -175,11 +211,11 @@ public class TextButton extends Composite {
         this.command = command;
 
         initWidget(flowPanel);
-        flowPanel.setStyleName(Style.PANEL);
+        flowPanel.setStyleName(RESOURCES.css().exoStatusTextPanel());
 
         textGrid = new Grid(1, 3);
 
-        textGrid.setStyleName(Style.TABLE);
+        textGrid.setStyleName(RESOURCES.css().exoStatusTextTable());
         textGrid.setBorderWidth(0);
         textGrid.setCellPadding(0);
         textGrid.setCellSpacing(0);
@@ -300,9 +336,9 @@ public class TextButton extends Composite {
 
     /** Set style selected ( when user press mouse key ) */
     private void setStyleSelected() {
-        textGrid.getCellFormatter().setStyleName(0, 0, Style.TABLE_LEFT_DOWN);
-        textGrid.getCellFormatter().setStyleName(0, 1, Style.TABLE_MIDDLE_DOWN);
-        textGrid.getCellFormatter().setStyleName(0, 2, Style.TABLE_RIGHT_DOWN);
+        textGrid.getCellFormatter().setStyleName(0, 0, RESOURCES.css().exoStatusTextTableLeftDown());
+        textGrid.getCellFormatter().setStyleName(0, 1, RESOURCES.css().exoStatusTextTableMiddleDown());
+        textGrid.getCellFormatter().setStyleName(0, 2, RESOURCES.css().exoStatusTextTableRightDown());
     }
 
     /**
@@ -317,16 +353,16 @@ public class TextButton extends Composite {
 
     /** Set default style. */
     private void setStyleNormal() {
-        textGrid.getCellFormatter().setStyleName(0, 0, Style.TABLE_LEFT);
-        textGrid.getCellFormatter().setStyleName(0, 1, Style.TABLE_MIDDLE);
-        textGrid.getCellFormatter().setStyleName(0, 2, Style.TABLE_RIGHT);
+        textGrid.getCellFormatter().setStyleName(0, 0, RESOURCES.css().exoStatusTextTableLeft());
+        textGrid.getCellFormatter().setStyleName(0, 1, RESOURCES.css().exoStatusTextTableMiddle());
+        textGrid.getCellFormatter().setStyleName(0, 2, RESOURCES.css().exoStatusTextTableRight());
     }
 
     /** Set style hovered. */
     private void setStyleHovered() {
-        textGrid.getCellFormatter().setStyleName(0, 0, Style.TABLE_LEFT_OVER);
-        textGrid.getCellFormatter().setStyleName(0, 1, Style.TABLE_MIDDLE_OVER);
-        textGrid.getCellFormatter().setStyleName(0, 2, Style.TABLE_RIGHT_OVER);
+        textGrid.getCellFormatter().setStyleName(0, 0, RESOURCES.css().exoStatusTextTableLeftOver());
+        textGrid.getCellFormatter().setStyleName(0, 1, RESOURCES.css().exoStatusTextTableMiddleOver());
+        textGrid.getCellFormatter().setStyleName(0, 2, RESOURCES.css().exoStatusTextTableRightOver());
     }
 
     /**

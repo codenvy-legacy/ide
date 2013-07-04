@@ -18,9 +18,12 @@
  */
 package com.codenvy.ide.commons.cache;
 
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 /**
  * Synchronized cache.
- *
+ * 
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  * @see Cache
@@ -60,5 +63,10 @@ public final class SynchronizedCache<K, V> implements Cache<K, V> {
     @Override
     public int size() {
         return delegate.size();
+    }
+
+    @Override
+    public Iterator<Entry<K, V>> iterator() {
+        return delegate.iterator();
     }
 }

@@ -41,7 +41,6 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImportFromGithubControl.java Nov 18, 2011 5:06:02 PM vereshchaka $
  */
-@RolesAllowed({"developer"})
 public class WelcomeControl extends SimpleControl implements IDEControl, VfsChangedHandler, ViewClosedHandler,
                                                              WelcomePageOpenedHandler {
 

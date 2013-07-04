@@ -20,7 +20,11 @@
 
 package org.exoplatform.gwtframework.ui.client.component;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -28,7 +32,12 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 
-import org.exoplatform.gwtframework.ui.client.menu.*;
+import org.exoplatform.gwtframework.ui.client.menu.CloseMenuHandler;
+import org.exoplatform.gwtframework.ui.client.menu.ItemSelectedHandler;
+import org.exoplatform.gwtframework.ui.client.menu.MenuItem;
+import org.exoplatform.gwtframework.ui.client.menu.MenuLockLayer;
+import org.exoplatform.gwtframework.ui.client.menu.PopupMenu;
+import org.exoplatform.gwtframework.ui.client.menu.PopupMenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,16 +96,37 @@ public class PopupMenuButton extends Composite implements ItemSelectedHandler, C
     }
 
     /** Styles for Popup Menu UI component. */
-    private interface Style {
+    interface Style extends CssResource {
 
-        static final String POPUP_ICON = "exoPopupButtonIcon";
+//        static final String POPUP_ICON = "exoPopupButtonIcon";
+//
+//        static final String POPUP_PANEL = "exoPopupButtonPanel";
+//
+//        static final String POPUP_PANEL_DOWN = "exoPopupButtonPanelDown";
+//
+//        static final String POPUP_PANEL_OVER = "exoPopupButtonPanelOver";
 
-        static final String POPUP_PANEL = "exoPopupButtonPanel";
+        String exoPopupButtonPanelOver();
 
-        static final String POPUP_PANEL_DOWN = "exoPopupButtonPanelDown";
+        String exoPopupButtonPanel();
 
-        static final String POPUP_PANEL_OVER = "exoPopupButtonPanelOver";
+        String exoPopupButtonIcon();
 
+        String exoPopupButtonPanelDown();
+    }
+
+    interface Resources extends ClientBundle {
+        @Source("component-popup-button.css")
+        Style css();
+
+        @Source("popup-button.png")
+        ImageResource popup();
+    }
+
+    private static final Resources RESOURCES = GWT.create(Resources.class);
+
+    static {
+        RESOURCES.css().ensureInjected();
     }
 
     /** Icon for disabled state. */
@@ -134,7 +164,7 @@ public class PopupMenuButton extends Composite implements ItemSelectedHandler, C
 
         panel = new ButtonPanel();
         initWidget(panel);
-        panel.setStyleName(Style.POPUP_PANEL);
+        panel.setStyleName(RESOURCES.css().exoPopupButtonPanel());
         renderIcon();
     }
 
@@ -204,7 +234,7 @@ public class PopupMenuButton extends Composite implements ItemSelectedHandler, C
             lockLayer = null;
         }
 
-        panel.setStyleName(Style.POPUP_PANEL);
+        panel.setStyleName(RESOURCES.css().exoPopupButtonPanel());
     }
 
     /**
@@ -252,19 +282,14 @@ public class PopupMenuButton extends Composite implements ItemSelectedHandler, C
         closePopupMenu();
     }
 
-    /**
-     * Menu Item selected handler.
-     *
-     * @see org.exoplatform.gwtframework.ui.client.menu.ItemSelectedHandler#onMenuItemSelected(org.exoplatform.gwtframework.ui.client.menu
-     * .MenuItem)
-     */
+    /** Menu Item selected handler. */
     public void onMenuItemSelected(MenuItem menuItem) {
         closePopupMenu();
     }
 
     /** Mouse Down handler. */
     private void onMouseDown() {
-        panel.setStyleName(Style.POPUP_PANEL_DOWN);
+        panel.setStyleName(RESOURCES.css().exoPopupButtonPanelDown());
     }
 
     /** Mouse Out Handler. */
@@ -273,7 +298,7 @@ public class PopupMenuButton extends Composite implements ItemSelectedHandler, C
             return;
         }
 
-        panel.setStyleName(Style.POPUP_PANEL);
+        panel.setStyleName(RESOURCES.css().exoPopupButtonPanel());
     }
 
     private void onMouseClick() {
@@ -282,12 +307,12 @@ public class PopupMenuButton extends Composite implements ItemSelectedHandler, C
 
     /** Mouse Over handler. */
     private void onMouseOver() {
-        panel.setStyleName(Style.POPUP_PANEL_OVER);
+        panel.setStyleName(RESOURCES.css().exoPopupButtonPanelOver());
     }
 
     /** Mouse Up handler. */
     private void onMouseUp() {
-        panel.setStyleName(Style.POPUP_PANEL_OVER);
+        panel.setStyleName(RESOURCES.css().exoPopupButtonPanelOver());
     }
 
     /** Opens Popup Menu. */
@@ -327,7 +352,7 @@ public class PopupMenuButton extends Composite implements ItemSelectedHandler, C
 
         //NOT WORK in IE!!!
         //DOM.setElementAttribute(imageElement, "class", Style.POPUP_ICON);
-        imageElement.setClassName(Style.POPUP_ICON);
+        imageElement.setClassName(RESOURCES.css().exoPopupButtonIcon());
     }
 
     /**

@@ -19,18 +19,29 @@
 package com.codenvy.ide.everrest;
 
 import org.everrest.core.ResourceBinder;
-import org.everrest.core.impl.*;
-import org.everrest.core.impl.async.AsynchronousJobService;
+import org.everrest.core.impl.ApplicationProviderBinder;
+import org.everrest.core.impl.ApplicationPublisher;
+import org.everrest.core.impl.EverrestConfiguration;
+import org.everrest.core.impl.FileCollector;
+import org.everrest.core.impl.FileCollectorDestroyer;
+import org.everrest.core.impl.InternalException;
+import org.everrest.core.impl.LifecycleComponent;
+import org.everrest.core.impl.ProviderBinder;
 import org.everrest.core.impl.async.AsynchronousProcessListWriter;
 import org.everrest.core.impl.method.filter.SecurityConstraint;
 import org.everrest.core.util.Logger;
-import org.everrest.exoplatform.*;
+import org.everrest.exoplatform.ApplicationConfiguration;
+import org.everrest.exoplatform.EverrestConfigurationHelper;
+import org.everrest.exoplatform.ExoApplicationPublisher;
+import org.everrest.exoplatform.ProvidersRegistry;
+import org.everrest.exoplatform.StartableApplication;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
 import org.picocontainer.Startable;
 
 import javax.ws.rs.core.Application;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -99,7 +110,7 @@ public class EverrestInitializer implements Startable {
         if (config.isAsynchronousSupported()) {
             everrest.getSingletons().add(new CodenvyAsynchronousJobPool(config));
             everrest.getSingletons().add(new AsynchronousProcessListWriter());
-            everrest.getClasses().add(AsynchronousJobService.class);
+            everrest.getClasses().add(CodenvyAsynchronousJobService.class);
         }
         if (config.isCheckSecurity()) {
             everrest.getSingletons().add(new SecurityConstraint());

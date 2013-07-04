@@ -225,14 +225,16 @@ public class VfsWatcher implements Startable {
             if (!projectUsers.hasProject(projectId)) {
                 LOG.debug("Remove VFS listener for {} project", projectId);
                 Pair<ChangeEventFilter, EventListener> pair = vfsListeners.remove(projectId);
-                listeners.removeEventListener(pair.first, pair.second);
+                if(pair != null){
+                   listeners.removeEventListener(pair.first, pair.second);
+                }
             }
 
         }
     }
 
 
-    private static void broadcastToClients(String message, Set<String> collaborators) {
+    public static void broadcastToClients(String message, Set<String> collaborators) {
         for (String collaborator : collaborators) {
             ChannelBroadcastMessage broadcastMessage = new ChannelBroadcastMessage();
             broadcastMessage.setChannel("vfs_watcher." + collaborator);

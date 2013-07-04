@@ -162,7 +162,6 @@ public class UpdateTest extends LocalFileSystemTest {
         // File is protected and default principal 'admin' has not write permission.
         // Replace default principal by principal who has write permission.
         ConversationState user = new ConversationState(new Identity("andrew"));
-        user.setAttribute("currentTenant", ConversationState.getCurrent().getAttribute("currentTenant"));
         ConversationState.setCurrent(user);
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, properties.getBytes(), writer, null);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());

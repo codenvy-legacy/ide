@@ -30,7 +30,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"developer"})
+
 public class ShowAboutControl extends SimpleControl implements IDEControl {
 
     public static final String ID = "Help/About...";

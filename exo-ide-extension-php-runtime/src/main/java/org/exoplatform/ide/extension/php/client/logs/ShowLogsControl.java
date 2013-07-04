@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.php.client.logs;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -40,6 +41,7 @@ import org.exoplatform.ide.extension.php.client.run.event.ApplicationStoppedHand
  * @version $Id: ShowLogsControl.java Apr 17, 2013 4:02:56 PM azatsarynnyy $
  *
  */
+@RolesAllowed({"developer"})
 public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
                                                               ApplicationStartedHandler, ApplicationStoppedHandler {
     private static final String ID = "Run/PHP Logs";

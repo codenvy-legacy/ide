@@ -20,12 +20,14 @@ package org.eclipse.jdt.client.create;
 
 import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.event.CreateJavaClassEvent;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jan 10, 2012 2:05:22 PM anya $
  */
+@RolesAllowed({"developer"})
 public class CreateJavaClassControl extends JavaControl {
 
     public CreateJavaClassControl() {

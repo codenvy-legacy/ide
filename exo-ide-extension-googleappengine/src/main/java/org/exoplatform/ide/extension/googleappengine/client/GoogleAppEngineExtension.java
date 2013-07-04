@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.googleappengine.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Image;
 
+import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -29,6 +30,7 @@ import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.googleappengine.client.backends.BackendsHandler;
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationControl;
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationPresenter;
@@ -102,8 +104,8 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
      * .client.framework.application.event.InitializeServicesEvent) */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new GoogleAppEngineClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
-        new CreateApplicationPresenter(event.getApplicationConfiguration().getContext());
+        new GoogleAppEngineClientServiceImpl(Utils.getRestContext(), Utils.getWorkspaceName(), event.getLoader(), IDE.messageBus());
+        new CreateApplicationPresenter();
         new AccountsHandler();
     }
 

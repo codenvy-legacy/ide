@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -47,62 +48,65 @@ import java.util.List;
  * @version $Id: Jun 6, 2011 5:50:11 PM anya $
  */
 public class OpenShiftClientServiceImpl extends OpenShiftClientService {
+    
+    private static final String BASE_URL = Utils.getWorkspaceName() + "/openshift/express";
+    
     /** Login method's path. */
-    private static final String LOGIN = "/ide/openshift/express/login";
+    private static final String LOGIN = BASE_URL + "/login";
 
     /** Create domain method's path. */
-    private static final String CREATE_DOMAIN = "/ide/openshift/express/domain/create";
+    private static final String CREATE_DOMAIN = BASE_URL + "/domain/create";
 
     /** Create application method's path. */
-    private static final String CREATE_APPLICATION = "/ide/openshift/express/apps/create";
+    private static final String CREATE_APPLICATION = BASE_URL + "/apps/create";
 
     /** Destroy application method's path. */
-    private static final String DESTROY_APPLICATION = "/ide/openshift/express/apps/destroy";
+    private static final String DESTROY_APPLICATION = BASE_URL + "/apps/destroy";
 
     /** User info method's path. */
-    private static final String USER_INFO = "/ide/openshift/express/user/info";
+    private static final String USER_INFO = BASE_URL + "/user/info";
 
     /** Get application's info method's path. */
-    private static final String APPLICATION_INFO = "/ide/openshift/express/apps/info";
+    private static final String APPLICATION_INFO = BASE_URL + "/apps/info";
 
     /** Types of the application method's path. */
-    private static final String APPLICATION_TYPES = "/ide/openshift/express/apps/type";
+    private static final String APPLICATION_TYPES = BASE_URL + "/apps/type";
 
     /** Start of the application method's path. */
-    private static final String APPLICATION_START = "/ide/openshift/express/apps/start";
+    private static final String APPLICATION_START = BASE_URL + "/apps/start";
 
     /** Stop of the application method's path. */
-    private static final String APPLICATION_STOP = "/ide/openshift/express/apps/stop";
+    private static final String APPLICATION_STOP = BASE_URL + "/apps/stop";
 
     /** Restart of the application method's path. */
-    private static final String APPLICATION_RESTART = "/ide/openshift/express/apps/restart";
+    private static final String APPLICATION_RESTART = BASE_URL + "/apps/restart";
 
     /** Health check of the application method's path. */
-    private static final String APPLICATION_HEALTH = "/ide/openshift/express/apps/health";
+    private static final String APPLICATION_HEALTH = BASE_URL + "/apps/health";
 
     /** Cartridges list method's path. */
-    private static final String CARTRIDGES = "/ide/openshift/express/sys/embeddable_cartridges";
+    private static final String CARTRIDGES = BASE_URL + "/sys/embeddable_cartridges";
 
     /** Add cartridge method's path. */
-    private static final String ADD_CARTRIDGE = "/ide/openshift/express/apps/embeddable_cartridges/add";
+    private static final String ADD_CARTRIDGE = BASE_URL + "/apps/embeddable_cartridges/add";
 
     /** Delete cartridge method's path. */
-    private static final String DELETE_CARTRIDGE = "/ide/openshift/express/apps/embedded_cartridges/remove";
+    private static final String DELETE_CARTRIDGE = BASE_URL + "/apps/embedded_cartridges/remove";
 
     /** Start cartridge method's path. */
-    private static final String START_CARTRIDGE = "/ide/openshift/express/apps/embedded_cartridges/start";
+    private static final String START_CARTRIDGE = BASE_URL + "/apps/embedded_cartridges/start";
 
     /** Stop cartridge method's path. */
-    private static final String STOP_CARTRIDGE = "/ide/openshift/express/apps/embedded_cartridges/stop";
+    private static final String STOP_CARTRIDGE = BASE_URL + "/apps/embedded_cartridges/stop";
 
     /** Restart cartridge method's path. */
-    private static final String RESTART_CARTRIDGE = "/ide/openshift/express/apps/embedded_cartridges/restart";
+    private static final String RESTART_CARTRIDGE = BASE_URL + "/apps/embedded_cartridges/restart";
 
     /** Reload cartridge method's path. */
-    private static final String RELOAD_CARTRIDGE = "/ide/openshift/express/apps/embedded_cartridges/reload";
+    private static final String RELOAD_CARTRIDGE = BASE_URL + "/apps/embedded_cartridges/reload";
 
     /** Destroy all applications and namespace method's path. */
-    private static final String DESTROY_APPS_AND_NAMESPACE = "/ide/openshift/express/apps/destroy/all";
+    private static final String DESTROY_APPS_AND_NAMESPACE = BASE_URL + "/apps/destroy/all";
 
     /** REST service context. */
     private String restServiceContext;
@@ -121,9 +125,9 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService {
      * @param wsMessageBus
      *         {@link MessageBus to send messages over WebSocket}
      */
-    public OpenShiftClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus) {
+    public OpenShiftClientServiceImpl(Loader loader, MessageBus wsMessageBus) {
         this.loader = loader;
-        this.restServiceContext = restContext;
+        this.restServiceContext = Utils.getRestContext();
         this.wsMessageBus = wsMessageBus;
     }
 

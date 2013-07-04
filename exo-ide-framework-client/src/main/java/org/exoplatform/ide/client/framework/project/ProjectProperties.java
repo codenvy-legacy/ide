@@ -23,7 +23,10 @@ package org.exoplatform.ide.client.framework.project;
  * @version $Id: Jul 26, 2012 10:31:58 AM anya $
  */
 public enum ProjectProperties {
-    TYPE("vfs:projectType"), TARGET("exoide:target"), DESCRIPTION("exoide:projectDescription");
+    TYPE("vfs:projectType"),
+    TARGET("exoide:target"),
+    DESCRIPTION("exoide:projectDescription"),
+    MIME_TYPE("vfs:mimeType");
 
     private String value;
 

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -29,6 +30,7 @@ import org.exoplatform.ide.git.client.init.InitRepositoryEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 23, 2011 5:36:00 PM anya $
  */
+@RolesAllowed("developer")
 public class InitRepositoryControl extends GitControl {
 
     public InitRepositoryControl() {

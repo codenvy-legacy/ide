@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -35,6 +36,7 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
+@RolesAllowed("developer")
 public class DebugAppControl extends SimpleControl implements IDEControl,
                                                   // ProjectClosedHandler, ProjectOpenedHandler,
                                                   AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler {
@@ -122,6 +124,12 @@ public class DebugAppControl extends SimpleControl implements IDEControl,
 
             ProjectModel project = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem
                 : ((ItemContext)selectedItem).getProject();
+            if (ProjectType.MultiModule.value().equals(project.getProjectType())
+                || ProjectType.JAR.value().equals(project.getProjectType())
+                || ProjectType.JAVASCRIPT.value().equals(project.getProjectType())
+                || ProjectType.RUBY_ON_RAILS.value().equals(project.getProjectType())) {
+                setVisible(false);
+            }
             updateState(project.getProjectType());
         }
     }

@@ -49,7 +49,7 @@ public class FileModel extends FileImpl implements ItemContext {
 
     @SuppressWarnings("rawtypes")
     public FileModel(String name, String mimeType, String content, FolderModel parent) {
-        super(null, name, parent.createPath(name), parent.getId(), new Date().getTime(), new Date().getTime(),
+        super(null, null, name, parent.createPath(name), parent.getId(), new Date().getTime(), new Date().getTime(),
               null /* versionId */, mimeType, 0, false, new ArrayList<Property>(), new HashMap<String, Link>());
         this.persisted = false;
         this.content = content;
@@ -68,9 +68,9 @@ public class FileModel extends FileImpl implements ItemContext {
     }
 
     public FileModel(File file) {
-        super(file.getId(), file.getName(), file.getPath(), file.getParentId(), file.getCreationDate(), file
-                .getLastModificationDate(), file.getVersionId(), file.getMimeType(), file.getLength(), file.isLocked(), file
-                      .getProperties(), file.getLinks());
+        super(file.getVfsId(), file.getId(), file.getName(), file.getPath(), file.getParentId(), file.getCreationDate(),
+              file.getLastModificationDate(), file.getVersionId(), file.getMimeType(), file.getLength(), file.isLocked(),
+              file.getProperties(), file.getLinks());
         fixMimeType();
         this.persisted = true;
     }
@@ -86,6 +86,7 @@ public class FileModel extends FileImpl implements ItemContext {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void init(JSONObject itemObject) {
+        vfsId = itemObject.get("vfsId").isString().stringValue();
         id = itemObject.get("id").isString().stringValue();
         name = itemObject.get("name").isString().stringValue();
         mimeType = itemObject.get("mimeType").isString().stringValue();
@@ -98,6 +99,7 @@ public class FileModel extends FileImpl implements ItemContext {
         length = (long)itemObject.get("length").isNumber().doubleValue();
         lastModificationDate = (long)itemObject.get("lastModificationDate").isNumber().doubleValue();
         locked = itemObject.get("locked").isBoolean().booleanValue();
+        permissions = JSONDeserializer.STRING_DESERIALIZER.toSet(itemObject.get("permissions"));
         this.persisted = true;
         this.contentChanged = false;
         fixMimeType();
@@ -182,6 +184,6 @@ public class FileModel extends FileImpl implements ItemContext {
     }
 
     public boolean isVersion() {
-        return versionId == null ? false : !versionId.equals("0");
+        return versionId != null && !versionId.equals("0");
     }
 }

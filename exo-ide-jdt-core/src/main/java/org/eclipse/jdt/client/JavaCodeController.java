@@ -18,6 +18,7 @@
  */
 package org.eclipse.jdt.client;
 
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.http.client.RequestBuilder;
@@ -39,7 +40,14 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.editor.event.*;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.job.Job;
 import org.exoplatform.ide.client.framework.job.Job.JobStatus;
 import org.exoplatform.ide.client.framework.job.JobChangeEvent;
@@ -56,7 +64,12 @@ import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Java code controller is used for getting AST and updating all modules, that depend on the received AST.
@@ -68,7 +81,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
                                            CancelParseHandler, EditorFileOpenedHandler, ReparseOpenedFilesHandler, EditorFileClosedHandler {
 
     /** Get build log method's path. */
-    private static final String LOG = "/ide/maven/log";
+    private final String LOG ;
 
     /** Active file in editor. */
     private FileModel activeFile;
@@ -85,7 +98,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
     private final SupportedProjectResolver resolver;
 
-    public JavaCodeController(SupportedProjectResolver resolver) {
+    public JavaCodeController(String restContest, String ws, SupportedProjectResolver resolver) {
+        this.LOG = restContest + ws + "/maven/log";
         this.resolver = resolver;
         instance = this;
         IDE.addHandler(EditorFileContentChangedEvent.TYPE, this);
@@ -245,7 +259,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
     /** @param buildid */
     private void getBuildLog(String buildid) {
-        final String requestUrl = JdtExtension.REST_CONTEXT + LOG + "/" + buildid;
+        final String requestUrl = LOG + "/" + buildid;
 
         try {
             AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)

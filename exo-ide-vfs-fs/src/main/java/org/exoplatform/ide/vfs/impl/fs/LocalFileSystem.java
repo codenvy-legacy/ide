@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.commons.shared.ProjectType;
 
 import org.apache.commons.codec.binary.Base64;
@@ -353,7 +354,7 @@ public class LocalFileSystem implements VirtualFileSystem {
                     new VirtualFileSystemInfoImpl(this.vfsId, false, true, VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL,
                                                   VirtualFileSystemInfo.ANY_PRINCIPAL, permissions, ACLCapability.MANAGE,
                                                   searcherProvider == null ? QueryCapability.NONE : QueryCapability.FULLTEXT,
-                                                  LinksHelper.createUrlTemplates(baseUri, vfsId),
+                                                  LinksHelper.createUrlTemplates(baseUri, EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString()),
                                                   (Folder)fromVirtualFile(mountPoint.getRoot(), true, PropertyFilter.ALL_FILTER));
         }
         return vfsInfo;
@@ -603,7 +604,10 @@ public class LocalFileSystem implements VirtualFileSystem {
             //TODO need to organize both ProjectType enums from server and client side to use one shared ProjectType
             if (projectType != null && ("Servlet/JSP".equals(projectType) || "Spring".equals(projectType))) {
                 String jRebelUsage = updated.hasProperty("jrebel") ? updated.getPropertyValue("jrebel") : "false";
-                LOG.info("EVENT#jrebel-usage# PROJECT#" + updated.getName() + "# TYPE#" + projectType + "# JREBEL#" + jRebelUsage + "#");
+                VirtualFileSystemUser user = mountPoint.getCurrentVirtualFileSystemUser();
+                LOG.info("EVENT#jrebel-usage# WS#"
+                         + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString() + "# USER#"
+                         + user.getUserId() + "# PROJECT#" + updated.getName() + "# TYPE#" + projectType + "# JREBEL#" + jRebelUsage + "#");
             }
         }
         return updated;
@@ -852,18 +856,18 @@ public class LocalFileSystem implements VirtualFileSystem {
             final boolean locked = virtualFile.isLocked();
             final long length = virtualFile.getLength();
             final long modified = virtualFile.getLastModificationDate();
-            item = new FileImpl(id, name, path, parentId, created, modified, FAKE_VERSION_ID, mediaType, length, locked,
+            item = new FileImpl(vfsId, id, name, path, parentId, created, modified, FAKE_VERSION_ID, mediaType, length, locked,
                                 virtualFile.getProperties(propertyFilter),
-                                addLinks ? LinksHelper.createFileLinks(baseUri, vfsId, id, id, path, mediaType, locked, parentId) : null);
+                                addLinks ? LinksHelper.createFileLinks(baseUri, EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString(), id, id, path, mediaType, locked, parentId) : null);
         } else {
             if (virtualFile.isProject()) {
                 final String projectType = virtualFile.getPropertyValue("vfs:projectType");
-                item = new ProjectImpl(id, name, mediaType, path, parentId, created, virtualFile.getProperties(propertyFilter),
-                                       addLinks ? LinksHelper.createProjectLinks(baseUri, vfsId, id, parentId) : null,
+                item = new ProjectImpl(vfsId, id, name, mediaType, path, parentId, created, virtualFile.getProperties(propertyFilter),
+                                       addLinks ? LinksHelper.createProjectLinks(baseUri, EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString(), id, parentId) : null,
                                        projectType == null ? "default" : projectType);
             } else {
-                item = new FolderImpl(id, name, mediaType, path, parentId, created, virtualFile.getProperties(propertyFilter),
-                                      addLinks ? LinksHelper.createFolderLinks(baseUri, vfsId, id, isRoot, parentId) : null);
+                item = new FolderImpl(vfsId, id, name, mediaType, path, parentId, created, virtualFile.getProperties(propertyFilter),
+                                      addLinks ? LinksHelper.createFolderLinks(baseUri, EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString(), id, isRoot, parentId) : null);
             }
         }
 

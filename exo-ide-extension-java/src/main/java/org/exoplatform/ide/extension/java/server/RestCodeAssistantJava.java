@@ -60,7 +60,7 @@ import java.util.List;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: RestCodeAssistantJava Mar 30, 2011 10:40:38 AM evgen $
  */
-@Path("/ide/code-assistant/java")
+@Path("{ws-name}/code-assistant/java")
 public class RestCodeAssistantJava {
 
     @Inject

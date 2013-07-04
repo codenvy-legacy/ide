@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
@@ -52,7 +53,7 @@ import java.util.List;
  */
 public class CloudFoundryClientServiceImpl extends CloudFoundryClientService {
 
-    private static final String BASE_URL         = "/ide/cloudfoundry";
+    private static final String BASE_URL         = Utils.getWorkspaceName() + "/cloudfoundry";
 
     private static final String CREATE           = BASE_URL + "/apps/create";
 
@@ -117,9 +118,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService {
     /** WebSocket message bus. */
     private MessageBus          wsMessageBus;
 
-    public CloudFoundryClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus) {
+    public CloudFoundryClientServiceImpl(Loader loader, MessageBus wsMessageBus) {
         this.loader = loader;
-        this.restServiceContext = restContext;
+        this.restServiceContext = Utils.getRestContext();
         this.wsMessageBus = wsMessageBus;
     }
 

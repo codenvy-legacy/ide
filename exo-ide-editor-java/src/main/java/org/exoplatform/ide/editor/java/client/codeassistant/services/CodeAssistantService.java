@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.ide.editor.java.client.model.Types;
@@ -51,10 +52,10 @@ public abstract class CodeAssistantService {
 
     protected String restServiceContext;
 
-    protected CodeAssistantService(String restServiceContext, Loader loader, String getClassUrl,
+    protected CodeAssistantService(String restContext, Loader loader, String getClassUrl,
                                    String findClassByPrefix, String findType) {
         this.loader = loader;
-        this.restServiceContext = restServiceContext;
+        this.restServiceContext = restContext;
 
         this.GET_CLASS_URL = getClassUrl;
         this.FIND_CLASS_BY_PREFIX = findClassByPrefix;

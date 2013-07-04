@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -29,6 +30,7 @@ import org.exoplatform.ide.git.client.merge.MergeEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 12:31:07 PM anya $
  */
+@RolesAllowed("developer")
 public class MergeControl extends GitControl {
     public MergeControl() {
         super(GitExtension.MESSAGES.mergeControlId());

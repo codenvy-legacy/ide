@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
+import com.codenvy.commons.lang.NameGenerator;
 import com.codenvy.ide.commons.cache.Cache;
 import com.codenvy.ide.commons.cache.LoadingValueSLRUCache;
 import com.codenvy.ide.commons.cache.SynchronizedCache;
-import com.codenvy.ide.commons.server.FileUtils;
-import com.codenvy.ide.commons.server.NameGenerator;
 
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
@@ -50,6 +49,7 @@ import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -67,6 +67,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -77,7 +78,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import static com.codenvy.commons.lang.IoUtil.GIT_FILTER;
+import static com.codenvy.commons.lang.IoUtil.nioCopy;
+import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -128,7 +131,7 @@ public class MountPoint {
     };
 
     /** Hide .vfs and .git directories. */
-    private static final java.io.FilenameFilter SERVICE_GIT_DIR_FILTER = new OrFileNameFilter(SERVICE_DIR_FILTER, FileUtils.GIT_FILTER);
+    private static final java.io.FilenameFilter SERVICE_GIT_DIR_FILTER = new OrFileNameFilter(SERVICE_DIR_FILTER, GIT_FILTER);
 
     private static class OrFileNameFilter implements java.io.FilenameFilter {
         private final java.io.FilenameFilter[] filters;
@@ -220,6 +223,14 @@ public class MountPoint {
                     return aclSerializer.read(dis);
                 }
 
+                // TODO : REMOVE!!! Temporary default ACL until will have client side for real manage
+                if (key.isRoot()) {
+                    final Map<Principal, Set<BasicPermissions>> dummy = new HashMap<Principal, Set<BasicPermissions>>(2);
+                    dummy.put(new PrincipalImpl("workspace/developer", Principal.Type.GROUP), EnumSet.of(BasicPermissions.ALL));
+                    dummy.put(new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER),
+                              EnumSet.of(BasicPermissions.READ));
+                    return new AccessControlList(dummy);
+                }
                 return new AccessControlList();
             } catch (IOException e) {
                 String msg = String.format("Unable read ACL for '%s'. ", key);
@@ -343,6 +354,13 @@ public class MountPoint {
 
         final FileLockFactory.FileLock parentLock = fileLockFactory.getLock(parent.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
+            if (parent.isRoot()) {
+                // NOTE: We do not check read permissions when access to ROOT folder.
+                if (!hasPermission(parent, BasicPermissions.READ, false)) {
+                    // User has not access to ROOT folder.
+                    return Collections.emptyList();
+                }
+            }
             final List<VirtualFile> children = doGetChildren(parent, SERVICE_GIT_DIR_FILTER);
             for (Iterator<VirtualFile> iterator = children.iterator(); iterator.hasNext(); ) {
                 VirtualFile child = iterator.next();
@@ -517,13 +535,13 @@ public class MountPoint {
             // fail to copy metadata or ACL client may not try to copy again
             // because copy destination already exists.
             if (sourceMetadataFile.exists()) {
-                FileUtils.nioCopy(sourceMetadataFile, destinationMetadataFile, null);
+                nioCopy(sourceMetadataFile, destinationMetadataFile, null);
             }
             if (sourceAclFile.exists()) {
-                FileUtils.nioCopy(sourceAclFile, destinationAclFile, null);
+                nioCopy(sourceAclFile, destinationAclFile, null);
             }
 
-            FileUtils.nioCopy(source.getIoFile(), destination.getIoFile(), null);
+            nioCopy(source.getIoFile(), destination.getIoFile(), null);
 
             if (searcherProvider != null) {
                 try {
@@ -668,7 +686,7 @@ public class MountPoint {
 
                 // Otherwise copy this file to be able release the file lock before leave this method.
                 final java.io.File f = java.io.File.createTempFile("spool_file", null);
-                FileUtils.nioCopy(ioFile, f, null);
+                nioCopy(ioFile, f, null);
                 return new ContentStream(virtualFile.getName(), new DeleteOnCloseFileInputStream(f),
                                          virtualFile.getMediaType(), fLength, new Date(ioFile.lastModified()));
             } catch (IOException e) {
@@ -790,7 +808,7 @@ public class MountPoint {
         clearMetadataCache();
 
         final String path = virtualFile.getPath();
-        if (!FileUtils.deleteRecursive(virtualFile.getIoFile())) {
+        if (!deleteRecursive(virtualFile.getIoFile())) {
             LOG.error("Unable delete file {}", virtualFile.getIoFile());
             throw new VirtualFileSystemException(String.format("Unable delete item '%s'. ", virtualFile.getPath()));
         }
@@ -1157,7 +1175,6 @@ public class MountPoint {
 
    /* ============ ACCESS CONTROL  ============ */
 
-
     AccessControlList getACL(VirtualFile virtualFile) throws VirtualFileSystemException {
         // Do not check permission here. We already check 'read' permission when get VirtualFile.
         final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
@@ -1225,29 +1242,39 @@ public class MountPoint {
     }
 
 
+    private static final PrincipalImpl ANY = new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER);
+
     // under lock
     private boolean hasPermission(VirtualFile virtualFile, BasicPermissions p, boolean checkParent) throws VirtualFileSystemException {
         final VirtualFileSystemUser user = userContext.getVirtualFileSystemUser();
+        final PrincipalImpl userPrincipal = new PrincipalImpl(user.getUserId(), Principal.Type.USER);
+        final Collection<String> userGroups = user.getGroups();
+        final List<PrincipalImpl> groupPrincipals;
+        if (!userGroups.isEmpty()) {
+            groupPrincipals = new ArrayList<PrincipalImpl>(userGroups.size());
+            for (String group : userGroups) {
+                groupPrincipals.add(new PrincipalImpl(group, Principal.Type.GROUP));
+            }
+        } else {
+            groupPrincipals = Collections.emptyList();
+        }
         Path path = virtualFile.getInternalPath();
         while (path != null) {
             final AccessControlList accessControlList = aclCache[path.hashCode() & MASK].get(path);
             if (!accessControlList.isEmpty()) {
-                Set<BasicPermissions> userPermissions =
-                        accessControlList.getPermissions(new PrincipalImpl(user.getUserId(), Principal.Type.USER));
+                Set<BasicPermissions> userPermissions = accessControlList.getPermissions(userPrincipal);
                 if (userPermissions != null) {
                     return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL);
                 }
-                Collection<String> groups = user.getGroups();
-                if (!groups.isEmpty()) {
-                    for (String group : groups) {
-                        userPermissions = accessControlList.getPermissions(new PrincipalImpl(group, Principal.Type.GROUP));
+                if (!groupPrincipals.isEmpty()) {
+                    for (PrincipalImpl groupPrincipal : groupPrincipals) {
+                        userPermissions = accessControlList.getPermissions(groupPrincipal);
                         if (userPermissions != null) {
                             return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL);
                         }
                     }
                 }
-                userPermissions = accessControlList.getPermissions(
-                        new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER));
+                userPermissions = accessControlList.getPermissions(ANY);
                 return userPermissions != null && (userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL));
             }
             if (checkParent) {

@@ -19,23 +19,24 @@
 package org.exoplatform.ide.vfs.impl.fs;
 
 import com.codenvy.commons.env.EnvironmentContext;
-import com.codenvy.ide.commons.NamedThreadFactory;
-import com.codenvy.ide.commons.server.FileUtils;
+import com.codenvy.commons.lang.NamedThreadFactory;
 
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 
 /**
  * Implementation of SearcherProvider which run Searcher initialization update tasks in ExecutorService.
@@ -47,13 +48,13 @@ import java.util.concurrent.Executors;
  * @version $Id: $
  */
 public class CleanableSearcherProvider implements SearcherProvider {
-    private final ConcurrentMap<File, CleanableSearcher> instances;
+    private final ConcurrentMap<java.io.File, CleanableSearcher> instances;
     private final ExecutorService                        executor;
 
     public CleanableSearcherProvider() {
         executor = Executors.newFixedThreadPool(1 + Runtime.getRuntime().availableProcessors(),
                                                 new NamedThreadFactory("LocalVirtualFileSystem-CleanableSearcher-", true));
-        instances = new ConcurrentHashMap<File, CleanableSearcher>();
+        instances = new ConcurrentHashMap<java.io.File, CleanableSearcher>();
     }
 
     @Override
@@ -76,7 +77,8 @@ public class CleanableSearcherProvider implements SearcherProvider {
             final java.io.File myIndexDir;
             CleanableSearcher newSearcher;
             try {
-                myIndexDir = FileUtils.createTempDirectory(indexRootDir, workspaceId);
+                Files.createDirectories(indexRootDir.toPath());
+                myIndexDir = Files.createTempDirectory(indexRootDir.toPath(), workspaceId).toFile();
                 newSearcher = new CleanableSearcher(this, myIndexDir, getIndexedMediaTypes());
             } catch (IOException e) {
                 throw new VirtualFileSystemException("Unable create searcher. " + e.getMessage(), e);
@@ -93,7 +95,7 @@ public class CleanableSearcherProvider implements SearcherProvider {
     void close(CleanableSearcher searcher) {
         instances.values().remove(searcher);
         searcher.doClose();
-        FileUtils.deleteRecursive(searcher.getIndexDir());
+        deleteRecursive(searcher.getIndexDir());
     }
 
     private Set<String> getIndexedMediaTypes() throws VirtualFileSystemException {

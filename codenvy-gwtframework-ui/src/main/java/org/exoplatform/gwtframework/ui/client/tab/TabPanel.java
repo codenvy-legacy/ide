@@ -636,7 +636,7 @@ public class TabPanel extends DecoratedTabPanel implements Scrollable, CloseTabH
      */
     public void setTabHighlited(int tabIndex, boolean isHighlited) {
         Wrapper w = (Wrapper)getDeckPanel().getWidget(getTabBar().getSelectedTab());
-        w.setHighlited(true);
+        w.setHighlighted(true);
     }
 
     /**

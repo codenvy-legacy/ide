@@ -27,6 +27,9 @@ import java.util.*;
  * @version $Id: Item.java 79579 2012-02-17 13:27:25Z andrew00x $
  */
 public abstract class ItemImpl implements Item {
+    /** Id of virtual file system that contains object. */
+    protected String vfsId;
+
     /** Id of object. */
     protected String id;
 
@@ -55,7 +58,7 @@ public abstract class ItemImpl implements Item {
     /** Links. */
     protected Map<String, Link> links;
 
-    private Set<String> permissions;
+    protected Set<String> permissions;
 
     /**
      * @param id
@@ -78,8 +81,9 @@ public abstract class ItemImpl implements Item {
      *         hyper-links for retrieved or(and) manage item
      */
     @SuppressWarnings("rawtypes")
-    public ItemImpl(String id, String name, ItemType itemType, String mimeType, String path, String parentId,
+    public ItemImpl(String vfsId, String id, String name, ItemType itemType, String mimeType, String path, String parentId,
                     long creationDate, List<Property> properties, Map<String, Link> links) {
+        this.vfsId = vfsId;
         this.id = id;
         this.name = name;
         this.itemType = itemType;
@@ -93,6 +97,16 @@ public abstract class ItemImpl implements Item {
 
     public ItemImpl(ItemType itemType) {
         this.itemType = itemType;
+    }
+
+    @Override
+    public String getVfsId() {
+        return vfsId;
+    }
+
+    @Override
+    public void setVfsId(String vfsId) {
+        this.vfsId = vfsId;
     }
 
     @Override
@@ -235,6 +249,6 @@ public abstract class ItemImpl implements Item {
 
     @Override
     public String toString() {
-        return "Item [" + itemType + ", id=" + id + ", path=" + path + ']';
+        return "Item [vfsId=" + vfsId + ", " + itemType + ", id=" + id + ", path=" + path + ']';
     }
 }

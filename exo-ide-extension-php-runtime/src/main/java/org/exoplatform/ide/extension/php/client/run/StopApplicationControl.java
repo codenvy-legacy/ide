@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.php.client.run;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -42,6 +43,7 @@ import org.exoplatform.ide.extension.php.client.run.event.StopApplicationEvent;
  * @version $Id: StopApplicationControl.java Apr 17, 2013 4:10:52 PM azatsarynnyy $
  *
  */
+@RolesAllowed("developer")
 public class StopApplicationControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
                                                                      ProjectOpenedHandler, ApplicationStartedHandler,
                                                                      ApplicationStoppedHandler {

@@ -170,11 +170,11 @@ public class StatusImpl implements Status, InfoPage {
         this.untracked = untracked;
     }
 
-    /** @see org.eclipse.jgit.api.Status#getUntrackedFolders() 
-     * Always empty
-     * */
+    /**
+     * @see org.eclipse.jgit.api.Status#getUntrackedFolders() Always empty
+     */
     public Set<String> getUntrackedFolders() {
-        return Collections.<String>emptySet(); 
+        return Collections.<String> emptySet();
     }
 
     /** Setter for org.eclipse.jgit.api.Status#getUntrackedFolders() */
@@ -292,7 +292,6 @@ public class StatusImpl implements Status, InfoPage {
 
         if (isClean()) {
             out.write("nothing to commit, working directory clean\n");
-
         }
 
         if (!(getAdded().isEmpty() && getChanged().isEmpty() && getRemoved().isEmpty())) {
@@ -339,6 +338,11 @@ public class StatusImpl implements Status, InfoPage {
             out.write("#\n");
 
             writeList(out, getUntracked(), null);
+
+            if (getAdded().isEmpty() && getChanged().isEmpty() && getRemoved().isEmpty() && getMissing().isEmpty()
+                && getModified().isEmpty() && getConflicting().isEmpty()) {
+                out.write("nothing added to commit but untracked files present (use \"git add\" to track)\n");
+            }
         }
     }
 }

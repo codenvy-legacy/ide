@@ -33,7 +33,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"developer"})
+
 public class ShowImagesControl extends SimpleControl implements IDEControl, ViewOpenedHandler, ViewClosedHandler {
 
     public static final String ID = "Help/Debug/Show Images";

@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.gadget.shared.Gadget;
 import org.exoplatform.ide.extension.gadget.shared.TokenRequest;
 import org.exoplatform.ide.extension.gadget.shared.TokenResponse;
@@ -52,9 +53,9 @@ public class GadgetService {
 
     private String gadgetServer;
 
-    public GadgetService(Loader loader, String restServiceContext, String gadgetServer, String publicContext) {
+    public GadgetService(Loader loader, String gadgetServer, String publicContext) {
         this.loader = loader;
-        this.restServiceContext = restServiceContext;
+        this.restServiceContext = Utils.getRestContext();
         this.gadgetServer = gadgetServer;
         instance = this;
     }
@@ -74,7 +75,7 @@ public class GadgetService {
             throws RequestException {
         String tokenRequest = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request)).getPayload();
 
-        String url = restServiceContext + "/ide/shindig/securitytoken/createToken";
+        String url = restServiceContext + Utils.getWorkspaceName() + "/shindig/securitytoken/createToken";
         AsyncRequest.build(RequestBuilder.POST, url).loader(loader)
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(tokenRequest).send(callback);
     }

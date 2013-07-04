@@ -60,7 +60,7 @@ import java.util.regex.Pattern;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/appengine")
+@Path("{ws-name}/appengine")
 public class AppEngineService {
     private static final Pattern PATTERN_XML = Pattern.compile(".*<application>.*</application>.*");
 

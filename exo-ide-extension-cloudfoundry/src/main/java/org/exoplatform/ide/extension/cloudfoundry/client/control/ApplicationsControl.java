@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
@@ -31,6 +32,7 @@ import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExte
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Aug 18, 2011 evgen $
  */
+@RolesAllowed("developer")
 public class ApplicationsControl extends AbstractCloudFoundryControl {
 
     private static final String CF_ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.appsControlId();

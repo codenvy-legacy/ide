@@ -103,7 +103,7 @@ public class CutCopyPasteItemsCommandHandler extends ItemsOperationPresenter
             for (String path : collaborationManager.getOpenedFiles().asIterable()) {
                 if (path.startsWith(i.getPath())) {
                     new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't cut <b>").appendEscaped(
-                            i.getName()).appendHtmlConstant("</b>.").toSafeHtml(), collaborationManager, path, i instanceof FileModel,
+                            i.getName()).appendHtmlConstant("</b>.").toSafeHtml(), collaborationManager, path, i,
                                                 i.getPath(),
                                                 Operation.MOVE);
 //               Dialogs.getInstance().showError(
@@ -114,7 +114,7 @@ public class CutCopyPasteItemsCommandHandler extends ItemsOperationPresenter
             }
             if (collaborationManager.isFileOpened(i.getPath())) {
                 new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't cut <b>").appendEscaped(
-                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true, i.getPath(),
+                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), i, i.getPath(),
                                             Operation.MOVE);
                 return;
             }
@@ -123,7 +123,7 @@ public class CutCopyPasteItemsCommandHandler extends ItemsOperationPresenter
                     if (openedEditors.get(f.getId()) instanceof CollabEditor) {
                         if (collaborationManager.isFileOpened(f.getPath())) {
                             new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't cut <b>").appendEscaped(
-                                    f.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, f.getPath(), true,
+                                    f.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, f.getPath(), f,
                                                         f.getPath(), Operation.MOVE);
                             return;
                         }

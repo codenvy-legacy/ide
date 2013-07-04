@@ -62,7 +62,7 @@ public abstract class ParserBaseTest extends BaseTest {
         ASTNode ast = parser.createAST(null);
         unit = (CompilationUnit)ast;
 
-        new JavaCodeAssistantService(null, null);
+        new JavaCodeAssistantService(null, null, null);
     }
 
     private class MockNameEnv implements INameEnvironment {

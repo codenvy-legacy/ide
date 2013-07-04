@@ -503,6 +503,9 @@ public class Editor extends UiComponent<Editor.View> {
     }
 
     public SelectionModel getSelection() {
+        if(selectionManager == null){
+            return null;
+        }
         return selectionManager.getSelectionModel();
     }
 
@@ -614,6 +617,9 @@ public class Editor extends UiComponent<Editor.View> {
                 listener.onDocumentChanged(oldDocument, document);
             }
         });
+        if(isReadOnly){
+            dispachReadOnlyChange();
+        }
     }
 
     public void undo() {
@@ -650,7 +656,11 @@ public class Editor extends UiComponent<Editor.View> {
 
         this.isReadOnly = isReadOnly;
 
-        readOnlyListenerManager.dispatch(new Dispatcher<Editor.ReadOnlyListener>() {
+        dispachReadOnlyChange();
+    }
+
+    private void dispachReadOnlyChange() {
+        readOnlyListenerManager.dispatch(new Dispatcher<ReadOnlyListener>() {
             @Override
             public void dispatch(ReadOnlyListener listener) {
                 listener.onReadOnlyChanged(isReadOnly);

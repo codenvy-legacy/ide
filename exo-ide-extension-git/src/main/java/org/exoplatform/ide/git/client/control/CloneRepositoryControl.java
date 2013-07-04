@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -29,6 +30,7 @@ import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 22, 2011 3:49:23 PM anya $
  */
+@RolesAllowed("developer")
 public class CloneRepositoryControl extends GitControl {
 
     public CloneRepositoryControl() {

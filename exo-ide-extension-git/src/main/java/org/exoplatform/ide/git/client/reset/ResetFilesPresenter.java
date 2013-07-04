@@ -182,7 +182,11 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
                 files.add(file.getPath());
             }
         }
-
+        if (files.size() <= 0) {
+            IDE.getInstance().closeView(display.asView().getId());
+            IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.nothingToReset(), Type.ERROR));
+            return;
+        }
         String projectId = getSelectedProject().getId();
         try {
             GitClientService.getInstance().reset(vfs.getId(), projectId, "HEAD",
@@ -198,9 +202,9 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
                                                      @Override
                                                      protected void onFailure(Throwable exception) {
                                                          String errorMassage =
-                                                                               (exception.getMessage() != null) ? exception.getMessage()
-                                                                                   : GitExtension.MESSAGES
-                                                                                                          .resetFilesFailed();
+                                                                               (exception.getMessage() != null)
+                                                                                   ? exception.getMessage()
+                                                                                   : GitExtension.MESSAGES.resetFilesFailed();
                                                          IDE.fireEvent(new OutputEvent(errorMassage, Type.GIT));
                                                      }
                                                  });
@@ -208,5 +212,6 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
             String errorMassage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.resetFilesFailed();
             IDE.fireEvent(new OutputEvent(errorMassage, Type.GIT));
         }
+
     }
 }

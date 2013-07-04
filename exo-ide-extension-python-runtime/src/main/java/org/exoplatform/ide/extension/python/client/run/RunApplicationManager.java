@@ -24,11 +24,11 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
@@ -39,6 +39,9 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.python.client.PythonRuntimeExtension;
 import org.exoplatform.ide.extension.python.client.PythonRuntimeService;
 import org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedEvent;
@@ -68,8 +71,8 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
     private ApplicationInstance runApplication;
 
     public RunApplicationManager() {
-        IDE.getInstance().addControl(new RunApplicationControl());
         IDE.getInstance().addControl(new StopApplicationControl());
+        IDE.getInstance().addControl(new RunApplicationControl(), Docking.TOOLBAR_RIGHT);
 
         IDE.addHandler(RunApplicationEvent.TYPE, this);
         IDE.addHandler(StopApplicationEvent.TYPE, this);
@@ -123,15 +126,15 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
     /** Run Python application. */
     private void runApplication() {
         AutoBean<ApplicationInstance> autoBean =
-                PythonRuntimeExtension.AUTO_BEAN_FACTORY.create(ApplicationInstance.class);
-        AutoBeanUnmarshaller<ApplicationInstance> unmarshaller = new AutoBeanUnmarshaller<ApplicationInstance>(autoBean);
-
+            PythonRuntimeExtension.AUTO_BEAN_FACTORY.create(ApplicationInstance.class);
+        AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller =
+                                                                   new AutoBeanUnmarshallerWS<ApplicationInstance>(autoBean);
         try {
             IDE.fireEvent(new OutputEvent(PythonRuntimeExtension.PYTHON_LOCALIZATION.startingProjectMessage(currentProject
                                                                                                                     .getName()),
                                           Type.INFO));
             PythonRuntimeService.getInstance().start(currentVfs.getId(), currentProject,
-                         new AsyncRequestCallback<ApplicationInstance>(unmarshaller) {
+                         new RequestCallback<ApplicationInstance>(unmarshaller) {
                              @Override
                              protected void onSuccess(ApplicationInstance result) {
                                  runApplication = result;
@@ -157,7 +160,7 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
                                          + message, OutputMessage.Type.ERROR));
                              }
                          });
-        } catch (RequestException e) {
+        } catch (WebSocketException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }

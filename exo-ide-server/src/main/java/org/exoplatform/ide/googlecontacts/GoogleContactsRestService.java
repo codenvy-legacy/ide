@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.googlecontacts;
 
-import com.codenvy.commons.security.oauth.GoogleOAuthAuthenticator;
 import com.codenvy.commons.security.oauth.OAuthTokenProvider;
 import com.codenvy.commons.security.shared.Token;
 import com.codenvy.organization.invite.InviteService;
@@ -26,7 +25,6 @@ import com.codenvy.organization.model.Invitation;
 import com.google.gdata.data.contacts.ContactEntry;
 import com.google.gdata.data.extensions.Email;
 import com.google.gdata.util.ServiceException;
-
 
 import org.exoplatform.services.security.ConversationState;
 
@@ -37,44 +35,43 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * This REST service is used for getting user's Google Contacts.
- *
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: GoogleContactsService.java Aug 20, 2012 4:44:58 PM azatsarynnyy $
  */
-@Path("/ide/googlecontacts")
+@Path("{ws-name}/googlecontacts")
 public class GoogleContactsRestService {
     @Inject
     private GoogleContactsClient contactsClient;
 
     @Inject
-    private OAuthTokenProvider oauthTokenProvider;
+    private OAuthTokenProvider   oauthTokenProvider;
 
     @Inject
-    private InviteService inviteService;
+    private InviteService        inviteService;
 
     /**
      * Fetch all user's contacts.
-     *
+     * 
      * @return {@link List} of user's contacts
-     * @throws ServiceException
-     *         if any error in Google Contacts Service
-     * @throws IOException
-     *         if any i/o errors occur
+     * @throws ServiceException if any error in Google Contacts Service
+     * @throws IOException if any i/o errors occur
      */
     @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
     public List<GoogleContact> getContactList(@Context SecurityContext sctx) throws IOException, ServiceException {
-        //list of invited users based on current user as sender invitation
+        // list of invited users based on current user as sender invitation
         List<String> invitedUsers = new ArrayList<String>();
 
-        //list of google contacts filtered by invited users if they appears in google contacts book
+        // list of google contacts filtered by invited users if they appears in google contacts book
         List<GoogleContact> contactList = new ArrayList<GoogleContact>();
 
         for (Invitation invitation : inviteService.invitations(sctx)) {
@@ -84,7 +81,7 @@ public class GoogleContactsRestService {
         for (ContactEntry contactListEntry : contactsClient.getAllContacts()) {
             if (contactListEntry.hasEmailAddresses()) {
                 for (Email entriesEmail : contactListEntry.getEmailAddresses()) {
-                    //if user is already invited then we hide it from contacts list
+                    // if user is already invited then we hide it from contacts list
                     if (invitedUsers.contains(entriesEmail.getAddress())) {
                         continue;
                     }
@@ -107,7 +104,7 @@ public class GoogleContactsRestService {
     @Path("/is-authenticate")
     @Produces(MediaType.APPLICATION_JSON)
     public String isAuthenticate() throws Exception {
-        Token token = oauthTokenProvider.getToken("google",ConversationState.getCurrent().getIdentity().getUserId());
+        Token token = oauthTokenProvider.getToken("google", ConversationState.getCurrent().getIdentity().getUserId());
         return token != null ? token.getScope() : null;
     }
 }

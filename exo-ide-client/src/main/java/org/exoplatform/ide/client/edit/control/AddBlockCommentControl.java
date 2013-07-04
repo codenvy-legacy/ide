@@ -39,10 +39,9 @@ import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityHandler;
  */
 @RolesAllowed({"developer"})
 public class AddBlockCommentControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-                                                         EditorCursorActivityHandler {
+                                                                     EditorCursorActivityHandler {
 
-    public static final String ID = "Edit/Add Block Comment";
-
+    public static final  String ID    = "Edit/Add Block Comment";
     private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.addBlockCommentControl();
 
     public AddBlockCommentControl() {
@@ -62,10 +61,8 @@ public class AddBlockCommentControl extends SimpleControl implements IDEControl,
         IDE.addHandler(EditorCursorActivityEvent.TYPE, this);
     }
 
-    /**
-     * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client
-     *      .editor.event.EditorActiveFileChangedEvent)
-     */
+    /** {@inheritDoc} */
+    @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         boolean isEnabled = event.getFile() != null && event.getEditor() != null
                             && event.getEditor().isCapable(EditorCapability.COMMENT_SOURCE);
@@ -73,9 +70,8 @@ public class AddBlockCommentControl extends SimpleControl implements IDEControl,
         updateEnableState(event.getEditor());
     }
 
-    /**
-     * @see org.exoplatform.ide.editor.client.api.event.EditorCursorActivityHandler#onEditorCursorActivity(org.exoplatform.ide.editor.client.api.event.EditorCursorActivityEvent)
-     */
+
+    /** {@inheritDoc} */
     @Override
     public void onEditorCursorActivity(EditorCursorActivityEvent event) {
         updateEnableState(event.getEditor());
@@ -83,8 +79,10 @@ public class AddBlockCommentControl extends SimpleControl implements IDEControl,
 
     private void updateEnableState(Editor editor) {
         if (editor == null) {
+            setEnabled(false);
             return;
         }
+        
         SelectionRange selectionRange = editor.getSelectionRange();
         if (selectionRange == null) {
             setEnabled(false);

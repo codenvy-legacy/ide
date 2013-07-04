@@ -21,6 +21,7 @@ package org.exoplatform.gwtframework.ui.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Resources for common GWT components.
@@ -77,5 +78,11 @@ public interface GwtResources extends ClientBundle {
 
         String loaderImage();
     }
+
+    @Source("org/exoplatform/gwtframework/ui/client/component/ajax-loader-new.gif")
+    ImageResource loader();
+
+    @Source("org/exoplatform/gwtframework/ui/client/component/loader-background-element.png")
+    ImageResource loaderBackground();
 
 }

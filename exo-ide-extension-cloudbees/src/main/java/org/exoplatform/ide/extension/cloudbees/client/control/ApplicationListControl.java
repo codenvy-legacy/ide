@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.cloudbees.client.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -32,6 +33,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 21, 2011 evgen $
  */
+@RolesAllowed("developer")
 public class ApplicationListControl extends SimpleControl implements IDEControl, VfsChangedHandler {
 
     private VirtualFileSystemInfo vfsInfo;

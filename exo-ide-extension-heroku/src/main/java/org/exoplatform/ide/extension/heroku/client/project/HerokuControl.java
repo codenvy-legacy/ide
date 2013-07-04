@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.heroku.client.project;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
@@ -36,6 +37,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 2, 2011 2:17:30 PM anya $
  */
+@RolesAllowed("developer")
 public class HerokuControl extends SimpleControl implements IDEControl, 
             ProjectClosedHandler, ProjectOpenedHandler, FolderRefreshedHandler {
     

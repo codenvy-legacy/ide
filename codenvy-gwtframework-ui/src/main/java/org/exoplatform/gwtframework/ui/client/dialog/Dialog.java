@@ -22,7 +22,7 @@ package org.exoplatform.gwtframework.ui.client.dialog;
 
 /**
  * Created by The eXo Platform SAS .
- *
+ * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -30,33 +30,33 @@ package org.exoplatform.gwtframework.ui.client.dialog;
 public class Dialog {
 
     public enum Type {
-
         ASK,
-
         ASKVALUE,
-
         INFO,
-
         WARNING
 
     }
 
     private BooleanValueReceivedHandler booleanValueReceivedHandler;
-
-    private String defaultValue;
-
-    private String message;
-
-    private StringValueReceivedHandler stringValueReceivedHandler;
-
-    private String title;
-
-    private Type type;
+    private String                      defaultValue;
+    private String                      message;
+    private StringValueReceivedHandler  stringValueReceivedHandler;
+    private String                      title;
+    private Type                        type;
+    private boolean                     modal;
 
     public Dialog(String title, String message, Type type) {
         this.title = title;
         this.message = message;
         this.type = type;
+        this.modal = false;
+    }
+
+    public Dialog(String title, String message, Type type, boolean modal) {
+        this.title = title;
+        this.message = message;
+        this.type = type;
+        this.modal = modal;
     }
 
     public BooleanValueReceivedHandler getBooleanValueReceivedHandler() {
@@ -77,6 +77,14 @@ public class Dialog {
 
     public String getTitle() {
         return title;
+    }
+
+    public boolean getModal() {
+        return modal;
+    }
+
+    public void setModal(boolean modal) {
+        this.modal = modal;
     }
 
     public Type getType() {

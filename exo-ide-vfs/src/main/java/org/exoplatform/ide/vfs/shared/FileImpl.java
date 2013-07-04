@@ -69,10 +69,10 @@ public class FileImpl extends ItemImpl implements File {
      *         hyperlinks for retrieved or(and) manage item
      */
     @SuppressWarnings("rawtypes")
-    public FileImpl(String id, String name, String path, String parentId, long creationDate, long lastModificationDate,
+    public FileImpl(String vfsId, String id, String name, String path, String parentId, long creationDate, long lastModificationDate,
                     String versionId, String mimeType, long length, boolean locked, List<Property> properties,
                     Map<String, Link> links) {
-        super(id, name, ItemType.FILE, mimeType, path, parentId, creationDate, properties, links);
+        super(vfsId, id, name, ItemType.FILE, mimeType, path, parentId, creationDate, properties, links);
         this.lastModificationDate = lastModificationDate;
         this.locked = locked;
         this.versionId = versionId;

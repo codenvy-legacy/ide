@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.pull.PullEvent;
@@ -28,6 +29,7 @@ import org.exoplatform.ide.git.client.pull.PullEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 12:03:32 PM anya $
  */
+@RolesAllowed("developer")
 public class PullControl extends GitControl {
     public PullControl() {
         super(GitExtension.MESSAGES.pullControlId());

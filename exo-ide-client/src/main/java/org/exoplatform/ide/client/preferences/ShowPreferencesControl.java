@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.preferences;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
@@ -29,6 +30,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 18, 2012 12:47:10 PM anya $
  */
+@RolesAllowed({"developer"})
 public class ShowPreferencesControl extends SimpleControl implements IDEControl {
     public ShowPreferencesControl() {
         super(IDE.PREFERENCES_CONSTANT.showPreferencesControlId());

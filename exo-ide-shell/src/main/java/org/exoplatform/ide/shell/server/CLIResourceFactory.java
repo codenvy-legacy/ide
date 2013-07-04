@@ -18,35 +18,55 @@
  */
 package org.exoplatform.ide.shell.server;
 
+import com.codenvy.commons.env.EnvironmentContext;
+
 import org.everrest.core.ComponentLifecycleScope;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.everrest.core.impl.resource.AbstractResourceDescriptorImpl;
 import org.everrest.core.method.MethodParameter;
-import org.everrest.core.resource.*;
+import org.everrest.core.resource.AbstractResourceDescriptor;
+import org.everrest.core.resource.ResourceMethodDescriptor;
+import org.everrest.core.resource.ResourceMethodMap;
+import org.everrest.core.resource.SubResourceLocatorDescriptor;
+import org.everrest.core.resource.SubResourceLocatorMap;
+import org.everrest.core.resource.SubResourceMethodDescriptor;
+import org.everrest.core.resource.SubResourceMethodMap;
 import org.exoplatform.ide.shell.shared.CLIResource;
 import org.exoplatform.ide.shell.shared.CLIResourceParameter;
 
-import javax.ws.rs.*;
+import javax.ws.rs.CookieParam;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.MatrixParam;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URL;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class CLIResourceFactory {
     private static class CLIResourceConfig {
-        private final AtomicLong lastModified = new AtomicLong();
+        private final AtomicLong                                             lastModified = new AtomicLong();
 
         private final AtomicReference<Map<String, Map<String, CLIResource>>> cliResources =
-                new AtomicReference<Map<String, Map<String, CLIResource>>>();
+                                                                                            new AtomicReference<Map<String, Map<String, CLIResource>>>();
 
-        private final File file;
+        private final File                                                   file;
 
         CLIResourceConfig(File file) throws IOException {
             this.file = file;
@@ -60,8 +80,11 @@ public class CLIResourceFactory {
                 Map<String, CLIResource> sub = m.get(path);
                 if (sub != null) {
                     CLIResource cli = sub.get(method);
-                    if (cli != null)
-                        return cli;
+                    if (cli != null) {
+                        CLIResource copy = CLIResource.newInstance(cli);
+                        copy.setPath(copy.getPath().replace("{ws-name}", EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString()));
+                        return copy;
+                    }
                 }
             }
             return null;
@@ -75,7 +98,7 @@ public class CLIResourceFactory {
                 JsonParser jsonParser = new JsonParser();
                 jsonParser.parse(reader);
                 CLIResource[] cliMapping =
-                        (CLIResource[])ObjectBuilder.createArray(CLIResource[].class, jsonParser.getJsonObject());
+                                           (CLIResource[])ObjectBuilder.createArray(CLIResource[].class, jsonParser.getJsonObject());
 
                 if (cliMapping != null && cliMapping.length > 0) {
                     for (int i = 0; i < cliMapping.length; i++) {
@@ -148,7 +171,7 @@ public class CLIResourceFactory {
     }
 
     private void processResource(String rootPath, AbstractResourceDescriptor resource, Collection<CLIResource> toAdd)
-            throws IOException {
+                                                                                                                     throws IOException {
         processResourceMethods(rootPath, resource.getResourceMethods(), toAdd);
         processSubResourceMethods(rootPath, resource.getSubResourceMethods(), toAdd);
         processSubResourceLocators(rootPath, resource.getSubResourceLocators(), toAdd);
@@ -180,10 +203,10 @@ public class CLIResourceFactory {
                 for (SubResourceMethodDescriptor subResourceMethod : l) {
                     String methodPath = subResourceMethod.getPathValue().getPath();
                     String subResourcePath = rootPath + ((methodPath.startsWith("/") && rootPath.endsWith("/")) //
-                                                         ? methodPath.substring(0) //
-                                                         : (methodPath.startsWith("/") || rootPath.endsWith("/")) //
-                                                           ? methodPath //
-                                                           : "/" + methodPath);
+                        ? methodPath.substring(0) //
+                        : (methodPath.startsWith("/") || rootPath.endsWith("/")) //
+                            ? methodPath //
+                            : "/" + methodPath);
                     CLIResource tmpl = getCLIResource(subResourcePath, subResourceMethod.getHttpMethod());
                     if (tmpl != null) {
                         toAdd.add(fillFromResourceMethod(tmpl, subResourceMethod));
@@ -198,13 +221,14 @@ public class CLIResourceFactory {
         for (SubResourceLocatorDescriptor subResourceLocator : subResourceLocators.values()) {
             String methodPath = subResourceLocator.getPathValue().getPath();
             String subResourcePath = rootPath + ((methodPath.startsWith("/") && rootPath.endsWith("/")) //
-                                                 ? methodPath.substring(0) //
-                                                 : (methodPath.startsWith("/") || rootPath.endsWith("/")) //
-                                                   ? methodPath //
-                                                   : "/" + methodPath);
+                ? methodPath.substring(0) //
+                : (methodPath.startsWith("/") || rootPath.endsWith("/")) //
+                    ? methodPath //
+                    : "/" + methodPath);
             AbstractResourceDescriptor subResourceDescriptor =
-                    new AbstractResourceDescriptorImpl(subResourceLocator.getMethod().getReturnType(),
-                                                       ComponentLifecycleScope.SINGLETON);
+                                                               new AbstractResourceDescriptorImpl(subResourceLocator.getMethod()
+                                                                                                                    .getReturnType(),
+                                                                                                  ComponentLifecycleScope.SINGLETON);
             processResource(subResourcePath, subResourceDescriptor, toAdd);
         }
     }

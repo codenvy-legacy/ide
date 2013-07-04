@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -26,6 +27,7 @@ import org.exoplatform.ide.git.client.GitExtension;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  */
+@RolesAllowed("developer")
 public class RemoteControl extends GitControl {
     public RemoteControl() {
         super(GitExtension.MESSAGES.remoteControlId());

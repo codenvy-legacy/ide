@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import static com.codenvy.ide.commons.server.ZipUtils.unzip;
+import static com.codenvy.commons.lang.ZipUtils.unzip;
 
 
 

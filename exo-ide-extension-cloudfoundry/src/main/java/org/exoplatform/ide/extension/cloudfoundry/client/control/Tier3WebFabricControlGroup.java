@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
@@ -30,6 +31,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
  * @version $Id: Tier3WebFabricControlGroup.java Apr 24, 2013 11:35:14 AM azatsarynnyy $
  *
  */
+@RolesAllowed({"developer"})
 public class Tier3WebFabricControlGroup extends SimpleControl implements IDEControl {
 
     private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.tier3WebFabricControlId();

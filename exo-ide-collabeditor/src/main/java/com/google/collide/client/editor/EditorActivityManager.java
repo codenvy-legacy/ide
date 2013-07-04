@@ -14,6 +14,13 @@
 
 package com.google.collide.client.editor;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.application.IDELoader;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.util.Utils;
+
 import com.codenvy.ide.client.util.SignalEvent;
 import com.codenvy.ide.client.util.UserActivityManager;
 import com.codenvy.ide.commons.shared.ListenerRegistrar;
@@ -22,6 +29,10 @@ import com.codenvy.ide.json.shared.JsonArray;
 import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.editor.Buffer.ScrollListener;
 import com.google.collide.client.editor.Editor.KeyListener;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Timer;
 
 
 /**
@@ -29,6 +40,8 @@ import com.google.collide.client.editor.Editor.KeyListener;
  * the user's status.
  */
 public class EditorActivityManager {
+    
+    private static final int IDLE_DELAY_MS =5000;
 
     private JsonArray<Remover> listenerRemovers = JsonCollections.createArray();
 
@@ -40,6 +53,7 @@ public class EditorActivityManager {
             @Override
             public void onScroll(Buffer buffer, int scrollTop) {
                 userActivityManager.markUserActive();
+                //switchTimer.schedule(IDLE_DELAY_MS);
             }
         }));
 
@@ -47,6 +61,7 @@ public class EditorActivityManager {
             @Override
             public boolean onKeyPress(SignalEvent event) {
                 userActivityManager.markUserActive();
+                //switchTimer.schedule(IDLE_DELAY_MS);
                 return false;
             }
         }));
@@ -55,6 +70,31 @@ public class EditorActivityManager {
     void teardown() {
         for (int i = 0, n = listenerRemovers.size(); i < n; i++) {
             listenerRemovers.get(i).remove();
+        }
+    }
+    
+    private final Timer switchTimer = new Timer() {
+        @Override
+        public void run() {
+            sendUserActiveEvent();
+        }
+    };
+    
+    private void sendUserActiveEvent() {
+        String url = Utils.getRestContext() + Utils.getWorkspaceName() + "/event/user/active";
+        try {
+            AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(IDELoader.get()).send(new AsyncRequestCallback<Void>() {
+                            @Override
+                            protected void onSuccess(Void result) {
+                                //success
+                            }
+
+                            @Override
+                            protected void onFailure(Throwable exception) {
+                            }
+                        });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
 }

@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.client;
 
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
 import org.exoplatform.gwtframework.commons.exception.*;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 
 /**
@@ -44,10 +44,8 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler {
     /** @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception
      * .ExceptionThrownEvent) */
     public void onError(ExceptionThrownEvent event) {
-        Log.info("ExceptionThrownEventHandler.onError()");
-
         Throwable error = event.getException();
-        Log.info(event.getErrorMessage());
+        Log.error(getClass(), error);
         error.printStackTrace();
 
         if (error instanceof UnauthorizedException) {
@@ -71,7 +69,6 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler {
     }
 
     private void showServerDisconnectedDialog(final ServerDisconnectedException exception) {
-        Log.info("Displays Server Disconnected Dialog....");
 
         String message = IDE.IDE_LOCALIZATION_CONSTANT.serverDisconnected();
         Dialogs.getInstance().showError(message);

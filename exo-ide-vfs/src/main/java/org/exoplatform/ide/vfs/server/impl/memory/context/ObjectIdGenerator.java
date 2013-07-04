@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.vfs.server.impl.memory.context;
 
-import com.codenvy.ide.commons.server.NameGenerator;
+import com.codenvy.commons.lang.NameGenerator;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>

@@ -36,7 +36,7 @@ import java.security.Principal;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@Path("ide/vfs/watch")
+@Path("{ws-name}/vfs/watch")
 public class VfsWatcherService {
 
     @Inject

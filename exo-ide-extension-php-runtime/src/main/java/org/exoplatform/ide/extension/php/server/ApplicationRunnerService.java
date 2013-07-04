@@ -22,14 +22,11 @@ import org.exoplatform.ide.extension.php.shared.ApplicationInstance;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.Project;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -41,17 +38,18 @@ import javax.ws.rs.core.UriInfo;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationRunnerService.java Apr 17, 2013 4:39:33 PM azatsarynnyy $
- *
  */
-@Path("ide/php/runner")
+@Path("{ws-name}/php/runner")
 public class ApplicationRunnerService {
-    private static final Log LOG = ExoLogger.getLogger(ApplicationRunnerService.class);
 
     @Inject
-    private ApplicationRunner runner;
+    private ApplicationRunner         runner;
 
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
+
+    @PathParam("ws-name")
+    String                            wsName;
 
     @Path("run")
     @GET
@@ -59,15 +57,11 @@ public class ApplicationRunnerService {
     public ApplicationInstance runApplication(@QueryParam("vfsid") String vfsId,
                                               @QueryParam("projectid") String projectId,
                                               @Context UriInfo uriInfo)
-            throws ApplicationRunnerException, VirtualFileSystemException {
+                                                                       throws ApplicationRunnerException, VirtualFileSystemException {
         VirtualFileSystem vfs = vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null;
         ApplicationInstance app = runner.runApplication(vfs, projectId);
         app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
-                              .queryParam("name", app.getName()).build().toString());
-
-        Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
-        LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
-                 + "# PAAS#LOCAL#");
+                              .queryParam("name", app.getName()).build(wsName).toString());
         return app;
     }
 

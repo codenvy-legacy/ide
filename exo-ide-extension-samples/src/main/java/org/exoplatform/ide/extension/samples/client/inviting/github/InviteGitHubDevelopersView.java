@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.samples.client.inviting.github;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -44,17 +46,15 @@ import java.util.Map;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-public class InviteGitHubDevelopersView extends ViewImpl implements
-                                                         org.exoplatform.ide.extension.samples.client.inviting.github
-                                                                 .InviteGitHubDevelopersPresenter.Display {
+public class InviteGitHubDevelopersView extends ViewImpl implements InviteGitHubDevelopersPresenter.Display {
 
-    private static final String ID = "ide.inviteGitHubDevelopersView";
+    private static final String                       ID       = "ide.inviteGitHubDevelopersView";
 
-    private static final String TITLE = "Invite GitHub Developers";
+    private static final String                       TITLE    = "Invite GitHub Developers";
 
-    private static final int WIDTH = 800;
+    private static final int                          WIDTH    = 800;
 
-    private static final int HEIGHT = 500;
+    private static final int                          HEIGHT   = 500;
 
     private static InviteGitHubDevelopersViewUiBinder uiBinder = GWT.create(InviteGitHubDevelopersViewUiBinder.class);
 
@@ -68,22 +68,18 @@ public class InviteGitHubDevelopersView extends ViewImpl implements
 
         /**
          * Adds a new child widget
-         *
-         * @param w
-         *         the widget to be added
+         * 
+         * @param w the widget to be added
          */
         public void add(Widget w) {
             add(w, getElement());
         }
 
         /**
-         * Adds a new child widget to the panel, attaching its Element to the
-         * specified container Element.
-         *
-         * @param child
-         *         the child widget to be added
-         * @param container
-         *         the element within which the child will be contained
+         * Adds a new child widget to the panel, attaching its Element to the specified container Element.
+         * 
+         * @param child the child widget to be added
+         * @param container the element within which the child will be contained
          */
         protected void add(Widget child, Element container) {
             // Detach new child.
@@ -101,16 +97,22 @@ public class InviteGitHubDevelopersView extends ViewImpl implements
 
     }
 
-    UserListWidget userListWidget;
+    UserListWidget  userListWidget;
 
     @UiField
-    DivElement userListElement;
+    DivElement      userListElement;
 
     @UiField
-    CheckBox checkAll;
+    CheckBox        checkAll;
 
     @UiField
-    ImageButton inviteButton, cancelButton;
+    ImageButton     inviteButton, addMessageButton, cancelButton;
+
+    @UiField
+    DivElement      inviteUserListDiv;
+
+    @UiField
+    DivElement      inviteMessageDiv;
 
     @UiField
     TextAreaElement inviteMessage;
@@ -160,6 +162,11 @@ public class InviteGitHubDevelopersView extends ViewImpl implements
     }
 
     @Override
+    public HasClickHandlers getAddMessageButton() {
+        return addMessageButton;
+    }
+
+    @Override
     public HasClickHandlers getCloseButton() {
         return cancelButton;
     }
@@ -174,4 +181,30 @@ public class InviteGitHubDevelopersView extends ViewImpl implements
         inviteButton.setEnabled(enabled);
     }
 
+    @Override
+    public void setAddMessageButtonEnabled(boolean enabled) {
+        addMessageButton.setEnabled(enabled);
+    }
+
+    @Override
+    public void setMessageFiledVisibility(boolean visible) {
+        if (visible) {
+            inviteMessageDiv.getStyle().setDisplay(Display.INLINE);
+            inviteUserListDiv.getStyle().setBottom(130, Unit.PX);
+        } else {
+            inviteMessageDiv.getStyle().setDisplay(Display.NONE);
+            inviteUserListDiv.getStyle().setBottom(70, Unit.PX);
+            inviteMessage.setValue("");
+        }
+    }
+
+    @Override
+    public void setAddMessageButtonText(String text) {
+        addMessageButton.setText(text);
+    }
+
+    @Override
+    public String getAddMessageButtonText() {
+        return addMessageButton.getText();
+    }
 }

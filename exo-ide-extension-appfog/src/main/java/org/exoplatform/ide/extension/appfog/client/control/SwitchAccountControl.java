@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.appfog.client.control;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.appfog.client.AppfogClientBundle;
@@ -30,6 +31,7 @@ import org.exoplatform.ide.extension.appfog.client.login.LoginEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@RolesAllowed("developer")
 public class SwitchAccountControl extends AbstractAppfogControl {
 
     private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.switchAccountControlId();

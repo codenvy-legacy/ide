@@ -51,4 +51,11 @@ public interface JsonStringMap<T> {
     boolean containsKey(String key);
 
     int size();
+
+    /**
+     * Returns an array containing all the values in this map.
+     *
+     * @return a snapshot of the values contained in the map
+     */
+    JsonArray<T> getValues();
 }

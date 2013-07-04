@@ -25,6 +25,7 @@ import com.google.gwt.user.client.Timer;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.util.Utils;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -60,7 +61,7 @@ public class SessionKeepAlive implements InitializeServicesHandler {
 
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        url = event.getApplicationConfiguration().getContext() + "/ide/configuration/ping?random=" + Random.nextDouble();//avoid caching   
+        url = Utils.getRestContext() + Utils.getWorkspaceName() + "/configuration/ping?random=" + Random.nextDouble();//avoid caching   
         timer.scheduleRepeating(PING_DELAY);
     }
 

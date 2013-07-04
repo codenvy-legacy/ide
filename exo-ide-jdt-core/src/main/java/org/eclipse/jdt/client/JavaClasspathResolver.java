@@ -42,6 +42,7 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.job.Job;
+import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.job.Job.JobStatus;
 import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -222,6 +223,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, VfsChangedHan
     }
 
     private void resolveDependencies(ProjectModel... projects) {
+        JobManager.get();
         for (ProjectModel projectModel : projects) {
             //for each project create own update status handler and assign for each their project id
             statusHandler.put(projectModel.getId(), new UpdateDependencyStatusHandler(projectModel.getName()));
@@ -240,7 +242,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, VfsChangedHan
         for (ProjectModel project : projects) {
             final String projectId = project.getId();
             statusHandler.get(projectId).requestInProgress(projectId);
-            String url = "/ide/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid=" + vfsId;
+            String url = "/" + Utils.getWorkspaceName() + "/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid=" + vfsId;
             StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
 
             RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, url).getRequestMessage();
@@ -277,7 +279,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, VfsChangedHan
             final String projectId = project.getId();
             statusHandler.get(projectId).requestInProgress(projectId);
             String url =
-                    Utils.getRestContext() + "/ide/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid="
+                    Utils.getRestContext() + Utils.getWorkspaceName() + "/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid="
                     + vfsId;
             StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
 

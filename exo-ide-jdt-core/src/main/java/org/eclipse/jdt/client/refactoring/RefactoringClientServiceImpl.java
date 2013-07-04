@@ -40,20 +40,16 @@ import java.util.List;
  */
 public class RefactoringClientServiceImpl extends RefactoringClientService {
 
-    /** Base url. */
-    private static final String BASE_URL = "/ide/refactoring/java";
-
-    /** Build project method's path. */
-    private static final String RENAME = BASE_URL + "/rename";
-
-    /** REST-service context. */
-    private String restServiceContext;
-
     /** Loader to be displayed. */
     private Loader loader;
 
     /** WebSocket message bus. */
     private MessageBus wsMessageBus;
+
+    private final String restContext;
+
+    private final String wsName;
+
 
     /**
      * @param restContext
@@ -63,9 +59,10 @@ public class RefactoringClientServiceImpl extends RefactoringClientService {
      * @param wsMessageBus
      *         {@link MessageBus} to send messages over WebSocket
      */
-    public RefactoringClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus) {
+    public RefactoringClientServiceImpl(String restContext, String wsName, Loader loader, MessageBus wsMessageBus) {
+        this.wsName = wsName;
+        this.restContext = restContext + wsName;
         this.loader = loader;
-        this.restServiceContext = restContext;
         this.wsMessageBus = wsMessageBus;
     }
 
@@ -77,13 +74,11 @@ public class RefactoringClientServiceImpl extends RefactoringClientService {
     @Override
     public void renameWS(String vfsId, String projectId, String fqn, int offset, String newName,
                          RequestCallback<List<Action>> callback) throws WebSocketException {
-        final String requesrUrl = RENAME;
         callback.setLoader(loader);
-
         String params =
                 "vfsid=" + vfsId + "&projectid=" + projectId + "&fqn=" + fqn + "&offset=" + offset + "&newName=" + newName;
         RequestMessage message =
-                RequestMessageBuilder.build(RequestBuilder.POST, requesrUrl + "?" + params).getRequestMessage();
+                RequestMessageBuilder.build(RequestBuilder.POST, wsName + "/refactoring/java/rename" + "?" + params).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
 
@@ -95,11 +90,9 @@ public class RefactoringClientServiceImpl extends RefactoringClientService {
     @Override
     public void rename(String vfsId, String projectId, String fqn, int offset, String newName,
                        AsyncRequestCallback<List<Action>> callback) throws RequestException {
-        final String requesrUrl = restServiceContext + RENAME;
-
         String params =
                 "vfsid=" + vfsId + "&projectid=" + projectId + "&fqn=" + fqn + "&offset=" + offset + "&newName=" + newName;
-        AsyncRequest.build(RequestBuilder.POST, requesrUrl + "?" + params).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.POST, restContext + wsName + "/refactoring/java/rename" + "?" + params).loader(loader).send(callback);
     }
 
 }

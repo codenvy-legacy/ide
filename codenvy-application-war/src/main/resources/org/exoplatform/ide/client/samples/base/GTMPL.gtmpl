@@ -1,0 +1,21 @@
+<html>
+   <head>
+     <%
+       import org.exoplatform.services.security.Identity;
+       import org.exoplatform.services.security.ConversationState;
+     %>
+   </head>
+   <body>
+     <%
+       ConversationState curentState = ConversationState.getCurrent();
+       if (curentState != null)
+       {
+         Identity identity = curentState.getIdentity();
+         3.times
+         {
+           println "Hello " + identity.getUserId();
+         }
+       }
+     %>
+   </body>
+</html>

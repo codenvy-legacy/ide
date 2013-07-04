@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.python.client.logs;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -34,6 +35,7 @@ import org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedH
 import org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedEvent;
 import org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedHandler;
 
+@RolesAllowed({"developer"})
 public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
                                                               ApplicationStartedHandler, ApplicationStoppedHandler {
     private static final String ID = "Run/Python Logs";

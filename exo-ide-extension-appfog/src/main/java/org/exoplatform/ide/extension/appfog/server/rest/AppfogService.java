@@ -44,7 +44,7 @@ import java.util.Map;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-@Path("ide/appfog")
+@Path("{ws-name}/appfog")
 public class AppfogService {
     private static final Log LOG = ExoLogger.getLogger(AppfogService.class);
 

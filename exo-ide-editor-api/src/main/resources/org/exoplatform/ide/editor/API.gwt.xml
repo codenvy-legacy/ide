@@ -25,6 +25,8 @@
 
     <!-- Inherit the core Web Toolkit stuff.                        -->
     <inherits name='com.google.gwt.user.User'/>
+    <inherits name="org.exoplatform.ide.vfs.VFS"/>
+    <inherits name="com.codenvy.ide.client.util.Util"/>
 
     <source path="client"/>
     <source path="shared"/>

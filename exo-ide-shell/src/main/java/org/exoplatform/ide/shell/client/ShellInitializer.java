@@ -27,7 +27,16 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.shell.client.ShellPresenter.Display;
-import org.exoplatform.ide.shell.client.commands.*;
+import org.exoplatform.ide.shell.client.commands.CatCommand;
+import org.exoplatform.ide.shell.client.commands.CdCommand;
+import org.exoplatform.ide.shell.client.commands.ClearCommand;
+import org.exoplatform.ide.shell.client.commands.HelpCommand;
+import org.exoplatform.ide.shell.client.commands.JobsCommand;
+import org.exoplatform.ide.shell.client.commands.KillJobCommand;
+import org.exoplatform.ide.shell.client.commands.LsCommand;
+import org.exoplatform.ide.shell.client.commands.MkdirCommand;
+import org.exoplatform.ide.shell.client.commands.PwdCommand;
+import org.exoplatform.ide.shell.client.commands.RmCommand;
 import org.exoplatform.ide.shell.client.maven.BuildCommand;
 import org.exoplatform.ide.shell.shared.CLIResource;
 import org.exoplatform.ide.shell.shared.CLIResourceParameter;
@@ -88,8 +97,7 @@ public class ShellInitializer {
         try {
             AutoBean<ShellConfiguration> autoBean = CloudShell.AUTO_BEAN_FACTORY.shellConfiguration();
             AutoBeanUnmarshaller<ShellConfiguration> unmarshaller = new AutoBeanUnmarshaller<ShellConfiguration>(autoBean);
-            ShellService.getService().loadConfiguration(getConfigurationURL(),
-                                                        new AsyncRequestCallback<ShellConfiguration>(unmarshaller) {
+            ShellService.getService().loadConfiguration(new AsyncRequestCallback<ShellConfiguration>(unmarshaller) {
 
                                                             @Override
                                                             protected void onSuccess(ShellConfiguration result) {
@@ -97,6 +105,12 @@ public class ShellInitializer {
                                                                 CloudShell.getCommands().add(new ClearCommand());
                                                                 Environment.get().saveValue(EnvironmentVariables.USER_NAME,
                                                                                             result.getUser().getUserId());
+                                                                if (result.getUser().getUserId().equals("__anonim"))
+                                                                {
+                                                                    createShell();
+                                                                    CloudShell.console().println(CloudShell.messages.welcomeMessage());
+                                                                    return;
+                                                                }
                                                                 if (result.getVfsBaseUrl() != null) {
                                                                     Environment.get().saveValue(EnvironmentVariables.VFS_BASE_URL,
                                                                                                 result.getVfsBaseUrl());

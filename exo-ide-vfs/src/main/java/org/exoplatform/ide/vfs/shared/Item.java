@@ -29,6 +29,11 @@ import java.util.Set;
  * @version $Id: $
  */
 public interface Item {
+    /** @return id of virtual file system that contains object */
+    String getVfsId();
+
+    void setVfsId(String vfsId);
+
     /** @return id of object */
     String getId();
 

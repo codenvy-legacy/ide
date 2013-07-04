@@ -215,8 +215,6 @@ public class ResizeableWindow extends Window {
             case Event.ONMOUSEDOWN:
                 if (isStartResizing(event)) {
                     DOM.setCapture(getElement());
-                    //event.stopPropagation();
-                    //return;
                 }
                 break;
 
@@ -224,15 +222,11 @@ public class ResizeableWindow extends Window {
                 if (resizing) {
                     DOM.releaseCapture(getElement());
                     stopResizing();
-                    //event.stopPropagation();
-                    //return;
                 }
                 break;
 
             case Event.ONDBLCLICK:
                 if (checkMaximizeRestore(event)) {
-                    //event.stopPropagation();
-                    //return;
                 }
                 break;
         }

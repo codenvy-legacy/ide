@@ -84,13 +84,13 @@ public abstract class GoogleAppEngineClientService {
                                          GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
 
     public abstract void update(String vfsId, ProjectModel project, String bin,
-                                GoogleAppEngineAsyncRequestCallback<ApplicationInfo> callback) throws RequestException;
+                                GoogleAppEngineWsRequestCallback<ApplicationInfo> callback) throws RequestException;
 
     public abstract void updateAllBackends(String vfsId, String projectId,
-                                           GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
+                                           GoogleAppEngineWsRequestCallback<Object> callback) throws RequestException;
 
     public abstract void updateBackend(String vfsId, String projectId, String backendName,
-                                       GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
+                                       GoogleAppEngineWsRequestCallback<Object> callback) throws RequestException;
 
     public abstract void updateCron(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
             throws RequestException;

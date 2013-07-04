@@ -22,12 +22,14 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarBuilder;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 import org.exoplatform.gwtframework.ui.client.menu.CloseMenuHandler;
 import org.exoplatform.ide.client.editor.EditorView;
+import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -89,16 +91,25 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
         new Timer() {
             @Override
             public void run() {
-                // activate default view
-                // eventBus.fireEvent(new ActivateViewEvent(BrowserPanel.ID));
                 try {
-                    new SessionKeepAlive();
-                    new IDEConfigurationInitializer(controlsRegistration).loadConfiguration();
+                    DOM.getElementById("ide-preloader").removeFromParent();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                
+                new Timer() {
+                    @Override
+                    public void run() {
+                        try {
+                            new SessionKeepAlive();
+                            new IDEConfigurationInitializer(controlsRegistration).loadConfiguration();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }.schedule(500);
             }
-        }.schedule(500);
+        }.schedule(1000);
     }
 
     public void openView(View view) {

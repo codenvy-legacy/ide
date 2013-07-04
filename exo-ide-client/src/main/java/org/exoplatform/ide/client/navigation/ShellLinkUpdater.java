@@ -25,6 +25,7 @@ import com.google.gwt.user.client.Element;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.util.Utils;
 
 /**
  * This class updates link to working directory which uses by Shell.
@@ -53,7 +54,7 @@ public class ShellLinkUpdater implements ItemsSelectedHandler {
         }
 
         AnchorElement a = AnchorElement.as(ae);
-        String newHref = "/IDE/shell/Shell.html?workdir=" + path;
+        String newHref = "/ide/" + Utils.getWorkspaceName() + "/_app/shell?workdir=" + path;
         a.setHref(newHref);
     }
 

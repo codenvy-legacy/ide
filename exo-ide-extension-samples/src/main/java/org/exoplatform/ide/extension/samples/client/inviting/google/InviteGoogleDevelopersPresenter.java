@@ -35,7 +35,6 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialog;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.invite.GoogleContact;
@@ -43,8 +42,6 @@ import org.exoplatform.ide.client.framework.invite.GoogleContactsService;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.Utils;
@@ -60,8 +57,8 @@ import java.util.List;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHandler, ViewClosedHandler, OAuthLoginFinishedHandler,
-                                            GoogleContactSelectionChangedHandler {
+public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHandler, ViewClosedHandler,
+                                            GoogleContactSelectionChangedHandler, JsPopUpOAuthWindow.JsPopUpOAuthWindowCallback {
 
     public interface Display extends IsView {
 
@@ -93,6 +90,22 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 
         void hideEmailsHint();
 
+        void setMessageFiledVisibility(boolean visible);
+
+        HasClickHandlers getAddMessageButton();
+
+        void setAddMessageButtonEnabled(boolean enabled);
+
+        void setAddMessageButtonText(String text);
+
+        String getAddMessageButtonText();
+
+        HasClickHandlers getLoadGmailContactsButton();
+
+        void setLoadGmailContactsButtonText(String text);
+
+        String getLoadGmailContactsButtonText();
+
     }
 
     private Display                          display;
@@ -107,6 +120,8 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 
     private int                              invitations              = 0;
 
+    private boolean                          contactsLoaded           = false;
+
     /** Comparator for ordering Google contacts list alphabetically, by first e-mail. */
     private static Comparator<GoogleContact> googleContactsComparator = new GoogleContactsComparator();
 
@@ -117,20 +132,26 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
         IDE.addHandler(ViewClosedEvent.TYPE, this);
     }
 
-    @Override
-    public void onInviteGoogleDevelopers(InviteGoogleDevelopersEvent event) {
+    private void createDisplay() {
+        contactsLoaded = false;
         if (display != null) {
             return;
         }
+        display = GWT.create(Display.class);
+        bindDisplay();
+    }
+
+    @Override
+    public void onInviteGoogleDevelopers(InviteGoogleDevelopersEvent event) {
+        createDisplay();
         customEmailsList.clear();
         selectedEmailsList.clear();
         emailsToInvite.clear();
-        display = GWT.create(Display.class);
-        bindDisplay();
         display.showEmailsHint();
         contacts = new ArrayList<GoogleContact>();
-        display.setDevelopersListVisible(true);
-        isAuthenticate();
+        updateInviteButton();
+        IDE.getInstance().openView(display.asView());
+        display.setDevelopersListVisible(false);
     }
 
     private void isAuthenticate() {
@@ -157,11 +178,9 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
     }
 
     public void oAuthLoginStart() {
-        IDE.addHandler(OAuthLoginFinishedEvent.TYPE, this);
         String message = "Would you like to find contacts in your Google contact list? <br> "
                          + "You will be redirected to Google authorization page.";
-
-        Dialog askDialog = new Dialog("You have to be logged in Google account!", message, Dialog.Type.ASK);
+        String title = "You have to be logged in Google account!";
 
         BooleanValueReceivedHandler handler = new BooleanValueReceivedHandler() {
             @Override
@@ -170,29 +189,24 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                     String authUrl = Utils.getAuthorizationContext()
                                      + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"
                                      + "&scope=https://www.google.com/m8/feeds"
-                                     + "&userId=" + IDE.userId
-                                     + "&redirect_after_login="
-                                     + Utils.getAuthorizationPageURL();
-
-                    JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
+                                     + "&userId=" + IDE.user.getName()
+                                     + "&redirect_after_login=/w/" + Utils.getWorkspaceName();
+                    JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500,
+                                                                           InviteGoogleDevelopersPresenter.this);
                     authWindow.loginWithOAuth();
                 } else {
                     loadContactsFailed();
                 }
             }
         };
-
-        askDialog.setBooleanValueReceivedHandler(handler);
-        Dialogs.getInstance().showDialog(askDialog);
+        Dialogs.getInstance().ask(title, message, handler);
     }
 
-
     @Override
-    public void onOAuthLoginFinished(OAuthLoginFinishedEvent event) {
-        if (event.getStatus() == 2) {
+    public void oAuthFinished(int authenticationStatus) {
+        if (authenticationStatus == 2) {
             loadGoogleContacts();
         }
-        IDE.removeHandler(OAuthLoginFinishedEvent.TYPE, this);
     }
 
     private void loadGoogleContacts() {
@@ -204,8 +218,9 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                                                                                                                                  new ArrayList<GoogleContact>())) {
                                                   @Override
                                                   protected void onSuccess(List<GoogleContact> result) {
-                                                      IDE.getInstance().openView(display.asView());
                                                       googleContactsReceived(result);
+                                                      contactsLoaded = true;
+                                                      reactGmailContacts();
                                                   }
 
                                                   @Override
@@ -220,7 +235,6 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
     }
 
     private void loadContactsFailed() {
-        IDE.getInstance().openView(display.asView());
         display.setDevelopersListVisible(false);
     }
 
@@ -233,12 +247,16 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
         Collections.sort(contacts, googleContactsComparator);
 
         display.setDevelopers(contacts, this);
+        display.setDevelopersListVisible(true);
     }
 
     @Override
     public void onGoogleContactSelectionChanged(GoogleContact contact, boolean selected) {
         updateSelectedEmailsList();
         updateInviteButton();
+        if (selectedEmailsList.size() + customEmailsList.size() == 0) {
+            resetMessageEntry();
+        }
     }
 
     private void updateSelectedEmailsList() {
@@ -258,7 +276,18 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                 IDE.getInstance().closeView(display.asView().getId());
             }
         });
-
+        display.getAddMessageButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                reactMessageEntry();
+            }
+        });
+        display.getLoadGmailContactsButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                reactGmailContacts();
+            }
+        });
         display.getInviteButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -280,6 +309,9 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 
                 updateSelectedEmailsList();
                 updateInviteButton();
+                if (selectedEmailsList.size() + customEmailsList.size() == 0) {
+                    resetMessageEntry();
+                }
             }
         });
 
@@ -337,9 +369,27 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
         }
     }
 
+    private void reactMessageEntry() {
+        if (display.getAddMessageButtonText().equals("Add a message")) {
+            display.setAddMessageButtonText("Discard message");
+            display.setMessageFiledVisibility(true);
+        } else {
+            display.setAddMessageButtonText("Add a message");
+            display.setMessageFiledVisibility(false);
+        }
+    }
+
+    private void resetMessageEntry() {
+        if (display.getAddMessageButtonText().equals("Discard message")) {
+            display.setAddMessageButtonText("Add a message");
+            display.setMessageFiledVisibility(false);
+        }
+    }
+
     private void updateInviteButton() {
         int emails = selectedEmailsList.size() + customEmailsList.size();
         display.setInviteButtonEnabled(emails > 0);
+        display.setAddMessageButtonEnabled(emails > 0);
         if (emails == 1)
             display.setInviteButtonTitle("Invite 1 developer");
         else
@@ -381,8 +431,20 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
         } catch (RequestException e) {
             IDELoader.hide();
             IDE.fireEvent(new ExceptionThrownEvent(e));
-            e.printStackTrace();
         }
     }
 
+    private void reactGmailContacts() {
+        if (display.getLoadGmailContactsButtonText().equals("Show gmail contacts")) {
+            if (!contactsLoaded) {
+                isAuthenticate();
+            } else {
+                display.setDevelopersListVisible(true);
+                display.setLoadGmailContactsButtonText("Hide gmail contacts");
+            }
+        } else if (display.getLoadGmailContactsButtonText().equals("Hide gmail contacts")) {
+            display.setLoadGmailContactsButtonText("Show gmail contacts");
+            display.setDevelopersListVisible(false);
+        }
+    }
 }

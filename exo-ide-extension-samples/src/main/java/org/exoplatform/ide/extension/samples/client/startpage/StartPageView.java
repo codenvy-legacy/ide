@@ -20,13 +20,16 @@ package org.exoplatform.ide.extension.samples.client.startpage;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 
@@ -62,6 +65,12 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
 
     @UiField
     Anchor supportLink;
+    
+    @UiField
+    Frame fbFrame;
+    
+    @UiField
+    Frame googleFrame;
 
     @UiField
     Image logo;
@@ -69,6 +78,9 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
     public StartPageView() {
         super(ID, "editor", TITLE, new Image(SamplesClientBundle.INSTANCE.welcome()));
         add(uiBinder.createAndBindUi(this));
+        fbFrame.setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName() +"/_app/fblike.html"));
+        googleFrame.setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName() +"/_app/googleone.html"));
+        googleFrame.getElement().setAttribute("scrolling", "no");
     }
 
     /** @see org.exoplatform.ide.client.StartPagePresenter.WelcomePresenter.Display#getCloneLink() */
@@ -92,6 +104,12 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
     @Override
     public HasClickHandlers getInvitationsLink() {
         return invitationsLink;
+    }
+    
+    
+    @Override
+    public void disableInvitationsLink() {
+        invitationsLink.getElement().setAttribute("style", " color: grey;cursor: default; text-decoration: none;");
     }
 
 }

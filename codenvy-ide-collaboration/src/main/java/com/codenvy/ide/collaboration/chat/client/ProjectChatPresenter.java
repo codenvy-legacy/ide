@@ -25,10 +25,16 @@ import elemental.events.KeyboardEvent.KeyCode;
 import com.codenvy.ide.client.util.SignalEvent;
 import com.codenvy.ide.client.util.SignalEventUtils;
 import com.codenvy.ide.client.util.logging.Log;
-import com.codenvy.ide.collaboration.dto.*;
+import com.codenvy.ide.collaboration.dto.ChatCodePointMessage;
+import com.codenvy.ide.collaboration.dto.ChatMessage;
+import com.codenvy.ide.collaboration.dto.ChatParticipantAdd;
+import com.codenvy.ide.collaboration.dto.ChatParticipantRemove;
+import com.codenvy.ide.collaboration.dto.ParticipantInfo;
+import com.codenvy.ide.collaboration.dto.RoutingTypes;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.ChatCodePointMessageImpl;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.ChatMessageImpl;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.UserDetailsImpl;
+import com.codenvy.ide.commons.shared.ListenerManager;
 import com.codenvy.ide.commons.shared.StringUtils;
 import com.codenvy.ide.json.client.JsoStringMap;
 import com.codenvy.ide.json.shared.JsonArray;
@@ -75,65 +81,9 @@ import java.util.Date;
  */
 public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHandler, EditorActiveFileChangedHandler, SendCodePointHandler {
 
-    public interface Display extends IsView {
-        String ID = "codenvyIdeChat";
-
-        String getChatMessage();
-
-        void clearMessage();
-
-        void addMessage(Participant participant, String message, long time);
-
-        void addMessage(Participant participant, String message, long time, MessageCallback callback);
-
-        void addListener(EventListener eventListener);
-
-        void messageNotDelivered(String messageId);
-
-        void messageDelivered(String messageId);
-
-        void removeParticipant(Participant participant);
-
-        void addParticipant(Participant participant);
-
-        void removeEditParticipant(String userId);
-
-        void addEditParticipant(String userId, String color);
-
-        void clearEditParticipants();
-
-        void addNotificationMessage(String message);
-
-        void addNotificationMessage(String message, String link, MessageCallback callback);
-    }
-
-    public interface MessageCallback {
-        void messageClicked();
-    }
-
-    private class MessagesTimer extends Timer {
-
-        private String messageId;
-
-        public boolean executed = false;
-
-        private MessagesTimer(String messageId) {
-            this.messageId = messageId;
-        }
-
-        @Override
-        public void run() {
-            executed = true;
-            if (display != null) {
-                display.messageNotDelivered(messageId);
-            }
-        }
-    }
-
-    public static final int MESSAGE_DELIVER_TIMEOUT = 10000;
-
-
-    private EventListener enterListener = new EventListener() {
+    public static final int                                   MESSAGE_DELIVER_TIMEOUT = 10000;
+    private             ListenerManager<ProjectUsersListener> projectUsersListeners   = ListenerManager.create();
+    private             EventListener                         enterListener           = new EventListener() {
         @Override
         public void handleEvent(Event event) {
             SignalEvent signalEvent = SignalEventUtils.create(event);
@@ -148,8 +98,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
             }
         }
     };
-
-    private ParticipantsListener participantsListener = new ParticipantsListener() {
+    private             ParticipantsListener                  participantsListener    = new ParticipantsListener() {
         /**
          * {@inheritDoc}
          */
@@ -168,7 +117,6 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
                 });
             }
         }
-
 
         private String getName(UserDetails user) {
             if (user.getDisplayName().contains("@")) {
@@ -191,7 +139,6 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
             }
         }
 
-
         private boolean isShow(String path) {
             if (project == null) {
                 return true;
@@ -210,8 +157,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
             return path;
         }
     };
-
-    private Listener listener = new Listener() {
+    private             Listener                              listener                = new Listener() {
         @Override
         public void participantAdded(com.google.collide.client.code.Participant participant) {
             display.addEditParticipant(participant.getId(), participant.getColor());
@@ -225,36 +171,21 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
             display.removeEditParticipant(participant.getId());
         }
     };
-
-    private ChatApi chatApi;
-
-    private IDE ide;
-
-    private ShowChatControl control;
-
+    private ChatApi               chatApi;
+    private IDE                   ide;
+    private ShowChatControl       control;
     private CollabEditorExtension collabExtension;
-
-    private Display display;
-
-    private JsonStringMap<Participant> users = JsonCollections.createMap();
-
+    private Display               display;
+    private JsonStringMap<Participant>   users         = JsonCollections.createMap();
     private JsonStringMap<MessagesTimer> deliverTimers = JsonCollections.createMap();
-
     private SendCodePointerControl pointerControl;
-
-    private String userId;
-
+    private String                 userId;
     private boolean viewClosed = true;
-
     private ParticipantModel participantModel;
-
-    private ProjectModel project;
-
-    private CollabEditor editor;
-
-    private String clientId;
-
-    private FileModel file;
+    private ProjectModel     project;
+    private CollabEditor     editor;
+    private String           clientId;
+    private FileModel        file;
 
     public ProjectChatPresenter(ChatApi chatApi, MessageFilter messageFilter, IDE ide, ShowChatControl chatControl,
                                 SendCodePointerControl pointerControl, final String userId, CollabEditorExtension collabExtension) {
@@ -264,9 +195,9 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
         this.userId = userId;
         control = chatControl;
         this.collabExtension = collabExtension;
-        ide.eventBus().addHandler(ViewClosedEvent.TYPE, this);
-        ide.eventBus().addHandler(ShowHideChatEvent.TYPE, this);
-        ide.eventBus().addHandler(SendCodePointEvent.TYPE, this);
+        IDE.eventBus().addHandler(ViewClosedEvent.TYPE, this);
+        IDE.eventBus().addHandler(ShowHideChatEvent.TYPE, this);
+        IDE.eventBus().addHandler(SendCodePointEvent.TYPE, this);
         IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
         messageFilter.registerMessageRecipient(RoutingTypes.CHAT_MESSAGE, new MessageRecipient<ChatMessage>() {
             @Override
@@ -305,6 +236,10 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
         });
     }
 
+    public ListenerManager<ProjectUsersListener> getProjectUsersListeners() {
+        return projectUsersListeners;
+    }
+
     private String getName(String path) {
         path = path.substring(path.lastIndexOf('/') + 1);
         return path;
@@ -324,6 +259,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
                 if (file != null && file.getPath().equals(message.getPath())) {
                     editor.selectRange(message.getStartLine(), message.getStartChar(), message.getEndLine(),
                                        message.getEndChar());
+                    editor.setFocus();
                 } else {
                     openFile(message.getPath());
                     IDE.eventBus().addHandler(EditorActiveFileChangedEvent.TYPE, new EditorActiveFileChangedHandler() {
@@ -344,8 +280,9 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
     }
 
     private void removeParticipant(String clientId) {
+        Participant participant = users.remove(clientId);
+        dispatchParticipantRemoved();
         if (display != null) {
-            Participant participant = users.remove(clientId);
             display.removeParticipant(participant);
             display.addNotificationMessage(participant.getDisplayName() + " left the " + project.getName() + " project.");
             if (users.size() == 1) {
@@ -353,6 +290,15 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
                 //            ide.closeView(Display.ID);
             }
         }
+    }
+
+    private void dispatchParticipantRemoved() {
+        projectUsersListeners.dispatch(new ListenerManager.Dispatcher<ProjectUsersListener>() {
+            @Override
+            public void dispatch(ProjectUsersListener listener) {
+                listener.onUserCloseProject();
+            }
+        });
     }
 
     private void addParticipant(ParticipantInfo user) {
@@ -367,6 +313,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
         }
         participant.setClientId(user.getClientId());
         users.put(user.getClientId(), participant);
+        dispatchParticipantAdded();
         if (display != null && !participant.isCurrentUser()) {
             setParticipantColor(participant);
             display.addParticipant(participant);
@@ -381,12 +328,20 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
         }
     }
 
+    private void dispatchParticipantAdded() {
+        projectUsersListeners.dispatch(new ListenerManager.Dispatcher<ProjectUsersListener>() {
+            @Override
+            public void dispatch(ProjectUsersListener listener) {
+                listener.onUserOpenProject();
+            }
+        });
+    }
+
     private void setParticipantColor(Participant user) {
         com.google.collide.client.code.Participant participant = collabExtension.getUsersModel().getParticipant(
                 user.getUserId());
         user.setColor(participant.getColor());
     }
-
 
     private void messageReceived(ChatMessage message) {
         if (message.getClientId().equals(BootstrapSession.getBootstrapSession().getActiveClientId())) {
@@ -539,7 +494,6 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
         }
     }
 
-
     @Override
     public void onSendCodePoint(SendCodePointEvent event) {
         if (editor == null) {
@@ -565,4 +519,64 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
             Log.debug(ProjectChatPresenter.class, e);
         }
     }
+
+    public JsonStringMap<Participant> getParticipants() {
+        return users;
+    }
+
+    public interface Display extends IsView {
+        String ID = "codenvyIdeChat";
+
+        String getChatMessage();
+
+        void clearMessage();
+
+        void addMessage(Participant participant, String message, long time);
+
+        void addMessage(Participant participant, String message, long time, MessageCallback callback);
+
+        void addListener(EventListener eventListener);
+
+        void messageNotDelivered(String messageId);
+
+        void messageDelivered(String messageId);
+
+        void removeParticipant(Participant participant);
+
+        void addParticipant(Participant participant);
+
+        void removeEditParticipant(String userId);
+
+        void addEditParticipant(String userId, String color);
+
+        void clearEditParticipants();
+
+        void addNotificationMessage(String message);
+
+        void addNotificationMessage(String message, String link, MessageCallback callback);
+    }
+
+
+    public interface MessageCallback {
+        void messageClicked();
+    }
+
+    private class MessagesTimer extends Timer {
+
+        public boolean executed = false;
+        private String messageId;
+
+        private MessagesTimer(String messageId) {
+            this.messageId = messageId;
+        }
+
+        @Override
+        public void run() {
+            executed = true;
+            if (display != null) {
+                display.messageNotDelivered(messageId);
+            }
+        }
+    }
+
 }

@@ -23,6 +23,7 @@ import com.google.gwt.user.client.Window;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedEvent;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedHandler;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionErrorHandler;
 import org.exoplatform.ide.client.framework.websocket.rest.RESTMessageBus;
 
@@ -66,9 +67,9 @@ public class WebSocketHandler implements ApplicationClosedHandler {
     private String getWebSocketServerURL() {
         boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
         if (isSecureConnection)
-            return "wss://" + Window.Location.getHost() + "/IDE/websocket";
+            return "wss://" + Window.Location.getHost() + Utils.getWebSocketContext() + Utils.getWorkspaceName();
         else
-            return "ws://" + Window.Location.getHost() + "/IDE/websocket";
+            return "ws://" + Window.Location.getHost()  + Utils.getWebSocketContext() +  Utils.getWorkspaceName();
     }
 
 

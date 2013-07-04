@@ -26,6 +26,7 @@ import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -140,7 +141,13 @@ public abstract class MemoryItem {
     public final List<AccessControlEntry> getACL() {
         synchronized (permissionsMap) {
             if (permissionsMap.isEmpty()) {
-                return Collections.emptyList();
+                final List<AccessControlEntry> result = new ArrayList<AccessControlEntry>(2);
+                result.add(new AccessControlEntryImpl(new PrincipalImpl("workspace/developer", Principal.Type.GROUP),
+                                                      Collections.singleton(BasicPermissions.ALL.value())));
+                result.add(new AccessControlEntryImpl(new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER),
+                                                      Collections.singleton(BasicPermissions.READ.value())));
+                return result;
+                //return Collections.emptyList();
             }
             List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(permissionsMap.size());
             for (Map.Entry<PrincipalImpl, Set<BasicPermissions>> e : permissionsMap.entrySet()) {

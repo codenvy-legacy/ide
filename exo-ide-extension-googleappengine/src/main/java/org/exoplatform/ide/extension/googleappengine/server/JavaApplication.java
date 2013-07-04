@@ -18,14 +18,24 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server;
 
-import com.google.appengine.tools.admin.*;
-import com.google.apphosting.utils.config.*;
+import com.google.appengine.tools.admin.AppAdminFactory;
+import com.google.appengine.tools.admin.Application;
+import com.google.appengine.tools.admin.GenericApplication;
+import com.google.appengine.tools.admin.ResourceLimits;
+import com.google.appengine.tools.admin.UpdateListener;
+import com.google.apphosting.utils.config.AppEngineWebXml;
+import com.google.apphosting.utils.config.BackendsXml;
+import com.google.apphosting.utils.config.CronXml;
+import com.google.apphosting.utils.config.DosXml;
+import com.google.apphosting.utils.config.IndexesXml;
+import com.google.apphosting.utils.config.QueueXml;
+import com.google.apphosting.utils.config.WebXml;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import static com.codenvy.ide.commons.server.FileUtils.deleteRecursive;
+import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 
 
 

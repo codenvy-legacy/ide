@@ -32,7 +32,7 @@ import java.util.*;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 6, 2011 11:45:43 AM anya $
  */
-@Path("ide/heroku")
+@Path("{ws-name}/heroku")
 public class MockHerokuService {
     /**
      * Heroku users. <b>key</b> - user's login; <br>

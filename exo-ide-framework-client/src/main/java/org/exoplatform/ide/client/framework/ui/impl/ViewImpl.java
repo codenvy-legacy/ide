@@ -24,6 +24,7 @@ import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
@@ -36,64 +37,69 @@ import org.exoplatform.ide.client.framework.ui.api.event.BeforeViewLoseActivityE
 import org.exoplatform.ide.client.framework.ui.api.event.BeforeViewLoseActivityHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewLostActivityEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewLostActivityHandler;
-import org.exoplatform.ide.client.framework.ui.impl.event.*;
+import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewIconEvent;
+import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewIconHandler;
+import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewTitleEvent;
+import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewTitleHandler;
+import org.exoplatform.ide.client.framework.ui.impl.event.HasChangeViewIconHandler;
+import org.exoplatform.ide.client.framework.ui.impl.event.HasChangeViewTitleHandler;
+import org.exoplatform.ide.client.framework.ui.impl.event.HasSetViewVisibleHandler;
+import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleEvent;
+import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleHandler;
 
 /**
  * Created by The eXo Platform SAS .
- *
+ * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeViewTitleHandler, HasChangeViewIconHandler,
-                                                     HasSetViewVisibleHandler {
+                                         HasSetViewVisibleHandler {
 
     /** Is this view activated */
-    private boolean activated = false;
+    private boolean activated          = false;
 
     /** Is this view can be resized */
-    private boolean canResize = true;
+    private boolean canResize          = true;
 
     /** View can show custom context menu. */
     private boolean canShowContextMenu = false;
 
     /** View's default height */
-    protected int defaultHeight = 200;
+    protected int   defaultHeight      = 200;
 
     /** View's default width */
-    protected int defaultWidth = 300;
+    protected int   defaultWidth       = 300;
 
     /** Is this view has close button ( can be closed ) */
-    private boolean canBeClosed = true;
+    private boolean canBeClosed        = true;
 
-    private boolean closeOnEscape = false;
+    private boolean closeOnEscape      = false;
 
     /** View's icon */
-    private Image icon;
+    private Image   icon;
 
     /** View's ID */
-    private String id;
+    private String  id;
 
     /** Title of this view. */
-    private String tiltle;
+    private String  tiltle;
 
     /** Type of this view. */
-    private String type;
+    private String  type;
 
-    private Border viewBorder;
+    private Border  viewBorder;
 
     /** User defined content which will be displayed in this view. */
-    private Widget viewWidget;
+    private Widget  viewWidget;
 
     /**
      * Creates a new instance of this View implementation with specified parameters.
-     *
-     * @param id
-     *         id of this view
-     * @param type
-     *         type of this view
-     * @param title
-     *         title of this view
+     * 
+     * @param id id of this view
+     * @param type type of this view
+     * @param title title of this view
      */
     public ViewImpl(String id, String type, String title) {
         this(id, type, title, null);
@@ -101,15 +107,11 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Creates a new instance of this View implementation with specified parameters.
-     *
-     * @param id
-     *         id of this view
-     * @param type
-     *         type of this view
-     * @param title
-     *         title of this view
-     * @param icon
-     *         icon of this view
+     * 
+     * @param id id of this view
+     * @param type type of this view
+     * @param title title of this view
+     * @param icon icon of this view
      */
     public ViewImpl(String id, String type, String title, Image icon) {
         this(id, type, title, icon, 300, 200);
@@ -117,19 +119,13 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Creates a new instance of this View implementation with specified parameters.
-     *
-     * @param id
-     *         d of this view
-     * @param type
-     *         type of this view
-     * @param title
-     *         title of this view
-     * @param icon
-     *         icon of this view
-     * @param defaultWidth
-     *         view's default width
-     * @param defaultHeight
-     *         view's default height
+     * 
+     * @param id d of this view
+     * @param type type of this view
+     * @param title title of this view
+     * @param icon icon of this view
+     * @param defaultWidth view's default width
+     * @param defaultHeight view's default height
      */
     public ViewImpl(String id, String type, String title, Image icon, int defaultWidth, int defaultHeight) {
         this(id, type, title, icon, defaultWidth, defaultHeight, true);
@@ -137,21 +133,14 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Creates a new instance of this View implementation with specified parameters.
-     *
-     * @param id
-     *         id of this view
-     * @param type
-     *         type of this view
-     * @param title
-     *         title of this view
-     * @param icon
-     *         icon of this view
-     * @param defaultWidth
-     *         view's default width
-     * @param defaultHeight
-     *         view's default height
-     * @param canResize
-     *         is this view resizeable
+     * 
+     * @param id id of this view
+     * @param type type of this view
+     * @param title title of this view
+     * @param icon icon of this view
+     * @param defaultWidth view's default width
+     * @param defaultHeight view's default height
+     * @param canResize is this view resizeable
      */
     public ViewImpl(String id, String type, String title, Image icon, int defaultWidth, int defaultHeight,
                     boolean canResize) {
@@ -182,16 +171,16 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Set's this view activate.
-     *
+     * 
      * @see org.exoplatform.ide.client.framework.ui.api.View#activate()
      */
     @Override
-    public void activate() {        
+    public void activate() {
         if (isActive()) {
             return;
         }
-        
-        if (isViewVisible()) {            
+
+        if (isViewVisible()) {
             ViewHighlightManager.getInstance().activateView(this);
         } else {
             setViewVisible();
@@ -200,9 +189,8 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Add user defined content into this view.
-     *
-     * @param w
-     *         user defined widget
+     * 
+     * @param w user defined widget
      */
     @Override
     public final void add(Widget w) {
@@ -215,9 +203,9 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Adds ChangeViewIconHandler to this view.
-     *
+     * 
      * @see org.exoplatform.ide.client.framework.ui.impl.event.HasChangeViewIconHandler#addChangeViewIconHandler(org.exoplatform.ide
-     * .client.framework.ui.impl.event.ChangeViewIconHandler)
+     *      .client.framework.ui.impl.event.ChangeViewIconHandler)
      */
     @Override
     public HandlerRegistration addChangeViewIconHandler(ChangeViewIconHandler changeViewIconHandler) {
@@ -226,9 +214,9 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Adds ChangeViewTitleHandler to this view.
-     *
+     * 
      * @see org.exoplatform.ide.client.framework.ui.impl.event.HasChangeViewTitleHandler#addChangeViewTitleHandler(org.exoplatform.ide
-     * .client.framework.ui.impl.event.ChangeViewTitleHandler)
+     *      .client.framework.ui.impl.event.ChangeViewTitleHandler)
      */
     @Override
     public HandlerRegistration addChangeViewTitleHandler(ChangeViewTitleHandler changeViewTitleHandler) {
@@ -237,9 +225,9 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Adds SetViewVisibleHandler to this view.
-     *
+     * 
      * @see org.exoplatform.ide.client.framework.ui.impl.event.HasSetViewVisibleHandler#addSetViewVisibleHandler(org.exoplatform.ide
-     * .client.framework.ui.impl.event.SetViewVisibleHandler)
+     *      .client.framework.ui.impl.event.SetViewVisibleHandler)
      */
     @Override
     public HandlerRegistration addSetViewVisibleHandler(SetViewVisibleHandler setViewVisibleHandler) {
@@ -248,7 +236,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Returns this view as {@link View}.
-     *
+     * 
      * @see org.exoplatform.ide.client.framework.ui.api.IsView#asView()
      */
     @Override
@@ -258,7 +246,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Determines whether this view can be resized.
-     *
+     * 
      * @see org.exoplatform.ide.client.framework.ui.api.View#canResize()
      */
     @Override
@@ -268,7 +256,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Get default height of this view.
-     *
+     * 
      * @see org.exoplatform.ide.client.framework.ui.api.View#getDefaultHeight()
      */
     @Override
@@ -278,7 +266,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Get default width of this view.
-     *
+     * 
      * @see org.exoplatform.ide.client.framework.ui.api.View#getDefaultWidth()
      */
     @Override
@@ -288,7 +276,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Get icon of this view.
-     *
+     * 
      * @see org.exoplatform.ide.client.framework.ui.api.View#getIcon()
      */
     @Override
@@ -298,7 +286,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Get ID of this view.
-     *
+     * 
      * @see org.exoplatform.ide.client.framework.ui.api.View#getId()
      */
     @Override
@@ -308,7 +296,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Get title of this view.
-     *
+     * 
      * @see com.google.gwt.user.client.ui.UIObject#getTitle()
      */
     @Override
@@ -318,7 +306,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Get type of this view.
-     *
+     * 
      * @see org.exoplatform.ide.client.framework.ui.api.View#getType()
      */
     @Override
@@ -328,7 +316,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Determines whether this view can be closed.
-     *
+     * 
      * @see org.exoplatform.ide.client.framework.ui.api.View#canBeClosed()
      */
     @Override
@@ -338,7 +326,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Determined whether this view is visible.
-     *
+     * 
      * @see org.exoplatform.ide.client.framework.ui.api.View#isViewVisible()
      */
     @Override
@@ -348,7 +336,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Handle of browser events.
-     *
+     * 
      * @see com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt.user.client.Event)
      */
     @Override
@@ -369,7 +357,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Sets this view activated.
-     *
+     * 
      * @param activated
      */
     public void setActivated(boolean activated) {
@@ -377,17 +365,16 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
         viewBorder.setBorderColor(activated ? "#B6CCE8" : "transparent");
         // getElement().getStyle().setBorderColor(activated ? "#B6CCE8" : "transparent");
 
-      /*
-       * Attribute for Selenium Tests
-       */
+        /*
+         * Attribute for Selenium Tests
+         */
         getElement().setAttribute("is-active", "" + activated);
     }
 
     /**
      * Sets this view can be closed.
-     *
-     * @param canBeClosed
-     *         <b>true</b> makes view closeable, <
+     * 
+     * @param canBeClosed <b>true</b> makes view closeable, <
      */
     public void setCanBeClosed(boolean canBeClosed) {
         this.canBeClosed = canBeClosed;
@@ -395,7 +382,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Sets new icon.
-     *
+     * 
      * @see org.exoplatform.ide.client.framework.ui.api.View#setIcon(com.google.gwt.user.client.ui.Image)
      */
     @Override
@@ -408,7 +395,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Sets new title.
-     *
+     * 
      * @see com.google.gwt.user.client.ui.UIObject#setTitle(java.lang.String)
      */
     @Override
@@ -421,7 +408,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     /**
      * Sets this view is visible.
-     *
+     * 
      * @see org.exoplatform.ide.client.framework.ui.api.View#setViewVisible()
      */
     @Override
@@ -437,7 +424,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
 
     @Override
     public HandlerRegistration addBeforeViewLoseActivityHandler(
-            BeforeViewLoseActivityHandler beforeViewLoseActivityHandler) {
+                                                                BeforeViewLoseActivityHandler beforeViewLoseActivityHandler) {
         return addHandler(beforeViewLoseActivityHandler, BeforeViewLoseActivityEvent.TYPE);
     }
 
@@ -472,10 +459,47 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
     }
 
     /**
-     * @param canShowContextMenu
-     *         the canShowContextMenu to set
+     * @param canShowContextMenu the canShowContextMenu to set
      */
     public void setCanShowContextMenu(boolean canShowContextMenu) {
         this.canShowContextMenu = canShowContextMenu;
+    }
+
+    private Element getInnerTable() {
+        Element currentEl = getElement();
+        while (true) {
+            if (currentEl != null && !currentEl.getTagName().equals("TABLE")) {
+                currentEl = DOM.getParent(currentEl);
+            } else {
+                break;
+            }
+        }
+        return currentEl;
+    }
+
+    /**
+     * @param int value
+     * @param unit of value
+     */
+    public void setWidth(int value, Unit unit) {
+        Element inner = getInnerTable();
+        if (inner != null) {
+            inner.getStyle().setWidth(value, unit);
+        }
+        getElement().getStyle().setWidth(value, unit);
+        onResize();
+    }
+
+    /**
+     * @param int value
+     * @param unit of value
+     */
+    public void setHeight(int value, Unit unit) {
+        Element inner = getInnerTable();
+        if (inner != null) {
+            inner.getStyle().setHeight(value, unit);
+        }
+        getElement().getStyle().setHeight(value, unit);
+        onResize();
     }
 }

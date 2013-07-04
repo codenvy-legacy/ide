@@ -27,6 +27,7 @@ import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.LazyIterator;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemUser;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.HtmlErrorFormatter;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
@@ -71,6 +72,8 @@ import org.exoplatform.services.jcr.core.ExtendedSession;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+
+import com.codenvy.commons.env.EnvironmentContext;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -1237,7 +1240,9 @@ public class JcrFileSystem implements VirtualFileSystem
          if (projectType != null && ("Servlet/JSP".equals(projectType) || "Spring".equals(projectType)))
          {
             String jRebelUsage = updItem.hasProperty("jrebel") ? updItem.getPropertyValue("jrebel") : "false";
-            LOG.info("EVENT#jrebel-usage# PROJECT#" + updItem.getName() + "# TYPE#" + projectType + "# JREBEL#" + jRebelUsage + "#");
+            LOG.info("EVENT#jrebel-usage# WS#"
+                + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString() + "# USER#"
+                + session.getUserID() + "# PROJECT#" + updItem.getName() + "# TYPE#" + projectType + "# JREBEL#" + jRebelUsage + "#");
          }
 
          if (convertToProject)

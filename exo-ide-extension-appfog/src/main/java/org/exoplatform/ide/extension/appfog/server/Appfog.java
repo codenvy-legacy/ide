@@ -20,14 +20,31 @@ package org.exoplatform.ide.extension.appfog.server;
 
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonParseException;
-import com.codenvy.ide.commons.server.*;
+import com.codenvy.ide.commons.server.ParsingResponseException;
 
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.ide.extension.appfog.server.json.*;
-import org.exoplatform.ide.extension.appfog.shared.*;
+import org.exoplatform.ide.extension.appfog.server.json.ApplicationFile;
+import org.exoplatform.ide.extension.appfog.server.json.Crashes;
+import org.exoplatform.ide.extension.appfog.server.json.CreateAppfogApplication;
+import org.exoplatform.ide.extension.appfog.server.json.CreateResponse;
+import org.exoplatform.ide.extension.appfog.server.json.InstanceInfo;
+import org.exoplatform.ide.extension.appfog.server.json.InstancesInfo;
+import org.exoplatform.ide.extension.appfog.server.json.RuntimeInfo;
+import org.exoplatform.ide.extension.appfog.server.json.Stats;
+import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
+import org.exoplatform.ide.extension.appfog.shared.AppfogApplicationStatistics;
+import org.exoplatform.ide.extension.appfog.shared.AppfogProvisionedService;
+import org.exoplatform.ide.extension.appfog.shared.AppfogServices;
+import org.exoplatform.ide.extension.appfog.shared.AppfogSystemService;
+import org.exoplatform.ide.extension.appfog.shared.Framework;
+import org.exoplatform.ide.extension.appfog.shared.InfraDetail;
+import org.exoplatform.ide.extension.appfog.shared.InfraType;
+import org.exoplatform.ide.extension.appfog.shared.Instance;
+import org.exoplatform.ide.extension.appfog.shared.SystemInfo;
+import org.exoplatform.ide.extension.appfog.shared.SystemResources;
 import org.exoplatform.ide.security.paas.Credential;
 import org.exoplatform.ide.security.paas.CredentialStore;
 import org.exoplatform.ide.security.paas.CredentialStoreException;
@@ -45,7 +62,16 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import java.io.*;
+
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -53,9 +79,26 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.codenvy.commons.lang.IoUtil.GIT_FILTER;
+import static com.codenvy.commons.lang.IoUtil.copy;
+import static com.codenvy.commons.lang.IoUtil.createTempDirectory;
+import static com.codenvy.commons.lang.IoUtil.downloadFile;
+import static com.codenvy.commons.lang.IoUtil.list;
+import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
+import static com.codenvy.commons.lang.NameGenerator.generate;
+import static com.codenvy.commons.lang.ZipUtils.unzip;
+import static com.codenvy.commons.lang.ZipUtils.zipDir;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
@@ -288,7 +331,7 @@ public class Appfog {
                 if ("file".equals(uri.getScheme())) {
                     path = new java.io.File(uri);
                 } else {
-                    path = FileUtils.downloadFile(null, "af_" + app, ".war", url);
+                    path = downloadFile(null, "af_" + app, ".war", url);
                     cleanup = true; // remove only downloaded file.
                 }
             }
@@ -369,7 +412,7 @@ public class Appfog {
             }
         } finally {
             if (path != null && cleanup) {
-                FileUtils.deleteRecursive(path);
+                deleteRecursive(path);
             }
         }
         return appInfo;
@@ -508,7 +551,7 @@ public class Appfog {
                 if ("file".equals(uri.getScheme())) {
                     path = new java.io.File(uri);
                 } else {
-                    path = FileUtils.downloadFile(null, "af_" + app, ".war", url);
+                    path = downloadFile(null, "af_" + app, ".war", url);
                     cleanup = true;
                 }
                 uploadApplication(credential, app, vfs, projectId, path);
@@ -517,7 +560,7 @@ public class Appfog {
             }
         } finally {
             if (path != null && cleanup) {
-                FileUtils.deleteRecursive(path);
+                deleteRecursive(path);
             }
         }
 
@@ -914,7 +957,7 @@ public class Appfog {
         }
         // Generate service name if not specified.
         if (name == null || name.isEmpty()) {
-            name = NameGenerator.generate(service + '-', 8);
+            name = generate(service + '-', 8);
         }
 
         AppfogCreateService req = new AppfogCreateService(name, target.getType(), service, target.getVersion(), infraType.getInfra());
@@ -1442,22 +1485,22 @@ public class Appfog {
         HttpURLConnection http = null;
         java.io.File uploadDir = null;
         try {
-            uploadDir = FileUtils.createTempDirectory(null, "af_" + app);
+            uploadDir = createTempDirectory(null, "af_" + app);
 
             if (path != null) {
                 if (path.isFile()) {
                     String name = path.getName();
                     if (name.endsWith(".war") || name.endsWith(".zip") || name.endsWith(".jar")) {
-                        ZipUtils.unzip(path, uploadDir);
+                        unzip(path, uploadDir);
                     }
                 } else {
-                    FileUtils.copy(path, uploadDir, null);
+                    copy(path, uploadDir, null);
                 }
             } else {
                 Utils.copy(vfs, projectId, uploadDir);
             }
 
-            List<java.io.File> files = FileUtils.list(uploadDir, FileUtils.GIT_FILTER);
+            List<java.io.File> files = list(uploadDir, GIT_FILTER);
 
             long totalSize = 0;
             for (java.io.File f : files) {
@@ -1501,7 +1544,7 @@ public class Appfog {
 
             final long startZIP = System.currentTimeMillis();
             zip = new java.io.File(System.getProperty("java.io.tmpdir"), app + ".zip");
-            ZipUtils.zipDir(uploadDir.getAbsolutePath(), uploadDir, zip, new FilenameFilter() {
+            zipDir(uploadDir.getAbsolutePath(), uploadDir, zip, new FilenameFilter() {
                 @Override
                 public boolean accept(java.io.File parent, String name) {
                     return !(".cloudfoundry-application".equals(name)
@@ -1585,7 +1628,7 @@ public class Appfog {
             }
         } finally {
             if (uploadDir != null) {
-                FileUtils.deleteRecursive(uploadDir);
+                deleteRecursive(uploadDir);
             }
             if (zip != null) {
                 zip.delete();

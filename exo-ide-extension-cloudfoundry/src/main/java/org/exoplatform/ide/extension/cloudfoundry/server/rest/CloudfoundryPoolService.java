@@ -35,7 +35,7 @@ import java.security.Principal;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/cloudfoundry/pool")
+@Path("{ws-name}/cloudfoundry/pool")
 public class CloudfoundryPoolService {
     @Inject
     private CloudfoundryPool pool;

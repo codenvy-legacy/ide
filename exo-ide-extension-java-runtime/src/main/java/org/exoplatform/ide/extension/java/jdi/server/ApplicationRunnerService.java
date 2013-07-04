@@ -34,10 +34,13 @@ import java.util.Map;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/java/runner")
+@Path("{ws-name}/java/runner")
 public class ApplicationRunnerService {
     @Inject
     private ApplicationRunner runner;
+    
+    @PathParam("ws-name")
+    String wsName;
 
     @Path("run")
     @POST
@@ -47,9 +50,11 @@ public class ApplicationRunnerService {
                                               @Context UriInfo uriInfo,
                                               Map<String, String> params)
             throws ApplicationRunnerException {
+        if (params == null)
+            throw new IllegalArgumentException("Body ot this response can not be null or empty");
         ApplicationInstance app = runner.runApplication(war, params);
         app.setStopURL(uriInfo.getBaseUriBuilder().path(ApplicationRunnerService.this.getClass(), "stopApplication")
-                              .queryParam("name", app.getName()).build().toString());
+                              .queryParam("name", app.getName()).build(wsName).toString());
         return app;
     }
 
@@ -63,7 +68,7 @@ public class ApplicationRunnerService {
                                                 Map<String, String> params) throws ApplicationRunnerException {
         ApplicationInstance app = runner.debugApplication(war, suspend, params);
         app.setStopURL(uriInfo.getBaseUriBuilder().path(ApplicationRunnerService.this.getClass(), "stopApplication")
-                              .queryParam("name", app.getName()).build().toString());
+                              .queryParam("name", app.getName()).build(wsName).toString());
         return app;
     }
 

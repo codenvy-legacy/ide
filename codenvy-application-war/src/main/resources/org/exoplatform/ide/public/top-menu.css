@@ -1,0 +1,65 @@
+/**
+ * Copyright (C) 2012 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+.ideMenuAdditions {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    height: 20px;
+    z-index: 999999;
+    padding: 0px;
+    -moz-box-sizing: border-box;
+    overflow: hidden;
+}
+
+.ideMenuAdditionsTable {
+    height: 20px;
+}
+
+.ideMenuAdditionsTable td {
+    height: 20px;
+    color: #333333;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: normal;
+    padding-left: 8px;
+    padding-right: 8px;
+    cursor: default;
+}
+
+.ideMenuAdditionsTable td:HOVER {
+    background: url('ui/menu/menu-item-over.png');
+}
+
+.ideMenuAdditionsTable td:ACTIVE {
+    background: url('ui/menu/menu-item-selected.png');
+}
+
+.ideMenuAdditionsTable td a {
+    height: 20px;
+    color: #333333;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: normal;
+    padding-left: 8px;
+    padding-right: 8px;
+    cursor: default;
+    text-decoration: none;
+}

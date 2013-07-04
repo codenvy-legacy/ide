@@ -1,0 +1,47 @@
+.controlPanel {
+    width: 22px;
+    height: 24px;
+    float: left;
+    overflow: hidden;
+
+    border-bottom: 1px solid #C0C3C7 !important;
+    -moz-box-sizing: border-box !important;
+    box-sizing: border-box !important;
+}
+
+.controlTable {
+    width: 22px;
+    height: 24px;
+    border-collapse: collapse;
+}
+
+.controlCell {
+    width: 22px;
+    height: 24px;
+    /*
+    border-bottom: 1px solid #C0C3C7 !important;
+    */
+}
+
+@sprite .button {
+    width: 20px;
+    height: 20px;
+    margin-left: 1px;
+    overflow: hidden;
+    gwt-image: 'background';
+}
+
+.buttonOver {
+    background-position: 0px -20px;
+}
+
+.buttonDown {
+    background-position: 0px -40px;
+}
+
+.iconPanel {
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+    overflow: hidden;
+}

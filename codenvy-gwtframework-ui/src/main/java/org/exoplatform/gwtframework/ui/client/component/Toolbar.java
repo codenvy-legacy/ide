@@ -20,6 +20,10 @@
 
 package org.exoplatform.gwtframework.ui.client.component;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -35,6 +39,38 @@ import java.util.List;
  */
 
 public class Toolbar extends FlowPanel {
+
+    public interface Style extends CssResource {
+
+        String exoToolbarPanel();
+
+        String exoToolbarElementLeft();
+
+        String exoToolbarDelimiter();
+
+        String exoToolbarElementRight();
+    }
+
+    public interface Resources extends ClientBundle {
+        @Source("toolbar/component-toolbar.css")
+        Style css();
+
+        @Source("toolbar/toolbar_Background.png")
+        @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Horizontal)
+        ImageResource background();
+
+        @Source("toolbar/delimiter.png")
+        ImageResource delimiter();
+
+        @Source("toolbar/statusbar_Background.png")
+        ImageResource statusbarBackground();
+    }
+
+    public static final Resources RESOURCES = GWT.create(Resources.class);
+
+    static {
+        RESOURCES.css().ensureInjected();
+    }
 
     private String id;
 
@@ -61,7 +97,7 @@ public class Toolbar extends FlowPanel {
     public Toolbar(String id) {
         this.id = id;
 
-        setStyleName("exoToolbarPanel");
+        setStyleName(RESOURCES.css().exoToolbarPanel());
         if (id != null && !id.isEmpty()) {
             getElement().setId(id);
         }
@@ -132,7 +168,7 @@ public class Toolbar extends FlowPanel {
      */
     public void add(Widget widget) {
         if (widget instanceof ToolbarItem) {
-            super.add(widget);            
+            super.add(widget);
         } else {
             addItem(widget);
         }

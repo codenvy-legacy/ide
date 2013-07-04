@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
@@ -48,7 +49,7 @@ import java.util.Map;
  */
 public class CloudBeesClientServiceImpl extends CloudBeesClientService {
 
-    private static final String BASE_URL = "/ide/cloudbees";
+    private static final String BASE_URL = Utils.getWorkspaceName() + "/cloudbees";
 
     private static final String DOMAINS = BASE_URL + "/domains";
 
@@ -81,9 +82,9 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService {
     /** WebSocket message bus. */
     private MessageBus wsMessageBus;
 
-    public CloudBeesClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus) {
+    public CloudBeesClientServiceImpl(Loader loader, MessageBus wsMessageBus) {
         this.loader = loader;
-        this.restServiceContext = restContext;
+        this.restServiceContext = Utils.getRestContext();
         this.wsMessageBus = wsMessageBus;
     }
 

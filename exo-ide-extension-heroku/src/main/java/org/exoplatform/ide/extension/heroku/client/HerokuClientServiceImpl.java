@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
@@ -42,31 +43,34 @@ import org.exoplatform.ide.extension.heroku.shared.Credentials;
  * @version $Id: May 25, 2011 12:23:29 PM anya $
  */
 public class HerokuClientServiceImpl extends HerokuClientService {
-    private static final String LOGIN_PATH = "/ide/heroku/login";
+    
+    private static final String HEROKU_BASE = Utils.getWorkspaceName() + "/heroku";
+    
+    private static final String LOGIN_PATH = HEROKU_BASE + "/login";
 
-    private static final String LOGOUT_PATH = "/ide/heroku/logout";
+    private static final String LOGOUT_PATH = HEROKU_BASE + "/logout";
 
-    private static final String CREATE_APPLICATION = "/ide/heroku/apps/create";
+    private static final String CREATE_APPLICATION = HEROKU_BASE + "/apps/create";
 
-    private static final String DESTROY_APPLICATION = "/ide/heroku/apps/destroy";
+    private static final String DESTROY_APPLICATION = HEROKU_BASE + "/apps/destroy";
 
-    private static final String LOGS = "/ide/heroku/apps/logs";
+    private static final String LOGS = HEROKU_BASE + "/apps/logs";
 
-    private static final String RENAME_APPLICATION = "/ide/heroku/apps/rename";
+    private static final String RENAME_APPLICATION = HEROKU_BASE + "/apps/rename";
 
-    private static final String RUN = "/ide/heroku/apps/run";
+    private static final String RUN = HEROKU_BASE + "/apps/run";
 
-    private static final String ADD_KEY = "/ide/heroku/keys/add";
+    private static final String ADD_KEY = HEROKU_BASE + "/keys/add";
 
-    private static final String CLEAR_KEYS = "/ide/heroku/keys/clear";
+    private static final String CLEAR_KEYS = HEROKU_BASE + "/keys/clear";
 
-    private static final String APPLICATION_INFO = "/ide/heroku/apps/info";
+    private static final String APPLICATION_INFO = HEROKU_BASE + "/apps/info";
 
-    private static final String LIST_APPLICATIONS = "/ide/heroku/apps";
+    private static final String LIST_APPLICATIONS = HEROKU_BASE + "/apps";
 
-    private static final String GET_STACKS = "/ide/heroku/apps/stack";
+    private static final String GET_STACKS = HEROKU_BASE + "/apps/stack";
 
-    private static final String STACK_MIGRATE = "/ide/heroku/apps/stack-migrate";
+    private static final String STACK_MIGRATE = HEROKU_BASE + "/apps/stack-migrate";
 
     /** REST service context. */
     private String restServiceContext;
@@ -85,9 +89,9 @@ public class HerokuClientServiceImpl extends HerokuClientService {
      * @param wsMessageBus
      *         {@link MessageBus} to send messages over WebSocket
      */
-    public HerokuClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus) {
+    public HerokuClientServiceImpl(Loader loader, MessageBus wsMessageBus) {
         this.loader = loader;
-        this.restServiceContext = restContext;
+        this.restServiceContext = Utils.getRestContext();
         this.wsMessageBus = wsMessageBus;
     }
 

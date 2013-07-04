@@ -117,4 +117,10 @@ public final class ClientStringMap<T> implements JsonStringMap<T> {
         }
         return result;
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public JsonArray<T> getValues() {
+        return delegate.getValues();
+    }
 }

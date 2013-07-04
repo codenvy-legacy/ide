@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.appfog.client.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.appfog.client.AppfogClientBundle;
 import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
@@ -27,6 +28,7 @@ import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@RolesAllowed({"developer"})
 public class AppfogControlGroup extends SimpleControl implements IDEControl {
 
     private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.appfogControlId();

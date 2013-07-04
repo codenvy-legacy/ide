@@ -21,8 +21,8 @@ package org.exoplatform.ide.vfs.impl.fs;
 import junit.framework.TestCase;
 
 import com.codenvy.commons.env.EnvironmentContext;
-import com.codenvy.ide.commons.server.FileUtils;
-import com.codenvy.ide.commons.server.NameGenerator;
+import static com.codenvy.commons.lang.IoUtil.*;
+import static com.codenvy.commons.lang.NameGenerator.*;
 
 import org.apache.commons.codec.binary.Base64;
 import org.everrest.core.RequestHandler;
@@ -113,7 +113,7 @@ public abstract class LocalFileSystemTest extends TestCase {
     };
 
     protected final String BASE_URI              = "http://localhost/service";
-    protected final String SERVICE_URI           = BASE_URI + "/ide/vfs/v2/";
+    protected final String SERVICE_URI           = BASE_URI + "/my-ws/vfs/v2/";
     protected final String DEFAULT_CONTENT       = "__TEST__";
     protected final byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
 
@@ -161,12 +161,15 @@ public abstract class LocalFileSystemTest extends TestCase {
         deployer.publish(new VirtualFileSystemApplication());
 
         // RUNTIME VARIABLES
-        ConversationState user = new ConversationState(new Identity("admin"));
+        Identity identity = new Identity("admin");
+        identity.setRoles(Arrays.asList("developer"));
+        ConversationState user = new ConversationState(identity);
         ConversationState.setCurrent(user);
 
         EnvironmentContext env = EnvironmentContext.getCurrent();
         env.setVariable(EnvironmentContext.VFS_ROOT_DIR, root);
         env.setVariable(EnvironmentContext.WORKSPACE_ID, MY_WORKSPACE_ID);
+        env.setVariable(EnvironmentContext.WORKSPACE_NAME, MY_WORKSPACE_ID);
     }
 
     // Directory "fs-root" in "target" folder of maven project.
@@ -187,7 +190,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         //assertTrue("Unable unmount local filesystem. ", provider.umount(testFsIoRoot));
         virtualFileSystemRegistry.unregisterProvider(MY_WORKSPACE_ID);
         assertFalse("Unable unmount local filesystem. ", provider.isMounted());
-        if (!FileUtils.deleteRecursive(root)) {
+        if (!deleteRecursive(root)) {
             fail("Unable clean test content. ");
         }
         super.tearDown();
@@ -248,7 +251,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         }
         int num = 0;
         for (int i = 0; i < numberItemsEachLevel; i++, num++) {
-            String newName = NameGenerator.generate(null, 8);
+            String newName = generate(null, 8);
             String newPath = parent + '/' + newName;
             java.io.File f = getIoFile(newPath);
 

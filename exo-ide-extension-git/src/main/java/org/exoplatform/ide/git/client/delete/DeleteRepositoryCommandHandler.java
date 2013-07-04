@@ -31,13 +31,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.ItemWrapper;
-import org.exoplatform.ide.vfs.shared.Item;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Delete repository command handler, performs deleting Git repository.

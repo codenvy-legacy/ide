@@ -35,7 +35,6 @@ import org.exoplatform.ide.client.framework.navigation.event.GoToItemEvent;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"developer"})
 public class GoToFolderControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
                                                                 VfsChangedHandler {
 

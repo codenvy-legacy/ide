@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -46,6 +47,7 @@ import java.util.List;
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: UpdateAppControl.java Oct 30, 2012 2:53:32 PM azatsarynnyy $
  */
+@RolesAllowed("developer")
 public class UpdateAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
                                                    AppStartedHandler, AppStoppedHandler, DebuggerActivityHandler {
     public static final String  ID     = DebuggerExtension.LOCALIZATION_CONSTANT.updateAppControlId();

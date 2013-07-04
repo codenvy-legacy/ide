@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.security.openid;
 
-import com.codenvy.ide.commons.server.NameGenerator;
+import com.codenvy.commons.lang.NameGenerator;
 
 import org.exoplatform.ide.security.login.FederatedLoginList;
 import org.exoplatform.ide.security.openid.extensions.UIExtension;
@@ -50,7 +50,7 @@ import java.util.Map;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/openid")
+@Path("{ws-name}/openid")
 public class OpenIDAuthenticationService {
     private static final Log LOG = ExoLogger.getLogger(OpenIDAuthenticationService.class);
 

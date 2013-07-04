@@ -43,7 +43,7 @@ import java.util.Map;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: BeanstalkService.java Aug 23, 2012
  */
-@Path("ide/aws/beanstalk")
+@Path("{ws-name}/aws/beanstalk")
 public class BeanstalkService {
     private static final Log LOG = ExoLogger.getLogger(BeanstalkService.class);
 

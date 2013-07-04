@@ -38,10 +38,10 @@ import java.util.concurrent.atomic.AtomicReference;
 public class LocalFileSystemProvider implements VirtualFileSystemProvider {
     private static final Log LOG = ExoLogger.getLogger(LocalFileSystemProvider.class);
 
-    private final String                      workspaceId;
-    private final LocalFSMountStrategy        mountStrategy;
-    private final SearcherProvider            searcherProvider;
-    private final AtomicReference<MountPoint> mountRef;
+    private final String               workspaceId;
+    private final LocalFSMountStrategy mountStrategy;
+    private final SearcherProvider     searcherProvider;
+    private final MountPointRef        mountRef;
 
     /**
      * @param vfsId
@@ -67,7 +67,7 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider {
         this.workspaceId = workspaceId;
         this.mountStrategy = mountStrategy;
         this.searcherProvider = searcherProvider;
-        this.mountRef = new AtomicReference<MountPoint>();
+        this.mountRef = new MountPointRef();
     }
 
     /**
@@ -89,7 +89,7 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider {
                 throw new VirtualFileSystemException(String.format("Virtual filesystem '%s' is not available. ", workspaceId));
             }
             MountPoint newMount = new MountPoint(workspaceMountPoint, searcherProvider);
-            if (mountRef.compareAndSet(null, newMount)) {
+            if (mountRef.maybeSet(newMount)) {
                 if (!(workspaceMountPoint.exists() || workspaceMountPoint.mkdirs())) {
                     LOG.error("Unable create directory {}", workspaceMountPoint);
                     // critical error cannot continue
@@ -107,7 +107,7 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider {
 
     @Override
     public void close() {
-        final MountPoint mount = mountRef.getAndSet(null);
+        final MountPoint mount = mountRef.remove();
         if (mount != null) {
             mount.reset();
             if (searcherProvider != null) {
@@ -133,7 +133,7 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider {
      * @see org.exoplatform.ide.vfs.server.VirtualFileSystem
      */
     public void mount(java.io.File ioFile) throws VirtualFileSystemException {
-        if (!mountRef.compareAndSet(null, new MountPoint(ioFile, searcherProvider))) {
+        if (!mountRef.maybeSet(new MountPoint(ioFile, searcherProvider))) {
             throw new VirtualFileSystemException(String.format("Local filesystem '%s' already mounted. ", ioFile));
         }
     }
@@ -148,5 +148,33 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider {
             throw new VirtualFileSystemException(String.format("Virtual filesystem '%s' is not mounted yet. ", workspaceId));
         }
         return mount;
+    }
+
+    private static class MountPointRef {
+        final AtomicReference<MountPoint> ref;
+
+        private MountPointRef() {
+            ref = new AtomicReference<MountPoint>();
+        }
+
+        boolean maybeSet(MountPoint mountPoint) {
+            final boolean res = ref.compareAndSet(null, mountPoint);
+            if (res) {
+                MountPointCacheCleaner.add(mountPoint);
+            }
+            return res;
+        }
+
+        MountPoint get() {
+            return ref.get();
+        }
+
+        MountPoint remove() {
+            final MountPoint mountPoint = ref.getAndSet(null);
+            if (mountPoint != null) {
+                MountPointCacheCleaner.remove(mountPoint);
+            }
+            return mountPoint;
+        }
     }
 }

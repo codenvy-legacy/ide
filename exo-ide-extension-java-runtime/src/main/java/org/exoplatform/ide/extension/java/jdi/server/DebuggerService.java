@@ -32,7 +32,7 @@ import javax.ws.rs.core.MediaType;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/java/debug")
+@Path("{ws-name}/java/debug")
 public class DebuggerService {
     @GET
     @Path("connect")

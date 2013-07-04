@@ -37,7 +37,6 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: ${date} ${time}
  */
-@RolesAllowed({"developer"})
 public class FindTextControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
                                                               ViewOpenedHandler, ViewClosedHandler {
     // public static final String ID = "Edit/Find&#47Replace...";

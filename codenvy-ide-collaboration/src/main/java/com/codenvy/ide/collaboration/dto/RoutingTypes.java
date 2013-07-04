@@ -54,4 +54,6 @@ public class RoutingTypes {
 
     public static final int CHAT_PARTISIPANT_REMOVE = 12;
 
+    public static final int PROJECT_OPERATION_NOTIFICATION = 14;
+
 }

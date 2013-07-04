@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.logreader.client.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.logreader.client.LogReaderClientBundle;
 import org.exoplatform.ide.extension.logreader.client.event.ShowLogReaderEvent;
@@ -29,6 +30,7 @@ import org.exoplatform.ide.extension.logreader.client.event.ShowLogReaderEvent;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  */
+@RolesAllowed("developer")
 public class LogReaderControl extends SimpleControl implements IDEControl {
     /** Control ID. */
     public static final String ID = "View/Log";

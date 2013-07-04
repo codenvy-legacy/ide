@@ -30,8 +30,6 @@ import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.Utils;
@@ -47,7 +45,7 @@ import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 18, 2012 12:19:01 PM anya $
  */
-public class LoginPresenter implements LoginHandler, ViewClosedHandler, OAuthLoginFinishedHandler {
+public class LoginPresenter implements LoginHandler, ViewClosedHandler, JsPopUpOAuthWindow.JsPopUpOAuthWindowCallback {
     interface Display extends IsView {
         /**
          * Get Go button click handler.
@@ -88,22 +86,20 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, OAuthLog
      */
     @Override
     public void onLogin(LoginEvent event) {
-        IDE.addHandler(OAuthLoginFinishedEvent.TYPE, this);
-        String authUrl = Utils.getAuthorizationContext()
+        String authUrl = Utils.getAuthorizationContext()                        
                          + "/ide/oauth/authenticate?oauth_provider=google"
                          + "&scope=https://www.googleapis.com/auth/appengine.admin"
-                         + "&userId=" + IDE.userId + "&redirect_after_login="
-                         + Utils.getAuthorizationPageURL();
-        JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 450, 500);
+                         + "&userId=" + IDE.user.getName() + "&redirect_after_login=/w/" + Utils.getWorkspaceName();
+                         
+        JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 450, 500, this);
         authWindow.loginWithOAuth();
     }
 
     @Override
-    public void onOAuthLoginFinished(OAuthLoginFinishedEvent event) {
-        if (event.getStatus() == 2) {
+    public void oAuthFinished(int authenticationStatus) {
+        if (authenticationStatus == 2) {
             IDE.fireEvent(new SetLoggedUserStateEvent(true));
         }
-        IDE.removeHandler(OAuthLoginFinishedEvent.TYPE, this);
     }
 
     private void doLogin() {
@@ -129,8 +125,9 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, OAuthLog
                                                                      new GoogleAppEngineAsyncRequestCallback<GaeUser>(unmarshaller) {
                                                                          @Override
                                                                          protected void onSuccess(GaeUser result) {
-                                                                             boolean isLogged = GaeTools.isAuthenticatedInAppEngine(result.getToken());
-                                                                            IDE.fireEvent(new SetLoggedUserStateEvent(isLogged));
+                                                                             boolean isLogged =
+                                                                                                GaeTools.isAuthenticatedInAppEngine(result.getToken());
+                                                                             IDE.fireEvent(new SetLoggedUserStateEvent(isLogged));
                                                                              if (!isLogged) {
                                                                                  if (display != null) {
                                                                                      IDE.getInstance().closeView(display.asView().getId());

@@ -21,6 +21,7 @@ package com.codenvy.ide.everrest;
 import com.codenvy.commons.env.EnvironmentContext;
 
 import org.everrest.core.impl.EverrestConfiguration;
+import org.everrest.core.impl.async.AsynchronousJob;
 import org.everrest.core.impl.async.AsynchronousJobPool;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -28,6 +29,7 @@ import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityConstants;
 
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 import java.lang.reflect.Method;
@@ -62,10 +64,15 @@ public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements C
         }
     }
 
-    /**
-     * @see org.everrest.core.impl.async.AsynchronousJobPool#newCallable(java.lang.Object, java.lang.reflect.Method,
-     *      java.lang.Object[])
-     */
+    @Override
+    protected void initAsynchronousJobContext(AsynchronousJob job) {
+        final String internalJobUri =
+                UriBuilder.fromPath("/")
+                          .path(CodenvyAsynchronousJobService.class, "get")
+                          .build(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME), job.getJobId()).toString();
+        job.getContext().put("internal-uri", internalJobUri);
+    }
+
     @Override
     protected Callable<Object> newCallable(Object resource, Method method, Object[] params) {
         return new CallableWrapper(super.newCallable(resource, method, params));

@@ -26,7 +26,6 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.framework.ui.api.Panel;
 import org.exoplatform.ide.client.framework.ui.api.Perspective;
 import org.exoplatform.ide.client.menu.Menu;
@@ -77,8 +76,8 @@ public class IDEForm extends DockLayoutPanel implements IDEPresenter.Display {
     private void createStatusbar() {
         statusbar = new Toolbar("exoIDEStatusbar");
         statusbar.setHeight("30px");
-        String background =
-                UIHelper.getGadgetImagesURL() + "../eXoStyle/skin/default/images/component/toolbar/statusbar_Background.png";
+        String background = Toolbar.RESOURCES.statusbarBackground().getSafeUri().asString();
+
         statusbar.setBackgroundImage(background);
         statusbar.setItemsTopPadding(3);
         addSouth(statusbar, 30);
@@ -125,8 +124,10 @@ public class IDEForm extends DockLayoutPanel implements IDEPresenter.Display {
         return statusbar;
     }
 
-    /** @see org.exoplatform.ide.client.application.IDEPresenter.Display#setContextMenuHandler(com.google.gwt.event.dom.client
-     * .ContextMenuHandler) */
+    /**
+     * @see org.exoplatform.ide.client.application.IDEPresenter.Display#setContextMenuHandler(com.google.gwt.event.dom.client
+     *      .ContextMenuHandler)
+     */
     @Override
     public void setContextMenuHandler(ContextMenuHandler handler) {
         RootLayoutPanel.get().addDomHandler(handler, ContextMenuEvent.getType());

@@ -65,8 +65,8 @@
                 class="org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display"/>
     </replace-with>
 
-    <replace-with class="org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginView">
-        <when-type-is class="org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginPresenter.Display"/>
+    <replace-with class="org.exoplatform.ide.extension.samples.client.oauth.GithubLoginView">
+        <when-type-is class="org.exoplatform.ide.extension.samples.client.oauth.GithubLoginPresenter.Display"/>
     </replace-with>
 
     <replace-with class="org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubDevelopersView">
@@ -90,4 +90,5 @@
     <replace-with class="org.exoplatform.ide.extension.samples.client.github.ssh.GenerateGitHubSshKeyView">
         <when-type-is class="org.exoplatform.ide.extension.samples.client.github.ssh.GenerateGitHubSshKeyPresenter.Display" />
     </replace-with>
+
 </module>

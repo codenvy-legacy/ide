@@ -22,6 +22,7 @@ import com.codenvy.ide.collaboration.dto.ChatMessage;
 import com.codenvy.ide.collaboration.dto.GetChatParticipants;
 import com.codenvy.ide.collaboration.dto.GetChatParticipantsResponse;
 
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.FrontendApi;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 
@@ -31,10 +32,10 @@ import org.exoplatform.ide.client.framework.websocket.MessageBus;
  */
 public class ChatApi extends FrontendApi {
 
-    public SendApi<ChatMessage> SEND_MESSAGE = makeApi("ide/collaboration/chat/send/message");
+    public SendApi<ChatMessage> SEND_MESSAGE = makeApi(Utils.getWorkspaceName() + "/collaboration/chat/send/message");
 
     public RequestResponseApi<GetChatParticipants, GetChatParticipantsResponse> GET_CHAT_PARTISIPANTS =
-            makeApi("ide/collaboration/chat/participants");
+            makeApi(Utils.getWorkspaceName() + "/collaboration/chat/participants");
 
     public ChatApi(MessageBus messageBus) {
         super(messageBus);

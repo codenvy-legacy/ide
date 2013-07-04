@@ -42,7 +42,7 @@ import java.util.Iterator;
  * @author <a href="work.visor.ck@gmail.com">Dmytro Katayev</a> ${date}
  */
 
-@Path("/ide/loopbackcontent")
+@Path("{ws-name}/loopbackcontent")
 public class LoopbackContentService {
 
     private static Log log = ExoLogger.getLogger(LoopbackContentService.class);

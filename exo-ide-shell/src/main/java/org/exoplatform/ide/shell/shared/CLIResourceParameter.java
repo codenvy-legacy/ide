@@ -59,6 +59,19 @@ public class CLIResourceParameter {
         this.mandatory = mandatory;
         this.hasArg = hasArg;
     }
+    
+    
+    /**
+     * Copy constructor
+     * 
+     * @param crp
+     */
+    public CLIResourceParameter(CLIResourceParameter crp) {
+        this(crp.getName(), //
+                                crp.getOptions() != null ? new HashSet<String>(crp.getOptions()) : new HashSet<String>(),//
+                                 crp.getType(), crp.mandatory, crp.hasArg);
+    }
+
 
     public CLIResourceParameter() {
     }

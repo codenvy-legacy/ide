@@ -330,9 +330,9 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
         try {
             final List<Property> properties = new ArrayList<Property>();
             properties.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+            properties.add(new PropertyImpl("vfs:projectType", projectType.value()));
             properties.add(new PropertyImpl("openshift-express-application", display.getApplicationNameField().getValue()));
             item.getProperties().addAll(properties);
-
             VirtualFileSystem.getInstance().updateItem(item,
                                                        null,
                                                        new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {

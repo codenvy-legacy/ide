@@ -1,0 +1,27 @@
+@sprite .exoPopupButtonPanel,
+.exoPopupButtonPanelOver,
+.exoPopupButtonPanelDown {
+    height: 24px;
+    width: 38px;
+    overflow: hidden;
+    gwt-image: 'popup';
+}
+
+.exoPopupButtonPanel {
+    background-position: 0px 0px;
+}
+
+.exoPopupButtonPanelOver {
+    background-position: 0px -24px;
+}
+
+.exoPopupButtonPanelDown {
+    background-position: 0px -48px;
+}
+
+.exoPopupButtonIcon {
+    width: 16px;
+    height: 16px;
+    margin-left: 4px;
+    margin-top: 4px;
+}

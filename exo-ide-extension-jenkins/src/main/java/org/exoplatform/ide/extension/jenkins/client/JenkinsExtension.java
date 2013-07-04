@@ -57,7 +57,7 @@ public class JenkinsExtension extends Extension implements InitializeServicesHan
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
         new BuildApplicationPresenter();
-        new JenkinsService(event.getApplicationConfiguration().getContext(), event.getLoader());
+        new JenkinsService(event.getLoader());
     }
 
 }

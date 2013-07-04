@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.openshift.client.controls;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.create.CreateApplicationEvent;
@@ -28,6 +29,7 @@ import org.exoplatform.ide.extension.openshift.client.create.CreateApplicationEv
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 7, 2011 5:35:09 PM anya $
  */
+@RolesAllowed("developer")
 public class CreateApplicationControl extends AbstractOpenShiftControl {
 
     public CreateApplicationControl() {

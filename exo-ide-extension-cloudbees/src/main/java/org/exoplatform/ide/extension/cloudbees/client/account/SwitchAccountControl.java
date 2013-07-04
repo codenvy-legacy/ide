@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.cloudbees.client.account;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -33,6 +34,7 @@ import org.exoplatform.ide.extension.cloudbees.client.login.LoginEvent;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 5, 2012 5:02:29 PM anya $
  */
+@RolesAllowed({"developer"})
 public class SwitchAccountControl extends SimpleControl implements IDEControl, VfsChangedHandler {
     private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.controlSwitchAccountId();
 

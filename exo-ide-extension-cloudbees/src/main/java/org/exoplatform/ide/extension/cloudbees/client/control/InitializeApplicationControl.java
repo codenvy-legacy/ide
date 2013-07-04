@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.cloudbees.client.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -38,6 +39,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: InitializeApplicationControl.java Jun 23, 2011 12:00:53 PM vereshchaka $
  */
+@RolesAllowed("developer")
 public class InitializeApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler,
                                                                PropertiesChangedHandler {
 

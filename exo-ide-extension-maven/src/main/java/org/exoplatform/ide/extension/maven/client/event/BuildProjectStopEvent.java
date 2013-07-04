@@ -37,7 +37,7 @@ public class BuildProjectStopEvent extends GwtEvent<BuildProjectStopHandler> {
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
-    public com.google.gwt.event.shared.GwtEvent.Type<BuildProjectStopHandler> getAssociatedType() {
+    public GwtEvent.Type<BuildProjectStopHandler> getAssociatedType() {
         return TYPE;
     }
 

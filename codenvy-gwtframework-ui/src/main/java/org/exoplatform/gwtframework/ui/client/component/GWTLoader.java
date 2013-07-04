@@ -28,7 +28,6 @@ import com.google.gwt.user.client.ui.PopupPanel;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.ui.client.GwtResources;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 
 /**
  * Created by The eXo Platform SAS .
@@ -39,14 +38,6 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 
 public class GWTLoader extends Loader {
     private static final String LOADER_ID = "GWTLoaderId";
-
-    public static final String LOADER_BACKGROUND = "loader/loader-background.png";
-
-    public static final String LOADER_BACKIMAGE = "loader/loader-background-element.png";
-
-    //public static final String LOADER_PROGRESSIMAGE = "loader/ajax-loader.gif";
-
-    public static final String LOADER_PROGRESSIMAGE = "loader/ajax-loader-new.gif";
 
     private PopupPanel loader;
 
@@ -62,11 +53,10 @@ public class GWTLoader extends Loader {
         String loadingMessage = getMessage();
         loaderContent = new FlowPanel();
         loaderContent.getElement().setId(LOADER_ID);
-        DOM.setStyleAttribute(loaderContent.getElement(), "backgroundImage", "url(" + UIHelper.getGadgetImagesURL()
-                                                                             + LOADER_BACKIMAGE + ")");
+
         loaderContent.setStyleName(GwtResources.INSTANCE.css().loaderCenteredContent());
 
-        Image image = new Image(UIHelper.getGadgetImagesURL() + LOADER_PROGRESSIMAGE);
+        Image image = new Image(GwtResources.INSTANCE.loader());
         image.setStyleName(GwtResources.INSTANCE.css().loaderImage());
 
         messageElement = DOM.createSpan();

@@ -20,6 +20,7 @@ package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
 import org.eclipse.jdt.client.event.AddGetterSetterEvent;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
@@ -27,6 +28,7 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
+@RolesAllowed("developer")
 public class AddGetterSetterControl extends JavaControl {
 
     /** @param id */

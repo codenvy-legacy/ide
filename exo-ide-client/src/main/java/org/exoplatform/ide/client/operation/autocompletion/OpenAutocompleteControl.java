@@ -22,6 +22,7 @@ package org.exoplatform.ide.client.operation.autocompletion;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
@@ -31,6 +32,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @version $
  */
 
+@RolesAllowed({"developer"})
 public class OpenAutocompleteControl extends SimpleControl implements IDEControl {
 
     public static final String ID = "Edit/Do Autocomplete...";

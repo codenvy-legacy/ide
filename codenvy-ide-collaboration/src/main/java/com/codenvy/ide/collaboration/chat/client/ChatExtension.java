@@ -170,16 +170,16 @@ public class ChatExtension extends Extension
         createPresenter();
     }
 
-//    public JsonArray<Participant> getCurrentProjectParticipants() {
-//        if (chatPresenter == null) {
-//            return JsonCollections.createArray();
-//        }
-//        
-//        return chatPresenter.getParticipants().getValues();
-//    }
+    public JsonArray<Participant> getCurrentProjectParticipants() {
+        if (chatPresenter == null) {
+            return JsonCollections.createArray();
+        }
+        
+        return chatPresenter.getParticipants().getValues();
+    }
 
-//    public ListenerManager<ProjectUsersListener> getProjectUserListeners() {
-//        return chatPresenter.getProjectUsersListeners();
-//    }
+    public ListenerManager<ProjectUsersListener> getProjectUserListeners() {
+        return chatPresenter.getProjectUsersListeners();
+    }
 
 }

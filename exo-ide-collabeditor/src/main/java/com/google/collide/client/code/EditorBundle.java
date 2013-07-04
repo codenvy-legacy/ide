@@ -138,7 +138,7 @@ public class EditorBundle implements Content {
     private       RootActionExecutor.Remover languageActionsRemover;
     private       RootActionExecutor.Remover textActionsRemover;
     private final Css                        editorCss;
-    private final boolean isReadOnly = false;
+    private boolean isReadOnly = false;
 
     private EditorBundle(DocumentManager documentManager,
                          Editor editor,
@@ -182,7 +182,11 @@ public class EditorBundle implements Content {
         return isReadOnly;
     }
 
-//  public WorkspaceLocationBreadcrumbs getBreadcrumbs() {
+    public void setReadOnly(boolean readOnly) {
+        isReadOnly = readOnly;
+    }
+
+    //  public WorkspaceLocationBreadcrumbs getBreadcrumbs() {
 //    return breadcrumbs;
 //  }
 //

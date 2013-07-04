@@ -1,58 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    <ui:style type='org.exoplatform.gwtframework.ui.client.tab.TabButton.Style'>
-
-        .controlPanel {
-            width: 22px;
-            height: 24px;
-            float: left;
-            overflow: hidden;
-
-            border-bottom: 1px solid #C0C3C7 !important;
-            -moz-box-sizing: border-box !important;
-            box-sizing: border-box !important;
-        }
-
-        .controlTable {
-            width: 22px;
-            height: 24px;
-            border-collapse: collapse;
-        }
-
-        .controlCell {
-            width: 22px;
-            height: 24px;
-            /*
-            border-bottom: 1px solid #C0C3C7 !important;
-            */
-        }
-
-        .button {
-            width: 20px;
-            height: 20px;
-            margin-left: 1px;
-            overflow: hidden;
-            background: url("ui/tab/tab-button-background2.png") no-repeat;
-        }
-
-        .buttonOver {
-            background-position: 0px -20px;
-        }
-
-        .buttonDown {
-            background-position: 0px -40px;
-        }
-
-        .iconPanel {
-            width: 16px;
-            height: 16px;
-            margin: 2px;
-            overflow: hidden;
-        }
-
-    </ui:style>
-
+    <ui:with type='org.exoplatform.gwtframework.ui.client.tab.TabButton.Style' field="style"/>
     <g:HTML styleName="{style.controlPanel}" ui:field="controlPanel">
 
         <table class="{style.controlTable}" border="0" cellpadding="0" cellspacing="0">

@@ -77,4 +77,5 @@ public class RubyOutlineItemCreator extends OutlineItemCreatorImpl {
 
         return label;
     }
+
 }
