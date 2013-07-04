@@ -35,6 +35,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter for controlling EC2 instances.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -47,6 +49,16 @@ public class EC2ManagerPresenter implements EC2ManagerView.ActionDelegate {
     private EC2ClientService        service;
     private LoginPresenter          loginPresenter;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param console
+     * @param eventBus
+     * @param constant
+     * @param service
+     * @param loginPresenter
+     */
     @Inject
     protected EC2ManagerPresenter(EC2ManagerView view, ConsolePart console, EventBus eventBus, AWSLocalizationConstant constant,
                                   EC2ClientService service, LoginPresenter loginPresenter) {
@@ -60,6 +72,7 @@ public class EC2ManagerPresenter implements EC2ManagerView.ActionDelegate {
         this.view.setDelegate(this);
     }
 
+    /** Show main dialog window. */
     public void showDialog() {
         if (!view.isShown()) {
             view.showDialog();
@@ -68,6 +81,7 @@ public class EC2ManagerPresenter implements EC2ManagerView.ActionDelegate {
         }
     }
 
+    /** Get list of all instances. */
     private void getInstanceInfo() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -100,6 +114,7 @@ public class EC2ManagerPresenter implements EC2ManagerView.ActionDelegate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onTerminateClicked(final InstanceInfo instanceInfo) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -134,6 +149,7 @@ public class EC2ManagerPresenter implements EC2ManagerView.ActionDelegate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onRebootClicked(final InstanceInfo instanceInfo) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -167,6 +183,7 @@ public class EC2ManagerPresenter implements EC2ManagerView.ActionDelegate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onStartClicked(final InstanceInfo instanceInfo) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -200,6 +217,7 @@ public class EC2ManagerPresenter implements EC2ManagerView.ActionDelegate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onStopClicked(final InstanceInfo instanceInfo) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -236,6 +254,7 @@ public class EC2ManagerPresenter implements EC2ManagerView.ActionDelegate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCloseClicked() {
         view.close();

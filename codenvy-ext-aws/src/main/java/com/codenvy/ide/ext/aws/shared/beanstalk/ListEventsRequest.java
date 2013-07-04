@@ -68,8 +68,18 @@ public interface ListEventsRequest {
      */
     String getNextToken();
 
+    /**
+     * The start date from which we should take events list.
+     *
+     * @return The start date for getting events.
+     */
     double getStartTime();
 
+    /**
+     * The end date to which we should take events list.
+     *
+     * @return The end date for getting events.
+     */
     double getEndTime();
 
     /**

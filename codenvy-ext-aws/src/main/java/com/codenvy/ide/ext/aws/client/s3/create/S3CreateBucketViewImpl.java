@@ -35,6 +35,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link S3CreateBucketPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -64,6 +66,11 @@ public class S3CreateBucketViewImpl extends DialogBox implements S3CreateBucketV
 
     private boolean isShown;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected S3CreateBucketViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -74,26 +81,31 @@ public class S3CreateBucketViewImpl extends DialogBox implements S3CreateBucketV
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getBucketName() {
         return bucketNameField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setBucketName(String name) {
         bucketNameField.setText(name);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setCreateButtonEnable(boolean enable) {
         btnCreate.setEnabled(enable);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setFocusNameField() {
         bucketNameField.setFocus(true);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRegions(JsonArray<String> regions) {
         regionField.clear();
@@ -102,16 +114,19 @@ public class S3CreateBucketViewImpl extends DialogBox implements S3CreateBucketV
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getRegion() {
         return regionField.getValue(regionField.getSelectedIndex());
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -119,12 +134,14 @@ public class S3CreateBucketViewImpl extends DialogBox implements S3CreateBucketV
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

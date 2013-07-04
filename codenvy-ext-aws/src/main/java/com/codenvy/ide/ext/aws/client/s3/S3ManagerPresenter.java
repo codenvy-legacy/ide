@@ -47,6 +47,8 @@ import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter for managing S3 Buckets and Objects.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -64,6 +66,20 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
     private ResourceProvider        resourceProvider;
     private Project                 activeProject;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param console
+     * @param eventBus
+     * @param constant
+     * @param service
+     * @param loginPresenter
+     * @param restServiceContext
+     * @param s3CreateBucketPresenter
+     * @param s3UploadObjectPresenter
+     * @param resourceProvider
+     */
     @Inject
     protected S3ManagerPresenter(S3ManagerView view, ConsolePart console, EventBus eventBus, AWSLocalizationConstant constant,
                                  S3ClientService service, LoginPresenter loginPresenter, @Named("restContext") String restServiceContext,
@@ -84,6 +100,7 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
         this.view.setDelegate(this);
     }
 
+    /** Show main dialog window. */
     public void showDialog() {
         if (!view.isShown()) {
             if (resourceProvider.getActiveProject() != null) {
@@ -97,6 +114,7 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
         }
     }
 
+    /** Get Amazon S3 Buckets. */
     private void getBuckets() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -128,6 +146,7 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onDeleteObjectClicked(final String bucketId, final String objectId) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -156,6 +175,7 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onUploadObjectClicked(final String bucketId) {
         s3UploadObjectPresenter.showDialog(bucketId, new AsyncCallback<Boolean>() {
@@ -174,12 +194,14 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onDownloadObjectClicked(final String bucketId, final String objectId) {
-        String url = restServiceContext + "/" + resourceProvider.getVfsId() +  "/aws/s3/objects/" + bucketId + "?s3key=" + objectId;
+        String url = restServiceContext + "/" + resourceProvider.getVfsId() + "/aws/s3/objects/" + bucketId + "?s3key=" + objectId;
         Window.open(url, "", "");
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onUploadProjectClicked() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -210,6 +232,7 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onRefreshObjectsClicked(final String bucketId) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -241,6 +264,7 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onDeleteBucketClicked(final String bucketId) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -269,6 +293,7 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCreateBucketClicked() {
         s3CreateBucketPresenter.showDialog(new AsyncCallback<String>() {
@@ -286,6 +311,7 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCloseButtonClicked() {
         view.close();

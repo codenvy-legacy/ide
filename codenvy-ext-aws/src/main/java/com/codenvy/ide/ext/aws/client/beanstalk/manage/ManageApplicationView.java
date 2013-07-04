@@ -22,25 +22,58 @@ import com.codenvy.ide.api.mvp.View;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 /**
+ * The view for {@link ManageApplicationPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface ManageApplicationView extends View<ManageApplicationView.ActionDelegate> {
+    /** Interface which must implement presenter to process any actions. */
     interface ActionDelegate {
+        /** Perform action when close button clicked. */
         void onCloseButtonClicked();
     }
 
+    /**
+     * Adds main tab pain and return Simple panel to assign it into new presenter.
+     *
+     * @param tabText
+     *         tab title.
+     * @return SimplePanel object.
+     */
     AcceptsOneWidget addMainTabPain(String tabText);
 
+    /**
+     * Adds version tab pain and return Simple panel to assign it into new presenter.
+     *
+     * @param tabText
+     *         tab title.
+     * @return SimplePanel object.
+     */
     AcceptsOneWidget addVersionTabPain(String tabText);
 
+    /**
+     * Adds environment tab pain and return Simple panel to assign it into new presenter.
+     *
+     * @param tabText
+     *         tab title.
+     * @return SimplePanel object.
+     */
     AcceptsOneWidget addEnvironmentTabPain(String tabText);
 
+    /** Set focus in first tab. */
     void focusInFirstTab();
 
+    /**
+     * Return shown state for current window.
+     *
+     * @return true if shown, otherwise false.
+     */
     boolean isShown();
 
+    /** Shows current dialog. */
     void showDialog();
 
+    /** Close current dialog. */
     void close();
 }

@@ -21,33 +21,73 @@ package com.codenvy.ide.ext.aws.client.beanstalk.versions.create;
 import com.codenvy.ide.api.mvp.View;
 
 /**
+ * The view for {@link CreateVersionPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface CreateVersionView extends View<CreateVersionView.ActionDelegate> {
+    /** Interface which must implement presenter to process any actions. */
     interface ActionDelegate {
+        /** Perform action when create button clicked. */
         void onCreateButtonClicked();
 
+        /** Perform action when cancel button clicked. */
         void onCancelButtonClicked();
 
+        /** Perform action when version field changed. */
         void onVersionLabelKeyUp();
     }
 
+    /**
+     * Get version for new application.
+     *
+     * @return version label for new application.
+     */
     String getVersionLabel();
 
+    /**
+     * Get description for new application.
+     *
+     * @return description for new application.
+     */
     String getDescription();
 
+    /**
+     * Get S3 Bucket in which application will be created.
+     *
+     * @return S3 Bucket id.
+     */
     String getS3Bucket();
 
+    /**
+     * Get S3 Key in which application will be created.
+     *
+     * @return S3 Key id.
+     */
     String getS3Key();
 
+    /**
+     * Enable or disable create button.
+     *
+     * @param enable
+     *         true if enable.
+     */
     void enableCreateButton(boolean enable);
 
+    /** Set focus in version field. */
     void focusInVersionLabelField();
 
+    /**
+     * Return shown state for current window.
+     *
+     * @return true if shown, otherwise false.
+     */
     boolean isShown();
 
+    /** Shows current dialog. */
     void showDialog();
 
+    /** Close current dialog. */
     void close();
 }

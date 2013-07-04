@@ -35,6 +35,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter for creating S3 Buckets.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -48,6 +50,16 @@ public class S3CreateBucketPresenter implements S3CreateBucketView.ActionDelegat
     private LoginPresenter          loginPresenter;
     private AsyncCallback<String>   callback;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param console
+     * @param eventBus
+     * @param constant
+     * @param service
+     * @param loginPresenter
+     */
     @Inject
     protected S3CreateBucketPresenter(S3CreateBucketView view, ConsolePart console, EventBus eventBus, AWSLocalizationConstant constant,
                                       S3ClientService service, LoginPresenter loginPresenter) {
@@ -61,6 +73,7 @@ public class S3CreateBucketPresenter implements S3CreateBucketView.ActionDelegat
         this.view.setDelegate(this);
     }
 
+    /** Show main dialog window. */
     public void showDialog(AsyncCallback<String> callback) {
         this.callback = callback;
 
@@ -72,6 +85,7 @@ public class S3CreateBucketPresenter implements S3CreateBucketView.ActionDelegat
         }
     }
 
+    /** Set regions from enum into list box. */
     private void setRegions() {
         JsonArray<String> regions = JsonCollections.createArray();
         for (S3Region region : S3Region.values()) {
@@ -81,6 +95,7 @@ public class S3CreateBucketPresenter implements S3CreateBucketView.ActionDelegat
         view.setRegions(regions);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCreateButtonClicked() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -114,11 +129,13 @@ public class S3CreateBucketPresenter implements S3CreateBucketView.ActionDelegat
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCancelButtonCLicked() {
         view.close();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onNameFieldChanged() {
         view.setCreateButtonEnable(view.getBucketName() != null && !view.getBucketName().isEmpty());

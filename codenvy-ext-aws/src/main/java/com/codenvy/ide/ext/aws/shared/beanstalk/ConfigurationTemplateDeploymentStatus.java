@@ -19,6 +19,8 @@
 package com.codenvy.ide.ext.aws.shared.beanstalk;
 
 /**
+ * Configuration Deployment Status
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -38,6 +40,13 @@ public enum ConfigurationTemplateDeploymentStatus {
         return value;
     }
 
+    /**
+     * Use this in place of valueOf.
+     *
+     * @param value
+     *         real value
+     * @return ConfigurationTemplateDeploymentStatus corresponding to the value
+     */
     public static ConfigurationTemplateDeploymentStatus fromValue(String value) {
         for (ConfigurationTemplateDeploymentStatus v : ConfigurationTemplateDeploymentStatus.values()) {
             if (v.value.equals(value)) {

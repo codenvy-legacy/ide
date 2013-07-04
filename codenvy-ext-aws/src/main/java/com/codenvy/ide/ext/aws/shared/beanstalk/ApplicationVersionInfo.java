@@ -25,15 +25,45 @@ package com.codenvy.ide.ext.aws.shared.beanstalk;
  * @version $Id: $
  */
 public interface ApplicationVersionInfo {
+    /**
+     * The name of the application associated with this release.
+     *
+     * @return The name of the application associated with this release.
+     */
     String getApplicationName();
 
+    /**
+     * The description of this application version.
+     *
+     * @return The description of this application version.
+     */
     String getDescription();
 
+    /**
+     * A label uniquely identifying the version for the associated  application.
+     *
+     * @return A label uniquely identifying the version for the associated application.
+     */
     String getVersionLabel();
 
+    /**
+     * The location where the source bundle is located for this version.
+     *
+     * @return The location where the source bundle is located for this version.
+     */
     S3Item getS3Location();
 
+    /**
+     * The creation date of the application version.
+     *
+     * @return The creation date of the application version.
+     */
     double getCreated();
 
+    /**
+     * The last modified date of the application version.
+     *
+     * @return The last modified date of the application version.
+     */
     double getUpdated();
 }

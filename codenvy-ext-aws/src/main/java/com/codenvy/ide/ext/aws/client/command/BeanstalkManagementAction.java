@@ -27,6 +27,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Action to show Manage Application window.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -35,6 +37,13 @@ public class BeanstalkManagementAction extends Action {
     private ResourceProvider           resourceProvider;
     private ManageApplicationPresenter presenter;
 
+    /**
+     * Create action.
+     *
+     * @param resource
+     * @param resourceProvider
+     * @param presenter
+     */
     @Inject
     public BeanstalkManagementAction(AWSResource resource, ResourceProvider resourceProvider, ManageApplicationPresenter presenter) {
         super("Elastic Beanstalk Application...", "Manage Elastic Beanstalk application", resource.manageApplication());
@@ -42,11 +51,13 @@ public class BeanstalkManagementAction extends Action {
         this.presenter = presenter;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         presenter.showDialog();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
         e.getPresentation()

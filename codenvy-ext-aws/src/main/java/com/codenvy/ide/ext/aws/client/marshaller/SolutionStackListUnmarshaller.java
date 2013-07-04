@@ -29,17 +29,25 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 /**
+ * Unmarshaller for Solution stack list.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class SolutionStackListUnmarshaller implements Unmarshallable<JsonArray<SolutionStack>> {
     private JsonArray<SolutionStack> stackJsonArray;
 
+    /**
+     * Create unmarshaller.
+     *
+     * @param stackJsonArray
+     */
     public SolutionStackListUnmarshaller(
             JsonArray<SolutionStack> stackJsonArray) {
         this.stackJsonArray = stackJsonArray;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         String text = response.getText();
@@ -62,6 +70,7 @@ public class SolutionStackListUnmarshaller implements Unmarshallable<JsonArray<S
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public JsonArray<SolutionStack> getPayload() {
         return stackJsonArray;

@@ -27,16 +27,24 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 /**
+ * Unmarshaller for new S3 Object.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class NewS3ObjectUnmarshaller implements Unmarshallable<NewS3Object> {
     private DtoClientImpls.NewS3ObjectImpl newS3Object;
 
+    /**
+     * Create unmarshaller.
+     *
+     * @param newS3Object
+     */
     public NewS3ObjectUnmarshaller(DtoClientImpls.NewS3ObjectImpl newS3Object) {
         this.newS3Object = newS3Object;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         String text = response.getText();
@@ -57,6 +65,7 @@ public class NewS3ObjectUnmarshaller implements Unmarshallable<NewS3Object> {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public NewS3Object getPayload() {
         return newS3Object;

@@ -19,11 +19,25 @@
 package com.codenvy.ide.ext.aws.shared.beanstalk;
 
 /**
+ * A regular expression representing a restriction on a string configuration option value.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public interface ConfigurationOptionRestriction {
+    /**
+     * A unique name representing this regular expression.
+     *
+     * @return A unique name representing this regular expression.
+     */
     String getLabel();
 
+    /**
+     * The regular expression pattern that a string configuration option
+     * value with this restriction must match.
+     *
+     * @return The regular expression pattern that a string configuration option
+     *         value with this restriction must match.
+     */
     String getPattern();
 }

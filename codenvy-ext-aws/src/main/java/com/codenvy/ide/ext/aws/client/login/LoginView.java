@@ -21,6 +21,8 @@ package com.codenvy.ide.ext.aws.client.login;
 import com.codenvy.ide.api.mvp.View;
 
 /**
+ * The view for {@link LoginPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -37,19 +39,49 @@ public interface LoginView extends View<LoginView.ActionDelegate> {
         void onValueChanged();
     }
 
+    /**
+     * Get access key from user input.
+     *
+     * @return access key.
+     */
     String getAccessKey();
 
+    /**
+     * Get secret key from user input.
+     *
+     * @return secret key.
+     */
     String getSecretKey();
 
+    /**
+     * Set error message if login is failed.
+     *
+     * @param result
+     *         message with details.
+     */
     void setLoginResult(String result);
 
+    /** Focus into access key field. */
     void focusAccessKeyField();
 
+    /**
+     * Enable or disable login button.
+     *
+     * @param enable
+     *         true if enable.
+     */
     void enableLoginButton(boolean enable);
 
+    /**
+     * Return shown state for current window.
+     *
+     * @return true if shown, otherwise false.
+     */
     boolean isShown();
 
+    /** Shows current dialog. */
     void showDialog();
 
+    /** Close current dialog. */
     void close();
 }

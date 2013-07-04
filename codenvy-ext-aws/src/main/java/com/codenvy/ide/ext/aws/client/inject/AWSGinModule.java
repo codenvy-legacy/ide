@@ -73,6 +73,7 @@ import com.google.inject.Singleton;
  */
 @ExtensionGinModule
 public class AWSGinModule extends AbstractGinModule {
+    /** {@inheritDoc} */
     @Override
     protected void configure() {
         bind(BeanstalkClientService.class).to(BeanstalkClientServiceImpl.class).in(Singleton.class);
@@ -106,7 +107,5 @@ public class AWSGinModule extends AbstractGinModule {
         bind(MainTabPainView.class).to(MainTabPainViewImpl.class).in(Singleton.class);
         bind(VersionTabPainView.class).to(VersionTabPainViewImpl.class).in(Singleton.class);
         bind(EnvironmentTabPainView.class).to(EnvironmentTabPainViewImpl.class).in(Singleton.class);
-
-
     }
 }

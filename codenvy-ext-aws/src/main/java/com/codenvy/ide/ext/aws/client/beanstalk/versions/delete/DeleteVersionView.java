@@ -21,23 +21,46 @@ package com.codenvy.ide.ext.aws.client.beanstalk.versions.delete;
 import com.codenvy.ide.api.mvp.View;
 
 /**
+ * The view for {@link DeleteVersionView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface DeleteVersionView extends View<DeleteVersionView.ActionDelegate> {
+    /** Interface which must implement presenter to process any actions. */
     interface ActionDelegate {
+        /** Perform action when delete button clicked. */
         void onDeleteButtonCLicked();
 
+        /** Perform action when cancel button clicked. */
         void onCancelButtonClicked();
     }
 
+    /**
+     * Set delete question.
+     *
+     * @param question
+     *         delete question.
+     */
     void setDeleteQuestion(String question);
 
+    /**
+     * Include deletion of S3 Bundle.
+     *
+     * @return true if deletion of S3 Bundle is included.
+     */
     boolean getDeleteS3Bundle();
 
+    /**
+     * Return shown state for current window.
+     *
+     * @return true if shown, otherwise false.
+     */
     boolean isShown();
 
+    /** Shows current dialog. */
     void showDialog();
 
+    /** Close current dialog. */
     void close();
 }

@@ -37,6 +37,8 @@ import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter for uploading object into S3 Buckets.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -57,6 +59,19 @@ public class S3UploadObjectPresenter implements S3UploadObjectView.ActionDelegat
 
     private static final JsonStringMap<String> fileTypes = JsonCollections.createStringMap();
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param console
+     * @param eventBus
+     * @param constant
+     * @param service
+     * @param loginPresenter
+     * @param restContext
+     * @param loader
+     * @param resourceProvider
+     */
     @Inject
     protected S3UploadObjectPresenter(S3UploadObjectView view, ConsolePart console, EventBus eventBus, AWSLocalizationConstant constant,
                                       S3ClientService service, LoginPresenter loginPresenter, @Named("restContext") String restContext,
@@ -74,6 +89,7 @@ public class S3UploadObjectPresenter implements S3UploadObjectView.ActionDelegat
         this.view.setDelegate(this);
     }
 
+    /** Show main dialog window. */
     public void showDialog(String s3Bucket, AsyncCallback<Boolean> uploadCallback) {
         this.s3Bucket = s3Bucket;
         this.uploadCallback = uploadCallback;
@@ -84,6 +100,7 @@ public class S3UploadObjectPresenter implements S3UploadObjectView.ActionDelegat
         }
     }
 
+    /** Initialize upload form. */
     private void init() {
         fileTypes.put("txt", "text/plain");
         fileTypes.put("jpg", "image/jpeg");
@@ -115,6 +132,7 @@ public class S3UploadObjectPresenter implements S3UploadObjectView.ActionDelegat
 
     }
 
+    /** Handler for submitting files. */
     FormPanel.SubmitHandler submitHandler = new FormPanel.SubmitHandler() {
         @Override
         public void onSubmit(FormPanel.SubmitEvent event) {
@@ -126,6 +144,7 @@ public class S3UploadObjectPresenter implements S3UploadObjectView.ActionDelegat
         }
     };
 
+    /** Handler for successful submitting. */
     FormPanel.SubmitCompleteHandler submitCompleteHandler = new FormPanel.SubmitCompleteHandler() {
         @Override
         public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
@@ -140,6 +159,7 @@ public class S3UploadObjectPresenter implements S3UploadObjectView.ActionDelegat
         }
     };
 
+    /** Handler for file field changing. */
     ChangeHandler fileFieldChangeHandler = new ChangeHandler() {
         @Override
         public void onChange(ChangeEvent event) {
@@ -168,9 +188,10 @@ public class S3UploadObjectPresenter implements S3UploadObjectView.ActionDelegat
         }
     };
 
+    /** {@inheritDoc} */
     @Override
     public void onUploadButtonClicked() {
-        view.getUploadForm().setAction(restContext + "/" + resourceProvider.getVfsId() +"/aws/s3/objects/upload/" + s3Bucket);
+        view.getUploadForm().setAction(restContext + "/" + resourceProvider.getVfsId() + "/aws/s3/objects/upload/" + s3Bucket);
 
         view.setMimeTypeHiddenField(view.getMimeType());
         view.setNameHiddenField(fileName);
@@ -180,6 +201,7 @@ public class S3UploadObjectPresenter implements S3UploadObjectView.ActionDelegat
         view.getUploadForm().submit();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCloseButtonCLicked() {
         view.close();

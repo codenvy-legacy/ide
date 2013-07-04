@@ -19,13 +19,30 @@
 package com.codenvy.ide.ext.aws.shared.beanstalk;
 
 /**
+ * Describes the possible values for a configuration option.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public interface ConfigurationOption {
+    /**
+     * A unique namespace identifying the option's associated AWS resource.
+     *
+     * @return A unique namespace identifying the option's associated AWS resource.
+     */
     String getNamespace();
 
+    /**
+     * The name of the configuration option.
+     *
+     * @return The name of the configuration option.
+     */
     String getName();
 
+    /**
+     * The value for this configuration option.
+     *
+     * @return The value for this configuration option.
+     */
     String getValue();
 }

@@ -31,6 +31,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link LoginView}.
  *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
@@ -64,6 +65,11 @@ public class LoginViewImpl extends DialogBox implements LoginView {
 
     private boolean isShown;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected LoginViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -74,31 +80,37 @@ public class LoginViewImpl extends DialogBox implements LoginView {
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getAccessKey() {
         return accessKeyField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getSecretKey() {
         return secretKeyField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void focusAccessKeyField() {
         accessKeyField.setFocus(true);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void enableLoginButton(boolean enable) {
         btnLogin.setEnabled(enable);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -106,17 +118,20 @@ public class LoginViewImpl extends DialogBox implements LoginView {
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setLoginResult(String result) {
         loginResult.setText(result);
     }
 
+    /** {@inheritDoc} */
     /** Sets the delegate to receive events from this view. */
     @Override
     public void setDelegate(ActionDelegate delegate) {

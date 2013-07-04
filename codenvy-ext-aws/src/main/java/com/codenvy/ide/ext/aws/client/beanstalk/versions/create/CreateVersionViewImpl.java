@@ -33,12 +33,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link CreateVersionView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class CreateVersionViewImpl extends DialogBox implements CreateVersionView {
-    interface CreateVersionViewImplUiBinder extends UiBinder<Widget, CreateVersionViewImpl> {}
+    interface CreateVersionViewImplUiBinder extends UiBinder<Widget, CreateVersionViewImpl> {
+    }
 
     private static CreateVersionViewImplUiBinder uiBinder = GWT.create(CreateVersionViewImplUiBinder.class);
 
@@ -67,6 +70,11 @@ public class CreateVersionViewImpl extends DialogBox implements CreateVersionVie
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected CreateVersionViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -77,46 +85,55 @@ public class CreateVersionViewImpl extends DialogBox implements CreateVersionVie
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getVersionLabel() {
         return versionLabelField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return versionLabelField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getS3Bucket() {
         return s3BucketField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getS3Key() {
         return s3KeyField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void enableCreateButton(boolean enable) {
         createButton.setEnabled(enable);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void focusInVersionLabelField() {
         versionLabelField.setFocus(true);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isSHown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isSHown = true;
@@ -124,6 +141,7 @@ public class CreateVersionViewImpl extends DialogBox implements CreateVersionVie
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isSHown = false;

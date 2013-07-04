@@ -30,12 +30,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link MainTabPainView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class MainTabPainViewImpl extends Composite implements MainTabPainView {
-    interface MainTabPainViewImplUiBinder extends UiBinder<Widget, MainTabPainViewImpl> {}
+    interface MainTabPainViewImplUiBinder extends UiBinder<Widget, MainTabPainViewImpl> {
+    }
 
     private static MainTabPainViewImplUiBinder uiBinder = GWT.create(MainTabPainViewImplUiBinder.class);
 
@@ -68,6 +71,11 @@ public class MainTabPainViewImpl extends Composite implements MainTabPainView {
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected MainTabPainViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -77,29 +85,34 @@ public class MainTabPainViewImpl extends Composite implements MainTabPainView {
         initWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setApplicationName(String applicationName) {
         nameField.setText(applicationName);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDescription(String description) {
         descriptionField.setText(description);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setCreationDate(String date) {
         creationDateField.setText(date);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setUpdateDate(String date) {
         updatedDateField.setText(date);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
-       this.delegate = delegate;
+        this.delegate = delegate;
     }
 
     @UiHandler("editDescriptionButton")

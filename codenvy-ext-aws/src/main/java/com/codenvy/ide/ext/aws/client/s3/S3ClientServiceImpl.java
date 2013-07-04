@@ -37,6 +37,8 @@ import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Implementation for the {@link S3ClientService}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -56,6 +58,15 @@ public class S3ClientServiceImpl implements S3ClientService {
     private EventBus                eventBus;
     private AWSLocalizationConstant constant;
 
+    /**
+     * Create Aws S3 Client service.
+     *
+     * @param restContext
+     * @param loader
+     * @param wsMessageBus
+     * @param eventBus
+     * @param constant
+     */
     @Inject
     protected S3ClientServiceImpl(@Named("restContext") String restContext, Loader loader, MessageBus wsMessageBus,
                                   EventBus eventBus, AWSLocalizationConstant constant) {
@@ -66,12 +77,16 @@ public class S3ClientServiceImpl implements S3ClientService {
         this.constant = constant;
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void getBuckets(AwsAsyncRequestCallback<JsonArray<S3Bucket>> callback) throws RequestException {
         String url = restServiceContext + BUCKETS;
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
                     .send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void getS3ObjectsList(AwsAsyncRequestCallback<S3ObjectsList> callback, String s3Bucket, String nextMarker, int itemNums)
             throws RequestException {
         String url = restServiceContext + OBJECTS + s3Bucket + "?maxkeys=" + String.valueOf(itemNums);
@@ -82,6 +97,8 @@ public class S3ClientServiceImpl implements S3ClientService {
                     .send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void deleteObject(AwsAsyncRequestCallback<String> callback, String s3Bucket, String s3key)
             throws RequestException {
         String url = restServiceContext + OBJECT_DELETE + s3Bucket + "?s3key=" + s3key;
@@ -89,16 +106,22 @@ public class S3ClientServiceImpl implements S3ClientService {
 
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void deleteBucket(AwsAsyncRequestCallback<String> callback, String bucketId) throws RequestException {
         String url = restServiceContext + BUCKETS_DELETE + bucketId;
         AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void createBucket(AwsAsyncRequestCallback<String> callback, String name, String region) throws RequestException {
         String url = restServiceContext + BUCKETS_CREATE + "?name=" + name + "&region=" + region;
         AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void uploadProject(AwsAsyncRequestCallback<NewS3Object> callback, String s3Bucket, String s3key, String vfsid, String projectid)
             throws RequestException {
         String url = restServiceContext + PROJECT_UPLOAD + s3Bucket + "?s3key=" + s3key + "&vfsid=" + vfsid + "&projectid=" + projectid;

@@ -42,12 +42,15 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * The implementation of {@link VersionTabPainView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class VersionTabPainViewImpl extends Composite implements VersionTabPainView {
-    interface VersionTabPainViewImplUiBinder extends UiBinder<Widget, VersionTabPainViewImpl> {}
+    interface VersionTabPainViewImplUiBinder extends UiBinder<Widget, VersionTabPainViewImpl> {
+    }
 
     private static VersionTabPainViewImplUiBinder uiBinder = GWT.create(VersionTabPainViewImplUiBinder.class);
 
@@ -59,6 +62,11 @@ public class VersionTabPainViewImpl extends Composite implements VersionTabPainV
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected VersionTabPainViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -70,6 +78,7 @@ public class VersionTabPainViewImpl extends Composite implements VersionTabPainV
         initWidget(widget);
     }
 
+    /** Init version table. */
     private void initVersionTable() {
         versions.setWidth("100%", true);
         versions.setAutoHeaderRefreshDisabled(true);
@@ -153,11 +162,13 @@ public class VersionTabPainViewImpl extends Composite implements VersionTabPainV
         versions.addColumn(deleteButtonColumn, constant.deleteButton());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setVersions(List<ApplicationVersionInfo> versions) {
         this.versions.setRowData(versions);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

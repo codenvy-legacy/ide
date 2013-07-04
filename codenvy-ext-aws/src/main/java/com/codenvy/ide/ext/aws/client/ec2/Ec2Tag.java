@@ -19,6 +19,8 @@
 package com.codenvy.ide.ext.aws.client.ec2;
 
 /**
+ * Wrapper to store ec2 tags name and value.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */

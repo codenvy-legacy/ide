@@ -33,6 +33,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation for {@link DescriptionUpdateView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -59,6 +61,11 @@ public class DescriptionUpdateViewImpl extends DialogBox implements DescriptionU
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     public DescriptionUpdateViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -69,26 +76,31 @@ public class DescriptionUpdateViewImpl extends DialogBox implements DescriptionU
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getDescriptionValue() {
         return descriptionField.getValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void enableUpdateButton(boolean enable) {
         btnUpdate.setEnabled(enable);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void focusDescriptionField() {
         descriptionField.setFocus(true);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -96,12 +108,14 @@ public class DescriptionUpdateViewImpl extends DialogBox implements DescriptionU
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

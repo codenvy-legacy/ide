@@ -29,6 +29,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter to allow user login with credentials.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -42,6 +44,15 @@ public class LoginPresenter implements LoginView.ActionDelegate {
     private AWSLocalizationConstant constant;
     private BeanstalkClientService  service;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param console
+     * @param eventBus
+     * @param constant
+     * @param service
+     */
     @Inject
     protected LoginPresenter(LoginView view, ConsolePart console, EventBus eventBus, AWSLocalizationConstant constant,
                              BeanstalkClientService service) {
@@ -54,10 +65,12 @@ public class LoginPresenter implements LoginView.ActionDelegate {
         this.view.setDelegate(this);
     }
 
+    /** Show main dialog window. */
     public void showDialog() {
         showDialog(null, null);
     }
 
+    /** Show main dialog window. */
     public void showDialog(LoggedInHandler loggedInHandler, LoginCanceledHandler loginCanceledHandler) {
         this.loggedInHandler = loggedInHandler;
         this.loginCanceledHandler = loginCanceledHandler;
@@ -69,7 +82,7 @@ public class LoginPresenter implements LoginView.ActionDelegate {
         }
     }
 
-    /** Performs any actions appropriate in response to the user having pressed the LogIn button. */
+    /** {@inheritDoc} */
     @Override
     public void onLogInClicked() {
         final String accessKey = view.getAccessKey();
@@ -98,7 +111,7 @@ public class LoginPresenter implements LoginView.ActionDelegate {
         }
     }
 
-    /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
+    /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {
         view.close();
@@ -107,12 +120,17 @@ public class LoginPresenter implements LoginView.ActionDelegate {
         }
     }
 
-    /** Performs any actions appropriate in response to the user having changed something. */
+    /** {@inheritDoc} */
     @Override
     public void onValueChanged() {
         view.enableLoginButton(isFullFilled());
     }
 
+    /**
+     * Check if all user input fields are filled.
+     *
+     * @return true if all fields are filled.
+     */
     private boolean isFullFilled() {
         return view.getAccessKey() != null && !view.getAccessKey().isEmpty() && view.getSecretKey() != null &&
                !view.getSecretKey().isEmpty();

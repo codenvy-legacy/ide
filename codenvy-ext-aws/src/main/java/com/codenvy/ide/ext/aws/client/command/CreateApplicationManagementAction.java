@@ -27,6 +27,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Action to show Create Application window.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -35,6 +37,13 @@ public class CreateApplicationManagementAction extends Action {
     private CreateApplicationPresenter presenter;
     private ResourceProvider           resourceProvider;
 
+    /**
+     * Create action.
+     *
+     * @param presenter
+     * @param resourceProvider
+     * @param resource
+     */
     @Inject
     public CreateApplicationManagementAction(CreateApplicationPresenter presenter,
                                              ResourceProvider resourceProvider, AWSResource resource) {
@@ -43,11 +52,13 @@ public class CreateApplicationManagementAction extends Action {
         this.resourceProvider = resourceProvider;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         presenter.showDialog();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
         e.getPresentation()

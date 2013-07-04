@@ -29,17 +29,25 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 /**
+ * Unmarshaller for environments info list.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class EnvironmentsInfoListUnmarshaller implements Unmarshallable<JsonArray<EnvironmentInfo>> {
     private JsonArray<EnvironmentInfo> environmentInfos;
 
+    /**
+     * Create unmarshaller.
+     *
+     * @param environmentInfos
+     */
     public EnvironmentsInfoListUnmarshaller(
             JsonArray<EnvironmentInfo> environmentInfos) {
         this.environmentInfos = environmentInfos;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         String text = response.getText();
@@ -62,6 +70,7 @@ public class EnvironmentsInfoListUnmarshaller implements Unmarshallable<JsonArra
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public JsonArray<EnvironmentInfo> getPayload() {
         return environmentInfos;

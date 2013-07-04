@@ -30,6 +30,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link BeanstalkPageView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -54,6 +56,11 @@ public class BeanstalkPageViewImpl extends Composite implements BeanstalkPageVie
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param resource
+     */
     @Inject
     public BeanstalkPageViewImpl(AWSResource resource) {
         this.resource = resource;
@@ -61,26 +68,31 @@ public class BeanstalkPageViewImpl extends Composite implements BeanstalkPageVie
         initWidget(uiBinder.createAndBindUi(this));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setApplicationName(String applicationName) {
         this.appNameField.setText(applicationName);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getApplicationName() {
         return appNameField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setEnvironmentName(String environmentName) {
         this.envNameField.setText(environmentName);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getEnvironmentName() {
         return envNameField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setSolutionStack(JsonArray<String> stack) {
         for (int i = 0; i < stack.size(); i++) {
@@ -88,11 +100,13 @@ public class BeanstalkPageViewImpl extends Composite implements BeanstalkPageVie
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getSolutionStack() {
         return solutionStack.getItemText(solutionStack.getSelectedIndex());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

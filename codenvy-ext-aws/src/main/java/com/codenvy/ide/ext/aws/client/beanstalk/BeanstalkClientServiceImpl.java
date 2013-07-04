@@ -37,6 +37,8 @@ import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * The implementation of {@link BeanstalkClientService}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -72,6 +74,15 @@ public class BeanstalkClientServiceImpl implements BeanstalkClientService {
     private EventBus                eventBus;
     private AWSLocalizationConstant constant;
 
+    /**
+     * Create client service.
+     *
+     * @param restContext
+     * @param loader
+     * @param wsMessageBus
+     * @param eventBus
+     * @param constant
+     */
     @Inject
     protected BeanstalkClientServiceImpl(@Named("restContext") String restContext, Loader loader, MessageBus wsMessageBus,
                                          EventBus eventBus, AWSLocalizationConstant constant) {
@@ -105,8 +116,7 @@ public class BeanstalkClientServiceImpl implements BeanstalkClientService {
         AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
     }
 
-    /** {@inheritDoc}
-     * @param callback*/
+    /** {@inheritDoc} */
     @Override
     public void getAvailableSolutionStacks(AwsAsyncRequestCallback<JsonArray<SolutionStack>> callback)
             throws RequestException {
@@ -119,7 +129,8 @@ public class BeanstalkClientServiceImpl implements BeanstalkClientService {
     /** {@inheritDoc} */
     @Override
     public void getSolutionStackConfigurationOptions(SolutionStackConfigurationOptionsRequest request,
-                                                     AsyncRequestCallback<JsonArray<ConfigurationOptionInfo>> callback) throws RequestException {
+                                                     AsyncRequestCallback<JsonArray<ConfigurationOptionInfo>> callback)
+            throws RequestException {
         String url = restServiceContext + SOLUTION_STACK_OPTIONS;
         DtoClientImpls.SolutionStackConfigurationOptionsRequestImpl requestImpl =
                 DtoClientImpls.SolutionStackConfigurationOptionsRequestImpl.make();
@@ -191,8 +202,7 @@ public class BeanstalkClientServiceImpl implements BeanstalkClientService {
 
     }
 
-    /** {@inheritDoc}
-     * @param callback*/
+    /** {@inheritDoc} */
     @Override
     public void getApplications(AsyncRequestCallback<JsonArray<ApplicationInfo>> callback) throws RequestException {
         String url = restServiceContext + APPLICATIONS;

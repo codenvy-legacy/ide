@@ -26,6 +26,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Action to show Switch Account window.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -33,12 +35,19 @@ import com.google.inject.Singleton;
 public class SwitchAccountAction extends Action {
     private LoginPresenter presenter;
 
+    /**
+     * Create action.
+     *
+     * @param presenter
+     * @param resource
+     */
     @Inject
     public SwitchAccountAction(LoginPresenter presenter, AWSResource resource) {
         super("Switch Account...", "Login on Amazon Web Services", resource.switchAccount());
         this.presenter = presenter;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         presenter.showDialog();

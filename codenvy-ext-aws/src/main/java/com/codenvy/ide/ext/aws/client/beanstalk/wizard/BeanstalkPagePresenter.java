@@ -60,6 +60,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
+ * Presenter to allow user create application via wizard.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -82,6 +84,21 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
     private Loader                  loader;
     private boolean                 isLogined;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param resourceProvider
+     * @param console
+     * @param constant
+     * @param loginPresenter
+     * @param service
+     * @param templateAgent
+     * @param createProjectProvider
+     * @param resource
+     * @param loader
+     */
     @Inject
     public BeanstalkPagePresenter(BeanstalkPageView view, EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
                                   AWSLocalizationConstant constant, LoginPresenter loginPresenter,
@@ -103,6 +120,7 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
         this.view.setDelegate(this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onProjectBuilt(ProjectBuiltEvent event) {
         projectBuildHandler.removeHandler();
@@ -112,26 +130,31 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public WizardPagePresenter flipToNext() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean canFinish() {
         return validate();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean hasNext() {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isCompleted() {
         return validate();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getNotice() {
         if (!isLogined) {
@@ -147,6 +170,7 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         createProjectProvider = templateAgent.getSelectedTemplate().getCreateProjectProvider();
@@ -162,12 +186,18 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
         container.setWidget(view);
     }
 
+    /**
+     * Validate filling application name, environment name and solution stack field.
+     *
+     * @return true if all fields are filled correctly.
+     */
     public boolean validate() {
         return !isLogined ||
                view.getApplicationName() != null && !view.getApplicationName().isEmpty() && view.getEnvironmentName() != null &&
                !view.getEnvironmentName().isEmpty() && view.getSolutionStack() != null && !view.getSolutionStack().isEmpty();
     }
 
+    /** Creates Beanstalk Application. */
     private void createApplication() {
         loader.setMessage(constant.creatingProject());
         loader.show();
@@ -215,6 +245,12 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
         }
     }
 
+    /**
+     * Create new environment for Elastic Beanstalk Application.
+     *
+     * @param appName
+     *         name for newly created application.
+     */
     private void createEnvironment(final String appName) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -271,6 +307,7 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void doFinish() {
         createProjectProvider.create(new AsyncCallback<Project>() {
@@ -288,27 +325,37 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
         });
     }
 
+    /**
+     * Start deploy application.
+     *
+     * @param project
+     *         created project for deploying.
+     */
     public void deploy(Project project) {
         this.project = project;
 
         buildApplication();
     }
 
+    /** Start building application. */
     private void buildApplication() {
         projectBuildHandler = eventBus.addHandler(ProjectBuiltEvent.TYPE, this);
         eventBus.fireEvent(new BuildProjectEvent(project));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onApplicationNameChange() {
         projectName = view.getApplicationName();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onEnvironmentNameChange() {
         environmentName = view.getEnvironmentName();
     }
 
+    /** Get list of solution stack technologies. */
     private void getSolutionStack() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override

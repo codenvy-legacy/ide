@@ -19,6 +19,8 @@
 package com.codenvy.ide.ext.aws.shared.beanstalk;
 
 /**
+ * Environment Health
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -39,6 +41,13 @@ public enum EnvironmentHealth {
         return value;
     }
 
+    /**
+     * Use this in place of valueOf.
+     *
+     * @param value
+     *         real value
+     * @return EnvironmentHealth corresponding to the value
+     */
     public static EnvironmentHealth fromValue(String value) {
         for (EnvironmentHealth v : EnvironmentHealth.values()) {
             if (v.value.equals(value)) {
