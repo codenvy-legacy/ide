@@ -67,22 +67,47 @@ public enum ImageType {
         this.memory = memory;
     }
 
+    /**
+     * The unique Name of the AMI.
+     *
+     * @return The unique Name of the AMI.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * The unique ID of the AMI.
+     *
+     * @return The unique ID of the AMI.
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * The CPU Cores that need to run for this image.
+     *
+     * @return The CPU Cores that need to run for this image.
+     */
     public int getCpuCores() {
         return cpuCores;
     }
 
+    /**
+     * The CPU Units that need to run for this image.
+     *
+     * @return The CPU Units that need to run for this image.
+     */
     public String getCpuUnits() {
         return cpuUnits;
     }
 
+    /**
+     * The Memory that need to run for this image.
+     *
+     * @return The Memory that need to run for this image.
+     */
     public String getMemory() {
         return memory;
     }

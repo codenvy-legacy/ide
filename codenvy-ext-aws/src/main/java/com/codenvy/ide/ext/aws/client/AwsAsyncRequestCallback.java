@@ -27,6 +27,9 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.websocket.rest.exceptions.ServerException;
 
 /**
+ * Asynchronous AWS request. The {@link #onFailure(Throwable)} method contains the check for user not authorized
+ * exception, in this case - showDialog method calls on {@link LoginPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -35,6 +38,14 @@ public abstract class AwsAsyncRequestCallback<T> extends AsyncRequestCallback<T>
     private final LoginCanceledHandler loginCanceledHandler;
     private       LoginPresenter       loginPresenter;
 
+    /**
+     * Create callback.
+     *
+     * @param unmarshaller
+     * @param loggedInHandler
+     * @param loginCanceledHandler
+     * @param loginPresenter
+     */
     public AwsAsyncRequestCallback(Unmarshallable<T> unmarshaller,
                                    LoggedInHandler loggedInHandler,
                                    LoginCanceledHandler loginCanceledHandler, LoginPresenter loginPresenter) {
@@ -44,6 +55,7 @@ public abstract class AwsAsyncRequestCallback<T> extends AsyncRequestCallback<T>
         this.loginPresenter = loginPresenter;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void onFailure(Throwable exception) {
         if (exception.getMessage() != null && exception.getMessage().contains("Authentication required")) {
@@ -62,5 +74,10 @@ public abstract class AwsAsyncRequestCallback<T> extends AsyncRequestCallback<T>
         processFail(exception);
     }
 
+    /**
+     * Need to be implemented by user to handle exception on failure.
+     *
+     * @param exception throwed exception.
+     */
     protected abstract void processFail(Throwable exception);
 }

@@ -29,7 +29,17 @@ import java.util.List;
  * @version $Id: $
  */
 public interface EventsList {
+    /**
+     * Get environment events list.
+     *
+     * @return List of environment events.
+     */
     JsonArray<Event> getEvents();
 
+    /**
+     * Next token for events list.
+     *
+     * @return Token
+     */
     String getNextToken();
 }

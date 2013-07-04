@@ -31,6 +31,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link S3UploadObjectView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -78,6 +80,11 @@ public class S3UploadObjectViewImpl extends DialogBox implements S3UploadObjectV
 
     private boolean isShown;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected S3UploadObjectViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -92,11 +99,13 @@ public class S3UploadObjectViewImpl extends DialogBox implements S3UploadObjectV
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -104,22 +113,26 @@ public class S3UploadObjectViewImpl extends DialogBox implements S3UploadObjectV
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getMimeType() {
         return mimeTypesField.getItemText(mimeTypesField.getSelectedIndex());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMimeType(String mimeType) {
         for (int i = 0; i < mimeTypesField.getItemCount(); i++) {
@@ -129,6 +142,7 @@ public class S3UploadObjectViewImpl extends DialogBox implements S3UploadObjectV
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMimeTypes(JsonStringMap<String> mimeTypes) {
         mimeTypes.iterate(new JsonStringMap.IterationCallback<String>() {
@@ -139,21 +153,25 @@ public class S3UploadObjectViewImpl extends DialogBox implements S3UploadObjectV
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMimeTypeFieldEnabled(boolean enabled) {
         mimeTypesField.setEnabled(enabled);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setUploadButtonEnabled(boolean enabled) {
         btnUpload.setEnabled(enabled);
     }
 
+    /** {@inheritDoc} */
     @Override
     public FormPanel getUploadForm() {
         return uploadForm;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMimeTypeHiddenField(String mimeType) {
         mimeTypeHiddenField.setValue(mimeType);
@@ -161,6 +179,7 @@ public class S3UploadObjectViewImpl extends DialogBox implements S3UploadObjectV
             postFieldsPanel.add(mimeTypeHiddenField);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setNameHiddenField(String name) {
         nameHiddenField.setValue(name);
@@ -168,6 +187,7 @@ public class S3UploadObjectViewImpl extends DialogBox implements S3UploadObjectV
             postFieldsPanel.add(nameHiddenField);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setOverwriteHiddenField(Boolean overwrite) {
         overwriteHiddenField.setValue(overwrite.toString());
@@ -175,6 +195,7 @@ public class S3UploadObjectViewImpl extends DialogBox implements S3UploadObjectV
             postFieldsPanel.add(overwriteHiddenField);
     }
 
+    /** {@inheritDoc} */
     @Override
     public FileUpload getFileUpload() {
         return fileUploadInput;

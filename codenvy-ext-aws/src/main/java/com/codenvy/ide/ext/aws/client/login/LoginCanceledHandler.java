@@ -19,9 +19,12 @@
 package com.codenvy.ide.ext.aws.client.login;
 
 /**
+ * Handler to execute, when login to AWS was canceled.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface LoginCanceledHandler {
+    /** Perform any actions when login cancelled. */
     void onLoginCanceled();
 }

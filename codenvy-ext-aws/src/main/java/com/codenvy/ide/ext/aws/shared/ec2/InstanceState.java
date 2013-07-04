@@ -42,6 +42,13 @@ public enum InstanceState {
         return value;
     }
 
+    /**
+     * Use this in place of valueOf.
+     *
+     * @param value
+     *         real value
+     * @return InstanceState corresponding to the value
+     */
     public static InstanceState fromValue(String value) {
         for (InstanceState v : InstanceState.values()) {
             if (v.value.equals(value)) {

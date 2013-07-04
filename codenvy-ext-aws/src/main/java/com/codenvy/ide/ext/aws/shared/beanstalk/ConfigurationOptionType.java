@@ -42,6 +42,13 @@ public enum ConfigurationOptionType {
         return value;
     }
 
+    /**
+     * Use this in place of valueOf.
+     *
+     * @param value
+     *         real value
+     * @return ConfigurationOptionType corresponding to the value
+     */
     public static ConfigurationOptionType fromValue(String value) {
         for (ConfigurationOptionType v : ConfigurationOptionType.values()) {
             if (v.value.equals(value)) {

@@ -21,11 +21,24 @@ package com.codenvy.ide.ext.aws.shared.beanstalk;
 import com.codenvy.ide.json.JsonArray;
 
 /**
+ * Describes the solution stack.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public interface SolutionStack {
+    /**
+     * The name of the solution stack.
+     * <p/>
+     * <b>Constraints:</b><br/>
+     * <b>Length: </b>0 - 100<br/>
+     */
     String getName();
 
+    /**
+     * The permitted file types allowed for a solution stack.
+     *
+     * @return The permitted file types allowed for a solution stack.
+     */
     JsonArray<String> getPermittedFileTypes();
 }

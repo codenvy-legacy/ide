@@ -25,17 +25,24 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 
 /**
+ * Unmarshaller for S3 Object list.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class S3ObjectListUnmarshaller implements Unmarshallable<S3ObjectsList> {
-
     private DtoClientImpls.S3ObjectsListImpl objectsList;
 
+    /**
+     * Create unmarshaller.
+     *
+     * @param objectsList
+     */
     public S3ObjectListUnmarshaller(DtoClientImpls.S3ObjectsListImpl objectsList) {
         this.objectsList = objectsList;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         String text = response.getText();
@@ -53,6 +60,7 @@ public class S3ObjectListUnmarshaller implements Unmarshallable<S3ObjectsList> {
         objectsList.setObjects(object.getObjects());
     }
 
+    /** {@inheritDoc} */
     @Override
     public S3ObjectsList getPayload() {
         return objectsList;

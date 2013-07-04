@@ -24,15 +24,36 @@ import com.codenvy.ide.ext.aws.shared.beanstalk.ApplicationVersionInfo;
 import java.util.List;
 
 /**
+ * The view for {@link VersionTabPainView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface VersionTabPainView extends View<VersionTabPainView.ActionDelegate> {
+    /** Interface which must implement presenter to process any actions. */
     interface ActionDelegate {
+        /**
+         * Perform action when deploy version button clicked.
+         *
+         * @param object
+         *         object which contain information about selected version.
+         */
         void onDeployVersionClicked(ApplicationVersionInfo object);
 
+        /**
+         * Perform action when delete version button clicked.
+         *
+         * @param object
+         *         object which contain information about selected version.
+         */
         void onDeleteVersionClicked(ApplicationVersionInfo object);
     }
 
+    /**
+     * Set list of versions for the selected application.
+     *
+     * @param versions
+     *         list of application versions.
+     */
     void setVersions(List<ApplicationVersionInfo> versions);
 }

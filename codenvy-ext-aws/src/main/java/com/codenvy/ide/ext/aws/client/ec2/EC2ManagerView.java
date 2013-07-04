@@ -23,31 +23,84 @@ import com.codenvy.ide.ext.aws.shared.ec2.InstanceInfo;
 import com.codenvy.ide.json.JsonArray;
 
 /**
+ * The view for {@link EC2ManagerPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface EC2ManagerView extends View<EC2ManagerView.ActionDelegate> {
+    /** Interface which must implement presenter to process any actions. */
     public interface ActionDelegate {
+        /**
+         * Perform terminate selected instance.
+         *
+         * @param instanceInfo
+         *         selected instance.
+         */
         void onTerminateClicked(InstanceInfo instanceInfo);
 
+        /**
+         * Perform reboot selected instance.
+         *
+         * @param instanceInfo
+         *         selected instance.
+         */
         void onRebootClicked(InstanceInfo instanceInfo);
 
+        /**
+         * Perform start selected instance.
+         *
+         * @param instanceInfo
+         *         selected instance.
+         */
         void onStartClicked(InstanceInfo instanceInfo);
 
+        /**
+         * Perform stop selected instance.
+         *
+         * @param instanceInfo
+         *         selected instance.
+         */
         void onStopClicked(InstanceInfo instanceInfo);
 
+        /** Perform close window. */
         void onCloseClicked();
     }
 
+    /**
+     * Set array of instances.
+     *
+     * @param instances
+     *         array of instances.
+     */
     public void setEC2Instances(JsonArray<InstanceInfo> instances);
 
+    /**
+     * Set array of properties for the selected EC2 instance.
+     *
+     * @param tags
+     *         array of tags and their values.
+     */
     public void setEC2Tags(JsonArray<Ec2Tag> tags);
 
+    /**
+     * Enable or disable state controlling buttons.
+     *
+     * @param enable
+     *         true if enable.
+     */
     public void setAllButtonsEnableState(boolean enable);
 
+    /**
+     * Return shown state for current window.
+     *
+     * @return true if shown, otherwise false.
+     */
     public boolean isShown();
 
+    /** Shows current dialog. */
     public void showDialog();
 
+    /** Close current dialog. */
     public void close();
 }

@@ -30,12 +30,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link ManageApplicationView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class ManageApplicationViewImpl extends DialogBox implements ManageApplicationView {
-    interface ManageApplicationViewImplUiBinder extends UiBinder<Widget, ManageApplicationViewImpl> {}
+    interface ManageApplicationViewImplUiBinder extends UiBinder<Widget, ManageApplicationViewImpl> {
+    }
 
     private static ManageApplicationViewImplUiBinder uiBinder = GWT.create(ManageApplicationViewImplUiBinder.class);
 
@@ -52,6 +55,11 @@ public class ManageApplicationViewImpl extends DialogBox implements ManageApplic
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected ManageApplicationViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -62,6 +70,7 @@ public class ManageApplicationViewImpl extends DialogBox implements ManageApplic
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public AcceptsOneWidget addMainTabPain(String tabText) {
         SimplePanel panel = new SimplePanel();
@@ -69,6 +78,7 @@ public class ManageApplicationViewImpl extends DialogBox implements ManageApplic
         return panel;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AcceptsOneWidget addVersionTabPain(String tabText) {
         SimplePanel panel = new SimplePanel();
@@ -76,6 +86,7 @@ public class ManageApplicationViewImpl extends DialogBox implements ManageApplic
         return panel;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AcceptsOneWidget addEnvironmentTabPain(String tabText) {
         SimplePanel panel = new SimplePanel();
@@ -83,11 +94,13 @@ public class ManageApplicationViewImpl extends DialogBox implements ManageApplic
         return panel;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -95,17 +108,20 @@ public class ManageApplicationViewImpl extends DialogBox implements ManageApplic
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void focusInFirstTab() {
         applicationTabPanel.selectTab(0);

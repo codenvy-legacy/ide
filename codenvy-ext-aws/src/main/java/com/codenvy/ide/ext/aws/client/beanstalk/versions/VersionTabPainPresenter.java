@@ -45,6 +45,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Presenter for displaying version information for selected application.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -60,7 +62,19 @@ public class VersionTabPainPresenter implements Presenter, VersionTabPainView.Ac
     private AWSLocalizationConstant constant;
     private ResourceProvider        resourceProvider;
 
-
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param loginPresenter
+     * @param service
+     * @param deployVersionPresenter
+     * @param deleteVersionPresenter
+     * @param constant
+     * @param resourceProvider
+     */
     @Inject
     public VersionTabPainPresenter(VersionTabPainView view, EventBus eventBus, ConsolePart console,
                                    LoginPresenter loginPresenter, BeanstalkClientService service,
@@ -79,6 +93,7 @@ public class VersionTabPainPresenter implements Presenter, VersionTabPainView.Ac
         this.view.setDelegate(this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onDeployVersionClicked(final ApplicationVersionInfo object) {
         deployVersionPresenter.showDialog(object.getApplicationName(), object.getVersionLabel(), new AsyncCallback<EnvironmentInfo>() {
@@ -98,6 +113,7 @@ public class VersionTabPainPresenter implements Presenter, VersionTabPainView.Ac
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onDeleteVersionClicked(ApplicationVersionInfo object) {
         deleteVersionPresenter.showDialog(object, new AsyncCallback<ApplicationVersionInfo>() {
@@ -113,6 +129,7 @@ public class VersionTabPainPresenter implements Presenter, VersionTabPainView.Ac
         });
     }
 
+    /** Get list of versions for selected application. */
     public void getVersions() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -150,6 +167,7 @@ public class VersionTabPainPresenter implements Presenter, VersionTabPainView.Ac
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);

@@ -25,17 +25,70 @@ package com.codenvy.ide.ext.aws.shared.beanstalk;
  * @version $Id: $
  */
 public interface Event {
+    /**
+     * The date when the event occurred.
+     *
+     * @return The date when the event occurred.
+     */
     double getEventDate();
 
+    /**
+     * The event message.
+     *
+     * @return The event message.
+     */
     String getMessage();
 
+    /**
+     * The application associated with the event.
+     * <p/>
+     * <b>Constraints:</b><br/>
+     * <b>Length: </b>1 - 100<br/>
+     *
+     * @return The application associated with the event.
+     */
     String getApplicationName();
 
+    /**
+     * The release label for the application version associated with this
+     * event.
+     * <p/>
+     * <b>Constraints:</b><br/>
+     * <b>Length: </b>1 - 100<br/>
+     *
+     * @return The release label for the application version associated with this
+     *         event.
+     */
     String getVersionLabel();
 
+    /**
+     * The name of the configuration associated with this event.
+     * <p/>
+     * <b>Constraints:</b><br/>
+     * <b>Length: </b>1 - 100<br/>
+     *
+     * @return The name of the configuration associated with this event.
+     */
     String getTemplateName();
 
+    /**
+     * The name of the environment associated with this event.
+     * <p/>
+     * <b>Constraints:</b><br/>
+     * <b>Length: </b>4 - 23<br/>
+     *
+     * @return The name of the environment associated with this event.
+     */
     String getEnvironmentName();
 
+    /**
+     * The severity level of this event.
+     * <p/>
+     * <b>Constraints:</b><br/>
+     * <b>Allowed Values: </b>TRACE, DEBUG, INFO, WARN, ERROR, FATAL
+     *
+     * @return The severity level of this event.
+     * @see EventsSeverity
+     */
     EventsSeverity getSeverity();
 }

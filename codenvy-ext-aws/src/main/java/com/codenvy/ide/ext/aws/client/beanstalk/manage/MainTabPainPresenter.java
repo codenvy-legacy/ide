@@ -49,6 +49,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import java.util.Date;
 
 /**
+ * Presenter to allow user view application info and control description.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -66,6 +68,20 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
     private CreateVersionPresenter     createNewVersionPresenter;
     private LaunchEnvironmentPresenter launchEnvironmentPresenter;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param constant
+     * @param loginPresenter
+     * @param descriptionUpdatePresenter
+     * @param service
+     * @param resourceProvider
+     * @param launchEnvironmentPresenter
+     * @param createNewVersionPresenter
+     */
     @Inject
     public MainTabPainPresenter(MainTabPainView view, EventBus eventBus, ConsolePart console,
                                 AWSLocalizationConstant constant, LoginPresenter loginPresenter,
@@ -86,11 +102,13 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
         this.view.setDelegate(this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
     }
 
+    /** Get application information. */
     public void loadApplication() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -135,6 +153,7 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onEditDescriptionButtonClicked() {
         descriptionUpdatePresenter.showDialog(applicationInfo, new AsyncCallback<ApplicationInfo>() {
@@ -163,6 +182,7 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onDeleteApplicationButtonClicked() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -192,6 +212,7 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCreateNewVersionButtonClicked() {
         createNewVersionPresenter.showDialog(applicationInfo.getName(), new AsyncCallback<ApplicationVersionInfo>() {
@@ -211,6 +232,7 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onLaunchNewEnvironmentButtonClicked() {
         launchEnvironmentPresenter

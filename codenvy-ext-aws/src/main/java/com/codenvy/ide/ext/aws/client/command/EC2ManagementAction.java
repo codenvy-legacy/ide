@@ -27,14 +27,23 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Action to show EC2 Management window.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class EC2ManagementAction extends Action {
     private EC2ManagerPresenter presenter;
-    private ResourceProvider resourceProvider;
+    private ResourceProvider    resourceProvider;
 
+    /**
+     * Create action.
+     *
+     * @param presenter
+     * @param resource
+     * @param resourceProvider
+     */
     @Inject
     public EC2ManagementAction(EC2ManagerPresenter presenter, AWSResource resource, ResourceProvider resourceProvider) {
         super("EC2 Management...", "Manage EC2 instances", resource.ec2());
@@ -42,6 +51,7 @@ public class EC2ManagementAction extends Action {
         this.resourceProvider = resourceProvider;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         presenter.showDialog();

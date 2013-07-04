@@ -34,15 +34,17 @@ public enum EventsSeverity {
         this.value = value;
     }
 
-//    @Override
-//    public String toString() {
-//        return value;
-//    }
-
     public String getValue() {
         return value;
     }
 
+    /**
+     * Use this in place of valueOf.
+     *
+     * @param value
+     *         real value
+     * @return EventsSeverity corresponding to the value
+     */
     public static EventsSeverity fromValue(String value) {
         for (EventsSeverity v : EventsSeverity.values()) {
             if (v.value.equals(value)) {

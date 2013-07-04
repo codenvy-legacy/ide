@@ -23,7 +23,19 @@ package com.codenvy.ide.ext.aws.shared.beanstalk;
  * @version $Id: $
  */
 public interface S3Item {
+    /**
+     * The Amazon S3 bucket where the data is located.
+     * <p/>
+     * <b>Constraints:</b><br/>
+     * <b>Length: </b>0 - 255<br/>
+     */
     String getS3Bucket();
 
+    /**
+     * The Amazon S3 key where the data is located.
+     * <p/>
+     * <b>Constraints:</b><br/>
+     * <b>Length: </b>0 - 1024<br/>
+     */
     String getS3Key();
 }

@@ -47,6 +47,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * The implementation of {@link EC2ManagerView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -87,6 +89,11 @@ public class EC2ManagerViewImpl extends DialogBox implements EC2ManagerView {
 
     private InstanceInfo selectedInstanceInfo;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected EC2ManagerViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -100,6 +107,7 @@ public class EC2ManagerViewImpl extends DialogBox implements EC2ManagerView {
         initTagsTable();
     }
 
+    /** Init EC2 instances table. */
     private void initInstancesTable() {
         ec2Instances.setWidth("100%", true);
         ec2Instances.setAutoHeaderRefreshDisabled(true);
@@ -221,6 +229,7 @@ public class EC2ManagerViewImpl extends DialogBox implements EC2ManagerView {
         ec2Instances.setColumnWidth(instanceColumn, 100, Style.Unit.PX);
     }
 
+    /** Init EC2 tags table. */
     private void initTagsTable() {
         ec2Tags.setWidth("100%", true);
         ec2Tags.setAutoHeaderRefreshDisabled(true);
@@ -253,12 +262,13 @@ public class EC2ManagerViewImpl extends DialogBox implements EC2ManagerView {
         ec2Tags.setColumnWidth(tagKeyColumn, 200, Style.Unit.PX);
     }
 
-    /** Sets the delegate to receive events from this view. */
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setEC2Instances(JsonArray<InstanceInfo> instances) {
         List<InstanceInfo> instanceInfoList = new ArrayList<InstanceInfo>();
@@ -270,6 +280,7 @@ public class EC2ManagerViewImpl extends DialogBox implements EC2ManagerView {
         ec2Instances.setRowData(instanceInfoList);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setEC2Tags(JsonArray<Ec2Tag> tags) {
         List<Ec2Tag> ec2TagList = new ArrayList<Ec2Tag>();
@@ -281,6 +292,7 @@ public class EC2ManagerViewImpl extends DialogBox implements EC2ManagerView {
         ec2Tags.setRowData(ec2TagList);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setAllButtonsEnableState(boolean enable) {
         btnReboot.setEnabled(enable);
@@ -289,11 +301,13 @@ public class EC2ManagerViewImpl extends DialogBox implements EC2ManagerView {
         btnTerminate.setEnabled(enable);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -301,6 +315,7 @@ public class EC2ManagerViewImpl extends DialogBox implements EC2ManagerView {
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;

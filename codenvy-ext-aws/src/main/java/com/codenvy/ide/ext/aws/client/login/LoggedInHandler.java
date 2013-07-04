@@ -19,9 +19,12 @@
 package com.codenvy.ide.ext.aws.client.login;
 
 /**
+ * Can be called after success login.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface LoggedInHandler {
+    /** Performs some actions when logged in. */
     void onLoggedIn();
 }

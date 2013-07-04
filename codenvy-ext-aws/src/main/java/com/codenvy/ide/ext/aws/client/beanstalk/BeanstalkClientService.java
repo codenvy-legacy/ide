@@ -25,6 +25,8 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 
 /**
+ * Client service for controlling Elastic Beanstalk Applications.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -51,7 +53,6 @@ public interface BeanstalkClientService {
     /**
      * Returns available solution stacks.
      *
-     *
      * @param callback
      * @throws RequestException
      */
@@ -60,7 +61,6 @@ public interface BeanstalkClientService {
 
     /**
      * Returns configuration options of the solution stack.
-     *
      *
      * @param request
      * @param callback
@@ -123,7 +123,6 @@ public interface BeanstalkClientService {
     /**
      * Returns the list of applications.
      *
-     *
      * @param callback
      * @throws RequestException
      */
@@ -157,7 +156,6 @@ public interface BeanstalkClientService {
     /**
      * Returns the list of environments.
      *
-     *
      * @param vfsId
      * @param projectId
      * @param callback
@@ -168,7 +166,6 @@ public interface BeanstalkClientService {
 
     /**
      * Returns the list of the environment configurations.
-     *
      *
      * @param vfsId
      * @param projectId
@@ -241,7 +238,6 @@ public interface BeanstalkClientService {
     /**
      * Returns the list of web servers startup logs for a specified environment.
      *
-     *
      * @param environmentId
      * @param callback
      * @throws RequestException
@@ -251,7 +247,6 @@ public interface BeanstalkClientService {
 
     /**
      * Returns the list of application versions.
-     *
      *
      * @param vfsId
      * @param projectId

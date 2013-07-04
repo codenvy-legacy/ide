@@ -25,6 +25,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Presenter that allow user to manage Elastic Beanstalk application.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -35,6 +37,14 @@ public class ManageApplicationPresenter implements ManageApplicationView.ActionD
     private VersionTabPainPresenter     versionTabPainPresenter;
     private EnvironmentTabPainPresenter environmentTabPainPresenter;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param mainTabPainPresenter
+     * @param versionTabPainPresenter
+     * @param environmentTabPainPresenter
+     */
     @Inject
     protected ManageApplicationPresenter(ManageApplicationView view, MainTabPainPresenter mainTabPainPresenter,
                                          VersionTabPainPresenter versionTabPainPresenter,
@@ -55,6 +65,7 @@ public class ManageApplicationPresenter implements ManageApplicationView.ActionD
         environmentTabPainPresenter.go(environmentTab);
     }
 
+    /** Show main dialog window. */
     public void showDialog() {
         if (!view.isShown()) {
             view.showDialog();
@@ -66,6 +77,7 @@ public class ManageApplicationPresenter implements ManageApplicationView.ActionD
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCloseButtonClicked() {
         view.close();

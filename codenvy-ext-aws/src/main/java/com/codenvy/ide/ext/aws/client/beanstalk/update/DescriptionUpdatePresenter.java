@@ -37,6 +37,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter the allow user to change description for application.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -52,6 +54,17 @@ public class DescriptionUpdatePresenter implements DescriptionUpdateView.ActionD
     private AsyncCallback<ApplicationInfo> callback;
     private ApplicationInfo                applicationInfo;
 
+    /**
+     * Create view.
+     *
+     * @param view
+     * @param console
+     * @param loginPresenter
+     * @param eventBus
+     * @param constant
+     * @param service
+     * @param resourceProvider
+     */
     @Inject
     public DescriptionUpdatePresenter(DescriptionUpdateView view, ConsolePart console,
                                       LoginPresenter loginPresenter, EventBus eventBus,
@@ -67,6 +80,7 @@ public class DescriptionUpdatePresenter implements DescriptionUpdateView.ActionD
         this.view.setDelegate(this);
     }
 
+    /** Show main dialog window. */
     public void showDialog(ApplicationInfo applicationInfo, AsyncCallback<ApplicationInfo> callback) {
         this.applicationInfo = applicationInfo;
         this.callback = callback;
@@ -74,9 +88,11 @@ public class DescriptionUpdatePresenter implements DescriptionUpdateView.ActionD
         if (!view.isShown()) {
             view.enableUpdateButton(false);
             view.showDialog();
+            view.focusDescriptionField();
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onUpdateClicked() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -127,11 +143,13 @@ public class DescriptionUpdatePresenter implements DescriptionUpdateView.ActionD
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {
         view.close();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onDescriptionFieldChangedValue() {
         view.enableUpdateButton(view.getDescriptionValue() != null && !view.getDescriptionValue().isEmpty());

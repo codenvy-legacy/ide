@@ -29,16 +29,24 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 /**
+ * Unmarshaller for instance info list.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class InstanceListInfoUnmarshaller implements Unmarshallable<JsonArray<InstanceInfo>> {
     private JsonArray<InstanceInfo> instances;
 
+    /**
+     * Create unmarshaller.
+     *
+     * @param instances
+     */
     public InstanceListInfoUnmarshaller(JsonArray<InstanceInfo> instances) {
         this.instances = instances;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         String text = response.getText();
@@ -61,6 +69,7 @@ public class InstanceListInfoUnmarshaller implements Unmarshallable<JsonArray<In
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public JsonArray<InstanceInfo> getPayload() {
         return instances;
