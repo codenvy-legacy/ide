@@ -46,9 +46,9 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 @SuppressWarnings("serial")
 public class HtmlAppRunnerServlet extends HttpServlet {
 
-    private ApplicationRunner appRunner;
-
-    private MimeTypeResolver  mimeTypeResolver;
+    private ApplicationRunner     appRunner;
+    private MimeTypeResolver      mimeTypeResolver;
+    private static final String[] HTML_INDEX_FILES = new String[]{"index.htm", "index.html"};
 
     /** @see javax.servlet.GenericServlet#init() */
     @Override
@@ -87,7 +87,7 @@ public class HtmlAppRunnerServlet extends HttpServlet {
         }
 
         if (filePath.isEmpty()) {
-            filePath = getIndexFileNameIfExist(projectPath);
+            filePath = getHtmlIndexFileNameIfExist(projectPath);
             if (filePath == null) {
                 response.setStatus(SC_BAD_REQUEST);
                 return;
@@ -115,13 +115,12 @@ public class HtmlAppRunnerServlet extends HttpServlet {
         outputStream.flush();
     }
 
-    private String getIndexFileNameIfExist(String projectPath) {
-        final Path indexHtmFilePath = Paths.get(projectPath, "/index.htm");
-        final Path indexHtmlFilePath = Paths.get(projectPath, "/index.html");
-        if (Files.exists(indexHtmFilePath)) {
-            return indexHtmFilePath.getFileName().toString();
-        } else if (Files.exists(indexHtmlFilePath)) {
-            return indexHtmlFilePath.getFileName().toString();
+    private String getHtmlIndexFileNameIfExist(String projectPath) {
+        for (String indexFile : HTML_INDEX_FILES) {
+            Path indexFilePath = Paths.get(projectPath, indexFile);
+            if (Files.exists(indexFilePath)) {
+                return indexFilePath.getFileName().toString();
+            }
         }
         return null;
     }
