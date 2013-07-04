@@ -24,7 +24,6 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -144,24 +143,6 @@ public class PullViewImpl extends DialogBox implements PullView {
 
     /** {@inheritDoc} */
     @Override
-    public boolean isRemoteBranchesEmpty() {
-        return remoteBranch.getItemCount() <= 0;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isLocalBranchesEmpty() {
-        return localBranch.getItemCount() <= 0;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isRepositoriesEmpty() {
-        return repository.getItemCount() <= 0;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void setEnablePullButton(boolean enabled) {
         btnPull.setEnabled(enabled);
     }
@@ -193,10 +174,5 @@ public class PullViewImpl extends DialogBox implements PullView {
     @UiHandler("btnCancel")
     public void onCancelClicked(ClickEvent event) {
         delegate.onCancelClicked();
-    }
-
-    @UiHandler({"localBranch", "remoteBranch", "repository"})
-    public void onValueChanged(ChangeEvent event) {
-        delegate.onValueChanged();
     }
 }

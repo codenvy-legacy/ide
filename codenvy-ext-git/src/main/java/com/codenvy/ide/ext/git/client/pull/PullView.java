@@ -36,9 +36,6 @@ public interface PullView extends View<PullView.ActionDelegate> {
 
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         void onCancelClicked();
-
-        /** Performs any actions appropriate in response to the user having changed something. */
-        void onValueChanged();
     }
 
     /**
@@ -88,15 +85,6 @@ public interface PullView extends View<PullView.ActionDelegate> {
      *         remote branches
      */
     void setRemoteBranches(@NotNull JsonArray<String> branches);
-
-    /** @return <code>true</code> if remote branches field is empty, and <code>false</code> otherwise */
-    boolean isRemoteBranchesEmpty();
-
-    /** @return <code>true</code> if local branches field is empty, and <code>false</code> otherwise */
-    boolean isLocalBranchesEmpty();
-
-    /** @return <code>true</code> if repository field is empty, and <code>false</code> otherwise */
-    boolean isRepositoriesEmpty();
 
     /**
      * Change the enable state of the push button.

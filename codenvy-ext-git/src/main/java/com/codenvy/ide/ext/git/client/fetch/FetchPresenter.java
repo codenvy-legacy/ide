@@ -99,6 +99,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
                                    protected void onSuccess(JsonArray<Remote> result) {
                                        getBranches(projectId, LIST_REMOTE);
                                        getBranches(projectId, LIST_LOCAL);
+                                       view.setEnableFetchButton(!result.isEmpty());
                                        view.setRepositories(result);
                                        view.showDialog();
                                    }
@@ -280,12 +281,5 @@ public class FetchPresenter implements FetchView.ActionDelegate {
     @Override
     public void onCancelClicked() {
         view.close();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onValueChanged() {
-        boolean isDisable = view.isLocalBranchesEmpty() || view.isRemoteBranchesEmpty() || view.isRepositoriesEmpty();
-        view.setEnableFetchButton(isDisable);
     }
 }

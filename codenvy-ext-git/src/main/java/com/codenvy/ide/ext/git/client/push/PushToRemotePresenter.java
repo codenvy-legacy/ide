@@ -98,6 +98,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
                                    protected void onSuccess(JsonArray<Remote> result) {
                                        getBranches(projectId, LIST_REMOTE);
                                        getBranches(projectId, LIST_LOCAL);
+                                       view.setEnablePushButton(!result.isEmpty());
                                        view.setRepositories(result);
                                        view.showDialog();
                                    }
@@ -276,12 +277,5 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
     @Override
     public void onCancelClicked() {
         view.close();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onValueChanged() {
-        boolean isDisable = view.isLocalBranchesEmpty() || view.isRemoteBranchesEmpty() || view.isRepositoriesEmpty();
-        view.setEnablePushButton(isDisable);
     }
 }
