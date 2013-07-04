@@ -527,7 +527,7 @@ public interface GitClientService {
      * @param callback
      *         callback
      */
-    void diff(@NotNull String vfsId, @NotNull String projectid, JsonArray<String> fileFilter, @NotNull DiffRequest.DiffType type,
+    void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull JsonArray<String> fileFilter, @NotNull DiffRequest.DiffType type,
               boolean noRenames, int renameLimit, @NotNull String commitA, @NotNull String commitB,
               @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
@@ -554,7 +554,7 @@ public interface GitClientService {
      * @param callback
      *         callback
      */
-    void diff(@NotNull String vfsId, @NotNull String projectid, JsonArray<String> fileFilter, @NotNull DiffRequest.DiffType type,
+    void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull JsonArray<String> fileFilter, @NotNull DiffRequest.DiffType type,
               boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached,
               @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 

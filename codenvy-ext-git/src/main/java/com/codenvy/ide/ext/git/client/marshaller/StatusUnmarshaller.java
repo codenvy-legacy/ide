@@ -31,7 +31,7 @@ import com.google.gwt.json.client.JSONParser;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class StatusUnmarshaller implements Unmarshallable<Status>, Constants {
+public class StatusUnmarshaller implements Unmarshallable<Status> {
     private DtoClientImpls.StatusImpl status;
 
     /**

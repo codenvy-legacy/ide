@@ -40,9 +40,9 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
 public class GitExtension {
     public static final String GIT_REPOSITORY_PROP        = "isGitRepository";
     public static final String GIT_GROUP_MAIN_MENU        = "Git";
-    public static final String REPOSITORY_GROUP_MAIN_MENU = "GitRepository";
-    public static final String COMMAND_GROUP_MAIN_MENU    = "GitCommand";
-    public static final String HISTORY_GROUP_MAIN_MENU    = "GitHistory";
+    public static final String REPOSITORY_GROUP_MAIN_MENU = "GitRepositoryGroup";
+    public static final String COMMAND_GROUP_MAIN_MENU    = "GitCommandGroup";
+    public static final String HISTORY_GROUP_MAIN_MENU    = "GitHistoryGroup";
 
     @Inject
     public GitExtension(GitClientResources resources, ActionManager actionManager, CloneRepositoryAction cloneAction,
@@ -50,7 +50,8 @@ public class GitExtension {
                         ResetToCommitAction resetToCommitAction, RemoveFromIndexAction removeFromIndexAction, CommitAction commitAction,
                         ShowBranchesAction showBranchesAction, ShowMergeAction showMergeAction, ResetFilesAction resetFilesAction,
                         ShowStatusAction showStatusAction, ShowGitUrlAction showGitUrlAction, ShowRemoteAction showRemoteAction,
-                        PushAction pushAction, FetchAction fetchAction, PullAction pullAction) {
+                        PushAction pushAction, FetchAction fetchAction, PullAction pullAction, GitLocalizationConstant constant,
+                        HistoryAction historyAction) {
         resources.gitCSS().ensureInjected();
 
         DefaultActionGroup mainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
@@ -93,13 +94,15 @@ public class GitExtension {
         commandGroup.add(showBranchesAction);
         actionManager.registerAction("GitMerge", showMergeAction);
         commandGroup.add(showMergeAction);
-        DefaultActionGroup remoteGroup = new DefaultActionGroup("GitRemoteGroup", true, actionManager);
+        DefaultActionGroup remoteGroup = new DefaultActionGroup(constant.remotesControlTitle(), true, actionManager);
         remoteGroup.getTemplatePresentation().setIcon(resources.remote());
         actionManager.registerAction("GitRemoteGroup", remoteGroup);
         commandGroup.add(remoteGroup);
         actionManager.registerAction("GitResetFiles", resetFilesAction);
         commandGroup.add(resetFilesAction);
 
+        actionManager.registerAction("GitHistory", historyAction);
+        historyGroup.add(historyAction);
         actionManager.registerAction("GitStatus", showStatusAction);
         historyGroup.add(showStatusAction);
         actionManager.registerAction("GitUrl", showGitUrlAction);

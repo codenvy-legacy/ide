@@ -45,7 +45,6 @@ public class BuildApplicationViewImpl extends BaseView<BuildApplicationView.Acti
 
     @UiField
     FlowPanel output;
-    private ActionDelegate delegate;
     private int animationCharIndex = 1;
     private Label progress;
 
