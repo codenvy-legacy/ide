@@ -210,7 +210,7 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>codenvy-ide-extension-html-runtime</artifactId>
+            <artifactId>codenvy-extension-html-runtime</artifactId>
             <version>${project.version}</version>
          </dependency>
 
@@ -810,7 +810,7 @@
       <module>exo-ide-extension-java-runtime</module>
       <module>exo-ide-extension-python-runtime</module>
       <module>exo-ide-extension-php-runtime</module>
-      <module>codenvy-ide-extension-html-runtime</module>
+      <module>codenvy-extension-html-runtime</module>
       <module>exo-ide-extension-nodejs-runtime</module>
       <module>exo-ide-extension-git</module>
       <module>exo-ide-extension-ssh</module>

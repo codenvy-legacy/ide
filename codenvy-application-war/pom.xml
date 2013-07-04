@@ -148,7 +148,7 @@
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>codenvy-ide-extension-html-runtime</artifactId>
+            <artifactId>codenvy-extension-html-runtime</artifactId>
         </dependency>
 
         <dependency>
