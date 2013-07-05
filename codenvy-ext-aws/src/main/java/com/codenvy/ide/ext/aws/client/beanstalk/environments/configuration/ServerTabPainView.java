@@ -125,7 +125,7 @@ public interface ServerTabPainView extends View<ServerTabPainView.ActionDelegate
      *
      * @return true if modified.
      */
-    boolean isMonitoringIntervalModifieds();
+    boolean isMonitoringIntervalModified();
 
     /**
      * Set image id.
