@@ -23,11 +23,26 @@ import com.codenvy.ide.ext.aws.shared.beanstalk.ConfigurationOptionInfo;
 import com.codenvy.ide.json.JsonArray;
 
 /**
+ * Allow presenters that is representing tabs to exchange information about environment configuration.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface HasConfigurationProperty {
+    /**
+     * Get modified configuration for the environment.
+     *
+     * @return array with modified properties.
+     */
     JsonArray<ConfigurationOption> getConfigurationOptions();
 
+    /**
+     * Set configuration which presenter should parse and show.
+     *
+     * @param configuration
+     *         existed environment configuration.
+     * @param configurationOptionInfo
+     *         configuration for solution stack technology.
+     */
     void setConfiguration(JsonArray<ConfigurationOption> configuration, JsonArray<ConfigurationOptionInfo> configurationOptionInfo);
 }

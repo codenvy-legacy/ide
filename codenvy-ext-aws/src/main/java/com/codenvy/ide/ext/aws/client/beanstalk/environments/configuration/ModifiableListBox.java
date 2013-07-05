@@ -21,16 +21,29 @@ package com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration;
 import com.google.gwt.user.client.ui.ListBox;
 
 /**
+ * Wrapper on ListBox with field that marker input modifiable.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class ModifiableListBox extends ListBox {
     private boolean modified;
 
+    /**
+     * If input field is modified by user.
+     *
+     * @return true if modified.
+     */
     public boolean isModified() {
         return modified;
     }
 
+    /**
+     * Set modified value.
+     *
+     * @param modified
+     *         true if field is modified.
+     */
     public void setModified(boolean modified) {
         this.modified = modified;
     }

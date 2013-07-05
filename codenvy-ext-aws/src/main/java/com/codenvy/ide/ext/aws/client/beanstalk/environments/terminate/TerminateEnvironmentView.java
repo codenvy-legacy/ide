@@ -21,21 +21,39 @@ package com.codenvy.ide.ext.aws.client.beanstalk.environments.terminate;
 import com.codenvy.ide.api.mvp.View;
 
 /**
+ * The view for {@link TerminateEnvironmentPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface TerminateEnvironmentView extends View<TerminateEnvironmentView.ActionDelegate> {
+    /** Interface which must implement presenter to process any actions. */
     interface ActionDelegate {
+        /** Perform action when terminate button clicked. */
         void onTerminateButtonClicked();
 
+        /** Perform action when cancel button clicked. */
         void onCancelButtonClicked();
     }
 
+    /**
+     * Set terminate question.
+     *
+     * @param question
+     *         question message.
+     */
     void setTerminateQuestion(String question);
 
+    /**
+     * Return shown state for current window.
+     *
+     * @return true if shown, otherwise false.
+     */
     boolean isShown();
 
+    /** Shows current dialog. */
     void showDialog();
 
+    /** Close current dialog. */
     void close();
 }

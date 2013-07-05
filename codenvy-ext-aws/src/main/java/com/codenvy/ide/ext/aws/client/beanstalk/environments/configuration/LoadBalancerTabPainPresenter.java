@@ -29,20 +29,27 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Presenter that show user environment configuration.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class LoadBalancerTabPainPresenter implements Presenter, LoadBalancerTabPainView.ActionDelegate, HasConfigurationProperty {
-    private LoadBalancerTabPainView view;
+    private LoadBalancerTabPainView        view;
     private JsonArray<ConfigurationOption> configuration;
-    private JsonArray<ConfigurationOption> modifiedOptions = JsonCollections.createArray();
 
+    /**
+     * Create view.
+     *
+     * @param view
+     */
     @Inject
     public LoadBalancerTabPainPresenter(LoadBalancerTabPainView view) {
         this.view = view;
     }
 
+    /** {@inheritDoc} */
     @Override
     public JsonArray<ConfigurationOption> getConfigurationOptions() {
         JsonArray<ConfigurationOption> options = JsonCollections.createArray();
@@ -94,6 +101,7 @@ public class LoadBalancerTabPainPresenter implements Presenter, LoadBalancerTabP
         return options;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setConfiguration(JsonArray<ConfigurationOption> configuration, JsonArray<ConfigurationOptionInfo> configurationOptionInfo) {
         view.resetModifiedFields();
@@ -114,6 +122,7 @@ public class LoadBalancerTabPainPresenter implements Presenter, LoadBalancerTabP
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);

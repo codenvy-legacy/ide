@@ -32,11 +32,11 @@ import com.google.inject.Singleton;
  */
 @Singleton
 @Extension(title = "GoogleAppEngine Support.", version = "3.0.0")
-public class GAEExtansion {
+public class GAEExtension {
     public static final String ID = "GAE";
 
     @Inject
-    public GAEExtansion(PaaSAgent paasAgent, GAEResources resources) {
+    public GAEExtension(PaaSAgent paasAgent, GAEResources resources) {
         // TODO change hard code types
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Java", "Python", "Django", "Servlet/JSP", "War");
         // TODO wizard page is empty

@@ -30,6 +30,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link EditConfigurationView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -56,6 +58,11 @@ public class EditConfigurationViewImpl extends DialogBox implements EditConfigur
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected EditConfigurationViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -66,6 +73,7 @@ public class EditConfigurationViewImpl extends DialogBox implements EditConfigur
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public AcceptsOneWidget addServerTabPain(String tabText) {
         SimplePanel panel = new SimplePanel();
@@ -73,6 +81,7 @@ public class EditConfigurationViewImpl extends DialogBox implements EditConfigur
         return panel;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AcceptsOneWidget addLoadBalancerTabPain(String tabText) {
         SimplePanel panel = new SimplePanel();
@@ -80,6 +89,7 @@ public class EditConfigurationViewImpl extends DialogBox implements EditConfigur
         return panel;
     }
 
+    /** {@inheritDoc} */
     @Override
     public AcceptsOneWidget addContainerTabPain(String tabText) {
         SimplePanel panel = new SimplePanel();
@@ -87,16 +97,19 @@ public class EditConfigurationViewImpl extends DialogBox implements EditConfigur
         return panel;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void focusInFirstTab() {
         configurationTabPanel.selectTab(0);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -104,12 +117,14 @@ public class EditConfigurationViewImpl extends DialogBox implements EditConfigur
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

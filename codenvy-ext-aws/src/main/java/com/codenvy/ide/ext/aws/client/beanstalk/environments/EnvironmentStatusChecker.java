@@ -40,6 +40,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Checker for getting information about starting environment and it logs.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -78,6 +80,20 @@ public class EnvironmentStatusChecker {
 
     private AWSLocalizationConstant constant;
 
+    /**
+     * Create checker.
+     *
+     * @param resourceProvider
+     * @param project
+     * @param environmentToCheck
+     * @param showEvents
+     * @param statusHandler
+     * @param eventBus
+     * @param console
+     * @param service
+     * @param loginPresenter
+     * @param constant
+     */
     public EnvironmentStatusChecker(ResourceProvider resourceProvider, Project project, EnvironmentInfo environmentToCheck,
                                     boolean showEvents, RequestStatusHandler statusHandler, EventBus eventBus, ConsolePart console,
                                     BeanstalkClientService service, LoginPresenter loginPresenter, AWSLocalizationConstant constant) {
@@ -100,6 +116,7 @@ public class EnvironmentStatusChecker {
         checkEnvironmentStatusTimer.schedule(delay);
     }
 
+    /** Timer that perform checking for environment ready status. */
     private Timer checkEnvironmentStatusTimer = new Timer() {
         @Override
         public void run() {
@@ -123,6 +140,12 @@ public class EnvironmentStatusChecker {
         }
     };
 
+    /**
+     * Check environment status.
+     *
+     * @param callback
+     *         callback.
+     */
     private void checkEnvironmentStatus(final AsyncCallback<Boolean> callback) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -166,6 +189,9 @@ public class EnvironmentStatusChecker {
         }
     }
 
+    /**
+     * Show environment events when timer scheduled.
+     */
     private void outputEvents() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -186,7 +212,7 @@ public class EnvironmentStatusChecker {
                                          new AwsAsyncRequestCallback<EventsList>(unmarshaller, loggedInHandler, null, loginPresenter) {
                                              @Override
                                              protected void processFail(Throwable exception) {
-                                                //nothing to do
+                                                 //nothing to do
                                              }
 
                                              @Override
@@ -218,8 +244,6 @@ public class EnvironmentStatusChecker {
     private void updateEnvironmentStatus(EnvironmentInfo env) {
         if (env.getStatus() != previousStatus) {
             previousStatus = env.getStatus();
-            //todo do somethind with update
-//            eventBus.fireEvent(new EnvironmentInfoChangedEvent(env));
         }
 
         StringBuilder message = new StringBuilder();
