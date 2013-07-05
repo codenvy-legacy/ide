@@ -19,7 +19,7 @@
 package com.codenvy.ide.ext.git.client.url;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.git.client.GitClientResources;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -49,7 +49,7 @@ public class ShowProjectGitReadOnlyUrlViewImpl extends DialogBox implements Show
     @UiField
     com.codenvy.ide.ui.Button btnClose;
     @UiField(provided = true)
-    final   GitClientResources      res;
+    final   GitResources            res;
     @UiField(provided = true)
     final   GitLocalizationConstant locale;
     private ActionDelegate          delegate;
@@ -61,7 +61,7 @@ public class ShowProjectGitReadOnlyUrlViewImpl extends DialogBox implements Show
      * @param locale
      */
     @Inject
-    protected ShowProjectGitReadOnlyUrlViewImpl(GitClientResources resources, GitLocalizationConstant locale) {
+    protected ShowProjectGitReadOnlyUrlViewImpl(GitResources resources, GitLocalizationConstant locale) {
         this.res = resources;
         this.locale = locale;
 

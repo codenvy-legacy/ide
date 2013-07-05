@@ -19,7 +19,7 @@
 package com.codenvy.ide.ext.git.client.push;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.git.client.GitClientResources;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
@@ -57,7 +57,7 @@ public class PushToRemoteViewImpl extends DialogBox implements PushToRemoteView 
     @UiField
     com.codenvy.ide.ui.Button btnCancel;
     @UiField(provided = true)
-    final   GitClientResources      res;
+    final   GitResources            res;
     @UiField(provided = true)
     final   GitLocalizationConstant locale;
     private ActionDelegate          delegate;
@@ -69,7 +69,7 @@ public class PushToRemoteViewImpl extends DialogBox implements PushToRemoteView 
      * @param locale
      */
     @Inject
-    protected PushToRemoteViewImpl(GitClientResources resources, GitLocalizationConstant locale) {
+    protected PushToRemoteViewImpl(GitResources resources, GitLocalizationConstant locale) {
         this.res = resources;
         this.locale = locale;
 

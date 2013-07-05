@@ -19,7 +19,7 @@
 package com.codenvy.ide.ext.git.client.history;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.git.client.GitClientResources;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.json.JsonArray;
@@ -87,7 +87,7 @@ public class HistoryViewImpl extends BaseView<HistoryView.ActionDelegate> implem
     @UiField
     com.codenvy.ide.ui.Button btnDiffWithPrevCommit;
     @UiField(provided = true)
-    final GitClientResources      res;
+    final GitResources            res;
     @UiField(provided = true)
     final GitLocalizationConstant locale;
 
@@ -99,7 +99,7 @@ public class HistoryViewImpl extends BaseView<HistoryView.ActionDelegate> implem
      * @param partStackUIResources
      */
     @Inject
-    protected HistoryViewImpl(GitClientResources resources, GitLocalizationConstant locale, PartStackUIResources partStackUIResources) {
+    protected HistoryViewImpl(GitResources resources, GitLocalizationConstant locale, PartStackUIResources partStackUIResources) {
         super(partStackUIResources);
 
         this.res = resources;

@@ -19,7 +19,7 @@
 package com.codenvy.ide.ext.git.client.pull;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.git.client.GitClientResources;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
@@ -57,7 +57,7 @@ public class PullViewImpl extends DialogBox implements PullView {
     @UiField
     com.codenvy.ide.ui.Button btnCancel;
     @UiField(provided = true)
-    final   GitClientResources      res;
+    final   GitResources            res;
     @UiField(provided = true)
     final   GitLocalizationConstant locale;
     private ActionDelegate          delegate;
@@ -69,7 +69,7 @@ public class PullViewImpl extends DialogBox implements PullView {
      * @param locale
      */
     @Inject
-    protected PullViewImpl(GitClientResources resources, GitLocalizationConstant locale) {
+    protected PullViewImpl(GitResources resources, GitLocalizationConstant locale) {
         this.res = resources;
         this.locale = locale;
 

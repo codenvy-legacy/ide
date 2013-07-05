@@ -25,7 +25,7 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
-import com.codenvy.ide.ext.git.client.GitClientResources;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.marshaller.DiffResponseUnmarshaller;
@@ -66,7 +66,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
     private HistoryView             view;
     private GitClientService        service;
     private GitLocalizationConstant constant;
-    private GitClientResources      resources;
+    private GitResources            resources;
     private ResourceProvider        resourceProvider;
     private ConsolePart             console;
     private WorkspaceAgent          workspaceAgent;
@@ -89,7 +89,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
      * @param workspaceAgent
      */
     @Inject
-    public HistoryPresenter(HistoryView view, GitClientService service, GitLocalizationConstant constant, GitClientResources resources,
+    public HistoryPresenter(HistoryView view, GitClientService service, GitLocalizationConstant constant, GitResources resources,
                             ResourceProvider resourceProvider, ConsolePart console, WorkspaceAgent workspaceAgent) {
         this.view = view;
         this.view.setDelegate(this);

@@ -24,7 +24,7 @@ import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.git.client.GitClientResources;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.json.JsonArray;
@@ -68,7 +68,7 @@ public class BranchViewImpl extends DialogBox implements BranchView {
     @UiField
     ScrollPanel               branchesPanel;
     @UiField(provided = true)
-    final   GitClientResources      res;
+    final   GitResources            res;
     @UiField(provided = true)
     final   GitLocalizationConstant locale;
     @UiField(provided = true)
@@ -83,7 +83,7 @@ public class BranchViewImpl extends DialogBox implements BranchView {
      * @param locale
      */
     @Inject
-    protected BranchViewImpl(GitClientResources resources, GitLocalizationConstant locale, Resources coreRes) {
+    protected BranchViewImpl(GitResources resources, GitLocalizationConstant locale, Resources coreRes) {
         this.res = resources;
         this.locale = locale;
         this.coreRes = coreRes;

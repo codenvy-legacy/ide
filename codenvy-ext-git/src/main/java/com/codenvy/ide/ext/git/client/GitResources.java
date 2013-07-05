@@ -26,7 +26,7 @@ import com.google.gwt.resources.client.ImageResource;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 22, 2011 2:39:07 PM anya $
  */
-public interface GitClientResources extends ClientBundle {
+public interface GitResources extends ClientBundle {
     public interface GitCSS extends CssResource {
         String textFont();
     }

@@ -19,7 +19,7 @@
 package com.codenvy.ide.ext.git.client.fetch;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.git.client.GitClientResources;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
@@ -60,7 +60,7 @@ public class FetchViewImpl extends DialogBox implements FetchView {
     @UiField
     com.codenvy.ide.ui.Button btnCancel;
     @UiField(provided = true)
-    final   GitClientResources      res;
+    final   GitResources            res;
     @UiField(provided = true)
     final   GitLocalizationConstant locale;
     private ActionDelegate          delegate;
@@ -72,7 +72,7 @@ public class FetchViewImpl extends DialogBox implements FetchView {
      * @param locale
      */
     @Inject
-    protected FetchViewImpl(GitClientResources resources, GitLocalizationConstant locale) {
+    protected FetchViewImpl(GitResources resources, GitLocalizationConstant locale) {
         this.res = resources;
         this.locale = locale;
 

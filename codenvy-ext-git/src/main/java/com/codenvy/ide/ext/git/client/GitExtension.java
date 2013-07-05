@@ -45,7 +45,7 @@ public class GitExtension {
     public static final String HISTORY_GROUP_MAIN_MENU    = "GitHistoryGroup";
 
     @Inject
-    public GitExtension(GitClientResources resources, ActionManager actionManager, CloneRepositoryAction cloneAction,
+    public GitExtension(GitResources resources, ActionManager actionManager, CloneRepositoryAction cloneAction,
                         InitRepositoryAction initAction, DeleteRepositoryAction deleteAction, AddToIndexAction addToIndexAction,
                         ResetToCommitAction resetToCommitAction, RemoveFromIndexAction removeFromIndexAction, CommitAction commitAction,
                         ShowBranchesAction showBranchesAction, ShowMergeAction showMergeAction, ResetFilesAction resetFilesAction,

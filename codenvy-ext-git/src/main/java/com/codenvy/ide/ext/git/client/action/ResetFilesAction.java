@@ -21,7 +21,7 @@ package com.codenvy.ide.ext.git.client.action;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.ext.git.client.GitClientResources;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.reset.files.ResetFilesPresenter;
 import com.codenvy.ide.resources.model.Project;
@@ -37,7 +37,7 @@ public class ResetFilesAction extends Action {
     private ResourceProvider    resourceProvider;
 
     @Inject
-    public ResetFilesAction(ResetFilesPresenter presenter, ResourceProvider resourceProvider, GitClientResources resources,
+    public ResetFilesAction(ResetFilesPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                             GitLocalizationConstant constant) {
         super(constant.resetFilesControlTitle(), constant.resetFilesControlPrompt(), resources.reset());
         this.presenter = presenter;

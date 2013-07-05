@@ -4,7 +4,7 @@
              xmlns:p1='urn:import:com.google.gwt.user.cellview.client'
              xmlns:c='urn:import:com.codenvy.ide.ui'>
     <ui:with field='locale' type='com.codenvy.ide.ext.git.client.GitLocalizationConstant'/>
-    <ui:with field='res' type='com.codenvy.ide.ext.git.client.GitClientResources'/>
+    <ui:with field='res' type='com.codenvy.ide.ext.git.client.GitResources'/>
     <ui:style>
         .alignBtn {
             float: right;
