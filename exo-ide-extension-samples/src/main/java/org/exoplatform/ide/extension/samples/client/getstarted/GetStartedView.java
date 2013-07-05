@@ -223,7 +223,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
 
     @Override
     public void setPaaSTypes(List<PaaS> paaSTypes) {
-        int columnCount = 9;
+        int columnCount = 7;
         int rowCount = (int)Math.ceil((double)paaSTypes.size() / columnCount);
 
         paasGrid.clear();

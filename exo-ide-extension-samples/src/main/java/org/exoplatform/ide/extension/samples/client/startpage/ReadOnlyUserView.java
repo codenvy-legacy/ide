@@ -71,7 +71,8 @@ public class ReadOnlyUserView extends ViewImpl {
     Label       label;
 
     public ReadOnlyUserView(final List<String> workspaces) {
-        super(ID, ViewType.MODAL, SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyTitle(),
+        super(ID, ViewType.MODAL, workspaces.size() == 0 ? SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyTitle()
+            : SamplesExtension.LOCALIZATION_CONSTANT.switchWorkspaceTitle(),
               null, WIDTH, HEIGHT, false);
         add(uiBinder.createAndBindUi(this));
         label.setID(LABEL_ID);
@@ -89,14 +90,16 @@ public class ReadOnlyUserView extends ViewImpl {
         actionButton.addClickHandler(new ClickHandler() {
 
             @Override
-            public void onClick(ClickEvent   event) {
+            public void onClick(ClickEvent event) {
                 UrlBuilder builder = new UrlBuilder();
                 if (workspaces.size() == 0)
-                    Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("/login").buildString());
+                    Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("/login")
+                                                   .buildString());
                 else if (workspaces.size() == 1)
                     Window.Location.replace(workspaces.get(0));
-                else 
-                    Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("/private/select-tenant").buildString());
+                else
+                    Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                                                   .setPath("/private/select-tenant").buildString());
             }
         });
 
