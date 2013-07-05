@@ -36,6 +36,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter that allow user to rebuild instance.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -50,8 +52,17 @@ public class RebuildEnvironmentPresenter implements RebuildEnvironmentView.Actio
     private LoginPresenter                 loginPresenter;
     private AsyncCallback<EnvironmentInfo> callback;
 
+    /**
+     * Create view.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param service
+     * @param constant
+     * @param loginPresenter
+     */
     @Inject
-
     public RebuildEnvironmentPresenter(RebuildEnvironmentView view, EventBus eventBus, ConsolePart console,
                                        BeanstalkClientService service, AWSLocalizationConstant constant, LoginPresenter loginPresenter) {
         this.view = view;
@@ -64,6 +75,7 @@ public class RebuildEnvironmentPresenter implements RebuildEnvironmentView.Actio
         this.view.setDelegate(this);
     }
 
+    /** Show main dialog window. */
     public void showDialog(EnvironmentInfo environmentInfo, AsyncCallback<EnvironmentInfo> callback) {
         this.callback = callback;
 
@@ -80,6 +92,7 @@ public class RebuildEnvironmentPresenter implements RebuildEnvironmentView.Actio
         view.setRebuildQuestion(constant.rebuildEnvironmentQuestion(environmentInfo.getName()));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onRebuildButtonClicked() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -117,6 +130,7 @@ public class RebuildEnvironmentPresenter implements RebuildEnvironmentView.Actio
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCancelButtonClicked() {
         view.close();

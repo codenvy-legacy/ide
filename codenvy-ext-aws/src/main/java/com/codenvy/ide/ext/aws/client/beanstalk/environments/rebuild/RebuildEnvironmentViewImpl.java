@@ -32,12 +32,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link RebuildEnvironmentView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class RebuildEnvironmentViewImpl extends DialogBox implements RebuildEnvironmentView {
-    interface RebuildEnvironmentViewImplUiBinder extends UiBinder<Widget, RebuildEnvironmentViewImpl> {}
+    interface RebuildEnvironmentViewImplUiBinder extends UiBinder<Widget, RebuildEnvironmentViewImpl> {
+    }
 
     private static RebuildEnvironmentViewImplUiBinder uiBinder = GWT.create(RebuildEnvironmentViewImplUiBinder.class);
 
@@ -57,6 +60,11 @@ public class RebuildEnvironmentViewImpl extends DialogBox implements RebuildEnvi
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     public RebuildEnvironmentViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -67,16 +75,19 @@ public class RebuildEnvironmentViewImpl extends DialogBox implements RebuildEnvi
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRebuildQuestion(String message) {
         questionLabel.setText(message);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -84,12 +95,14 @@ public class RebuildEnvironmentViewImpl extends DialogBox implements RebuildEnvi
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

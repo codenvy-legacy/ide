@@ -32,12 +32,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link TerminateEnvironmentView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class TerminateEnvironmentViewImpl extends DialogBox implements TerminateEnvironmentView {
-    interface TerminateEnvironmentViewImplUiBinder extends UiBinder<Widget, TerminateEnvironmentViewImpl> {}
+    interface TerminateEnvironmentViewImplUiBinder extends UiBinder<Widget, TerminateEnvironmentViewImpl> {
+    }
 
     private static TerminateEnvironmentViewImplUiBinder uiBinder = GWT.create(TerminateEnvironmentViewImplUiBinder.class);
 
@@ -57,6 +60,11 @@ public class TerminateEnvironmentViewImpl extends DialogBox implements Terminate
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     public TerminateEnvironmentViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -67,16 +75,19 @@ public class TerminateEnvironmentViewImpl extends DialogBox implements Terminate
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setTerminateQuestion(String question) {
         questionLabel.setText(question);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -84,12 +95,14 @@ public class TerminateEnvironmentViewImpl extends DialogBox implements Terminate
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

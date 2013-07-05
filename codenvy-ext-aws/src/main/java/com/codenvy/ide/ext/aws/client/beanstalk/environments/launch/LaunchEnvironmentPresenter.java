@@ -44,6 +44,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter that allow user to launch environment.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -59,6 +61,17 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
     private AWSLocalizationConstant        constant;
     private AsyncCallback<EnvironmentInfo> callback;
 
+    /**
+     * Create view.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param service
+     * @param loginPresenter
+     * @param resourceProvider
+     * @param constant
+     */
     @Inject
     public LaunchEnvironmentPresenter(LaunchEnvironmentView view, EventBus eventBus, ConsolePart console,
                                       BeanstalkClientService service, LoginPresenter loginPresenter, ResourceProvider resourceProvider,
@@ -74,6 +87,7 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
         this.view.setDelegate(this);
     }
 
+    /** Show main dialog window. */
     public void showDialog(String versionLabel, String appName, AsyncCallback<EnvironmentInfo> callback) {
         this.appName = appName;
         this.callback = callback;
@@ -81,12 +95,14 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
         if (!view.isShown()) {
             view.enableLaunchButton(false);
             view.showDialog();
+            view.focusInEnvNameField();
 
             getSolutionStacks();
             getVersions(versionLabel);
         }
     }
 
+    /** Get available solution stack technologies. */
     private void getSolutionStacks() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -134,6 +150,12 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
         }
     }
 
+    /**
+     * Get available version labels for the application.
+     *
+     * @param versionLabel
+     *         version label.
+     */
     private void getVersions(final String versionLabel) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -171,6 +193,7 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onLaunchButtonClicked() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -216,16 +239,19 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
                                           }
                                       });
         } catch (RequestException e) {
-
+            eventBus.fireEvent(new ExceptionThrownEvent(e));
+            console.print(e.getMessage());
         }
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCancelButtonClicked() {
         view.close();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onNameFieldValueChanged() {
         view.enableLaunchButton(view.getEnvName() != null && !view.getEnvName().isEmpty());

@@ -22,27 +22,61 @@ import com.codenvy.ide.api.mvp.View;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 /**
+ * The view for {@link EditConfigurationPresenter}
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface EditConfigurationView extends View<EditConfigurationView.ActionDelegate> {
+    /** Interface which must implement presenter to process any actions. */
     interface ActionDelegate {
+        /** Perform action when apply button clicked. */
         void onApplyButtonCLicked();
 
+        /** Perform action when cancel button clicked. */
         void onCancelButtonClicked();
     }
 
+    /**
+     * Adds Server tab pain and return Simple panel to assign it into new presenter.
+     *
+     * @param tabText
+     *         tab title.
+     * @return SimplePanel object.
+     */
     AcceptsOneWidget addServerTabPain(String tabText);
 
+    /**
+     * Adds Load balancer tab pain and return Simple panel to assign it into new presenter.
+     *
+     * @param tabText
+     *         tab title.
+     * @return SimplePanel object.
+     */
     AcceptsOneWidget addLoadBalancerTabPain(String tabText);
 
+    /**
+     * Adds Container tab pain and return Simple panel to assign it into new presenter.
+     *
+     * @param tabText
+     *         tab title.
+     * @return SimplePanel object.
+     */
     AcceptsOneWidget addContainerTabPain(String tabText);
 
+    /** Set focus in first tab. */
     void focusInFirstTab();
 
+    /**
+     * Return shown state for current window.
+     *
+     * @return true if shown, otherwise false.
+     */
     boolean isShown();
 
+    /** Shows current dialog. */
     void showDialog();
 
+    /** Close current dialog. */
     void close();
 }

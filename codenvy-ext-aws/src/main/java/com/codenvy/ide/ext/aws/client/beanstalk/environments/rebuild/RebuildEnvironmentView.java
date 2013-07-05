@@ -21,21 +21,39 @@ package com.codenvy.ide.ext.aws.client.beanstalk.environments.rebuild;
 import com.codenvy.ide.api.mvp.View;
 
 /**
+ * The view for {@link RebuildEnvironmentPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface RebuildEnvironmentView extends View<RebuildEnvironmentView.ActionDelegate> {
+    /** Interface which must implement presenter to process any actions. */
     interface ActionDelegate {
+        /** Perform action when rebuild button clicked. */
         void onRebuildButtonClicked();
 
+        /** Perform action when cancel button clicked. */
         void onCancelButtonClicked();
     }
 
+    /**
+     * Set rebuild question.
+     *
+     * @param message
+     *         question message.
+     */
     public void setRebuildQuestion(String message);
 
+    /**
+     * Return shown state for current window.
+     *
+     * @return true if shown, otherwise false.
+     */
     boolean isShown();
 
+    /** Shows current dialog. */
     void showDialog();
 
+    /** Close current dialog. */
     void close();
 }

@@ -31,12 +31,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link CreateApplicationView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class CreateApplicationViewImpl extends DialogBox implements CreateApplicationView {
-    interface CreateApplicationViewImplUiBinder extends UiBinder<Widget, CreateApplicationViewImpl> {}
+    interface CreateApplicationViewImplUiBinder extends UiBinder<Widget, CreateApplicationViewImpl> {
+    }
 
     private static CreateApplicationViewImplUiBinder uiBinder = GWT.create(CreateApplicationViewImplUiBinder.class);
 
@@ -89,6 +92,11 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected CreateApplicationViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -102,41 +110,49 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
         envDescField.setEnabled(false);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getApplicationName() {
         return appNameField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return appDescField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getS3Bucket() {
         return s3BucketField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getS3Key() {
         return s3KeyField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getEnvironmentName() {
         return envNameField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getEnvironmentDescription() {
         return envDescField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getSolutionStack() {
         return solutionStack.getItemText(solutionStack.getSelectedIndex());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setSolutionStacks(JsonArray<String> stack) {
         for (int i = 0; i < stack.size(); i++) {
@@ -144,16 +160,19 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean launchNewEnvironment() {
         return launchNewEnv.getValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -161,17 +180,20 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void enableCreateEnvironmentStep(boolean enabled) {
         envNameField.setEnabled(enabled);
@@ -179,6 +201,7 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
         solutionStack.setEnabled(enabled);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showCreateApplicationStep() {
         createEnvironmentStep.setVisible(false);
@@ -188,6 +211,7 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
         btnNext.setVisible(true);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showCreateEnvironmentStep() {
         createApplicationStep.setVisible(false);

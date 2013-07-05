@@ -45,12 +45,15 @@ import com.google.inject.Singleton;
 import java.util.List;
 
 /**
+ * The implementation of {@link EnvironmentTabPainView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class EnvironmentTabPainViewImpl extends Composite implements EnvironmentTabPainView {
-    interface EnvironmentTabPainViewImplUiBinder extends UiBinder<Widget, EnvironmentTabPainViewImpl> {}
+    interface EnvironmentTabPainViewImplUiBinder extends UiBinder<Widget, EnvironmentTabPainViewImpl> {
+    }
 
     private static EnvironmentTabPainViewImplUiBinder uiBinder = GWT.create(EnvironmentTabPainViewImplUiBinder.class);
 
@@ -79,8 +82,12 @@ public class EnvironmentTabPainViewImpl extends Composite implements Environment
 
     private EnvironmentInfo selectedEnvironment;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
-
     public EnvironmentTabPainViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
 
@@ -91,19 +98,19 @@ public class EnvironmentTabPainViewImpl extends Composite implements Environment
         initWidget(widget);
 
         editConfigurationButton.setEnabled(false);
-//        editConfigurationButton.setVisible(false);
         restartEnvironmentButton.setEnabled(false);
         rebuildEnvironmentButton.setEnabled(false);
         terminateEnvironmentButton.setEnabled(false);
         logsEnvironmentButton.setEnabled(false);
     }
 
+    /** Link representation of table cell. */
     public class LinkCell extends AbstractSafeHtmlCell<String> {
-
         public LinkCell() {
             super(new SafeHtmlListRenderer());
         }
 
+        /** {@inheritDoc} */
         @Override
         protected void render(com.google.gwt.cell.client.Cell.Context context, SafeHtml data, SafeHtmlBuilder sb) {
             sb.append(data);
@@ -111,15 +118,17 @@ public class EnvironmentTabPainViewImpl extends Composite implements Environment
 
     }
 
-    private class SafeHtmlListRenderer implements SafeHtmlRenderer<String> {
 
+    /** Renderer for HTML cells. */
+    private class SafeHtmlListRenderer implements SafeHtmlRenderer<String> {
+        /** {@inheritDoc} */
         @Override
         public SafeHtml render(String object) {
             String string = createLinks(object);
             return new SafeHtmlBuilder().appendHtmlConstant(string).toSafeHtml();
         }
 
-        /** @see com.google.gwt.text.shared.SafeHtmlRenderer#render(java.lang.Object, com.google.gwt.safehtml.shared.SafeHtmlBuilder) */
+        /** {@inheritDoc} */
         @Override
         public void render(String object, SafeHtmlBuilder builder) {
             String string = createLinks(object);
@@ -127,6 +136,13 @@ public class EnvironmentTabPainViewImpl extends Composite implements Environment
         }
     }
 
+    /**
+     * Create html href link for specified url.
+     *
+     * @param s
+     *         url.
+     * @return html href with specified url.
+     */
     private String createLinks(String s) {
         if (s.isEmpty()) {
             return "n/a";
@@ -135,6 +151,7 @@ public class EnvironmentTabPainViewImpl extends Composite implements Environment
                + " target=\"_blank\">View Running Version</a><br>";
     }
 
+    /** Init environment cell table. */
     private void initEnvironmentCellTable() {
         environmentInfoCellTable.setWidth("100%", true);
         environmentInfoCellTable.setAutoHeaderRefreshDisabled(true);
@@ -214,11 +231,13 @@ public class EnvironmentTabPainViewImpl extends Composite implements Environment
         environmentInfoCellTable.addColumn(urlColumn, constant.environmentsGridUrl());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setEnvironments(List<EnvironmentInfo> environments) {
         environmentInfoCellTable.setRowData(environments);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

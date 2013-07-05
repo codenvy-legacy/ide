@@ -52,6 +52,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
+ * Presenter which allow user to create Elastic Beanstalk Application.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -69,6 +71,18 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     private HandlerRegistration     projectBuildHandler;
     private Loader                  loader;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param constant
+     * @param resourceProvider
+     * @param service
+     * @param loginPresenter
+     * @param loader
+     */
     @Inject
     public CreateApplicationPresenter(CreateApplicationView view, EventBus eventBus, ConsolePart console,
                                       AWSLocalizationConstant constant, ResourceProvider resourceProvider, BeanstalkClientService service,
@@ -85,6 +99,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         this.view.setDelegate(this);
     }
 
+    /** Show main dialog window. */
     public void showDialog() {
         if (!view.isShown()) {
             view.showDialog();
@@ -93,6 +108,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         }
     }
 
+    /** Get solution stack technologies. */
     private void getSolutionStacks() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -140,6 +156,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onProjectBuilt(ProjectBuiltEvent event) {
         projectBuildHandler.removeHandler();
@@ -149,6 +166,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onNextButtonClicked() {
         final String appName = view.getApplicationName();
@@ -160,11 +178,13 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         view.showCreateEnvironmentStep();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onBackButtonClicked() {
         view.showCreateApplicationStep();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onFinishButtonClicked() {
         if (view.launchNewEnvironment()) {
@@ -180,6 +200,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         beforeCreation();
     }
 
+    /** Start building application before creation on Elastic Beanstalk. */
     private void beforeCreation() {
         openedProject = resourceProvider.getActiveProject();
 
@@ -191,16 +212,19 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCancelButtonClicked() {
         view.close();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onLaunchEnvironmentClicked(boolean enabled) {
         view.enableCreateEnvironmentStep(enabled);
     }
 
+    /** Create new application. */
     private void createApplication() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -257,6 +281,12 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         }
     }
 
+    /**
+     * Create new environment.
+     *
+     * @param appName
+     *         name of newly created application.
+     */
     private void createEnvironment(final String appName) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override

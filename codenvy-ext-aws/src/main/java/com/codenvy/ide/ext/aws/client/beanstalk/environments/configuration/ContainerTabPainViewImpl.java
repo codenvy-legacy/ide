@@ -30,12 +30,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link ContainerTabPainView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class ContainerTabPainViewImpl extends Composite implements ContainerTabPainView {
-    interface ContainerTabPainViewImplUiBinder extends UiBinder<Widget, ContainerTabPainViewImpl> {}
+    interface ContainerTabPainViewImplUiBinder extends UiBinder<Widget, ContainerTabPainViewImpl> {
+    }
 
     private static ContainerTabPainViewImplUiBinder uiBinder = GWT.create(ContainerTabPainViewImplUiBinder.class);
 
@@ -56,6 +59,11 @@ public class ContainerTabPainViewImpl extends Composite implements ContainerTabP
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected ContainerTabPainViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -65,51 +73,61 @@ public class ContainerTabPainViewImpl extends Composite implements ContainerTabP
         this.initWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setInitialHeapSize(String heapSize) {
         initialJVMHeapSizeField.setText(heapSize);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getInitialHeapSize() {
         return initialJVMHeapSizeField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMaxHeapSize(String maxHeapSize) {
         maximumJVMHeapSizeField.setText(maxHeapSize);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getMaxHeapSize() {
         return maximumJVMHeapSizeField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMaxPermGenSize(String maxPermGenSize) {
         maxPermSizeField.setText(maxPermGenSize);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getMaxPermGenSize() {
         return maxPermSizeField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setJVMCommandLineOpt(String jvmCommandLineOpt) {
         jvmOptionsField.setText(jvmCommandLineOpt);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getJVMCommandLineOpt() {
         return jvmOptionsField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void resetModifiedFields() {
         initialJVMHeapSizeField.setModified(false);
@@ -118,21 +136,25 @@ public class ContainerTabPainViewImpl extends Composite implements ContainerTabP
         jvmOptionsField.setModified(false);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isInitialHeapSizeModified() {
         return initialJVMHeapSizeField.isModified();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isMaxHeapSizeModified() {
         return maximumJVMHeapSizeField.isModified();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isMaxPermGenSizeModified() {
         return maxPermSizeField.isModified();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isJVMCommandLineOptModified() {
         return jvmOptionsField.isModified();

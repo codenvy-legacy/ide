@@ -21,21 +21,39 @@ package com.codenvy.ide.ext.aws.client.beanstalk.environments.restart;
 import com.codenvy.ide.api.mvp.View;
 
 /**
+ * The view for {@link RestartEnvironmentPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface RestartEnvironmentView extends View<RestartEnvironmentView.ActionDelegate> {
+    /** Interface which must implement presenter to process any actions. */
     interface ActionDelegate {
+        /** Perform action when restart button clicked. */
         void onRestartButtonClicked();
 
+        /** Perform action when cancel button clicked. */
         void onCancelButtonClicked();
     }
 
+    /**
+     * Set restart question.
+     *
+     * @param question
+     *         question message.
+     */
     void setRestartQuestion(String question);
 
+    /**
+     * Return shown state for current window.
+     *
+     * @return true if shown, otherwise false.
+     */
     boolean isShown();
 
+    /** Shows current dialog. */
     void showDialog();
 
+    /** Close current dialog. */
     void close();
 }

@@ -32,12 +32,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link RestartEnvironmentView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class RestartEnvironmentViewImpl extends DialogBox implements RestartEnvironmentView {
-    interface RestartEnvironmentViewImplUiBinder extends UiBinder<Widget, RestartEnvironmentViewImpl> {}
+    interface RestartEnvironmentViewImplUiBinder extends UiBinder<Widget, RestartEnvironmentViewImpl> {
+    }
 
     private static RestartEnvironmentViewImplUiBinder uiBinder = GWT.create(RestartEnvironmentViewImplUiBinder.class);
 
@@ -57,6 +60,11 @@ public class RestartEnvironmentViewImpl extends DialogBox implements RestartEnvi
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     public RestartEnvironmentViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -67,16 +75,19 @@ public class RestartEnvironmentViewImpl extends DialogBox implements RestartEnvi
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRestartQuestion(String question) {
         questionLabel.setText(question);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -84,12 +95,14 @@ public class RestartEnvironmentViewImpl extends DialogBox implements RestartEnvi
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

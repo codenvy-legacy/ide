@@ -30,6 +30,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link LoadBalancerTabPainView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -60,6 +62,11 @@ public class LoadBalancerTabPainViewImpl extends Composite implements LoadBalanc
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected LoadBalancerTabPainViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -69,61 +76,73 @@ public class LoadBalancerTabPainViewImpl extends Composite implements LoadBalanc
         this.initWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setHealthCheckUrl(String healthCheckUrl) {
         appHealthCheckUrlField.setText(healthCheckUrl);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getHealthCheckUrl() {
         return appHealthCheckUrlField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setHealthCheckInterval(String healthCheckInterval) {
         healthCheckIntervalField.setText(healthCheckInterval);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getHealthCheckInterval() {
         return healthCheckIntervalField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setHealthCheckTimeOut(String healthCheckTimeOut) {
         healthCheckTimeoutField.setText(healthCheckTimeOut);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getHealthCheckTimeOut() {
         return healthCheckTimeoutField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setHealthCheckCountThreshold(String healthCheckCountThreshold) {
         healthyThresholdField.setText(healthCheckCountThreshold);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getHealthCheckCountThreshold() {
         return healthyThresholdField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setUnhealthyCheckCountThreshold(String unhealthyCheckCountThreshold) {
         unhealthyThresholdField.setText(unhealthyCheckCountThreshold);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getUnhealthyCheckCountThreshold() {
         return unhealthyThresholdField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void resetModifiedFields() {
         appHealthCheckUrlField.setModified(false);
@@ -133,26 +152,31 @@ public class LoadBalancerTabPainViewImpl extends Composite implements LoadBalanc
         unhealthyThresholdField.setModified(false);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isHealthCheckUrlModified() {
         return appHealthCheckUrlField.isModified();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isHealthCheckIntervalModified() {
         return healthCheckIntervalField.isModified();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isHealthCheckTimeOutModified() {
         return healthCheckTimeoutField.isModified();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isHealthCheckCountThresholdModified() {
         return healthyThresholdField.isModified();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isUnhealthyCheckCountThresholdModified() {
         return unhealthyThresholdField.isModified();

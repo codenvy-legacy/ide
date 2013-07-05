@@ -47,6 +47,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Presenter that allow user to control environment state.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -61,8 +63,22 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
     private RestartEnvironmentPresenter   restartEnvironmentPresenter;
     private RebuildEnvironmentPresenter   rebuildEnvironmentPresenter;
     private TerminateEnvironmentPresenter terminateEnvironmentPresenter;
-    private AWSLocalizationConstant constant;
+    private AWSLocalizationConstant       constant;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param service
+     * @param resourceProvider
+     * @param editConfigurationPresenter
+     * @param restartEnvironmentPresenter
+     * @param rebuildEnvironmentPresenter
+     * @param terminateEnvironmentPresenter
+     * @param constant
+     */
     @Inject
     public EnvironmentTabPainPresenter(EnvironmentTabPainView view, EventBus eventBus, ConsolePart console,
                                        BeanstalkClientService service, ResourceProvider resourceProvider,
@@ -84,16 +100,19 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
         this.view.setDelegate(this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onEditConfigurationButtonClicked(EnvironmentInfo environment) {
         editConfigurationPresenter.showDialog(environment);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onRestartButtonClicked(EnvironmentInfo environment) {
         restartEnvironmentPresenter.showDialog(environment);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onRebuildButtonClicked(EnvironmentInfo environment) {
         rebuildEnvironmentPresenter.showDialog(environment, new AsyncCallback<EnvironmentInfo>() {
@@ -109,6 +128,7 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onTerminateButtonClicked(EnvironmentInfo environment) {
         terminateEnvironmentPresenter.showDialog(environment, new AsyncCallback<EnvironmentInfo>() {
@@ -124,6 +144,7 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onGetLogsButtonCLicked(final EnvironmentInfo environment) {
         if (environment == null) {
@@ -153,7 +174,7 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
                 @Override
                 protected void onFailure(Throwable exception) {
                     String message = constant.logsEnvironmentFailed(environment.getName());
-                    if (exception instanceof ServerException &&exception.getMessage() != null) {
+                    if (exception instanceof ServerException && exception.getMessage() != null) {
                         message += "<br>" + exception.getMessage();
                     }
 
@@ -166,6 +187,13 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
         }
     }
 
+    /**
+     * Get html url link for logs from instance info..
+     *
+     * @param instanceLog
+     *         url for
+     * @return html href for logs.
+     */
     private String getUrl(InstanceLog instanceLog) {
         String logUrl = instanceLog.getLogUrl();
         if (!logUrl.startsWith("http")) {
@@ -177,6 +205,7 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
         return logUrl;
     }
 
+    /** Get environments list. */
     public void getEnvironments() {
         JsonArray<EnvironmentInfo> environmentInfoJsonArray = JsonCollections.createArray();
         EnvironmentsInfoListUnmarshaller unmarshaller = new EnvironmentsInfoListUnmarshaller(environmentInfoJsonArray);
@@ -206,6 +235,7 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
