@@ -141,7 +141,8 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
 //TODO need improve this code
                                                      String project = null;
                                                      String filePath = null;
-                                                     if (request.getHeader("Referer") != null && !request.getHeader("Referer").isEmpty() && request.getHeader("Referer").contains("/ide/"))
+                                                     if (request.getHeader("Referer") != null && !request.getHeader("Referer").isEmpty() && request.getHeader("Referer").contains("/ide/")
+                                                         && !request.getHeader("Referer").contains("_app"))
                                                      {
                                                          String orginalUrl = request.getHeader("Referer");
                                                          
