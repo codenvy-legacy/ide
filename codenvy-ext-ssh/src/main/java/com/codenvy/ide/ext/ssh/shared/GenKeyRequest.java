@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,20 +16,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.ssh.client.inject;
+package com.codenvy.ide.ext.ssh.shared;
 
-import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.ext.ssh.client.SshKeyService;
-import com.codenvy.ide.ext.ssh.client.SshKeyServiceImpl;
-import com.google.gwt.inject.client.AbstractGinModule;
-import com.google.inject.Singleton;
+/**
+ * Interface describe a request for generate a SSH-key.
+ *
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: GenKeyRequest.java Mar 21, 2012 6:14:27 PM azatsarynnyy $
+ */
+public interface GenKeyRequest {
+    /**
+     * Returns remote host name for which generate key.
+     *
+     * @return host name
+     */
+    String getHost();
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
-@ExtensionGinModule
-public class SshGinModule extends AbstractGinModule {
-    /** {@inheritDoc} */
-    @Override
-    protected void configure() {
-        bind(SshKeyService.class).to(SshKeyServiceImpl.class).in(Singleton.class);
-    }
+    /**
+     * Returns comment for public key.
+     *
+     * @return comment
+     */
+    String getComment();
+
+    /**
+     * Returns passphrase for private key.
+     *
+     * @return passphrase
+     */
+    String getPassphrase();
 }
