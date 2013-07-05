@@ -32,7 +32,14 @@ public class CloneRequestStatusHandler extends RequestStatusHandlerBase {
     private String                  remoteUri;
     private GitLocalizationConstant constant;
 
-    /** @param remoteUri */
+    /**
+     * Create handler.
+     *
+     * @param projectName
+     * @param remoteUri
+     * @param eventBus
+     * @param constant
+     */
     public CloneRequestStatusHandler(String projectName, String remoteUri, EventBus eventBus, GitLocalizationConstant constant) {
         super(projectName, eventBus);
         this.remoteUri = remoteUri;

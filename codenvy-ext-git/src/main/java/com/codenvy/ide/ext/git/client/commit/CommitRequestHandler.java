@@ -32,7 +32,14 @@ public class CommitRequestHandler extends RequestStatusHandlerBase {
     private String                  comment;
     private GitLocalizationConstant constant;
 
-    /** @param projectName */
+    /**
+     * Create handler.
+     *
+     * @param projectName
+     * @param comment
+     * @param eventBus
+     * @param constant
+     */
     public CommitRequestHandler(String projectName, String comment, EventBus eventBus, GitLocalizationConstant constant) {
         super(projectName, eventBus);
         this.comment = comment;

@@ -185,6 +185,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      *         the path where project exist
      */
     private void deleteFolder(Project path) {
+        // TODO need to add support of removing project
 //        try {
 //            VirtualFileSystem.getInstance().delete(path,
 //                                                   new AsyncRequestCallback<String>() {

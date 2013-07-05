@@ -108,7 +108,7 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
                                @Override
                                protected void onSuccess(String result) {
                                    console.print(constant.removeFilesSuccessfull());
-// TODO
+// TODO refresh project explorer tree
 //                                   if (display.getFromIndexValue().getValue().booleanValue()) {
 //                                       IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
 //                                   } else {

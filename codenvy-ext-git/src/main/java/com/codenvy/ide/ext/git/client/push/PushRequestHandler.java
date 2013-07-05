@@ -35,8 +35,12 @@ public class PushRequestHandler extends RequestStatusHandlerBase {
     private GitLocalizationConstant constant;
 
     /**
+     * Create handler.
+     *
      * @param projectName
      * @param refSpec
+     * @param eventBus
+     * @param constant
      */
     public PushRequestHandler(String projectName, JsonArray<String> refSpec, EventBus eventBus, GitLocalizationConstant constant) {
         super(projectName, eventBus);

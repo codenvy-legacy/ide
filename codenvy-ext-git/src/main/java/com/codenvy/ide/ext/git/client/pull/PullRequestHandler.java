@@ -34,8 +34,12 @@ public class PullRequestHandler extends RequestStatusHandlerBase {
     private GitLocalizationConstant constant;
 
     /**
+     * Create handler.
+     *
      * @param projectName
      * @param refSpec
+     * @param eventBus
+     * @param constant
      */
     public PullRequestHandler(String projectName, String refSpec, EventBus eventBus, GitLocalizationConstant constant) {
         super(projectName, eventBus);

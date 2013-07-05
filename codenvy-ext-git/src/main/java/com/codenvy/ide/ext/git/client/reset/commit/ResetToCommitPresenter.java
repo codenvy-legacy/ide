@@ -37,7 +37,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Presenter for reseting head to commit.
+ * Presenter for resetting head to commit.
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 15, 2011 10:31:25 AM anya $
