@@ -101,58 +101,58 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
      */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new CloudFoundryClientServiceImpl(event.getLoader(), IDE.messageBus());
+//        new CloudFoundryClientServiceImpl(event.getLoader(), IDE.messageBus());
     }
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
     @Override
     public void initialize() {
-        IDE.getInstance().registerPaaS(new PaaS(CF_ID, "Cloud Foundry",
-                                                new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry48()),
-                                                new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry48Disabled()),
-                                                Arrays.asList(ProjectType.JSP,
-                                                              ProjectType.RUBY_ON_RAILS,
-                                                              ProjectType.SPRING,
-                                                              ProjectType.WAR),
-                                                new DeployApplicationPresenter()));
-
-        IDE.getInstance()
-           .registerPaaS(new PaaS(WF_ID, "Tier3 Web Fabric",
-                                  new Image(CloudFoundryClientBundle.INSTANCE.tier3WebFabric48()),
-                                  new Image(CloudFoundryClientBundle.INSTANCE.tier3WebFabric48Disabled()),
-                                  Arrays.asList(ProjectType.JSP,
-                                                ProjectType.RUBY_ON_RAILS,
-                                                ProjectType.SPRING,
-                                                ProjectType.WAR),
-                                  new org.exoplatform.ide.extension.cloudfoundry.client.deployTier3WebFabric.DeployApplicationPresenter()));
-
-        IDE.addHandler(InitializeServicesEvent.TYPE, this);
-
-        IDE.getInstance().addControl(new CloudFoundryControl(PAAS_PROVIDER.CLOUD_FOUNDRY));
-        IDE.getInstance().addControl(new CloudFoundryControl(PAAS_PROVIDER.WEB_FABRIC));
-
-        IDE.getInstance().addControl(new CloudFoundryControlGroup());
-        IDE.getInstance().addControl(new Tier3WebFabricControlGroup());
-
-        IDE.getInstance().addControl(new CreateApplicationControl(PAAS_PROVIDER.CLOUD_FOUNDRY));
-        IDE.getInstance().addControl(new CreateApplicationControl(PAAS_PROVIDER.WEB_FABRIC));
-        IDE.getInstance().addControl(new ApplicationsControl(PAAS_PROVIDER.CLOUD_FOUNDRY));
-        IDE.getInstance().addControl(new ApplicationsControl(PAAS_PROVIDER.WEB_FABRIC));
-        IDE.getInstance().addControl(new SwitchAccountControl(PAAS_PROVIDER.CLOUD_FOUNDRY));
-        IDE.getInstance().addControl(new SwitchAccountControl(PAAS_PROVIDER.WEB_FABRIC));
-
-        new CreateApplicationPresenter();
-        new LoginPresenter();
-        new StartApplicationPresenter();
-        new ApplicationInfoPresenter();
-        new UpdateApplicationPresenter();
-        new DeleteApplicationPresenter();
-        new UnmapUrlPresenter();
-        new UpdatePropertiesPresenter();
-        new ApplicationsPresenter();
-        new CloudFoundryProjectPresenter();
-        new ManageServicesPresenter();
-        new CreateServicePresenter();
+//        IDE.getInstance().registerPaaS(new PaaS(CF_ID, "Cloud Foundry",
+//                                                new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry48()),
+//                                                new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry48Disabled()),
+//                                                Arrays.asList(ProjectType.JSP,
+//                                                              ProjectType.RUBY_ON_RAILS,
+//                                                              ProjectType.SPRING,
+//                                                              ProjectType.WAR),
+//                                                new DeployApplicationPresenter()));
+//
+//        IDE.getInstance()
+//           .registerPaaS(new PaaS(WF_ID, "Tier3 Web Fabric",
+//                                  new Image(CloudFoundryClientBundle.INSTANCE.tier3WebFabric48()),
+//                                  new Image(CloudFoundryClientBundle.INSTANCE.tier3WebFabric48Disabled()),
+//                                  Arrays.asList(ProjectType.JSP,
+//                                                ProjectType.RUBY_ON_RAILS,
+//                                                ProjectType.SPRING,
+//                                                ProjectType.WAR),
+//                                  new org.exoplatform.ide.extension.cloudfoundry.client.deployTier3WebFabric.DeployApplicationPresenter()));
+//
+//        IDE.addHandler(InitializeServicesEvent.TYPE, this);
+//
+//        IDE.getInstance().addControl(new CloudFoundryControl(PAAS_PROVIDER.CLOUD_FOUNDRY));
+//        IDE.getInstance().addControl(new CloudFoundryControl(PAAS_PROVIDER.WEB_FABRIC));
+//
+//        IDE.getInstance().addControl(new CloudFoundryControlGroup());
+//        IDE.getInstance().addControl(new Tier3WebFabricControlGroup());
+//
+//        IDE.getInstance().addControl(new CreateApplicationControl(PAAS_PROVIDER.CLOUD_FOUNDRY));
+//        IDE.getInstance().addControl(new CreateApplicationControl(PAAS_PROVIDER.WEB_FABRIC));
+//        IDE.getInstance().addControl(new ApplicationsControl(PAAS_PROVIDER.CLOUD_FOUNDRY));
+//        IDE.getInstance().addControl(new ApplicationsControl(PAAS_PROVIDER.WEB_FABRIC));
+//        IDE.getInstance().addControl(new SwitchAccountControl(PAAS_PROVIDER.CLOUD_FOUNDRY));
+//        IDE.getInstance().addControl(new SwitchAccountControl(PAAS_PROVIDER.WEB_FABRIC));
+//
+//        new CreateApplicationPresenter();
+//        new LoginPresenter();
+//        new StartApplicationPresenter();
+//        new ApplicationInfoPresenter();
+//        new UpdateApplicationPresenter();
+//        new DeleteApplicationPresenter();
+//        new UnmapUrlPresenter();
+//        new UpdatePropertiesPresenter();
+//        new ApplicationsPresenter();
+//        new CloudFoundryProjectPresenter();
+//        new ManageServicesPresenter();
+//        new CreateServicePresenter();
     }
 
     public static boolean canBeDeployedToCF(ProjectModel project) {
