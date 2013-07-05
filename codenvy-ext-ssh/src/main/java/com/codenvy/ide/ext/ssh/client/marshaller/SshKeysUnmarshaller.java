@@ -18,7 +18,6 @@
  */
 package com.codenvy.ide.ext.ssh.client.marshaller;
 
-import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.ssh.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.ssh.shared.KeyItem;
 import com.codenvy.ide.json.JsonArray;
@@ -36,20 +35,16 @@ import com.google.gwt.json.client.JSONObject;
  *          Changed made for use this marshaler in JsonpRequest. We use it for cross-domain Ajax calls
  */
 public class SshKeysUnmarshaller {
-    public static JsonArray<KeyItem> unmarshal(JavaScriptObject response) throws UnmarshallerException {
-        try {
-            JsonArray<KeyItem> keyItems = JsonCollections.createArray();
-            JSONArray array = new JSONArray(response);
-            for (int i = 0; i < array.size(); i++) {
-                JSONObject object = array.get(i).isObject();
-                String value = object.toString();
+    public static JsonArray<KeyItem> unmarshal(JavaScriptObject response) {
+        JsonArray<KeyItem> keyItems = JsonCollections.createArray();
+        JSONArray array = new JSONArray(response);
+        for (int i = 0; i < array.size(); i++) {
+            JSONObject object = array.get(i).isObject();
+            String value = object.toString();
 
-                DtoClientImpls.KeyItemImpl keyItem = DtoClientImpls.KeyItemImpl.deserialize(value);
-                keyItems.add(keyItem);
-            }
-            return keyItems;
-        } catch (Exception e) {
-            throw new UnmarshallerException("Can't parse SSH Keys", e);
+            DtoClientImpls.KeyItemImpl keyItem = DtoClientImpls.KeyItemImpl.deserialize(value);
+            keyItems.add(keyItem);
         }
+        return keyItems;
     }
 }
