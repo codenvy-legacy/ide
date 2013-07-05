@@ -27,10 +27,11 @@
     <inherits name='com.codenvy.ide.ext.cloudbees.CloudBees'/>
     <inherits name='com.codenvy.ide.ext.openshift.OpenShift'/>
     <inherits name='com.codenvy.ide.ext.gae.GAE'/>
-    <inherits name='com.codenvy.ide.ext.aws.AWS' />
+    <inherits name='com.codenvy.ide.ext.aws.AWS'/>
     <inherits name='com.codenvy.ide.ext.jenkins.Jenkins'/>
     <inherits name='com.codenvy.ide.extension.maven.Maven'/>
     <inherits name='com.codenvy.ide.ext.git.Git'/>
+    <inherits name='com.codenvy.ide.ext.ssh.Ssh'/>
 
     <stylesheet src="IDE.css"/>
 
