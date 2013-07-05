@@ -43,16 +43,19 @@ public class SearchPartPresenter extends BasePresenter implements SearchPart, Se
         view.setDelegate(this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return TITLE;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getTitleToolTip() {
         return "Search view";

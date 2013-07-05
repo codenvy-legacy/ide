@@ -31,7 +31,7 @@ import com.google.gwt.json.client.JSONValue;
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: RevisionUnmarshallerWS.java Nov 22, 2012 12:38:47 PM azatsarynnyy $
  */
-public class RevisionUnmarshallerWS implements Unmarshallable<Revision>, Constants {
+public class RevisionUnmarshallerWS implements Unmarshallable<Revision> {
     /** Represents revision info. */
     private DtoClientImpls.RevisionImpl revision;
 

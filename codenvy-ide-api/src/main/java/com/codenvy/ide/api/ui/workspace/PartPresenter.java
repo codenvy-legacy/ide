@@ -70,6 +70,13 @@ public interface PartPresenter extends Presenter {
     public String getTitleToolTip();
 
     /**
+     * Return size of part. If current part is vertical panel then size is height. If current part is horizontal panel then size is width.
+     *
+     * @return size of part
+     */
+    public int getSize();
+
+    /**
      * This method is called when Part is opened.
      * Note: this method is NOT called when part gets focused. It is called when new tab in
      * PartStack created.

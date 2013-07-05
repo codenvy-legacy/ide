@@ -46,7 +46,7 @@ import com.google.inject.Singleton;
 public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate {
     private ResetToCommitView       view;
     private GitClientService        service;
-    private Revision                selectedRevison;
+    private Revision                selectedRevision;
     private ResourceProvider        resourceProvider;
     private GitLocalizationConstant constant;
     private ConsolePart             console;
@@ -76,13 +76,13 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
     public void showDialog() {
         projectId = resourceProvider.getActiveProject().getId();
         DtoClientImpls.LogResponseImpl logResponse = DtoClientImpls.LogResponseImpl.make();
-        LogResponseUnmarshaller unmarshaller = new LogResponseUnmarshaller(logResponse, false);
+        LogResponseUnmarshaller unmarshaller = new LogResponseUnmarshaller(logResponse);
 
         try {
             service.log(resourceProvider.getVfsId(), projectId, false, new AsyncRequestCallback<LogResponse>(unmarshaller) {
                 @Override
                 protected void onSuccess(LogResponse result) {
-                    selectedRevison = null;
+                    selectedRevision = null;
                     view.setRevisions(result.getCommits());
                     view.setMixMode(true);
                     view.setEnableResetButton(false);
@@ -111,7 +111,7 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
         type = (type == null && view.isMergeMode()) ? ResetRequest.ResetType.MERGE : type;
 
         try {
-            service.reset(resourceProvider.getVfsId(), projectId, selectedRevison.getId(), type, new AsyncRequestCallback<String>() {
+            service.reset(resourceProvider.getVfsId(), projectId, selectedRevision.getId(), type, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     resourceProvider.getActiveProject().refreshTree(new AsyncCallback<Project>() {
@@ -149,7 +149,7 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
     /** {@inheritDoc} */
     @Override
     public void onRevisionSelected(@NotNull Revision revision) {
-        selectedRevison = revision;
+        selectedRevision = revision;
         view.setEnableResetButton(true);
     }
 }

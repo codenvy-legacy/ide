@@ -33,7 +33,7 @@ import com.google.gwt.json.client.JSONParser;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 12:01:03 PM anya $
  */
-public class MergeUnmarshaller implements Unmarshallable<MergeResult>, Constants {
+public class MergeUnmarshaller implements Unmarshallable<MergeResult> {
     /** Result of merge operation. */
     private DtoClientImpls.MergeResultImpl merge;
 

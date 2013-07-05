@@ -34,7 +34,7 @@ import com.google.gwt.json.client.JSONParser;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 5, 2011 2:14:51 PM anya $
  */
-public class BranchListUnmarshaller implements Unmarshallable<JsonArray<Branch>>, Constants {
+public class BranchListUnmarshaller implements Unmarshallable<JsonArray<Branch>> {
     /** List of branches. */
     private JsonArray<Branch> branches;
 

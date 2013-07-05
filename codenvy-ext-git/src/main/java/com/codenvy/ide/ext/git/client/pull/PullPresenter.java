@@ -89,6 +89,7 @@ public class PullPresenter implements PullView.ActionDelegate {
     private void getRemotes() {
         RemoteListUnmarshaller unmarshaller = new RemoteListUnmarshaller(JsonCollections.<Remote>createArray());
         final String projectId = project.getId();
+        view.setEnablePullButton(true);
 
         try {
             service.remoteList(resourceProvider.getVfsId(), projectId, null, true,
@@ -97,6 +98,7 @@ public class PullPresenter implements PullView.ActionDelegate {
                                    protected void onSuccess(JsonArray<Remote> result) {
                                        getBranches(projectId, LIST_REMOTE);
                                        getBranches(projectId, LIST_LOCAL);
+                                       view.setEnablePullButton(!result.isEmpty());
                                        view.setRepositories(result);
                                        view.showDialog();
                                    }
@@ -279,12 +281,5 @@ public class PullPresenter implements PullView.ActionDelegate {
     @Override
     public void onCancelClicked() {
         view.close();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onValueChanged() {
-        boolean isDisable = view.isLocalBranchesEmpty() || view.isRemoteBranchesEmpty() || view.isRepositoriesEmpty();
-        view.setEnablePullButton(isDisable);
     }
 }

@@ -25,7 +25,6 @@ import com.codenvy.ide.ext.git.client.clone.CloneRequestStatusHandler;
 import com.codenvy.ide.ext.git.client.commit.CommitRequestHandler;
 import com.codenvy.ide.ext.git.client.fetch.FetchRequestHandler;
 import com.codenvy.ide.ext.git.client.init.InitRequestStatusHandler;
-import com.codenvy.ide.ext.git.client.marshaller.DiffRequestMarshaller;
 import com.codenvy.ide.ext.git.client.pull.PullRequestHandler;
 import com.codenvy.ide.ext.git.client.push.PushRequestHandler;
 import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
@@ -582,7 +581,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void diff(@NotNull String vfsId, @NotNull String projectid, JsonArray<String> fileFilter, @NotNull DiffRequest.DiffType type,
+    public void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull JsonArray<String> fileFilter,
+                     @NotNull DiffRequest.DiffType type,
                      boolean noRenames, int renameLimit, @NotNull String commitA, @NotNull String commitB,
                      @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException {
         DtoClientImpls.DiffRequestImpl diffRequest = DtoClientImpls.DiffRequestImpl.make();
@@ -598,8 +598,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void diff(@NotNull String vfsId, @NotNull String projectid, JsonArray<String> fileFilter, @NotNull DiffRequest.DiffType type,
-                     boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached,
+    public void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull JsonArray<String> fileFilter,
+                     @NotNull DiffRequest.DiffType type, boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached,
                      @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException {
         DtoClientImpls.DiffRequestImpl diffRequest = DtoClientImpls.DiffRequestImpl.make();
         diffRequest.setFileFilter(fileFilter);
@@ -629,15 +629,9 @@ public class GitClientServiceImpl implements GitClientService {
                       AsyncRequestCallback<StringBuilder> callback)
             throws RequestException {
         String url = restServiceContext + DIFF;
-
-        DiffRequestMarshaller marshaller = new DiffRequestMarshaller(diffRequest);
-        // TODO need to check
-        // System.out.println(marshaller.marshal());
-        // System.out.println(diffRequest.serialize());
-
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
-        AsyncRequest.build(POST, url + "?" + params).loader(loader).data(marshaller.marshal())
+        AsyncRequest.build(POST, url + "?" + params).loader(loader).data(diffRequest.serialize())
                     .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
     }
 

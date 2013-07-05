@@ -31,6 +31,8 @@ import com.codenvy.ide.ext.git.client.commit.CommitView;
 import com.codenvy.ide.ext.git.client.commit.CommitViewImpl;
 import com.codenvy.ide.ext.git.client.fetch.FetchView;
 import com.codenvy.ide.ext.git.client.fetch.FetchViewImpl;
+import com.codenvy.ide.ext.git.client.history.HistoryView;
+import com.codenvy.ide.ext.git.client.history.HistoryViewImpl;
 import com.codenvy.ide.ext.git.client.init.InitRepositoryView;
 import com.codenvy.ide.ext.git.client.init.InitRepositoryViewImpl;
 import com.codenvy.ide.ext.git.client.merge.MergeView;
@@ -77,5 +79,6 @@ public class GitGinModule extends AbstractGinModule {
         bind(PushToRemoteView.class).to(PushToRemoteViewImpl.class).in(Singleton.class);
         bind(FetchView.class).to(FetchViewImpl.class).in(Singleton.class);
         bind(PullView.class).to(PullViewImpl.class).in(Singleton.class);
+        bind(HistoryView.class).to(HistoryViewImpl.class).in(Singleton.class);
     }
 }

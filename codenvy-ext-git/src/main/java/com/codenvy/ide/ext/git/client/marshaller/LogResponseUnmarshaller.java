@@ -21,12 +21,8 @@ package com.codenvy.ide.ext.git.client.marshaller;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.LogResponse;
-import com.codenvy.ide.ext.git.shared.Revision;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
@@ -34,22 +30,16 @@ import com.google.gwt.json.client.JSONParser;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 14, 2011 4:10:34 PM anya $
  */
-public class LogResponseUnmarshaller implements Unmarshallable<LogResponse>, Constants {
+public class LogResponseUnmarshaller implements Unmarshallable<LogResponse> {
     /** Log response. */
     private DtoClientImpls.LogResponseImpl logResponse;
-
-    /** If <code>true</code> - the response is in text format, else - the list of revisions in JSON format is returned. */
-    private boolean isText;
 
     /**
      * @param logResponse
      *         log response
-     * @param isText
-     *         if <code>true</code> - the response is in text format
      */
-    public LogResponseUnmarshaller(DtoClientImpls.LogResponseImpl logResponse, boolean isText) {
+    public LogResponseUnmarshaller(DtoClientImpls.LogResponseImpl logResponse) {
         this.logResponse = logResponse;
-        this.isText = isText;
     }
 
     /** {@inheritDoc} */
@@ -60,27 +50,12 @@ public class LogResponseUnmarshaller implements Unmarshallable<LogResponse>, Con
             return;
         }
 
-        if (isText) {
-            logResponse.setTextLog(text);
-            return;
-        }
-
-        JsonArray<Revision> revisions = JsonCollections.createArray();
         JSONObject logObject = JSONParser.parseStrict(text).isObject();
-        if (logObject == null)
-            return;
+        String value = logObject.toString();
+        DtoClientImpls.LogResponseImpl logResponse = DtoClientImpls.LogResponseImpl.deserialize(value);
 
-        JSONArray array = (logObject.get(COMMITS) != null) ? logObject.get(COMMITS).isArray() : null;
-        if (array == null || array.size() <= 0)
-            return;
-
-        for (int i = 0; i < array.size(); i++) {
-            JSONObject revisionObject = array.get(i).isObject();
-            String value = revisionObject.toString();
-            DtoClientImpls.RevisionImpl revision = DtoClientImpls.RevisionImpl.deserialize(value);
-            revisions.add(revision);
-        }
-        logResponse.setCommits(revisions);
+        this.logResponse.setTextLog(logResponse.getTextLog());
+        this.logResponse.setCommits(logResponse.getCommits());
     }
 
     /** {@inheritDoc} */

@@ -53,7 +53,7 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class PartStackPresenter implements Presenter, PartStackView.ActionDelegate, PartStack {
 
-    private static final double                   DEFAULT_SIZE = 200;
+    private static final int                      DEFAULT_SIZE = 200;
     /** list of parts */
     protected final      JsonArray<PartPresenter> parts        = JsonCollections.createArray();
     /** view implementation */
@@ -131,9 +131,11 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             ((BasePresenter)part).setPartStack(this);
         }
         parts.add(part);
-        partsSize.add(DEFAULT_SIZE);
+
+        double partSize = part.getSize() <= 0 ? DEFAULT_SIZE : part.getSize();
+        partsSize.add(partSize);
         if (workBenchPartController != null)
-            workBenchPartController.setSize(DEFAULT_SIZE);
+            workBenchPartController.setSize(partSize);
         part.addPropertyListener(propertyListener);
         // include close button
         ImageResource titleImage = part.getTitleImage();

@@ -47,7 +47,6 @@ public class BuildProjectViewImpl extends BaseView<BuildProjectView.ActionDelega
     Button    btnClearOutput;
     @UiField
     FlowPanel output;
-    private ActionDelegate delegate;
     private int animationCharIndex = 1;
     private Label progress;
 
@@ -63,12 +62,6 @@ public class BuildProjectViewImpl extends BaseView<BuildProjectView.ActionDelega
         container.add(uiBinder.createAndBindUi(this));
 
         btnClearOutput.setHTML(new Image(resources.clearOutput()).toString());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setDelegate(ActionDelegate delegate) {
-        this.delegate = delegate;
     }
 
     /** {@inheritDoc} */
