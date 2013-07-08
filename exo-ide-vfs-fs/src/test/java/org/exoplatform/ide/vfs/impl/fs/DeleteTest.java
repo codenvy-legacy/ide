@@ -142,7 +142,6 @@ public class DeleteTest extends LocalFileSystemTest {
         // File is protected and default principal 'admin' has not write permission.
         // Replace default principal by principal who has write permission.
         ConversationState user = new ConversationState(new Identity("andrew"));
-        user.setAttribute("currentTenant", ConversationState.getCurrent().getAttribute("currentTenant"));
         ConversationState.setCurrent(user);
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
         assertEquals(204, response.getStatus());

@@ -26,7 +26,6 @@ import org.exoplatform.ide.vfs.server.observation.ChangeEventFilter;
 import org.exoplatform.ide.vfs.server.observation.EventListener;
 import org.exoplatform.ide.vfs.server.observation.ProjectUpdateListener;
 import org.exoplatform.ide.vfs.shared.Project;
-import org.exoplatform.services.security.ConversationState;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -257,13 +256,8 @@ public class EventsTest extends LocalFileSystemTest {
 
         provider.mount(testFsIoRoot2);
 
-        ConversationState state = ConversationState.getCurrent();
         LocalFileSystem vfs1 = (LocalFileSystem)provider.newInstance(null, eventListenerList);
-        String previous = (String)state.getAttribute("currentTenant");
-        state.setAttribute("currentTenant", "my-ws2");
         LocalFileSystem vfs2 = (LocalFileSystem)provider.newInstance(null, eventListenerList);
-        // restore previous
-        state.setAttribute("currentTenant", previous);
 
         VirtualFile project1 = vfs1.getVirtualFileByPath(folderPath);
         VirtualFile project2 = vfs2.getVirtualFileByPath(folderPath);

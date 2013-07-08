@@ -223,6 +223,14 @@ public class MountPoint {
                     return aclSerializer.read(dis);
                 }
 
+                // TODO : REMOVE!!! Temporary default ACL until will have client side for real manage
+                if (key.isRoot()) {
+                    final Map<Principal, Set<BasicPermissions>> dummy = new HashMap<Principal, Set<BasicPermissions>>(2);
+                    dummy.put(new PrincipalImpl("workspace/developer", Principal.Type.GROUP), EnumSet.of(BasicPermissions.ALL));
+                    dummy.put(new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER),
+                              EnumSet.of(BasicPermissions.READ));
+                    return new AccessControlList(dummy);
+                }
                 return new AccessControlList();
             } catch (IOException e) {
                 String msg = String.format("Unable read ACL for '%s'. ", key);
@@ -346,6 +354,13 @@ public class MountPoint {
 
         final FileLockFactory.FileLock parentLock = fileLockFactory.getLock(parent.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
+            if (parent.isRoot()) {
+                // NOTE: We do not check read permissions when access to ROOT folder.
+                if (!hasPermission(parent, BasicPermissions.READ, false)) {
+                    // User has not access to ROOT folder.
+                    return Collections.emptyList();
+                }
+            }
             final List<VirtualFile> children = doGetChildren(parent, SERVICE_GIT_DIR_FILTER);
             for (Iterator<VirtualFile> iterator = children.iterator(); iterator.hasNext(); ) {
                 VirtualFile child = iterator.next();
@@ -1160,20 +1175,11 @@ public class MountPoint {
 
    /* ============ ACCESS CONTROL  ============ */
 
-    // Temporary default ACL until will have client side for real manage
-    private static final Map<Principal, Set<BasicPermissions>> dummy_acl = new HashMap<Principal, Set<BasicPermissions>>();
-    static {
-        dummy_acl.put(new PrincipalImpl("workspace/developer", Principal.Type.GROUP), EnumSet.of(BasicPermissions.ALL));
-        dummy_acl.put(new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
-    }
-
     AccessControlList getACL(VirtualFile virtualFile) throws VirtualFileSystemException {
         // Do not check permission here. We already check 'read' permission when get VirtualFile.
         final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
-            final AccessControlList acl =
-                    new AccessControlList(aclCache[virtualFile.getInternalPath().hashCode() & MASK].get(virtualFile.getInternalPath()));
-            return acl.isEmpty() ? new AccessControlList(dummy_acl) : acl;
+            return new AccessControlList(aclCache[virtualFile.getInternalPath().hashCode() & MASK].get(virtualFile.getInternalPath()));
         } finally {
             lock.release();
         }
@@ -1236,29 +1242,39 @@ public class MountPoint {
     }
 
 
+    private static final PrincipalImpl ANY = new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER);
+
     // under lock
     private boolean hasPermission(VirtualFile virtualFile, BasicPermissions p, boolean checkParent) throws VirtualFileSystemException {
         final VirtualFileSystemUser user = userContext.getVirtualFileSystemUser();
+        final PrincipalImpl userPrincipal = new PrincipalImpl(user.getUserId(), Principal.Type.USER);
+        final Collection<String> userGroups = user.getGroups();
+        final List<PrincipalImpl> groupPrincipals;
+        if (!userGroups.isEmpty()) {
+            groupPrincipals = new ArrayList<PrincipalImpl>(userGroups.size());
+            for (String group : userGroups) {
+                groupPrincipals.add(new PrincipalImpl(group, Principal.Type.GROUP));
+            }
+        } else {
+            groupPrincipals = Collections.emptyList();
+        }
         Path path = virtualFile.getInternalPath();
         while (path != null) {
             final AccessControlList accessControlList = aclCache[path.hashCode() & MASK].get(path);
             if (!accessControlList.isEmpty()) {
-                Set<BasicPermissions> userPermissions =
-                        accessControlList.getPermissions(new PrincipalImpl(user.getUserId(), Principal.Type.USER));
+                Set<BasicPermissions> userPermissions = accessControlList.getPermissions(userPrincipal);
                 if (userPermissions != null) {
                     return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL);
                 }
-                Collection<String> groups = user.getGroups();
-                if (!groups.isEmpty()) {
-                    for (String group : groups) {
-                        userPermissions = accessControlList.getPermissions(new PrincipalImpl(group, Principal.Type.GROUP));
+                if (!groupPrincipals.isEmpty()) {
+                    for (PrincipalImpl groupPrincipal : groupPrincipals) {
+                        userPermissions = accessControlList.getPermissions(groupPrincipal);
                         if (userPermissions != null) {
                             return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL);
                         }
                     }
                 }
-                userPermissions = accessControlList.getPermissions(
-                        new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER));
+                userPermissions = accessControlList.getPermissions(ANY);
                 return userPermissions != null && (userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL));
             }
             if (checkParent) {

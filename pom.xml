@@ -25,7 +25,7 @@
       <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
 
       <!-- Everrest -->
-      <everrest.version>1.1.1-SNAPSHOT</everrest.version>
+      <everrest.version>1.1.1</everrest.version>
 
       <!-- Third parties -->
       <junit.version>4.10</junit.version>
@@ -45,8 +45,8 @@
       <appengine.version>1.7.7</appengine.version>
       <ch.qos.logback.version>1.0.0</ch.qos.logback.version>
       <crash.version>1.0.0-beta21</crash.version>
-      <com.codenvy.commons.version>0.6-SNAPSHOT</com.codenvy.commons.version>
-      <com.codenvy.organization.version>0.5-SNAPSHOT</com.codenvy.organization.version>
+      <com.codenvy.commons.version>0.6.0-SNAPSHOT</com.codenvy.commons.version>
+      <com.codenvy.organization.version>0.5.0-SNAPSHOT</com.codenvy.organization.version>
 
       <tomcat.version>7.0.37</tomcat.version>
       <javax.annotation.version>1.0</javax.annotation.version>
@@ -93,6 +93,12 @@
       <dependency>
          <groupId>com.codenvy.organization</groupId>
          <artifactId>codenvy-organization-invite</artifactId>
+         <version>${com.codenvy.organization.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>com.codenvy.organization</groupId>
+         <artifactId>codenvy-organization-packaging-api-war</artifactId>
+         <type>war</type>
          <version>${com.codenvy.organization.version}</version>
       </dependency>
       <dependency>
@@ -180,12 +186,6 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-groovy</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-java</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -205,6 +205,12 @@
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-php-runtime</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>codenvy-extension-html-runtime</artifactId>
             <version>${project.version}</version>
          </dependency>
 
@@ -251,12 +257,6 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-groovy</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-javascript</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -272,19 +272,6 @@
             <artifactId>exo-ide-editor-jsp</artifactId>
             <version>${project.version}</version>
          </dependency>
-
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-chromattic</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-gtmpl</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -810,6 +797,7 @@
       <module>exo-ide-extension-java-runtime</module>
       <module>exo-ide-extension-python-runtime</module>
       <module>exo-ide-extension-php-runtime</module>
+      <module>codenvy-extension-html-runtime</module>
       <module>exo-ide-extension-nodejs-runtime</module>
       <module>exo-ide-extension-git</module>
       <module>exo-ide-extension-ssh</module>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.exoplatform.ide</groupId>
@@ -49,13 +48,12 @@
                         <phase>prepare-package</phase>
                         <configuration>
                             <tasks>
-                                <unzip src="${project.build.directory}/packager-conf/war/shindig-server.war"
-                                       dest="${project.build.directory}/packager-conf/unwar/gadget-server"/>
+                                <unzip src="${project.build.directory}/packager-conf/war/shindig-server.war" dest="${project.build.directory}/packager-conf/unwar/gadget-server" />
                                 <copy todir="${project.build.directory}/packager-conf/unwar/gadget-server/samplecontainer" overwrite="true">
-                                    <fileset dir="${basedir}/src/main/resources/containers/samplecontainer"/>
+                                    <fileset dir="${basedir}/src/main/resources/containers/samplecontainer" />
                                 </copy>
                                 <copy todir="${project.build.directory}/packager-conf/unwar/gadget-server/WEB-INF" overwrite="true">
-                                    <fileset dir="${basedir}/src/main/webapp"/>
+                                    <fileset dir="${basedir}/src/main/webapp" />
                                 </copy>
                             </tasks>
                         </configuration>

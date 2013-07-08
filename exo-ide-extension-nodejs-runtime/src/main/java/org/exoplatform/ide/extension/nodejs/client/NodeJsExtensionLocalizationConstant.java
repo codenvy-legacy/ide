@@ -19,7 +19,7 @@
 package org.exoplatform.ide.extension.nodejs.client;
 
 /**
- * Interface to represent the messages contained in resource bundle: DebugLocalizationConstant.properties'.
+ * Interface to represent the messages contained in resource bundle: NodeJsExtensionLocalizationConstant.properties'.
  * 
  * @author <a href="mailto:vsvydenko@codenvy.com">Valeriy Svydenko</a>
  * @version $Id: NodeJsExtensionLocalizationConstant.java Apr 18, 2013 4:38:27 PM vsvydenko $

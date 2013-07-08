@@ -4,8 +4,7 @@
    in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
    See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
    if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.exoplatform.ide</groupId>
@@ -111,7 +110,7 @@
                         <configuration>
                             <tasks>
                                 <copy todir="${project.build.directory}/tomcat-ide-builder">
-                                    <fileset dir="${exo.projects.directory.dependencies}/apache-tomcat-${tomcat.version}/"/>
+                                    <fileset dir="${exo.projects.directory.dependencies}/apache-tomcat-${tomcat.version}/" />
                                 </copy>
                             </tasks>
                         </configuration>
@@ -124,12 +123,11 @@
                         <phase>prepare-package</phase>
                         <configuration>
                             <tasks>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide-builder/webapps/builder.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide-builder/webapps/builder.war" overwrite="true" />
                                 <copy todir="${project.build.directory}/tomcat-ide-builder" overwrite="true">
-                                    <fileset dir="${basedir}/src/main/resources/tomcat"/>
+                                    <fileset dir="${basedir}/src/main/resources/tomcat" />
                                 </copy>
-                                <chmod dir="${project.build.directory}/tomcat-ide-builder/bin" perm="+x" includes="**/*.sh"/>
+                                <chmod dir="${project.build.directory}/tomcat-ide-builder/bin" perm="+x" includes="**/*.sh" />
                             </tasks>
                         </configuration>
                         <goals>

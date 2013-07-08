@@ -94,6 +94,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:

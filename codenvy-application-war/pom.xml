@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.exoplatform.ide</groupId>
@@ -144,6 +143,11 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-php-runtime</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>codenvy-extension-html-runtime</artifactId>
         </dependency>
 
         <dependency>
@@ -404,7 +408,7 @@
                         <phase>compile</phase>
                         <configuration>
                             <tasks>
-                                <echo file="${project.build.directory}/classes/org/exoplatform/ide/client/BuildNumber.properties"  append="false">
+                                <echo file="${project.build.directory}/classes/org/exoplatform/ide/client/BuildNumber.properties" append="false">
                                     buildNumber = ${buildNumber}
                                     buildTime = ${timestamp}
                                     version = ${project.version}
@@ -476,12 +480,9 @@
                                 **/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
                                 **/preloadIDE.js,
                                 **/lib/exo-ide-client*,
-                                **/lib/exo-ide-editor-chromattic*,
                                 **/lib/exo-ide-editor-codemirror2*,
                                 **/lib/exo-ide-editor-css*,
                                 **/lib/exo-ide-editor-gadget*,
-                                **/lib/exo-ide-editor-groovy*,
-                                **/lib/exo-ide-editor-gtmpl*,
                                 **/lib/exo-ide-editor-html*,
                                 **/lib/exo-ide-editor-java*,
                                 **/lib/exo-ide-editor-javascript*,

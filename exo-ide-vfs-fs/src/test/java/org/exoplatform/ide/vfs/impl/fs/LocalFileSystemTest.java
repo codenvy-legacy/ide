@@ -161,7 +161,9 @@ public abstract class LocalFileSystemTest extends TestCase {
         deployer.publish(new VirtualFileSystemApplication());
 
         // RUNTIME VARIABLES
-        ConversationState user = new ConversationState(new Identity("admin"));
+        Identity identity = new Identity("admin");
+        identity.setRoles(Arrays.asList("developer"));
+        ConversationState user = new ConversationState(identity);
         ConversationState.setCurrent(user);
 
         EnvironmentContext env = EnvironmentContext.getCurrent();
