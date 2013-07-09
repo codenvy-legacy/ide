@@ -28,7 +28,7 @@ import com.codenvy.ide.resources.model.File;
 public interface EditorAgent {
 
     /**
-     * Open editor with gieven file
+     * Open editor with given file
      *
      * @param file
      */

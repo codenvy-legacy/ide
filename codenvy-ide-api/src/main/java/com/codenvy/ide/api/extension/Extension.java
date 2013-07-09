@@ -17,7 +17,7 @@
 package com.codenvy.ide.api.extension;
 
 /**
- * Extension Definition annotation. Used to mark class as Extensio and declare it's description
+ * Extension Definition annotation. Used to mark class as Extension and declare it's description
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */

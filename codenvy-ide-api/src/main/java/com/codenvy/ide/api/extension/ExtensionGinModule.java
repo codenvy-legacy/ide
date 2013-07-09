@@ -17,7 +17,7 @@
 package com.codenvy.ide.api.extension;
 
 /**
- * Marker annotation, used to infrom SDK, that particular GinModule should be installed into the main Injector
+ * Marker annotation, used to inform SDK, that particular GinModule should be installed into the main Injector
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */

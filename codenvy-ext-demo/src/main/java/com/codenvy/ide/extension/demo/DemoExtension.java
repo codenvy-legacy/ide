@@ -24,7 +24,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Extension used to demonstrate the IDE 2.0 SDK fetures
+ * Extension used to demonstrate the IDE 2.0 SDK features.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
