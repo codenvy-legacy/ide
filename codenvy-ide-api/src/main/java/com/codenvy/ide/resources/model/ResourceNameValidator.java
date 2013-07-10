@@ -26,7 +26,7 @@ import com.google.gwt.regexp.shared.RegExp;
  *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *          //TODO check howe use GWT Validation API https://developers.google.com/web-toolkit/doc/latest/DevGuideValidation
+ *          //TODO check how to use GWT Validation API https://developers.google.com/web-toolkit/doc/latest/DevGuideValidation
  */
 public class ResourceNameValidator {
 
