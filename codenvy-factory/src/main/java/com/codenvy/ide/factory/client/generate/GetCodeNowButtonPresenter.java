@@ -25,8 +25,10 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -189,7 +191,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
     private static final String   CODE_NOW_BUTTON_FOR_GITHUB_IMAGE_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow_gh.png";
 
     /** Base URL for Codenvy Factory. */
-    private static final String   BASE_FACTORY_URL                     = "https://www.codenvy.com/factory";
+    private final String          BASE_FACTORY_URL;
 
     public GetCodeNowButtonPresenter() {
         IDE.addHandler(GetCodeNowButtonEvent.TYPE, this);
@@ -197,6 +199,8 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        UrlBuilder builder = new UrlBuilder();
+        BASE_FACTORY_URL = builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("factory").buildString();
     }
 
     public void bindDisplay() {
