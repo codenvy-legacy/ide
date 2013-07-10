@@ -78,7 +78,7 @@ public class GitUrlResolverFsImpl implements GitUrlResolver {
             if (port != 80 && port != 443 && port != -1) {
                 result.append(':').append(port);
             }
-            result.append('/').append("ide/").append(context.getVariable(EnvironmentContext.WORKSPACE_NAME).toString()).append("/_git/").append(path).append(item.getPath());
+            result.append('/').append("git").append(path).append(item.getPath());
 
             return result.toString();
         } catch (VirtualFileSystemException e) {
