@@ -194,6 +194,11 @@
                 <artifactId>codenvy-ext-git</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.codenvy.ide</groupId>
+                <artifactId>codenvy-ide-security</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- OTHER -->
             <!--dependency>
@@ -497,6 +502,7 @@
         <module>codenvy-ext-git</module>
         <module>codenvy-ext-maven</module>
         <module>codenvy-ext-ssh</module>
+        <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
         <module>codenvy-ide-site-war</module>
         <module>codenvy-packaging-standalone-tomcat</module>

@@ -22,6 +22,7 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.commons.exception.UnauthorizedException;
+import com.codenvy.ide.ext.gae.client.actions.LoginAction;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.web.bindery.event.shared.EventBus;
@@ -33,18 +34,8 @@ import com.google.web.bindery.event.shared.EventBus;
 public abstract class GAEAsyncRequestCallback<T> extends AsyncRequestCallback<T> {
     private ConsolePart     console;
     private EventBus        eventBus;
+    private LoginAction     loginAction;
     private GAELocalization constant;
-
-    /**
-     * Create callback.
-     *
-     * @param console
-     * @param eventBus
-     * @param constant
-     */
-    public GAEAsyncRequestCallback(ConsolePart console, EventBus eventBus, GAELocalization constant) {
-        this(null, console, eventBus, constant);
-    }
 
     /**
      * Create callback.
@@ -55,19 +46,21 @@ public abstract class GAEAsyncRequestCallback<T> extends AsyncRequestCallback<T>
      * @param constant
      */
     public GAEAsyncRequestCallback(Unmarshallable<T> unmarshaller, ConsolePart console, EventBus eventBus,
-                                   GAELocalization constant) {
+                                   GAELocalization constant, LoginAction loginAction) {
         super(unmarshaller);
         this.console = console;
         this.constant = constant;
         this.eventBus = eventBus;
+        this.loginAction = loginAction;
     }
 
     /** {@inheritDoc} */
     @Override
     protected void onFailure(Throwable exception) {
         if (exception instanceof UnauthorizedException) {
-            // TODO replace with execute method on presenter
-            //            IDE.fireEvent(new LoginEvent());
+            if (loginAction != null) {
+                loginAction.doLogin();
+            }
             return;
         }
         if (exception instanceof ServerException) {

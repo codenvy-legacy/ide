@@ -16,22 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.gae.client;
-
-import com.codenvy.ide.ext.gae.shared.Token;
+package com.codenvy.ide.security.oauth;
 
 /**
- * @author <a href="mailto:vparfonov@codenvy.com">Vitaly Parfonov</a>
- * @version $Id: GaeTools.java Apr 18, 2013 vetal $
+ * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
+ * @version $Id: $
  */
-public class GaeTools {
-    public static final String APPENGINE_ADMIN_SCOPE = "https://www.googleapis.com/auth/appengine.admin";
-
-    public static boolean isAuthenticatedInAppEngine(Token token) {
-        if (token == null || token.getToken() == null || token.getToken().isEmpty())
-            return false;
-        if (token.getScope() == null || token.getScope().isEmpty())
-            return false;
-        return token.getScope().contains(APPENGINE_ADMIN_SCOPE);
-    }
+public interface OAuthCallback {
+    void onAuthenticated(OAuthStatus authStatus);
 }

@@ -21,6 +21,8 @@ package com.codenvy.ide.ext.gae.client.inject;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.ext.gae.client.GAEClientService;
 import com.codenvy.ide.ext.gae.client.GAEClientServiceImpl;
+import com.codenvy.ide.ext.gae.client.create.CreateApplicationView;
+import com.codenvy.ide.ext.gae.client.create.CreateApplicationViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -31,5 +33,7 @@ public class GAEGinModule extends AbstractGinModule {
     @Override
     protected void configure() {
         bind(GAEClientService.class).to(GAEClientServiceImpl.class).in(Singleton.class);
+
+//        bind(CreateApplicationView.class).to(CreateApplicationViewImpl.class).in(Singleton.class);
     }
 }

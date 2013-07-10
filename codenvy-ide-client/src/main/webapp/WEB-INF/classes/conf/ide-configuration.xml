@@ -95,4 +95,26 @@
         </init-params>
     </component>
 
+    <!-- OAuth support start -->
+    <component>
+        <type>com.codenvy.commons.security.oauth.OAuthAuthenticationApplication</type>
+    </component>
+
+    <component>
+        <key>com.codenvy.commons.security.oauth.OAuthTokenProvider</key>
+        <type>com.codenvy.commons.security.oauth.OAuthAuthenticatorTokenProvider</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.security.oauth.ExoOAuthAuthenticatorProvider</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.security.oauth.ExoGoogleOAuthAuthenticator</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.security.oauth.ExoGitHubOAuthAuthenticator</type>
+    </component>
+    <!-- OAuth support end -->
 </configuration>
