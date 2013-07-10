@@ -41,7 +41,7 @@ public class FactorySpec10 {
     public final static String DEFAULT_VCS       = "Git";
 
     /** Mandatory parameter. Latest commit ID. */
-    public final static String COMMIT_ID         = "commitid";
+    public final static String COMMIT_ID         = "idcommit";
 
     /**
      * Optional parameter for project name in file system, if not set we try detect it from VCS_URL param.
