@@ -93,7 +93,8 @@
 <script>
   var _gaq = _gaq || [];
   if (window.location.hostname == 'localhost')
-    {//patch for tracking localhost in chrome _gaq.push(['_setDomainName', 'none']); }
+    {//patch for tracking localhost in chrome 
+    _gaq.push(['_setDomainName', 'none']); }
     _gaq.push(
       ['_setAccount', "UA-37306001-1"], // codenvy account
       ['_trackPageview'],
