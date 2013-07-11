@@ -30,6 +30,7 @@
     <inherits name='com.codenvy.ide.ext.aws.AWS' />
     <inherits name='com.codenvy.ide.ext.jenkins.Jenkins'/>
     <inherits name='com.codenvy.ide.extension.maven.Maven'/>
+    <inherits name='com.codenvy.ide.ext.extruntime.ExtRuntime'/>
     <inherits name='com.codenvy.ide.ext.git.Git'/>
 
     <stylesheet src="IDE.css"/>

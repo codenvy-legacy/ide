@@ -52,7 +52,7 @@
         <version.enforcer.plugin>1.0.1</version.enforcer.plugin>
         <appengine.version>1.6.5</appengine.version>
         <ch.qos.logback.version>0.9.29</ch.qos.logback.version>
-        <com.codenvy.organization.version>0.4</com.codenvy.organization.version>
+        <com.codenvy.organization.version>0.5</com.codenvy.organization.version>
         <maven.build.timestamp.format>dd.MM.yy HH:mm</maven.build.timestamp.format>
         <buildNumber>${maven.build.timestamp}</buildNumber>
     </properties>
@@ -122,76 +122,6 @@
             <dependency>
                 <groupId>com.codenvy.ide</groupId>
                 <artifactId>codenvy-ide-commons</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ext-java</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ext-java-runtime</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ext-extensions-runtime</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ext-demo</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ext-css</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ext-cloudfoundry</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ext-appfog</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ext-cloudbees</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ext-googleappengine</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ext-openshift</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ext-aws</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ext-maven</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ext-jenkins</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ext-git</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -405,26 +335,6 @@
                 <version>${everrest.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.google.appengine</groupId>
-                <artifactId>appengine-java-sdk</artifactId>
-                <version>${appengine.version}</version>
-                <type>zip</type>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.appengine</groupId>
-                <artifactId>appengine-python-sdk</artifactId>
-                <version>${appengine.version}</version>
-                <type>zip</type>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.appengine</groupId>
-                <artifactId>appengine-tools-sdk</artifactId>
-                <version>${appengine.version}</version>
-            </dependency>
-
         </dependencies>
         
     </dependencyManagement>
@@ -484,22 +394,6 @@
         <module>codenvy-ide-commons</module>
         <module>codenvy-ide-api</module>
         <module>codenvy-ide-core</module>
-        <module>codenvy-ext-demo</module>
-        <module>codenvy-ext-css</module>
-        <module>codenvy-ext-java</module>
-        <module>codenvy-ext-java-runtime</module>
-        <module>codenvy-ext-extensions-runtime</module>
-        <module>codenvy-ext-cloudfoundry</module>
-        <module>codenvy-ext-cloudbees</module>
-        <module>codenvy-ext-appfog</module>
-        <module>codenvy-ext-openshift</module>
-        <module>codenvy-ext-googleappengine</module>
-        <module>codenvy-ext-aws</module>
-        <module>codenvy-ext-jenkins</module>
-        <module>codenvy-ext-git</module>
-        <module>codenvy-ext-maven</module>
         <module>codenvy-ide-client</module>
-        <module>codenvy-ide-site-war</module>
-        <module>codenvy-packaging-standalone-tomcat</module>
     </modules>
 </project>
