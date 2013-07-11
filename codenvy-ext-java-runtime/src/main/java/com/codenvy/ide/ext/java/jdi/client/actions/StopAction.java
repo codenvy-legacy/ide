@@ -18,27 +18,31 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.actions;
 
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
 import com.codenvy.ide.ext.java.jdi.client.run.RunnerPresenter;
+import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
  * The action for stopping application.
- *
+ * 
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
 public class StopAction extends Action {
+    private ResourceProvider  resourceProvider;
     private DebuggerPresenter debugger;
     private RunnerPresenter   runner;
 
     @Inject
-    public StopAction(JavaRuntimeResources resources, DebuggerPresenter debugger, RunnerPresenter runner) {
+    public StopAction(ResourceProvider resourceProvider, JavaRuntimeResources resources, DebuggerPresenter debugger, RunnerPresenter runner) {
         super("Stop Application", "Stop Application", resources.stopApp());
+        this.resourceProvider = resourceProvider;
         this.debugger = debugger;
         this.runner = runner;
     }
@@ -56,7 +60,15 @@ public class StopAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        boolean isApplicationStarted = debugger.isAppRunning() || runner.isAppRunning();
-        e.getPresentation().setEnabled(isApplicationStarted);
+        Project activeProject = resourceProvider.getActiveProject();
+        boolean isEnabled = false;
+        if (activeProject != null) {
+            if (activeProject.getDescription().getNatures().contains("CodenvyExtension")) {
+                e.getPresentation().setVisible(false);
+            } else {
+                isEnabled = debugger.isAppRunning() || runner.isAppRunning();
+            }
+        }
+        e.getPresentation().setEnabled(isEnabled);
     }
 }

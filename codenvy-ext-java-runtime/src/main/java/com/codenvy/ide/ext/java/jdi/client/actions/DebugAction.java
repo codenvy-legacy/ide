@@ -23,6 +23,7 @@ import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
+import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -52,6 +53,15 @@ public class DebugAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setVisible(resourceProvider.getActiveProject() != null);
+        Project activeProject = resourceProvider.getActiveProject();
+        boolean isEnabled = false;
+        if (activeProject != null) {
+            if (activeProject.getDescription().getNatures().contains("CodenvyExtension")) {
+                e.getPresentation().setVisible(false);
+            } else {
+                isEnabled = true;
+            }
+        }
+        e.getPresentation().setEnabled(isEnabled);
     }
 }
