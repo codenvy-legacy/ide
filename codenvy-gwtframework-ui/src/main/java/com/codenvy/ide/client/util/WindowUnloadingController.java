@@ -44,12 +44,12 @@ public class WindowUnloadingController {
     private final List<Message> messages = new ArrayList<Message>();
 
     public WindowUnloadingController() {
-        JsBrowser.getWindow().setOnBeforeUnload(new BeforeUnloadEventListener() {
+        /*JsBrowser.getWindow().setOnBeforeUnload(new BeforeUnloadEventListener() {
             @Override
             public String handleEvent(Event event) {
                 return handleBeforeUnloadEvent();
             }
-        });
+        });*/
     }
 
     public void addMessage(Message message) {

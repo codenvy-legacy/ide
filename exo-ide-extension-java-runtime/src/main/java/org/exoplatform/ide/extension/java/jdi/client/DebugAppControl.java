@@ -127,7 +127,10 @@ public class DebugAppControl extends SimpleControl implements IDEControl,
             if (ProjectType.MultiModule.value().equals(project.getProjectType())
                 || ProjectType.JAR.value().equals(project.getProjectType())
                 || ProjectType.JAVASCRIPT.value().equals(project.getProjectType())
-                || ProjectType.RUBY_ON_RAILS.value().equals(project.getProjectType())) {
+                || ProjectType.RUBY_ON_RAILS.value().equals(project.getProjectType())
+                || ProjectType.PYTHON.value().equals(project.getProjectType())
+                || ProjectType.PHP.value().equals(project.getProjectType())
+                || ProjectType.NODE_JS.value().equals(project.getProjectType())) {
                 setVisible(false);
             }
             updateState(project.getProjectType());
