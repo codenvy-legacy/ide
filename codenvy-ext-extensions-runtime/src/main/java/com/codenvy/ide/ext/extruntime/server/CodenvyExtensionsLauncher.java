@@ -214,9 +214,7 @@ public class CodenvyExtensionsLauncher {
             Build clientPomBuild = clientPom.getBuild();
             Map<String, Plugin> clientPomPlugins = clientPomBuild.getPluginsAsMap();
             Plugin warPlugin = clientPomPlugins.get("org.apache.maven.plugins:maven-war-plugin");
-            Xpp3Dom warPluginConfiguration =
-                                             Xpp3DomBuilder.build(new StringReader(
-                                                                                   "<configuration><outputDirectory>./target/</outputDirectory></configuration>"));
+            Xpp3Dom warPluginConfiguration = Xpp3DomBuilder.build(new StringReader("<configuration><outputDirectory>./target/</outputDirectory></configuration>"));
             warPlugin.setConfiguration(warPluginConfiguration);
             clientPomBuild.setPlugins(new ArrayList(clientPomPlugins.values()));
             writePom(clientPom, clientModulePomPath);
@@ -301,7 +299,6 @@ public class CodenvyExtensionsLauncher {
         Process process = applications.get(appId);
         if (process != null) {
             process.destroy();
-//            process.waitFor();
             applications.remove(appId);
         } else {
             throw new Exception("Unable stop application. Application '" + appId + "' not found. ");

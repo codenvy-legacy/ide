@@ -58,7 +58,7 @@ public interface ExtRuntimeClientService {
      * @param callback callback
      * @throws WebSocketException
      */
-    public void launch(String vfsId, String projectId, RequestCallback<StringBuffer> callback)
+    public void launch(String vfsId, String projectId, RequestCallback<StringBuilder> callback)
                                                                                               throws WebSocketException;
 
     /**

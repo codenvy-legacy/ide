@@ -51,7 +51,7 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
 public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     /** Base url. */
     private static final String BASE_URL = "/ide/extruntime";
-    private static final String CREATE   = BASE_URL + "/create";
+    private static final String CREATE   = "/create";
     /** Launch method's path. */
     private static final String LAUNCH   = "/launch";
     /** Stop method's path. */
@@ -93,7 +93,7 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
                                               String version,
                                               AsyncRequestCallback<Void> callback)
                                                                                   throws RequestException {
-        final String requestUrl = restContext + CREATE;
+        final String requestUrl = restContext + BASE_URL + CREATE;
         final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" + resourceProvider.getRootId()
                              + "&groupid=" + groupId + "&artifactid=" + artifactId + "&version=" + version;
         loader.setMessage("Creating new project...");
@@ -104,8 +104,8 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void launch(String vfsId, String projectId, RequestCallback<StringBuffer> callback)
-                                                                                              throws WebSocketException {
+    public void launch(String vfsId, String projectId, RequestCallback<StringBuilder> callback)
+                                                                                               throws WebSocketException {
         final String params = "?vfsid=" + vfsId + "&projectid=" + projectId;
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
         MessageBuilder builder = new MessageBuilder(RequestBuilder.GET, BASE_URL + LAUNCH + params);
@@ -117,7 +117,7 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     /** {@inheritDoc} */
     @Override
     public void stop(String appId, AsyncRequestCallback<Void> callback) throws RequestException {
-        final String url = restContext + STOP + "/" + appId;
+        final String url = restContext + BASE_URL + STOP + "/" + appId;
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
 }

@@ -22,8 +22,10 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
+import com.codenvy.ide.websocket.rest.Unmarshallable;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Window;
@@ -82,13 +84,14 @@ public class LaunchExtensionController {
             return;
         }
 
+        StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
         final String projectId = project.getId();
         try {
             beforeApplicationStart();
             service.launch(resourceProvider.getVfsId(), projectId,
-                           new RequestCallback<StringBuffer>() {
+                           new RequestCallback<StringBuilder>(unmarshaller) {
                                @Override
-                               protected void onSuccess(StringBuffer result) {
+                               protected void onSuccess(StringBuilder result) {
                                    launchedAppId = result.toString();
                                    afterApplicationLaunched();
                                }
@@ -116,6 +119,7 @@ public class LaunchExtensionController {
                          new AsyncRequestCallback<Void>() {
                              @Override
                              protected void onSuccess(Void result) {
+                                 launchedAppId = null;
                                  console.print(constant.applicationStopped(project.getName()));
                              }
 
@@ -167,5 +171,26 @@ public class LaunchExtensionController {
             msg += " : " + exception.getMessage();
         }
         console.print(msg);
+    }
+
+    private class StringUnmarshaller implements Unmarshallable<StringBuilder> {
+
+        protected StringBuilder builder;
+
+        /** @param callback */
+        public StringUnmarshaller(StringBuilder builder) {
+            this.builder = builder;
+        }
+
+        /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+        @Override
+        public void unmarshal(Message response) {
+            builder.append(response.getBody());
+        }
+
+        @Override
+        public StringBuilder getPayload() {
+            return builder;
+        }
     }
 }

@@ -63,11 +63,11 @@ public class LaunchAction extends Action {
     @Override
     public void update(ActionEvent e) {
         Project activeProject = resourceProvider.getActiveProject();
-        boolean isEnabledAndVisible = false;
         if (activeProject != null) {
-            isEnabledAndVisible = activeProject.getDescription().getNatures().contains(CODENVY_EXTENSION_PROJECT_TYPE)
-                                      && !controller.isAnyAppLaunched();
+            e.getPresentation().setVisible(activeProject.getDescription().getNatures().contains(CODENVY_EXTENSION_PROJECT_TYPE));
+            e.getPresentation().setEnabled(!controller.isAnyAppLaunched());
+        } else {
+            e.getPresentation().setEnabledAndVisible(false);
         }
-        e.getPresentation().setEnabledAndVisible(isEnabledAndVisible);
     }
 }
