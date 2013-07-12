@@ -42,6 +42,13 @@ public enum EnvironmentStatus {
         return value;
     }
 
+    /**
+     * Use this in place of valueOf.
+     *
+     * @param value
+     *         real value
+     * @return EnvironmentStatus corresponding to the value
+     */
     public static EnvironmentStatus fromValue(String value) {
         for (EnvironmentStatus v : EnvironmentStatus.values()) {
             if (v.value.equals(value)) {

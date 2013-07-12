@@ -35,6 +35,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter to allow user delete beanstalk application.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -50,8 +52,18 @@ public class DeleteVersionPresenter implements DeleteVersionView.ActionDelegate 
     private ResourceProvider                      resourceProvider;
     private AsyncCallback<ApplicationVersionInfo> callback;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param service
+     * @param loginPresenter
+     * @param constant
+     * @param resourceProvider
+     */
     @Inject
-
     public DeleteVersionPresenter(DeleteVersionView view, EventBus eventBus, ConsolePart console,
                                   BeanstalkClientService service, LoginPresenter loginPresenter,
                                   AWSLocalizationConstant constant, ResourceProvider resourceProvider) {
@@ -66,6 +78,7 @@ public class DeleteVersionPresenter implements DeleteVersionView.ActionDelegate 
         this.view.setDelegate(this);
     }
 
+    /** Show main dialog window. */
     public void showDialog(ApplicationVersionInfo version, AsyncCallback<ApplicationVersionInfo> callback) {
         this.version = version;
         this.callback = callback;
@@ -77,6 +90,7 @@ public class DeleteVersionPresenter implements DeleteVersionView.ActionDelegate 
         view.setDeleteQuestion(constant.deleteVersionQuestion(version.getVersionLabel()));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onDeleteButtonCLicked() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -119,6 +133,7 @@ public class DeleteVersionPresenter implements DeleteVersionView.ActionDelegate 
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCancelButtonClicked() {
         view.close();

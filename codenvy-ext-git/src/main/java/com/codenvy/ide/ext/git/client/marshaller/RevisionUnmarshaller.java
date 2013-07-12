@@ -30,7 +30,7 @@ import com.google.gwt.json.client.JSONValue;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 31, 2011 11:15:57 AM anya $
  */
-public class RevisionUnmarshaller implements Unmarshallable<Revision>, Constants {
+public class RevisionUnmarshaller implements Unmarshallable<Revision> {
     /** Represents revision info. */
     private DtoClientImpls.RevisionImpl revision;
 

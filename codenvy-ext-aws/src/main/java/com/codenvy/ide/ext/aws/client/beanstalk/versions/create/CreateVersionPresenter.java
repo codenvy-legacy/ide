@@ -43,6 +43,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
+ * Presenter that allow user to create application.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -60,8 +62,18 @@ public class CreateVersionPresenter implements CreateVersionView.ActionDelegate,
     private String                                appName;
     private AsyncCallback<ApplicationVersionInfo> callback;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param service
+     * @param constant
+     * @param loginPresenter
+     * @param resourceProvider
+     */
     @Inject
-
     public CreateVersionPresenter(CreateVersionView view, EventBus eventBus, ConsolePart console,
                                   BeanstalkClientService service, AWSLocalizationConstant constant,
                                   LoginPresenter loginPresenter, ResourceProvider resourceProvider) {
@@ -76,6 +88,7 @@ public class CreateVersionPresenter implements CreateVersionView.ActionDelegate,
         this.view.setDelegate(this);
     }
 
+    /** Show main dialog window. */
     public void showDialog(String appName, AsyncCallback<ApplicationVersionInfo> callback) {
         this.appName = appName;
         this.callback = callback;
@@ -87,22 +100,26 @@ public class CreateVersionPresenter implements CreateVersionView.ActionDelegate,
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCreateButtonClicked() {
         warUrl = null;
         beforeCreation();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCancelButtonClicked() {
         view.close();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onVersionLabelKeyUp() {
         view.enableCreateButton(view.getVersionLabel() != null && view.getVersionLabel().length() > 0);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onProjectBuilt(ProjectBuiltEvent event) {
         projectBuildHandler.removeHandler();
@@ -112,6 +129,7 @@ public class CreateVersionPresenter implements CreateVersionView.ActionDelegate,
         }
     }
 
+    /** Run application build before creating. */
     private void beforeCreation() {
         Project project = resourceProvider.getActiveProject();
 
@@ -123,6 +141,7 @@ public class CreateVersionPresenter implements CreateVersionView.ActionDelegate,
         }
     }
 
+    /** Create new version for application. */
     private void createVersion() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override

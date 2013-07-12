@@ -97,4 +97,10 @@ public abstract class AbstractPartPresenter implements PartPresenter {
         this.selection = selection;
         firePropertyChange(SELECTION_PROPERTY);
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public int getSize() {
+        return 0;
+    }
 }

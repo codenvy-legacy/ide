@@ -29,14 +29,21 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Presenter that show user environment configuration.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class ServerTabPainPresenter implements Presenter, ServerTabPainView.ActionDelegate, HasConfigurationProperty {
-    private ServerTabPainView view;
+    private ServerTabPainView              view;
     private JsonArray<ConfigurationOption> configuration;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     */
     @Inject
     public ServerTabPainPresenter(ServerTabPainView view) {
         this.view = view;
@@ -44,11 +51,13 @@ public class ServerTabPainPresenter implements Presenter, ServerTabPainView.Acti
         this.view.setDelegate(this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
     }
 
+    /** {@inheritDoc} */
     @Override
     public JsonArray<ConfigurationOption> getConfigurationOptions() {
         JsonArray<ConfigurationOption> options = JsonCollections.createArray();
@@ -100,6 +109,7 @@ public class ServerTabPainPresenter implements Presenter, ServerTabPainView.Acti
         return options;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setConfiguration(JsonArray<ConfigurationOption> configuration, JsonArray<ConfigurationOptionInfo> configurationOptionInfo) {
         view.resetModifiedFields();
@@ -123,6 +133,15 @@ public class ServerTabPainPresenter implements Presenter, ServerTabPainView.Acti
         }
     }
 
+    /**
+     * Get values for complex option, such as instance type and monitoring interval.
+     *
+     * @param option
+     *         existed environment configuration.
+     * @param configurationOptionInfo
+     *         solution stack configuration.
+     * @return array of possible values to configure.
+     */
     private JsonArray<String> getValueOptionsForConfigurationOption(ConfigurationOption option,
                                                                     JsonArray<ConfigurationOptionInfo> configurationOptionInfo) {
         if (configurationOptionInfo == null) {

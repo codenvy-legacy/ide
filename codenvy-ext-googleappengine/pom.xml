@@ -99,6 +99,10 @@
             <artifactId>gwt-test-utils</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-security</artifactId>
+        </dependency>
     </dependencies>
 
     <profiles>

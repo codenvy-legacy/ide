@@ -19,7 +19,7 @@
 package com.codenvy.ide.ext.git.client.reset.commit;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.git.client.GitClientResources;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.json.JsonArray;
@@ -75,7 +75,7 @@ public class ResetToCommitViewImpl extends DialogBox implements ResetToCommitVie
     @UiField(provided = true)
     CellTable<Revision>       commits;
     @UiField(provided = true)
-    final   GitClientResources      res;
+    final   GitResources            res;
     @UiField(provided = true)
     final   GitLocalizationConstant locale;
     private ActionDelegate          delegate;
@@ -87,7 +87,7 @@ public class ResetToCommitViewImpl extends DialogBox implements ResetToCommitVie
      * @param locale
      */
     @Inject
-    protected ResetToCommitViewImpl(GitClientResources resources, GitLocalizationConstant locale) {
+    protected ResetToCommitViewImpl(GitResources resources, GitLocalizationConstant locale) {
         this.res = resources;
         this.locale = locale;
 

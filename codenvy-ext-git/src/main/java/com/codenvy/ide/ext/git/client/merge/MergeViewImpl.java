@@ -22,7 +22,7 @@ import elemental.html.DragEvent;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.git.client.GitClientResources;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Reference;
@@ -65,7 +65,7 @@ public class MergeViewImpl extends DialogBox implements MergeView {
     @UiField
     ScrollPanel               referencesPanel;
     @UiField(provided = true)
-    final         GitClientResources           res;
+    final         GitResources                 res;
     @UiField(provided = true)
     final         GitLocalizationConstant      locale;
     @UiField(provided = true)
@@ -84,7 +84,7 @@ public class MergeViewImpl extends DialogBox implements MergeView {
      * @param rendererResources
      */
     @Inject
-    protected MergeViewImpl(GitClientResources resources, GitLocalizationConstant locale, Resources coreRes,
+    protected MergeViewImpl(GitResources resources, GitLocalizationConstant locale, Resources coreRes,
                             ReferenceTreeNodeRenderer.Resources rendererResources) {
         this.res = resources;
         this.locale = locale;

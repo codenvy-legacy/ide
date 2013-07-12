@@ -31,6 +31,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link ServerTabPainView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -61,6 +63,11 @@ public class ServerTabPainViewImpl extends Composite implements ServerTabPainVie
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected ServerTabPainViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -70,6 +77,7 @@ public class ServerTabPainViewImpl extends Composite implements ServerTabPainVie
         initWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setEc2InstanceTypes(JsonArray<String> instanceTypes, String valueToSelect) {
         ec2InstanceTypeField.clear();
@@ -85,31 +93,37 @@ public class ServerTabPainViewImpl extends Composite implements ServerTabPainVie
         ec2InstanceTypeField.setSelectedIndex(indexToSelect);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getEc2InstanceType() {
         return ec2InstanceTypeField.getItemText(ec2InstanceTypeField.getSelectedIndex());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setEc2SecurityGroup(String securityGroup) {
         ec2SecurityGroupsField.setText(securityGroup);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getEc2SecurityGroup() {
         return ec2SecurityGroupsField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setKeyPair(String keyPair) {
         keyNameField.setText(keyPair);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getKeyPair() {
         return keyNameField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMonitoringInterval(JsonArray<String> interval, String valueForSelect) {
         monitoringIntervalField.clear();
@@ -125,25 +139,30 @@ public class ServerTabPainViewImpl extends Composite implements ServerTabPainVie
         monitoringIntervalField.setSelectedIndex(indexToSelect);
     }
 
+    /** {@inheritDoc} */
     public String getMonitoringInterval() {
         return monitoringIntervalField.getItemText(monitoringIntervalField.getSelectedIndex());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setAmiId(String amiId) {
         imageIdField.setText(amiId);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getAmiId() {
         return imageIdField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void resetModifiedFields() {
         ec2InstanceTypeField.setModified(false);
@@ -153,26 +172,31 @@ public class ServerTabPainViewImpl extends Composite implements ServerTabPainVie
         imageIdField.setModified(false);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isEc2InstanceTypeModified() {
         return ec2InstanceTypeField.isModified();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isEc2SecurityGroupModified() {
         return ec2SecurityGroupsField.isModified();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isHeyPairModified() {
         return keyNameField.isModified();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isMonitoringIntervalModified() {
         return monitoringIntervalField.isModified();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isAmiIdModified() {
         return imageIdField.isModified();

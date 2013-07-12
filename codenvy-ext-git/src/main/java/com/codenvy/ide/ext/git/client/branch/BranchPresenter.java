@@ -162,7 +162,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
                 @Override
                 protected void onSuccess(String result) {
                     getBranches(projectId);
-                    // TODO
+                    // TODO refresh project explorer tree
                     // IDE.fireEvent(new RefreshBrowserEvent());
                 }
 

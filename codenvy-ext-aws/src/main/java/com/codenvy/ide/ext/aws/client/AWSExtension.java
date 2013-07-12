@@ -41,6 +41,19 @@ public class AWSExtension {
     private static final String ID             = "AWS";
     public static final  String INIT_VER_LABEL = "initial version";
 
+    /**
+     * Create CloudFoundry extension.
+     *
+     * @param paasAgent
+     * @param resource
+     * @param actionManager
+     * @param switchAccountAction
+     * @param ec2ManagementAction
+     * @param s3ManagementAction
+     * @param beanstalkManagementAction
+     * @param createApplicationManagementAction
+     * @param wizardPage
+     */
     @Inject
     public AWSExtension(PaaSAgent paasAgent, AWSResource resource, ActionManager actionManager, SwitchAccountAction switchAccountAction,
                         EC2ManagementAction ec2ManagementAction, S3ManagementAction s3ManagementAction,

@@ -35,12 +35,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link LaunchEnvironmentView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class LaunchEnvironmentViewImpl extends DialogBox implements LaunchEnvironmentView {
-    interface LaunchEnvironmentViewImplUiBinder extends UiBinder<Widget, LaunchEnvironmentViewImpl> {}
+    interface LaunchEnvironmentViewImplUiBinder extends UiBinder<Widget, LaunchEnvironmentViewImpl> {
+    }
 
     private static LaunchEnvironmentViewImplUiBinder uiBinder = GWT.create(LaunchEnvironmentViewImplUiBinder.class);
 
@@ -69,6 +72,11 @@ public class LaunchEnvironmentViewImpl extends DialogBox implements LaunchEnviro
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected LaunchEnvironmentViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -79,21 +87,25 @@ public class LaunchEnvironmentViewImpl extends DialogBox implements LaunchEnviro
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getEnvName() {
         return envNameField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getEnvDescription() {
         return envDescriptionField.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getSolutionStack() {
         return solutionStackField.getItemText(solutionStackField.getSelectedIndex());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setSolutionStackValues(JsonArray<String> values) {
         solutionStackField.clear();
@@ -103,11 +115,13 @@ public class LaunchEnvironmentViewImpl extends DialogBox implements LaunchEnviro
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getVersionField() {
         return versionsField.getItemText(versionsField.getSelectedIndex());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setVersionValues(JsonArray<String> values, String selectedValue) {
         versionsField.clear();
@@ -124,21 +138,25 @@ public class LaunchEnvironmentViewImpl extends DialogBox implements LaunchEnviro
         versionsField.setSelectedIndex(indexToSelect);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void enableLaunchButton(boolean enabled) {
         launchButton.setEnabled(enabled);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void focusInEnvNameField() {
         envNameField.setFocus(true);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -146,12 +164,14 @@ public class LaunchEnvironmentViewImpl extends DialogBox implements LaunchEnviro
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

@@ -3,7 +3,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:c='urn:import:com.codenvy.ide.ui'>
     <ui:with field='locale' type='com.codenvy.ide.ext.git.client.GitLocalizationConstant'/>
-    <ui:with field='res' type='com.codenvy.ide.ext.git.client.GitClientResources'/>
+    <ui:with field='res' type='com.codenvy.ide.ext.git.client.GitResources'/>
     <ui:style>
         .alignBtn {
             float: right;
@@ -30,7 +30,7 @@
                     <g:Label text="{locale.projectReadOnlyGitUrlTitle}" addStyleNames="{res.gitCSS.textFont}"/>
                 </g:north>
                 <g:center>
-                    <g:TextBox width="438px" height="16px" ui:field="url" addStyleNames="{res.gitCSS.textFont}"/>
+                    <g:TextBox width="438px" height="16px" ui:field="url" addStyleNames="{res.gitCSS.textFont}" readOnly="true"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:center>

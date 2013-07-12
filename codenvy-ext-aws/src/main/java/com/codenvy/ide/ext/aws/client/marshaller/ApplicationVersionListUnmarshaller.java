@@ -29,17 +29,25 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 /**
+ * Unmarshaller for application version info list.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class ApplicationVersionListUnmarshaller implements Unmarshallable<JsonArray<ApplicationVersionInfo>> {
     private JsonArray<ApplicationVersionInfo> versionList;
 
+    /**
+     * Create unmarshaller.
+     *
+     * @param versionList
+     */
     public ApplicationVersionListUnmarshaller(
             JsonArray<ApplicationVersionInfo> versionList) {
         this.versionList = versionList;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         String text = response.getText();
@@ -61,6 +69,7 @@ public class ApplicationVersionListUnmarshaller implements Unmarshallable<JsonAr
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public JsonArray<ApplicationVersionInfo> getPayload() {
         return versionList;

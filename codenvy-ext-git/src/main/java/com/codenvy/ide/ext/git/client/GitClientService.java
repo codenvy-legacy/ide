@@ -143,7 +143,7 @@ public interface GitClientService {
      * @param callback
      *         callback
      */
-    void branchList(@NotNull String vfsId, @NotNull String projectid, @NotNull String mode,
+    void branchList(@NotNull String vfsId, @NotNull String projectid, @Nullable String mode,
                     @NotNull AsyncRequestCallback<JsonArray<Branch>> callback) throws RequestException;
 
     /**
@@ -230,7 +230,7 @@ public interface GitClientService {
      * @param callback
      *         callback
      */
-    void remoteList(@NotNull String vfsId, @NotNull String projectid, @NotNull String remoteName, boolean verbose,
+    void remoteList(@NotNull String vfsId, @NotNull String projectid, @Nullable String remoteName, boolean verbose,
                     @NotNull AsyncRequestCallback<JsonArray<Remote>> callback) throws RequestException;
 
     /**
@@ -403,7 +403,7 @@ public interface GitClientService {
      *         callback
      * @throws RequestException
      */
-    void push(@NotNull String vfsId, @NotNull Project project, JsonArray<String> refSpec, @NotNull String remote, boolean force,
+    void push(@NotNull String vfsId, @NotNull Project project, @NotNull JsonArray<String> refSpec, @NotNull String remote, boolean force,
               @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
@@ -424,7 +424,7 @@ public interface GitClientService {
      *         callback
      * @throws WebSocketException
      */
-    void pushWS(@NotNull String vfsId, @NotNull Project project, JsonArray<String> refSpec, @NotNull String remote, boolean force,
+    void pushWS(@NotNull String vfsId, @NotNull Project project, @NotNull JsonArray<String> refSpec, @NotNull String remote, boolean force,
                 @NotNull RequestCallback<String> callback) throws WebSocketException;
 
     /**
@@ -527,7 +527,7 @@ public interface GitClientService {
      * @param callback
      *         callback
      */
-    void diff(@NotNull String vfsId, @NotNull String projectid, JsonArray<String> fileFilter, @NotNull DiffRequest.DiffType type,
+    void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull JsonArray<String> fileFilter, @NotNull DiffRequest.DiffType type,
               boolean noRenames, int renameLimit, @NotNull String commitA, @NotNull String commitB,
               @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
@@ -554,7 +554,7 @@ public interface GitClientService {
      * @param callback
      *         callback
      */
-    void diff(@NotNull String vfsId, @NotNull String projectid, JsonArray<String> fileFilter, @NotNull DiffRequest.DiffType type,
+    void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull JsonArray<String> fileFilter, @NotNull DiffRequest.DiffType type,
               boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached,
               @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 

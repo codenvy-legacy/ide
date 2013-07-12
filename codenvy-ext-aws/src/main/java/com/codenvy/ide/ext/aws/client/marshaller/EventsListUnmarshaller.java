@@ -27,16 +27,24 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 /**
+ * Unmarshaller for Events list.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class EventsListUnmarshaller implements Unmarshallable<EventsList> {
     private DtoClientImpls.EventsListImpl eventsList;
 
+    /**
+     * Create unmarshaller.
+     *
+     * @param eventsList
+     */
     public EventsListUnmarshaller(DtoClientImpls.EventsListImpl eventsList) {
         this.eventsList = eventsList;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         String text = response.getText();
@@ -54,6 +62,7 @@ public class EventsListUnmarshaller implements Unmarshallable<EventsList> {
         eventsList.setNextToken(dtoEvents.getNextToken());
     }
 
+    /** {@inheritDoc} */
     @Override
     public EventsList getPayload() {
         return eventsList;

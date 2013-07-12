@@ -35,6 +35,8 @@ import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * The implementation of {@link EC2ClientService}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -58,6 +60,15 @@ public class EC2ClientServiceImpl implements EC2ClientService {
     private EventBus                eventBus;
     private AWSLocalizationConstant constant;
 
+    /**
+     * Create client service.
+     *
+     * @param restContext
+     * @param loader
+     * @param wsMessageBus
+     * @param eventBus
+     * @param constant
+     */
     @Inject
     protected EC2ClientServiceImpl(@Named("restContext") String restContext, Loader loader, MessageBus wsMessageBus,
                                    EventBus eventBus, AWSLocalizationConstant constant) {
@@ -68,13 +79,7 @@ public class EC2ClientServiceImpl implements EC2ClientService {
         this.constant = constant;
     }
 
-    /**
-     * Returns the list of EC2 instances.
-     *
-     * @param callback
-     * @throws com.google.gwt.http.client.RequestException
-     *
-     */
+    /** {@inheritDoc} */
     @Override
     public void getInstances(AsyncRequestCallback<JsonArray<InstanceInfo>> callback) throws RequestException {
         final String url = restServiceContext + INSTANCES;
@@ -83,15 +88,7 @@ public class EC2ClientServiceImpl implements EC2ClientService {
                     .send(callback);
     }
 
-    /**
-     * Terminate the specified EC2 instance.
-     *
-     * @param id
-     *         EC2 instance identifier
-     * @param callback
-     * @throws com.google.gwt.http.client.RequestException
-     *
-     */
+    /** {@inheritDoc} */
     @Override
     public void terminateInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException {
         final String url = restServiceContext + TERMINATE_INSTANCE + id;
@@ -99,15 +96,7 @@ public class EC2ClientServiceImpl implements EC2ClientService {
         AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
     }
 
-    /**
-     * Reboot the specified EC2 instance.
-     *
-     * @param id
-     *         EC2 instance identifier
-     * @param callback
-     * @throws com.google.gwt.http.client.RequestException
-     *
-     */
+    /** {@inheritDoc} */
     @Override
     public void rebootInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException {
         final String url = restServiceContext + REBOOT_INSTANCE + id;
@@ -115,17 +104,7 @@ public class EC2ClientServiceImpl implements EC2ClientService {
         AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
     }
 
-    /**
-     * Stop the specified EC2 instance.
-     *
-     * @param id
-     *         EC2 instance identifier
-     * @param force
-     *         forces the instance to stop
-     * @param callback
-     * @throws com.google.gwt.http.client.RequestException
-     *
-     */
+    /** {@inheritDoc} */
     @Override
     public void stopInstance(String id, boolean force, AsyncRequestCallback<Object> callback) throws RequestException {
         final String url = restServiceContext + STOP_INSTANCE + id + "?force=" + force;
@@ -134,15 +113,7 @@ public class EC2ClientServiceImpl implements EC2ClientService {
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
-    /**
-     * Start the specified EC2 instance.
-     *
-     * @param id
-     *         EC2 instance identifier
-     * @param callback
-     * @throws com.google.gwt.http.client.RequestException
-     *
-     */
+    /** {@inheritDoc} */
     @Override
     public void startInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException {
         final String url = restServiceContext + START_INSTANCE + id;

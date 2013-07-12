@@ -27,6 +27,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Action to show S3 Management window.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -35,6 +37,13 @@ public class S3ManagementAction extends Action {
     private S3ManagerPresenter presenter;
     private ResourceProvider   resourceProvider;
 
+    /**
+     * Create action.
+     *
+     * @param presenter
+     * @param resourceProvider
+     * @param resource
+     */
     @Inject
     public S3ManagementAction(S3ManagerPresenter presenter, ResourceProvider resourceProvider, AWSResource resource) {
         super("S3 Management...", "Manage S3 Buckets", resource.s3());
@@ -42,6 +51,7 @@ public class S3ManagementAction extends Action {
         this.resourceProvider = resourceProvider;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         presenter.showDialog();

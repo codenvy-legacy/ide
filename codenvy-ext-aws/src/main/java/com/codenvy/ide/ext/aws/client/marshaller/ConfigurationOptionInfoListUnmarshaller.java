@@ -29,17 +29,25 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 /**
+ * Unmarshaller for configuration option info list.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class ConfigurationOptionInfoListUnmarshaller implements Unmarshallable<JsonArray<ConfigurationOptionInfo>> {
     JsonArray<ConfigurationOptionInfo> configurationOptionInfoJsonArray;
 
+    /**
+     * Create unmarshaller.
+     *
+     * @param configurationOptionInfoJsonArray
+     */
     public ConfigurationOptionInfoListUnmarshaller(
             JsonArray<ConfigurationOptionInfo> configurationOptionInfoJsonArray) {
         this.configurationOptionInfoJsonArray = configurationOptionInfoJsonArray;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         String text = response.getText();
@@ -61,6 +69,7 @@ public class ConfigurationOptionInfoListUnmarshaller implements Unmarshallable<J
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public JsonArray<ConfigurationOptionInfo> getPayload() {
         return configurationOptionInfoJsonArray;

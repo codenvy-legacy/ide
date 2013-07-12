@@ -43,6 +43,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter that allow user to edit application configuration.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -60,6 +62,19 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
     private EnvironmentInfo                    environmentInfo;
     private JsonArray<ConfigurationOptionInfo> configurationOptionInfoList;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param service
+     * @param containerTabPainPresenter
+     * @param eventBus
+     * @param console
+     * @param resourceProvider
+     * @param constant
+     * @param serverTabPainPresenter
+     * @param loadBalancerTabPainPresenter
+     */
     @Inject
     protected EditConfigurationPresenter(EditConfigurationView view, BeanstalkClientService service,
                                          ContainerTabPainPresenter containerTabPainPresenter, EventBus eventBus, ConsolePart console,
@@ -89,6 +104,7 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
         containerTabPainPresenter.go(containerTab);
     }
 
+    /** Show main dialog window. */
     public void showDialog(EnvironmentInfo environmentInfo) {
         this.environmentInfo = environmentInfo;
         if (!view.isShown()) {
@@ -98,6 +114,7 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
         }
     }
 
+    /** Get configuration options for selected solution stack technology. */
     private void getConfigurationOptions() {
         DtoClientImpls.SolutionStackConfigurationOptionsRequestImpl solutionStackConfigurationOptionsRequest =
                 DtoClientImpls.SolutionStackConfigurationOptionsRequestImpl.make();
@@ -127,6 +144,7 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
         }
     }
 
+    /** get configuration list for selected environment. */
     private void getConfigurationsList() {
         DtoClientImpls.ConfigurationRequestImpl configurationRequest = DtoClientImpls.ConfigurationRequestImpl.make();
         configurationRequest.setEnvironmentName(environmentInfo.getName());
@@ -163,12 +181,19 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
         }
     }
 
+    /**
+     * Assign configuration between nested presenters.
+     *
+     * @param envConfiguration
+     *         environment configuration.
+     */
     private void showConfiguration(Configuration envConfiguration) {
         serverTabPainPresenter.setConfiguration(envConfiguration.getOptions(), configurationOptionInfoList);
         containerTabPainPresenter.setConfiguration(envConfiguration.getOptions(), null);
         loadBalancerTabPainPresenter.setConfiguration(envConfiguration.getOptions(), null);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onApplyButtonCLicked() {
         JsonArray<ConfigurationOption> options = JsoArray.create();
@@ -207,6 +232,7 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCancelButtonClicked() {
         view.close();

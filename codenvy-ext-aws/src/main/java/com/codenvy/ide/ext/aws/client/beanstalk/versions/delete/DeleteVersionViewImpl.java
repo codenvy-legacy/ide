@@ -33,12 +33,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link DeleteVersionView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class DeleteVersionViewImpl extends DialogBox implements DeleteVersionView {
-    interface DeleteVersionViewImplUiBinder extends UiBinder<Widget, DeleteVersionViewImpl> {}
+    interface DeleteVersionViewImplUiBinder extends UiBinder<Widget, DeleteVersionViewImpl> {
+    }
 
     private static DeleteVersionViewImplUiBinder uiBinder = GWT.create(DeleteVersionViewImplUiBinder.class);
 
@@ -61,6 +64,11 @@ public class DeleteVersionViewImpl extends DialogBox implements DeleteVersionVie
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected DeleteVersionViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -71,21 +79,25 @@ public class DeleteVersionViewImpl extends DialogBox implements DeleteVersionVie
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDeleteQuestion(String question) {
         questionLabel.setText(question);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean getDeleteS3Bundle() {
         return deleteS3BundleField.getValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -93,12 +105,14 @@ public class DeleteVersionViewImpl extends DialogBox implements DeleteVersionVie
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

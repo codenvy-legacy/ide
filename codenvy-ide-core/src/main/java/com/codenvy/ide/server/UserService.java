@@ -57,7 +57,7 @@ public class UserService {
             User currentUser = userManager.getUserByAlias(userId);
 
             DtoServerImpls.UserImpl user = DtoServerImpls.UserImpl.make();
-            user.setUserId(currentUser.getId());
+            user.setUserId(userId); //userId - "user alias" e.g. email
             user.setProfileAttributes(currentUser.getProfile().getAttributes());
 
             return user.toJson();

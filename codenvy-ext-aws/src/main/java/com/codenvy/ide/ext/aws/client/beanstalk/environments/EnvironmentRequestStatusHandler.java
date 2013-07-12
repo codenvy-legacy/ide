@@ -24,6 +24,8 @@ import com.codenvy.ide.rest.RequestStatusHandler;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Handler for environment status request.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -32,12 +34,20 @@ public class EnvironmentRequestStatusHandler implements RequestStatusHandler {
     private String   finishMessage;
     private EventBus eventBus;
 
+    /**
+     * Create handler.
+     *
+     * @param startMessage
+     * @param finishMessage
+     * @param eventBus
+     */
     public EnvironmentRequestStatusHandler(String startMessage, String finishMessage, EventBus eventBus) {
         this.startMessage = startMessage;
         this.finishMessage = finishMessage;
         this.eventBus = eventBus;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void requestInProgress(String id) {
         Job job = new Job(id, Job.JobStatus.STARTED);
@@ -45,6 +55,7 @@ public class EnvironmentRequestStatusHandler implements RequestStatusHandler {
         eventBus.fireEvent(new JobChangeEvent(job));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void requestFinished(String id) {
         Job job = new Job(id, Job.JobStatus.FINISHED);
@@ -52,6 +63,7 @@ public class EnvironmentRequestStatusHandler implements RequestStatusHandler {
         eventBus.fireEvent(new JobChangeEvent(job));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void requestError(String id, Throwable exception) {
         Job job = new Job(id, Job.JobStatus.ERROR);

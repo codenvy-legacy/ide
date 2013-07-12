@@ -142,10 +142,10 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
     }
 
     /**
-     * Handler some action whether some exception happend.
+     * Handler some action whether some exception happened.
      *
      * @param e
-     *         excpetion what happend
+     *         exception what happened
      */
     private void handleError(@NotNull Throwable e) {
         String errorMessage = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : constant.initFailed();

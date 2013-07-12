@@ -24,21 +24,60 @@ import com.codenvy.ide.ext.aws.shared.beanstalk.EnvironmentInfo;
 import java.util.List;
 
 /**
+ * The view for {@link EnvironmentTabPainPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface EnvironmentTabPainView extends View<EnvironmentTabPainView.ActionDelegate> {
+    /** Interface which must implement presenter to process any actions. */
     interface ActionDelegate {
+        /**
+         * Perform show edit configuration window for specified environment.
+         *
+         * @param environment
+         *         selected environment.
+         */
         void onEditConfigurationButtonClicked(EnvironmentInfo environment);
 
+        /**
+         * Perform restart selected environment.
+         *
+         * @param environment
+         *         selected environment.
+         */
         void onRestartButtonClicked(EnvironmentInfo environment);
 
+        /**
+         * Perform rebuild selected environment.
+         *
+         * @param environment
+         *         selected environment.
+         */
         void onRebuildButtonClicked(EnvironmentInfo environment);
 
+        /**
+         * Perform terminate selected environment.
+         *
+         * @param environment
+         *         selected environment.
+         */
         void onTerminateButtonClicked(EnvironmentInfo environment);
 
+        /**
+         * Perform get logs for selected environment.
+         *
+         * @param environment
+         *         selected environment.
+         */
         void onGetLogsButtonCLicked(EnvironmentInfo environment);
     }
 
+    /**
+     * Set list of environments.
+     *
+     * @param environments
+     *         list of environments.
+     */
     void setEnvironments(List<EnvironmentInfo> environments);
 }

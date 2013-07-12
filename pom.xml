@@ -186,12 +186,22 @@
             </dependency>
             <dependency>
                 <groupId>com.codenvy.ide</groupId>
+                <artifactId>codenvy-ext-ssh</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.ide</groupId>
                 <artifactId>codenvy-ext-jenkins</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.codenvy.ide</groupId>
                 <artifactId>codenvy-ext-git</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.ide</groupId>
+                <artifactId>codenvy-ide-security</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -426,9 +436,8 @@
             </dependency>
 
         </dependencies>
-        
     </dependencyManagement>
-    
+
     <profiles>
         <profile>
             <id>osx_profile</id>
@@ -444,11 +453,11 @@
                     <version>1.6.0</version>
                     <scope>system</scope>
                     <systemPath>${java.home}/../Classes/classes.jar</systemPath>
-                </dependency>                
+                </dependency>
             </dependencies>
         </profile>
     </profiles>
-    
+
     <build>
         <pluginManagement>
             <plugins>
@@ -498,6 +507,8 @@
         <module>codenvy-ext-jenkins</module>
         <module>codenvy-ext-git</module>
         <module>codenvy-ext-maven</module>
+        <module>codenvy-ext-ssh</module>
+        <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
         <module>codenvy-ide-site-war</module>
         <module>codenvy-packaging-standalone-tomcat</module>

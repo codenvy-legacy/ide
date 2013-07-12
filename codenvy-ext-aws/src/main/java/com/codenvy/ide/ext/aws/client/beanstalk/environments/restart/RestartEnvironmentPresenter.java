@@ -35,19 +35,31 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter that allow user to restart instance.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class RestartEnvironmentPresenter implements RestartEnvironmentView.ActionDelegate {
-    private RestartEnvironmentView         view;
-    private EventBus                       eventBus;
-    private ConsolePart                    console;
-    private BeanstalkClientService         service;
-    private AWSLocalizationConstant        constant;
-    private LoginPresenter                 loginPresenter;
-    private EnvironmentInfo                environmentInfo;
+    private RestartEnvironmentView  view;
+    private EventBus                eventBus;
+    private ConsolePart             console;
+    private BeanstalkClientService  service;
+    private AWSLocalizationConstant constant;
+    private LoginPresenter          loginPresenter;
+    private EnvironmentInfo         environmentInfo;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param service
+     * @param constant
+     * @param loginPresenter
+     */
     @Inject
     public RestartEnvironmentPresenter(RestartEnvironmentView view, EventBus eventBus, ConsolePart console,
                                        BeanstalkClientService service, AWSLocalizationConstant constant,
@@ -62,6 +74,7 @@ public class RestartEnvironmentPresenter implements RestartEnvironmentView.Actio
         this.view.setDelegate(this);
     }
 
+    /** Show main dialog window. */
     public void showDialog(EnvironmentInfo environmentInfo) {
         this.environmentInfo = environmentInfo;
         if (!environmentInfo.getStatus().equals(EnvironmentStatus.Ready)) {
@@ -76,6 +89,7 @@ public class RestartEnvironmentPresenter implements RestartEnvironmentView.Actio
         view.setRestartQuestion(constant.restartAppServerQuestion(environmentInfo.getName()));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onRestartButtonClicked() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -101,7 +115,7 @@ public class RestartEnvironmentPresenter implements RestartEnvironmentView.Actio
 
                                                  @Override
                                                  protected void onSuccess(Object result) {
-                                                    view.close();
+                                                     view.close();
                                                  }
                                              });
         } catch (RequestException e) {
@@ -110,6 +124,7 @@ public class RestartEnvironmentPresenter implements RestartEnvironmentView.Actio
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCancelButtonClicked() {
         view.close();

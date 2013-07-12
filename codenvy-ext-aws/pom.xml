@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>codenvy-ext-aws</artifactId>
     <packaging>jar</packaging>
-    <name>Codenvy Extension :: Cloud Foundry</name>
+    <name>Codenvy Extension :: Amazon Web Services</name>
 
     <dependencies>
         <dependency>

@@ -27,7 +27,7 @@ import com.codenvy.ide.api.mvp.View;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public interface InitRepositoryView extends View<InitRepositoryView.ActionDelegate> {
-    /** Needs for delegate some function into CloneRepository view. */
+    /** Needs for delegate some function into InitRepository view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Ok button. */
         void onOkClicked();

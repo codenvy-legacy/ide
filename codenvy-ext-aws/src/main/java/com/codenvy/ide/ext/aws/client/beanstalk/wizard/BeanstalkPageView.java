@@ -22,25 +22,63 @@ import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.json.JsonArray;
 
 /**
+ * The view of {@link BeanstalkPagePresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface BeanstalkPageView extends View<BeanstalkPageView.ActionDelegate> {
+    /** Interface which must implement presenter to process any actions. */
     interface ActionDelegate {
+        /** Perform action when application name changed. */
         void onApplicationNameChange();
 
+        /** Perform action when environment name changed. */
         void onEnvironmentNameChange();
     }
 
+    /**
+     * Set application name.
+     *
+     * @param applicationName
+     *         application name.
+     */
     void setApplicationName(String applicationName);
 
+    /**
+     * Get application name.
+     *
+     * @return application name which user select as Elastic Beanstalk Application.
+     */
     String getApplicationName();
 
+    /**
+     * Set environment name.
+     *
+     * @param environmentName
+     *         environment name.
+     */
     void setEnvironmentName(String environmentName);
 
+    /**
+     * Get environment name.
+     *
+     * @return environment name which user select to create new environment.
+     */
     String getEnvironmentName();
 
+    /**
+     * Set list of solution stack technologies.
+     *
+     * @param stack
+     *         array of solution stack.
+     */
     void setSolutionStack(JsonArray<String> stack);
 
+    /**
+     * Get solution stack technology which user will be used.
+     *
+     * @return name of solution stack technology.
+     */
     String getSolutionStack();
 }

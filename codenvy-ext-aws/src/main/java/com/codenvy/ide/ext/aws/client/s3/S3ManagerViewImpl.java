@@ -46,6 +46,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * The implementation for the {@link S3ManagerView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -106,6 +108,11 @@ public class S3ManagerViewImpl extends DialogBox implements S3ManagerView {
 
     private S3Object selectedS3Object;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected S3ManagerViewImpl(AWSLocalizationConstant constant) {
         this.constant = constant;
@@ -139,7 +146,6 @@ public class S3ManagerViewImpl extends DialogBox implements S3ManagerView {
         refreshObjectsAction.setScheduledCommand(new Scheduler.ScheduledCommand() {
             @Override
             public void execute() {
-                GWT.log("asdasd");
                 delegate.onRefreshObjectsClicked(selectedS3Bucket.getName());
             }
         });
@@ -162,6 +168,7 @@ public class S3ManagerViewImpl extends DialogBox implements S3ManagerView {
         this.setWidget(widget);
     }
 
+    /** Init S3 Buckets table. */
     private void initBucketsTable() {
         s3BucketCellTable.setWidth("100%", true);
         s3BucketCellTable.setAutoHeaderRefreshDisabled(true);
@@ -201,6 +208,7 @@ public class S3ManagerViewImpl extends DialogBox implements S3ManagerView {
         });
     }
 
+    /** Init S3 Objects table. */
     private void initObjectsTable() {
         s3ObjectCellTable.setWidth("100%", true);
         s3ObjectCellTable.setAutoHeaderRefreshDisabled(true);
@@ -270,6 +278,7 @@ public class S3ManagerViewImpl extends DialogBox implements S3ManagerView {
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setS3Buckets(JsonArray<S3Bucket> s3Buckets) {
         List<S3Bucket> buckets = new ArrayList<S3Bucket>(s3Buckets.size());
@@ -281,6 +290,7 @@ public class S3ManagerViewImpl extends DialogBox implements S3ManagerView {
         s3BucketCellTable.setRowData(buckets);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setS3ObjectsList(S3ObjectsList s3ObjectsList) {
         List<S3Object> objects = new ArrayList<S3Object>();
@@ -291,36 +301,37 @@ public class S3ManagerViewImpl extends DialogBox implements S3ManagerView {
         s3ObjectCellTable.setRowData(objects);
     }
 
-    @Override
-    public void addS3ObjectsList(S3ObjectsList s3ObjectsList) {
-      //TODO ?!
-    }
-
+    /** {@inheritDoc} */
     @Override
     public String getSelectedBucketId() {
         return selectedS3Bucket.getName();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setBucketId() {
         bucketId.setText(selectedS3Bucket.getName());
     }
 
+    /** {@inheritDoc} */
     @Override
     public S3Object getSelectedObject() {
         return selectedS3Object;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setUploadProjectButtonEnabled(boolean enabled) {
         uploadProjectAction.setEnabled(enabled);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -328,12 +339,14 @@ public class S3ManagerViewImpl extends DialogBox implements S3ManagerView {
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

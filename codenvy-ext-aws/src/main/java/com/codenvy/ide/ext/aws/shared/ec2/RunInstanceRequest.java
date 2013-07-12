@@ -21,6 +21,8 @@ package com.codenvy.ide.ext.aws.shared.ec2;
 import com.codenvy.ide.json.JsonArray;
 
 /**
+ * The RunInstances operation launches a specified number of instances.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -39,11 +41,39 @@ public interface RunInstanceRequest {
      */
     String getInstanceType();
 
+    /**
+     * The number of instances to launch. If the value is more than
+     * Amazon EC2 can launch, the largest possible number above minCount will
+     * be launched instead. <p> Between 1 and the maximum number allowed for
+     * your account (default: 20).
+     *
+     * @return The number of instances to launch. If the value is more than
+     *         Amazon EC2 can launch, the largest possible number above minCount will
+     *         be launched instead. <p> Between 1 and the maximum number allowed for
+     *         your account (default: 20).
+     */
     int getNumberOfInstances();
 
+    /**
+     * The name of the key pair.
+     *
+     * @return The name of the key pair.
+     */
     String getKeyName();
 
+    /**
+     * Returns the value of the SecurityGroupIds property for this object.
+     *
+     * @return The value of the SecurityGroupIds property for this object.
+     */
     JsonArray<String> getSecurityGroupsIds();
 
+    /**
+     * Specifies the placement constraints (Availability Zones) for launching
+     * the instances.
+     *
+     * @return Specifies the placement constraints (Availability Zones) for launching
+     *         the instances.
+     */
     String getAvailabilityZone();
 }

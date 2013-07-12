@@ -149,6 +149,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
                 protected void onSuccess(String result) {
                     view.close();
                     console.print(constant.resetFilesSuccessfully());
+                    // TODO refresh project explorer tree
                     // IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
                 }
 

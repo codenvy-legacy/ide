@@ -27,15 +27,53 @@ import com.codenvy.ide.json.JsonArray;
  * @version $Id: $
  */
 public interface ApplicationInfo {
+    /**
+     * The name of the application.
+     * <p/>
+     * <b>Constraints:</b><br/>
+     * <b>Length: </b>1 - 100<br/>
+     *
+     * @return The name of the application.
+     */
     String getName();
 
+    /**
+     * User-defined description of the application.
+     * <p/>
+     * <b>Constraints:</b><br/>
+     * <b>Length: </b>0 - 200<br/>
+     *
+     * @return User-defined description of the application.
+     */
     String getDescription();
 
+    /**
+     * The date when the application was created.
+     *
+     * @return The date when the application was created.
+     */
     double getCreated();
 
+    /**
+     * The date when the application was last modified.
+     *
+     * @return The date when the application was last modified.
+     */
     double getUpdated();
 
+    /**
+     * The names of the versions for this application.
+     *
+     * @return The names of the versions for this application.
+     */
     JsonArray<String> getVersions();
 
+    /**
+     * The names of the configuration templates associated with this
+     * application.
+     *
+     * @return The names of the configuration templates associated with this
+     *         application.
+     */
     JsonArray<String> getConfigurationTemplates();
 }

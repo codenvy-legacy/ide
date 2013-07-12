@@ -38,6 +38,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter that allow user to terminate instance.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -52,6 +54,16 @@ public class TerminateEnvironmentPresenter implements TerminateEnvironmentView.A
     private EnvironmentInfo                environmentInfo;
     private AsyncCallback<EnvironmentInfo> callback;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param constant
+     * @param service
+     * @param loginPresenter
+     */
     @Inject
     public TerminateEnvironmentPresenter(TerminateEnvironmentView view, EventBus eventBus, ConsolePart console,
                                          AWSLocalizationConstant constant,
@@ -66,6 +78,7 @@ public class TerminateEnvironmentPresenter implements TerminateEnvironmentView.A
         this.view.setDelegate(this);
     }
 
+    /** Show main dialog window. */
     public void showDialog(EnvironmentInfo environmentInfo, AsyncCallback<EnvironmentInfo> callback) {
         this.callback = callback;
 
@@ -82,6 +95,7 @@ public class TerminateEnvironmentPresenter implements TerminateEnvironmentView.A
         view.setTerminateQuestion(constant.terminateEnvironmentQuestion(environmentInfo.getName()));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onTerminateButtonClicked() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -122,6 +136,7 @@ public class TerminateEnvironmentPresenter implements TerminateEnvironmentView.A
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCancelButtonClicked() {
         view.close();

@@ -29,16 +29,24 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 /**
+ * Unmarshaller for S3 Bucket list.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class S3BucketsUnmarshaller implements Unmarshallable<JsonArray<S3Bucket>> {
     private JsonArray<S3Bucket> s3Buckets;
 
+    /**
+     * Create unmarshaller.
+     *
+     * @param s3Buckets
+     */
     public S3BucketsUnmarshaller(JsonArray<S3Bucket> s3Buckets) {
         this.s3Buckets = s3Buckets;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         String text = response.getText();
@@ -62,6 +70,7 @@ public class S3BucketsUnmarshaller implements Unmarshallable<JsonArray<S3Bucket>
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public JsonArray<S3Bucket> getPayload() {
         return s3Buckets;

@@ -19,7 +19,7 @@
 package com.codenvy.ide.ext.git.client.clone;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.git.client.GitClientResources;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -56,7 +56,7 @@ public class CloneRepositoryViewImpl extends DialogBox implements CloneRepositor
     @UiField
     com.codenvy.ide.ui.Button btnCancel;
     @UiField(provided = true)
-    final   GitClientResources      res;
+    final   GitResources            res;
     @UiField(provided = true)
     final   GitLocalizationConstant locale;
     private ActionDelegate          delegate;
@@ -68,7 +68,7 @@ public class CloneRepositoryViewImpl extends DialogBox implements CloneRepositor
      * @param locale
      */
     @Inject
-    public CloneRepositoryViewImpl(GitClientResources resources, GitLocalizationConstant locale) {
+    public CloneRepositoryViewImpl(GitResources resources, GitLocalizationConstant locale) {
         this.res = resources;
         this.locale = locale;
 

@@ -39,6 +39,7 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
     private PreferencesPagePresenter            currentPage;
     private JsonArray<PreferencesPagePresenter> preferences;
     private boolean                             hasDirtyPage;
+    private PreferencesAgentImpl                agent;
 
     /**
      * Create presenter.
@@ -52,8 +53,7 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
     protected PreferencesPresenter(PreferencesView view, PreferencesAgentImpl agent) {
         this.view = view;
         this.view.setDelegate(this);
-        preferences = agent.getPreferences();
-        this.view.setPreferences(preferences);
+        this.agent = agent;
     }
 
     /** {@inheritDoc} */
@@ -98,6 +98,11 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
 
     /** Shows preferences. */
     public void showPreferences() {
+        preferences = agent.getPreferences();
+        this.view.setPreferences(preferences);
+        if (!preferences.isEmpty()) {
+            selectedPreference(preferences.get(0));
+        }
         view.showPreferences();
     }
 

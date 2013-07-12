@@ -19,7 +19,7 @@
 package com.codenvy.ide.ext.git.client.commit;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.git.client.GitClientResources;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -57,7 +57,7 @@ public class CommitViewImpl extends DialogBox implements CommitView {
     @UiField
     com.codenvy.ide.ui.Button btnCancel;
     @UiField(provided = true)
-    final   GitClientResources      res;
+    final   GitResources            res;
     @UiField(provided = true)
     final   GitLocalizationConstant locale;
     private ActionDelegate          delegate;
@@ -69,7 +69,7 @@ public class CommitViewImpl extends DialogBox implements CommitView {
      * @param locale
      */
     @Inject
-    protected CommitViewImpl(GitClientResources resources, GitLocalizationConstant locale) {
+    protected CommitViewImpl(GitResources resources, GitLocalizationConstant locale) {
         this.res = resources;
         this.locale = locale;
 

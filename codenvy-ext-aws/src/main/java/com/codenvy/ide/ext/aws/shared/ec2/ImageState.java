@@ -38,6 +38,13 @@ public enum ImageState {
         return value;
     }
 
+    /**
+     * Use this in place of valueOf.
+     *
+     * @param value
+     *            real value
+     * @return ImageState corresponding to the value
+     */
     public static ImageState fromValue(String value) {
         for (ImageState v : ImageState.values()) {
             if (v.value.equals(value)) {

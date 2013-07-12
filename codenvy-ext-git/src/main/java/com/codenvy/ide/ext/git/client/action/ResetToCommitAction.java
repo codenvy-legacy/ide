@@ -21,7 +21,7 @@ package com.codenvy.ide.ext.git.client.action;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.ext.git.client.GitClientResources;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.reset.commit.ResetToCommitPresenter;
 import com.codenvy.ide.resources.model.Project;
@@ -37,7 +37,7 @@ public class ResetToCommitAction extends Action {
     private ResourceProvider       resourceProvider;
 
     @Inject
-    public ResetToCommitAction(ResetToCommitPresenter presenter, ResourceProvider resourceProvider, GitClientResources resources,
+    public ResetToCommitAction(ResetToCommitPresenter presenter, ResourceProvider resourceProvider, GitResources resources,
                                GitLocalizationConstant constant) {
         super(constant.resetToCommitControlTitle(), constant.resetToCommitControlPrompt(), resources.revert());
         this.presenter = presenter;

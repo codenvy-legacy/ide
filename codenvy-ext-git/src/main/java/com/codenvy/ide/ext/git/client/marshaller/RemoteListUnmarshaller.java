@@ -34,7 +34,7 @@ import com.google.gwt.json.client.JSONParser;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 4, 2011 12:45:37 PM anya $
  */
-public class RemoteListUnmarshaller implements Unmarshallable<JsonArray<Remote>>, Constants {
+public class RemoteListUnmarshaller implements Unmarshallable<JsonArray<Remote>> {
     /** Remote repositories. */
     private JsonArray<Remote> remotes;
 
@@ -59,20 +59,8 @@ public class RemoteListUnmarshaller implements Unmarshallable<JsonArray<Remote>>
 
         for (int i = 0; i < array.size(); i++) {
             JSONObject object = array.get(i).isObject();
-            if (object == null)
-                continue;
-            String name = "";
-            String url = "";
-            if (object.containsKey(NAME)) {
-                name = (object.get(NAME).isString() != null) ? object.get(NAME).isString().stringValue() : name;
-            }
-            if (object.containsKey(URL)) {
-                url = (object.get(URL).isString() != null) ? object.get(URL).isString().stringValue() : url;
-            }
-            DtoClientImpls.RemoteImpl remote = DtoClientImpls.RemoteImpl.make();
-            remote.setName(name);
-            remote.setUrl(url);
-
+            String value = object.toString();
+            DtoClientImpls.RemoteImpl remote = DtoClientImpls.RemoteImpl.deserialize(value);
             remotes.add(remote);
         }
     }

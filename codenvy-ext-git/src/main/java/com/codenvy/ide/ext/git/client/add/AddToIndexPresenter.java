@@ -113,7 +113,7 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
                 @Override
                 protected void onSuccess(String result) {
                     console.print(constant.addSuccess());
-                    // TODO
+                    // TODO need to refresh project explorer tree
                     //IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
                 }
 
@@ -135,7 +135,7 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
                 @Override
                 protected void onSuccess(String result) {
                     console.print(constant.addSuccess());
-                    // TODO
+                    // TODO need to refresh project explorer tree
                     //IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
                 }
 

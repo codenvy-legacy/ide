@@ -27,16 +27,24 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 /**
+ * Unmarshaller for application info.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class ApplicationInfoUnmarshaller implements Unmarshallable<ApplicationInfo> {
     private DtoClientImpls.ApplicationInfoImpl applicationInfo;
 
+    /**
+     * Create unmarshaller.
+     *
+     * @param applicationInfo
+     */
     public ApplicationInfoUnmarshaller(DtoClientImpls.ApplicationInfoImpl applicationInfo) {
         this.applicationInfo = applicationInfo;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         String text = response.getText();
@@ -59,6 +67,7 @@ public class ApplicationInfoUnmarshaller implements Unmarshallable<ApplicationIn
         applicationInfo.setConfigurationTemplates(dtoAppInfo.getConfigurationTemplates());
     }
 
+    /** {@inheritDoc} */
     @Override
     public ApplicationInfo getPayload() {
         return applicationInfo;
