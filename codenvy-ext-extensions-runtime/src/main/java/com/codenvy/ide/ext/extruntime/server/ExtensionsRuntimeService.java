@@ -42,7 +42,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
@@ -52,7 +51,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.exoplatform.ide.vfs.shared.PropertyFilter.ALL_FILTER;
 
 /**
@@ -85,7 +83,6 @@ public class ExtensionsRuntimeService {
      */
     @Path("create")
     @POST
-    @Produces(APPLICATION_JSON)
     public void createCodenvyExtensionProject(@QueryParam("vfsid") String vfsId,
                                               @QueryParam("name") String name,
                                               @QueryParam("rootid") String rootId,
@@ -167,7 +164,7 @@ public class ExtensionsRuntimeService {
     @Path("stop/{appid}")
     @GET
     public void stop(@PathParam("appid") String appId) throws Exception {
-        launcher.stop(appId);
+        launcher.stopExtension(appId);
     }
 
 }

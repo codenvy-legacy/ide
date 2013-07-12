@@ -41,6 +41,7 @@ import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.picocontainer.Startable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -78,7 +79,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: CodenvyExtensionsLauncher.java Jul 7, 2013 3:17:41 PM azatsarynnyy $
  */
-public class CodenvyExtensionsLauncher {
+public class CodenvyExtensionsLauncher implements Startable {
     /** System property that contains build server URL. */
     public static final String         BUILD_SERVER_BASE_URL = "exo.ide.builder.build-server-base-url";
 
@@ -91,7 +92,8 @@ public class CodenvyExtensionsLauncher {
     /** Base URL of build server. */
     private final String               baseURL;
 
-    private final Map<String, Process> applications;
+    private final Map<String, Process> applicationToProcess;
+    private final Map<String, File>    applicationToTomcatFile;
 
     public CodenvyExtensionsLauncher(InitParams initParams) {
         this(readValueParam(initParams, "build-server-base-url", System.getProperty(BUILD_SERVER_BASE_URL)));
@@ -117,7 +119,8 @@ public class CodenvyExtensionsLauncher {
             throw new IllegalArgumentException("Base URL of build server may not be null or empty string. ");
         }
         this.baseURL = baseURL;
-        applications = new ConcurrentHashMap<String, Process>();
+        applicationToProcess = new ConcurrentHashMap<String, Process>();
+        applicationToTomcatFile = new ConcurrentHashMap<String, File>();
     }
 
     /**
@@ -214,7 +217,9 @@ public class CodenvyExtensionsLauncher {
             Build clientPomBuild = clientPom.getBuild();
             Map<String, Plugin> clientPomPlugins = clientPomBuild.getPluginsAsMap();
             Plugin warPlugin = clientPomPlugins.get("org.apache.maven.plugins:maven-war-plugin");
-            Xpp3Dom warPluginConfiguration = Xpp3DomBuilder.build(new StringReader("<configuration><outputDirectory>./target/</outputDirectory></configuration>"));
+            Xpp3Dom warPluginConfiguration =
+                                             Xpp3DomBuilder.build(new StringReader(
+                                                                                   "<configuration><outputDirectory>./target/</outputDirectory></configuration>"));
             warPlugin.setConfiguration(warPluginConfiguration);
             clientPomBuild.setPlugins(new ArrayList(clientPomPlugins.values()));
             writePom(clientPom, clientModulePomPath);
@@ -285,7 +290,8 @@ public class CodenvyExtensionsLauncher {
         Process process = new ProcessBuilder(tomcatDir.getPath() + "/bin/catalina.sh", "run").start();
 
         String appId = generate("app-", 16);
-        applications.put(appId, process);
+        applicationToProcess.put(appId, process);
+        applicationToTomcatFile.put(appId, tomcatDir);
         return appId;
     }
 
@@ -295,13 +301,17 @@ public class CodenvyExtensionsLauncher {
      * @param appId identifier of application to stop
      * @throws Exception if error occurred while stopping an application
      */
-    public void stop(String appId) throws Exception {
-        Process process = applications.get(appId);
+    public void stopExtension(String appId) throws Exception {
+        Process process = applicationToProcess.get(appId);
         if (process != null) {
             process.destroy();
-            applications.remove(appId);
+            process.waitFor();
+            File tomcatDir = applicationToTomcatFile.get(appId);
+            deleteRecursive(tomcatDir);
+            applicationToProcess.remove(appId);
+            applicationToTomcatFile.remove(appId);
         } else {
-            throw new Exception("Unable stop application. Application '" + appId + "' not found. ");
+            throw new Exception("Unable to stop application. Application '" + appId + "' not found. ");
         }
     }
 
@@ -449,6 +459,23 @@ public class CodenvyExtensionsLauncher {
             body = bout.toString();
         }
         return body;
+    }
+
+    /** @see org.picocontainer.Startable#start() */
+    @Override
+    public void start() {
+    }
+
+    /** @see org.picocontainer.Startable#stop() */
+    @Override
+    public void stop() {
+        for (String appId : applicationToProcess.keySet()) {
+            try {
+                stopExtension(appId);
+            } catch (Exception e) {
+                LOG.error("Failed to stop Codenvy extension {}.", appId, e);
+            }
+        }
     }
 
 }

@@ -19,20 +19,18 @@
 package com.codenvy.ide.ext.extruntime.server;
 
 import javax.ws.rs.core.Application;
-import java.util.HashSet;
+
+import java.util.Collections;
 import java.util.Set;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtensionsRuntimeApplication.java Jul 3, 2013 3:26:32 PM azatsarynnyy $
  */
 public class ExtensionsRuntimeApplication extends Application {
     /** {@inheritDoc} */
     @Override
-    public Set<Class<?>> getClasses() {
-        Set<Class<?>> classes = new HashSet<Class<?>>();
-        classes.add(ExtensionsRuntimeService.class);
-        return classes;
+    public Set<Class< ? >> getClasses() {
+        return Collections.<Class< ? >> singleton(ExtensionsRuntimeService.class);
     }
 }
