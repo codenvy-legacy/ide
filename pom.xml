@@ -727,6 +727,12 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>codenvy-factory</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>eclipse-jdt-core</artifactId>
             <version>${project.version}</version>
          </dependency>
