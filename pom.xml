@@ -816,7 +816,6 @@
       <module>exo-ide-client</module>
       <module>exo-ide-shell</module>
       <module>exo-ide-websocket</module>
-      <module>codenvy-factory</module>
 
       <module>exo-ide-git-server</module>
       <module>exo-ide-packaging-shell-war</module>

@@ -24,23 +24,30 @@ import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.extension.java.jdi.client.events.*;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * Control for show breakpoint properties.
- *
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ShowBreakpointPropertiesControl.java May 11, 2012 12:44:25 PM azatsarynnyy $
  */
 @RolesAllowed({"developer"})
 public class ShowBreakpointPropertiesControl extends SimpleControl implements IDEControl, ShowContextMenuHandler,
-                                                                              DebuggerConnectedHandler, DebuggerDisconnectedHandler {
+                                                                  DebuggerConnectedHandler, DebuggerDisconnectedHandler,
+                                                                  ItemsSelectedHandler {
     /** Control's identifier. */
-    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.showBreakpointPropertiesControlId();
+    public static final String  ID     = DebuggerExtension.LOCALIZATION_CONSTANT.showBreakpointPropertiesControlId();
 
     /** Control's title. */
-    private static final String TITLE = DebuggerExtension.LOCALIZATION_CONSTANT.showBreakpointPropertiesControlTitle();
+    private static final String TITLE  = DebuggerExtension.LOCALIZATION_CONSTANT.showBreakpointPropertiesControlTitle();
 
     /** Control's prompt. */
     private static final String PROMPT = DebuggerExtension.LOCALIZATION_CONSTANT.showBreakpointPropertiesControlPrompt();
@@ -59,12 +66,15 @@ public class ShowBreakpointPropertiesControl extends SimpleControl implements ID
         IDE.addHandler(ShowContextMenuEvent.TYPE, this);
         IDE.addHandler(DebuggerConnectedEvent.TYPE, this);
         IDE.addHandler(DebuggerDisconnectedEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
 
         setVisible(false);
     }
 
-    /** @see org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuHandler#onShowContextMenu(org.exoplatform.ide.client
-     * .framework.contextmenu.ShowContextMenuEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuHandler#onShowContextMenu(org.exoplatform.ide.client
+     *      .framework.contextmenu.ShowContextMenuEvent)
+     */
     @Override
     public void onShowContextMenu(ShowContextMenuEvent event) {
         if (event.getObject() instanceof EditorBreakPoint) {
@@ -78,19 +88,46 @@ public class ShowBreakpointPropertiesControl extends SimpleControl implements ID
         }
     }
 
-    /** @see org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedHandler#onDebuggerDisconnected(org.exoplatform.ide
-     * .extension.java.jdi.client.events.DebuggerDisconnectedEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedHandler#onDebuggerDisconnected(org.exoplatform.ide
+     *      .extension.java.jdi.client.events.DebuggerDisconnectedEvent)
+     */
     @Override
     public void onDebuggerDisconnected(DebuggerDisconnectedEvent event) {
         setVisible(false);
     }
 
-    /** @see org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedHandler#onDebuggerConnected(org.exoplatform.ide
-     * .extension.java.jdi.client.events.DebuggerConnectedEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedHandler#onDebuggerConnected(org.exoplatform.ide
+     *      .extension.java.jdi.client.events.DebuggerConnectedEvent)
+     */
     @Override
     public void onDebuggerConnected(DebuggerConnectedEvent event) {
         setVisible(true);
         setEnabled(true);
+    }
+
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        if (event.getSelectedItems().size() != 1) {
+            setEnabled(false);
+            setVisible(false);
+        } else {
+            setVisible(true);
+            Item selectedItem = event.getSelectedItems().get(0);
+
+            ProjectModel project = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem
+                : ((ItemContext)selectedItem).getProject();
+            if (ProjectType.MultiModule.value().equals(project.getProjectType())
+                || ProjectType.JAR.value().equals(project.getProjectType())
+                || ProjectType.JAVASCRIPT.value().equals(project.getProjectType())
+                || ProjectType.RUBY_ON_RAILS.value().equals(project.getProjectType())
+                || ProjectType.PHP.value().equals(project.getProjectType())
+                || ProjectType.PYTHON.value().equals(project.getProjectType())
+                || ProjectType.NODE_JS.value().equals(project.getProjectType())) {
+                setVisible(false);
+            }
+        }
     }
 
 }

@@ -156,7 +156,7 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
         }
 
         display.getFormPanel().setEncoding(FormPanel.ENCODING_MULTIPART);
-        display.getFormPanel().setAction(restContext + "/" + Utils.getWorkspaceName() + "/ssh-keys/add?host=" + host);
+        display.getFormPanel().setAction(restContext + Utils.getWorkspaceName() + "/ssh-keys/add?host=" + host);
         display.getFormPanel().submit();
     }
 

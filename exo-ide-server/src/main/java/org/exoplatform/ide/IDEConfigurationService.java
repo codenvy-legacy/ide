@@ -98,7 +98,7 @@ public class IDEConfigurationService {
                 //ignore 
             }
             IdeUser user = new IdeUser(userId, identity.getRoles(), request.getSession().getId(), workspaces);
-            LOG.info(user.toString());
+            LOG.debug(user.toString());
             result.put("user", user);
             final Map<String, Object> userSettings = Collections.emptyMap();
             result.put("userSettings", userSettings);

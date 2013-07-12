@@ -225,7 +225,14 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
 
                                                        @Override
                                                        protected void onFailure(Throwable exception) {
-                                                           IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                           if (exception.getMessage().contains("Bad credentials"))
+                                                           {
+                                                               Dialogs.getInstance()
+                                                                      .showError("Bad credentials",
+                                                                                 "ooks like a problem with your SSH key.  Delete a GitHub key at Window > Preferences > SSH Keys, and try importing your GitHub projects again.");
+                                                           }
+                                                           else
+                                                               IDE.fireEvent(new ExceptionThrownEvent(exception));
 
                                                        }
                                                    });

@@ -589,10 +589,12 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
         if (fileModel == null) {
             String path = resolveFilePath(location);
             try {
+                FileModel openFileModel = new FileModel();
+                openFileModel.setProject(project);
                 VirtualFileSystem.getInstance()
                                  .getItemByPath(path,
                                                 new AsyncRequestCallback<ItemWrapper>(
-                                                                                      new ItemUnmarshaller(new ItemWrapper(new FileModel()))) {
+                                                                                      new ItemUnmarshaller(new ItemWrapper(openFileModel))) {
 
                                                     @Override
                                                     protected void onSuccess(ItemWrapper result) {

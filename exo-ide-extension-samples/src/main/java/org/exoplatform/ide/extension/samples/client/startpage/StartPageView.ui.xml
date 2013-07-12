@@ -84,7 +84,7 @@
 		
 		.googleOnePanel {
 			position: absolute;
-			width: 190px;
+			width: 205px;
 			height: 480px;
 			background: none;
 			border: none;
