@@ -164,14 +164,21 @@ public class UpdateStorageService {
 
     public void shutdown() {
         pool.shutdown();
+        cleaner.shutdown();
         try {
             if (!pool.awaitTermination(30, TimeUnit.SECONDS)) {
                 pool.shutdownNow();
             }
+            if (!cleaner.awaitTermination(30, TimeUnit.SECONDS)) {
+                cleaner.shutdownNow();
+            }
             // Task with null artifact will shutdown writer thread
             writerQueue.add(new WriterTask(null, null, null, null));
         } catch (InterruptedException e) {
-            pool.shutdownNow();
+            if (!pool.isShutdown())
+              pool.shutdownNow();
+            if (!cleaner.isShutdown())
+                cleaner.shutdownNow();
             Thread.currentThread().interrupt();
         }
     }
@@ -251,6 +258,7 @@ public class UpdateStorageService {
             }
             controlledObj.interrupt();
         }
+        
     }
 
     /**
