@@ -260,18 +260,23 @@ public class CodenvyExtensionsLauncher implements Startable {
         if (tomcatStream == null) {
             throw new InvalidArgumentException("Can't find Tomcat package.");
         }
+
         File tomcatDir = createTempDirectory("tomcat-");
-        unzip(tomcatStream, tomcatDir);
-
-        File ideWar = downloadFile(new File(tomcatDir.getPath() + "/webapps"), "app-", ".war", new URL(buildStatus.getDownloadUrl()));
-        ideWar.renameTo(new File(tomcatDir.getPath() + "/webapps/IDE.war"));
-
-        new ProcessBuilder("chmod", "+x", tomcatDir.getPath() + "/bin/*.sh").start().waitFor();
-        Process process = new ProcessBuilder(tomcatDir.getPath() + "/bin/catalina.sh", "run").start();
-
-        final String appId = generate("app-", 16);
-        applicationToProcess.put(appId, process);
-        applicationToTomcatFile.put(appId, tomcatDir);
+        String appId;
+        try {
+            unzip(tomcatStream, tomcatDir);
+            
+            File ideWar = downloadFile(new File(tomcatDir.getPath() + "/webapps"), "app-", ".war", new URL(buildStatus.getDownloadUrl()));
+            ideWar.renameTo(new File(tomcatDir.getPath() + "/webapps/IDE.war"));
+            new ProcessBuilder("chmod", "+x", tomcatDir.getPath() + "/bin/catalina.sh").start().waitFor();
+            Process process = new ProcessBuilder(tomcatDir.getPath() + "/bin/catalina.sh", "run").start();
+            appId = generate("app-", 16);
+            applicationToProcess.put(appId, process);
+            applicationToTomcatFile.put(appId, tomcatDir);
+        } catch (IOException e) {
+            deleteRecursive(tomcatDir);
+            throw e;
+        }
         return appId;
     }
 
