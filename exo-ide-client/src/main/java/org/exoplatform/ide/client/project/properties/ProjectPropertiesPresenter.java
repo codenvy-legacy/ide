@@ -206,7 +206,8 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
     private void refreshProperties() {
         List<Property> propertyList = new ArrayList<Property>();
         for (Property property : currentProject.getProperties()) {
-            if (property.getValue() == null || property.getValue().isEmpty()) {
+            if (property.getValue() == null || property.getValue().isEmpty()
+                || ProjectProperties.JREBEL_COUNT.value().equals(property.getName())) {
                 continue;
             }
 
