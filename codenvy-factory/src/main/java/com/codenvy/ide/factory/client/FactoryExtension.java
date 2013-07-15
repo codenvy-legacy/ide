@@ -23,7 +23,7 @@ import com.codenvy.ide.factory.client.generate.FactoryURLHandler;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter;
 import com.codenvy.ide.factory.client.generate.FactoryUrlControl;
 import com.codenvy.ide.factory.client.generate.SendMailPresenter;
-import com.codenvy.ide.factory.client.receive.CodeNowHandler;
+import com.codenvy.ide.factory.client.receive.FanctoryHandler;
 import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -61,7 +61,7 @@ public class FactoryExtension extends Extension implements InitializeServicesHan
         IDE.getInstance().addControl(new FactoryUrlControl());
 
         new FactoryURLHandler();
-        new CodeNowHandler();
+        new FanctoryHandler();
         new GetCodeNowButtonPresenter();
         new SendMailPresenter();
         new CommitChangesPresenter();
