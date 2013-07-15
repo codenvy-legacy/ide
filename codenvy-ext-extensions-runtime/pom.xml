@@ -25,24 +25,6 @@
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.exoplatform.kernel</groupId>
-            <artifactId>exo.kernel.container</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -56,11 +38,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-commons</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model</artifactId>
             <version>3.0.5</version>
@@ -69,56 +46,126 @@
         <!-- Client side -->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-java</artifactId>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-java-runtime</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
-            <classifier>sources</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <!-- needs extra dependencies: objenesis & hamcrest -->
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.gwt-test-utils</groupId>
-            <artifactId>gwt-test-utils</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.easytesting</groupId>
-            <artifactId>fest-assert</artifactId>
-            <version>1.4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${ch.qos.logback.version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-clear-tomcat</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.apache.tomcat</groupId>
+                                    <artifactId>tomcat</artifactId>
+                                    <type>zip</type>
+                                    <version>7.0.37</version>
+                                    <outputDirectory>${project.build.directory}/classes/conf/tomcat</outputDirectory>
+                                    <destFileName>tomcat.zip</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.organization</groupId>
+                                    <artifactId>codenvy-organization-packaging-api-war</artifactId>
+                                    <type>war</type>
+                                    <version>${com.codenvy.organization.version}</version>
+                                    <outputDirectory>${project.build.directory}/classes/conf/tomcat</outputDirectory>
+                                    <destFileName>userdb.war</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.slf4j</groupId>
+                                    <artifactId>slf4j-api</artifactId>
+                                    <version>${org.slf4j.version}</version>
+                                    <outputDirectory>${project.build.directory}/classes/conf/tomcat/lib</outputDirectory>
+                                    <destFileName>slf4j-api.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.slf4j</groupId>
+                                    <artifactId>jul-to-slf4j</artifactId>
+                                    <version>${org.slf4j.version}</version>
+                                    <outputDirectory>${project.build.directory}/classes/conf/tomcat/lib</outputDirectory>
+                                    <destFileName>jul-to-slf4j.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>ch.qos.logback</groupId>
+                                    <artifactId>logback-core</artifactId>
+                                    <version>${ch.qos.logback.version}</version>
+                                    <outputDirectory>${project.build.directory}/classes/conf/tomcat/lib</outputDirectory>
+                                    <destFileName>logback-core.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>ch.qos.logback</groupId>
+                                    <artifactId>logback-classic</artifactId>
+                                    <version>${ch.qos.logback.version}</version>
+                                    <outputDirectory>${project.build.directory}/classes/conf/tomcat/lib</outputDirectory>
+                                    <destFileName>logback-classic.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Prepare Tomcat</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <unzip src="${project.build.directory}/classes/conf/tomcat/tomcat.zip"
+                                       dest="${project.build.directory}/classes/conf/tomcat/unzip">
+                                    <patternset>
+                                        <exclude name="**/ROOT/**"/>
+                                        <exclude name="**/docs/**"/>
+                                        <exclude name="**/examples/**"/>
+                                        <exclude name="**/manager/**"/>
+                                        <exclude name="**/host-manager/**"/>
+                                    </patternset>
+                                </unzip>
+                                <delete file="${project.build.directory}/classes/conf/tomcat/tomcat.zip"/>
+                                <move todir="${project.build.directory}/classes/conf/tomcat/unzip">
+                                    <fileset dir="${project.build.directory}/classes/conf/tomcat/unzip/apache-tomcat-7.0.37"/>
+                                </move>
+                                <delete dir="${project.build.directory}/classes/conf/tomcat/unzip/apache-tomcat-7.0.37"/>
+                                <move todir="${project.build.directory}/classes/conf/tomcat/unzip/lib">
+                                    <fileset dir="${project.build.directory}/classes/conf/tomcat/lib"/>
+                                </move>
+                                <move file="${project.build.directory}/classes/conf/tomcat/userdb.war"
+                                      tofile="${project.build.directory}/classes/conf/tomcat/unzip/webapps/userdb.war"/>
+                                <move file="${project.build.directory}/classes/conf/tomcat/setenv.sh"
+                                      tofile="${project.build.directory}/classes/conf/tomcat/unzip/bin/setenv.sh"/>
+                                <move file="${project.build.directory}/classes/conf/tomcat/server.xml"
+                                      tofile="${project.build.directory}/classes/conf/tomcat/unzip/conf/server.xml"/>
+                                <move file="${project.build.directory}/classes/conf/tomcat/logback.xml"
+                                      tofile="${project.build.directory}/classes/conf/tomcat/unzip/conf/logback.xml"/>
+                                <move file="${project.build.directory}/classes/conf/tomcat/jaas.conf"
+                                      tofile="${project.build.directory}/classes/conf/tomcat/unzip/conf/jaas.conf"/>
+                                <zip basedir="${project.build.directory}/classes/conf/tomcat/unzip"
+                                     destfile="${project.build.directory}/classes/conf/tomcat/tomcat.zip"/>
+                                <delete dir="${project.build.directory}/classes/conf/tomcat/unzip"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
         <resources>
             <resource>
                 <directory>src/main/java</directory>

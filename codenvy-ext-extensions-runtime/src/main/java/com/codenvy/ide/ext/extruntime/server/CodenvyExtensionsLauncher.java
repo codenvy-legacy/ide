@@ -266,30 +266,10 @@ public class CodenvyExtensionsLauncher implements Startable {
         File ideWar = downloadFile(new File(tomcatDir.getPath() + "/webapps"), "app-", ".war", new URL(buildStatus.getDownloadUrl()));
         ideWar.renameTo(new File(tomcatDir.getPath() + "/webapps/IDE.war"));
 
-        // -----------------------------------------------------------
-        // Copy additional resources into Tomcat.
-        // -----------------------------------------------------------
-        Map<String, String> additionalResources = new HashMap<String, String>();
-        additionalResources.put("setenv.sh", "bin");
-        additionalResources.put("logback.xml", "conf");
-        additionalResources.put("jaas.conf", "conf");
-        additionalResources.put("server.xml", "conf");
-        additionalResources.put("userdb.war", "webapps");
-        additionalResources.put("jul-to-slf4j.jar", "lib");
-        additionalResources.put("log4j-1.2.16.jar", "lib");
-        additionalResources.put("log4j-over-slf4j.jar", "lib");
-        additionalResources.put("logback-classic.jar", "lib");
-        additionalResources.put("logback-core.jar", "lib");
-        additionalResources.put("slf4j-api.jar", "lib");
-        for (Entry<String, String> entry : additionalResources.entrySet()) {
-            InputStream stream = contextClassLoader.getResourceAsStream("conf/tomcat/" + entry.getKey());
-            Files.copy(stream, Paths.get(tomcatDir.getPath() + "/" + entry.getValue() + "/" + entry.getKey()), REPLACE_EXISTING);
-        }
-
-        new ProcessBuilder("chmod", "+x", tomcatDir.getPath() + "/bin/catalina.sh").start();
+        new ProcessBuilder("chmod", "+x", tomcatDir.getPath() + "/bin/*.sh").start().waitFor();
         Process process = new ProcessBuilder(tomcatDir.getPath() + "/bin/catalina.sh", "run").start();
 
-        String appId = generate("app-", 16);
+        final String appId = generate("app-", 16);
         applicationToProcess.put(appId, process);
         applicationToTomcatFile.put(appId, tomcatDir);
         return appId;
