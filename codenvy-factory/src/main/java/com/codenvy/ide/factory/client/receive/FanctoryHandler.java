@@ -53,11 +53,11 @@ import java.util.Map;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: CodeNowHandler.java Dec 6, 2012 vetal $
  */
-public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHandler {
+public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHandler {
 
     private VirtualFileSystemInfo vfs;
 
-    public CodeNowHandler() {
+    public FanctoryHandler() {
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(StartWithInitParamsEvent.TYPE, this);
     }
