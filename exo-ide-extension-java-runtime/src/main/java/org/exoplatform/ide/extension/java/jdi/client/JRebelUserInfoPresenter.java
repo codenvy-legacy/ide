@@ -30,12 +30,15 @@ import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.java.jdi.client.events.JRebelUserInfoEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.JRebelUserInfoHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Property;
 
@@ -75,9 +78,7 @@ public class JRebelUserInfoPresenter implements ViewClosedHandler, JRebelUserInf
     private Display      display;
 
     private ProjectModel project;
-
-    private final String JREBEL_COUNT   = "jrebelCount";
-
+    
     private final byte   JREBEL_UPDATED = 0;
 
     public JRebelUserInfoPresenter() {
@@ -190,7 +191,7 @@ public class JRebelUserInfoPresenter implements ViewClosedHandler, JRebelUserInf
         }
         else {
             for (Property prop : project.getProperties()) {
-                if (prop.getName().equals(JREBEL_COUNT)) {
+                if (prop.getName().equals(ProjectProperties.JREBEL_COUNT.value())) {
                     List<String> value = new ArrayList<String>();
                     value.add(count);
                     prop.setValue(value);
