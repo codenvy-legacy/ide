@@ -27,11 +27,12 @@ import org.everrest.core.impl.provider.json.JsonWriter;
 import org.everrest.core.tools.SimpleSecurityContext;
 import org.everrest.test.mock.MockPrincipal;
 import org.exoplatform.commons.utils.IOUtil;
-import org.exoplatform.ide.conversationstate.IdeUser;
 import org.exoplatform.services.security.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.codenvy.ide.commons.IdeUser;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;

@@ -33,7 +33,7 @@
     <!-- IDE commons -->
 
     <component>
-        <type>org.exoplatform.ide.IDEServiceApplication</type>
+        <type>com.codenvy.ide.IDEServiceApplication</type>
         <init-params>
             <value-param>
                 <name>defaultEntryPoint</name>

@@ -59,6 +59,6 @@ public class FactorySpec10 {
     public final static String DEFAULT_ACTION    = "openproject";
 
     /** Optional parameter for project type, if not set we try detect it. */
-    public final static String PROJECT_TYPE      = "pt";
+    public final static String PROJECT_TYPE      = "ptype";
 
 }

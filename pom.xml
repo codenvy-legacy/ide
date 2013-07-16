@@ -775,7 +775,7 @@
 
       <module>exo-ide-editor-api</module>
       <module>exo-ide-collabeditor</module>
-
+      <module>codenvy-factory</module>
       <module>codenvy-ide-collaboration</module>
 
       <module>exo-ide-editor</module>

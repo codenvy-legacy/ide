@@ -58,7 +58,15 @@
       <filter-name>StandaloneAuthenticationFilter</filter-name>
       <filter-class>org.exoplatform.ide.authentication.StandaloneAuthenticationFilter</filter-class>
    </filter>
+    <servlet>
+        <servlet-name>FactoryServlet</servlet-name>
+        <servlet-class>com.codenvy.ide.factory.server.FactoryServlet</servlet-class>
+    </servlet>
 
+    <servlet-mapping>
+        <servlet-name>FactoryServlet</servlet-name>
+        <url-pattern>/factory/*</url-pattern>
+    </servlet-mapping>
    <filter-mapping>
       <filter-name>SetCurrentIdentityFilter</filter-name>
       <url-pattern>/rest/*</url-pattern>

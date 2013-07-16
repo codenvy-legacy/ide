@@ -18,20 +18,32 @@
  */
 package com.codenvy.ide;
 
-import com.codenvy.commons.env.EnvironmentContext;
-import com.codenvy.organization.client.WorkspaceManager;
-import com.codenvy.organization.exception.OrganizationServiceException;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.MembershipEntry;
+
+import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.organization.client.WorkspaceManager;
+import com.codenvy.organization.exception.OrganizationServiceException;
 
 public class SetEnvironmentContextFilter implements Filter {
     private Map<String, Object> env;
@@ -50,6 +62,10 @@ public class SetEnvironmentContextFilter implements Filter {
                 {
                     try {
                         workspaceManager.getWorkspaceByName(ws);
+                        
+                        List<String> roles = Arrays.asList("admin", "developer");
+                        ConversationState.setCurrent(new ConversationState(new Identity("tmp-user125",new HashSet<MembershipEntry>(),roles)));
+                       
                         EnvironmentContext environment = EnvironmentContext.getCurrent();
                         for (Map.Entry<String, Object> entry : env.entrySet()) {
                             environment.setVariable(entry.getKey(), entry.getValue());

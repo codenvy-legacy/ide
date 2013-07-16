@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.conversationstate;
+package com.codenvy.ide.commons;
 
 import java.util.Collection;
 
@@ -31,7 +31,7 @@ public class IdeUser {
 
     private Collection<String> roles;
     
-    private Collection<String> workspaces;
+    private Collection<IDEWorkspace> workspaces;
 
     private String clientId;
 
@@ -47,7 +47,7 @@ public class IdeUser {
      *         the roles to set
      * @param clientId
      */
-    public IdeUser(String userId, Collection<String> roles, String clientId, Collection<String> workspaces) {
+    public IdeUser(String userId, Collection<String> roles, String clientId, Collection<IDEWorkspace> workspaces) {
         this.userId = userId;
         this.roles = roles;
         this.clientId = clientId;
@@ -93,11 +93,11 @@ public class IdeUser {
         this.clientId = clientId;
     }
     
-    public Collection<String> getWorkspaces() {
+    public Collection<IDEWorkspace> getWorkspaces() {
         return workspaces;
     }
     
-    public void setWorkspaces(Collection<String> workspaces) {
+    public void setWorkspaces(Collection<IDEWorkspace> workspaces) {
         this.workspaces = workspaces;
     }
     
