@@ -12,7 +12,7 @@
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
     <component>
-        <type>org.exoplatform.ide.IDEServiceApplication</type>
+        <type>com.codenvy.ide.IDEServiceApplication</type>
     </component>
 
     <!-- JRebel consumer service -->
