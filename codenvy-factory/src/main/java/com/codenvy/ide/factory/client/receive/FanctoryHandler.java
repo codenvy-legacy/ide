@@ -16,8 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client;
+package com.codenvy.ide.factory.client.receive;
 
+import com.codenvy.ide.factory.client.FactorySpec10;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Random;
 
@@ -25,9 +26,6 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.codenow.CodeNowSpec10;
-import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
-import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -35,6 +33,8 @@ import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshallerWS;
 import org.exoplatform.ide.git.shared.RepoInfo;
@@ -53,11 +53,11 @@ import java.util.Map;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: CodeNowHandler.java Dec 6, 2012 vetal $
  */
-public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHandler {
+public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHandler {
 
     private VirtualFileSystemInfo vfs;
 
-    public CodeNowHandler() {
+    public FanctoryHandler() {
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(StartWithInitParamsEvent.TYPE, this);
     }
@@ -74,22 +74,22 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
     @Override
     public void onStartWithInitParams(StartWithInitParamsEvent event) {
         if (isValidParam(event.getParameterMap())) {
-            String giturl = event.getParameterMap().get(CodeNowSpec10.VCS_URL).get(0);
+            String giturl = event.getParameterMap().get(FactorySpec10.VCS_URL).get(0);
 
             String prjName = null;
 
-            if (event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME) != null
-                && !event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME).isEmpty()) {
-                prjName = event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME).get(0);
+            if (event.getParameterMap().get(FactorySpec10.PROJECT_NAME) != null
+                && !event.getParameterMap().get(FactorySpec10.PROJECT_NAME).isEmpty()) {
+                prjName = event.getParameterMap().get(FactorySpec10.PROJECT_NAME).get(0);
             } else {
                 prjName = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
             }
 
             String prjType = null;
 
-            if (event.getParameterMap().get(CodeNowSpec10.PROJECT_TYPE) != null
-                && !event.getParameterMap().get(CodeNowSpec10.PROJECT_TYPE).isEmpty()) {
-                prjType = event.getParameterMap().get(CodeNowSpec10.PROJECT_TYPE).get(0);
+            if (event.getParameterMap().get(FactorySpec10.PROJECT_TYPE) != null
+                && !event.getParameterMap().get(FactorySpec10.PROJECT_TYPE).isEmpty()) {
+                prjType = event.getParameterMap().get(FactorySpec10.PROJECT_TYPE).get(0);
             } else {
                 prjType = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
             }
@@ -105,17 +105,17 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
         if (initParam == null || initParam.isEmpty()) {
             return false;
         }
-        if (!initParam.containsKey(CodeNowSpec10.VERSION_PARAMETER)
-            || initParam.get(CodeNowSpec10.VERSION_PARAMETER).size() != 1
-            || !initParam.get(CodeNowSpec10.VERSION_PARAMETER).get(0).equals(CodeNowSpec10.CURRENT_VERSION)) {
+        if (!initParam.containsKey(FactorySpec10.VERSION_PARAMETER)
+            || initParam.get(FactorySpec10.VERSION_PARAMETER).size() != 1
+            || !initParam.get(FactorySpec10.VERSION_PARAMETER).get(0).equals(FactorySpec10.CURRENT_VERSION)) {
             return false;
         }
-        if (!initParam.containsKey(CodeNowSpec10.VCS) || initParam.get(CodeNowSpec10.VCS).isEmpty()
-            || !initParam.get(CodeNowSpec10.VCS).get(0).equalsIgnoreCase(CodeNowSpec10.DEFAULT_VCS)) {
+        if (!initParam.containsKey(FactorySpec10.VCS) || initParam.get(FactorySpec10.VCS).isEmpty()
+            || !initParam.get(FactorySpec10.VCS).get(0).equalsIgnoreCase(FactorySpec10.DEFAULT_VCS)) {
             return false;
         }
-        if (!initParam.containsKey(CodeNowSpec10.VCS_URL) || initParam.get(CodeNowSpec10.VCS_URL) == null
-            || initParam.get(CodeNowSpec10.VCS_URL).isEmpty()) {
+        if (!initParam.containsKey(FactorySpec10.VCS_URL) || initParam.get(FactorySpec10.VCS_URL) == null
+            || initParam.get(FactorySpec10.VCS_URL).isEmpty()) {
             return false;
         }
         return true;

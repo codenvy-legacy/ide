@@ -1,0 +1,199 @@
+<!--
+
+    Copyright (C) 2013 eXo Platform SAS.
+
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component" xmlns:d="urn:import:com.google.gwt.dom.client">
+    <ui:with field='resource' type='com.codenvy.ide.factory.client.FactoryClientBundle'/>
+    <ui:with field='locale' type='com.codenvy.ide.factory.client.FactoryLocalizationConstants'/>
+    <ui:style>
+        .displayNone {
+            display: none;
+        }
+
+        .padding {
+            padding: 15px;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .floatLeft {
+            float: left;
+        }
+
+        .clearLeft {
+            clear: left;
+        }
+
+        .marginTop {
+            margin-top: 15px;
+        }
+
+        .checkbox {
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+
+        .radioButton {
+			margin-bottom: 3px;
+			font-size: 11px;
+			font-family: Verdana, Bitstream Vera Sans, sans-serif;
+			float: left;
+		}
+
+        .label {
+            font-size: 12px;
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+            margin-top: 2px;
+            margin-bottom: 10px;
+        }
+
+        .labelTitle {
+            font-size: 14px;
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .borderBottom {
+            border-bottom: 1px solid #DBDFE5;
+        }
+
+        .snippetPanel {
+			margin: 0px 7px 0px 7px;
+			box-shadow: 0 0 7px rgba(82, 168, 236, 0.75);
+			border-radius: 4px;
+			padding: 10px 15px 10px 15px;
+		}
+
+        .textArea {
+            width: 220px;
+            height: 165px;
+            font-size: 12px;
+            resize: none;
+            overflow: hidden;
+            color: #666;
+            padding: 5px;
+            border: 1px solid #aaa !important;
+            box-shadow: 0 0 5px rgba(82,168,236,.75);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .textAreaLabel {
+            font-weight: bold;
+            margin-top: 7px;
+        }
+
+        .image {
+            float: left;
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+            margin-bottom: 5px;
+        }
+
+        .shareButton {
+            float: left;
+            width: 32px;
+            height: 32px;
+            margin: 5px 10px 5px 10px;
+            cursor: pointer;
+        }
+
+        .previewFrame {
+			width: 140px;
+			height: 50px;
+            border: none;
+		}
+    </ui:style>
+
+    <f:Border margin="15" borderColor="transparent">
+        <f:layer>
+            <g:FlowPanel styleName="{style.padding}">
+
+                <!-- Customize area -->
+                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom} {style.displayNone}" text="Customize"></g:Label>
+                <g:FlowPanel width="100%" height="10%" addStyleNames="{style.displayNone}">
+                    <g:FlowPanel width="70%" addStyleNames="{style.floatLeft}">
+<!--                         <g:Label width="320px" addStyleNames="{style.label} {style.floatLeft}" text="{locale.factoryURLFieldShowCounterTitle}"></g:Label> -->
+                        <g:CheckBox ui:field="showCounter" addStyleNames="{style.checkbox} {style.floatLeft}" HTML="{locale.factoryURLFieldShowCounterTitle}"></g:CheckBox>
+
+                        <g:Label width="140px" addStyleNames="{style.label} {style.floatLeft} {style.clearLeft}" text="{locale.factoryURLFieldPositionTitle}"></g:Label>
+           	            <g:RadioButton height="22px" width="80px" ui:field="verticalStyleField" text="{locale.factoryURLFieldVerticalModeTitle}"
+           	                           name="factoryURL.field.position" addStyleNames="{style.radioButton}"></g:RadioButton>
+           	            <g:RadioButton height="22px" width="80px" ui:field="horizontalStyleField" text="{locale.factoryURLFieldHorizontalModeTitle}"
+           	                           name="factoryURL.field.position" addStyleNames="{style.radioButton}"></g:RadioButton>
+                    </g:FlowPanel>
+                    <g:FlowPanel addStyleNames="{style.floatLeft} {style.marginTop}">
+                        <g:Frame ui:field="previewFrame" styleName="{style.previewFrame}"></g:Frame>
+                    </g:FlowPanel>
+                </g:FlowPanel>
+
+                <!-- Embed area -->
+                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Embed"></g:Label>
+                <g:FlowPanel width="100%" height="60%">
+                    <g:FlowPanel addStyleNames="{style.floatLeft} {style.snippetPanel}">
+                        <g:Image resource="{resource.world}" styleName="{style.image}"></g:Image>
+                        <g:Label addStyleNames="{style.textAreaLabel}" text="on Websites"></g:Label>
+                        <f:TextAreaInput ui:field="websitesURLField" addStyleNames="{style.floatLeft} {style.textArea}">
+                        </f:TextAreaInput>
+	                </g:FlowPanel>
+
+                    <g:FlowPanel addStyleNames="{style.floatLeft} {style.snippetPanel}">
+                        <g:Image resource="{resource.gitHub}" styleName="{style.image}"></g:Image>
+                        <g:Label addStyleNames="{style.textAreaLabel}" text="on GitHub Pages"></g:Label>
+                        <f:TextAreaInput ui:field="gitHubURLField" addStyleNames="{style.floatLeft} {style.textArea}">
+                        </f:TextAreaInput>
+                    </g:FlowPanel>
+
+                    <g:FlowPanel addStyleNames="{style.floatLeft} {style.snippetPanel}">
+                        <g:Image resource="{resource.link}" styleName="{style.image}"></g:Image>
+                        <g:Label addStyleNames="{style.textAreaLabel}" text="Direct Sharing"></g:Label>
+                        <f:TextAreaInput ui:field="directSharingURLField" addStyleNames="{style.floatLeft} {style.textArea}">
+                        </f:TextAreaInput>
+                    </g:FlowPanel>
+                </g:FlowPanel>
+
+                <!-- Share buttons area -->
+                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Share it to your friends"></g:Label>
+                <g:FlowPanel width="208px" height="10%" styleName="{style.center}">
+                    <g:Image ui:field="shareFacebookButton" resource="{resource.facebook}" styleName="{style.shareButton}"></g:Image>
+                    <g:Image ui:field="shareGooglePlusButton" resource="{resource.gplus}" styleName="{style.shareButton}"></g:Image>
+                    <g:Image ui:field="shareTwitterButton" resource="{resource.twitter}" styleName="{style.shareButton}"></g:Image>
+                    <g:Image ui:field="shareEmailButton" resource="{resource.mail}" styleName="{style.shareButton}"></g:Image>
+                </g:FlowPanel>
+
+                <g:Label width="100%" height="5px" addStyleNames="{style.borderBottom}"></g:Label>
+            </g:FlowPanel>
+        </f:layer>
+        <f:layer height="22px" bottom="0">
+            <g:FlowPanel width="90px" addStyleNames="{style.center}">
+                <f:ImageButton ui:field="okButton" width="90" height="22" text="{locale.buttonOk}" imageResource="{resource.ok}"
+                               disabledImageResource="{resource.okDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
+            </g:FlowPanel>
+        </f:layer>
+    </f:Border>
+</ui:UiBinder>

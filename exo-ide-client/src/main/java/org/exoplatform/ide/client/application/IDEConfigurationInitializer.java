@@ -19,17 +19,15 @@
 package org.exoplatform.ide.client.application;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.factory.client.FactorySpec10;
+import com.codenvy.ide.factory.client.receive.StartWithInitParamsEvent;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Image;
 
@@ -38,13 +36,12 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.AddToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.component.IconButton;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.codenow.CodeNowSpec10;
-import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -229,6 +226,12 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                     @Override
                                                     protected void onFailure(Throwable exception) {
                                                         Log.error(AsyncRequestCallback.class, exception);
+                                                        initialOpenedProject = null;
+                                                        initialOpenedFiles.clear();
+                                                        initialActiveFile = null;
+                                                        Dialogs.getInstance().showError("Not found resource", "The requested project URL was not found in this workspace.");
+                                                        new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject,
+                                                                                    initialOpenedFiles, initialActiveFile);
                                                     }
                                                 });
             } catch (RequestException e) {
@@ -239,8 +242,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
         else {
             Map<String, List<String>> parameterMap = Location.getParameterMap();
-            if (parameterMap != null && parameterMap.get(CodeNowSpec10.VERSION_PARAMETER) != null
-                && parameterMap.get(CodeNowSpec10.VERSION_PARAMETER).get(0).equals(CodeNowSpec10.CURRENT_VERSION)) {
+            if (parameterMap != null && parameterMap.get(FactorySpec10.VERSION_PARAMETER) != null
+                && parameterMap.get(FactorySpec10.VERSION_PARAMETER).get(0).equals(FactorySpec10.CURRENT_VERSION)) {
                 IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
             } else {
                 new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);
@@ -272,6 +275,11 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                 @Override
                                                 protected void onFailure(Throwable exception) {
                                                     Log.error(AsyncRequestCallback.class, exception);
+                                                    Dialogs.getInstance().showError("Not found resource", "The requested file URL was not found on this project.");
+                                                    initialActiveFile = null;
+                                                    initialOpenedFiles.clear();
+                                                    new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject,
+                                                                                initialOpenedFiles, initialActiveFile);
                                                 }
                                             });
         } catch (RequestException e) {

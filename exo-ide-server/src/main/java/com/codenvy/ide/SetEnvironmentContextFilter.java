@@ -23,24 +23,75 @@ import com.codenvy.commons.env.EnvironmentContext;
 import javax.servlet.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.MembershipEntry;
+
+import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.organization.client.WorkspaceManager;
+import com.codenvy.organization.exception.OrganizationServiceException;
 
 public class SetEnvironmentContextFilter implements Filter {
     private Map<String, Object> env;
+    private WorkspaceManager workspaceManager;
 
     /** Set current {@link EnvironmentContext} */
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-                                                                                                     ServletException {
+                                                                                             ServletException {
         try {
-            EnvironmentContext environment = EnvironmentContext.getCurrent();
-            for (Map.Entry<String, Object> entry : env.entrySet()) {
-                environment.setVariable(entry.getKey(), entry.getValue());
+            String url = ((HttpServletRequest)request).getRequestURI();
+            if (url.contains("/rest/") || url.contains("/websocket/"))
+            {
+                String[] split = url.split("/");
+                String ws = split[3];
+                if (workspaceManager != null)
+                {
+                    try {
+                        workspaceManager.getWorkspaceByName(ws);
+                        
+                        List<String> roles = Arrays.asList("admin", "developer");
+                        ConversationState.setCurrent(new ConversationState(new Identity("tmp-user125",new HashSet<MembershipEntry>(),roles)));
+                       
+                        EnvironmentContext environment = EnvironmentContext.getCurrent();
+                        for (Map.Entry<String, Object> entry : env.entrySet()) {
+                            environment.setVariable(entry.getKey(), entry.getValue());
+                        }
+                        environment.setVariable(EnvironmentContext.WORKSPACE_NAME, ws);
+                        environment.setVariable(EnvironmentContext.WORKSPACE_ID, ws);
+                        chain.doFilter(request, response);
+                    } catch (OrganizationServiceException e) {
+                        HttpServletResponse httpResponse = (HttpServletResponse)response;
+                        httpResponse.setStatus(404);
+                        httpResponse.setHeader("JAXRS-Body-Provided", "Error-Message");
+                        PrintWriter out = response.getWriter();
+                        String msg = String.format("Workspace %s not found", ws);
+                        httpResponse.setContentLength(msg.getBytes().length);
+                        
+                        out.write(msg);
+                        out.close();
+                        return;
+                    }
+                }
             }
 
-            chain.doFilter(request, response);
-        } finally {
+            } finally {
             EnvironmentContext.reset();
         }
     }
@@ -51,9 +102,12 @@ public class SetEnvironmentContextFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        try {
+            workspaceManager = new WorkspaceManager();
+        } catch (OrganizationServiceException e) {
+            e.printStackTrace();
+        } 
         Map<String, Object> myEnv = new HashMap<String, Object>();
-        myEnv.put(EnvironmentContext.WORKSPACE_NAME, "dev-monit");
-        myEnv.put(EnvironmentContext.WORKSPACE_ID, "dev-monit");
         myEnv.put(EnvironmentContext.GIT_SERVER, "git");
         myEnv.put(EnvironmentContext.TMP_DIR, new File("../temp"));
         myEnv.put(EnvironmentContext.VFS_ROOT_DIR, new File("../temp/fs-root"));

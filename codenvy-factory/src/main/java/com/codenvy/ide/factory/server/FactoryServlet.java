@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,18 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package com.codenvy.ide.factory.server;
 
-package org.exoplatform.ide.client.framework.codenow;
-
-import com.google.gwt.event.shared.EventHandler;
-
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: StartWithInitParamsHandler.java Nov 21, 2012 vetal $
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @version $Id:
  */
-public interface StartWithInitParamsHandler extends EventHandler {
+public class FactoryServlet extends HttpServlet {
 
-    void onStartWithInitParams(StartWithInitParamsEvent event);
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+       resp.sendRedirect("dev-monit?" + req.getQueryString());
+    }
 
 }

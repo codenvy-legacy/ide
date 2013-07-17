@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.client.framework.codenow;
+package com.codenvy.ide.factory.client.receive;
 
 import com.google.gwt.event.shared.GwtEvent;
 

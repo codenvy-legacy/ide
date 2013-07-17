@@ -8,6 +8,9 @@ function addMenuAddition(html) {
  var htmlShell = "<a id=\"shell-link\" href=/ide/" + ws + "/_app/shell target=\"_blank\">Shell</a>";
  addMenuAddition(htmlShell);
 
- var htmlLogout = "<span id=\"logoutButton\" onClick=\"window.location = '/site/logout.jsp';\">Logout</span>";
+ var htmlLogin = "<span id=\"loginButton\" onClick=\"window.location = '/ide/login';\">Login</span>";
+ addMenuAddition(htmlLogin);
+ 
+ var htmlLogout = "<span id=\"logoutButton\" onClick=\"window.location = '/ide/_app/logout.jsp';\">Logout</span>";
  addMenuAddition(htmlLogout);
 

@@ -16,19 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide;
+package com.codenvy.ide;
 
 import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.ide.commons.IDEWorkspace;
+import com.codenvy.ide.commons.IdeUser;
 import com.codenvy.organization.client.UserManager;
+import com.codenvy.organization.client.WorkspaceManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.Workspace;
 
-import org.exoplatform.ide.conversationstate.IdeUser;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.MembershipEntry;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
@@ -47,6 +50,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -60,9 +64,12 @@ public class IDEConfigurationService {
     private static Log        LOG = ExoLogger.getLogger(IDEConfigurationService.class);
 
     private final UserManager userManager;
+    
+    private final WorkspaceManager workspaceManager;
 
     public IDEConfigurationService() throws OrganizationServiceException {
         userManager = new UserManager();
+        workspaceManager = new WorkspaceManager();
     }
 
     @PathParam("ws-name")
@@ -88,21 +95,25 @@ public class IDEConfigurationService {
             ConversationState curentState = ConversationState.getCurrent();
             Identity identity = curentState.getIdentity();
             String userId = identity.getUserId();
-            List<String> workspaces = new ArrayList<String>();
+            List<IDEWorkspace> workspaces = new ArrayList<IDEWorkspace>();
             try {
                 for (Workspace workspace : userManager.getUserWorkspaces(userId)) {
-                    workspaces.add(uriInfo.getBaseUriBuilder().replacePath(null).path("ide").path(workspace.getName()).build().toString());
+                    workspaces.add(new IDEWorkspace(uriInfo.getBaseUriBuilder().replacePath(null).path("ide").path(workspace.getName())
+                                                           .build().toString(),
+                                                    workspace.getName(), workspace.getId(), workspaceManager.getWorkspaceByName(wsName)
+                                                                                                            .isTemporary()));
                 }
             }
             catch (OrganizationServiceException e) {
                 //ignore 
             }
             IdeUser user = new IdeUser(userId, identity.getRoles(), request.getSession().getId(), workspaces);
-            LOG.info(user.toString());
+            LOG.debug(user.toString());
             result.put("user", user);
             final Map<String, Object> userSettings = Collections.emptyMap();
             result.put("userSettings", userSettings);
             result.put("vfsId", vfsId);
+            result.put("currentWorkspace", wsName); //TODO
             result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path("v2").build(wsName).toString());
             return result;
         } catch (Exception e) {
