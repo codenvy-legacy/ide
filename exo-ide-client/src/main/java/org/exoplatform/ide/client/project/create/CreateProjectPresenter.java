@@ -97,7 +97,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         void setProjectTypes(List<ProjectType> projectTypeList);
 
         void setTargets(List<PaaS> targetList);
-
+        
         List<ToggleButton> getProjectTypeButtons();
 
         List<ToggleButton> getTargetButtons();
@@ -126,8 +126,10 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         void toggleUpAllButtons(List<ToggleButton> buttonsList, ToggleButton currentButton);
 
         void selectTarget(PaaS target);
-
+        
         void setJRebelPanelVisibility(boolean isVisible);
+        
+        void setJRebelPanelEnable(boolean isEnabled);
 
         ListGridItem<ProjectTemplate> getTemplatesGrid();
 
@@ -873,8 +875,9 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
     /** Set the visibility state of a panel with JRebel setting. */
     private void updateJRebelPanelVisibility() {
         boolean visible =
-                (isChooseTemplateStep && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING));
+                (isChooseTemplateStep && !IDE.currentWorkspace.isTemporary() && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING));
         display.setJRebelPanelVisibility(visible);
+        display.setJRebelPanelEnable(!IDE.currentWorkspace.isTemporary());
     }
 
     @Override
