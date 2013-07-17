@@ -199,6 +199,22 @@ public class JRebelUserInfoPresenter implements ViewClosedHandler, JRebelUserInf
                 }
             }
         }
+        try {
+            VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
+
+                @Override
+                protected void onSuccess(ItemWrapper result) {
+                    // nothing to do
+                }
+
+                @Override
+                protected void onFailure(Throwable ignore) {
+                    // ignore this exception
+                }
+            });
+        } catch (RequestException e) {
+            // ignore this exception
+        }
     }
 
     @Override
