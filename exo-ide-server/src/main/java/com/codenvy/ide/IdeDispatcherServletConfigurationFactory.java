@@ -141,7 +141,13 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
 //TODO need improve this code
                                                      String project = null;
                                                      String filePath = null;
-                                                     if (request.getHeader("Referer") != null && !request.getHeader("Referer").isEmpty() && request.getHeader("Referer").contains("/ide/")
+                                                     //checking for attribute openProjectOperation need to prevent parsing referer again
+                                                     //after browser refreshing or pressing F5. when servlet change user location,
+                                                     //addition attribute is setted in session to indicate that we need to parse
+                                                     //referer to get project name and file path.
+                                                     if (request.getSession().getAttribute("openProjectOperation") != null
+                                                         && request.getHeader("Referer") != null && !request.getHeader("Referer").isEmpty()
+                                                         && request.getHeader("Referer").contains("/ide/")
                                                          && !request.getHeader("Referer").contains("_app"))
                                                      {
                                                          String orginalUrl = request.getHeader("Referer");
@@ -164,6 +170,7 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
 
                                                          request.setAttribute("project", project);
                                                          request.setAttribute("path", filePath);
+                                                         request.getSession().removeAttribute("openProjectOperation");
                                                          final String myPath = "/_app/main";
                                                          request.getRequestDispatcher(myPath).forward(request, response);
                                                          return;
@@ -209,6 +216,7 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                                          wsUri = wsUri.substring(0, wsUri.length() - trim);
                                                          response.setContentType("text/html;charset=UTF-8");
                                                          response.setCharacterEncoding("UTF-8");
+                                                         request.getSession().setAttribute("openProjectOperation", "1");
                                                          response.getWriter().write("<script>window.location.replace(\"" + wsUri
                                                                                     + "\");</script>");
                                                          return;
