@@ -43,6 +43,7 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -142,11 +143,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
     /** Name of 'JRebel' project property. */
     private static final String     JREBEL                   = "jrebel";
 
-    /** Name of 'JRebel update' project property. */
-    private final String            JREBEL_COUNT             = "jrebelCount";
-
     /** Max number of JRebel updating. */
-    private final byte              MAX_NUMBER_JREBEL_UPDATE = 10;
+    private final byte              MAX_NUMBER_JREBEL_UPDATE = 5;
     /** Value of 'JRebel update' project property if user data  forward to ZeroTurnaround. */
     private final byte              JREBEL_UPDATED           = 0;
 
@@ -589,10 +587,12 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
         if (fileModel == null) {
             String path = resolveFilePath(location);
             try {
+                FileModel openFileModel = new FileModel();
+                openFileModel.setProject(project);
                 VirtualFileSystem.getInstance()
                                  .getItemByPath(path,
                                                 new AsyncRequestCallback<ItemWrapper>(
-                                                                                      new ItemUnmarshaller(new ItemWrapper(new FileModel()))) {
+                                                                                      new ItemUnmarshaller(new ItemWrapper(openFileModel))) {
 
                                                     @Override
                                                     protected void onSuccess(ItemWrapper result) {
@@ -740,11 +740,11 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
      * @param project {@link ProjectModel}
      */
     private boolean writeJRebelCountProperty(ProjectModel project) {
-        if (project.getPropertyValue(JREBEL_COUNT) == null) {
-            project.getProperties().add(new PropertyImpl(JREBEL_COUNT, Integer.toString(1)));
+        if (project.getPropertyValue(ProjectProperties.JREBEL_COUNT.value()) == null) {
+            project.getProperties().add(new PropertyImpl(ProjectProperties.JREBEL_COUNT.value(), Integer.toString(1)));
         }
         else {
-            int countJRebel = Integer.parseInt(project.getPropertyValue(JREBEL_COUNT));
+            int countJRebel = Integer.parseInt(project.getPropertyValue(ProjectProperties.JREBEL_COUNT.value()));
             if (countJRebel == JREBEL_UPDATED) {
                 return true;
             } else if (countJRebel < MAX_NUMBER_JREBEL_UPDATE) {
@@ -755,7 +755,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                 return false;
             }
             for (Property prop : project.getProperties()) {
-                if (prop.getName().equals(JREBEL_COUNT)) {
+                if (prop.getName().equals(ProjectProperties.JREBEL_COUNT.value())) {
                     List<String> value = new ArrayList<String>();
                     value.add(Integer.toString(countJRebel));
                     prop.setValue(value);

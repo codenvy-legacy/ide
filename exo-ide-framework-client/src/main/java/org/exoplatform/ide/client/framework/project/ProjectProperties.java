@@ -25,6 +25,7 @@ package org.exoplatform.ide.client.framework.project;
 public enum ProjectProperties {
     TYPE("vfs:projectType"),
     TARGET("exoide:target"),
+    JREBEL_COUNT("jrebelCount"),
     DESCRIPTION("exoide:projectDescription"),
     MIME_TYPE("vfs:mimeType");
 
