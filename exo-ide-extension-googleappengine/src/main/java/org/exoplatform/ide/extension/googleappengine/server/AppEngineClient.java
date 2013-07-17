@@ -34,7 +34,7 @@ import com.google.appengine.tools.admin.UpdateListener;
 import com.google.apphosting.utils.config.BackendsXml;
 import com.google.apphosting.utils.config.BackendsXml.State;
 
-import org.exoplatform.ide.extension.googleappengine.server.python.PythonApplication;
+import org.exoplatform.ide.extension.googleappengine.server.PythonApplication;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfoImpl;
 import org.exoplatform.ide.vfs.server.ContentStream;
@@ -66,7 +66,6 @@ import java.util.Set;
 import static com.codenvy.commons.lang.IoUtil.createTempDirectory;
 import static com.codenvy.commons.lang.IoUtil.downloadFile;
 import static com.codenvy.commons.lang.ZipUtils.unzip;
-
 
 
 /**
@@ -346,27 +345,34 @@ public class AppEngineClient {
                     writeProjectProperty(vfs, projectId, "gae-target", app.getServer());
                 }
                 LOG.info("EVENT#application-created# WS#"
-                         + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString() + "# USER#" + userId
+                         + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME) + "# USER#" + userId
                          + "# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
                          + "# PAAS#GAE#");
                 return app;
             }
-            case PYTHON: {
+            // Do for PHP in the same way as for Python for the moment. Even appengine SDK use Python runtime for PHP so it is OK for us.
+            case PYTHON:
+            case PHP: {
                 java.io.File appDir = createTempDirectory(null, "ide-appengine");
                 unzip(vfs.exportZip(projectId).getStream(), appDir);
                 java.io.File projectFile = new java.io.File(appDir, ".project");
                 if (projectFile.exists()) {
                     projectFile.delete();
                 }
-                PythonApplication app = new PythonApplication(appDir);
+                PythonApplication app = type == ProjectType.PYTHON ? new PythonApplication(appDir) : new PythonApplication(appDir){
+                    @Override
+                    public String getSourceLanguage() {
+                        return "PHP";
+                    }
+                };
                 if (projectId != null) {
                     writeProjectProperty(vfs, projectId, "gae-application", app.getAppId());
                     writeProjectProperty(vfs, projectId, "gae-target", app.getServer());
                 }
                 LOG.info("EVENT#application-created# WS#"
-                    + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString() + "# USER#" + userId
-                    + "# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
-                    + "# PAAS#GAE#");
+                         + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME) + "# USER#" + userId
+                         + "# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
+                         + "# PAAS#GAE#");
                 return app;
             }
             default:
@@ -383,7 +389,7 @@ public class AppEngineClient {
     }
 
     private enum ProjectType {
-        JAVA, PYTHON /*, GO*/
+        JAVA, PYTHON, PHP /*, GO*/
     }
 
     private ProjectType getApplicationType(VirtualFileSystem vfs,
@@ -402,6 +408,8 @@ public class AppEngineClient {
                     YamlAppInfo appInfo = YamlAppInfo.parse(r);
                     if ("python".equals(appInfo.runtime) || "python27".equals(appInfo.runtime)) {
                         return ProjectType.PYTHON;
+                    } else if ("php".equals(appInfo.runtime)) {
+                        return ProjectType.PHP;
                     } else if ("java".equals(appInfo.runtime)) {
                         return ProjectType.JAVA;
                     }

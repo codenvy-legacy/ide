@@ -18,6 +18,9 @@
  */
 package com.codenvy.ide;
 
+import com.codenvy.commons.env.EnvironmentContext;
+
+import javax.servlet.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -88,7 +91,7 @@ public class SetEnvironmentContextFilter implements Filter {
                 }
             }
 
-        } finally {
+            } finally {
             EnvironmentContext.reset();
         }
     }

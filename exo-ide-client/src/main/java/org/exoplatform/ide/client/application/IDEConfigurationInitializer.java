@@ -36,6 +36,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.AddToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.component.IconButton;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -225,6 +226,12 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                     @Override
                                                     protected void onFailure(Throwable exception) {
                                                         Log.error(AsyncRequestCallback.class, exception);
+                                                        initialOpenedProject = null;
+                                                        initialOpenedFiles.clear();
+                                                        initialActiveFile = null;
+                                                        Dialogs.getInstance().showError("Not found resource", "The requested project URL was not found in this workspace.");
+                                                        new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject,
+                                                                                    initialOpenedFiles, initialActiveFile);
                                                     }
                                                 });
             } catch (RequestException e) {
@@ -268,6 +275,11 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                 @Override
                                                 protected void onFailure(Throwable exception) {
                                                     Log.error(AsyncRequestCallback.class, exception);
+                                                    Dialogs.getInstance().showError("Not found resource", "The requested file URL was not found on this project.");
+                                                    initialActiveFile = null;
+                                                    initialOpenedFiles.clear();
+                                                    new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject,
+                                                                                initialOpenedFiles, initialActiveFile);
                                                 }
                                             });
         } catch (RequestException e) {
