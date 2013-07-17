@@ -72,5 +72,12 @@ public class IDEWorkspace {
     public void setId(String id) {
         this.id = id;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("\"currentWorkspace\":{\"url\":\"").append(url).append("\",\"name\":\"").append(name).append("\",\"id\":\"").append(id).append("\",\"temporary\":\"").append(temporary).append("\"}");
+        return builder.toString();
+    }
 
 }

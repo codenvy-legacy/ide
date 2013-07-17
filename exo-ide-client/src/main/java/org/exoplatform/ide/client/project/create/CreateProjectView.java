@@ -528,4 +528,10 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
     public HasClickHandlers getChoosePaaSTooltip() {
         return choosePaaSTooltip;
     }
+
+    @Override
+    public void setJRebelPanelEnable(boolean isEnabled) {
+        useJRebelPluginField.setValue(isEnabled);
+        useJRebelPluginField.setEnabled(isEnabled);
+    }
 }

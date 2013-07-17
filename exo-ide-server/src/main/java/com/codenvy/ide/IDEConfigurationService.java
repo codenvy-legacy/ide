@@ -31,7 +31,6 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.security.MembershipEntry;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +49,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -113,7 +111,8 @@ public class IDEConfigurationService {
             final Map<String, Object> userSettings = Collections.emptyMap();
             result.put("userSettings", userSettings);
             result.put("vfsId", vfsId);
-            result.put("currentWorkspace", wsName); //TODO
+            result.put("currentWorkspace", new IDEWorkspace(uriInfo.getBaseUriBuilder().replacePath(null).path("ide").path(wsName)
+                                                            .build().toString(), wsName, vfsId, wsName.startsWith("tmp"))); //TODO
             result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path("v2").build(wsName).toString());
             return result;
         } catch (Exception e) {
