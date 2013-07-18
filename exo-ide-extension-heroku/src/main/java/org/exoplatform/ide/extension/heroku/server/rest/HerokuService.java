@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.heroku.server.rest;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.commons.server.ParsingResponseException;
 
 import org.exoplatform.ide.extension.heroku.server.Heroku;
@@ -36,6 +37,7 @@ import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -128,7 +130,8 @@ public class HerokuService {
             propertiesList.add(isGitRepositoryProperty);
             vfs.updateItem(projectId, propertiesList, null);
         }
-        LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
+        LOG.info("EVENT#application-created# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                 + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
                  + "# PAAS#Heroku#");
         return application;
     }
