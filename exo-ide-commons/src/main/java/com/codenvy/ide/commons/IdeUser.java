@@ -34,6 +34,8 @@ public class IdeUser {
     private Collection<IDEWorkspace> workspaces;
 
     private String clientId;
+    
+    private boolean temporary;
 
     public IdeUser() {
     }
@@ -47,11 +49,12 @@ public class IdeUser {
      *         the roles to set
      * @param clientId
      */
-    public IdeUser(String userId, Collection<String> roles, String clientId, Collection<IDEWorkspace> workspaces) {
+    public IdeUser(String userId, Collection<String> roles, String clientId, Collection<IDEWorkspace> workspaces, boolean temporary) {
         this.userId = userId;
         this.roles = roles;
         this.clientId = clientId;
         this.workspaces = workspaces;
+        this.temporary = temporary;
     }
 
     /** @return the userId */
@@ -102,10 +105,21 @@ public class IdeUser {
     }
     
     
+    public boolean isTemporary() {
+        return temporary;
+    }
+    
+    public void setTemporary(boolean temporary) {
+        this.temporary = temporary;
+    }
+    
+    
+    
+    
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("\"user\":{\"userId\":\"").append(userId).append("\",\"clientId\":\"").append(clientId).append("\",\"roles\":[");
+        builder.append("\"user\":{\"userId\":\"").append(userId).append("\",\"clientId\":\"").append(clientId).append("\",\"temporary\":\"").append(temporary).append("\",\"roles\":[");
         int i = 0;
         int rMax = roles.size();
         for (String r : roles) {

@@ -23,7 +23,6 @@ import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.Workspace;
 
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityRegistry;
 import org.exoplatform.services.security.MembershipEntry;

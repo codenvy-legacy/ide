@@ -45,6 +45,10 @@
    <listener>
       <listener-class>com.codenvy.ide.collaboration.watcher.server.WatcherSessionCleaner</listener-class>
    </listener>
+   <filter>
+      <filter-name>LoginFilter</filter-name>
+      <filter-class>com.codenvy.ide.LoginFilter</filter-class>
+   </filter>
    
    <filter>
       <filter-name>SetCurrentIdentityFilter</filter-name>
@@ -67,6 +71,15 @@
         <servlet-name>FactoryServlet</servlet-name>
         <url-pattern>/factory/*</url-pattern>
     </servlet-mapping>
+    <filter-mapping>
+      <filter-name>LoginFilter</filter-name>
+      <url-pattern>/rest/*</url-pattern>
+   </filter-mapping>
+   <filter-mapping>
+      <filter-name>LoginFilter</filter-name>
+      <url-pattern>/websocket/*</url-pattern>
+   </filter-mapping>
+   
    <filter-mapping>
       <filter-name>SetCurrentIdentityFilter</filter-name>
       <url-pattern>/rest/*</url-pattern>

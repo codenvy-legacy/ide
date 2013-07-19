@@ -24,6 +24,7 @@ import com.codenvy.ide.commons.IdeUser;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.client.WorkspaceManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
+import com.codenvy.organization.model.User;
 import com.codenvy.organization.model.Workspace;
 
 import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
@@ -93,6 +94,7 @@ public class IDEConfigurationService {
             ConversationState curentState = ConversationState.getCurrent();
             Identity identity = curentState.getIdentity();
             String userId = identity.getUserId();
+            boolean temporary = false;
             List<IDEWorkspace> workspaces = new ArrayList<IDEWorkspace>();
             try {
                 for (Workspace workspace : userManager.getUserWorkspaces(userId)) {
@@ -100,12 +102,14 @@ public class IDEConfigurationService {
                                                            .build().toString(),
                                                     workspace.getName(), workspace.getId(), workspaceManager.getWorkspaceByName(wsName)
                                                                                                             .isTemporary()));
+                    temporary = userManager.getUserByAlias(userId).isTemporary();
+                    
                 }
             }
             catch (OrganizationServiceException e) {
                 //ignore 
             }
-            IdeUser user = new IdeUser(userId, identity.getRoles(), request.getSession().getId(), workspaces);
+            IdeUser user = new IdeUser(userId, identity.getRoles(), request.getSession().getId(), workspaces, temporary);
             LOG.debug(user.toString());
             result.put("user", user);
             final Map<String, Object> userSettings = Collections.emptyMap();
