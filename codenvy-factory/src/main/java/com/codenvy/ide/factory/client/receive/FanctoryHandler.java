@@ -19,10 +19,12 @@
 package com.codenvy.ide.factory.client.receive;
 
 import com.codenvy.ide.factory.client.FactorySpec10;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Random;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -31,19 +33,21 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
-import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
-import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshallerWS;
-import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.*;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,11 +59,13 @@ import java.util.Map;
  */
 public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHandler {
 
-    private VirtualFileSystemInfo vfs;
+    private final String                restServiceContext;
+    private       VirtualFileSystemInfo vfs;
 
     public FanctoryHandler() {
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(StartWithInitParamsEvent.TYPE, this);
+        restServiceContext = Utils.getWorkspaceName();
     }
 
     /**
@@ -94,8 +100,10 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                 prjType = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
             }
 
+            String idCommit = event.getParameterMap().get(FactorySpec10.COMMIT_ID).get(0);
 
-            cloneProject(giturl, prjName, prjType);
+
+            cloneProject(giturl, prjName, prjType,idCommit);
         }
 
     }
@@ -121,13 +129,13 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
         return true;
     }
 
-    private void cloneProject(final String giturl, final String prjName, final String prjType) {
+    private void cloneProject(final String giturl, final String prjName, final String prjType, final String idCommit) {
         try {
 
             VirtualFileSystem.getInstance()
                              .getChildren(vfs.getRoot(), ItemType.PROJECT,
                                           new AsyncRequestCallback<List<Item>>(
-                                                                               new ChildrenUnmarshaller(new ArrayList<Item>())) {
+                                                  new ChildrenUnmarshaller(new ArrayList<Item>())) {
 
                                               @Override
                                               protected void onSuccess(List<Item> result) {
@@ -146,15 +154,15 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                                                   }
                                                   if (itemExist) {
                                                       doClone(giturl, "origin",
-                                                              prjName + "-" + Random.nextInt(Integer.MAX_VALUE), prjType);
+                                                              prjName + "-" + Random.nextInt(Integer.MAX_VALUE), prjType, idCommit);
                                                   } else {
-                                                      doClone(giturl, "origin", prjName, prjType);
+                                                      doClone(giturl, "origin", prjName, prjType, idCommit);
                                                   }
                                               }
 
                                               @Override
                                               protected void onFailure(Throwable exception) {
-                                                  doClone(giturl, "origin", prjName, prjType);
+                                                  doClone(giturl, "origin", prjName, prjType, idCommit);
                                               }
                                           });
         } catch (RequestException e) {
@@ -171,7 +179,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
      * @param remoteName - remote name (by default origin)
      * @param workDir - name of target folder
      */
-    public void doClone(final String remoteUri, final String remoteName, final String workDir, final String prjType) {
+    public void doClone(final String remoteUri, final String remoteName, final String workDir, final String prjType, final String idCommit) {
         FolderModel folder = new FolderModel();
         folder.setName(workDir);
         try {
@@ -179,7 +187,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                                                          new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(folder)) {
                                                              @Override
                                                              protected void onSuccess(FolderModel result) {
-                                                                 cloneRepository(remoteUri, remoteName, prjType, result);
+                                                                 cloneRepository(remoteUri, remoteName, prjType, result, idCommit);
                                                              }
 
                                                              @Override
@@ -213,41 +221,42 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
      * @param remoteName remote name instead of "origin"
      * @param folder folder (root of GIT repository)
      */
-    private void cloneRepository(final String remoteUri, final String remoteName, final String prjType, final FolderModel folder) {
+    private void cloneRepository(final String remoteUri, final String remoteName, final String prjType, final FolderModel folder, final String idCommit) {
         try {
-            GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, remoteName,
-                                                             new RequestCallback<RepoInfo>(new RepoInfoUnmarshallerWS(new RepoInfo())) {
+            String uri = "/factory/clone?vfsid=" + vfs.getId() + "&projectid="+ folder.getId() + "&remoteuri=" + remoteUri + "&idcommit=" + idCommit;
+            RequestMessage message =
+                    RequestMessageBuilder.build(RequestBuilder.POST, restServiceContext + uri).
+                                         getRequestMessage();
+            IDE.messageBus().send(message, new RequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    onCloneSuccess(folder, prjType, remoteUri);
+                }
 
-                                                                 @Override
-                                                                 protected void onSuccess(RepoInfo result) {
-                                                                     onCloneSuccess(folder, result, prjType);
-                                                                 }
-
-                                                                 @Override
-                                                                 protected void onFailure(Throwable exception) {
-                                                                     handleError(exception, remoteUri);
-                                                                 }
-                                                             });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    handleError(exception, remoteUri);
+                }
+            });
         } catch (WebSocketException e) {
-            cloneRepositoryREST(remoteUri, remoteName, prjType, folder);
+            cloneRepositoryREST(remoteUri, remoteName, prjType, folder, idCommit);
         }
     }
 
     /** Get the necessary parameters values and call the clone repository method (over HTTP). */
-    private void cloneRepositoryREST(final String remoteUri, String remoteName, final String prjType, final FolderModel folder) {
-        try {
-            GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, remoteName,
-                                                           new AsyncRequestCallback<RepoInfo>(new RepoInfoUnmarshaller(new RepoInfo())) {
-                                                               @Override
-                                                               protected void onSuccess(RepoInfo result) {
-                                                                   onCloneSuccess(folder, result, prjType);
-                                                               }
+    private void cloneRepositoryREST(final String remoteUri, String remoteName, final String prjType, final FolderModel folder, final String idCommit) {
 
-                                                               @Override
-                                                               protected void onFailure(Throwable exception) {
-                                                                   handleError(exception, remoteUri);
-                                                               }
-                                                           });
+        try {
+            String uri = "/factory/clone?vfsid=" + vfs.getId() + "&projectid="+ folder.getId() + "&remoteuri=" + remoteUri + "&idcommit=" + idCommit;
+            AsyncRequest.build(RequestBuilder.POST, uri).send(new AsyncRequestCallback<Object>() {
+                @Override
+                protected void onSuccess(Object result) {
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                }
+            });
         } catch (RequestException e) {
             handleError(e, remoteUri);
         }
@@ -258,15 +267,13 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
      * 
      * @param folder {@link FolderModel} to clone
      */
-    private void onCloneSuccess(FolderModel folder, RepoInfo repoInfo, String prjType) {
-        IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(repoInfo.getRemoteUri()), Type.GIT));
+    private void onCloneSuccess(FolderModel folder, String prjType, String remoteUri) {
+        IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(remoteUri), Type.GIT));
         // TODO: not good, comment temporary need found other way
         // for inviting collaborators
         // showInvitation(repoInfo.getRemoteUri());
 
         List<Property> properties = new ArrayList<Property>();
-        properties.add(new PropertyImpl("codenow", repoInfo.getRemoteUri()));
-
         IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), prjType, properties));
     }
 
