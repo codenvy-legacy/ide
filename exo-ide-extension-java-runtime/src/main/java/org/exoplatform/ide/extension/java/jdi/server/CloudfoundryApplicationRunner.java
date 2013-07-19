@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.commons.server.ParsingResponseException;
 
 import org.everrest.websockets.WSConnectionContext;
@@ -35,6 +36,7 @@ import org.exoplatform.ide.security.paas.CredentialStoreException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 import org.picocontainer.Startable;
 
 import java.io.BufferedReader;
@@ -201,8 +203,12 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
             applications.put(name, new Application(name, target, expired, params.get("projectName"), 0));
             LOG.debug("Start application {} at CF server {}", name, target);
-            LOG.info("EVENT#run-started# PROJECT#" + params.get("projectName") + "# TYPE#War#");
-            LOG.info("EVENT#project-deployed# PROJECT#" + params.get("projectName") + "# TYPE#War# PAAS#LOCAL#");
+            LOG.info("EVENT#run-started# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + params.get("projectName")
+                     + "# TYPE#War#");
+            LOG.info("EVENT#project-deployed# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + params.get("projectName")
+                     + "# TYPE#War# PAAS#LOCAL#");
             return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
         } catch (Exception e) {
             String logs = safeGetLogs(cloudfoundry, name);
@@ -237,8 +243,12 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
             applications.put(name, new Application(name, target, expired, params.get("projectName"), 1));
             LOG.debug("Start application {} under debug at CF server {}", name, target);
-            LOG.info("EVENT#debug-started# PROJECT#" + params.get("projectName") + "# TYPE#War#");
-            LOG.info("EVENT#project-deployed# PROJECT#" + params.get("projectName") + "# TYPE#War# PAAS#LOCAL#");
+            LOG.info("EVENT#debug-started# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + params.get("projectName")
+                     + "# TYPE#War#");
+            LOG.info("EVENT#project-deployed# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + params.get("projectName")
+                     + "# TYPE#War# PAAS#LOCAL#");
             return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime,
                                                instances[0].getDebugHost(), instances[0].getDebugPort());
         } catch (Exception e) {
@@ -338,9 +348,13 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             publishWebSocketMessage(null, "runner:application-stopped:" + name);
             LOG.debug("Stop application {}.", name);
             if (app.type == 0) {
-                LOG.info("EVENT#run-finished# PROJECT#" + app.projectName + "# TYPE#War#");
+                LOG.info("EVENT#run-finished# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                         + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + app.projectName
+                         + "# TYPE#War#");
             } else if (app.type == 1) {
-                LOG.info("EVENT#debug-finished# PROJECT#" + app.projectName + "# TYPE#War#");
+                LOG.info("EVENT#debug-finished# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                         + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + app.projectName
+                         + "# TYPE#War#");
             }
             applications.remove(name);
         } catch (Exception e) {
