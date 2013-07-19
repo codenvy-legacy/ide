@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.cloudbees.server.rest;
 
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.cloudbees.server.CloudBees;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser;
@@ -27,6 +28,9 @@ import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
+
+import com.codenvy.commons.env.EnvironmentContext;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -91,7 +95,8 @@ public class CloudBeesService {
         if (projectId != null && vfsId != null) {
             VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
             Project proj = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
-            LOG.info("EVENT#application-created# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
+            LOG.info("EVENT#application-created# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
                      + "# PAAS#CloudBees#");
         }
         return app;

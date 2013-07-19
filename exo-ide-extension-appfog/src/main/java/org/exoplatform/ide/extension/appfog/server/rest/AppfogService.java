@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.appfog.server.rest;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.commons.server.ParsingResponseException;
 
 import org.exoplatform.ide.extension.appfog.server.Appfog;
@@ -32,6 +33,7 @@ import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -152,7 +154,8 @@ public class AppfogService {
         String projectId = params.get("projectid");
         if (projectId != null) {
             Project proj = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
-            LOG.info("EVENT#application-created# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
+            LOG.info("EVENT#application-created# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
                      + "# PAAS#Appfog#");
         }
         return app;
