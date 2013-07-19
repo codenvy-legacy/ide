@@ -347,6 +347,12 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
             IDE.fireEvent(new AddToolbarItemsEvent(iconButton));
         }
+
+        sessionStart();
     }
+
+    private static native void sessionStart() /*-{
+        sendSessionStatus("ide", "start");
+    }-*/;
 
 }
