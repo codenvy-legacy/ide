@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
+import org.exoplatform.ide.client.framework.workspaceinfo.CurrentWorkspaceInfo;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -52,6 +53,8 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
     private static final String VFS_BASE_URL = "vfsBaseUrl";
 
     private static final String USER = "user";
+    
+    private static final String CURRENT_WORKSPACE = "currentWorkspace";
 
     private static final String INVALID_CONFIGURATION_TITLE = IDE.ERRORS_CONSTANT.confInvalidConfTitle();
 
@@ -103,6 +106,12 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
                     String payload = object.get(USER).isObject().toString();
                     AutoBean<UserInfo> autoBean = AutoBeanCodex.decode(IDE.AUTO_BEAN_FACTORY, UserInfo.class, payload);
                     initializationConfiguration.setUserInfo(autoBean.as());
+                }
+                
+                if (object.containsKey(CURRENT_WORKSPACE)) {
+                    String payload = object.get(CURRENT_WORKSPACE).isObject().toString();
+                    AutoBean<CurrentWorkspaceInfo> autoBean = AutoBeanCodex.decode(IDE.AUTO_BEAN_FACTORY, CurrentWorkspaceInfo.class, payload);
+                    initializationConfiguration.setCurrentWorkspace(autoBean.as());
                 }
 
             } else

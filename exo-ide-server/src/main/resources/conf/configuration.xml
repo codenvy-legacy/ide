@@ -21,10 +21,6 @@
     </component>
     
     <component>
-        <type>com.codenvy.ide.logger.LogEventApplication</type>
-    </component>
-
-    <component>
          <type>com.codenvy.organization.invite.InviteService</type>
     </component>
 

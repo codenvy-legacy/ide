@@ -67,7 +67,9 @@ public class SetEnvironmentContextFilter implements Filter {
                         workspaceManager.getWorkspaceByName(ws);
                         
                         List<String> roles = Arrays.asList("admin", "developer");
-                        ConversationState.setCurrent(new ConversationState(new Identity("tmp-user125",new HashSet<MembershipEntry>(),roles)));
+                        if ("tmp-dev-monit".equals(ws)) {
+                            ConversationState.setCurrent(new ConversationState(new Identity("tmp-user125",new HashSet<MembershipEntry>(),roles)));
+                        }
                        
                         EnvironmentContext environment = EnvironmentContext.getCurrent();
                         for (Map.Entry<String, Object> entry : env.entrySet()) {

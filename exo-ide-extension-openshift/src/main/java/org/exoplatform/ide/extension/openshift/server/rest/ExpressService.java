@@ -34,6 +34,9 @@ import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
+
+import com.codenvy.commons.env.EnvironmentContext;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -129,7 +132,8 @@ public class ExpressService {
             properties.add(isGitRepositoryProperty);
             vfs.updateItem(projectId, properties, null);
         }
-        LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
+        LOG.info("EVENT#application-created# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                 + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
                  + "# PAAS#OpenShift#");
         return application;
     }

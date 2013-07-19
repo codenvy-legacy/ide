@@ -115,6 +115,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                                applicationConfiguration = result.getIdeConfiguration();
                                                                                applicationSettings = result.getSettings();
                                                                                IDE.user = result.getUserInfo();
+                                                                               IDE.currentWorkspace = result.getCurrentWorkspace();
 
                                                                                // TODO: small hack need because currently user on client
                                                                                // must have it least one role
@@ -346,6 +347,12 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
             IDE.fireEvent(new AddToolbarItemsEvent(iconButton));
         }
+
+        sessionStart();
     }
+
+    private static native void sessionStart() /*-{
+        sendSessionStatus("ide", "start");
+    }-*/;
 
 }
