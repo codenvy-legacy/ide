@@ -29,8 +29,6 @@ import org.exoplatform.ide.vfs.server.RequestContextResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 
-import com.codenvy.ide.logger.LogEventService;
-
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
@@ -57,7 +55,6 @@ public class IDEServiceApplication extends Application {
         classes.add(RequestContextResolver.class);
         classes.add(GoogleContactsRestService.class);
         classes.add(ProjectPrepareService.class);
-        classes.add(LogEventService.class);
         classes.add(IDESessionService.class);
     }
 
