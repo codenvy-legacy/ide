@@ -38,7 +38,20 @@
         var ws = "<%= request.getAttribute("ws")%>";
     </script>
 
+    <script>
+        window.onblur = function() {
+            sendSessionStatus("shell", "stop");
+            return false;
+        }
+
+        window.onfocus = function() {
+            sendSessionStatus("shell", "start");
+            return false;
+        }
+    </script>
+
     <link rel="shortcut icon" href='<%= genShellStaticResourceUrl(request, "favicon.ico")%>'/>
+    <script type="text/javascript" language="javascript" src='<%= genShellStaticResourceUrl(request, "session.js")%>'></script>
     <script type="text/javascript" language="javascript" src='<%= genShellStaticResourceUrl(request, "Shell.nocache.js")%>'></script>
 </head>
 

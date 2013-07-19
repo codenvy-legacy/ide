@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide;
 
+import org.exoplatform.ide.IDESessionService;
 import org.exoplatform.ide.googlecontacts.GoogleContactsRestService;
 import org.exoplatform.ide.project.ProjectPrepareExceptionMapper;
 import org.exoplatform.ide.project.ProjectPrepareService;
@@ -27,8 +28,6 @@ import org.exoplatform.ide.upload.UploadServiceExceptionMapper;
 import org.exoplatform.ide.vfs.server.RequestContextResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
-
-import com.codenvy.ide.logger.LogEventService;
 
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
@@ -56,7 +55,7 @@ public class IDEServiceApplication extends Application {
         classes.add(RequestContextResolver.class);
         classes.add(GoogleContactsRestService.class);
         classes.add(ProjectPrepareService.class);
-        classes.add(LogEventService.class);
+        classes.add(IDESessionService.class);
     }
 
     /** @see javax.ws.rs.core.Application#getClasses() */
