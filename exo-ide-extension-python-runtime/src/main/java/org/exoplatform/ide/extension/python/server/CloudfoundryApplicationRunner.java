@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.python.server;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.commons.server.ParsingResponseException;
 
 import org.exoplatform.container.xml.InitParams;
@@ -34,6 +35,7 @@ import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 import org.picocontainer.Startable;
 
 import java.io.IOException;
@@ -162,8 +164,11 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
             applications.put(name, new Application(name, target, expired, projectName));
             LOG.debug("Start application {} at CF server {}", name, target);
-            LOG.info("EVENT#run-started# PROJECT#" + projectName + "# TYPE#Python#");
-            LOG.info("EVENT#project-deployed# PROJECT#" + projectName + "# TYPE#Python# PAAS#LOCAL#");
+            LOG.info("EVENT#run-started# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + projectName + "# TYPE#Python#");
+            LOG.info("EVENT#project-deployed# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + projectName
+                     + "# TYPE#Python# PAAS#LOCAL#");
             return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
         } catch (Exception e) {
 
@@ -260,7 +265,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             cloudfoundry.stopApplication(target, name, null, null, "cloudfoundry");
             cloudfoundry.deleteApplication(target, name, null, null, "cloudfoundry", true);
             LOG.debug("Stop application {}.", name);
-            LOG.info("EVENT#run-finished# PROJECT#" + applications.get(name).projectName + "# TYPE#Python#");
+            LOG.info("EVENT#run-finished# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + applications.get(name).projectName + "# TYPE#Python#");
             applications.remove(name);
         } catch (Exception e) {
             throw new ApplicationRunnerException(e.getMessage(), e);
