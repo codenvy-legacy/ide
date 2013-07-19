@@ -156,9 +156,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             LOG.info("EVENT#project-deployed# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
                      + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + projectName
                      + "# TYPE#PHP# PAAS#LOCAL#");
-            /*LOG.info("EVENT#application-created# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
-                 + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
-                 + "# PAAS#Heroku#");*/
             return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
         } catch (Exception e) {
 
