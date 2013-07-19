@@ -47,10 +47,11 @@ import org.exoplatform.services.security.MembershipEntry;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.organization.client.WorkspaceManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
+import com.codenvy.organization.model.Workspace;
 
 public class SetEnvironmentContextFilter implements Filter {
     private Map<String, Object> env;
-    private WorkspaceManager workspaceManager;
+    private WorkspaceManager    workspaceManager;
 
     /** Set current {@link EnvironmentContext} */
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
@@ -64,11 +65,7 @@ public class SetEnvironmentContextFilter implements Filter {
                 if (workspaceManager != null)
                 {
                     try {
-                        workspaceManager.getWorkspaceByName(ws);
-                        
-                        List<String> roles = Arrays.asList("admin", "developer");
-                        ConversationState.setCurrent(new ConversationState(new Identity("tmp-user125",new HashSet<MembershipEntry>(),roles)));
-                       
+                        Workspace workspace = workspaceManager.getWorkspaceByName(ws);
                         EnvironmentContext environment = EnvironmentContext.getCurrent();
                         for (Map.Entry<String, Object> entry : env.entrySet()) {
                             environment.setVariable(entry.getKey(), entry.getValue());
@@ -83,7 +80,7 @@ public class SetEnvironmentContextFilter implements Filter {
                         PrintWriter out = response.getWriter();
                         String msg = String.format("Workspace %s not found", ws);
                         httpResponse.setContentLength(msg.getBytes().length);
-                        
+
                         out.write(msg);
                         out.close();
                         return;
@@ -91,7 +88,7 @@ public class SetEnvironmentContextFilter implements Filter {
                 }
             }
 
-            } finally {
+        } finally {
             EnvironmentContext.reset();
         }
     }
@@ -106,7 +103,7 @@ public class SetEnvironmentContextFilter implements Filter {
             workspaceManager = new WorkspaceManager();
         } catch (OrganizationServiceException e) {
             e.printStackTrace();
-        } 
+        }
         Map<String, Object> myEnv = new HashMap<String, Object>();
         myEnv.put(EnvironmentContext.GIT_SERVER, "git");
         myEnv.put(EnvironmentContext.TMP_DIR, new File("../temp"));
