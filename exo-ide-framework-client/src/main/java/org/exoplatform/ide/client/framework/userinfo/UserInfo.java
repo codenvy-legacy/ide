@@ -85,5 +85,11 @@ public interface UserInfo {
     public String getClientId();
 
     public void setClientId(String clientId);
+    
+    
+    public boolean isTemporary();
+        
+    
+    public void setTemporary(boolean temporary);
 
 }

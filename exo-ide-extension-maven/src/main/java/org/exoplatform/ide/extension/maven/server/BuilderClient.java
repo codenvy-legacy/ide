@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.maven.server;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.json.JsonHelper;
 
 import org.everrest.websockets.WSConnectionContext;
@@ -29,6 +30,7 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FilterInputStream;
@@ -425,6 +427,8 @@ public class BuilderClient {
      * @param buildId identifier of the build job to check status
      */
     private void startCheckingBuildStatus(final String buildId, final String projectName, final String projectType) {
+        final String ws = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
+        final String userId = ConversationState.getCurrent().getIdentity().getUserId();
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -433,7 +437,8 @@ public class BuilderClient {
                     if (!status.contains("\"status\":\"IN_PROGRESS\"")) {
                         checkStatusTasks.remove(buildId);
                         cancel();
-                        LOG.info("EVENT#build-finished# PROJECT#" + projectName + "# TYPE#" + projectType + "#");
+                        LOG.info("EVENT#build-finished# WS#" + ws + "# USER#" + userId + "# PROJECT#" + projectName + "# TYPE#"
+                                 + projectType + "#");
                         publishWebSocketMessage(status, BUILD_STATUS_CHANNEL + buildId, null);
                     }
                 } catch (Exception e) {
