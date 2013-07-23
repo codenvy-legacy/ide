@@ -31,15 +31,15 @@ public interface LogEntry {
      *
      * @return the token
      */
-    public String getToken();
+    public String getLrtoken();
 
     /**
      * Set identifier for the log file.
      *
-     * @param token
+     * @param lrtoken
      *         the token to set
      */
-    public void setToken(String token);
+    public void setLrtoken(String lrtoken);
 
     /**
      * Get content of the log file.

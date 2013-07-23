@@ -26,6 +26,7 @@ public enum ProjectProperties {
     TYPE("vfs:projectType"),
     TARGET("exoide:target"),
     JREBEL_COUNT("jrebelCount"),
+    JREBEL("jrebel"),
     DESCRIPTION("exoide:projectDescription"),
     MIME_TYPE("vfs:mimeType");
 

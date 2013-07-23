@@ -155,7 +155,7 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
 
                 @Override
                 protected void onSuccess(LogEntry result) {
-                    currentToken = result.getToken();
+                    currentToken = result.getLrtoken();
                     display.addLog(result.getContent());
                     updateButtonState(result);
                 }
@@ -191,7 +191,7 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
                 @Override
                 protected void onSuccess(LogEntry result) {
                     display.addLog(result.getContent());
-                    currentToken = result.getToken();
+                    currentToken = result.getLrtoken();
                     updateButtonState(result);
                 }
 
@@ -215,7 +215,7 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
 
                 @Override
                 protected void onSuccess(LogEntry result) {
-                    currentToken = result.getToken();
+                    currentToken = result.getLrtoken();
                     display.addLog(result.getContent());
                     updateButtonState(result);
                 }
