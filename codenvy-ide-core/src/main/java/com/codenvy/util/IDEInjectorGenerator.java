@@ -40,7 +40,7 @@ public class IDEInjectorGenerator {
     protected static final String GIN_MODULE_ANNOTATION = "@ExtensionGinModule";
 
     /**
-     * Path of the ouput class, it definitely should already exits. To ensure proper config.
+     * Path of the output class, it definitely should already exits. To ensure proper config.
      * File content will be overriden.
      */
     protected static final String IDE_INJECTOR_PATH =
