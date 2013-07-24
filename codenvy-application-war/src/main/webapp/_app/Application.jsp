@@ -45,16 +45,17 @@
     </script>
 
     <script>
-        window.onblur = function() {
-            sendSessionStatus("ide", "stop");
-            return false;
-        }
-
         window.onload = function() {
             window.onfocus = function() {
                 sendSessionStatus("ide", "start");
                 return false;
             }
+
+            window.onblur = function() {
+                sendSessionStatus("ide", "stop");
+                return false;
+            }
+
             sendSessionStatus("ide", "start");
         }
     </script>
