@@ -25,7 +25,7 @@
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
     <component>
-        <type>com.codenvy.ide.ext.extruntime.server.CodenvyExtensionsLauncher</type>
+        <type>com.codenvy.ide.ext.extruntime.server.ExtensionLauncher</type>
         <init-params>
             <value-param>
                 <name>build-server-base-url</name>

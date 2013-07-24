@@ -26,6 +26,7 @@ import com.codenvy.ide.actions.OpenProjectAction;
 import com.codenvy.ide.actions.SaveAction;
 import com.codenvy.ide.actions.SaveAllAction;
 import com.codenvy.ide.actions.ShowPreferencesAction;
+import com.codenvy.ide.actions.UpdateExtensionAction;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Constraints;
@@ -42,7 +43,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
-
 
 /**
  * Initializer for standard component i.e. some basic menu commands (Save, Save As etc)
@@ -98,6 +98,9 @@ public class StandardComponentInitializer {
     private ShowPreferencesAction showPreferencesAction;
 
     @Inject
+    private UpdateExtensionAction updateExtensionAction;
+
+    @Inject
     private ToolbarPresenter toolbarPresenter;
 
     /** Instantiates {@link StandardComponentInitializer} an creates standard content */
@@ -148,6 +151,10 @@ public class StandardComponentInitializer {
         toolbarGroup.add(saveGroup);
         toolbarGroup.addSeparator();
         fileGroup.add(saveGroup);
+
+        actionManager.registerAction("updateExtension", updateExtensionAction);
+        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_RUN_MAIN_MENU);
+        runMenuActionGroup.add(updateExtensionAction);
 
         toolbarPresenter.bindMainGroup(toolbarGroup);
         paasAgent.registerPaaS("None", "None", null, JsonCollections.<String>createArray("", "java", "War"), null, null);

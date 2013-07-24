@@ -64,7 +64,7 @@ public class ExtRuntimeExtension {
         runMenuActionGroup.add(stopAction);
 
         // register template
-        templateAgent.registerTemplate("Codenvy extension project. Illustrates simple examples that uses Codenvy SDK.",
+        templateAgent.registerTemplate("Codenvy extension project. Illustrates simple example that uses Codenvy SDK.",
                                        resources.codenvyExtensionProject(),
                                        createArray(CODENVY_EXTENSION_PROJECT_TYPE),
                                        createCodenvyExtensionProjectPresenter, wizardPage);

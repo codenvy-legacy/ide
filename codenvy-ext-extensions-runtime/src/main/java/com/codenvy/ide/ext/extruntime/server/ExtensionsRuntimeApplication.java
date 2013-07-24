@@ -31,6 +31,12 @@ public class ExtensionsRuntimeApplication extends Application {
     /** {@inheritDoc} */
     @Override
     public Set<Class< ? >> getClasses() {
-        return Collections.<Class< ? >> singleton(ExtensionsRuntimeService.class);
+        return Collections.<Class< ? >> singleton(ExtensionRuntimeService.class);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Set<Object> getSingletons() {
+        return Collections.<Object> singleton(ExtensionLauncherExceptionMapper.class);
     }
 }
