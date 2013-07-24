@@ -44,22 +44,6 @@
         var securityCheckURL = "/ide/j_security_check";
     </script>
 
-    <script>
-        window.onload = function() {
-            window.onfocus = function() {
-                sendSessionStatus("ide", "start");
-                return false;
-            }
-
-            window.onblur = function() {
-                sendSessionStatus("ide", "stop");
-                return false;
-            }
-
-            sendSessionStatus("ide", "start");
-        }
-    </script>
-
     <link rel="shortcut icon" href="/images/favicon.ico"/>
 <!--
     <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "_app.nocache.js")%>'></script>
@@ -90,8 +74,8 @@
     </table>
 </div>
 
-<script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "cloud_menu.js")%>'></script>
 <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "session.js")%>'></script>
+<script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "cloud_menu.js")%>'></script>
 
 
 <script type="text/javascript">
