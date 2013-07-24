@@ -223,4 +223,38 @@
         </plugins>
     </build>
 
+	<!--
+	This profile is required for launching Codenvy plugins (extensions).
+	See com.codenvy.ide.ext.extruntime.server.ExtensionLauncher.fixGwtSources(Path, String).
+	It's a recommended workaround for known bug of Maven GWT Plugin (https://jira.codehaus.org/browse/MGWT-332).
+	https://groups.google.com/d/msg/codehaus-mojo-gwt-maven-plugin-users/zvJ0IlGN7Fw/RbyteSEKXtoJ
+	-->
+	<profiles>
+		<profile>
+			<id>devMode</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>1.8</version>
+						<executions>
+							<execution>
+								<id>add-extension-sources</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>add-source</goal>
+								</goals>
+								<!-- configuration section should be added by
+								com.codenvy.ide.ext.extruntime.server.ExtensionLauncher.fixGwtSources(Path, String) -->
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
