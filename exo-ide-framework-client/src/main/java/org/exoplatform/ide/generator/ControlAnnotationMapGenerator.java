@@ -26,6 +26,10 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import org.exoplatform.ide.client.framework.annotation.DisableInTempWorkspace;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 21, 2010 $
@@ -48,20 +52,26 @@ public class ControlAnnotationMapGenerator extends ClassAnnotationMapGenerator {
         if (subTypes != null) {
             writer.write("List<String> values;");
             writer.println();
-            writer.write("values = new ArrayList<String>();");
-            writer.println();
             for (JClassType type : subTypes) {
+                writer.write("values = new ArrayList<String>();");
+                writer.println();
+                ArrayList<String> list = new ArrayList<>();
                 if (type.isAnnotationPresent(RolesAllowed.class)) {
                     for (String value : type.getAnnotation(RolesAllowed.class).value()) {
                         writer.write("values.add(\"" + value + "\");");
+                        list.add(value);
                         writer.println();
                     }
                 }
                 if (type.isAnnotationPresent(DisableInTempWorkspace.class)) {
+                    System.out.println("ControlAnnotationMapGenerator.writeConstructor()" + implName);
                     writer.write("values.add(\"" + DisableInTempWorkspace.class.getName() + "\");");
+                    list.add(DisableInTempWorkspace.class.getName());
                     writer.println();
                 }
                 writer.write("classAnnotations.put(\"%s\", values);", type.getQualifiedSourceName());
+                String [] countries = list.toArray(new String[list.size()]);
+                System.out.println("ControlAnnotationMapGenerator.writeConstructor()" + list);
                 writer.println();
 
             }

@@ -77,14 +77,15 @@ public class ReadOnlyUserView extends ViewImpl {
               null, WIDTH, HEIGHT, false);
         add(uiBinder.createAndBindUi(this));
         label.setID(LABEL_ID);
+        label.setIsHTML(true);
         actionButton.setId(ACTION_BUTTON_ID);
         cancelButton.setId(CANCEL_BUTTON_ID);
         if (workspaces.size() == 0) {
-            label.setText(SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyMessage());
+            label.setValue(SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyMessage());
             actionButton.setText(SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyTitle());
         }
         else {
-            label.setText(SamplesExtension.LOCALIZATION_CONSTANT.switchWorkspaceMessage());
+            label.setValue(SamplesExtension.LOCALIZATION_CONSTANT.switchWorkspaceMessage());
             actionButton.setText(SamplesExtension.LOCALIZATION_CONSTANT.switchWorkspace());
         }
 
