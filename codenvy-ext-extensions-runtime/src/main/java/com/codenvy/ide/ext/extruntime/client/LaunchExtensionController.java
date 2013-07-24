@@ -108,7 +108,6 @@ public class LaunchExtensionController {
 
     /** Launch the Codenvy extension project which is currently opened. */
     public void stop() {
-        project = resourceProvider.getActiveProject();
         if (project == null) {
             Window.alert("Project is not opened.");
             return;
@@ -135,7 +134,7 @@ public class LaunchExtensionController {
 
     /** Performs actions before starting application. */
     private void beforeApplicationStart() {
-        final String message = constant.applicationStarting();
+        final String message = constant.applicationStarting(project.getName());
         console.print(message);
     }
 

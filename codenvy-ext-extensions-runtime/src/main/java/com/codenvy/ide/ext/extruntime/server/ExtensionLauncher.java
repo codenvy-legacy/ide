@@ -317,15 +317,6 @@ public class ExtensionLauncher implements Startable {
         // fix known bug https://jira.codehaus.org/browse/MGWT-332
         try {
             Model clientPom = readPom(pomPath);
-            // Build clientPomBuild = clientPom.getBuild();
-            // Map<String, Plugin> clientPomPlugins = clientPomBuild.getPluginsAsMap();
-            // Plugin buildHelperPlugin = clientPomPlugins.get("org.codehaus.mojo:build-helper-maven-plugin");
-            //
-            // PluginExecution execution = new PluginExecution();
-            // execution.setId("add-extension-sources");
-            // execution.setPhase("generate-sources");
-            // execution.addGoal("add-source");
-
             List<Profile> profiles = clientPom.getProfiles();
             Profile superDevModeProfile = null;
             for (Profile profile : profiles) {
@@ -344,8 +335,6 @@ public class ExtensionLauncher implements Startable {
             Xpp3Dom configuration = Xpp3DomBuilder.build(new StringReader(confString));
             execution.setConfiguration(configuration);
 
-            // buildHelperPlugin.addExecution(execution);
-            // clientPomBuild.setPlugins(new ArrayList(clientPomPlugins.values()));
             superDevModeProfile.getBuild().setPlugins(new ArrayList(plugins.values()));
             writePom(clientPom, pomPath);
         } catch (IOException | XmlPullParserException e) {
@@ -365,12 +354,15 @@ public class ExtensionLauncher implements Startable {
             throw new ExtensionLauncherException(String.format("Unable to stop application %s. Application not found. ", appId));
         }
         app.tomcatProcess.destroy();
+        // FIXME app.codeServerProcess represents process of maven invoking, but not 'java CodeServer'
+        // consider 'ps --ppid xxxx -o pid' to get a list of subprocesses
         app.codeServerProcess.destroy();
         try {
             app.tomcatProcess.waitFor();
             app.codeServerProcess.waitFor();
         } catch (InterruptedException e) {
-            // do nothing
+            Thread.interrupted(); // reset interrupted state
+            // TODO kill Tomcat process or CodeServer process
         }
         deleteRecursive(app.tempDir);
         applications.remove(appId);
@@ -419,7 +411,7 @@ public class ExtensionLauncher implements Startable {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                // do nothing
+                // Do nothing. Continue executing.
             }
         }
     }
@@ -589,17 +581,14 @@ public class ExtensionLauncher implements Startable {
 
     private Process runCodeServer(Path appDir, Path extensionDirInFSRoot) throws ExtensionLauncherException {
         try {
-            // TODO clean compile it's a temporary fix to get IDEInjector.java in target folder
-            // TODO consider to add GWT maven plugin to pom.xml if need to set additional configuration
+            // TODO 'clean compile' it's a temporary workaround to get IDEInjector.java and ExtensionManager.java in a target folder
             // TODO set code server's temp directory (not system /temp)
-            ProcessBuilder processBuilder =
-                                            new ProcessBuilder(getMavenExecCommand(), "clean", "compile",
+            // TODO consider invoking 'java CodeServer' directly to avoid launching subprocesses
+            ProcessBuilder processBuilder = new ProcessBuilder(getMavenExecCommand(), "clean", "compile",
                                                                "org.codehaus.mojo:gwt-maven-plugin:2.5.1:run-codeserver",
                                                                "-PdevMode").directory(appDir.resolve(CLIENT_MODULE_DIR_NAME)
                                                                                             .toFile());
-            // TODO only for debug purpose
-            processBuilder.redirectOutput(appDir.resolve("codeServerOut.txt").toFile());
-
+            processBuilder.redirectOutput(appDir.resolve("CodeServer_output.txt").toFile());
             return processBuilder.start();
         } catch (IOException e) {
             throw new ExtensionLauncherException("Unable to launch application. ");

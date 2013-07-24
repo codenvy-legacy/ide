@@ -48,7 +48,7 @@ public interface ExtRuntimeLocalizationConstant extends Messages {
 
     /* Messages */
     @Key("appStarting")
-    String applicationStarting();
+    String applicationStarting(String name);
 
     @Key("appStarted.uris")
     String applicationStartedOnUrls(String name, String uris);
