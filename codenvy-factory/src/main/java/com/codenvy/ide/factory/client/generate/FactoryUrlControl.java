@@ -21,6 +21,7 @@ package com.codenvy.ide.factory.client.generate;
 import com.codenvy.ide.factory.client.FactoryClientBundle;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -38,6 +39,7 @@ import static com.codenvy.ide.factory.client.FactoryExtension.LOCALIZATION_CONST
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: FactoryUrlControl.java Jun 11, 2013 11:25:21 AM azatsarynnyy $
  */
+@RolesAllowed({"developer"})
 public class FactoryUrlControl extends SimpleControl implements IDEControl, VfsChangedHandler, ProjectOpenedHandler,
                                                     ProjectClosedHandler {
 
