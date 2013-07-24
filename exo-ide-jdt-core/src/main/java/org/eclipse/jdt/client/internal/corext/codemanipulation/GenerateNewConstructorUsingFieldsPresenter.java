@@ -285,6 +285,11 @@ public class GenerateNewConstructorUsingFieldsPresenter implements GenerateNewCo
         provider.addDataDisplay(display.getDataDisplay());
         selectAll();
         display.setConstructors(constructors);
+        IMethodBinding constructor = constructors[display.getConstructorIndex()];
+        if(constructor.getParameterTypes().length != 0){
+            display.setOmitSuperEnabled(false);
+            display.getOmitSuper().setValue(Boolean.FALSE);
+        }
 
     }
 
