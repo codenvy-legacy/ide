@@ -456,7 +456,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
      * @param project {@link ProjectModel}
      */
     private void writeUseJRebelProperty(ProjectModel project) {
-        project.getProperties().add(new PropertyImpl(JREBEL, String.valueOf(!IDE.currentWorkspace.isTemporary())));
+        project.getProperties().add(new PropertyImpl(JREBEL, String.valueOf(!IDE.user.isTemporary())));
         try {
             VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
 

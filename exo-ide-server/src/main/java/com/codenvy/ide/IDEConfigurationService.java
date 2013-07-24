@@ -100,8 +100,7 @@ public class IDEConfigurationService {
                 for (Workspace workspace : userManager.getUserWorkspaces(userId)) {
                     workspaces.add(new IDEWorkspace(uriInfo.getBaseUriBuilder().replacePath(null).path("ide").path(workspace.getName())
                                                            .build().toString(),
-                                                    workspace.getName(), workspace.getId(), workspaceManager.getWorkspaceByName(wsName)
-                                                                                                            .isTemporary()));
+                                                    workspace.getName(), workspace.getId(), workspace.isTemporary()));
                     temporary = userManager.getUserByAlias(userId).isTemporary();
                     
                 }
@@ -115,8 +114,10 @@ public class IDEConfigurationService {
             final Map<String, Object> userSettings = Collections.emptyMap();
             result.put("userSettings", userSettings);
             result.put("vfsId", vfsId);
-            result.put("currentWorkspace", new IDEWorkspace(uriInfo.getBaseUriBuilder().replacePath(null).path("ide").path(wsName)
-                                                            .build().toString(), wsName, vfsId, wsName.startsWith("tmp"))); //TODO
+            result.put("currentWorkspace",
+                       new IDEWorkspace(uriInfo.getBaseUriBuilder().replacePath(null).path("ide").path(wsName)
+                                               .build().toString(), wsName, vfsId, workspaceManager.getWorkspaceByName(wsName)
+                                                                                                   .isTemporary()));
             result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path("v2").build(wsName).toString());
             return result;
         } catch (Exception e) {
