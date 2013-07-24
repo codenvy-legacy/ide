@@ -23,6 +23,7 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JWildcardType.BoundType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 
+import org.exoplatform.ide.client.framework.annotation.DisableInTempWorkspace;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 
 /**
@@ -47,17 +48,21 @@ public class ControlAnnotationMapGenerator extends ClassAnnotationMapGenerator {
         if (subTypes != null) {
             writer.write("List<String> values;");
             writer.println();
+            writer.write("values = new ArrayList<String>();");
+            writer.println();
             for (JClassType type : subTypes) {
                 if (type.isAnnotationPresent(RolesAllowed.class)) {
-                    writer.write("values = new ArrayList<String>();");
-                    writer.println();
                     for (String value : type.getAnnotation(RolesAllowed.class).value()) {
                         writer.write("values.add(\"" + value + "\");");
                         writer.println();
                     }
-                    writer.write("classAnnotations.put(\"%s\", values);", type.getQualifiedSourceName());
+                }
+                if (type.isAnnotationPresent(DisableInTempWorkspace.class)) {
+                    writer.write("values.add(\"" + DisableInTempWorkspace.class.getName() + "\");");
                     writer.println();
                 }
+                writer.write("classAnnotations.put(\"%s\", values);", type.getQualifiedSourceName());
+                writer.println();
 
             }
         }

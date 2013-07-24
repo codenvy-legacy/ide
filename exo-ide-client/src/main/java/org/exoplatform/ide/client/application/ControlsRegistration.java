@@ -24,10 +24,12 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.annotation.ClassAnnotationMap;
+import org.exoplatform.ide.client.framework.annotation.DisableInTempWorkspace;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.workspaceinfo.CurrentWorkspaceInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,11 +131,12 @@ public class ControlsRegistration {
         }
     }
 
-    /** @param userRoles */
-    public void initControls(List<String> userRoles) {
+    /** @param userRoles 
+     * @param currentWorkspaceInfo */
+    public void initControls(List<String> userRoles, CurrentWorkspaceInfo currentWorkspaceInfo) {
         ClassAnnotationMap annotationMap = GWT.create(ClassAnnotationMap.class);
         if (annotationMap.getClassAnnotations() != null && annotationMap.getClassAnnotations().size() > 0) {
-            List<Control> allowedControls = getAllowedControlsForUser(registeredControls, userRoles, annotationMap);
+            List<Control> allowedControls = getAllowedControlsForUser(registeredControls, userRoles, annotationMap, currentWorkspaceInfo);
             registeredControls.retainAll(allowedControls);
             removeNotAllowedControls(registeredControls);
         }
@@ -149,15 +152,16 @@ public class ControlsRegistration {
      * @param controls
      * @param userRoles
      * @param annotationMap
+     * @param currentWorkspaceInfo 
      * @return
      */
     private List<Control> getAllowedControlsForUser(List<Control> controls, List<String> userRoles,
-                                                    ClassAnnotationMap annotationMap) {
+                                                    ClassAnnotationMap annotationMap, CurrentWorkspaceInfo currentWorkspaceInfo) {
         List<Control> allowedControls = new ArrayList<Control>();
         for (Control control : controls) {
             String className = control.getClass().getName();
             List<String> rolesAllowed = annotationMap.getClassAnnotations().get(className);
-            if (rolesAllowed == null || checkControlAllowedForUser(userRoles, rolesAllowed)) {
+            if ((rolesAllowed == null || checkControlAllowedForUser(userRoles, rolesAllowed)) && isControlEnableForCurrentWorkspace(rolesAllowed, currentWorkspaceInfo)) {
                 allowedControls.add(control);
             }
         }
@@ -176,6 +180,19 @@ public class ControlsRegistration {
             }
         }
         return false;
+    }
+    
+    
+    /**
+     * @param currentWorkspaceInfo 
+     * @param userRoles
+     * @param rolesAllowed
+     * @return
+     */
+    private boolean isControlEnableForCurrentWorkspace(List<String> contolAnotatoins, CurrentWorkspaceInfo currentWorkspaceInfo) {
+        if (!currentWorkspaceInfo.isTemporary())
+            return true;
+        return !contolAnotatoins.contains(DisableInTempWorkspace.class.getName());
     }
 
     /** @param allowedControls */
