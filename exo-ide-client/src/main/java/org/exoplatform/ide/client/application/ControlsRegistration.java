@@ -161,8 +161,13 @@ public class ControlsRegistration {
         for (Control control : controls) {
             String className = control.getClass().getName();
             List<String> rolesAllowed = annotationMap.getClassAnnotations().get(className);
-            if ((rolesAllowed == null || checkControlAllowedForUser(userRoles, rolesAllowed)) && isControlEnableForCurrentWorkspace(rolesAllowed, currentWorkspaceInfo)) {
-                allowedControls.add(control);
+            if (rolesAllowed == null || checkControlAllowedForUser(userRoles, rolesAllowed)) {
+                if (isControlEnableForCurrentWorkspace(rolesAllowed, currentWorkspaceInfo))
+                    allowedControls.add(control);
+                else {
+                     control.disablePermanently();
+                     allowedControls.add(control);
+                }
             }
         }
         return allowedControls;

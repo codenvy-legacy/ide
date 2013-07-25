@@ -27,8 +27,6 @@ import org.exoplatform.ide.client.framework.annotation.DisableInTempWorkspace;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -64,14 +62,11 @@ public class ControlAnnotationMapGenerator extends ClassAnnotationMapGenerator {
                     }
                 }
                 if (type.isAnnotationPresent(DisableInTempWorkspace.class)) {
-                    System.out.println("ControlAnnotationMapGenerator.writeConstructor()" + implName);
                     writer.write("values.add(\"" + DisableInTempWorkspace.class.getName() + "\");");
                     list.add(DisableInTempWorkspace.class.getName());
                     writer.println();
                 }
                 writer.write("classAnnotations.put(\"%s\", values);", type.getQualifiedSourceName());
-                String [] countries = list.toArray(new String[list.size()]);
-                System.out.println("ControlAnnotationMapGenerator.writeConstructor()" + list);
                 writer.println();
 
             }
