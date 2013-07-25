@@ -204,6 +204,15 @@ public class AppEngineClient {
         } finally {
             writeProjectProperty(vfs, projectId, "gae-application", admin.getApplication().getAppId());
             admin.getApplication().cleanStagingDirectory();
+
+            //IDE-2934
+            Project project = (Project) vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
+            if (ProjectType.JAVA == getApplicationType(vfs, project) && binaries != null) {
+                LOG.info("EVENT#application-created# WS#"
+                        + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME) + "# USER#" + userId
+                        + "# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
+                        + "# PAAS#GAE#");
+            }
         }
     }
 
