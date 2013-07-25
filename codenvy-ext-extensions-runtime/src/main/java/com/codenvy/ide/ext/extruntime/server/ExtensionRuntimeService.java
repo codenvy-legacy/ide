@@ -95,7 +95,7 @@ public class ExtensionRuntimeService {
         Folder projectFolder = vfs.createFolder(rootId, name);
 
         InputStream templateStream = Thread.currentThread().getContextClassLoader()
-                                           .getResourceAsStream("conf/CodenvyExtensionSample.zip");
+                                           .getResourceAsStream("conf/GistExtensionSample.zip");
         if (templateStream == null) {
             throw new InvalidArgumentException("Can't find project template.");
         }

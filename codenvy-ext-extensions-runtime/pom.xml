@@ -64,7 +64,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>copy-clear-tomcat</id>
+                        <id>prepare-clean-tomcat</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>copy</goal>
@@ -125,7 +125,7 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>Prepare Tomcat</id>
+                        <id>prepare-tomcat-bundle</id>
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>run</goal>
@@ -169,6 +169,7 @@
                 </executions>
             </plugin>
         </plugins>
+
         <resources>
             <resource>
                 <directory>src/main/java</directory>

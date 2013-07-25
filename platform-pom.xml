@@ -338,7 +338,7 @@
         </dependencies>
         
     </dependencyManagement>
-    
+
     <profiles>
         <profile>
             <id>osx_profile</id>
@@ -354,11 +354,11 @@
                     <version>1.6.0</version>
                     <scope>system</scope>
                     <systemPath>${java.home}/../Classes/classes.jar</systemPath>
-                </dependency>                
+                </dependency>
             </dependencies>
         </profile>
     </profiles>
-    
+
     <build>
         <pluginManagement>
             <plugins>

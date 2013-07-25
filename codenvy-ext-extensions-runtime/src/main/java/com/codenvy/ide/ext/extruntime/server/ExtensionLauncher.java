@@ -64,10 +64,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import static com.codenvy.ide.commons.FileUtils.ANY_FILTER;
+import static com.codenvy.ide.commons.FileUtils.deleteRecursive;
 import static com.codenvy.ide.commons.ZipUtils.unzip;
 import static com.codenvy.ide.commons.ZipUtils.zipDir;
 import static com.codenvy.ide.commons.server.FileUtils.createTempDirectory;
-import static com.codenvy.ide.commons.server.FileUtils.deleteRecursive;
 import static com.codenvy.ide.commons.server.FileUtils.downloadFile;
 import static com.codenvy.ide.commons.server.NameGenerator.generate;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -126,7 +126,7 @@ public class ExtensionLauncher implements Startable {
      */
     protected ExtensionLauncher(String baseURL) {
         if (baseURL == null || baseURL.isEmpty()) {
-            throw new IllegalArgumentException("Base URL of build server may not be null or empty string. ");
+            throw new IllegalArgumentException("Base URL of build server may not be null or empty string.");
         }
         this.baseURL = baseURL;
         applications = new ConcurrentHashMap<String, CodenvyExtensionResources>();
@@ -154,121 +154,72 @@ public class ExtensionLauncher implements Startable {
 
             Item pomFile = vfs.getItemByPath(project.getName() + PS + "pom.xml", null, false, PropertyFilter.NONE_FILTER);
             InputStream extPomContent = vfs.getContent(pomFile.getId()).getStream();
-            Model extPom = pomReader.read(extPomContent, false);
-            final String extArtifactId = extPom.getArtifactId();
+            Model extPom = pomReader.read(extPomContent, true);
 
-            // -----------------------------------------------------------
-            // Unpack Codenvy Platform sources & user's
-            // extension project into temporary directory.
-            // -----------------------------------------------------------
+            // Unpack Codenvy Platform sources & user's extension project into temporary directory.
             InputStream codenvyPlatformSourcesStream = Thread.currentThread().getContextClassLoader()
                                                              .getResourceAsStream("conf/CodenvyPlatform.zip");
             if (codenvyPlatformSourcesStream == null) {
                 throw new InvalidArgumentException("Can't find Codenvy Platform sources package.");
             }
             unzip(codenvyPlatformSourcesStream, appDirPath.toFile());
-            Path extensionPath = appDirPath.resolve(extArtifactId);
+            Path extensionPath = appDirPath.resolve(extPom.getArtifactId());
             unzip(vfs.exportZip(projectId).getStream(), extensionPath.toFile());
 
-            // TODO Temporary decision
-            File zippedExtensionProjectFile = tempDir.toPath().resolve("extension-project.zip").toFile();
-            zipDir(extensionPath.toString(), extensionPath.toFile(), zippedExtensionProjectFile, ANY_FILTER);
-            startCheckingBuildStatus(deploy(zippedExtensionProjectFile));
-
-            // -----------------------------------------------------------
-            // Use special 'clean' pom.xml for parent & client module
-            // to build Codenvy Platform.
-            // -----------------------------------------------------------
-            Files.move(appDirPath.resolve("platform-pom.xml"), appDirPath.resolve("pom.xml"), REPLACE_EXISTING);
-            Files.move(clientModuleDirPath.resolve("platform-pom.xml"), clientModulePomPath, REPLACE_EXISTING);
-
-            // -----------------------------------------------------------
-            // Use special ide-configuration.xml with removed
-            // unnecessary components.
-            // -----------------------------------------------------------
-            InputStream confStream =
-                                     Thread.currentThread().getContextClassLoader()
+            // Use special ide-configuration.xml with removed unnecessary components.
+            InputStream confStream = Thread.currentThread().getContextClassLoader()
                                            .getResourceAsStream("conf/tomcat/ide-configuration.xml");
             Files.copy(confStream, clientModuleDirPath.resolve("src/main/webapp/WEB-INF/classes/conf/ide-configuration.xml"),
                        REPLACE_EXISTING);
 
-            // -----------------------------------------------------------
-            // Add extension as maven-module into parent pom.xml.
-            // -----------------------------------------------------------
-            Model parentPom = readPom(appDirPath.resolve("pom.xml"));
-            final List<String> parentPomModulesList = parentPom.getModules();
-            int n = 0;
-            for (String module : parentPomModulesList) {
-                // insert extension module before client module
-                if (module.equals(CLIENT_MODULE_DIR_NAME)) {
-                    parentPom.getModules().add(n, extArtifactId);
-                    break;
-                }
-                n++;
-            }
-            writePom(parentPom, appDirPath.resolve("pom.xml"));
+            // Use special 'clean' pom.xml for parent & client module to build Codenvy Platform (without any extensions).
+            Files.move(appDirPath.resolve("platform-pom.xml"), appDirPath.resolve("pom.xml"), REPLACE_EXISTING);
+            Files.move(clientModuleDirPath.resolve("platform-pom.xml"), clientModulePomPath, REPLACE_EXISTING);
 
-            // -----------------------------------------------------------
+            // Add extension as maven-module into parent reactor pom.xml.
+            addModuleToReactorPom(appDirPath.resolve("pom.xml"), extensionPath.getFileName().toString());
+
             // Add extension as dependency into client module's pom.xml.
-            // -----------------------------------------------------------
-            Dependency extMvnDependency = new Dependency();
-            extMvnDependency.setGroupId(extPom.getGroupId());
-            extMvnDependency.setArtifactId(extArtifactId);
-            extMvnDependency.setVersion(extPom.getVersion());
-            Model clientPom = readPom(clientModulePomPath);
-            clientPom.getDependencies().add(extMvnDependency);
-            writePom(clientPom, clientModulePomPath);
+            addDependencyToPom(clientModulePomPath, extPom.getGroupId(), extPom.getArtifactId(), extPom.getVersion());
 
             // Change output directory for the WAR to allow builder return link to download WAR.
-            fixWarPlugin(clientModulePomPath);
+            configureWarPlugin(clientModulePomPath);
 
             // Add sources from user's project to allow code server access it.
-            fixGwtSources(clientModulePomPath, extArtifactId);
+            // It's a workaround for known bug in GWT Maven plug-in.
+            // See https://jira.codehaus.org/browse/MGWT-332.
+            fixGwtMavenPluginBug(clientModulePomPath, extensionPath.getFileName().toString());
 
-            // -----------------------------------------------------------
-            // Add GWT-module into IDEPlatform.gwt.xml.
-            // -----------------------------------------------------------
-            final String gwtModuleDependency = "\t<inherits name='com.codenvy.ide.extension.demo.Demo'/>";
+            // Add custom GWT-module into IDEPlatform.gwt.xml and enable SuperDevMode.
             Path gwtModuleDescriptorPath = appDirPath.resolve(CLIENT_MODULE_DIR_NAME)
                                                      .resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
-            List<String> content = Files.readAllLines(gwtModuleDescriptorPath, UTF_8);
-            // insert extension dependency as last entry
-            int i = 0, lastInheritsLine = 0;
-            for (String str : content) {
-                i++;
-                if (str.contains("<inherits")) {
-                    lastInheritsLine = i;
-                }
-            }
-            content.add(lastInheritsLine, SUPER_DEV_MODE_DIRECTIVE);
-            content.add(lastInheritsLine, gwtModuleDependency);
-            Files.write(gwtModuleDescriptorPath, content, UTF_8);
+            addGwtModuleToGwtModuleDescriptor(gwtModuleDescriptorPath, "com.codenvy.ide.extension.demo.Demo");
+            enableSuperDevMode(gwtModuleDescriptorPath);
 
-
-            // create symbolic links to user's project sources to allow code server always get the actual sources
+            // Replace src and pom.xml by symlinks to an appropriate src and pom.xml
+            // in 'fs-root' directory to allow code server always get the actual sources.
             Path extensionDirInFSRoot = Paths.get(wsMountPath + project.getPath());
             if (!extensionDirInFSRoot.isAbsolute()) {
                 extensionDirInFSRoot = extensionDirInFSRoot.toAbsolutePath();
             }
             extensionDirInFSRoot = extensionDirInFSRoot.normalize();
 
-            // replace src and pom.xml by sym-links to appropriate src and pom.xml in fs-root directory
             deleteRecursive(extensionPath.resolve("src").toFile());
             Files.delete(extensionPath.resolve("pom.xml"));
             Files.createSymbolicLink(extensionPath.resolve("src"), extensionDirInFSRoot.resolve("src"));
             Files.createSymbolicLink(extensionPath.resolve("pom.xml"), extensionDirInFSRoot.resolve("pom.xml"));
 
-            // -----------------------------------------------------------
-            // Build project.
-            // -----------------------------------------------------------
+            // Deploy custom project to maven repository.
+            File zippedExtensionProjectFile = tempDir.toPath().resolve("extension-project.zip").toFile();
+            zipDir(extensionPath.toString(), extensionPath.toFile(), zippedExtensionProjectFile, ANY_FILTER);
+            startCheckingBuildStatus(deploy(zippedExtensionProjectFile));
+
+            // Build Codenvy platform + custom project.
             File zippedProjectFile = tempDir.toPath().resolve("project.zip").toFile();
             zipDir(appDirPath.toString(), appDirPath.toFile(), zippedProjectFile, ANY_FILTER);
             final String buildId = build(zippedProjectFile);
 
-
-            // -----------------------------------------------------------
-            // Run code server.
-            // -----------------------------------------------------------
+            // Run code server while project is building.
             Process codeServerProcess = runCodeServer(appDirPath, extensionDirInFSRoot);
 
             final String status = startCheckingBuildStatus(buildId);
@@ -278,9 +229,6 @@ public class ExtensionLauncher implements Startable {
                                                                    buildStatus.getError()));
             }
 
-            // -----------------------------------------------------------
-            // Run Tomcat.
-            // -----------------------------------------------------------
             Process tomcatProcess = runTomcat(tempDir, new URL(buildStatus.getDownloadUrl()));
 
             // TODO wait while Tomcat & code server will start and check that they started successfully
@@ -290,13 +238,39 @@ public class ExtensionLauncher implements Startable {
             return appId;
         } catch (Exception e) {
             if (tempDir != null && tempDir.exists()) {
-                deleteRecursive(tempDir);
+                deleteRecursive(tempDir, false);
             }
-            throw new ExtensionLauncherException(String.format("Unable to launch application %s. ", project.getName()));
+            throw new ExtensionLauncherException(String.format("Unable to launch application %s.", project.getName()));
         }
     }
 
-    private void fixWarPlugin(Path pomPath) {
+    private void addModuleToReactorPom(Path reactorPomPath, String moduleName) {
+        Model parentPom = readPom(reactorPomPath);
+        final List<String> parentPomModulesList = parentPom.getModules();
+        int n = 0;
+        for (String module : parentPomModulesList) {
+            // insert custom module before module 'client' module
+            if (module.equals(CLIENT_MODULE_DIR_NAME)) {
+                parentPom.getModules().add(n, moduleName);
+                break;
+            }
+            n++;
+        }
+        writePom(parentPom, reactorPomPath);
+    }
+
+    private void addDependencyToPom(Path pomPath, String groupId, String artifactId, String version) {
+        Dependency extMvnDependency = new Dependency();
+        extMvnDependency.setGroupId(groupId);
+        extMvnDependency.setArtifactId(artifactId);
+        extMvnDependency.setVersion(version);
+        Model clientPom = readPom(pomPath);
+        clientPom.getDependencies().add(extMvnDependency);
+        writePom(clientPom, pomPath);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private void configureWarPlugin(Path pomPath) throws ExtensionLauncherException {
         try {
             Model clientPom = readPom(pomPath);
             Build clientPomBuild = clientPom.getBuild();
@@ -309,12 +283,12 @@ public class ExtensionLauncher implements Startable {
             clientPomBuild.setPlugins(new ArrayList(clientPomPlugins.values()));
             writePom(clientPom, pomPath);
         } catch (IOException | XmlPullParserException e) {
-            // TODO
+            throw new ExtensionLauncherException("Unable to launch application.");
         }
     }
 
-    private void fixGwtSources(Path pomPath, String extensionModuleName) {
-        // fix known bug https://jira.codehaus.org/browse/MGWT-332
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private void fixGwtMavenPluginBug(Path pomPath, String extensionModuleName) throws ExtensionLauncherException {
         try {
             Model clientPom = readPom(pomPath);
             List<Profile> profiles = clientPom.getProfiles();
@@ -329,16 +303,52 @@ public class ExtensionLauncher implements Startable {
             PluginExecution execution = buildHelperPlugin.getExecutionsAsMap().get("add-extension-sources");
 
             final String confString = String.format("<configuration>"
-                                                    + "<sources><source>../%s/src/main/java</source></sources>"
-                                                    + "<resources><resource>../%s/src/main/r</resource></resources>"
-                                                    + "</configuration>", extensionModuleName, extensionModuleName);
+                                                    + "<sources><source>../%1$s/src/main/java</source></sources>"
+                                                    + "<resources><resource>../%1$s/src/main/r</resource></resources>"
+                                                    + "</configuration>", extensionModuleName);
             Xpp3Dom configuration = Xpp3DomBuilder.build(new StringReader(confString));
             execution.setConfiguration(configuration);
 
             superDevModeProfile.getBuild().setPlugins(new ArrayList(plugins.values()));
             writePom(clientPom, pomPath);
         } catch (IOException | XmlPullParserException e) {
-            // TODO
+            throw new ExtensionLauncherException("Unable to launch application.");
+        }
+    }
+
+    private void addGwtModuleToGwtModuleDescriptor(Path gwtModuleDescriptorPath, String gwtModulePath) throws ExtensionLauncherException {
+        try {
+            final String gwtModuleDependency = "\t<inherits name='" + gwtModulePath + "'/>";
+            List<String> content = Files.readAllLines(gwtModuleDescriptorPath, UTF_8);
+            // insert custom module as last 'inherits' entry
+            int i = 0, lastInheritsLine = 0;
+            for (String str : content) {
+                i++;
+                if (str.contains("<inherits")) {
+                    lastInheritsLine = i;
+                }
+            }
+            content.add(lastInheritsLine, gwtModuleDependency);
+            Files.write(gwtModuleDescriptorPath, content, UTF_8);
+        } catch (IOException e) {
+            throw new ExtensionLauncherException("Unable to launch application.");
+        }
+    }
+
+    private void enableSuperDevMode(Path gwtModuleDescriptorPath) throws ExtensionLauncherException {
+        try {
+            List<String> content = Files.readAllLines(gwtModuleDescriptorPath, UTF_8);
+            int penultimateLine = 0;
+            for (String str : content) {
+                penultimateLine++;
+                if (str.contains("</module>")) {
+                    break;
+                }
+            }
+            content.add(penultimateLine - 1, SUPER_DEV_MODE_DIRECTIVE);
+            Files.write(gwtModuleDescriptorPath, content, UTF_8);
+        } catch (IOException e) {
+            throw new ExtensionLauncherException("Unable to launch application.");
         }
     }
 
@@ -351,20 +361,28 @@ public class ExtensionLauncher implements Startable {
     public void stopExtension(String appId) throws ExtensionLauncherException {
         CodenvyExtensionResources app = applications.get(appId);
         if (app == null) {
-            throw new ExtensionLauncherException(String.format("Unable to stop application %s. Application not found. ", appId));
+            throw new ExtensionLauncherException(String.format("Unable to stop application %s. Application not found.", appId));
         }
+
         app.tomcatProcess.destroy();
-        // FIXME app.codeServerProcess represents process of maven invoking, but not 'java CodeServer'
-        // consider 'ps --ppid xxxx -o pid' to get a list of subprocesses
+
+        // TODO
+        // app.codeServerProcess represents process of maven invoking. It has a several child processes (bash, java).
+        // But destroy() method doesn't kill child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
         app.codeServerProcess.destroy();
         try {
             app.tomcatProcess.waitFor();
+        } catch (InterruptedException e) {
+            Thread.interrupted(); // reset interrupted state
+            // TODO kill Tomcat process
+        }
+        try {
             app.codeServerProcess.waitFor();
         } catch (InterruptedException e) {
             Thread.interrupted(); // reset interrupted state
-            // TODO kill Tomcat process or CodeServer process
+            // TODO kill code server process
         }
-        deleteRecursive(app.tempDir);
+        deleteRecursive(app.tempDir, false);
         applications.remove(appId);
     }
 
@@ -449,36 +467,11 @@ public class ExtensionLauncher implements Startable {
         }
     }
 
-    private String result(String buildID) throws IOException, ExtensionLauncherException {
-        URL url = new URL(baseURL + "/builder/maven/result/" + buildID);
-        HttpURLConnection http = null;
-        try {
-            http = (HttpURLConnection)url.openConnection();
-            http.setRequestMethod("GET");
-            authenticate(http);
-            int responseCode = http.getResponseCode();
-            if (responseCode != 200) {
-                fail(http);
-            }
-
-            InputStream data = http.getInputStream();
-            try {
-                return readBody(data, http.getContentLength());
-            } finally {
-                data.close();
-            }
-        } finally {
-            if (http != null) {
-                http.disconnect();
-            }
-        }
-    }
-
     private String build(File zippedProjectFile) throws ExtensionLauncherException {
         try {
             return run(new URL(baseURL + "/builder/maven/build"), new FileInputStream(zippedProjectFile));
         } catch (Exception e) {
-            throw new ExtensionLauncherException(String.format("Unable to build project. "));
+            throw new ExtensionLauncherException(String.format("Unable to build project."));
         }
     }
 
@@ -486,7 +479,7 @@ public class ExtensionLauncher implements Startable {
         try {
             return run(new URL(baseURL + "/builder/maven/deploy"), new FileInputStream(zippedProjectFile));
         } catch (Exception e) {
-            throw new ExtensionLauncherException(String.format("Unable to build project. "));
+            throw new ExtensionLauncherException(String.format("Unable to build project."));
         }
     }
 
@@ -591,7 +584,7 @@ public class ExtensionLauncher implements Startable {
             processBuilder.redirectOutput(appDir.resolve("CodeServer_output.txt").toFile());
             return processBuilder.start();
         } catch (IOException e) {
-            throw new ExtensionLauncherException("Unable to launch application. ");
+            throw new ExtensionLauncherException("Unable to launch application.");
         }
     }
 
@@ -611,7 +604,7 @@ public class ExtensionLauncher implements Startable {
             Files.setPosixFilePermissions(catalinaPath, PosixFilePermissions.fromString("rwxr--r--"));
             return new ProcessBuilder(catalinaPath.toString(), "run").start();
         } catch (IOException e) {
-            throw new ExtensionLauncherException("Unable to launch application. ");
+            throw new ExtensionLauncherException("Unable to launch application.");
         }
     }
 
