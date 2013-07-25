@@ -22,6 +22,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -56,13 +57,34 @@ public class FileUtils {
      * @return <code>true</code> if specified File was deleted and <code>false</code> otherwise
      */
     public static boolean deleteRecursive(File fileOrDirectory) {
+        return deleteRecursive(fileOrDirectory, true);
+    }
+
+    /**
+     * Remove specified file or directory.
+     *
+     * @param fileOrDirectory
+     *         the file or directory to cancel
+     * @param processSymlinks
+     *         if <code>true</code> - when <code>fileOrDirectory</code> represents a symbolic link
+     *         to a folder then all child elements of a target folder will be deleted,
+     *         if <code>false</code> - when <code>fileOrDirectory</code> represents a symbolic link
+     *         to a folder then target folder's content will not be read, just symbolic link itself will be deleted
+     * @return <code>true</code> if specified File was deleted and <code>false</code> otherwise
+     */
+    public static boolean deleteRecursive(File fileOrDirectory, boolean processSymlinks) {
         if (fileOrDirectory.isDirectory()) {
+            // If fileOrDirectory represents a symbolic link to a folder, do not read a target folder content.
+            // Just remove a symbolic link itself.
+            if (!processSymlinks && Files.isSymbolicLink(fileOrDirectory.toPath())) {
+                return !fileOrDirectory.exists() || fileOrDirectory.delete();
+            }
             File[] list = fileOrDirectory.listFiles();
             if (list == null) {
                 return false;
             }
             for (File f : list) {
-                if (!deleteRecursive(f)) {
+                if (!deleteRecursive(f, processSymlinks)) {
                     return false;
                 }
             }
