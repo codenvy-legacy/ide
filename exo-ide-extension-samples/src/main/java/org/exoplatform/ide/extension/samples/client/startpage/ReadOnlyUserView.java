@@ -97,8 +97,8 @@ public class ReadOnlyUserView extends ViewImpl {
                 if (workspaces.size() == 0)
                     Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("/login")
                                                    .buildString());
-                else if (workspaces.size() == 1)
-                    Window.Location.replace(workspaces.get(0).getUrl());
+                else if (IDE.user.getWorkspaces().size() == 1)
+                    Window.Location.replace(IDE.user.getWorkspaces().get(0).getUrl());
                 else
                     Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost())
                                                    .setPath("/private/select-tenant").buildString());
