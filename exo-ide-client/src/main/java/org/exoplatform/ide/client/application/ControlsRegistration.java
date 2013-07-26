@@ -179,6 +179,8 @@ public class ControlsRegistration {
      * @return
      */
     private boolean checkControlAllowedForUser(List<String> userRoles, List<String> rolesAllowed) {
+        if (rolesAllowed == null || rolesAllowed.isEmpty())
+            return true;
         for (String role : rolesAllowed) {
             if (userRoles.contains(role)) {
                 return true;
