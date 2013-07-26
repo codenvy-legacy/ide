@@ -76,7 +76,7 @@ public class IDEWorkspace {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("\"currentWorkspace\":{\"url\":\"").append(url).append("\",\"name\":\"").append(name).append("\",\"id\":\"").append(id).append("\",\"temporary\":\"").append(temporary).append("\"}");
+        builder.append("{\"url\":\"").append(url).append("\",\"name\":\"").append(name).append("\",\"id\":\"").append(id).append("\",\"temporary\":\"").append(temporary).append("\"}");
         return builder.toString();
     }
 
