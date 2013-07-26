@@ -118,7 +118,7 @@ public class JsPopUpOAuthWindow {
                     if (href) {
                         console.log(href);
                         var path = popupWindow.location.pathname;
-                        if (path == "/w/" + $wnd.ws) {
+                        if (path == "/ide/" + $wnd.ws) {
                             instance.@org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow::setAuthenticationStatus(I)(2);
                             popupWindow.close();
                             popupWindow = null;
