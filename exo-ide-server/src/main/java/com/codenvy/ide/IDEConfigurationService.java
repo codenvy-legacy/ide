@@ -96,6 +96,7 @@ public class IDEConfigurationService {
             String userId = identity.getUserId();
             boolean temporary = false;
             List<IDEWorkspace> workspaces = new ArrayList<IDEWorkspace>();
+            List<String> workspaceUrl = new ArrayList<String>();
             try {
                 for (Workspace workspace : userManager.getUserWorkspaces(userId)) {
                     workspaces.add(new IDEWorkspace(uriInfo.getBaseUriBuilder().replacePath(null).path("ide").path(workspace.getName())
@@ -103,12 +104,14 @@ public class IDEConfigurationService {
                                                     workspace.getName(), workspace.getId(), workspace.isTemporary()));
                     temporary = userManager.getUserByAlias(userId).isTemporary();
                     
+                    workspaceUrl.add(uriInfo.getBaseUriBuilder().replacePath(null).path("ide").path(workspace.getName())
+                                     .build().toString());
                 }
             }
             catch (OrganizationServiceException e) {
                 //ignore 
             }
-            IdeUser user = new IdeUser(userId, identity.getRoles(), request.getSession().getId(), workspaces, temporary);
+            IdeUser user = new IdeUser(userId, identity.getRoles(), request.getSession().getId(), workspaces, workspaceUrl, temporary);
             LOG.debug(user.toString());
             result.put("user", user);
             final Map<String, Object> userSettings = Collections.emptyMap();

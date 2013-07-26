@@ -32,6 +32,8 @@ public class IdeUser {
     private Collection<String> roles;
     
     private Collection<IDEWorkspace> workspaces;
+    
+    private Collection<String> workspaceUrl;
 
     private String clientId;
     
@@ -49,12 +51,13 @@ public class IdeUser {
      *         the roles to set
      * @param clientId
      */
-    public IdeUser(String userId, Collection<String> roles, String clientId, Collection<IDEWorkspace> workspaces, boolean temporary) {
+    public IdeUser(String userId, Collection<String> roles, String clientId, Collection<IDEWorkspace> workspaces, Collection<String> workspaceUrl, boolean temporary) {
         this.userId = userId;
         this.roles = roles;
         this.clientId = clientId;
         this.workspaces = workspaces;
         this.temporary = temporary;
+        this.workspaceUrl = workspaceUrl;
     }
 
     /** @return the userId */
@@ -113,9 +116,14 @@ public class IdeUser {
         this.temporary = temporary;
     }
     
-    
-    
-    
+    public Collection<String> getWorkspaceUrl() {
+        return workspaceUrl;
+    }
+
+    public void setWorkspaceUrl(Collection<String> workspaceUrl) {
+        this.workspaceUrl = workspaceUrl;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

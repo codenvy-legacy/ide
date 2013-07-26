@@ -71,7 +71,7 @@ public class ReadOnlyUserView extends ViewImpl {
     @UiField
     Label       label;
 
-    public ReadOnlyUserView(final List<IDEWorkspace> workspaces) {
+    public ReadOnlyUserView(final List<String> workspaces) {
         super(ID, ViewType.MODAL, workspaces.size() == 0 ? SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyTitle()
             : SamplesExtension.LOCALIZATION_CONSTANT.switchWorkspaceTitle(),
               null, WIDTH, HEIGHT, false);
@@ -97,8 +97,8 @@ public class ReadOnlyUserView extends ViewImpl {
                 if (workspaces.size() == 0)
                     Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("/login")
                                                    .buildString());
-                else if (IDE.user.getWorkspaces().size() == 1)
-                    Window.Location.replace(IDE.user.getWorkspaces().get(0).getUrl());
+                else if (workspaces.size() == 1)
+                    Window.Location.replace(workspaces.get(0));
                 else
                     Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost())
                                                    .setPath("/private/select-tenant").buildString());
