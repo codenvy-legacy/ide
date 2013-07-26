@@ -144,7 +144,7 @@ public class LaunchExtensionController {
                             new AsyncRequestCallback<StringBuilder>(new com.codenvy.ide.resources.marshal.StringUnmarshaller()) {
                                 @Override
                                 protected void onSuccess(StringBuilder result) {
-                                    console.print(result.toString());
+                                    console.print("<pre>" + result.toString() + "</pre>");
                                 }
 
                                 @Override

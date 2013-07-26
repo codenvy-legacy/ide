@@ -16,28 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.extruntime.server;
+package com.codenvy.ide.ext.extruntime.server.codeserver;
+
+import com.codenvy.ide.ext.extruntime.server.ExtensionLauncherException;
+
+import java.nio.file.Path;
 
 /**
- * Interface represents a starter of code server processes.
+ * Interface represents a code servers starter.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: CodeServerStarter.java Jul 26, 2013 10:23:07 AM azatsarynnyy $
  */
 public interface CodeServerStarter {
     /**
-     * Starts a new code server process.
+     * Starts a new code server.
      * 
-     * @return a new Process object that represents a started code server
-     * @throws ExtensionLauncherException if any error has occurred while starting a code server process
+     * @param workingDirectory working directory for code server
+     * @return a new code server that started
+     * @throws ExtensionLauncherException if any error has occurred while starting a code server
      */
-    Process start() throws ExtensionLauncherException;
+    CodeServer start(Path workingDirectory) throws ExtensionLauncherException;
 
-    /**
-     * Get code server logs.
-     * 
-     * @return code server logs
-     * @throws ExtensionLauncherException if any error has occurred while getting code server logs
-     */
-    String getLogs() throws ExtensionLauncherException;
+    /** Interface represents a code server. */
+    public interface CodeServer {
+        /**
+         * Get code server logs.
+         * 
+         * @return code server logs
+         * @throws ExtensionLauncherException if any error has occurred while getting code server logs
+         */
+        String getLogs() throws ExtensionLauncherException;
+
+        /** Stop code server. */
+        void stop();
+    }
 }

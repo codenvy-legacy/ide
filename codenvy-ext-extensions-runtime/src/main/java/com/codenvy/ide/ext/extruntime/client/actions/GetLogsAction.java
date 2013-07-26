@@ -48,7 +48,7 @@ public class GetLogsAction extends Action {
                          ResourceProvider resourceProvider,
                          ExtRuntimeLocalizationConstant localizationConstants) {
         super(localizationConstants.getExtensionLogsActionText(), localizationConstants.getExtensionLogsDescription(),
-              resources.stopApp());
+              resources.getAppLogs());
         this.controller = controller;
         this.resourceProvider = resourceProvider;
     }

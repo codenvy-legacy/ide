@@ -19,6 +19,8 @@
 package com.codenvy.ide.ext.extruntime.server;
 
 import com.codenvy.ide.commons.JsonHelper;
+import com.codenvy.ide.ext.extruntime.server.codeserver.CodeServerStarter.CodeServer;
+import com.codenvy.ide.ext.extruntime.server.codeserver.GwtMvnCodeServerStarter;
 import com.codenvy.ide.ext.extruntime.server.tools.ProcessUtil;
 
 import org.apache.maven.model.Build;
@@ -227,7 +229,7 @@ public class ExtensionLauncher implements Startable {
             final String buildId = build(zippedProjectFile);
 
             // Run code server while project is building.
-            Process codeServerProcess = new GwtMvnCodeServerStarter(appDirPath.resolve(CLIENT_MODULE_DIR_NAME)).start();
+            CodeServer codeServer = new GwtMvnCodeServerStarter().start(appDirPath.resolve(CLIENT_MODULE_DIR_NAME));
 
             final String status = startCheckingBuildStatus(buildId);
             BuildStatusBean buildStatus = JsonHelper.fromJson(status, BuildStatusBean.class, null);
@@ -240,7 +242,7 @@ public class ExtensionLauncher implements Startable {
 
             // TODO wait while Tomcat & code server will start and check that they started successfully
 
-            applications.put(appId, new CodenvyExtensionResources(appId, tempDir, tomcatProcess, codeServerProcess));
+            applications.put(appId, new CodenvyExtensionResources(appId, tempDir, tomcatProcess, codeServer));
             LOG.debug("Start Codenvy extension {}", appId);
             return appId;
         } catch (Exception e) {
@@ -253,8 +255,30 @@ public class ExtensionLauncher implements Startable {
     }
 
     public String getLogs(String appId) throws ExtensionLauncherException {
+        CodenvyExtensionResources app = applications.get(appId);
+        if (app == null) {
+            throw new ExtensionLauncherException(String.format("Unable to get logs. Extension %s not found.", appId));
+        }
+
+        StringBuilder logs = new StringBuilder();
+
+        String codeServerLogs = app.codeServer.getLogs();
+        if (!(codeServerLogs == null || codeServerLogs.isEmpty())) {
+            logs.append("====> CodeServer.log <====");
+            logs.append("\n\n");
+            logs.append(codeServerLogs);
+        }
+
         // TODO
-        return "logs";
+        String tomcatLogs = "Tomcat logs should be here )";
+        if (!(tomcatLogs == null || tomcatLogs.isEmpty())) {
+            logs.append("====> Tomcat.log <====");
+            logs.append("\n\n");
+            logs.append(tomcatLogs);
+            logs.append("\n\n");
+        }
+
+        return logs.toString();
     }
 
     /**
@@ -275,7 +299,7 @@ public class ExtensionLauncher implements Startable {
         // Use ProcessUtil because java.lang.Process.destroy() method doesn't
         // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
         ProcessUtil.kill(app.tomcatProcess);
-        ProcessUtil.kill(app.codeServerProcess);
+        app.codeServer.stop();
 
         deleteRecursive(app.tempDir, false);
         applications.remove(appId);
@@ -621,13 +645,13 @@ public class ExtensionLauncher implements Startable {
         final String id;
         File         tempDir;
         Process      tomcatProcess;
-        Process      codeServerProcess;
+        CodeServer   codeServer;
 
-        CodenvyExtensionResources(String id, File tempDir, Process tomcatProcess, Process codeServerProcess) {
+        CodenvyExtensionResources(String id, File tempDir, Process tomcatProcess, CodeServer codeServer) {
             this.id = id;
             this.tempDir = tempDir;
             this.tomcatProcess = tomcatProcess;
-            this.codeServerProcess = codeServerProcess;
+            this.codeServer = codeServer;
         }
     }
 }

@@ -62,11 +62,11 @@ public class ExtRuntimeExtension {
         DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
         runMenuActionGroup.add(launchAction);
 
-        actionManager.registerAction(localizationConstants.stopExtensionActionId(), stopAction);
-        runMenuActionGroup.add(stopAction);
-
         actionManager.registerAction(localizationConstants.getExtensionLogsActionId(), getLogsAction);
         runMenuActionGroup.add(getLogsAction);
+
+        actionManager.registerAction(localizationConstants.stopExtensionActionId(), stopAction);
+        runMenuActionGroup.add(stopAction);
 
         // register template
         templateAgent.registerTemplate("Codenvy extension project. Illustrates simple example that uses Codenvy SDK.",

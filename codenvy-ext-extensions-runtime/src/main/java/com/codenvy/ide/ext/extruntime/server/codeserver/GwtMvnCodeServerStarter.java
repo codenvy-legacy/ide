@@ -16,11 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.extruntime.server;
+package com.codenvy.ide.ext.extruntime.server.codeserver;
+
+import com.codenvy.ide.ext.extruntime.server.ExtensionLauncherException;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -30,27 +31,10 @@ import java.nio.file.Path;
  * @version $Id: GwtMvnCodeServerStarter.java Jul 25, 2013 6:09:27 PM azatsarynnyy $
  */
 public class GwtMvnCodeServerStarter implements CodeServerStarter {
-    /** Code server's working directory. */
-    private Path    workDir;
-
-    /** Process that represents a started code server. */
-    private Process process;
-
-    /** Path that represents a code server's log file. */
-    private Path    logFilePath;
-
-    /**
-     * Constructs a code server starter with the specified working and temporary directories.
-     * 
-     * @param processWorkingDir working directory of code server process
-     */
-    GwtMvnCodeServerStarter(Path processWorkingDir) {
-        this.workDir = processWorkingDir;
-    }
 
     /** {@inheritDoc} */
     @Override
-    public Process start() throws ExtensionLauncherException {
+    public CodeServer start(Path workDir) throws ExtensionLauncherException {
         // TODO 'clean compile' it's a temporary workaround to get IDEInjector.java and ExtensionManager.java in a target folder
         final String[] command = new String[]{
                 getMavenExecCommand(),
@@ -59,38 +43,15 @@ public class GwtMvnCodeServerStarter implements CodeServerStarter {
                 "gwt:run-codeserver", // org.codehaus.mojo:gwt-maven-plugin should be described in pom.xml
                 "-PdevMode"};
 
+        Path logFilePath = workDir.resolve("CodeServer.log");
         ProcessBuilder processBuilder = new ProcessBuilder(command).directory(workDir.toFile());
-        logFilePath = workDir.resolve("CodeServerLog.txt");
         processBuilder.redirectOutput(logFilePath.toFile());
 
         try {
-            process = processBuilder.start();
-            return process;
+            return new DefaultCodeServer(processBuilder.start(), logFilePath);
         } catch (IOException e) {
             throw new ExtensionLauncherException("Unable to launch application.");
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getLogs() throws ExtensionLauncherException {
-        try {
-            // It should work fine for the files less than 2GB (Integer.MAX_VALUE).
-            // One recompiling procedure writes about 1KB output information to logs.
-            final byte[] encoded = Files.readAllBytes(logFilePath);
-            return new String(encoded);
-        } catch (IOException e) {
-            throw new ExtensionLauncherException("Unable to get code server logs.");
-        }
-    }
-
-    /**
-     * Return a code server's working directory.
-     * 
-     * @return code server's working directory
-     */
-    public Path getWorkDir() {
-        return workDir;
     }
 
     private String getMavenExecCommand() {

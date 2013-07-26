@@ -128,6 +128,7 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     @Override
     public void getLogs(String appId, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
         final String url = restContext + BASE_URL + LOGS + "/" + appId;
+        loader.setMessage("Retrieving logs...");
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
 }
