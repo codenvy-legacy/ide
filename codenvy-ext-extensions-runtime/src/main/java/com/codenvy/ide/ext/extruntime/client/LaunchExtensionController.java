@@ -132,6 +132,31 @@ public class LaunchExtensionController {
         }
     }
 
+    /** Get logs of launched extension. */
+    public void getLogs() {
+        if (project == null) {
+            Window.alert("Project is not opened.");
+            return;
+        }
+
+        try {
+            service.getLogs(launchedAppId,
+                            new AsyncRequestCallback<StringBuilder>(new com.codenvy.ide.resources.marshal.StringUnmarshaller()) {
+                                @Override
+                                protected void onSuccess(StringBuilder result) {
+                                    console.print(result.toString());
+                                }
+
+                                @Override
+                                protected void onFailure(Throwable exception) {
+                                    onGetApplicationLogsFailure(exception);
+                                }
+                            });
+        } catch (RequestException e) {
+            console.print(e.getMessage());
+        }
+    }
+
     /** Performs actions before starting application. */
     private void beforeApplicationStart() {
         final String message = constant.applicationStarting(project.getName());
@@ -146,11 +171,6 @@ public class LaunchExtensionController {
         console.print(constant.applicationStartedOnUrls(project.getName(), "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
     }
 
-    /**
-     * Performs actions when launching an application has failed.
-     * 
-     * @param exception an exception
-     */
     private void onApplicationLaunchFailure(Throwable exception) {
         String msg = constant.startApplicationFailed();
         if (exception != null && exception.getMessage() != null) {
@@ -159,13 +179,16 @@ public class LaunchExtensionController {
         console.print(msg);
     }
 
-    /**
-     * Performs actions when stopping an application has failed.
-     * 
-     * @param exception an exception
-     */
     private void onApplicationStopFailure(Throwable exception) {
         String msg = constant.stopApplicationFailed();
+        if (exception != null && exception.getMessage() != null) {
+            msg += " : " + exception.getMessage();
+        }
+        console.print(msg);
+    }
+
+    private void onGetApplicationLogsFailure(Throwable exception) {
+        String msg = constant.getApplicationLogsFailed();
         if (exception != null && exception.getMessage() != null) {
             msg += " : " + exception.getMessage();
         }

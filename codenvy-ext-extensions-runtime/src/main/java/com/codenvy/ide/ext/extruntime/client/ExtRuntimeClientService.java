@@ -59,15 +59,25 @@ public interface ExtRuntimeClientService {
      * @throws WebSocketException
      */
     public void launch(String vfsId, String projectId, RequestCallback<StringBuilder> callback)
-                                                                                              throws WebSocketException;
+                                                                                               throws WebSocketException;
 
     /**
      * Stop Codenvy extension.
      * 
-     * @param appId identifier of application to stop
+     * @param appId identifier of extension to stop
      * @param callback callback
      * @throws RequestException
      */
     public void stop(String appId, AsyncRequestCallback<Void> callback)
                                                                        throws RequestException;
+
+    /**
+     * Get logs of launched Codenvy extension.
+     * 
+     * @param appId identifier of launched extension to get its logs
+     * @param callback callback
+     * @throws RequestException
+     */
+    public void getLogs(String appId, AsyncRequestCallback<StringBuilder> callback)
+                                                                                   throws RequestException;
 }

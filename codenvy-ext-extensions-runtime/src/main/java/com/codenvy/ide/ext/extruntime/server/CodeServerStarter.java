@@ -18,34 +18,26 @@
  */
 package com.codenvy.ide.ext.extruntime.server;
 
-import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
-
 /**
+ * Interface represents a starter of code server processes.
+ * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ExtensionLauncherException.java Jul 19, 2013 4:03:36 PM azatsarynnyy $
+ * @version $Id: CodeServerStarter.java Jul 26, 2013 10:23:07 AM azatsarynnyy $
  */
-@SuppressWarnings("serial")
-public class ExtensionLauncherException extends Exception {
-    private int responseStatus = INTERNAL_SERVER_ERROR.getStatusCode();
+public interface CodeServerStarter {
+    /**
+     * Starts a new code server process.
+     * 
+     * @return a new Process object that represents a started code server
+     * @throws ExtensionLauncherException if any error has occurred while starting a code server process
+     */
+    Process start() throws ExtensionLauncherException;
 
-    public ExtensionLauncherException(String message) {
-        super(message);
-    }
-
-    public ExtensionLauncherException(int responseStatus, String message) {
-        super(message);
-        this.responseStatus = responseStatus;
-    }
-
-    public ExtensionLauncherException(Throwable cause) {
-        super(cause);
-    }
-    
-    public ExtensionLauncherException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public int getResponseStatus() {
-        return responseStatus;
-    }
+    /**
+     * Get code server logs.
+     * 
+     * @return code server logs
+     * @throws ExtensionLauncherException if any error has occurred while getting code server logs
+     */
+    String getLogs() throws ExtensionLauncherException;
 }

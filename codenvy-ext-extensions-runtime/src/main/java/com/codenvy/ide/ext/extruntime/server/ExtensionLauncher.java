@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.extruntime.server;
 
 import com.codenvy.ide.commons.JsonHelper;
+import com.codenvy.ide.ext.extruntime.server.tools.ProcessUtil;
 
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Dependency;
@@ -30,6 +31,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
+import org.codehaus.plexus.util.xml.Xpp3DomUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
@@ -86,8 +88,9 @@ public class ExtensionLauncher implements Startable {
     private static final String                                    BUILD_SERVER_BASE_URL    = "exo.ide.builder.build-server-base-url";
     /** The system-dependent default name-separator character. */
     private static final char                                      PS                       = File.separatorChar;
+    /** Default name of the client module directory. */
     private static final String                                    CLIENT_MODULE_DIR_NAME   = "codenvy-ide-client";
-    /** Directive for GWT-module descriptor to enable GWT SuperDevMode. */
+    /** Directive for GWT-module descriptor to enable GWT SuperDevMode and use cross-site IFrame linker. */
     // TODO avoid using failIfScriptTag property and remove <script> tags from Commons.gwt.xml
     private static final String                                    SUPER_DEV_MODE_DIRECTIVE =
                                                                                               "\r\n\t<add-linker name='xsiframe' />"
@@ -146,6 +149,7 @@ public class ExtensionLauncher implements Startable {
                                                                                               ExtensionLauncherException {
         Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.NONE_FILTER);
         File tempDir = null;
+        final String appId = generate("app-", 16);
         try {
             tempDir = createTempDirectory("CodenvyExtension-");
             final Path appDirPath = createTempDirectory(tempDir, "project-").toPath();
@@ -190,6 +194,9 @@ public class ExtensionLauncher implements Startable {
             // See https://jira.codehaus.org/browse/MGWT-332.
             fixGwtMavenPluginBug(clientModulePomPath, extensionPath.getFileName().toString());
 
+            // Set code server's working directory to application directory instead of system temp directory.
+            changeCodeServerWorkDir(clientModulePomPath, appDirPath);
+
             // Add custom GWT-module into IDEPlatform.gwt.xml and enable SuperDevMode.
             Path gwtModuleDescriptorPath = appDirPath.resolve(CLIENT_MODULE_DIR_NAME)
                                                      .resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
@@ -220,12 +227,12 @@ public class ExtensionLauncher implements Startable {
             final String buildId = build(zippedProjectFile);
 
             // Run code server while project is building.
-            Process codeServerProcess = runCodeServer(appDirPath, extensionDirInFSRoot);
+            Process codeServerProcess = new GwtMvnCodeServerStarter(appDirPath.resolve(CLIENT_MODULE_DIR_NAME)).start();
 
             final String status = startCheckingBuildStatus(buildId);
             BuildStatusBean buildStatus = JsonHelper.fromJson(status, BuildStatusBean.class, null);
             if (buildStatus.getStatus() != Status.SUCCESSFUL) {
-                throw new ExtensionLauncherException(String.format("Unable to build application %s. %s ", project.getName(),
+                throw new ExtensionLauncherException(String.format("Unable to build Codenvy extension %s. %s ", project.getName(),
                                                                    buildStatus.getError()));
             }
 
@@ -233,14 +240,78 @@ public class ExtensionLauncher implements Startable {
 
             // TODO wait while Tomcat & code server will start and check that they started successfully
 
-            final String appId = generate("app-", 16);
             applications.put(appId, new CodenvyExtensionResources(appId, tempDir, tomcatProcess, codeServerProcess));
+            LOG.debug("Start Codenvy extension {}", appId);
             return appId;
         } catch (Exception e) {
+            LOG.warn("Codenvy extension {} failed to start, cause: {}", appId, e.getMessage());
             if (tempDir != null && tempDir.exists()) {
                 deleteRecursive(tempDir, false);
             }
-            throw new ExtensionLauncherException(String.format("Unable to launch application %s.", project.getName()));
+            throw new ExtensionLauncherException(String.format("Unable to launch Codenvy extension %s.", project.getName()));
+        }
+    }
+
+    public String getLogs(String appId) throws ExtensionLauncherException {
+        // TODO
+        return "logs";
+    }
+
+    /**
+     * Stop application.
+     * 
+     * @param appId identifier of application to stop
+     * @throws ExtensionLauncherException if error occurred while stopping an application
+     */
+    public void stopExtension(String appId) throws ExtensionLauncherException {
+        CodenvyExtensionResources app = applications.get(appId);
+        if (app == null) {
+            throw new ExtensionLauncherException(String.format("Unable to stop Codenvy extension %s. Extension not found.", appId));
+        }
+
+        // TODO
+        // Use com.codenvy.api.tools.ProcessUtil from 'codenvy-organization-api' project when it finished.
+
+        // Use ProcessUtil because java.lang.Process.destroy() method doesn't
+        // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
+        ProcessUtil.kill(app.tomcatProcess);
+        ProcessUtil.kill(app.codeServerProcess);
+
+        deleteRecursive(app.tempDir, false);
+        applications.remove(appId);
+        LOG.debug("Stop Codenvy extension {}.", appId);
+    }
+
+    /** @see org.picocontainer.Startable#start() */
+    @Override
+    public void start() {
+    }
+
+    /** @see org.picocontainer.Startable#stop() */
+    @Override
+    public void stop() {
+        for (String appId : applications.keySet()) {
+            try {
+                stopExtension(appId);
+            } catch (Exception e) {
+                LOG.error("Failed to stop Codenvy extension {}.", appId, e);
+            }
+        }
+    }
+
+    private static Model readPom(Path path) {
+        try {
+            return pomReader.read(Files.newInputStream(path), false);
+        } catch (IOException | XmlPullParserException e) {
+            throw new IllegalStateException("Error occurred while reading pom.xml file.");
+        }
+    }
+
+    private static void writePom(Model pom, Path path) {
+        try {
+            pomWriter.write(Files.newOutputStream(path), pom);
+        } catch (IOException e) {
+            throw new IllegalStateException("Error occurred while writing pom.xml file.");
         }
     }
 
@@ -316,6 +387,27 @@ public class ExtensionLauncher implements Startable {
         }
     }
 
+    private void changeCodeServerWorkDir(Path pomPath, Path appDirPath) throws ExtensionLauncherException {
+        try {
+            final String configString = String.format("<configuration>"
+                                                      + "<codeServerWorkDir>%s</codeServerWorkDir>"
+                                                      + "</configuration>", appDirPath);
+            Xpp3Dom additionalConfiguration = Xpp3DomBuilder.build(new StringReader(configString));
+
+            Model clientPom = readPom(pomPath);
+            Build clientPomBuild = clientPom.getBuild();
+            Map<String, Plugin> clientPomPlugins = clientPomBuild.getPluginsAsMap();
+            Plugin gwtPlugin = clientPomPlugins.get("org.codehaus.mojo:gwt-maven-plugin");
+            Xpp3Dom existingConfiguration = (Xpp3Dom)gwtPlugin.getConfiguration();
+            Xpp3Dom configuration = Xpp3DomUtils.mergeXpp3Dom(existingConfiguration, additionalConfiguration);
+            gwtPlugin.setConfiguration(configuration);
+            clientPomBuild.setPlugins(new ArrayList(clientPomPlugins.values()));
+            writePom(clientPom, pomPath);
+        } catch (IOException | XmlPullParserException e) {
+            throw new ExtensionLauncherException("Unable to launch application.");
+        }
+    }
+
     private void addGwtModuleToGwtModuleDescriptor(Path gwtModuleDescriptorPath, String gwtModulePath) throws ExtensionLauncherException {
         try {
             final String gwtModuleDependency = "\t<inherits name='" + gwtModulePath + "'/>";
@@ -349,73 +441,6 @@ public class ExtensionLauncher implements Startable {
             Files.write(gwtModuleDescriptorPath, content, UTF_8);
         } catch (IOException e) {
             throw new ExtensionLauncherException("Unable to launch application.");
-        }
-    }
-
-    /**
-     * Stop application.
-     * 
-     * @param appId identifier of application to stop
-     * @throws ExtensionLauncherException if error occurred while stopping an application
-     */
-    public void stopExtension(String appId) throws ExtensionLauncherException {
-        CodenvyExtensionResources app = applications.get(appId);
-        if (app == null) {
-            throw new ExtensionLauncherException(String.format("Unable to stop application %s. Application not found.", appId));
-        }
-
-        app.tomcatProcess.destroy();
-
-        // TODO
-        // app.codeServerProcess represents process of maven invoking. It has a several child processes (bash, java).
-        // But destroy() method doesn't kill child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
-        app.codeServerProcess.destroy();
-        try {
-            app.tomcatProcess.waitFor();
-        } catch (InterruptedException e) {
-            Thread.interrupted(); // reset interrupted state
-            // TODO kill Tomcat process
-        }
-        try {
-            app.codeServerProcess.waitFor();
-        } catch (InterruptedException e) {
-            Thread.interrupted(); // reset interrupted state
-            // TODO kill code server process
-        }
-        deleteRecursive(app.tempDir, false);
-        applications.remove(appId);
-    }
-
-    /** @see org.picocontainer.Startable#start() */
-    @Override
-    public void start() {
-    }
-
-    /** @see org.picocontainer.Startable#stop() */
-    @Override
-    public void stop() {
-        for (String appId : applications.keySet()) {
-            try {
-                stopExtension(appId);
-            } catch (Exception e) {
-                LOG.error("Unable to stop Codenvy extension {}.", appId, e);
-            }
-        }
-    }
-
-    private static Model readPom(Path path) {
-        try {
-            return pomReader.read(Files.newInputStream(path), false);
-        } catch (IOException | XmlPullParserException e) {
-            throw new IllegalStateException("Error occurred while reading pom.xml file.");
-        }
-    }
-
-    private static void writePom(Model pom, Path path) {
-        try {
-            pomWriter.write(Files.newOutputStream(path), pom);
-        } catch (IOException e) {
-            throw new IllegalStateException("Error occurred while writing pom.xml file.");
         }
     }
 
@@ -572,22 +597,6 @@ public class ExtensionLauncher implements Startable {
         return body;
     }
 
-    private Process runCodeServer(Path appDir, Path extensionDirInFSRoot) throws ExtensionLauncherException {
-        try {
-            // TODO 'clean compile' it's a temporary workaround to get IDEInjector.java and ExtensionManager.java in a target folder
-            // TODO set code server's temp directory (not system /temp)
-            // TODO consider invoking 'java CodeServer' directly to avoid launching subprocesses
-            ProcessBuilder processBuilder = new ProcessBuilder(getMavenExecCommand(), "clean", "compile",
-                                                               "org.codehaus.mojo:gwt-maven-plugin:2.5.1:run-codeserver",
-                                                               "-PdevMode").directory(appDir.resolve(CLIENT_MODULE_DIR_NAME)
-                                                                                            .toFile());
-            processBuilder.redirectOutput(appDir.resolve("CodeServer_output.txt").toFile());
-            return processBuilder.start();
-        } catch (IOException e) {
-            throw new ExtensionLauncherException("Unable to launch application.");
-        }
-    }
-
     private Process runTomcat(File tempDir, URL ideWarUrl) throws ExtensionLauncherException {
         InputStream tomcatBundleStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("conf/tomcat/tomcat.zip");
         if (tomcatBundleStream == null) {
@@ -608,25 +617,6 @@ public class ExtensionLauncher implements Startable {
         }
     }
 
-    private String getMavenExecCommand() {
-        final File mvnHome = getMavenHome();
-        if (mvnHome != null) {
-            final String mvn = "bin" + File.separatorChar + "mvn";
-            return new File(mvnHome, mvn).getAbsolutePath(); // use Maven home directory if it's set
-        } else {
-            return "mvn"; // otherwise 'mvn' should be in PATH variable
-        }
-    }
-
-    private File getMavenHome() {
-        final String m2HomeEnv = System.getenv("M2_HOME");
-        if (m2HomeEnv == null) {
-            return null;
-        }
-        final File m2Home = new File(m2HomeEnv);
-        return m2Home.exists() ? m2Home : null;
-    }
-
     private class CodenvyExtensionResources {
         final String id;
         File         tempDir;
@@ -640,5 +630,4 @@ public class ExtensionLauncher implements Startable {
             this.codeServerProcess = codeServerProcess;
         }
     }
-
 }

@@ -22,6 +22,7 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.ext.extruntime.client.actions.GetLogsAction;
 import com.codenvy.ide.ext.extruntime.client.actions.LaunchAction;
 import com.codenvy.ide.ext.extruntime.client.actions.StopAction;
 import com.codenvy.ide.ext.extruntime.client.template.CreateCodenvyExtensionProjectPresenter;
@@ -54,14 +55,18 @@ public class ExtRuntimeExtension {
                                ExtRuntimeResources resources,
                                ActionManager actionManager,
                                LaunchAction launchAction,
-                               StopAction stopAction) {
+                               StopAction stopAction,
+                               GetLogsAction getLogsAction) {
         // register actions
         actionManager.registerAction(localizationConstants.launchExtensionActionlId(), launchAction);
         DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
         runMenuActionGroup.add(launchAction);
 
-        actionManager.registerAction(localizationConstants.stopExtensionActionlId(), stopAction);
+        actionManager.registerAction(localizationConstants.stopExtensionActionId(), stopAction);
         runMenuActionGroup.add(stopAction);
+
+        actionManager.registerAction(localizationConstants.getExtensionLogsActionId(), getLogsAction);
+        runMenuActionGroup.add(getLogsAction);
 
         // register template
         templateAgent.registerTemplate("Codenvy extension project. Illustrates simple example that uses Codenvy SDK.",

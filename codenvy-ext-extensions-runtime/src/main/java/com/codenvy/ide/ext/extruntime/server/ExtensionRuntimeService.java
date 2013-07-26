@@ -40,6 +40,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
@@ -132,12 +133,26 @@ public class ExtensionRuntimeService {
      * @throws ExtensionLauncherException if any error occurred while launching extension
      */
     @Path("launch")
-    @GET
+    @POST
     public String launch(@QueryParam("vfsid") String vfsId,
                          @QueryParam("projectid") String projectId) throws VirtualFileSystemException,
                                                                    ExtensionLauncherException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         return launcher.launchExtension(vfs, projectId, fsMountStrategy.getMountPath().getPath());
+    }
+
+    /**
+     * 
+     * 
+     * @param appId
+     * @return
+     * @throws ExtensionLauncherException
+     */
+    @GET
+    @Path("logs/{appid}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getLogs(@PathParam("appid") String appId) throws ExtensionLauncherException {
+        return launcher.getLogs(appId);
     }
 
     /**
