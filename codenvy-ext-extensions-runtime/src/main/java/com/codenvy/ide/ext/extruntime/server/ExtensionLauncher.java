@@ -436,6 +436,7 @@ public class ExtensionLauncher implements Startable {
         }
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void changeCodeServerWorkDir(Path pomPath, Path dirPath) throws ExtensionLauncherException {
         try {
             final String configString = String.format("<configuration>"
@@ -553,7 +554,7 @@ public class ExtensionLauncher implements Startable {
         try {
             return run(new URL(baseURL + "/builder/maven/deploy"), new FileInputStream(zippedProjectFile));
         } catch (Exception e) {
-            throw new ExtensionLauncherException(String.format("Unable to build project."));
+            throw new ExtensionLauncherException(String.format("Unable to deploy project."));
         }
     }
 
@@ -649,7 +650,7 @@ public class ExtensionLauncher implements Startable {
     private Process runTomcat(File tomcatDir, URL ideWarUrl, boolean waitForStarting) throws ExtensionLauncherException {
         InputStream tomcatBundleStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("conf/tomcat/tomcat.zip");
         if (tomcatBundleStream == null) {
-            throw new ExtensionLauncherException("Can't find Tomcat package.");
+            throw new ExtensionLauncherException("Unable to launch extension.");
         }
 
         try {
