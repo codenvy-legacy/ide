@@ -116,7 +116,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
                 }
             }
         });
-        if (IDE.isRoUser())
+        if (IDE.isRoUser() || IDE.currentWorkspace.isTemporary())
           display.disableInvitationsLink();
     }
 

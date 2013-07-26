@@ -59,6 +59,14 @@ public abstract class Control<T extends Control<?>> {
      */
     private List<ControlStateListener> stateListeners = new ArrayList<ControlStateListener>();
 
+    
+    
+    /**
+     * Use this carefully if it set true you cannot change control state using only setEnable(true) 
+     * need call resetPermanentDisable() firstly 
+     */
+    private boolean disablePermanently;
+
     public String getId() {
         return id;
     }
@@ -141,6 +149,9 @@ public abstract class Control<T extends Control<?>> {
 
     @SuppressWarnings("unchecked")
     public T setEnabled(boolean enabled) {
+        if (disablePermanently)
+            return (T)this;
+        
         if (this.enabled == enabled) {
             return (T)this;
         }
@@ -155,6 +166,8 @@ public abstract class Control<T extends Control<?>> {
 
     @SuppressWarnings("unchecked")
     public T enable() {
+        if (disablePermanently)
+            return (T)this;
         setEnabled(true);
         return (T)this;
     }
@@ -163,6 +176,20 @@ public abstract class Control<T extends Control<?>> {
     public T disable() {
         setEnabled(false);
         return (T)this;
+    }
+    
+    
+    /**
+     * Use this carefully if it set true you cannot change control state using only setEnable(true) 
+     * need call resetPermanentDisable() firstly 
+     */
+    public void disablePermanently() {
+        disablePermanently = true;
+        setEnabled(false);
+    }
+    
+    public void resetPermanentDisable() {
+        disablePermanently = false;
     }
 
     public boolean isVisible() {

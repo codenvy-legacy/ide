@@ -125,7 +125,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                                          .setRoles(Arrays.asList("not-in-role"));
 
 
-                                                                               controls.initControls(result.getUserInfo().getRoles());
+                                                                               controls.initControls(result.getUserInfo().getRoles(),result.getCurrentWorkspace());
 
 
                                                                                new SettingsServiceImpl(IDE.eventBus(), result.getUserInfo()
