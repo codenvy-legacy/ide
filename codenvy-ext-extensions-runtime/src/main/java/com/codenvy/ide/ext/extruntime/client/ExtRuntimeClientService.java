@@ -26,7 +26,7 @@ import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 
 /**
- * Client service for creating and launching/stopping Codenvy extensions.
+ * Client service to work with Codenvy extensions (create/launch/get logs/stop).
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtRuntimeClientService.java Jul 3, 2013 12:48:08 PM azatsarynnyy $
@@ -35,12 +35,12 @@ public interface ExtRuntimeClientService {
     /**
      * Create Codenvy extension project.
      * 
-     * @param projectName
-     * @param properties
-     * @param groupId
-     * @param artifactId
-     * @param version
-     * @param callback
+     * @param projectName name of the project to create
+     * @param properties properties to set to a newly created project
+     * @param groupId group id to set to the projects pom.xml
+     * @param artifactId artifact id to set to the projects pom.xml
+     * @param version version to set to the projects pom.xml
+     * @param callback callback
      * @throws RequestException
      */
     void createCodenvyExtensionProject(String projectName,
@@ -62,16 +62,6 @@ public interface ExtRuntimeClientService {
                                                                                                throws WebSocketException;
 
     /**
-     * Stop Codenvy extension.
-     * 
-     * @param appId identifier of extension to stop
-     * @param callback callback
-     * @throws RequestException
-     */
-    public void stop(String appId, AsyncRequestCallback<Void> callback)
-                                                                       throws RequestException;
-
-    /**
      * Get logs of launched Codenvy extension.
      * 
      * @param appId identifier of launched extension to get its logs
@@ -80,4 +70,14 @@ public interface ExtRuntimeClientService {
      */
     public void getLogs(String appId, AsyncRequestCallback<StringBuilder> callback)
                                                                                    throws RequestException;
+
+    /**
+     * Stop Codenvy extension.
+     * 
+     * @param appId identifier of extension to stop
+     * @param callback callback
+     * @throws RequestException
+     */
+    public void stop(String appId, AsyncRequestCallback<Void> callback)
+                                                                       throws RequestException;
 }

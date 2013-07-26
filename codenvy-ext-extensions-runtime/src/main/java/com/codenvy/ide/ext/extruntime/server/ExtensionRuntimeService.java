@@ -128,9 +128,9 @@ public class ExtensionRuntimeService {
      * 
      * @param vfsId identifier of virtual file system
      * @param projectId identifier of project we want to launch
-     * @return launched app id
+     * @return id of launched extension
      * @throws VirtualFileSystemException if any error occurred in VFS
-     * @throws ExtensionLauncherException if any error occurred while launching extension
+     * @throws ExtensionLauncherException if any error occurred while launching an extension
      */
     @Path("launch")
     @POST
@@ -142,29 +142,29 @@ public class ExtensionRuntimeService {
     }
 
     /**
+     * Get logs of launched Codenvy extension.
      * 
-     * 
-     * @param appId
-     * @return
-     * @throws ExtensionLauncherException
+     * @param extId id of extension to get its logs
+     * @return retrieved logs
+     * @throws ExtensionLauncherException if any error occurred while getting logs
      */
     @GET
-    @Path("logs/{appid}")
+    @Path("logs/{extid}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getLogs(@PathParam("appid") String appId) throws ExtensionLauncherException {
-        return launcher.getLogs(appId);
+    public String getLogs(@PathParam("extid") String extId) throws ExtensionLauncherException {
+        return launcher.getLogs(extId);
     }
 
     /**
      * Stop previously launched Codenvy extension.
      * 
-     * @param appId identifier of application to stop
-     * @throws ExtensionLauncherException if error occurred while stopping an application
+     * @param extId identifier of extension to stop
+     * @throws ExtensionLauncherException if error occurred while stopping an extension
      */
-    @Path("stop/{appid}")
+    @Path("stop/{extid}")
     @GET
-    public void stop(@PathParam("appid") String appId) throws ExtensionLauncherException {
-        launcher.stopExtension(appId);
+    public void stop(@PathParam("extid") String extId) throws ExtensionLauncherException {
+        launcher.stopExtension(extId);
     }
 
     private void updateProperties(String name, List<Property> properties, VirtualFileSystem vfs, Folder projectFolder)

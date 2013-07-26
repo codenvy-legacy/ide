@@ -35,15 +35,15 @@ public class GwtMvnCodeServerStarter implements CodeServerStarter {
     /** {@inheritDoc} */
     @Override
     public CodeServer start(Path workDir) throws ExtensionLauncherException {
-        // TODO 'clean compile' it's a temporary workaround to get IDEInjector.java and ExtensionManager.java in a target folder
+        // need 'clean compile' to get 'IDEInjector.java' and 'ExtensionManager.java' in a target folder
         final String[] command = new String[]{
                 getMavenExecCommand(),
                 "clean",
                 "compile",
-                "gwt:run-codeserver", // org.codehaus.mojo:gwt-maven-plugin should be described in pom.xml
+                "gwt:run-codeserver", // org.codehaus.mojo:gwt-maven-plugin should be described in a pom.xml
                 "-PdevMode"};
 
-        Path logFilePath = workDir.resolve("CodeServer.log");
+        Path logFilePath = workDir.resolve("code-server.log");
         ProcessBuilder processBuilder = new ProcessBuilder(command).directory(workDir.toFile());
         processBuilder.redirectOutput(logFilePath.toFile());
 

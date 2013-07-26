@@ -49,6 +49,11 @@ public class DefaultCodeServer implements CodeServer {
     /** {@inheritDoc} */
     @Override
     public void stop() {
+        // TODO
+        // Use com.codenvy.api.tools.ProcessUtil from 'codenvy-organization-api' project when it finished.
+
+        // Use ProcessUtil because java.lang.Process.destroy() method doesn't
+        // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
         ProcessUtil.kill(process);
     }
 
@@ -58,8 +63,7 @@ public class DefaultCodeServer implements CodeServer {
         try {
             // It should work fine for the files less than 2GB (Integer.MAX_VALUE).
             // One recompiling procedure writes about 1KB output information to logs.
-            final byte[] encoded = Files.readAllBytes(logFilePath);
-            return new String(encoded);
+            return new String(Files.readAllBytes(logFilePath));
         } catch (IOException e) {
             throw new ExtensionLauncherException("Unable to get code server logs.");
         }

@@ -52,19 +52,27 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     /** Base url. */
     private static final String BASE_URL = "/ide/extruntime";
 
+    /** Create method's path. */
     private static final String CREATE   = "/create";
+
     /** Launch method's path. */
     private static final String LAUNCH   = "/launch";
+
     /** Stop method's path. */
     private static final String STOP     = "/stop";
+
     /** Get logs method's path. */
     private static final String LOGS     = "/logs";
+
     /** REST-service context. */
     private String              restContext;
+
     /** Loader to be displayed. */
     private Loader              loader;
+
     /** Provider of IDE resources. */
     private ResourceProvider    resourceProvider;
+
     /** Message bus to communicate through WebSocket. */
     private MessageBus          wsMessageBus;
 
@@ -119,16 +127,16 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void stop(String appId, AsyncRequestCallback<Void> callback) throws RequestException {
-        final String url = restContext + BASE_URL + STOP + "/" + appId;
+    public void getLogs(String appId, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+        final String url = restContext + BASE_URL + LOGS + "/" + appId;
+        loader.setMessage("Retrieving logs...");
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getLogs(String appId, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
-        final String url = restContext + BASE_URL + LOGS + "/" + appId;
-        loader.setMessage("Retrieving logs...");
+    public void stop(String appId, AsyncRequestCallback<Void> callback) throws RequestException {
+        final String url = restContext + BASE_URL + STOP + "/" + appId;
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
 }
