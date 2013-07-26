@@ -339,7 +339,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                 public void onClick(ClickEvent event) {
                     if (IDE.isRoUser()) {
                         if (readOnlyUserView == null)
-                            readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaceUrl());
+                            readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
                         IDE.getInstance().openView(readOnlyUserView);
                     }
                 }

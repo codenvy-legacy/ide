@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.samples.client.startpage;
 
-import com.codenvy.ide.commons.IDEWorkspace;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -34,6 +33,7 @@ import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.client.framework.workspaceinfo.WorkspaceInfo;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 
 import java.util.List;
@@ -71,7 +71,7 @@ public class ReadOnlyUserView extends ViewImpl {
     @UiField
     Label       label;
 
-    public ReadOnlyUserView(final List<String> workspaces) {
+    public ReadOnlyUserView(final List<WorkspaceInfo> workspaces) {
         super(ID, ViewType.MODAL, workspaces.size() == 0 ? SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyTitle()
             : SamplesExtension.LOCALIZATION_CONSTANT.switchWorkspaceTitle(),
               null, WIDTH, HEIGHT, false);
@@ -98,7 +98,7 @@ public class ReadOnlyUserView extends ViewImpl {
                     Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("/login")
                                                    .buildString());
                 else if (workspaces.size() == 1)
-                    Window.Location.replace(workspaces.get(0));
+                    Window.Location.replace(workspaces.get(0).getUrl());
                 else
                     Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost())
                                                    .setPath("/private/select-tenant").buildString());
