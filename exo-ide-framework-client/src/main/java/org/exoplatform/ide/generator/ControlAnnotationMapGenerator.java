@@ -23,7 +23,10 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JWildcardType.BoundType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 
+import org.exoplatform.ide.client.framework.annotation.DisableInTempWorkspace;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+
+import java.util.ArrayList;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -48,16 +51,23 @@ public class ControlAnnotationMapGenerator extends ClassAnnotationMapGenerator {
             writer.write("List<String> values;");
             writer.println();
             for (JClassType type : subTypes) {
+                writer.write("values = new ArrayList<String>();");
+                writer.println();
+                ArrayList<String> list = new ArrayList<>();
                 if (type.isAnnotationPresent(RolesAllowed.class)) {
-                    writer.write("values = new ArrayList<String>();");
-                    writer.println();
                     for (String value : type.getAnnotation(RolesAllowed.class).value()) {
                         writer.write("values.add(\"" + value + "\");");
+                        list.add(value);
                         writer.println();
                     }
-                    writer.write("classAnnotations.put(\"%s\", values);", type.getQualifiedSourceName());
+                }
+                if (type.isAnnotationPresent(DisableInTempWorkspace.class)) {
+                    writer.write("values.add(\"" + DisableInTempWorkspace.class.getName() + "\");");
+                    list.add(DisableInTempWorkspace.class.getName());
                     writer.println();
                 }
+                writer.write("classAnnotations.put(\"%s\", values);", type.getQualifiedSourceName());
+                writer.println();
 
             }
         }

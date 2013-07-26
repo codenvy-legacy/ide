@@ -81,6 +81,10 @@ public interface UserInfo {
     public void setWorkspaces(List<IDEWorkspace> workspaces);
     
     public List<IDEWorkspace> getWorkspaces();
+    
+    public void setWorkspaceUrl(List<String> workspaces);
+    
+    public List<String> getWorkspaceUrl();
 
     public String getClientId();
 

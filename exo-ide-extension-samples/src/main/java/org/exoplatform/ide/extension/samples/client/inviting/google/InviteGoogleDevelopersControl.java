@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.samples.client.inviting.google;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.DisableInTempWorkspace;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
@@ -28,6 +29,7 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
  * @version $
  */
 @RolesAllowed({"developer"})
+@DisableInTempWorkspace
 public class InviteGoogleDevelopersControl extends SimpleControl implements IDEControl {
 
     private static final String ID = "Share/Invite Developers...";
@@ -42,13 +44,13 @@ public class InviteGoogleDevelopersControl extends SimpleControl implements IDEC
         setPrompt(PROMPT);
         setImages(SamplesClientBundle.INSTANCE.invite(), SamplesClientBundle.INSTANCE.inviteDisable());
         setEvent(new InviteGoogleDevelopersEvent());
-        setEnabled(true);
-        setVisible(true);
     }
 
     /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
     @Override
     public void initialize() {
+        setEnabled(true);
+        setVisible(true);
     }
 
 }

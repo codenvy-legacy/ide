@@ -71,7 +71,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
             public void onClick(ClickEvent event) {
                 if (IDE.isRoUser()) {
                     if (readOnlyUserView == null)
-                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
+                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaceUrl());
                     IDE.getInstance().openView(readOnlyUserView);
                 } else {
                     IDE.fireEvent(new CloneRepositoryEvent());
@@ -84,7 +84,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
             public void onClick(ClickEvent event) {
                 if (IDE.isRoUser()) {
                     if (readOnlyUserView == null)
-                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
+                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaceUrl());
                     IDE.getInstance().openView(readOnlyUserView);
                 } else {
                     IDE.fireEvent(new CreateProjectEvent());
@@ -98,7 +98,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
             public void onClick(ClickEvent event) {
                 if (IDE.isRoUser()) {
                     if (readOnlyUserView == null)
-                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
+                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaceUrl());
                     IDE.getInstance().openView(readOnlyUserView);
                 } else {
                     IDE.fireEvent(new ImportFromGithubEvent());
@@ -116,7 +116,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
                 }
             }
         });
-        if (IDE.isRoUser())
+        if (IDE.isRoUser() || IDE.currentWorkspace.isTemporary())
           display.disableInvitationsLink();
     }
 

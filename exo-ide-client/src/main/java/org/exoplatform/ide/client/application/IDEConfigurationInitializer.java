@@ -125,7 +125,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                                          .setRoles(Arrays.asList("not-in-role"));
 
 
-                                                                               controls.initControls(result.getUserInfo().getRoles());
+                                                                               controls.initControls(result.getUserInfo().getRoles(),result.getCurrentWorkspace());
 
 
                                                                                new SettingsServiceImpl(IDE.eventBus(), result.getUserInfo()
@@ -339,7 +339,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                 public void onClick(ClickEvent event) {
                     if (IDE.isRoUser()) {
                         if (readOnlyUserView == null)
-                            readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
+                            readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaceUrl());
                         IDE.getInstance().openView(readOnlyUserView);
                     }
                 }
