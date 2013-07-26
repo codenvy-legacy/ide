@@ -96,12 +96,16 @@ public class IDEConfigurationService {
             String userId = identity.getUserId();
             boolean temporary = false;
             List<IDEWorkspace> workspaces = new ArrayList<IDEWorkspace>();
-            for (Workspace workspace : userManager.getUserWorkspaces(userId)) {
-                workspaces.add(new IDEWorkspace(uriInfo.getBaseUriBuilder().replacePath(null).path("ide").path(workspace.getName())
-                                                       .build().toString(),
-                                                workspace.getName(), workspace.getId(), workspace.isTemporary()));
+            try {
+                for (Workspace workspace : userManager.getUserWorkspaces(userId)) {
+                    workspaces.add(new IDEWorkspace(uriInfo.getBaseUriBuilder().replacePath(null).path("ide").path(workspace.getName())
+                                                           .build().toString(),
+                                                    workspace.getName(), workspace.getId(), workspace.isTemporary()));
+                }
+                temporary = userManager.getUserByAlias(userId).isTemporary();
+            } catch (OrganizationServiceException ignore) {
+                // ignore
             }
-            temporary = userManager.getUserByAlias(userId).isTemporary();
             IdeUser user = new IdeUser(userId, identity.getRoles(), request.getSession().getId(), workspaces, temporary);
             LOG.debug(user.toString());
             result.put("user", user);
