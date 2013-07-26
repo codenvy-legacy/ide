@@ -47,6 +47,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
@@ -274,6 +275,8 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
         // showInvitation(repoInfo.getRemoteUri());
 
         List<Property> properties = new ArrayList<Property>();
+        properties.add(new PropertyImpl("codenow", remoteUri));
+
         IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), prjType, properties));
     }
 
