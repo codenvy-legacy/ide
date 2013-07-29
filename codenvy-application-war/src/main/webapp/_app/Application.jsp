@@ -34,7 +34,8 @@
         var appConfig = {
             "context": "/ide/rest/",
             "websocketContext": "/ide/websocket/"
-        }
+        };
+        
         var hiddenFiles = ".*";
         var ws = "<%= request.getAttribute("ws")%>";
         var project = <%= request.getAttribute("project") != null ? "\"" + request.getAttribute("project")  + "\"" : null%>;
@@ -42,6 +43,14 @@
         var authorizationContext = "/rest";
         var authorizationErrorPageURL = "/ide/ide/error_oauth.html";
         var securityCheckURL = "/ide/j_security_check";
+        
+        var greetingPaneContent = {
+        		"anonymous-user": null,
+        		"authenticated-user": null,
+        		"anonymous-user-temporary-workspace": "<%= genIdeStaticResourceUrl(request, "greeting/greeting-temporary-workspace-not-authenticated.html")%>",
+        		"authenticated-user-temporary-workspace": "<%= genIdeStaticResourceUrl(request, "greeting/greeting-temporary-workspace.html")%>"
+        }
+        
     </script>
 
     <link rel="shortcut icon" href="/images/favicon.ico"/>

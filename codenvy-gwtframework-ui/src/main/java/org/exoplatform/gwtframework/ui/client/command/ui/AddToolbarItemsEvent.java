@@ -19,8 +19,7 @@
 package org.exoplatform.gwtframework.ui.client.command.ui;
 
 import com.google.gwt.event.shared.GwtEvent;
-
-import org.exoplatform.gwtframework.ui.client.component.IconButton;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:vsvydenko@codenvy.com">Valeriy Svydenko</a>
@@ -31,10 +30,18 @@ public class AddToolbarItemsEvent extends GwtEvent<AddToolbarItemsHandler> {
 
     public static final GwtEvent.Type<AddToolbarItemsHandler> TYPE = new GwtEvent.Type<AddToolbarItemsHandler>();
 
-    private final IconButton                                  iconButton;
+    private Widget widget;
+    
+    private boolean rightDocking;
 
-    public AddToolbarItemsEvent(IconButton iconButton) {
-        this.iconButton = iconButton;
+    public AddToolbarItemsEvent(Widget widget) {
+        this.widget = widget;
+        rightDocking = false;
+    }
+    
+    public AddToolbarItemsEvent(Widget widget, boolean rightDocking) {
+        this.widget = widget;
+        this.rightDocking = rightDocking;
     }
 
     @Override
@@ -47,9 +54,12 @@ public class AddToolbarItemsEvent extends GwtEvent<AddToolbarItemsHandler> {
         return TYPE;
     }
 
+    public Widget getWidget() {
+        return widget;
+    }
 
-    public IconButton getIconButton() {
-        return iconButton;
+    public boolean isRightDocking() {
+        return rightDocking;
     }
 
 }

@@ -69,4 +69,23 @@ public interface FactoryClientBundle extends ClientBundle {
 
     @Source("com/codenvy/ide/factory/images/buttons/mail.png")
     ImageResource mail();
+    
+    @Source("com/codenvy/ide/factory/images/greeting/close-notification.png")
+    ImageResource closeNotification();
+
+    @Source("com/codenvy/ide/factory/images/greeting/greeting-1.png")
+    ImageResource greetingIcon();
+    
+    @Source("com/codenvy/ide/factory/images/create-account.png")
+    ImageResource createAccount();
+    
+    @Source("com/codenvy/ide/factory/images/create-account-hover.png")
+    ImageResource createAccountHover();
+    
+    @Source("com/codenvy/ide/factory/images/login.png")
+    ImageResource login();
+    
+    @Source("com/codenvy/ide/factory/images/login-hover.png")
+    ImageResource loginHover();
+
 }

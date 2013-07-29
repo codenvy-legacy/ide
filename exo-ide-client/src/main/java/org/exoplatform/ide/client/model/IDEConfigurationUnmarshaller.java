@@ -22,8 +22,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
@@ -32,6 +30,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.configuration.IDEInitialConfiguration;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.workspaceinfo.CurrentWorkspaceInfo;
@@ -40,7 +39,7 @@ import org.exoplatform.ide.client.framework.workspaceinfo.CurrentWorkspaceInfo;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: May 25, 2011 evgen $
  */
-public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializationConfiguration> {
+public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitialConfiguration> {
     private final static String CONTEXT = "context";
 
     public static final String LOOPBACK_SERVICE_CONTEXT = "/ide/loopbackcontent";
@@ -59,7 +58,7 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
 
     private static final String INVALID_CONFIGURATION_TITLE = IDE.ERRORS_CONSTANT.confInvalidConfTitle();
 
-    private IDEInitializationConfiguration initializationConfiguration;
+    private IDEInitialConfiguration initializationConfiguration;
 
     private IDEConfiguration configuration;
 
@@ -69,7 +68,7 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
      * @param initializationConfiguration
      * @param defaultAppConfiguration
      */
-    public IDEConfigurationUnmarshaller(IDEInitializationConfiguration initializationConfiguration,
+    public IDEConfigurationUnmarshaller(IDEInitialConfiguration initializationConfiguration,
                                         JSONObject defaultAppConfiguration) {
         this.initializationConfiguration = initializationConfiguration;
         this.defaultAppConfiguration = defaultAppConfiguration;
@@ -145,7 +144,7 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
 
     /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
     @Override
-    public IDEInitializationConfiguration getPayload() {
+    public IDEInitialConfiguration getPayload() {
         return initializationConfiguration;
     }
 

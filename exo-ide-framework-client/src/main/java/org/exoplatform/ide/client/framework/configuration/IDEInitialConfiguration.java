@@ -16,9 +16,8 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.model;
+package org.exoplatform.ide.client.framework.configuration;
 
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.workspaceinfo.CurrentWorkspaceInfo;
@@ -29,7 +28,7 @@ import org.exoplatform.ide.client.framework.workspaceinfo.CurrentWorkspaceInfo;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: May 25, 2011 evgen $
  */
-public class IDEInitializationConfiguration {
+public class IDEInitialConfiguration {
 
     private IDEConfiguration ideConfiguration;
 
@@ -42,7 +41,7 @@ public class IDEInitializationConfiguration {
     /**
      *
      */
-    public IDEInitializationConfiguration() {
+    public IDEInitialConfiguration() {
     }
 
     /**
@@ -51,7 +50,7 @@ public class IDEInitializationConfiguration {
      * @param settings
      * @param userInfo
      */
-    public IDEInitializationConfiguration(IDEConfiguration ideConfiguration,
+    public IDEInitialConfiguration(IDEConfiguration ideConfiguration,
                                           ApplicationSettings settings, UserInfo userInfo) {
         super();
         this.ideConfiguration = ideConfiguration;

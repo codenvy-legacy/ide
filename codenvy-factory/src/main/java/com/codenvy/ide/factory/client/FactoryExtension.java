@@ -23,6 +23,7 @@ import com.codenvy.ide.factory.client.generate.FactoryURLHandler;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter;
 import com.codenvy.ide.factory.client.generate.FactoryUrlControl;
 import com.codenvy.ide.factory.client.generate.SendMailPresenter;
+import com.codenvy.ide.factory.client.greeting.GreetingUserPresenter;
 import com.codenvy.ide.factory.client.receive.FanctoryHandler;
 import com.google.gwt.core.client.GWT;
 
@@ -65,5 +66,7 @@ public class FactoryExtension extends Extension implements InitializeServicesHan
         new GetCodeNowButtonPresenter();
         new SendMailPresenter();
         new CommitChangesPresenter();
+        
+        new GreetingUserPresenter();
     }
 }

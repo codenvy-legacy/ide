@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.configuration.IDEInitialConfiguration;
 import org.exoplatform.ide.client.framework.util.Utils;
 
 /**
@@ -57,7 +58,7 @@ public class IDEConfigurationLoader {
         this.loader = loader;
     }
 
-    public void loadConfiguration(AsyncRequestCallback<IDEInitializationConfiguration> callback) {
+    public void loadConfiguration(AsyncRequestCallback<IDEInitialConfiguration> callback) {
         try {
             
             String url = Utils.getRestContext() + Utils.getWorkspaceName() + "/configuration/init";
