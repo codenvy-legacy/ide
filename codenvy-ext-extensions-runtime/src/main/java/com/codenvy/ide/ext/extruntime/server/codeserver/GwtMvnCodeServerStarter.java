@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import static com.codenvy.ide.ext.extruntime.server.ExtensionLauncher.ADD_SOURCES_PROFILE;
+
 /**
  * Implementation of {@link CodeServerStarter} that uses GWT Maven plug-in.
  * 
@@ -41,7 +43,7 @@ public class GwtMvnCodeServerStarter implements CodeServerStarter {
                 "clean",
                 "compile",
                 "gwt:run-codeserver", // org.codehaus.mojo:gwt-maven-plugin should be described in a pom.xml
-                "-PdevMode"};
+                "-P" + ADD_SOURCES_PROFILE};
 
         Path logFilePath = workDir.resolve("code-server.log");
         ProcessBuilder processBuilder = new ProcessBuilder(command).directory(workDir.toFile());

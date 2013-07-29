@@ -85,14 +85,20 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  * @version $Id: ExtensionLauncher.java Jul 7, 2013 3:17:41 PM azatsarynnyy $
  */
 public class ExtensionLauncher implements Startable {
-    private static final Log                                       LOG                      = ExoLogger.getLogger(ExtensionLauncher.class);
 
     /** System property that contains build server URL. */
-    private static final String                                    BUILD_SERVER_BASE_URL    = "exo.ide.builder.build-server-base-url";
+    public static final String                                     BUILD_SERVER_BASE_URL    = "exo.ide.builder.build-server-base-url";
+    /** Default name of the client module directory. */
+    public static final String                                     CLIENT_MODULE_DIR_NAME   = "codenvy-ide-client";
+
+    private static final Log                                       LOG                      = ExoLogger.getLogger(ExtensionLauncher.class);
+
+    /** Id of maven profile that used to add (re)sources of custom extension. */
+    public static final String                                     ADD_SOURCES_PROFILE      = "customExtensionSources";
+
     /** The system-dependent default name-separator character. */
     private static final char                                      PS                       = File.separatorChar;
-    /** Default name of the client module directory. */
-    private static final String                                    CLIENT_MODULE_DIR_NAME   = "codenvy-ide-client";
+
     /** Directive for GWT-module descriptor to enable GWT SuperDevMode: use cross-site IFrame linker and enable using source maps. */
     // Set 'failIfScriptTag' property to FALSE, to avoid error messages that <script> tags exist in Commons.gwt.xml
     private static final String                                    SUPER_DEV_MODE_DIRECTIVE =
@@ -108,6 +114,7 @@ public class ExtensionLauncher implements Startable {
 
     /** Base URL of build server. */
     private final String                                           baseURL;
+
     /** Launched extensions. */
     private final ConcurrentMap<String, CodenvyExtensionResources> extensions;
 
@@ -414,7 +421,7 @@ public class ExtensionLauncher implements Startable {
             List<Profile> profiles = clientPom.getProfiles();
             Profile superDevModeProfile = null;
             for (Profile profile : profiles) {
-                if (profile.getId().equals("customExtensionSources")) {
+                if (profile.getId().equals(ADD_SOURCES_PROFILE)) {
                     superDevModeProfile = profile;
                 }
             }
