@@ -91,7 +91,7 @@ public class GreetingUserPresenter implements
                FactoryClientBundle.INSTANCE.createAccount(), FactoryClientBundle.INSTANCE.createAccountHover(), new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    Window.open("http://codenvy.com/create-account", "_blank", null);
+                    Window.Location.assign("http://codenvy.com/create-account");
                 }
             });        
         IDE.fireEvent(new AddToolbarItemsEvent(createAccountButton, true));
@@ -100,7 +100,7 @@ public class GreetingUserPresenter implements
                FactoryClientBundle.INSTANCE.login(), FactoryClientBundle.INSTANCE.loginHover(), new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    Window.open("http://codenvy.com/login", "_blank", null);
+                    Window.Location.assign("http://codenvy.com/login");
                 }
             });        
         IDE.fireEvent(new AddToolbarItemsEvent(loginButton, true));
