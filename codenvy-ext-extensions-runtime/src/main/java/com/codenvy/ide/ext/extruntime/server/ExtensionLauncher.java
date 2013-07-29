@@ -93,8 +93,8 @@ public class ExtensionLauncher implements Startable {
     private static final char                                      PS                       = File.separatorChar;
     /** Default name of the client module directory. */
     private static final String                                    CLIENT_MODULE_DIR_NAME   = "codenvy-ide-client";
-    /** Directive for GWT-module descriptor to enable GWT SuperDevMode and use cross-site IFrame linker. */
-    // TODO avoid to using 'failIfScriptTag' property (remove <script> tags from Commons.gwt.xml)
+    /** Directive for GWT-module descriptor to enable GWT SuperDevMode: use cross-site IFrame linker and enable using source maps. */
+    // Set 'failIfScriptTag' property to FALSE, to avoid error messages that <script> tags exist in Commons.gwt.xml
     private static final String                                    SUPER_DEV_MODE_DIRECTIVE =
                                                                                               "\r\n\t<add-linker name='xsiframe' />"
                                                                                                   + "\r\n\t<set-configuration-property name='devModeRedirectEnabled' value='true' />"

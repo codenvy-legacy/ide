@@ -53,7 +53,7 @@ import java.util.List;
 import static org.exoplatform.ide.vfs.shared.PropertyFilter.ALL_FILTER;
 
 /**
- * Service for creating and launching Codenvy extension projects in a separate Codenvy.
+ * Service for managing (creating/launching/stopping/getting logs) Codenvy-extension projects.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtensionRuntimeService.java Jul 3, 2013 3:21:23 PM azatsarynnyy $
