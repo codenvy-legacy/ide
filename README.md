@@ -12,5 +12,5 @@ Open in browser http://127.0.0.1:8080/IDE/IDE.html?gwt.codesvr=127.0.0.1:9997
 How to run Codenvy with supporting of running Codenvy-extensions:
 1. Build all modules from the root of the project using profile 'ext-runtime':
 mvn clean install -Pext-runtime
-2. Go to codenvy-packaging-standalone-tomcat-extensions-launcher/target/tomcat-ide and start Tomcat.
+2. Go to codenvy-packaging-standalone-tomcat/target/tomcat-ide and start Tomcat.
 

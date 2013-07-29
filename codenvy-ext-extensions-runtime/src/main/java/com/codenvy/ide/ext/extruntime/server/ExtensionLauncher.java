@@ -424,7 +424,7 @@ public class ExtensionLauncher implements Startable {
 
             final String confString = String.format("<configuration>"
                                                     + "<sources><source>../%1$s/src/main/java</source></sources>"
-                                                    + "<resources><resource>../%1$s/src/main/r</resource></resources>"
+                                                    + "<resources><resource>../%1$s/src/main/resources</resource></resources>"
                                                     + "</configuration>", extensionModuleName);
             Xpp3Dom configuration = Xpp3DomBuilder.build(new StringReader(confString));
             execution.setConfiguration(configuration);
