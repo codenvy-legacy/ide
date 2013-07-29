@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.discovery.RestServicesList;
 import org.exoplatform.ide.client.framework.invite.GoogleContact;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.workspaceinfo.CurrentWorkspaceInfo;
+import org.exoplatform.ide.client.framework.workspaceinfo.WorkspaceInfo;
 import org.exoplatform.ide.vfs.shared.*;
 
 import java.util.List;
@@ -87,6 +88,13 @@ public interface IDEAutoBeanFactory extends AutoBeanFactory {
      */
     AutoBean<CurrentWorkspaceInfo> currentWorkspace();
 
+    /**
+     * A factory method for a information about workspace bean.
+     *
+     * @return an {@link AutoBean} of type {@link WorkspaceInfo}
+     */
+    AutoBean<WorkspaceInfo> workspaceInfo();
+    
     /**
      * A factory method for a information about user bean.
      *

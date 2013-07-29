@@ -18,6 +18,38 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import java.io.ByteArrayInputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+
+import org.exoplatform.ide.extension.java.shared.Action;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.observation.EventListenerList;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
+
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.eclipse.core.resources.IProject;
 import com.codenvy.eclipse.core.resources.IProjectDescription;
@@ -40,37 +72,6 @@ import com.codenvy.eclipse.jdt.internal.core.JavaModelManager;
 import com.codenvy.eclipse.jdt.ui.refactoring.RenameSupport;
 import com.codenvy.eclipse.resources.ProjectResource;
 import com.codenvy.eclipse.resources.WorkspaceResource;
-
-import org.exoplatform.ide.extension.java.shared.Action;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
-import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
-import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
-import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.server.observation.EventListenerList;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemList;
-import org.exoplatform.ide.vfs.shared.Project;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-
-import javax.inject.Inject;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-
-import java.io.ByteArrayInputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -149,8 +150,10 @@ public class RefactoringService {
                 if (status.isOK()) {
                     renameSupport.perform();
                     Project proj = (Project)workspace.getVFS().getItem(projectid, false, PropertyFilter.ALL_FILTER);
-                    LOG.info("EVENT#user-code-refactor# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
-                             + "# FEATURE#rename#");
+                    String workspaceName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
+                    String user = ConversationState.getCurrent().getIdentity().getUserId();
+                    LOG.info("EVENT#user-code-refactor# WS#" + workspaceName + "# USER#" + user + "# PROJECT#" +
+                             proj.getName() + "# TYPE#" + proj.getProjectType() + "# FEATURE#rename#");
                     if (workspace instanceof ObservableWorkspace) {
                         return ((ObservableWorkspace)workspace).getActions();
                     } else {
@@ -208,7 +211,8 @@ public class RefactoringService {
                                                      RenameSupport.UPDATE_REFERENCES);
                 break;
             case IJavaElement.PACKAGE_FRAGMENT:
-                // renameSupport = RenameSupport.create( (IPackageFragment)element , newname, RenameSupport.UPDATE_REFERENCES);
+                // renameSupport = RenameSupport.create( (IPackageFragment)element , newname,
+                // RenameSupport.UPDATE_REFERENCES);
                 throw new UnsupportedOperationException("Currently we do not support renaming packages");
             default:
                 throw new IllegalArgumentException("Rename of element '" + element.getElementName() + "' is not supported");

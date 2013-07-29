@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.client.framework.userinfo;
 
-import com.codenvy.ide.commons.IDEWorkspace;
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
 import java.util.List;
+
+import org.exoplatform.ide.client.framework.workspaceinfo.WorkspaceInfo;
 
 /**
  * Interface describe information about user.
@@ -78,10 +79,10 @@ public interface UserInfo {
      */
     public void setRoles(List<String> roles);
     
-    public void setWorkspaces(List<IDEWorkspace> workspaces);
+    public void setWorkspaces(List<WorkspaceInfo> workspaces);
     
-    public List<IDEWorkspace> getWorkspaces();
-
+    public List<WorkspaceInfo> getWorkspaces();
+    
     public String getClientId();
 
     public void setClientId(String clientId);

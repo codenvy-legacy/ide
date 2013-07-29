@@ -60,10 +60,10 @@ import java.util.Map;
 @Path("{ws-name}/configuration")
 public class IDEConfigurationService {
 
-    private static Log        LOG = ExoLogger.getLogger(IDEConfigurationService.class);
+    private static Log             LOG = ExoLogger.getLogger(IDEConfigurationService.class);
 
-    private final UserManager userManager;
-    
+    private final UserManager      userManager;
+
     private final WorkspaceManager workspaceManager;
 
     public IDEConfigurationService() throws OrganizationServiceException {
@@ -101,18 +101,15 @@ public class IDEConfigurationService {
                     workspaces.add(new IDEWorkspace(uriInfo.getBaseUriBuilder().replacePath(null).path("ide").path(workspace.getName())
                                                            .build().toString(),
                                                     workspace.getName(), workspace.getId(), workspace.isTemporary()));
-                    temporary = userManager.getUserByAlias(userId).isTemporary();
-                    
                 }
-            }
-            catch (OrganizationServiceException e) {
-                //ignore 
+                temporary = userManager.getUserByAlias(userId).isTemporary();
+            } catch (OrganizationServiceException ignore) {
+                // ignore
             }
             IdeUser user = new IdeUser(userId, identity.getRoles(), request.getSession().getId(), workspaces, temporary);
             LOG.debug(user.toString());
             result.put("user", user);
-            final Map<String, Object> userSettings = Collections.emptyMap();
-            result.put("userSettings", userSettings);
+            result.put("userSettings", Collections.emptyMap());
             result.put("vfsId", vfsId);
             result.put("currentWorkspace",
                        new IDEWorkspace(uriInfo.getBaseUriBuilder().replacePath(null).path("ide").path(wsName)
@@ -124,19 +121,19 @@ public class IDEConfigurationService {
             throw new WebApplicationException(e);
         }
     }
-    
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"developer"})
     public String getConfiguration() {
-        return "{}"; //TODO: small hack add for supporting previous version of IDE. In 1.2 changed structure of user settings
+        return "{}"; // TODO: small hack add for supporting previous version of IDE. In 1.2 changed structure of user settings
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({"developer"})
     public void setConfiguration(String body) throws IOException {
-       // not impl yet
+        // not impl yet
     }
 
 

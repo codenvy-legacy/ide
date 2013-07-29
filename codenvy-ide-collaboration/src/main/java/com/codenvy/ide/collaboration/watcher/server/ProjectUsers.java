@@ -29,6 +29,7 @@ import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -107,20 +108,26 @@ public class ProjectUsers {
     public void broadcastToClients(String message, String projectId) {
 
         ChannelBroadcastMessage broadcastMessage = new ChannelBroadcastMessage();
-        broadcastMessage.setChannel("project_chat." + projectId);
+        broadcastMessage.setChannel(getChannelId(projectId));
         broadcastMessage.setBody(message);
         try {
             WSConnectionContext.sendMessage(broadcastMessage);
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+        }catch (IOException e){
+            LOG.debug("Can't send message : " + message, e);
         }
+        catch (Exception e) {
+            LOG.error("Can't send message : " + message, e);
+        }
+    }
+
+    public String getChannelId(String projectId) {
+        return "project_chat." + projectId;
     }
 
     private UserDetailsImpl getUserDetails(String userId) {
         UserDetailsImpl userDetails = UserDetailsImpl.make();
         userDetails.setUserId(userId);
-        String name = userId;
-        userDetails.setDisplayName(name);
+        userDetails.setDisplayName(userId);
         userDetails.setDisplayEmail(userId);
         userDetails.setPortraitUrl(gravatarUrl + MD5Util.md5Hex(userId) + "?s=24&d=mm");
         return userDetails;

@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.framework.configuration;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.workspaceinfo.CurrentWorkspaceInfo;
+import org.exoplatform.ide.client.framework.workspaceinfo.WorkspaceInfo;
 
 /**
  * Been used to transport initialization configuration
@@ -37,6 +38,8 @@ public class IDEInitialConfiguration {
     private UserInfo userInfo;
     
     private CurrentWorkspaceInfo currentWorkspace;
+    
+    private WorkspaceInfo workspaceInfo;
 
     /**
      *
@@ -111,4 +114,16 @@ public class IDEInitialConfiguration {
         this.currentWorkspace = currentWorkspace;
     }
 
+    /** @return the WorkspaceInfo */
+    public WorkspaceInfo getWorkspaceInfo() {
+        return workspaceInfo;
+    }
+
+    /**
+     * @param workspaceInfo
+     *         the WorkspaceInfo to set
+     */
+    public void setWorkspaceInfo(WorkspaceInfo workspaceInfo) {
+        this.workspaceInfo = workspaceInfo;
+    }
 }

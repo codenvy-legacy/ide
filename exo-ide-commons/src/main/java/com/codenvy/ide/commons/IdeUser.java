@@ -32,7 +32,7 @@ public class IdeUser {
     private Collection<String> roles;
     
     private Collection<IDEWorkspace> workspaces;
-
+    
     private String clientId;
     
     private boolean temporary;
@@ -113,9 +113,7 @@ public class IdeUser {
         this.temporary = temporary;
     }
     
-    
-    
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
