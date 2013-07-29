@@ -231,7 +231,7 @@
 	-->
 	<profiles>
 		<profile>
-			<id>devMode</id>
+			<id>customExtensionSources</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>

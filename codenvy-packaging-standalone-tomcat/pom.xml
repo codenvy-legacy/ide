@@ -120,18 +120,6 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-extensions-runtime</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.kernel</groupId>
-                    <artifactId>exo.kernel.container</artifactId>
-                </exclusion>
-            </exclusions>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-git-server</artifactId>
             <version>${org.exoplatform.ide.version}</version>
@@ -885,4 +873,20 @@
             </plugin>
         </plugins>
     </build>
+
+	<profiles>
+		<profile>
+			<id>ext-runtime</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<dependencies>
+				<dependency>
+		            <groupId>com.codenvy.ide</groupId>
+		            <artifactId>codenvy-ext-extensions-runtime</artifactId>
+		        </dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+
 </project>

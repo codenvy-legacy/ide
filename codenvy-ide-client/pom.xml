@@ -92,10 +92,6 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-extensions-runtime</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-demo</artifactId>
         </dependency>
         <dependency>
@@ -272,5 +268,31 @@
             </plugin>
         </plugins>
     </build>
+
+	<profiles>
+		<profile>
+			<id>ext-runtime</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<dependencies>
+				<dependency>
+		            <groupId>com.codenvy.ide</groupId>
+		            <artifactId>codenvy-ext-extensions-runtime</artifactId>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+		               <groupId>org.codehaus.mojo</groupId>
+		               <artifactId>gwt-maven-plugin</artifactId>
+		               <configuration>
+		                   <module>com.codenvy.ide.IDEExtensionsLauncher</module>
+		               </configuration>
+		           </plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

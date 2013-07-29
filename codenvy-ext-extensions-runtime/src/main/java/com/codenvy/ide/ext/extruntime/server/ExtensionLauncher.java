@@ -240,7 +240,7 @@ public class ExtensionLauncher implements Startable {
             }
 
             File tomcatDir = createTempDirectory(tempDir, "tomcat-");
-            Process tomcatProcess = runTomcat(tomcatDir, new URL(buildStatus.getDownloadUrl()), true);
+            Process tomcatProcess = runTomcat(tomcatDir, new URL(buildStatus.getDownloadUrl()));
 
             // TODO wait while Tomcat & code server will start and check that they started successfully
 
@@ -414,7 +414,7 @@ public class ExtensionLauncher implements Startable {
             List<Profile> profiles = clientPom.getProfiles();
             Profile superDevModeProfile = null;
             for (Profile profile : profiles) {
-                if (profile.getId().equals("devMode")) {
+                if (profile.getId().equals("customExtensionSources")) {
                     superDevModeProfile = profile;
                 }
             }
@@ -647,7 +647,7 @@ public class ExtensionLauncher implements Startable {
         return body;
     }
 
-    private Process runTomcat(File tomcatDir, URL ideWarUrl, boolean waitForStarting) throws ExtensionLauncherException {
+    private Process runTomcat(File tomcatDir, URL ideWarUrl) throws ExtensionLauncherException {
         InputStream tomcatBundleStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("conf/tomcat/tomcat.zip");
         if (tomcatBundleStream == null) {
             throw new ExtensionLauncherException("Unable to launch extension.");
@@ -660,11 +660,7 @@ public class ExtensionLauncher implements Startable {
 
             final Path catalinaPath = tomcatDir.toPath().resolve("bin/catalina.sh");
             Files.setPosixFilePermissions(catalinaPath, PosixFilePermissions.fromString("rwxr--r--"));
-            Process process = new ProcessBuilder(catalinaPath.toString(), "run").start();
-            if (waitForStarting) {
-                // TODO
-            }
-            return process;
+            return new ProcessBuilder(catalinaPath.toString(), "run").start();
         } catch (IOException e) {
             throw new ExtensionLauncherException("Unable to launch extension.");
         }

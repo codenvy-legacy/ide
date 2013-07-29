@@ -456,6 +456,15 @@
                 </dependency>
             </dependencies>
         </profile>
+        <profile>
+			<id>ext-runtime</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+				<module>codenvy-ext-extensions-runtime</module>
+			</modules>
+		</profile>
     </profiles>
 
     <build>
@@ -497,7 +506,6 @@
         <module>codenvy-ext-css</module>
         <module>codenvy-ext-java</module>
         <module>codenvy-ext-java-runtime</module>
-        <module>codenvy-ext-extensions-runtime</module>
         <module>codenvy-ext-cloudfoundry</module>
         <module>codenvy-ext-cloudbees</module>
         <module>codenvy-ext-appfog</module>
@@ -513,4 +521,5 @@
         <module>codenvy-ide-site-war</module>
         <module>codenvy-packaging-standalone-tomcat</module>
     </modules>
+
 </project>
