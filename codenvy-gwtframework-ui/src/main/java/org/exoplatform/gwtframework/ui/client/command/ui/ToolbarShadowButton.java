@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.factory.client.greeting;
+package org.exoplatform.gwtframework.ui.client.command.ui;
 
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
@@ -100,6 +100,9 @@ public class ToolbarShadowButton extends FlowPanel {
     
     private void mouseOut() {
         image.setResource(imageResource);
+        image.getElement().getStyle().setLeft(1, Unit.PX);
+        image.getElement().getStyle().setTop(1, Unit.PX);
+        image.getElement().getStyle().setProperty("boxShadow", "2px 2px 2px #888888");        
     }
     
     private void mouseDown() {
@@ -111,7 +114,7 @@ public class ToolbarShadowButton extends FlowPanel {
     private void mouseUp() {
         image.getElement().getStyle().setLeft(1, Unit.PX);
         image.getElement().getStyle().setTop(1, Unit.PX);
-        image.getElement().getStyle().setProperty("boxShadow", "1px 1px 2px #888888");        
+        image.getElement().getStyle().setProperty("boxShadow", "2px 2px 2px #888888");        
     }
     
     private void click() {

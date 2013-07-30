@@ -70,11 +70,8 @@ public interface FactoryClientBundle extends ClientBundle {
     @Source("com/codenvy/ide/factory/images/buttons/mail.png")
     ImageResource mail();
     
-    @Source("com/codenvy/ide/factory/images/greeting/close-notification.png")
+    @Source("com/codenvy/ide/factory/images/close-notification.png")
     ImageResource closeNotification();
-
-    @Source("com/codenvy/ide/factory/images/greeting/greeting-1.png")
-    ImageResource greetingIcon();
     
     @Source("com/codenvy/ide/factory/images/create-account.png")
     ImageResource createAccount();
@@ -88,4 +85,10 @@ public interface FactoryClientBundle extends ClientBundle {
     @Source("com/codenvy/ide/factory/images/login-hover.png")
     ImageResource loginHover();
 
+    @Source("com/codenvy/ide/factory/images/copy-to-my-workspace.png")
+    ImageResource copyToMyWorkspace();
+    
+    @Source("com/codenvy/ide/factory/images/copy-to-my-workspace-hover.png")
+    ImageResource copyToMyWorkspaceHover();
+    
 }
