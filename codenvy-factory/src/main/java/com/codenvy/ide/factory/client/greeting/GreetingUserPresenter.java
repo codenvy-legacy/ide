@@ -29,13 +29,16 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import org.exoplatform.gwtframework.ui.client.command.ui.AddToolbarItemsEvent;
+import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarShadowButton;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.configuration.IDEInitialConfiguration;
 import org.exoplatform.ide.client.framework.configuration.InitialConfigurationReceivedEvent;
@@ -56,18 +59,33 @@ public class GreetingUserPresenter implements
     public interface GreetingDisplay extends IsView {
     }
 
+    /**
+     * Initial IDE configuration
+     */
     private IDEInitialConfiguration initialConfiguration;
 
+    /**
+     * Creates presenter instance
+     */
     public GreetingUserPresenter() {
         IDE.addHandler(InitialConfigurationReceivedEvent.TYPE, this);
         IDE.addHandler(IDELoadCompleteEvent.TYPE, this);
     }
 
+    /**
+     * @see org.exoplatform.ide.client.framework.configuration.InitialConfigurationReceivedHandler#onInitialConfigurationReceived(org.exoplatform.ide.client.framework.configuration.InitialConfigurationReceivedEvent)
+     */
     @Override
     public void onInitialConfigurationReceived(InitialConfigurationReceivedEvent event) {
         initialConfiguration = event.getInitialConfiguration();
     }
     
+    /**
+     * Returns URL of the HTML file which should be displayed in Greeting view.
+     * 
+     * @param key
+     * @return
+     */
     public static native String getGreetingPanelContentURL(String key) /*-{
         try {
             return $wnd.greetingPaneContent[key];
@@ -76,6 +94,9 @@ public class GreetingUserPresenter implements
         }
     }-*/;
 
+    /**
+     * @see org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler#onIDELoadComplete(org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent)
+     */
     @Override
     public void onIDELoadComplete(IDELoadCompleteEvent event) {
         new Timer() {
@@ -86,12 +107,21 @@ public class GreetingUserPresenter implements
         }.schedule(500);
     }
     
+    private void goToURL(String path) {
+        UrlBuilder builder = new UrlBuilder();
+        String url = builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath(path).buildString();
+        Window.Location.replace(url);
+    }
+    
+    /**
+     * Adds "Create account" and "Login" buttons on toolbar.
+     */
     private void addButtonsForNoneAuthenticatedUser() {
         ToolbarShadowButton createAccountButton = new ToolbarShadowButton(
                FactoryClientBundle.INSTANCE.createAccount(), FactoryClientBundle.INSTANCE.createAccountHover(), new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    Window.Location.assign("http://codenvy.com/create-account");
+                    goToURL("/create-account");
                 }
             });        
         IDE.fireEvent(new AddToolbarItemsEvent(createAccountButton, true));
@@ -100,35 +130,51 @@ public class GreetingUserPresenter implements
                FactoryClientBundle.INSTANCE.login(), FactoryClientBundle.INSTANCE.loginHover(), new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    Window.Location.assign("http://codenvy.com/login");
+                    goToURL("/login");
                 }
             });        
         IDE.fireEvent(new AddToolbarItemsEvent(loginButton, true));
-        
     }
     
+    /**
+     * Adds "Copy to my workspace" button on toolbar.
+     */
+    private void addCopyToMyWorkspaceButton() {
+        ToolbarShadowButton copyToMyWorkspaceButton = new ToolbarShadowButton(
+               FactoryClientBundle.INSTANCE.copyToMyWorkspace(), FactoryClientBundle.INSTANCE.copyToMyWorkspaceHover(), new ClickHandler() {
+                   @Override
+                   public void onClick(ClickEvent event) {
+                   }
+               });        
+        IDE.fireEvent(new AddToolbarItemsEvent(copyToMyWorkspaceButton, true));        
+    }
+    
+    /**
+     * 
+     */
     private void loadGreeting() {
-        String key = "user-anonymous";
+        String key = "anonymous";
 
         boolean workspaceTemporary = initialConfiguration.getCurrentWorkspace() == null ? false : initialConfiguration.getCurrentWorkspace().isTemporary();
         
         String userName = initialConfiguration.getUserInfo().getName();
         if (userName.equals("_anonim") || userName.equals("__anonim") || userName.startsWith("tmp-")) {
             if (workspaceTemporary) {
-                key = "anonymous-user-temporary-workspace";
+                key = "anonymous-workspace-temporary";
             } else {
-                key = "anonymous-user";
+                key = "anonymous";
             }
-            
+
             addButtonsForNoneAuthenticatedUser();
         } else {
             if (workspaceTemporary) {
-                key = "authenticated-user-temporary-workspace";
+                key = "authenticated-workspace-temporary";
+                addCopyToMyWorkspaceButton();
             } else {
-                key = "authenticated-user";
+                key = "authenticated";
             }
         }
-
+        
         final String greetingContentURL = getGreetingPanelContentURL(key);
         if (greetingContentURL == null || greetingContentURL.trim().isEmpty()) {
             return;
@@ -216,7 +262,7 @@ public class GreetingUserPresenter implements
     }
     
     private void loadGreetingError(String message) {
-        Dialogs.getInstance().showError("IDE", message);
+        Dialogs.getInstance().showError("IDE", "Could not load greeting page");
     }
     
 }

@@ -35,6 +35,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.AddToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
+import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarShadowButton;
 import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -93,8 +94,6 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
     private List<String>         initialOpenedFiles;
 
     private String               initialActiveFile;
-
-    protected ReadOnlyUserView   readOnlyUserView;
 
     /** @param controls */
     public IDEConfigurationInitializer(ControlsRegistration controls) {
@@ -329,26 +328,15 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
 
         if (IDE.isRoUser()) {
-            IconButton iconButton =
-                                    new IconButton(new Image(IDEImageBundle.INSTANCE.readonly()),
-                                                   new Image(IDEImageBundle.INSTANCE.readonly()));
-            iconButton.setSize("89px", "29px");
-            iconButton.getElement().getStyle().setMarginTop(-4, Unit.PX);
-            iconButton.getElement().getStyle().setBackgroundImage("none");
-            iconButton.setHandleMouseEvent(false);
-            iconButton.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    if (IDE.isRoUser()) {
-                        if (readOnlyUserView == null)
-                            readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
-                        IDE.getInstance().openView(readOnlyUserView);
-                    }
-                }
-            });
-
-            IDE.fireEvent(new AddToolbarItemsEvent(iconButton));
+            ToolbarShadowButton readOnlyButton = new ToolbarShadowButton(
+                   IDEImageBundle.INSTANCE.readOnly(), IDEImageBundle.INSTANCE.readOnly(),
+                       new ClickHandler() {
+                           @Override
+                           public void onClick(ClickEvent event) {
+                               IDE.getInstance().openView(new ReadOnlyUserView(IDE.user.getWorkspaces()));
+                           }
+                   });        
+            IDE.fireEvent(new AddToolbarItemsEvent(readOnlyButton, true));              
         }
     }
 

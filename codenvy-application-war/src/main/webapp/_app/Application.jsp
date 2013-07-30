@@ -45,10 +45,10 @@
         var securityCheckURL = "/ide/j_security_check";
         
         var greetingPaneContent = {
-        		"anonymous-user": null,
-        		"authenticated-user": null,
-        		"anonymous-user-temporary-workspace": "<%= genIdeStaticResourceUrl(request, "greeting/greeting-temporary-workspace-not-authenticated.html")%>",
-        		"authenticated-user-temporary-workspace": "<%= genIdeStaticResourceUrl(request, "greeting/greeting-temporary-workspace.html")%>"
+        		"anonymous": null,
+        		"authenticated": null,
+        		"anonymous-workspace-temporary": "<%= genIdeStaticResourceUrl(request, "greeting/anonymous-workspace-temporary.html")%>",
+        		"authenticated-workspace-temporary": "<%= genIdeStaticResourceUrl(request, "greeting/authenticated-workspace-temporary.html")%>"
         }
         
     </script>
