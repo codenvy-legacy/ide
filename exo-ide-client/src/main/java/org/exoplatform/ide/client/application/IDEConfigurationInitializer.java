@@ -23,20 +23,17 @@ import com.codenvy.ide.factory.client.FactorySpec10;
 import com.codenvy.ide.factory.client.receive.StartWithInitParamsEvent;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Window.Location;
-import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.AddToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarShadowButton;
-import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.IDELoader;
@@ -329,7 +326,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
         if (IDE.isRoUser()) {
             ToolbarShadowButton readOnlyButton = new ToolbarShadowButton(
-                   IDEImageBundle.INSTANCE.readOnly(), IDEImageBundle.INSTANCE.readOnly(),
+                   IDEImageBundle.INSTANCE.readOnly(), IDEImageBundle.INSTANCE.readOnlyHover(),
                        new ClickHandler() {
                            @Override
                            public void onClick(ClickEvent event) {

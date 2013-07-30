@@ -683,10 +683,10 @@ public interface IDEImageBundle extends ClientBundle {
     @Source("org/exoplatform/ide/public/images/question.png")
     ImageResource question();
     
-    @Source("org/exoplatform/ide/public/images/read-only.png")
+    @Source("org/exoplatform/ide/public/images/readonly.png")
     ImageResource readOnly();
-    
-    @Source("org/exoplatform/ide/public/images/read-only-hover.png")
+
+    @Source("org/exoplatform/ide/public/images/readonly-hover.png")
     ImageResource readOnlyHover();
     
 }
