@@ -24,16 +24,10 @@ import com.codenvy.ide.ext.extruntime.server.codeserver.GwtMvnCodeServerStarter;
 import com.codenvy.ide.ext.extruntime.server.tools.ProcessUtil;
 
 import org.apache.maven.model.Build;
-import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
-import org.apache.maven.model.PluginExecution;
-import org.apache.maven.model.Profile;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
-import org.codehaus.plexus.util.xml.Xpp3DomUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
@@ -63,7 +57,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -75,7 +68,14 @@ import static com.codenvy.ide.commons.ZipUtils.zipDir;
 import static com.codenvy.ide.commons.server.FileUtils.createTempDirectory;
 import static com.codenvy.ide.commons.server.FileUtils.downloadFile;
 import static com.codenvy.ide.commons.server.NameGenerator.generate;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static com.codenvy.ide.ext.extruntime.server.Utils.addDependencyToPom;
+import static com.codenvy.ide.ext.extruntime.server.Utils.addModuleToReactorPom;
+import static com.codenvy.ide.ext.extruntime.server.Utils.changeCodeServerWorkDir;
+import static com.codenvy.ide.ext.extruntime.server.Utils.enableSuperDevMode;
+import static com.codenvy.ide.ext.extruntime.server.Utils.fixMGWT332Bug;
+import static com.codenvy.ide.ext.extruntime.server.Utils.inheritGwtModule;
+import static com.codenvy.ide.ext.extruntime.server.Utils.readPom;
+import static com.codenvy.ide.ext.extruntime.server.Utils.writePom;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
@@ -86,31 +86,17 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  */
 public class ExtensionLauncher implements Startable {
 
-    /** System property that contains build server URL. */
-    public static final String                                     BUILD_SERVER_BASE_URL    = "exo.ide.builder.build-server-base-url";
-    /** Default name of the client module directory. */
-    public static final String                                     CLIENT_MODULE_DIR_NAME   = "codenvy-ide-client";
-
-    private static final Log                                       LOG                      = ExoLogger.getLogger(ExtensionLauncher.class);
-
-    /** Id of maven profile that used to add (re)sources of custom extension. */
-    public static final String                                     ADD_SOURCES_PROFILE      = "customExtensionSources";
+    private static final Log                                       LOG                    = ExoLogger.getLogger(ExtensionLauncher.class);
 
     /** The system-dependent default name-separator character. */
-    private static final char                                      PS                       = File.separatorChar;
+    private static final char                                      PS                     = File.separatorChar;
 
-    /** Directive for GWT-module descriptor to enable GWT SuperDevMode: use cross-site IFrame linker and enable using source maps. */
-    // Set 'failIfScriptTag' property to FALSE, to avoid error messages that <script> tags exist in Commons.gwt.xml
-    private static final String                                    SUPER_DEV_MODE_DIRECTIVE =
-                                                                                              "\r\n\t<add-linker name='xsiframe' />"
-                                                                                                  + "\r\n\t<set-configuration-property name='devModeRedirectEnabled' value='true' />"
-                                                                                                  + "\r\n\t<set-configuration-property name='xsiframe.failIfScriptTag' value='false'/>"
-                                                                                                  + "\r\n\t<set-property name='compiler.useSourceMaps' value='true' />";
-
-    /** Maven POM reader. */
-    private static MavenXpp3Reader                                 pomReader                = new MavenXpp3Reader();
-    /** Maven POM writer. */
-    private static MavenXpp3Writer                                 pomWriter                = new MavenXpp3Writer();
+    /** System property that contains build server URL. */
+    public static final String                                     BUILD_SERVER_BASE_URL  = "exo.ide.builder.build-server-base-url";
+    /** Default name of the client module directory. */
+    public static final String                                     CLIENT_MODULE_DIR_NAME = "codenvy-ide-client";
+    /** Id of Maven profile that used to add (re)sources of custom's extension. */
+    public static final String                                     ADD_SOURCES_PROFILE    = "customExtensionSources";
 
     /** Base URL of build server. */
     private final String                                           baseURL;
@@ -150,7 +136,7 @@ public class ExtensionLauncher implements Startable {
      * 
      * @param vfs virtual file system
      * @param projectId identifier of a project we want to launch
-     * @param wsMountPath mount path for the project's workspace
+     * @param wsMountPath mount path for the user's workspace
      * @return id of launched extension
      * @throws VirtualFileSystemException if any error in VFS
      * @throws ExtensionLauncherException if any error occurred while launching extension
@@ -168,7 +154,7 @@ public class ExtensionLauncher implements Startable {
 
             Item pomFile = vfs.getItemByPath(project.getName() + PS + "pom.xml", null, false, PropertyFilter.NONE_FILTER);
             InputStream extPomContent = vfs.getContent(pomFile.getId()).getStream();
-            Model extPom = pomReader.read(extPomContent, true);
+            Model extPom = readPom(extPomContent);
 
             // Unpack Codenvy Platform sources & user's extension project into temporary directory.
             InputStream codenvyPlatformSourcesStream = Thread.currentThread().getContextClassLoader()
@@ -190,27 +176,23 @@ public class ExtensionLauncher implements Startable {
             Files.move(codeServerDirPath.resolve("platform-pom.xml"), codeServerDirPath.resolve("pom.xml"), REPLACE_EXISTING);
             Files.move(clientModuleDirPath.resolve("platform-pom.xml"), clientModulePomPath, REPLACE_EXISTING);
 
-            // Add extension as maven-module into parent reactor pom.xml.
-            addModuleToReactorPom(codeServerDirPath.resolve("pom.xml"), customModulePath.getFileName().toString());
-
-            // Add extension as dependency into client module's pom.xml.
+            addModuleToReactorPom(codeServerDirPath.resolve("pom.xml"), customModulePath.getFileName().toString(),
+                                  CLIENT_MODULE_DIR_NAME);
             addDependencyToPom(clientModulePomPath, extPom.getGroupId(), extPom.getArtifactId(), extPom.getVersion());
 
             // Change output directory for the WAR to allow builder return link to download WAR.
             configureWarPlugin(clientModulePomPath);
 
-            // Add sources from user's project to allow code server access it.
-            // It's a workaround for known bug in GWT Maven plug-in.
-            // See https://jira.codehaus.org/browse/MGWT-332.
-            fixGwtMavenPluginBug(clientModulePomPath, customModulePath.getFileName().toString());
+            // Add sources from custom's project to allow code server access it.
+            fixMGWT332Bug(clientModulePomPath, customModulePath.getFileName().toString(), ADD_SOURCES_PROFILE);
 
             // Set code server's own working directory instead of system temp directory.
             changeCodeServerWorkDir(clientModulePomPath, codeServerDirPath);
 
-            // Add custom GWT-module into IDEPlatform.gwt.xml and enable SuperDevMode.
+            // TODO detect logical name of custom's GWT module
             Path gwtModuleDescriptorPath = codeServerDirPath.resolve(CLIENT_MODULE_DIR_NAME)
                                                             .resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
-            addGwtModuleToGwtModuleDescriptor(gwtModuleDescriptorPath, "com.codenvy.ide.extension.demo.Demo");
+            inheritGwtModule(gwtModuleDescriptorPath, "com.codenvy.ide.extension.demo.Demo");
             enableSuperDevMode(gwtModuleDescriptorPath);
 
             // Replace src and pom.xml by symlinks to an appropriate src and pom.xml
@@ -294,6 +276,7 @@ public class ExtensionLauncher implements Startable {
                 return name.startsWith("catalina") && name.endsWith(".log");
             }
         });
+
         try {
             for (File catalinaLogFile : catalinaLogFiles) {
                 final String catalinaLogs = new String(Files.readAllBytes(catalinaLogFile.toPath()));
@@ -307,7 +290,7 @@ public class ExtensionLauncher implements Startable {
                 }
             }
         } catch (IOException e) {
-            throw new ExtensionLauncherException("Unable to get logs.");
+            throw new ExtensionLauncherException(String.format("Unable to get logs of extension with id %s.", extId));
         }
 
         return logs.toString();
@@ -355,49 +338,8 @@ public class ExtensionLauncher implements Startable {
         }
     }
 
-    private static Model readPom(Path path) {
-        try {
-            return pomReader.read(Files.newInputStream(path), false);
-        } catch (IOException | XmlPullParserException e) {
-            throw new IllegalStateException("Error occurred while reading pom.xml file.");
-        }
-    }
-
-    private static void writePom(Model pom, Path path) {
-        try {
-            pomWriter.write(Files.newOutputStream(path), pom);
-        } catch (IOException e) {
-            throw new IllegalStateException("Error occurred while writing pom.xml file.");
-        }
-    }
-
-    private void addModuleToReactorPom(Path reactorPomPath, String moduleName) {
-        Model parentPom = readPom(reactorPomPath);
-        final List<String> parentPomModulesList = parentPom.getModules();
-        int n = 0;
-        for (String module : parentPomModulesList) {
-            // insert custom module before module 'client' module
-            if (module.equals(CLIENT_MODULE_DIR_NAME)) {
-                parentPom.getModules().add(n, moduleName);
-                break;
-            }
-            n++;
-        }
-        writePom(parentPom, reactorPomPath);
-    }
-
-    private void addDependencyToPom(Path pomPath, String groupId, String artifactId, String version) {
-        Dependency extMvnDependency = new Dependency();
-        extMvnDependency.setGroupId(groupId);
-        extMvnDependency.setArtifactId(artifactId);
-        extMvnDependency.setVersion(version);
-        Model clientPom = readPom(pomPath);
-        clientPom.getDependencies().add(extMvnDependency);
-        writePom(clientPom, pomPath);
-    }
-
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private void configureWarPlugin(Path pomPath) throws ExtensionLauncherException {
+    private void configureWarPlugin(Path pomPath) {
         try {
             Model clientPom = readPom(pomPath);
             Build clientPomBuild = clientPom.getBuild();
@@ -410,94 +352,7 @@ public class ExtensionLauncher implements Startable {
             clientPomBuild.setPlugins(new ArrayList(clientPomPlugins.values()));
             writePom(clientPom, pomPath);
         } catch (IOException | XmlPullParserException e) {
-            throw new ExtensionLauncherException("Unable to launch extension.");
-        }
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private void fixGwtMavenPluginBug(Path pomPath, String extensionModuleName) throws ExtensionLauncherException {
-        try {
-            Model clientPom = readPom(pomPath);
-            List<Profile> profiles = clientPom.getProfiles();
-            Profile superDevModeProfile = null;
-            for (Profile profile : profiles) {
-                if (profile.getId().equals(ADD_SOURCES_PROFILE)) {
-                    superDevModeProfile = profile;
-                }
-            }
-            Map<String, Plugin> plugins = superDevModeProfile.getBuild().getPluginsAsMap();
-            Plugin buildHelperPlugin = plugins.get("org.codehaus.mojo:build-helper-maven-plugin");
-            PluginExecution execution = buildHelperPlugin.getExecutionsAsMap().get("add-extension-sources");
-
-            final String confString = String.format("<configuration>"
-                                                    + "<sources><source>../%1$s/src/main/java</source></sources>"
-                                                    + "<resources><resource>../%1$s/src/main/resources</resource></resources>"
-                                                    + "</configuration>", extensionModuleName);
-            Xpp3Dom configuration = Xpp3DomBuilder.build(new StringReader(confString));
-            execution.setConfiguration(configuration);
-
-            superDevModeProfile.getBuild().setPlugins(new ArrayList(plugins.values()));
-            writePom(clientPom, pomPath);
-        } catch (IOException | XmlPullParserException e) {
-            throw new ExtensionLauncherException("Unable to launch extension.");
-        }
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private void changeCodeServerWorkDir(Path pomPath, Path dirPath) throws ExtensionLauncherException {
-        try {
-            final String configString = String.format("<configuration>"
-                                                      + "<codeServerWorkDir>%s</codeServerWorkDir>"
-                                                      + "</configuration>", dirPath);
-            Xpp3Dom additionalConfiguration = Xpp3DomBuilder.build(new StringReader(configString));
-
-            Model clientPom = readPom(pomPath);
-            Build clientPomBuild = clientPom.getBuild();
-            Map<String, Plugin> clientPomPlugins = clientPomBuild.getPluginsAsMap();
-            Plugin gwtPlugin = clientPomPlugins.get("org.codehaus.mojo:gwt-maven-plugin");
-            Xpp3Dom existingConfiguration = (Xpp3Dom)gwtPlugin.getConfiguration();
-            Xpp3Dom configuration = Xpp3DomUtils.mergeXpp3Dom(existingConfiguration, additionalConfiguration);
-            gwtPlugin.setConfiguration(configuration);
-            clientPomBuild.setPlugins(new ArrayList(clientPomPlugins.values()));
-            writePom(clientPom, pomPath);
-        } catch (IOException | XmlPullParserException e) {
-            throw new ExtensionLauncherException("Unable to launch extension.");
-        }
-    }
-
-    private void addGwtModuleToGwtModuleDescriptor(Path gwtModuleDescriptorPath, String gwtModulePath) throws ExtensionLauncherException {
-        try {
-            final String gwtModuleDependency = "\t<inherits name='" + gwtModulePath + "'/>";
-            List<String> content = Files.readAllLines(gwtModuleDescriptorPath, UTF_8);
-            // insert custom module as last 'inherits' entry
-            int i = 0, lastInheritsLine = 0;
-            for (String str : content) {
-                i++;
-                if (str.contains("<inherits")) {
-                    lastInheritsLine = i;
-                }
-            }
-            content.add(lastInheritsLine, gwtModuleDependency);
-            Files.write(gwtModuleDescriptorPath, content, UTF_8);
-        } catch (IOException e) {
-            throw new ExtensionLauncherException("Unable to launch extension.");
-        }
-    }
-
-    private void enableSuperDevMode(Path gwtModuleDescriptorPath) throws ExtensionLauncherException {
-        try {
-            List<String> content = Files.readAllLines(gwtModuleDescriptorPath, UTF_8);
-            int penultimateLine = 0;
-            for (String str : content) {
-                penultimateLine++;
-                if (str.contains("</module>")) {
-                    break;
-                }
-            }
-            content.add(penultimateLine - 1, SUPER_DEV_MODE_DIRECTIVE);
-            Files.write(gwtModuleDescriptorPath, content, UTF_8);
-        } catch (IOException e) {
-            throw new ExtensionLauncherException("Unable to launch extension.");
+            throw new IllegalStateException("Can't parse pom.xml.");
         }
     }
 
@@ -530,7 +385,6 @@ public class ExtensionLauncher implements Startable {
         try {
             http = (HttpURLConnection)url.openConnection();
             http.setRequestMethod("GET");
-            authenticate(http);
             int responseCode = http.getResponseCode();
             if (responseCode != 200) {
                 fail(http);
@@ -571,7 +425,6 @@ public class ExtensionLauncher implements Startable {
             http = (HttpURLConnection)url.openConnection();
             http.setRequestMethod("POST");
             http.setRequestProperty("content-type", "application/zip");
-            authenticate(http);
             http.setDoOutput(true);
             byte[] buff = new byte[8192];
             InputStream data = null;
@@ -603,15 +456,6 @@ public class ExtensionLauncher implements Startable {
                 http.disconnect();
             }
         }
-    }
-
-    /**
-     * Add authentication info to the request. By default do nothing. May be reimplemented for particular authentication scheme.
-     * 
-     * @param http HTTP connection to add authentication info, e.g. Basic authentication headers.
-     * @throws IOException if any i/o errors occur
-     */
-    protected void authenticate(HttpURLConnection http) throws IOException {
     }
 
     private void fail(HttpURLConnection http) throws IOException, ExtensionLauncherException {
