@@ -40,6 +40,7 @@
         var ws = "<%= request.getAttribute("ws")%>";
         var project = <%= request.getAttribute("project") != null ? "\"" + request.getAttribute("project")  + "\"" : null%>;
         var path = <%= request.getAttribute("path") != null ? "\"" + request.getAttribute("path")  + "\"" : null%>;
+        var startUpParams = <%= request.getAttribute("startUpParams") != null ? "\"" + request.getAttribute("startUpParams")  + "\"" : null%>;
         var authorizationContext = "/ide/rest";
         var authorizationErrorPageURL = "/ide/ide/error_oauth.html";
         var securityCheckURL = "/ide/j_security_check";
