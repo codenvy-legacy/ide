@@ -18,39 +18,32 @@
  */
 package com.codenvy.ide.factory.server;
 
+import com.codenvy.commons.env.EnvironmentContext;
+
 import org.codenvy.mail.MailSenderClient;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
-import org.exoplatform.ide.git.shared.FetchRequest;
 import org.exoplatform.ide.git.shared.GitUser;
-import org.exoplatform.ide.git.shared.InitRequest;
-import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
 import javax.mail.MessagingException;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Service for sharing Factory URL by e-mail messages.
@@ -60,10 +53,11 @@ import java.util.List;
  */
 @Path("{ws-name}/factory")
 public class FactoryService {
+    private static final Log          LOG = ExoLogger.getLogger(FactoryService.class);
 
-    private final MailSenderClient          mailSenderClient;
-    private       VirtualFileSystemRegistry vfsRegistry;
-    private       LocalPathResolver         localPathResolver;
+    private final MailSenderClient    mailSenderClient;
+    private VirtualFileSystemRegistry vfsRegistry;
+    private LocalPathResolver         localPathResolver;
 
     /**
      * Constructs a new {@link FactoryService}.
@@ -71,7 +65,8 @@ public class FactoryService {
      * @param mailSenderClient
      *         client for sending messages over e-mail
      */
-    public FactoryService(MailSenderClient mailSenderClient, VirtualFileSystemRegistry vfsRegistry, LocalPathResolver localPathResolver) {
+    public FactoryService(MailSenderClient mailSenderClient, VirtualFileSystemRegistry vfsRegistry,
+                          LocalPathResolver localPathResolver) {
         this.mailSenderClient = mailSenderClient;
         this.vfsRegistry = vfsRegistry;
         this.localPathResolver = localPathResolver;
@@ -101,11 +96,41 @@ public class FactoryService {
         }
     }
 
+    /**
+     * Logs event generated during factory URL creation.
+     * 
+     * @param vfsId
+     * @param projectId
+     * @param action
+     * @param factoryUrl
+     * @param idCommit
+     * @param vcs
+     * @param vcsUrl
+     */
+    @Path("log-factory-created")
+    @GET
+    public void logFactoryCreated(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
+                                  @QueryParam("action") StringBuilder action,
+                                  @QueryParam("factoryurl") StringBuilder factoryUrl,
+                                  @QueryParam("idcommit") String idCommit, @QueryParam("vcs") String vcs,
+                                  @QueryParam("vcsurl") String vcsUrl) throws VirtualFileSystemException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        String workspace = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
+        Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
+        String user = ConversationState.getCurrent().getIdentity().getUserId();
+        factoryUrl.append("&pname=").append(project.getName()).append("&wname=").append(workspace).append("&vcs=")
+                  .append(vcs).append("&vcsurl=").append(vcsUrl).append("&idcommit=").append(idCommit)
+                  .append("&action=").append(action);
+        LOG.info("EVENT#factory-created# WS#" + workspace + "# USER#" + user + "# PROJECT#" + project.getName() +
+                 "# TYPE#" + project.getProjectType() + "# REPO-URL#" + vcsUrl + "# FACTORY-URL#" + factoryUrl + "#");
+    }
+
     @POST
     @Path("clone")
     public void cloneProject(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-                             @QueryParam("remoteuri") String remoteUri, @QueryParam("idcommit") String idCommit) throws VirtualFileSystemException, GitException,
-                                                                               URISyntaxException {
+                             @QueryParam("remoteuri") String remoteUri, @QueryParam("idcommit") String idCommit)
+            throws VirtualFileSystemException, GitException,
+                   URISyntaxException {
         GitConnection gitConnection = getGitConnection(projectId, vfsId);
         CloneRequest cloneRequest = new CloneRequest(remoteUri, null);
         gitConnection.clone(cloneRequest);
@@ -114,7 +139,7 @@ public class FactoryService {
         checkoutRequest.setCreateNew(true);
         checkoutRequest.setStartPoint(idCommit);
         gitConnection.branchCheckout(checkoutRequest);
-        deleteRepository(vfsId,projectId);
+        deleteRepository(vfsId, projectId);
 
     }
 
@@ -139,7 +164,8 @@ public class FactoryService {
     protected String resolveLocalPath(String projectId, String vfsId) throws VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         if (vfs == null) {
-            throw new VirtualFileSystemException("Can't resolve path on the Local File System : Virtual file system not initialized");
+            throw new VirtualFileSystemException(
+                    "Can't resolve path on the Local File System : Virtual file system not initialized");
         }
         Item gitProject = getGitProject(vfs, projectId);
         return localPathResolver.resolve(vfs, gitProject.getId());
