@@ -55,14 +55,14 @@ public class Toolbar extends FlowPanel {
         @Source("toolbar/component-toolbar.css")
         Style css();
 
-        @Source("toolbar/toolbar_Background.png")
+        @Source("toolbar/toolbar.png")
         @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Horizontal)
         ImageResource background();
 
         @Source("toolbar/delimiter.png")
         ImageResource delimiter();
 
-        @Source("toolbar/statusbar_Background.png")
+        @Source("toolbar/statusbar.png")
         ImageResource statusbarBackground();
     }
 

@@ -5,12 +5,14 @@ style prefix: exo-popupMenu-
 ****************************************************************************************/
 
 .exo-popupMenuMain {
-    background: #FFFFFF url(menu-background.png) repeat-y scroll;
+    background: #FFFFFF url(background.png) repeat-y scroll;
     position: absolute;
+    box-shadow: 1px 1px 2px #999999;
+    margin-left: -1px;
 }
 
 .exo-popupMenuTable {
-    border: 1px solid #93A9C0;
+    border: 1px solid #b3b3b3;
     font-family: Verdana, Bitstream Vera Sans, sans-serif;
     font-size: 11px;
     position: relative;
@@ -34,7 +36,7 @@ style prefix: exo-popupMenu-
 .exo-popupMenuSubMenuFieldOver,
 .exo-popupMenuSubMenuFieldDisabled,
 .exo-popupMenuDelimiter {
-    height: 22px;
+    height: 25px;
     cursor: default;
     font-family: Verdana, Bitstream Vera Sans, sans-serif;
     font-size: 11px;
@@ -53,13 +55,14 @@ style prefix: exo-popupMenu-
 .exo-popupMenuIconField,
 .exo-popupMenuIconFieldOver,
 .exo-popupMenuIconFieldDisabled {
-    width: 23px;
-    padding-left: 4px;
+    width: 22px;
+    padding-left: 3px;
     padding-right: 1px;
+    padding-top: 2px;
 }
 
 .exo-popupMenuTitleField {
-    color: #333333;
+    color: #404040;
 }
 
 .exo-popupMenuHotKeyField {
@@ -84,14 +87,14 @@ style prefix: exo-popupMenu-
 .exo-popupMenuTitleFieldOver,
 .exo-popupMenuHotKeyFieldOver,
 .exo-popupMenuSubMenuFieldOver {
-    background: #FFFFFF url(menu-rollover.png) repeat-x scroll 0px 1px;
+    background: url(selected-shape.png) repeat-x scroll 0px 1px;
 }
 
 .exo-popupMenuIconFieldDisabled,
 .exo-popupMenuTitleFieldDisabled,
 .exo-popupMenuHotKeyFieldDisabled,
 .exo-popupMenuSubMenuFieldDisabled {
-    color: #AAAAAA;
+    color: #b8b8b8;
 }
 
 .exo-popupMenuSubMenuImage {
@@ -100,6 +103,6 @@ style prefix: exo-popupMenu-
 }
 
 .exo-popupMenuDelimiter {
-    padding-left: 4px;
-    padding-right: 4px;
+    padding-left: 0px;
+    padding-right: 0px;
 }

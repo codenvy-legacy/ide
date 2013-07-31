@@ -50,7 +50,6 @@
         		"anonymous-workspace-temporary": "<%= genIdeStaticResourceUrl(request, "greeting/anonymous-workspace-temporary.html")%>",
         		"authenticated-workspace-temporary": "<%= genIdeStaticResourceUrl(request, "greeting/authenticated-workspace-temporary.html")%>"
         }
-        
     </script>
 
     <link rel="shortcut icon" href="/images/favicon.ico"/>
