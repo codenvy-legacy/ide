@@ -62,6 +62,11 @@ public class SetEnvironmentContextFilter implements Filter {
             {
                 String[] split = url.split("/");
                 String ws = split[3];
+                if (ws.equals("ide"))
+                {
+                    chain.doFilter(request, response);
+                    return;
+                }
                 if (workspaceManager != null)
                 {
                     try {
