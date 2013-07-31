@@ -34,8 +34,7 @@ style prefix: exo-popupMenu-
 .exo-popupMenuHotKeyFieldDisabled,
 .exo-popupMenuSubMenuField,
 .exo-popupMenuSubMenuFieldOver,
-.exo-popupMenuSubMenuFieldDisabled,
-.exo-popupMenuDelimiter {
+.exo-popupMenuSubMenuFieldDisabled {
     height: 25px;
     cursor: default;
     font-family: Verdana, Bitstream Vera Sans, sans-serif;
@@ -103,6 +102,8 @@ style prefix: exo-popupMenu-
 }
 
 .exo-popupMenuDelimiter {
-    padding-left: 0px;
+    height: 1px;
+    cursor: default;
+	padding-left: 0px;
     padding-right: 0px;
 }

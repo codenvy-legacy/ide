@@ -274,7 +274,8 @@ public class PopupMenu extends Composite {
 
             if (menuItem.getTitle() == null) {
                 table.getFlexCellFormatter().setColSpan(i, 0, hasCheckedItems ? 5 : 4);
-                table.setHTML(i, 0, "<nobr><hr noshade=\"noshade\" style=\"color:#BBBBBB;\" size=\"1\"></nobr>");
+                //table.setHTML(i, 0, "<nobr><hr noshade=\"noshade\" style=\"color:#BBBBBB;\" size=\"1\"></nobr>");
+                table.setHTML(i, 0, "<div style=\"width:100%; height:1px; background: #C0C0C0;\"></div>");
                 table.getCellFormatter().setStyleName(i, 0, PopupMenuStyle.DELIMITER);
             } else {
                 table.setHTML(i, 0, menuItem.getIcon());
