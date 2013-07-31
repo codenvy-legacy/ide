@@ -20,12 +20,13 @@ package com.codenvy.ide.ext.extruntime.client;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.ext.extruntime.client.marshaller.ApplicationInstanceUnmarshallerWS;
+import com.codenvy.ide.ext.extruntime.dto.client.DtoClientImpls;
+import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.codenvy.ide.websocket.rest.Unmarshallable;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Window;
@@ -46,7 +47,7 @@ public class LaunchExtensionController {
     private ConsolePart                    console;
     private ExtRuntimeClientService        service;
     private ExtRuntimeLocalizationConstant constant;
-    private String                         launchedAppId;
+    private ApplicationInstance            launchedApp;
 
     /**
      * Create controller.
@@ -73,7 +74,7 @@ public class LaunchExtensionController {
      * @return <code>true</code> if any application is launched, and <code>false</code> otherwise
      */
     public boolean isAnyAppLaunched() {
-        return launchedAppId != null;
+        return launchedApp != null;
     }
 
     /** Launch the Codenvy extension project which is currently opened. */
@@ -84,15 +85,16 @@ public class LaunchExtensionController {
             return;
         }
 
-        StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
-        final String projectId = project.getId();
+        DtoClientImpls.ApplicationInstanceImpl app = DtoClientImpls.ApplicationInstanceImpl.make();
+        ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS(app);
+
         try {
             beforeApplicationStart();
-            service.launch(resourceProvider.getVfsId(), projectId,
-                           new RequestCallback<StringBuilder>(unmarshaller) {
+            service.launch(resourceProvider.getVfsId(), project.getId(),
+                           new RequestCallback<ApplicationInstance>(unmarshaller) {
                                @Override
-                               protected void onSuccess(StringBuilder result) {
-                                   launchedAppId = result.toString();
+                               protected void onSuccess(ApplicationInstance result) {
+                                   launchedApp = result;
                                    afterApplicationLaunched();
                                }
 
@@ -114,11 +116,11 @@ public class LaunchExtensionController {
         }
 
         try {
-            service.stop(launchedAppId,
+            service.stop(launchedApp.getName(),
                          new AsyncRequestCallback<Void>() {
                              @Override
                              protected void onSuccess(Void result) {
-                                 launchedAppId = null;
+                                 launchedApp = null;
                                  console.print(constant.applicationStopped(project.getName()));
                              }
 
@@ -140,7 +142,7 @@ public class LaunchExtensionController {
         }
 
         try {
-            service.getLogs(launchedAppId,
+            service.getLogs(launchedApp.getName(),
                             new AsyncRequestCallback<StringBuilder>(new com.codenvy.ide.resources.marshal.StringUnmarshaller()) {
                                 @Override
                                 protected void onSuccess(StringBuilder result) {
@@ -166,7 +168,8 @@ public class LaunchExtensionController {
     /** Performs actions after application was successfully launched. */
     private void afterApplicationLaunched() {
         UrlBuilder builder = new UrlBuilder();
-        final String uri = builder.setProtocol(Window.Location.getProtocol()).setHost(Window.Location.getHostName()).setPort(8081)
+        final String uri = builder.setProtocol("http:").setHost(launchedApp.getHost())
+                                  .setPort(launchedApp.getPort())
                                   .setPath("IDE").buildString();
         console.print(constant.applicationStartedOnUrls(project.getName(), "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
     }
@@ -174,15 +177,7 @@ public class LaunchExtensionController {
     private void onApplicationLaunchFailure(Throwable exception) {
         String msg = constant.startApplicationFailed();
         if (exception != null && exception.getMessage() != null) {
-            msg += " : " + exception.getMessage();
-        }
-        console.print(msg);
-    }
-
-    private void onApplicationStopFailure(Throwable exception) {
-        String msg = constant.stopApplicationFailed();
-        if (exception != null && exception.getMessage() != null) {
-            msg += " : " + exception.getMessage();
+            msg += ": " + exception.getMessage();
         }
         console.print(msg);
     }
@@ -190,29 +185,17 @@ public class LaunchExtensionController {
     private void onGetApplicationLogsFailure(Throwable exception) {
         String msg = constant.getApplicationLogsFailed();
         if (exception != null && exception.getMessage() != null) {
-            msg += " : " + exception.getMessage();
+            msg += ": " + exception.getMessage();
         }
         console.print(msg);
     }
 
-    private class StringUnmarshaller implements Unmarshallable<StringBuilder> {
-
-        protected StringBuilder builder;
-
-        /** @param callback */
-        public StringUnmarshaller(StringBuilder builder) {
-            this.builder = builder;
+    private void onApplicationStopFailure(Throwable exception) {
+        String msg = constant.stopApplicationFailed();
+        if (exception != null && exception.getMessage() != null) {
+            msg += ": " + exception.getMessage();
         }
-
-        /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
-        @Override
-        public void unmarshal(Message response) {
-            builder.append(response.getBody());
-        }
-
-        @Override
-        public StringBuilder getPayload() {
-            return builder;
-        }
+        console.print(msg);
     }
+
 }

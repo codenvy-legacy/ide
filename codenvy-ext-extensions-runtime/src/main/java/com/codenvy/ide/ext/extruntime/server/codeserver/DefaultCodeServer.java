@@ -18,7 +18,6 @@
  */
 package com.codenvy.ide.ext.extruntime.server.codeserver;
 
-import com.codenvy.ide.ext.extruntime.server.ExtensionLauncherException;
 import com.codenvy.ide.ext.extruntime.server.codeserver.CodeServerStarter.CodeServer;
 import com.codenvy.ide.ext.extruntime.server.tools.ProcessUtil;
 
@@ -27,6 +26,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
+ * Default code server inplementation.
+ * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: DefaultCodeServer.java Jul 26, 2013 3:15:52 PM azatsarynnyy $
  */
@@ -34,12 +35,14 @@ public class DefaultCodeServer implements CodeServer {
     /** Process that represents a started code server. */
     private Process process;
 
-    /** Path that represents a code server's log file. */
+    /** Path to code server's log file. */
     private Path    logFilePath;
 
     /**
-     * @param logFilePath
-     * @param process
+     * Creates default code server.
+     * 
+     * @param process {@link Process} that represents this code server
+     * @param logFilePath {@link Path} to code server's log file
      */
     public DefaultCodeServer(Process process, Path logFilePath) {
         this.process = process;
@@ -59,13 +62,13 @@ public class DefaultCodeServer implements CodeServer {
 
     /** {@inheritDoc} */
     @Override
-    public String getLogs() throws ExtensionLauncherException {
+    public String getLogs() throws CodeServerException {
         try {
             // It should work fine for the files less than 2GB (Integer.MAX_VALUE).
             // One recompiling procedure writes about 1KB output information to logs.
             return new String(Files.readAllBytes(logFilePath));
         } catch (IOException e) {
-            throw new ExtensionLauncherException("Unable to get code server logs.");
+            throw new CodeServerException("Unable to get code server's logs.");
         }
     }
 }

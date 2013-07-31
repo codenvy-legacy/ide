@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.extruntime.client;
 
+import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -58,8 +59,8 @@ public interface ExtRuntimeClientService {
      * @param callback callback
      * @throws WebSocketException
      */
-    public void launch(String vfsId, String projectId, RequestCallback<StringBuilder> callback)
-                                                                                               throws WebSocketException;
+    public void launch(String vfsId, String projectId, RequestCallback<ApplicationInstance> callback)
+                                                                                                     throws WebSocketException;
 
     /**
      * Get logs of launched Codenvy extension.

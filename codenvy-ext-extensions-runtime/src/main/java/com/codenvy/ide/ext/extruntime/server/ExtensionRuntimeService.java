@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.ext.extruntime.server;
 
+import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
+
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
@@ -128,15 +130,16 @@ public class ExtensionRuntimeService {
      * 
      * @param vfsId identifier of virtual file system
      * @param projectId identifier of project we want to launch
-     * @return id of launched extension
+     * @return launched extension description
      * @throws VirtualFileSystemException if any error occurred in VFS
      * @throws ExtensionLauncherException if any error occurred while launching an extension
      */
     @Path("launch")
     @POST
-    public String launch(@QueryParam("vfsid") String vfsId,
-                         @QueryParam("projectid") String projectId) throws VirtualFileSystemException,
-                                                                   ExtensionLauncherException {
+    @Produces(MediaType.APPLICATION_JSON)
+    public ApplicationInstance launch(@QueryParam("vfsid") String vfsId,
+                                      @QueryParam("projectid") String projectId) throws VirtualFileSystemException,
+                                                                                ExtensionLauncherException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         return launcher.launchExtension(vfs, projectId, fsMountStrategy.getMountPath().getPath());
     }
@@ -148,8 +151,8 @@ public class ExtensionRuntimeService {
      * @return retrieved logs
      * @throws ExtensionLauncherException if any error occurred while getting logs
      */
-    @GET
     @Path("logs/{extid}")
+    @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String getLogs(@PathParam("extid") String extId) throws ExtensionLauncherException {
         return launcher.getLogs(extId);

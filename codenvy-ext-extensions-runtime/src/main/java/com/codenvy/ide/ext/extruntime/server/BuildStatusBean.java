@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.ext.extruntime.server;
 
-import org.exoplatform.ide.extension.maven.shared.BuildStatus;
+import com.codenvy.ide.extension.maven.shared.BuildStatus;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -28,7 +28,7 @@ public class BuildStatusBean implements BuildStatus {
 
     private Status status;
 
-    private int exitCode;
+    private int    exitCode;
 
     private String error;
 
@@ -79,39 +79,28 @@ public class BuildStatusBean implements BuildStatus {
         return downloadUrl;
     }
 
-    /** @see org.exoplatform.ide.extension.maven.shared.BuildStatus#setStatus(org.exoplatform.ide.extension.maven.shared.BuildStatus
-     * .Status) */
-    @Override
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    /** @see org.exoplatform.ide.extension.maven.shared.BuildStatus#setExitCode(int) */
-    @Override
-    public void setExitCode(int exitCode) {
-        this.exitCode = exitCode;
-    }
-
-    /** @see org.exoplatform.ide.extension.maven.shared.BuildStatus#setError(java.lang.String) */
-    @Override
-    public void setError(String error) {
-        this.error = error;
-    }
-
-    /** @see org.exoplatform.ide.extension.maven.shared.BuildStatus#setDownloadUrl(java.lang.String) */
-    @Override
-    public void setDownloadUrl(String downloadUrl) {
-        this.downloadUrl = downloadUrl;
-    }
-
     /** @see org.exoplatform.ide.extension.maven.shared.BuildStatus#getTime() */
     @Override
     public String getTime() {
         return time;
     }
 
-    /** @see org.exoplatform.ide.extension.maven.shared.BuildStatus#setTime(java.lang.String) */
-    @Override
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setExitCode(int exitCode) {
+        this.exitCode = exitCode;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
+    }
+
     public void setTime(String time) {
         this.time = time;
     }

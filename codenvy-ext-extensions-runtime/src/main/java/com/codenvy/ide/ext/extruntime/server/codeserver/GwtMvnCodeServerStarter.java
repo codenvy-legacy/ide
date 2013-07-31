@@ -18,8 +18,6 @@
  */
 package com.codenvy.ide.ext.extruntime.server.codeserver;
 
-import com.codenvy.ide.ext.extruntime.server.ExtensionLauncherException;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -27,7 +25,7 @@ import java.nio.file.Path;
 import static com.codenvy.ide.ext.extruntime.server.ExtensionLauncher.ADD_SOURCES_PROFILE;
 
 /**
- * Implementation of {@link CodeServerStarter} that uses GWT Maven plug-in.
+ * Implementation of {@link CodeServerStarter} that uses GWT Maven plug-in to start new code servers.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: GwtMvnCodeServerStarter.java Jul 25, 2013 6:09:27 PM azatsarynnyy $
@@ -36,7 +34,7 @@ public class GwtMvnCodeServerStarter implements CodeServerStarter {
 
     /** {@inheritDoc} */
     @Override
-    public CodeServer start(Path workDir) throws ExtensionLauncherException {
+    public CodeServer start(Path workDir) throws CodeServerException {
         // need 'clean compile' to get 'IDEInjector.java' and 'ExtensionManager.java' in a target folder
         final String[] command = new String[]{
                 getMavenExecCommand(),
@@ -52,7 +50,7 @@ public class GwtMvnCodeServerStarter implements CodeServerStarter {
         try {
             return new DefaultCodeServer(processBuilder.start(), logFilePath);
         } catch (IOException e) {
-            throw new ExtensionLauncherException("Unable to launch application.");
+            throw new CodeServerException("Unable to start code server.");
         }
     }
 

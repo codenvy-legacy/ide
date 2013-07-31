@@ -19,9 +19,13 @@
 package com.codenvy.ide.ext.extruntime.server;
 
 import com.codenvy.ide.commons.JsonHelper;
+import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls.ApplicationInstanceImpl;
+import com.codenvy.ide.ext.extruntime.server.codeserver.CodeServerException;
 import com.codenvy.ide.ext.extruntime.server.codeserver.CodeServerStarter.CodeServer;
 import com.codenvy.ide.ext.extruntime.server.codeserver.GwtMvnCodeServerStarter;
 import com.codenvy.ide.ext.extruntime.server.tools.ProcessUtil;
+import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
+import com.codenvy.ide.extension.maven.shared.BuildStatus.Status;
 
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
@@ -31,7 +35,6 @@ import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
-import org.exoplatform.ide.extension.maven.shared.BuildStatus.Status;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -137,12 +140,16 @@ public class ExtensionLauncher implements Startable {
      * @param vfs virtual file system
      * @param projectId identifier of a project we want to launch
      * @param wsMountPath mount path for the user's workspace
-     * @return id of launched extension
+     * @return launched extension description
      * @throws VirtualFileSystemException if any error in VFS
      * @throws ExtensionLauncherException if any error occurred while launching extension
      */
-    public String launchExtension(VirtualFileSystem vfs, String projectId, String wsMountPath) throws VirtualFileSystemException,
-                                                                                              ExtensionLauncherException {
+    public ApplicationInstance launchExtension(VirtualFileSystem vfs, String projectId, String wsMountPath) throws VirtualFileSystemException,
+                                                                                                           ExtensionLauncherException {
+        if (projectId == null || projectId.isEmpty()) {
+            throw new IllegalArgumentException("Project id required.");
+        }
+
         Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.NONE_FILTER);
         File tempDir = null;
         final String extId = generate("ext-", 16);
@@ -224,8 +231,7 @@ public class ExtensionLauncher implements Startable {
             final String status = startCheckingBuildStatus(buildId);
             BuildStatusBean buildStatus = JsonHelper.fromJson(status, BuildStatusBean.class, null);
             if (buildStatus.getStatus() != Status.SUCCESSFUL) {
-                throw new ExtensionLauncherException(String.format("Unable to build Codenvy extension %s. %s ", project.getName(),
-                                                                   buildStatus.getError()));
+                throw new Exception("Unable to build project: " + buildStatus.getError());
             }
 
             File tomcatDir = createTempDirectory(tempDir, "tomcat-");
@@ -235,13 +241,15 @@ public class ExtensionLauncher implements Startable {
 
             extensions.put(extId, new CodenvyExtensionResources(extId, codeServer, tomcatProcess, tomcatDir, tempDir));
             LOG.debug("Start Codenvy extension {}", extId);
-            return extId;
+
+            // TODO
+            return ApplicationInstanceImpl.make().setName(extId).setHost("127.0.0.1").setPort(8081);
         } catch (Exception e) {
-            LOG.warn("Codenvy extension {} failed to start, cause: {}", extId, e.getMessage());
+            LOG.warn("Codenvy extension {} failed to start, cause: {}", extId, e);
             if (tempDir != null && tempDir.exists()) {
                 deleteRecursive(tempDir, false);
             }
-            throw new ExtensionLauncherException(String.format("Unable to launch Codenvy extension %s.", project.getName()));
+            throw new ExtensionLauncherException(String.format("Unable to launch Codenvy with extension %s.", project.getName()));
         }
     }
 
@@ -260,24 +268,24 @@ public class ExtensionLauncher implements Startable {
 
         StringBuilder logs = new StringBuilder();
 
-        final String codeServerLogs = extension.codeServer.getLogs();
-        if (!(codeServerLogs == null || codeServerLogs.isEmpty())) {
-            logs.append("====> code-server.log <====");
-            logs.append("\n\n");
-            logs.append(codeServerLogs);
-            logs.append("\n\n");
-        }
-
-        // read all catalina*.log files
-        File logsDir = extension.tomcatDir.toPath().resolve("logs").toFile();
-        File[] catalinaLogFiles = logsDir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.startsWith("catalina") && name.endsWith(".log");
-            }
-        });
-
         try {
+            final String codeServerLogs = extension.codeServer.getLogs();
+            if (!(codeServerLogs == null || codeServerLogs.isEmpty())) {
+                logs.append("====> code-server.log <====");
+                logs.append("\n\n");
+                logs.append(codeServerLogs);
+                logs.append("\n\n");
+            }
+
+            // read all catalina*.log files
+            File logsDir = extension.tomcatDir.toPath().resolve("logs").toFile();
+            File[] catalinaLogFiles = logsDir.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.startsWith("catalina") && name.endsWith(".log");
+                }
+            });
+
             for (File catalinaLogFile : catalinaLogFiles) {
                 final String catalinaLogs = new String(Files.readAllBytes(catalinaLogFile.toPath()));
                 if (!(catalinaLogs == null || catalinaLogs.isEmpty())) {
@@ -289,8 +297,8 @@ public class ExtensionLauncher implements Startable {
                     logs.append("\n\n");
                 }
             }
-        } catch (IOException e) {
-            throw new ExtensionLauncherException(String.format("Unable to get logs of extension with id %s.", extId));
+        } catch (IOException | CodeServerException e) {
+            throw new ExtensionLauncherException(String.format("Unable to get logs of extension %s.", extId));
         }
 
         return logs.toString();
@@ -305,7 +313,7 @@ public class ExtensionLauncher implements Startable {
     public void stopExtension(String extId) throws ExtensionLauncherException {
         CodenvyExtensionResources extension = extensions.get(extId);
         if (extension == null) {
-            throw new ExtensionLauncherException(String.format("Unable to stop Codenvy extension %s. Extension not found.", extId));
+            throw new ExtensionLauncherException(String.format("Unable to stop Codenvy with extension %s. Extension not found.", extId));
         }
 
         // TODO
@@ -333,7 +341,7 @@ public class ExtensionLauncher implements Startable {
             try {
                 stopExtension(extId);
             } catch (Exception e) {
-                LOG.error("Failed to stop extension {}.", extId, e);
+                LOG.error("Failed to stop Codenvy with extension {}.", extId, e);
             }
         }
     }
@@ -387,7 +395,7 @@ public class ExtensionLauncher implements Startable {
             http.setRequestMethod("GET");
             int responseCode = http.getResponseCode();
             if (responseCode != 200) {
-                fail(http);
+                responseFail(http);
             }
 
             InputStream data = http.getInputStream();
@@ -447,7 +455,7 @@ public class ExtensionLauncher implements Startable {
             int responseCode = http.getResponseCode();
             if (responseCode != 202) // 202 (Accepted) response is expected.
             {
-                fail(http);
+                responseFail(http);
             }
             String location = http.getHeaderField("location");
             return location.substring(location.lastIndexOf('/') + 1);
@@ -458,7 +466,7 @@ public class ExtensionLauncher implements Startable {
         }
     }
 
-    private void fail(HttpURLConnection http) throws IOException, ExtensionLauncherException {
+    private void responseFail(HttpURLConnection http) throws IOException, ExtensionLauncherException {
         InputStream errorStream = null;
         try {
             int responseCode = http.getResponseCode();
@@ -513,7 +521,7 @@ public class ExtensionLauncher implements Startable {
             Files.setPosixFilePermissions(catalinaPath, PosixFilePermissions.fromString("rwxr--r--"));
             return new ProcessBuilder(catalinaPath.toString(), "run").start();
         } catch (IOException e) {
-            throw new ExtensionLauncherException("Unable to launch extension.");
+            throw new ExtensionLauncherException("Unable to launch Codenvy with extension.");
         }
     }
 

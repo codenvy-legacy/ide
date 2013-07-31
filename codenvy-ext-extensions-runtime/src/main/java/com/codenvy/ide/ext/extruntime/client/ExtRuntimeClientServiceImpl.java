@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.extruntime.client;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
@@ -115,12 +116,11 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void launch(String vfsId, String projectId, RequestCallback<StringBuilder> callback)
-                                                                                               throws WebSocketException {
+    public void launch(String vfsId, String projectId, RequestCallback<ApplicationInstance> callback)
+                                                                                                     throws WebSocketException {
         final String params = "?vfsid=" + vfsId + "&projectid=" + projectId;
-        callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
         MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, BASE_URL + LAUNCH + params);
-        builder.header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON);
+        builder.header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON);
         Message message = builder.build();
         wsMessageBus.send(message, callback);
     }
