@@ -26,6 +26,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.MessageBus;
@@ -46,7 +47,7 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class CloudFoundryClientServiceImpl implements CloudFoundryClientService {
-    private static final String BASE_URL         = "/ide/cloudfoundry";
+    private static final String BASE_URL         = '/' + Utils.getWorkspaceName() + "/cloudfoundry";
     private static final String CREATE           = BASE_URL + "/apps/create";
     private static final String FRAMEWORKS       = BASE_URL + "/info/frameworks";
     private static final String START            = BASE_URL + "/apps/start";
@@ -73,7 +74,6 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
     private static final String SERVICES_BIND    = SERVICES + "/bind";
     private static final String SERVICES_UNBIND  = SERVICES + "/unbind";
     private static final String LOGS             = BASE_URL + "/apps/logs";
-    public static final  String SUPPORT          = "support";
     /** REST service context. */
     private String                           restServiceContext;
     /** Loader to be displayed. */

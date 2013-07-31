@@ -26,6 +26,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.MessageBus;
@@ -71,7 +72,7 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
     @Inject
     protected ApplicationRunnerClientServiceImpl(MessageBus wsMessageBus, EventBus eventBus, JavaRuntimeLocalizationConstant constant,
                                                  Loader loader, @Named("restContext") String restContext) {
-        BASE_URL = "/ide" + "/java/runner";
+        BASE_URL = '/' + Utils.getWorkspaceName() + "/java/runner";
         this.wsMessageBus = wsMessageBus;
         this.eventBus = eventBus;
         this.constant = constant;
@@ -83,7 +84,7 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
     @Override
     public void runApplication(@NotNull String project, @NotNull String war, boolean useJRebel,
                                @NotNull AsyncRequestCallback<ApplicationInstance> callback) throws RequestException {
-        String requestUrl = BASE_URL + "/run?war=" + war;
+        String requestUrl = restContext + BASE_URL + "/run?war=" + war;
 
         String data = "";
         if (useJRebel) {
@@ -103,12 +104,12 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
                                  @NotNull RequestCallback<ApplicationInstance> callback) throws WebSocketException {
         String params = "?war=" + war;
 
-        String data = "";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("projectName", new JSONString(project));
         if (useJRebel) {
-            JSONObject jsonObject = new JSONObject();
             jsonObject.put("jrebel", new JSONString("true"));
-            data = jsonObject.toString();
         }
+        String data = jsonObject.toString();
 
         callback.setStatusHandler(new RunningAppStatusHandler(project, eventBus, constant));
 
@@ -124,14 +125,14 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
     @Override
     public void debugApplication(@NotNull String project, @NotNull String war, boolean useJRebel,
                                  @NotNull AsyncRequestCallback<ApplicationInstance> callback) throws RequestException {
-        String data = "";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("projectName", new JSONString(project));
         if (useJRebel) {
-            JSONObject jsonObject = new JSONObject();
             jsonObject.put("jrebel", new JSONString("true"));
-            data = jsonObject.toString();
         }
+        String data = jsonObject.toString();
 
-        String requestUrl = BASE_URL + "/debug?war=" + war + "&suspend=false";
+        String requestUrl = restContext + BASE_URL + "/debug?war=" + war + "&suspend=false";
         AsyncRequest.build(RequestBuilder.POST, requestUrl, true)
                     .requestStatusHandler(new RunningAppStatusHandler(project, eventBus, constant))
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
@@ -143,12 +144,12 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
                                    @NotNull RequestCallback<ApplicationInstance> callback) throws WebSocketException {
         String param = "?war=" + war + "&suspend=false";
 
-        String data = "";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("projectName", new JSONString(project));
         if (useJRebel) {
-            JSONObject jsonObject = new JSONObject();
             jsonObject.put("jrebel", new JSONString("true"));
-            data = jsonObject.toString();
         }
+        String data = jsonObject.toString();
 
         callback.setStatusHandler(new RunningAppStatusHandler(project, eventBus, constant));
 
@@ -187,7 +188,7 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
     @Override
     public void updateApplication(@NotNull String name, @NotNull String war, @NotNull AsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = BASE_URL + "/update";
+        String url = restContext + BASE_URL + "/update";
         String params = "?name=" + name + "&war=" + war;
 
         loader.setMessage("Updating application...");

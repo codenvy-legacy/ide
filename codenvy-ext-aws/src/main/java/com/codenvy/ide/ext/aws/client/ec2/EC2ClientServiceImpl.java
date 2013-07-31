@@ -18,7 +18,6 @@
  */
 package com.codenvy.ide.ext.aws.client.ec2;
 
-import com.codenvy.ide.ext.aws.client.AWSLocalizationConstant;
 import com.codenvy.ide.ext.aws.shared.ec2.InstanceInfo;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.AsyncRequest;
@@ -26,13 +25,12 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
-import com.codenvy.ide.websocket.MessageBus;
+import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * The implementation of {@link EC2ClientService}.
@@ -42,7 +40,7 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class EC2ClientServiceImpl implements EC2ClientService {
-    private static final String BASE_URL = "/ide/aws/ec2";
+    private static final String BASE_URL = '/' + Utils.getWorkspaceName() + "/aws/ec2";
 
     private static final String INSTANCES = BASE_URL + "/instances";
 
@@ -54,29 +52,19 @@ public class EC2ClientServiceImpl implements EC2ClientService {
 
     private static final String STOP_INSTANCE = BASE_URL + "/instances/stop/";
 
-    private String                  restServiceContext;
-    private Loader                  loader;
-    private MessageBus              wsMessageBus;
-    private EventBus                eventBus;
-    private AWSLocalizationConstant constant;
+    private String restServiceContext;
+    private Loader loader;
 
     /**
      * Create client service.
      *
      * @param restContext
      * @param loader
-     * @param wsMessageBus
-     * @param eventBus
-     * @param constant
      */
     @Inject
-    protected EC2ClientServiceImpl(@Named("restContext") String restContext, Loader loader, MessageBus wsMessageBus,
-                                   EventBus eventBus, AWSLocalizationConstant constant) {
+    protected EC2ClientServiceImpl(@Named("restContext") String restContext, Loader loader) {
         this.loader = loader;
         this.restServiceContext = restContext;
-        this.wsMessageBus = wsMessageBus;
-        this.eventBus = eventBus;
-        this.constant = constant;
     }
 
     /** {@inheritDoc} */

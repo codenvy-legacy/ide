@@ -140,6 +140,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit.http.server</artifactId>
+            <version>2.3.1.201302201838-r</version>
+        </dependency>
+
+        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
@@ -226,7 +232,7 @@
                     <module>com.codenvy.ide.IDE</module>
                     <logLevel>INFO</logLevel>
                     <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
-                    <runTarget>IDE.html</runTarget>
+                    <runTarget>ide/dev-monit</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <i18nMessagesBundle>com.codenvy.ide.client.Messages</i18nMessagesBundle>
                 </configuration>

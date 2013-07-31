@@ -33,6 +33,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.security.oauth.JsOAuthWindow;
 import com.codenvy.ide.security.oauth.OAuthCallback;
 import com.codenvy.ide.security.oauth.OAuthStatus;
+import com.codenvy.ide.util.Utils;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Singleton;
@@ -149,9 +150,9 @@ public class LoginAction extends Action implements OAuthCallback {
     }
 
     private void openAuthWindow(User user) {
-        String authUrl = restContext + "/ide/oauth/authenticate?oauth_provider=google"
+        String authUrl = "rest/ide/oauth/authenticate?oauth_provider=google"
                          + "&scope=https://www.googleapis.com/auth/appengine.admin"
-                         + "&userId=" + user.getUserId() + "&redirect_after_login=/IDE/IDE.html";
+                         + "&userId=" + user.getUserId() + "&redirect_after_login=/ide/" + Utils.getWorkspaceName();
         JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 450, 500, this);
         authWindow.loginWithOAuth();
     }

@@ -29,6 +29,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
@@ -48,33 +49,33 @@ public class GAEClientServiceImpl implements GAEClientService {
     private String restServiceContext;
     /** Loader to be displayed. */
     private Loader loader;
-    private final static String WS                  = "/ide";
-    private final        String AUTH_URL            = WS + "/oauth/authenticate";
-    private final        String LOGOUT              = WS + "/oauth/invalidate";
-    private final        String APP_ENGINE          = WS + "/appengine/";
-    private final        String USER                = APP_ENGINE + "user";
-    private final        String BACKEND_CONFIGURE   = APP_ENGINE + "backend/configure";
-    private final        String CRON_INFO           = APP_ENGINE + "cron/info";
-    private final        String BACKEND_DELETE      = APP_ENGINE + "backend/delete";
-    private final        String RESOURCE_LIMITS     = APP_ENGINE + "resource_limits";
-    private final        String BACKENDS_LIST       = APP_ENGINE + "backends/list";
-    private final        String LOGS                = APP_ENGINE + "logs";
-    private final        String ROLLBACK            = APP_ENGINE + "rollback";
-    private final        String BACKEND_ROLLBACK    = APP_ENGINE + "backend/rollback";
-    private final        String BACKENDS_ROLLBACK   = APP_ENGINE + "backends/rollback";
-    private final        String BACKEND_UPDATE      = APP_ENGINE + "backend/update";
-    private final        String BACKENDS_UPDATE_ALL = APP_ENGINE + "backends/update_all";
-    private final        String BACKEND_SET_STATE   = APP_ENGINE + "backend/set_state";
-    private final        String UPDATE              = APP_ENGINE + "update";
-    private final        String CRON_UPDATE         = APP_ENGINE + "cron/update";
-    private final        String DOS_UPDATE          = APP_ENGINE + "dos/update";
-    private final        String INDEXES_UPDATE      = APP_ENGINE + "indexes/update";
-    private final        String PAGE_SPEED_UPDATE   = APP_ENGINE + "pagespeed/update";
-    private final        String QUEUES_UPDATE       = APP_ENGINE + "queues/update";
-    private final        String VACUUM_INDEXES      = APP_ENGINE + "vacuum_indexes";
-    private final        String SET_APP_ID          = APP_ENGINE + "change-appid";
-    private EventBus        eventBus;
-    private GAELocalization constant;
+    private final String AUTH_URL            = "rest/ide/oauth/authenticate";
+    private final String LOGOUT              = "rest/ide/oauth/invalidate";
+    private final String APP_ENGINE          = "/appengine/";
+    private final String USER                = APP_ENGINE + "user";
+    private final String BACKEND_CONFIGURE   = APP_ENGINE + "backend/configure";
+    private final String CRON_INFO           = APP_ENGINE + "cron/info";
+    private final String BACKEND_DELETE      = APP_ENGINE + "backend/delete";
+    private final String RESOURCE_LIMITS     = APP_ENGINE + "resource_limits";
+    private final String BACKENDS_LIST       = APP_ENGINE + "backends/list";
+    private final String LOGS                = APP_ENGINE + "logs";
+    private final String ROLLBACK            = APP_ENGINE + "rollback";
+    private final String BACKEND_ROLLBACK    = APP_ENGINE + "backend/rollback";
+    private final String BACKENDS_ROLLBACK   = APP_ENGINE + "backends/rollback";
+    private final String BACKEND_UPDATE      = APP_ENGINE + "backend/update";
+    private final String BACKENDS_UPDATE_ALL = APP_ENGINE + "backends/update_all";
+    private final String BACKEND_SET_STATE   = APP_ENGINE + "backend/set_state";
+    private final String UPDATE              = APP_ENGINE + "update";
+    private final String CRON_UPDATE         = APP_ENGINE + "cron/update";
+    private final String DOS_UPDATE          = APP_ENGINE + "dos/update";
+    private final String INDEXES_UPDATE      = APP_ENGINE + "indexes/update";
+    private final String PAGE_SPEED_UPDATE   = APP_ENGINE + "pagespeed/update";
+    private final String QUEUES_UPDATE       = APP_ENGINE + "queues/update";
+    private final String VACUUM_INDEXES      = APP_ENGINE + "vacuum_indexes";
+    private final String SET_APP_ID          = APP_ENGINE + "change-appid";
+    private       EventBus        eventBus;
+    private       GAELocalization constant;
+    private final String          wsName;
 
     /**
      * Create client service.
@@ -92,6 +93,7 @@ public class GAEClientServiceImpl implements GAEClientService {
         this.loader = loader;
         this.eventBus = eventBus;
         this.constant = constant;
+        this.wsName = Utils.getWorkspaceName();
     }
 
     /** {@inheritDoc} */
@@ -232,7 +234,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void update(String vfsId, Project project, String bin, GAEAsyncRequestCallback<ApplicationInfo> callback)
             throws RequestException {
-        String url = restServiceContext + UPDATE;
+        String url = wsName + UPDATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(project.getId());
@@ -248,7 +250,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void updateAllBackends(String vfsId, String projectId, GAEAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + BACKENDS_UPDATE_ALL;
+        String url = wsName + BACKENDS_UPDATE_ALL;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -261,7 +263,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void updateBackend(String vfsId, String projectId, String backendName, GAEAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + BACKEND_UPDATE;
+        String url = wsName + BACKEND_UPDATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId).append("&backend_name=")
@@ -343,14 +345,14 @@ public class GAEClientServiceImpl implements GAEClientService {
     /** {@inheritDoc} */
     @Override
     public String getAuthUrl() {
-        return restServiceContext + AUTH_URL +
+        return AUTH_URL +
                "?oauth_provider=google&scope=https://www.googleapis.com/auth/appengine.admin&redirect_after_login=/success_oauth.html";
     }
 
     /** {@inheritDoc} */
     @Override
     public void logout(AsyncRequestCallback<Object> callback) throws RequestException {
-        String url = restServiceContext + LOGOUT + "?oauth_provider=google";
+        String url = LOGOUT + "?oauth_provider=google";
 
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }

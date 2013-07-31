@@ -38,7 +38,7 @@ import javax.ws.rs.core.MediaType;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@Path("ide/user")
+@Path("{ws-name}/user")
 public class UserService {
     @Inject
     UserManager userManager;
@@ -52,19 +52,19 @@ public class UserService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getUser() {
+        String userId = ConversationState.getCurrent().getIdentity().getUserId();
+        DtoServerImpls.UserImpl user = DtoServerImpls.UserImpl.make();
+        user.setUserId(userId); //userId - "user alias" e.g. email
+
         try {
-            String userId = ConversationState.getCurrent().getIdentity().getUserId();
             User currentUser = userManager.getUserByAlias(userId);
 
-            DtoServerImpls.UserImpl user = DtoServerImpls.UserImpl.make();
-            user.setUserId(userId); //userId - "user alias" e.g. email
             user.setProfileAttributes(currentUser.getProfile().getAttributes());
-
-            return user.toJson();
-
         } catch (OrganizationServiceException e) {
-            throw new IllegalStateException("Can't get user info. Please contact support.", e);
+            // do nothing
         }
+
+        return user.toJson();
     }
 
     /**

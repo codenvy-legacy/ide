@@ -24,6 +24,7 @@ import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -40,7 +41,7 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 @Singleton
 public class CreateProjectClientServiceImpl implements CreateProjectClientService {
-    private static final String BASE_URL              = "/ide/maven/create";
+    private static final String BASE_URL              = '/' + Utils.getWorkspaceName() + "/maven/create";
     private static final String CREATE_WAR_PROJECT    = BASE_URL + "/project/war";
     private static final String CREATE_JAVA_PROJECT   = BASE_URL + "/project/java";
     private static final String CREATE_SPRING_PROJECT = BASE_URL + "/project/spring";

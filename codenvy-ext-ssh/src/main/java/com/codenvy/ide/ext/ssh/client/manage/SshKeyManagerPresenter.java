@@ -20,7 +20,9 @@ package com.codenvy.ide.ext.ssh.client.manage;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.ui.preferences.AbstractPreferencesPagePresenter;
+import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
+import com.codenvy.ide.client.marshaller.UserUnmarshaller;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.github.GitHubClientService;
 import com.codenvy.ide.ext.git.client.marshaller.AllRepositoriesUnmarshaller;
@@ -36,8 +38,13 @@ import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.resources.marshal.StringUnmarshaller;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.security.oauth.JsOAuthWindow;
+import com.codenvy.ide.security.oauth.OAuthCallback;
+import com.codenvy.ide.security.oauth.OAuthStatus;
 import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
@@ -47,6 +54,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.security.oauth.OAuthStatus.LOGGED_IN;
 import static com.google.gwt.http.client.RequestBuilder.POST;
 
 /**
@@ -56,7 +64,7 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  * @version $Id: SshKeyManagerPresenter May 18, 2011 10:16:44 AM evgen $
  */
 @Singleton
-public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter implements SshKeyManagerView.ActionDelegate {
+public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter implements SshKeyManagerView.ActionDelegate, OAuthCallback {
     private SshKeyManagerView       view;
     private SshKeyService           service;
     private SshLocalizationConstant constant;
@@ -140,58 +148,56 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     /** {@inheritDoc} */
     @Override
     public void onGenerateGithubKeyClicked() {
-        // TODO don't have OAuth login
-//        service.getAllKeys(new JsonpAsyncCallback<JavaScriptObject>() {
-//            @Override
-//            public void onSuccess(JavaScriptObject result) {
-//                boolean githubKeyExists = false;
-//                loader = getLoader();
-//                JsonArray<KeyItem> keys = SshKeysUnmarshaller.unmarshal(result);
-//
-//                for (int i = 0; i < keys.size(); i++) {
-//                    KeyItem key = keys.get(i);
-//                    if (key.getHost().contains("github.com")) {
-//                        githubKeyExists = true;
-//                    }
-//                }
-//
-//                if (!githubKeyExists) {
-//                    loader.hide();
-//                    boolean needToCreate = Window.confirm(
-//                            "Would you like to upload a public SSH key to your GitHub account to establish a secure connection?");
-//                    if (needToCreate) {
-//                        loader.show();
-//                        try {
-//                            com.codenvy.ide.client.DtoClientImpls.UserImpl user = com.codenvy.ide.client.DtoClientImpls.UserImpl.make();
-//                            UserUnmarshaller unmarshaller = new UserUnmarshaller(user);
-//
-//                            userService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
-//                                @Override
-//                                protected void onSuccess(User result) {
-//                                    getToken(result.getUserId());
-//                                }
-//
-//                                @Override
-//                                protected void onFailure(Throwable exception) {
-//                                    Log.error(SshKeyManagerPresenter.class, exception);
-//                                }
-//                            });
-//                        } catch (RequestException e) {
-//                            Log.error(SshKeyManagerPresenter.class, e);
-//                        }
-//                    }
-//                } else {
-//                    loader.hide();
-//                    getUserRepos();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable caught) {
-//                getLoader().hide();
-//                Window.alert("Getting ssh keys failed.");
-//            }
-//        });
+        service.getAllKeys(new JsonpAsyncCallback<JavaScriptObject>() {
+            @Override
+            public void onSuccess(JavaScriptObject result) {
+                boolean githubKeyExists = false;
+                loader = getLoader();
+                JsonArray<KeyItem> keys = SshKeysUnmarshaller.unmarshal(result);
+
+                for (int i = 0; i < keys.size(); i++) {
+                    KeyItem key = keys.get(i);
+                    if (key.getHost().contains("github.com")) {
+                        githubKeyExists = true;
+                    }
+                }
+
+                if (!githubKeyExists) {
+                    loader.hide();
+                    boolean needToCreate = Window.confirm(constant.githubSshKeyLabel());
+                    if (needToCreate) {
+                        loader.show();
+                        try {
+                            com.codenvy.ide.client.DtoClientImpls.UserImpl user = com.codenvy.ide.client.DtoClientImpls.UserImpl.make();
+                            UserUnmarshaller unmarshaller = new UserUnmarshaller(user);
+
+                            userService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
+                                @Override
+                                protected void onSuccess(User result) {
+                                    getToken(result.getUserId());
+                                }
+
+                                @Override
+                                protected void onFailure(Throwable exception) {
+                                    Log.error(SshKeyManagerPresenter.class, exception);
+                                }
+                            });
+                        } catch (RequestException e) {
+                            Log.error(SshKeyManagerPresenter.class, e);
+                        }
+                    }
+                } else {
+                    loader.hide();
+                    getUserRepos();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                getLoader().hide();
+                Window.alert("Getting ssh keys failed.");
+            }
+        });
     }
 
     /**
@@ -200,7 +206,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
      * @param user
      *         user which need token
      */
-    private void getToken(String user) {
+    private void getToken(final String user) {
         StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
@@ -209,7 +215,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                 protected void onSuccess(StringBuilder result) {
                     if (result == null || result.toString().isEmpty()) {
                         loader.hide();
-                        oAuthLoginStart();
+                        oAuthLoginStart(user);
                     } else {
                         generateGitHubKey();
                     }
@@ -218,7 +224,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                 @Override
                 protected void onFailure(Throwable exception) {
                     loader.hide();
-                    oAuthLoginStart();
+                    oAuthLoginStart(user);
                 }
             });
         } catch (RequestException e) {
@@ -227,9 +233,14 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     }
 
     /** Log in  github */
-    private void oAuthLoginStart() {
-        // TODO need to add support OAuth login
-        // IDE.fireEvent(new GithubLoginEvent());
+    private void oAuthLoginStart(String user) {
+        boolean permitToRedirect = Window.confirm(constant.loginOAuthLabel());
+        if (permitToRedirect) {
+            String authUrl = "rest/ide/oauth/authenticate?oauth_provider=github"
+                             + "&scope=user&userId=" + user + "&scope=repo&redirect_after_login=/ide/" + Utils.getWorkspaceName();
+            JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, this);
+            authWindow.loginWithOAuth();
+        }
     }
 
     /** Generate github key. */
@@ -249,7 +260,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                 }
             };
 
-            String url = restContext + "/ide" + "/github/ssh/generate";
+            String url = restContext + '/' + Utils.getWorkspaceName() + "/github/ssh/generate";
             AsyncRequest.build(POST, url).loader(new EmptyLoader()).send(callback);
         } catch (RequestException e) {
             loader.hide();
@@ -363,5 +374,13 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                 eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
         });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onAuthenticated(OAuthStatus authStatus) {
+        if (LOGGED_IN.equals(authStatus)) {
+            generateGitHubKey();
+        }
     }
 }

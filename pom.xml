@@ -24,11 +24,11 @@
         <!-- eXo Modules -->
         <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
         <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
-        <org.exoplatform.ide.version>2.3.2</org.exoplatform.ide.version>
+        <org.exoplatform.ide.version>2.6.0-SNAPSHOT</org.exoplatform.ide.version>
         <!-- CodeAssistant DataBase -->
         <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
         <!-- Everrest -->
-        <everrest.version>1.0.11-SNAPSHOT</everrest.version>
+        <everrest.version>1.1.1</everrest.version>
         <!-- Third parties -->
         <gwt.version>2.5.1</gwt.version>
         <shindig.version>2.5.0-beta2</shindig.version>
@@ -50,9 +50,10 @@
         <version.buildnumber.plugin>1.1</version.buildnumber.plugin>
         <version.release.plugin>2.2.1</version.release.plugin>
         <version.enforcer.plugin>1.0.1</version.enforcer.plugin>
-        <appengine.version>1.6.5</appengine.version>
+        <appengine.version>1.7.7</appengine.version>
         <ch.qos.logback.version>0.9.29</ch.qos.logback.version>
-        <com.codenvy.organization.version>0.4</com.codenvy.organization.version>
+        <com.codenvy.organization.version>0.6.0-SNAPSHOT</com.codenvy.organization.version>
+        <com.codenvy.commons.version>0.7.0-SNAPSHOT</com.codenvy.commons.version>
         <maven.build.timestamp.format>dd.MM.yy HH:mm</maven.build.timestamp.format>
         <buildNumber>${maven.build.timestamp}</buildNumber>
     </properties>
@@ -85,6 +86,11 @@
                 <groupId>com.codenvy.organization</groupId>
                 <artifactId>codenvy-organization-api</artifactId>
                 <version>${com.codenvy.organization.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.commons</groupId>
+                <artifactId>codenvy-commons-security</artifactId>
+                <version>${com.codenvy.commons.version}</version>
             </dependency>
 
             <!-- IDE -->

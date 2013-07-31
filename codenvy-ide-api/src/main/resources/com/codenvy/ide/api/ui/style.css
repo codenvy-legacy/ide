@@ -1,5 +1,5 @@
 @CHARSET "UTF-8";
-/*Tabs*/
+    /*Tabs*/
 @def tabBorder #bdbdbd;
 @def inactiveTabBackground #d6d6d6;
 @def activeTabBackground #ffffff;
@@ -17,7 +17,7 @@
 @def keyboardSelectionBackgroundColor #C3DEFF;
 @def anchorColor #1155CC;
 
-/* Tree */
+    /* Tree */
 @def hoverBackground #D4E8FF;
 @def selectionBackground #C3DEFF;
 
@@ -50,12 +50,12 @@
 @def editorLineHeight 15px;
 @def editorFontFamily 'Andale Mono', monospace;
 
-/* DialogBox*/
-@def dialogTopLeft url("IDE/style/light/window/window_TL.png") no-repeat;
-@def dialogTopCenter url("IDE/style/light/window/window_T.png") repeat-x;
-@def dialogTopRight url("IDE/style/light/window/window_TR.png") no-repeat;
-@def dialogMiddleLeft url("IDE/style/light/window/window_L.png") repeat-y;
-@def dialogMiddleRight url("IDE/style/light/window/window_R.png") repeat-y;
-@def dialogBottomLeft url("IDE/style/light/window/window_BL.png") no-repeat;
-@def dialogBottomCenter url("IDE/style/light/window/window_B.png") repeat-x;
-@def dialogBottomRight url("IDE/style/light/window/window_BR.png") no-repeat;
+    /* DialogBox*/
+@def dialogTopLeft url("_app/style/light/window/window_TL.png") no-repeat;
+@def dialogTopCenter url("_app/style/light/window/window_T.png") repeat-x;
+@def dialogTopRight url("_app/style/light/window/window_TR.png") no-repeat;
+@def dialogMiddleLeft url("_app/style/light/window/window_L.png") repeat-y;
+@def dialogMiddleRight url("_app/style/light/window/window_R.png") repeat-y;
+@def dialogBottomLeft url("_app/style/light/window/window_BL.png") no-repeat;
+@def dialogBottomCenter url("_app/style/light/window/window_B.png") repeat-x;
+@def dialogBottomRight url("_app/style/light/window/window_BR.png") no-repeat;

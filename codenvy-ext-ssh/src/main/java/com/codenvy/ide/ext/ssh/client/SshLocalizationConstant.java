@@ -62,4 +62,16 @@ public interface SshLocalizationConstant extends Constants {
 
     @Key("key.manager.title")
     String sshManagerTitle();
+
+    @Key("login.oauth.title")
+    String loginOAuthTitle();
+
+    @Key("login.oauth.label")
+    String loginOAuthLabel();
+
+    @Key("github.sshkey.title")
+    String githubSshKeyTitle();
+
+    @Key("github.sshkey.label")
+    String githubSshKeyLabel();
 }

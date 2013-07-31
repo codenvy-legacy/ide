@@ -26,6 +26,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.MessageBus;
@@ -44,7 +45,7 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class AppfogClientServiceImpl implements AppfogClientService {
-    private static final String BASE_URL         = "/ide/appfog";
+    private static final String BASE_URL         = '/' + Utils.getWorkspaceName() + "/appfog";
     private static final String CREATE           = BASE_URL + "/apps/create";
     private static final String FRAMEWORKS       = BASE_URL + "/info/frameworks";
     private static final String START            = BASE_URL + "/apps/start";

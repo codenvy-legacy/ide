@@ -30,6 +30,7 @@ import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.http.client.RequestBuilder;
@@ -75,12 +76,12 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
      */
     @Inject
     public ResourceProviderComponent(ModelProvider genericModelProvider, Loader loader, EventBus eventBus,
-                                     @Named("defaultFileType") FileType defaulFile) {
+                                     @Named("defaultFileType") FileType defaulFile, @Named("restContext") String restContext) {
         super();
         this.genericModelProvider = genericModelProvider;
         this.eventBus = eventBus;
         this.defaulFile = defaulFile;
-        this.workspaceURL = "rest/ide/vfs/v2";
+        this.workspaceURL = restContext + '/' + Utils.getWorkspaceName() + "/vfs/v2";
         this.modelProviders = JsonCollections.<ModelProvider>createStringMap();
         this.natures = JsonCollections.<ProjectNature>createStringMap();
         this.fileTypes = JsonCollections.createIntegerMap();

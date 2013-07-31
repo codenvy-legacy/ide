@@ -3,7 +3,7 @@
     <ui:style>
             /* Add CSS here. See the GWT docs on UI Binder for more details */
         .welcome {
-            background-image: url(logo.png);
+            background-image: url(/ide/_app/logo.png);
             background-repeat: no-repeat;
             background-position: 20px 0px;
             text-align: center;
@@ -96,7 +96,7 @@
         </div>
         <div class="{style.botleft}">
             <a href="http://codenvy.com">
-                <img src="exo.png"/>
+                <img src="/ide/_app/exo.png"/>
             </a>
         </div>
     </div>

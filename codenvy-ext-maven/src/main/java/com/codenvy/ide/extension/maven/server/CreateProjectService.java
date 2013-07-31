@@ -42,7 +42,7 @@ import static org.exoplatform.ide.vfs.shared.PropertyFilter.ALL_FILTER;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@Path("ide/maven/create")
+@Path("{ws-name}/maven/create")
 public class CreateProjectService {
     @Inject
     VirtualFileSystemRegistry registry;

@@ -26,6 +26,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.MessageBus;
@@ -48,7 +49,7 @@ import java.util.List;
  */
 @Singleton
 public class OpenShiftClientServiceImpl implements OpenShiftClientService {
-    private static final String BASE_URL                   = "/ide/openshift/express";
+    private static final String BASE_URL                   = '/' + Utils.getWorkspaceName() + "/openshift/express";
     private static final String LOGIN                      = BASE_URL + "/login";
     private static final String USER_INFO                  = BASE_URL + "/user/info";
     private static final String CREATE_DOMAIN              = BASE_URL + "/domain/create";
