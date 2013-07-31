@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.factory.client.generate;
 
+import com.codenvy.ide.factory.client.FactoryClientService;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -411,9 +412,32 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
                      VCS_URL + "=" + encodeQueryString(vcsURL) + "&" + //
                      COMMIT_ID + "=" + latestCommitId + "&" + //
                      ACTION_PARAMETER + "=" + DEFAULT_ACTION;
+        logFactoryCreated(UriUtils.fromString(factoryURL).asString());
         generateSnippetForWebsites(true, false);
         gitHubPagesSnippet = "[![alt](" + CODE_NOW_BUTTON_FOR_GITHUB_IMAGE_URL + ")](" + factoryURL + ")";
         openView();
+    }
+
+    private void logFactoryCreated(String factoryURL) {
+        try {
+            FactoryClientService.getInstance()
+                            .logFactoryCreated(vfs.getId(),
+                                               openedProject.getId(), factoryURL,
+                                               new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
+                                                   @Override
+                                                   protected void onSuccess(StringBuilder result) {
+                                                   }
+
+                                                   @Override
+                                                   protected void onFailure(Throwable exception) {
+                                                   }
+                                               });
+        } catch (RequestException e) {
+            String errorMessage =
+                    (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
+                                                                            : GitExtension.MESSAGES.initFailed();
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+        }
     }
 
     private void generateSnippetForWebsites(boolean isShowCounter, boolean isVerticalStyle) {

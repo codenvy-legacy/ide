@@ -41,6 +41,8 @@ public class FactoryClientServiceImpl extends FactoryClientService {
 
     private static final String SHARE    = BASE_URL + "/share";
 
+    private static final String FACTORY_CREATED    = BASE_URL + "/log-factory-created";
+
     /** REST-service context. */
     private String              restServiceContext;
 
@@ -70,5 +72,12 @@ public class FactoryClientServiceImpl extends FactoryClientService {
         String params = "recipient=" + recipient + "&message=" + message;
         AsyncRequest.build(RequestBuilder.POST, requesrUrl + "?" + params)
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+    }
+
+    @Override
+    public void logFactoryCreated(String vfsId, String projectId, String factoryUrl, AsyncRequestCallback<StringBuilder> callback) throws RequestException{
+        String url = restServiceContext + FACTORY_CREATED;
+        url += "?vfsid=" + vfsId + "&projectid=" + projectId + "&factoryurl=" + factoryUrl;
+        AsyncRequest.build(RequestBuilder.GET, url).send(callback);
     }
 }
