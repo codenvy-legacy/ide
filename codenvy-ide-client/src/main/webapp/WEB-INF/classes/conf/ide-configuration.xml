@@ -165,55 +165,11 @@
     </component>
 
     <component>
-        <type>org.exoplatform.ide.security.oauth.ExoGitHubOAuthAuthenticator</type>
-        <init-params>
-            <value-param>
-                <name>type</name>
-                <value>web</value>
-            </value-param>
-            <value-param>
-                <name>client-id</name>
-                <value>c639f9ceaca95b7025eb</value>
-            </value-param>
-            <value-param>
-                <name>client-secret</name>
-                <value>e1d8f5a12a337d7b154146033a87ebb8799bd55f</value>
-            </value-param>
-            <value-param>
-                <name>auth-uri</name>
-                <value>https://github.com/login/oauth/authorize</value>
-            </value-param>
-            <value-param>
-                <name>token-uri</name>
-                <value>https://github.com/login/oauth/access_token</value>
-            </value-param>
-            <values-param>
-                <name>redirect-uris</name>
-                <value>http://aplotnikov.codenvy-dev.com/ide/rest/ide/oauth/callback</value>
-            </values-param>
-        </init-params>
+        <type>org.exoplatform.ide.security.oauth.ExoGoogleOAuthAuthenticator</type>
     </component>
 
     <component>
-        <type>org.exoplatform.ide.security.oauth.ExoGoogleOAuthAuthenticator</type>
-        <init-params>
-            <value-param>
-                <name>type</name>
-                <value>web</value>
-            </value-param>
-            <value-param>
-                <name>client-id</name>
-                <value>854018091723-fjpehkqiflfmhafcp6j3o1kvb504te2l.apps.googleusercontent.com</value>
-            </value-param>
-            <value-param>
-                <name>client-secret</name>
-                <value>8jxkJ8ROPCMoDY_7E52n6PAc</value>
-            </value-param>
-            <values-param>
-                <name>redirect-uris</name>
-                <value>http://aplotnikov.codenvy-dev.com/ide/rest/ide/oauth/callback</value>
-            </values-param>
-        </init-params>
+        <type>org.exoplatform.ide.security.oauth.ExoGitHubOAuthAuthenticator</type>
     </component>
 
     <!--
