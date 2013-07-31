@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.application;
 
 import com.codenvy.ide.client.util.logging.Log;
 import com.codenvy.ide.factory.client.FactorySpec10;
+import com.codenvy.ide.factory.client.copy.CopySpec10;
 import com.codenvy.ide.factory.client.receive.StartWithInitParamsEvent;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -245,7 +246,10 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
             if (parameterMap != null && parameterMap.get(FactorySpec10.VERSION_PARAMETER) != null
                 && parameterMap.get(FactorySpec10.VERSION_PARAMETER).get(0).equals(FactorySpec10.CURRENT_VERSION)) {
                 IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
-            } else {
+            } else if(parameterMap != null && parameterMap.get(CopySpec10.PROJECT_URL) != null){
+                IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
+            }
+              else {
                 new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);
             }
         }

@@ -117,6 +117,8 @@ public class LoginFilter implements Filter {
         String url = request.getRequestURI();
         String[] split = url.split("/");
         String ws = split[3];
+        if (ws.equals("ide"))
+            return false;
         Workspace workspace = workspaceManager.getWorkspaceByName(ws);
         if (workspace.isTemporary())
         {

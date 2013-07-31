@@ -18,10 +18,12 @@
  */
 package com.codenvy.ide.factory.client;
 
+import com.codenvy.ide.factory.client.copy.CopyProjectControl;
+import com.codenvy.ide.factory.client.copy.CopyProjectController;
 import com.codenvy.ide.factory.client.generate.CommitChangesPresenter;
 import com.codenvy.ide.factory.client.generate.FactoryURLHandler;
-import com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter;
 import com.codenvy.ide.factory.client.generate.FactoryUrlControl;
+import com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter;
 import com.codenvy.ide.factory.client.generate.SendMailPresenter;
 import com.codenvy.ide.factory.client.greeting.GreetingUserPresenter;
 import com.codenvy.ide.factory.client.receive.FanctoryHandler;
@@ -29,6 +31,7 @@ import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 
@@ -60,13 +63,13 @@ public class FactoryExtension extends Extension implements InitializeServicesHan
     public void initialize() {
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
         IDE.getInstance().addControl(new FactoryUrlControl());
-
+        IDE.getInstance().addControl(new CopyProjectControl(), Docking.TOOLBAR_RIGHT);
         new FactoryURLHandler();
         new FanctoryHandler();
         new GetCodeNowButtonPresenter();
         new SendMailPresenter();
         new CommitChangesPresenter();
-        
+        new CopyProjectController();
         new GreetingUserPresenter();
     }
 }
