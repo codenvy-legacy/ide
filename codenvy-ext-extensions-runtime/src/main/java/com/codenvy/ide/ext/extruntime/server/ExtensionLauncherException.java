@@ -21,6 +21,8 @@ package com.codenvy.ide.ext.extruntime.server;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 
 /**
+ * Signals that an error has occurred while managing Codenvy-extensions.
+ * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtensionLauncherException.java Jul 19, 2013 4:03:36 PM azatsarynnyy $
  */
@@ -28,6 +30,11 @@ import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 public class ExtensionLauncherException extends Exception {
     private int responseStatus = INTERNAL_SERVER_ERROR.getStatusCode();
 
+    /**
+     * Constructs a ExtensionLauncherException with the specified detail message.
+     * 
+     * @param message the detail message
+     */
     public ExtensionLauncherException(String message) {
         super(message);
     }
@@ -40,7 +47,7 @@ public class ExtensionLauncherException extends Exception {
     public ExtensionLauncherException(Throwable cause) {
         super(cause);
     }
-    
+
     public ExtensionLauncherException(String message, Throwable cause) {
         super(message, cause);
     }

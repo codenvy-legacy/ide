@@ -258,8 +258,6 @@
                                       tofile="${project.build.directory}/classes/conf/tomcat/unzip/webapps/userdb.war"/>
                                 <move file="${project.build.directory}/classes/conf/tomcat/setenv.sh"
                                       tofile="${project.build.directory}/classes/conf/tomcat/unzip/bin/setenv.sh"/>
-                                <move file="${project.build.directory}/classes/conf/tomcat/server.xml"
-                                      tofile="${project.build.directory}/classes/conf/tomcat/unzip/conf/server.xml"/>
                                 <move file="${project.build.directory}/classes/conf/tomcat/logback.xml"
                                       tofile="${project.build.directory}/classes/conf/tomcat/unzip/conf/logback.xml"/>
                                 <move file="${project.build.directory}/classes/conf/tomcat/jaas.conf"

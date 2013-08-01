@@ -55,7 +55,7 @@ import java.util.List;
 import static org.exoplatform.ide.vfs.shared.PropertyFilter.ALL_FILTER;
 
 /**
- * Service for managing (creating/launching/stopping/getting logs) Codenvy-extension projects.
+ * RESTful front-end for {@link ExtensionLauncher}.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtensionRuntimeService.java Jul 3, 2013 3:21:23 PM azatsarynnyy $
@@ -130,7 +130,7 @@ public class ExtensionRuntimeService {
      * 
      * @param vfsId identifier of virtual file system
      * @param projectId identifier of project we want to launch
-     * @return launched extension description
+     * @return launched application description
      * @throws VirtualFileSystemException if any error occurred in VFS
      * @throws ExtensionLauncherException if any error occurred while launching an extension
      */
@@ -141,7 +141,7 @@ public class ExtensionRuntimeService {
                                       @QueryParam("projectid") String projectId) throws VirtualFileSystemException,
                                                                                 ExtensionLauncherException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        return launcher.launchExtension(vfs, projectId, fsMountStrategy.getMountPath().getPath());
+        return launcher.launch(vfs, projectId, fsMountStrategy.getMountPath().getPath());
     }
 
     /**
@@ -159,7 +159,7 @@ public class ExtensionRuntimeService {
     }
 
     /**
-     * Stop previously launched Codenvy extension.
+     * Stop previously launched Codenvy with custom extension.
      * 
      * @param extId identifier of extension to stop
      * @throws ExtensionLauncherException if error occurred while stopping an extension
@@ -167,7 +167,7 @@ public class ExtensionRuntimeService {
     @Path("stop/{extid}")
     @GET
     public void stop(@PathParam("extid") String extId) throws ExtensionLauncherException {
-        launcher.stopExtension(extId);
+        launcher.stop(extId);
     }
 
     private void updateProperties(String name, List<Property> properties, VirtualFileSystem vfs, Folder projectFolder)

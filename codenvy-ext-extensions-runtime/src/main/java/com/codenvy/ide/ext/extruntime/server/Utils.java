@@ -29,7 +29,21 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -221,6 +235,49 @@ class Utils {
             writePom(pom, pomPath);
         } catch (IOException | XmlPullParserException e) {
             throw new IllegalStateException("Can't parse pom.xml.");
+        }
+    }
+
+    static void setTomcatPort(Path tomcatRootPath, int shutdownPort, int httpPort, int ajpPort) {
+        File serverXml = tomcatRootPath.resolve("conf/server.xml").toFile();
+
+        try {
+            DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = domFactory.newDocumentBuilder();
+            Document doc = builder.parse(serverXml);
+
+            Node serverElement = doc.getElementsByTagName("Server").item(0);
+            Node serverShutdownPortNode = serverElement.getAttributes().getNamedItem("port");
+            serverShutdownPortNode.setNodeValue(String.valueOf(shutdownPort));
+            
+            NodeList serverChildNodes = serverElement.getChildNodes();
+            for (int i = 0; i < serverChildNodes.getLength(); i++) {
+                Node serverChildNode = serverChildNodes.item(i);
+                if ("Service".equals(serverChildNode.getNodeName())) {
+                    NodeList serviceChildNodes = serverChildNode.getChildNodes();
+                    for (int n = 0; n < serviceChildNodes.getLength(); n++) {
+                        Node serviceChildNode = serviceChildNodes.item(n);
+                        if ("Connector".equals(serviceChildNode.getNodeName())) {
+                            Node portNode = serviceChildNode.getAttributes().getNamedItem("port");
+                            if ("8080".equals(portNode.getNodeValue())) {
+                                portNode.setNodeValue(String.valueOf(httpPort));
+                            } else if ("8009".equals(portNode.getNodeValue())) {
+                                portNode.setNodeValue(String.valueOf(ajpPort));                                
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(serverXml);
+            transformer.transform(source, result);
+        } catch (ParserConfigurationException | TransformerException | SAXException | IOException e) {
+            // TODO
+            e.printStackTrace();
         }
     }
 }

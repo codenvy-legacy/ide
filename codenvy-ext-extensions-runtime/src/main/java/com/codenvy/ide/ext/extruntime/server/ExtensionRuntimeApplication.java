@@ -24,10 +24,12 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
+ * JAX-RS application for Codenvy extensions runtime.
+ * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ExtensionsRuntimeApplication.java Jul 3, 2013 3:26:32 PM azatsarynnyy $
+ * @version $Id: ExtensionRuntimeApplication.java Jul 3, 2013 3:26:32 PM azatsarynnyy $
  */
-public class ExtensionsRuntimeApplication extends Application {
+public class ExtensionRuntimeApplication extends Application {
     /** {@inheritDoc} */
     @Override
     public Set<Class< ? >> getClasses() {

@@ -31,11 +31,23 @@
                 <name>build-server-base-url</name>
                 <value>http://localhost:8080/builder</value>
             </value-param>
+            <values-param>
+                <name>catalina-shutdown-port-ranges</name>
+                <value>8006-8007</value>
+            </values-param>
+            <values-param>
+                <name>http-connector-port-ranges</name>
+                <value>8081-8082</value>
+            </values-param>
+            <values-param>
+                <name>ajp-connector-port-ranges</name>
+                <value>8010-8011</value>
+            </values-param>
         </init-params>
     </component>
 
     <component>
-        <type>com.codenvy.ide.ext.extruntime.server.ExtensionsRuntimeApplication</type>
+        <type>com.codenvy.ide.ext.extruntime.server.ExtensionRuntimeApplication</type>
     </component>
 
 </configuration>
