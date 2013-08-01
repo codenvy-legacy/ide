@@ -29,15 +29,23 @@ import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import javax.inject.Inject;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.UUID;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -55,14 +63,22 @@ public class CopyProjectService {
     @Produces(MimeType.APPLICATION_JSON)
     public Project copyProject(@QueryParam("projecturl") String projectUrl,  @QueryParam("projectname") String projectName)
             throws VirtualFileSystemException, IOException {
+
         VirtualFileSystem vfs = vfsRegistry.getProvider(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID).toString()).newInstance(null, null);
         Folder folder = vfs.createFolder(vfs.getInfo().getRoot().getId(), projectName);
+        if (CookieHandler.getDefault() == null)
+            CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
         HttpURLConnection connection = null;
+
+
         InputStream inputStream = null;
         try {
             URL url = new URL(projectUrl);
             connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestProperty("Referer", projectUrl);
+            connection.setAllowUserInteraction(false);
             connection.setRequestMethod("GET");
+
             inputStream = connection.getInputStream();
             vfs.importZip(folder.getId(), inputStream, true);
             return (Project)vfs.getItem(folder.getId(), false, PropertyFilter.ALL_FILTER);
