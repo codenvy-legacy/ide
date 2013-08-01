@@ -63,7 +63,6 @@ public class FactoryExtension extends Extension implements InitializeServicesHan
     public void initialize() {
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
         IDE.getInstance().addControl(new FactoryUrlControl());
-        IDE.getInstance().addControl(new CopyProjectControl(), Docking.TOOLBAR_RIGHT);
         new FactoryURLHandler();
         new FanctoryHandler();
         new GetCodeNowButtonPresenter();

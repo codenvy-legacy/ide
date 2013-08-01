@@ -19,6 +19,7 @@
 package com.codenvy.ide.factory.client.greeting;
 
 import com.codenvy.ide.factory.client.FactoryClientBundle;
+import com.codenvy.ide.factory.client.copy.CopyProjectEvent;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.Style;
@@ -144,6 +145,7 @@ public class GreetingUserPresenter implements
                FactoryClientBundle.INSTANCE.copyToMyWorkspace(), FactoryClientBundle.INSTANCE.copyToMyWorkspaceHover(), new ClickHandler() {
                    @Override
                    public void onClick(ClickEvent event) {
+                       IDE.fireEvent(new CopyProjectEvent());
                    }
                });        
         IDE.fireEvent(new AddToolbarItemsEvent(copyToMyWorkspaceButton, true));        
