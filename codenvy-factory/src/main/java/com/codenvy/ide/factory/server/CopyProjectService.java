@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.factory.server;
 
+import com.codenvy.commons.env.EnvironmentContext;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -53,7 +55,7 @@ public class CopyProjectService {
     @Produces(MimeType.APPLICATION_JSON)
     public Project copyProject(@QueryParam("projecturl") String projectUrl,  @QueryParam("projectname") String projectName)
             throws VirtualFileSystemException, IOException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(wsName).newInstance(null, null);
+        VirtualFileSystem vfs = vfsRegistry.getProvider(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID).toString()).newInstance(null, null);
         Folder folder = vfs.createFolder(vfs.getInfo().getRoot().getId(), projectName);
         HttpURLConnection connection = null;
         InputStream inputStream = null;
