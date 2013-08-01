@@ -21,6 +21,8 @@ package com.codenvy.ide.ext.ssh.client.inject;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
 import com.codenvy.ide.ext.ssh.client.SshKeyServiceImpl;
+import com.codenvy.ide.ext.ssh.client.key.SshKeyView;
+import com.codenvy.ide.ext.ssh.client.key.SshKeyViewImpl;
 import com.codenvy.ide.ext.ssh.client.manage.SshKeyManagerView;
 import com.codenvy.ide.ext.ssh.client.manage.SshKeyManagerViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
@@ -35,5 +37,6 @@ public class SshGinModule extends AbstractGinModule {
         bind(SshKeyService.class).to(SshKeyServiceImpl.class).in(Singleton.class);
 
         bind(SshKeyManagerView.class).to(SshKeyManagerViewImpl.class).in(Singleton.class);
+        bind(SshKeyView.class).to(SshKeyViewImpl.class).in(Singleton.class);
     }
 }

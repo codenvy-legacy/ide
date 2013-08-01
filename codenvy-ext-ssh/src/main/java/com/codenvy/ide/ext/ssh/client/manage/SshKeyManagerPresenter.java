@@ -31,7 +31,9 @@ import com.codenvy.ide.ext.ssh.client.JsonpAsyncCallback;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
 import com.codenvy.ide.ext.ssh.client.SshResources;
+import com.codenvy.ide.ext.ssh.client.key.SshKeyPresenter;
 import com.codenvy.ide.ext.ssh.client.marshaller.SshKeysUnmarshaller;
+import com.codenvy.ide.ext.ssh.shared.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.shared.KeyItem;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonStringMap;
@@ -74,6 +76,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     private GitHubClientService     gitHubClientService;
     private Loader                  loader;
     private String                  restContext;
+    private SshKeyPresenter         sshKeyPresenter;
 
     /**
      * Create presenter.
@@ -91,7 +94,8 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     @Inject
     public SshKeyManagerPresenter(SshKeyManagerView view, SshKeyService service, SshResources resources, SshLocalizationConstant constant,
                                   EventBus eventBus, ConsolePart console, UserClientService userService,
-                                  GitHubClientService gitHubClientService, @Named("restContext") String restContext) {
+                                  GitHubClientService gitHubClientService, @Named("restContext") String restContext,
+                                  SshKeyPresenter sshKeyPresenter) {
         super(constant.sshManagerTitle(), resources.sshKeyManager());
 
         this.view = view;
@@ -103,12 +107,13 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         this.userService = userService;
         this.gitHubClientService = gitHubClientService;
         this.restContext = restContext;
+        this.sshKeyPresenter = sshKeyPresenter;
     }
 
     /** {@inheritDoc} */
     @Override
     public void onViewClicked(KeyItem key) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        sshKeyPresenter.showDialog(key);
     }
 
     /** {@inheritDoc} */
@@ -136,7 +141,26 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     /** {@inheritDoc} */
     @Override
     public void onGenerateClicked() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        String host = Window.prompt("Host name (w/o port): ", "");
+        if (!host.isEmpty()) {
+            try {
+                service.generateKey(host, new AsyncRequestCallback<GenKeyRequest>() {
+                    @Override
+                    protected void onSuccess(GenKeyRequest result) {
+                        refreshKeys();
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        console.print(exception.getMessage());
+                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                    }
+                });
+            } catch (RequestException e) {
+                console.print(e.getMessage());
+                eventBus.fireEvent(new ExceptionThrownEvent(e));
+            }
+        }
     }
 
     /** {@inheritDoc} */
