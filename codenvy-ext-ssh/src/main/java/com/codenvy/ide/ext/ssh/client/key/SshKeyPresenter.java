@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.ssh.client.key;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.ssh.client.JsonpAsyncCallback;
@@ -59,7 +60,7 @@ public class SshKeyPresenter implements SshKeyView.ActionDelegate {
     }
 
     /** Show dialog. */
-    public void showDialog(KeyItem keyItem) {
+    public void showDialog(@NotNull KeyItem keyItem) {
         view.addHostToTitle(keyItem.getHost());
 
         service.getPublicKey(keyItem, new JsonpAsyncCallback<JavaScriptObject>() {

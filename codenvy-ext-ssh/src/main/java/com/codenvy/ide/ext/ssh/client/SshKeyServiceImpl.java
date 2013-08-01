@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.ssh.client;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.ssh.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.ssh.shared.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.shared.KeyItem;
@@ -62,7 +63,7 @@ public class SshKeyServiceImpl implements SshKeyService {
 
     /** {@inheritDoc} */
     @Override
-    public void getAllKeys(JsonpAsyncCallback<JavaScriptObject> callback) {
+    public void getAllKeys(@NotNull JsonpAsyncCallback<JavaScriptObject> callback) {
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
         loader.setMessage("Getting SSH keys....");
         loader.show();
@@ -72,7 +73,7 @@ public class SshKeyServiceImpl implements SshKeyService {
 
     /** {@inheritDoc} */
     @Override
-    public void generateKey(String host, AsyncRequestCallback<GenKeyRequest> callback) throws RequestException {
+    public void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<GenKeyRequest> callback) throws RequestException {
         String url = restContext + wsName + "/ssh-keys/gen";
 
         DtoClientImpls.GenKeyRequestImpl keyRequest = DtoClientImpls.GenKeyRequestImpl.make();
@@ -87,7 +88,7 @@ public class SshKeyServiceImpl implements SshKeyService {
 
     /** {@inheritDoc} */
     @Override
-    public void getPublicKey(KeyItem keyItem, JsonpAsyncCallback<JavaScriptObject> callback) {
+    public void getPublicKey(@NotNull KeyItem keyItem, @NotNull JsonpAsyncCallback<JavaScriptObject> callback) {
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
         loader.setMessage("Getting public SSH key for " + keyItem.getHost());
         loader.show();
@@ -97,7 +98,7 @@ public class SshKeyServiceImpl implements SshKeyService {
 
     /** {@inheritDoc} */
     @Override
-    public void deleteKey(KeyItem keyItem, JsonpAsyncCallback<Void> callback) {
+    public void deleteKey(@NotNull KeyItem keyItem, @NotNull JsonpAsyncCallback<Void> callback) {
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
         loader.setMessage("Deleting SSH keys for " + keyItem.getHost());
         loader.show();

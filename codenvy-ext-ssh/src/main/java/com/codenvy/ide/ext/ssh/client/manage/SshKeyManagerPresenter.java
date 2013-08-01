@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.ssh.client.manage;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.ui.preferences.AbstractPreferencesPagePresenter;
 import com.codenvy.ide.api.user.User;
@@ -115,13 +116,13 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
 
     /** {@inheritDoc} */
     @Override
-    public void onViewClicked(KeyItem key) {
+    public void onViewClicked(@NotNull KeyItem key) {
         sshKeyPresenter.showDialog(key);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onDeleteClicked(KeyItem key) {
+    public void onDeleteClicked(@NotNull KeyItem key) {
         boolean needToDelete = Window.confirm("Do you want to delete ssh keys for <b>" + key.getHost() + "</b> host?");
         if (needToDelete) {
             service.deleteKey(key, new JsonpAsyncCallback<Void>() {
@@ -233,7 +234,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
      * @param user
      *         user which need token
      */
-    private void getToken(final String user) {
+    private void getToken(@NotNull final String user) {
         StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
@@ -260,7 +261,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     }
 
     /** Log in  github */
-    private void oAuthLoginStart(String user) {
+    private void oAuthLoginStart(@NotNull String user) {
         boolean permitToRedirect = Window.confirm(constant.loginOAuthLabel());
         if (permitToRedirect) {
             String authUrl = "rest/ide/oauth/authenticate?oauth_provider=github"
@@ -328,7 +329,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
      * @param key
      *         failed key
      */
-    private void removeFailedKey(KeyItem key) {
+    private void removeFailedKey(@NotNull KeyItem key) {
         service.deleteKey(key, new JsonpAsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -405,7 +406,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
 
     /** {@inheritDoc} */
     @Override
-    public void onAuthenticated(OAuthStatus authStatus) {
+    public void onAuthenticated(@NotNull OAuthStatus authStatus) {
         if (LOGGED_IN.equals(authStatus)) {
             generateGitHubKey();
         }

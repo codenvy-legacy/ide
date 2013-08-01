@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.ssh.client.manage;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.ext.ssh.shared.KeyItem;
 import com.codenvy.ide.json.JsonArray;
@@ -36,7 +37,7 @@ public interface SshKeyManagerView extends View<SshKeyManagerView.ActionDelegate
          * @param key
          *         key what need to show
          */
-        void onViewClicked(KeyItem key);
+        void onViewClicked(@NotNull KeyItem key);
 
         /**
          * Performs any actions appropriate in response to the user having pressed the Delete button.
@@ -44,7 +45,7 @@ public interface SshKeyManagerView extends View<SshKeyManagerView.ActionDelegate
          * @param key
          *         key what need to delete
          */
-        void onDeleteClicked(KeyItem key);
+        void onDeleteClicked(@NotNull KeyItem key);
 
         /** Performs any actions appropriate in response to the user having pressed the Generate button. */
         void onGenerateClicked();
@@ -62,5 +63,5 @@ public interface SshKeyManagerView extends View<SshKeyManagerView.ActionDelegate
      * @param keys
      *         available keys
      */
-    void setKeys(JsonArray<KeyItem> keys);
+    void setKeys(@NotNull JsonArray<KeyItem> keys);
 }

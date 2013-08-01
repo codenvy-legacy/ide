@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.ssh.client;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.ssh.shared.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.shared.KeyItem;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -36,7 +37,7 @@ public interface SshKeyService {
      *
      * @param callback
      */
-    void getAllKeys(JsonpAsyncCallback<JavaScriptObject> callback);
+    void getAllKeys(@NotNull JsonpAsyncCallback<JavaScriptObject> callback);
 
     /**
      * Generate new ssh key pare
@@ -46,7 +47,7 @@ public interface SshKeyService {
      * @param callback
      * @throws RequestException
      */
-    void generateKey(String host, AsyncRequestCallback<GenKeyRequest> callback) throws RequestException;
+    void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<GenKeyRequest> callback) throws RequestException;
 
     /**
      * Get public ssh key
@@ -55,7 +56,7 @@ public interface SshKeyService {
      *         to get public key
      * @param callback
      */
-    void getPublicKey(KeyItem keyItem, JsonpAsyncCallback<JavaScriptObject> callback);
+    void getPublicKey(@NotNull KeyItem keyItem, @NotNull JsonpAsyncCallback<JavaScriptObject> callback);
 
     /**
      * Delete ssh key
@@ -64,5 +65,5 @@ public interface SshKeyService {
      *         to delete
      * @param callback
      */
-    void deleteKey(KeyItem keyItem, JsonpAsyncCallback<Void> callback);
+    void deleteKey(@NotNull KeyItem keyItem, @NotNull JsonpAsyncCallback<Void> callback);
 }

@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.ssh.client.manage;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
 import com.codenvy.ide.ext.ssh.client.SshResources;
 import com.codenvy.ide.ext.ssh.shared.KeyItem;
@@ -139,7 +140,7 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
 
     /** {@inheritDoc} */
     @Override
-    public void setKeys(JsonArray<KeyItem> keys) {
+    public void setKeys(@NotNull JsonArray<KeyItem> keys) {
         // Wraps JsonArray in java.util.List
         List<KeyItem> appList = new ArrayList<KeyItem>();
         for (int i = 0; i < keys.size(); i++) {
