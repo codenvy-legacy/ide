@@ -33,6 +33,7 @@ import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
 import com.codenvy.ide.ext.ssh.client.SshResources;
 import com.codenvy.ide.ext.ssh.client.key.SshKeyPresenter;
 import com.codenvy.ide.ext.ssh.client.marshaller.SshKeysUnmarshaller;
+import com.codenvy.ide.ext.ssh.client.upload.UploadSshKeyPresenter;
 import com.codenvy.ide.ext.ssh.shared.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.shared.KeyItem;
 import com.codenvy.ide.json.JsonArray;
@@ -77,6 +78,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     private Loader                  loader;
     private String                  restContext;
     private SshKeyPresenter         sshKeyPresenter;
+    private UploadSshKeyPresenter   uploadSshKeyPresenter;
 
     /**
      * Create presenter.
@@ -95,7 +97,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     public SshKeyManagerPresenter(SshKeyManagerView view, SshKeyService service, SshResources resources, SshLocalizationConstant constant,
                                   EventBus eventBus, ConsolePart console, UserClientService userService,
                                   GitHubClientService gitHubClientService, @Named("restContext") String restContext,
-                                  SshKeyPresenter sshKeyPresenter) {
+                                  SshKeyPresenter sshKeyPresenter, UploadSshKeyPresenter uploadSshKeyPresenter) {
         super(constant.sshManagerTitle(), resources.sshKeyManager());
 
         this.view = view;
@@ -108,6 +110,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         this.gitHubClientService = gitHubClientService;
         this.restContext = restContext;
         this.sshKeyPresenter = sshKeyPresenter;
+        this.uploadSshKeyPresenter = uploadSshKeyPresenter;
     }
 
     /** {@inheritDoc} */
@@ -166,7 +169,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     /** {@inheritDoc} */
     @Override
     public void onUploadClicked() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        uploadSshKeyPresenter.showDialog();
     }
 
     /** {@inheritDoc} */

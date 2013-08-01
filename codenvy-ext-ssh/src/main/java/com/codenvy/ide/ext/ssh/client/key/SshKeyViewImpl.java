@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.ssh.client.key;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -75,13 +76,13 @@ public class SshKeyViewImpl extends DialogBox implements SshKeyView {
 
     /** {@inheritDoc} */
     @Override
-    public void setKey(String value) {
+    public void setKey(@NotNull String value) {
         key.setText(value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void addHostToTitle(String host) {
+    public void addHostToTitle(@NotNull String host) {
         setText(title + host);
     }
 
