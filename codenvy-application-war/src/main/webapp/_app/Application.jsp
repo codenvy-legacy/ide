@@ -31,6 +31,8 @@
      %>
 
     <script type="text/javascript" language="javascript">
+	var ide_base_path = '<%=request.getContextPath() + "/" + request.getAttribute("ws") + "/_app/"%>';
+
         var appConfig = {
             "context": "/ide/rest/",
             "websocketContext": "/ide/websocket/"
@@ -48,7 +50,7 @@
 
     <link rel="shortcut icon" href="/images/favicon.ico"/>
 
-    <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "gretting.js")%>'></script>
+    <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "greeting.js")%>'></script>
 
     <link type="text/css" rel="stylesheet" href='<%= genIdeStaticResourceUrl(request, "top-menu.css")%>' media="all"/>
     <link href='<%= genIdeStaticResourceUrl(request, "css/ide.css")%>' media="screen" rel="stylesheet" type="text/css"/>

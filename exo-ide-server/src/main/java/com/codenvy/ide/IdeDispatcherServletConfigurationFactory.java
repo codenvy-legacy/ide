@@ -174,11 +174,9 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                                          else
                                                              project = myPath1;
 
-
-
                                                          request.setAttribute("project", project);
                                                          request.setAttribute("path", filePath);
-                                                         request.setAttribute("startUpParams", url.getQuery());
+                                                         request.setAttribute("startUpParams", url.getQuery().contains("gwt.codesvr") ? null : url.getQuery());
                                                          request.getSession().removeAttribute("openProjectOperation");
                                                          final String myPath = "/_app/main";
                                                          request.getRequestDispatcher(myPath).forward(request, response);
@@ -217,7 +215,7 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                                          trim = project.length();
                                                      if (filePath != null)
                                                          trim += filePath.length();
-                                                     if (request.getQueryString() != null)
+                                                     if (request.getQueryString() != null  && !request.getQueryString().contains("gwt.codesvr"))
                                                          trim = 0;
 
                                                      if (trim >= 0) {

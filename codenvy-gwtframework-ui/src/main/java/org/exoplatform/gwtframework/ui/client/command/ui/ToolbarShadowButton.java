@@ -57,9 +57,9 @@ public class ToolbarShadowButton extends FlowPanel {
 
         image.getElement().getStyle().setPosition(Position.RELATIVE);
 
-        image.getElement().getStyle().setLeft(1, Unit.PX);
-        image.getElement().getStyle().setTop(1, Unit.PX);
-        image.getElement().getStyle().setProperty("boxShadow", "2px 2px 2px #888888");
+        image.getElement().getStyle().setLeft(2, Unit.PX);
+        image.getElement().getStyle().setTop(2, Unit.PX);
+        //image.getElement().getStyle().setProperty("boxShadow", "2px 2px 2px #888888");
         
         sinkEvents(Event.ONMOUSEOVER | Event.ONMOUSEOUT | Event.ONMOUSEDOWN | Event.ONMOUSEUP | Event.ONCLICK);        
     }
@@ -100,21 +100,21 @@ public class ToolbarShadowButton extends FlowPanel {
     
     private void mouseOut() {
         image.setResource(imageResource);
-        image.getElement().getStyle().setLeft(1, Unit.PX);
-        image.getElement().getStyle().setTop(1, Unit.PX);
-        image.getElement().getStyle().setProperty("boxShadow", "2px 2px 2px #888888");        
+//        image.getElement().getStyle().setLeft(1, Unit.PX);
+//        image.getElement().getStyle().setTop(1, Unit.PX);
+//        image.getElement().getStyle().setProperty("boxShadow", "2px 2px 2px #888888");        
     }
     
     private void mouseDown() {
-        image.getElement().getStyle().setLeft(3, Unit.PX);
-        image.getElement().getStyle().setTop(3, Unit.PX);
-        image.getElement().getStyle().setProperty("boxShadow", "0px 0px 2px #000000");
+//        image.getElement().getStyle().setLeft(3, Unit.PX);
+//        image.getElement().getStyle().setTop(3, Unit.PX);
+//        image.getElement().getStyle().setProperty("boxShadow", "0px 0px 2px #000000");
     }
     
     private void mouseUp() {
-        image.getElement().getStyle().setLeft(1, Unit.PX);
-        image.getElement().getStyle().setTop(1, Unit.PX);
-        image.getElement().getStyle().setProperty("boxShadow", "2px 2px 2px #888888");        
+//        image.getElement().getStyle().setLeft(1, Unit.PX);
+//        image.getElement().getStyle().setTop(1, Unit.PX);
+//        image.getElement().getStyle().setProperty("boxShadow", "2px 2px 2px #888888");        
     }
     
     private void click() {

@@ -41,11 +41,11 @@ import com.google.gwt.user.client.ui.RootPanel;
 import org.exoplatform.gwtframework.ui.client.command.ui.AddToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarShadowButton;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEInitialConfiguration;
 import org.exoplatform.ide.client.framework.configuration.InitialConfigurationReceivedEvent;
 import org.exoplatform.ide.client.framework.configuration.InitialConfigurationReceivedHandler;
-import org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent;
-import org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 
@@ -55,7 +55,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
  */
 public class GreetingUserPresenter implements 
         InitialConfigurationReceivedHandler,
-        IDELoadCompleteHandler {
+        InitializeServicesHandler {
 
     public interface GreetingDisplay extends IsView {
     }
@@ -70,7 +70,7 @@ public class GreetingUserPresenter implements
      */
     public GreetingUserPresenter() {
         IDE.addHandler(InitialConfigurationReceivedEvent.TYPE, this);
-        IDE.addHandler(IDELoadCompleteEvent.TYPE, this);
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
     }
 
     /**
@@ -94,12 +94,9 @@ public class GreetingUserPresenter implements
             return null;
         }
     }-*/;
-
-    /**
-     * @see org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler#onIDELoadComplete(org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent)
-     */
+    
     @Override
-    public void onIDELoadComplete(IDELoadCompleteEvent event) {
+    public void onInitializeServices(InitializeServicesEvent event) {
         new Timer() {
             @Override
             public void run() {
