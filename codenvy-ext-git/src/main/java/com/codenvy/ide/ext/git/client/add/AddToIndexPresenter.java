@@ -20,11 +20,15 @@ package com.codenvy.ide.ext.git.client.add;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.selection.Selection;
+import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
@@ -46,6 +50,7 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
     private GitLocalizationConstant constant;
     private ResourceProvider        resourceProvider;
     private Project                 project;
+    private SelectionAgent          selectionAgent;
 
     /**
      * Create presenter
@@ -55,16 +60,18 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
      * @param console
      * @param constant
      * @param resourceProvider
+     * @param selectionAgent
      */
     @Inject
     public AddToIndexPresenter(AddToIndexView view, GitClientService service, ConsolePart console, GitLocalizationConstant constant,
-                               ResourceProvider resourceProvider) {
+                               ResourceProvider resourceProvider, SelectionAgent selectionAgent) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.console = console;
         this.constant = constant;
         this.resourceProvider = resourceProvider;
+        this.selectionAgent = selectionAgent;
     }
 
     /** Show dialog. */
@@ -82,25 +89,28 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
      * @return {@link String} message to display
      */
     private String formMessage(String workdir) {
-        // TODO we don't know selected item
-        //        if (selectedItem == null) {
-        //            return "";
-        //        }
-        //        String pattern = selectedItem.getPath().replaceFirst(workdir, "");
-        //        pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
-        //
-        //        // Root of the working tree:
-        //        if (pattern.length() == 0 || "/".equals(pattern)) {
-        //            return GitExtension.MESSAGES.addToIndexAllChanges();
-        //        }
-        //
-        //        if (selectedItem instanceof Folder) {
-        //            return GitExtension.MESSAGES.addToIndexFolder(pattern);
-        //        } else {
-        //            return GitExtension.MESSAGES.addToIndexFile(pattern);
-        //        }
+        Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
 
-        return constant.addToIndexAllChanges();
+        Resource element;
+        if (selection == null) {
+            element = project;
+        } else {
+            element = selection.getFirstElement();
+        }
+
+        String pattern = element.getPath().replaceFirst(workdir, "");
+        pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
+
+        // Root of the working tree:
+        if (pattern.length() == 0 || "/".equals(pattern)) {
+            return constant.addToIndexAllChanges();
+        }
+
+        if (element instanceof Folder) {
+            return constant.addToIndexFolder(pattern);
+        } else {
+            return constant.addToIndexFile(pattern);
+        }
     }
 
     /** {@inheritDoc} */
@@ -157,10 +167,16 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
      */
     private JsonArray<String> getFilePatterns() {
         String projectPath = project.getPath();
-        // TODO we don't know selected item
-        String pattern = "";
-        // String pattern = selectedItem.getPath().replaceFirst(projectPath, "");
 
+        Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
+        Resource element;
+        if (selection == null) {
+            element = project;
+        } else {
+            element = selection.getFirstElement();
+        }
+
+        String pattern = element.getPath().replaceFirst(projectPath, "");
         pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
 
         JsoArray<String> patterns = JsoArray.create();

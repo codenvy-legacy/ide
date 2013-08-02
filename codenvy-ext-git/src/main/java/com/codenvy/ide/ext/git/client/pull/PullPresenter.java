@@ -218,6 +218,7 @@ public class PullPresenter implements PullView.ActionDelegate {
                 @Override
                 protected void onSuccess(String result) {
                     console.print(constant.pullSuccess(remoteUrl));
+                    // TODO
                     // IDE.fireEvent(new RefreshBrowserEvent());
                 }
 
@@ -242,6 +243,7 @@ public class PullPresenter implements PullView.ActionDelegate {
                 @Override
                 protected void onSuccess(String result) {
                     console.print(constant.pullSuccess(remoteUrl));
+                    // TODO
                     // IDE.fireEvent(new RefreshBrowserEvent());
                 }
 

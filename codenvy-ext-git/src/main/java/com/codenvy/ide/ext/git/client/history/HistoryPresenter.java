@@ -22,12 +22,14 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.selection.Selection;
+import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
-import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.marshaller.DiffResponseUnmarshaller;
 import com.codenvy.ide.ext.git.client.marshaller.LogResponseUnmarshaller;
 import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
@@ -37,6 +39,7 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.part.base.BasePresenter;
 import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -76,6 +79,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
     private boolean isViewClosed = true;
     private JsonArray<Revision> revisions;
     private Revision            selectedRevision;
+    private SelectionAgent      selectionAgent;
 
     /**
      * Create presenter.
@@ -90,7 +94,8 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
      */
     @Inject
     public HistoryPresenter(HistoryView view, GitClientService service, GitLocalizationConstant constant, GitResources resources,
-                            ResourceProvider resourceProvider, ConsolePart console, WorkspaceAgent workspaceAgent) {
+                            ResourceProvider resourceProvider, ConsolePart console, WorkspaceAgent workspaceAgent,
+                            SelectionAgent selectionAgent) {
         this.view = view;
         this.view.setDelegate(this);
         this.view.setTitle(constant.historyTitle());
@@ -100,6 +105,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.workspaceAgent = workspaceAgent;
+        this.selectionAgent = selectionAgent;
     }
 
     /** Show dialog. */
@@ -298,10 +304,16 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
 
         Project project = resourceProvider.getActiveProject();
         if (!showChangesInProject && project != null) {
-            // TODO selected item
-            // if (!showChangesInProject && project != null && selectedItem != null) {
-            // String pattern = selectedItem.getPath().replaceFirst(project.getPath(), "");
-            String pattern = "";
+            Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
+            Resource element;
+
+            if (selection == null) {
+                element = project;
+            } else {
+                element = selection.getFirstElement();
+            }
+
+            String pattern = element.getPath().replaceFirst(project.getPath(), "");
             pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
             if (pattern.length() > 0) {
                 filePatterns.add(pattern);
