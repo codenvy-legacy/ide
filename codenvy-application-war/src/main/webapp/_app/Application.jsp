@@ -53,7 +53,7 @@
     <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "greeting.js")%>'></script>
 
     <link type="text/css" rel="stylesheet" href='<%= genIdeStaticResourceUrl(request, "top-menu.css")%>' media="all"/>
-    <link href='<%= genIdeStaticResourceUrl(request, "css/ide.css")%>' media="screen" rel="stylesheet" type="text/css"/>
+    <link href='<%= genIdeStaticResourceUrl(request, "css/ide01.css")%>' media="screen" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
