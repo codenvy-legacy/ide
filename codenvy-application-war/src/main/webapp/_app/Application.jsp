@@ -31,6 +31,8 @@
      %>
 
     <script type="text/javascript" language="javascript">
+	var ide_base_path = '<%=request.getContextPath() + "/" + request.getAttribute("ws") + "/_app/"%>';
+
         var appConfig = {
             "context": "/ide/rest/",
             "websocketContext": "/ide/websocket/"
@@ -40,23 +42,16 @@
         var ws = "<%= request.getAttribute("ws")%>";
         var project = <%= request.getAttribute("project") != null ? "\"" + request.getAttribute("project")  + "\"" : null%>;
         var path = <%= request.getAttribute("path") != null ? "\"" + request.getAttribute("path")  + "\"" : null%>;
-        var startUpParams = <%= request.getAttribute("startUpParams") != null ? "\"" + request.getAttribute("startUpParams")  + "\"" : null%>;
-        var authorizationContext = "/ide/rest";
+        var startUpParams = <%= request.getAttribute("startUpParams") != null ? "\"?" + request.getAttribute("startUpParams")  + "\"" : null%>;
+        var authorizationContext = "/rest";
         var authorizationErrorPageURL = "/ide/ide/error_oauth.html";
         var securityCheckURL = "/ide/j_security_check";
-        
-        var greetingPaneContent = {
-        		"anonymous": null,
-        		"authenticated": null,
-        		"anonymous-workspace-temporary": "<%= genIdeStaticResourceUrl(request, "greeting/anonymous-workspace-temporary.html")%>",
-        		"authenticated-workspace-temporary": "<%= genIdeStaticResourceUrl(request, "greeting/authenticated-workspace-temporary.html")%>"
-        }
     </script>
 
     <link rel="shortcut icon" href="/images/favicon.ico"/>
-<!--
-    <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "_app.nocache.js")%>'></script>
--->
+
+    <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "greeting.js")%>'></script>
+
     <link type="text/css" rel="stylesheet" href='<%= genIdeStaticResourceUrl(request, "top-menu.css")%>' media="all"/>
     <link href='<%= genIdeStaticResourceUrl(request, "css/ide.css")%>' media="screen" rel="stylesheet" type="text/css"/>
 </head>

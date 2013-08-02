@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.factory.server;
 
+import com.codenvy.commons.env.EnvironmentContext;
+
 import org.everrest.websockets.WSConnection;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -35,8 +37,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.*;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -57,8 +58,13 @@ public class CopyProjectService {
     public Project copyProject(@QueryParam("projecturl") String projectUrl,
                                @QueryParam("projectname") String projectName, @Context WSConnection wsConnection)
             throws VirtualFileSystemException, IOException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(wsName).newInstance(null, null);
+
+        VirtualFileSystem vfs = vfsRegistry
+                .getProvider(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID).toString())
+                .newInstance(null, null);
         Folder folder = vfs.createFolder(vfs.getInfo().getRoot().getId(), projectName);
+        if (CookieHandler.getDefault() == null)
+            CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
         HttpURLConnection connection = null;
         InputStream inputStream = null;
         String user = ConversationState.getCurrent().getIdentity().getUserId();
@@ -66,7 +72,10 @@ public class CopyProjectService {
         try {
             URL url = new URL(projectUrl);
             connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestProperty("Referer", projectUrl);
+            connection.setAllowUserInteraction(false);
             connection.setRequestMethod("GET");
+
             inputStream = connection.getInputStream();
             vfs.importZip(folder.getId(), inputStream, true);
             Project project = (Project)vfs.getItem(folder.getId(), false, PropertyFilter.ALL_FILTER);
