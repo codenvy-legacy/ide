@@ -379,7 +379,6 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
      * @param revisionB
      *         selected commit
      */
-
     private void doDiffWithPrevVersion(@NotNull JsonArray<String> filePatterns, @Nullable final Revision revisionB) {
         if (revisionB == null) {
             return;

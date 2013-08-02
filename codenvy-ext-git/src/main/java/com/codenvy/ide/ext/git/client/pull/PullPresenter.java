@@ -128,7 +128,7 @@ public class PullPresenter implements PullView.ActionDelegate {
      * @param remoteMode
      *         is a remote mode
      */
-    private void getBranches(String projectId, final String remoteMode) {
+    private void getBranches(@NotNull String projectId, @NotNull final String remoteMode) {
         BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller(JsonCollections.<Branch>createArray());
         try {
             service.branchList(resourceProvider.getVfsId(), projectId, remoteMode,
@@ -165,6 +165,7 @@ public class PullPresenter implements PullView.ActionDelegate {
      * @param remoteBranches
      *         remote branches
      */
+    @NotNull
     private JsonArray<String> getRemoteBranchesToDisplay(@NotNull String remoteName, @NotNull JsonArray<Branch> remoteBranches) {
         JsonArray<String> branches = JsonCollections.createArray();
 
@@ -193,6 +194,7 @@ public class PullPresenter implements PullView.ActionDelegate {
      * @param localBranches
      *         local branches
      */
+    @NotNull
     private JsonArray<String> getLocalBranchesToDisplay(@NotNull JsonArray<Branch> localBranches) {
         JsonArray<String> branches = JsonCollections.createArray();
 
@@ -247,7 +249,7 @@ public class PullPresenter implements PullView.ActionDelegate {
      * Perform pull from pointed by user remote repository, from pointed remote branch to local one. Local branch may not be pointed. Sends
      * request over HTTP.
      */
-    private void doPullREST(final String remoteUrl, String remoteName) {
+    private void doPullREST(@NotNull final String remoteUrl, @NotNull String remoteName) {
         try {
             service.pull(resourceProvider.getVfsId(), project, getRefs(), remoteName, new AsyncRequestCallback<String>() {
                 @Override
@@ -276,6 +278,7 @@ public class PullPresenter implements PullView.ActionDelegate {
     }
 
     /** @return list of refs to fetch */
+    @NotNull
     private String getRefs() {
         String remoteName = view.getRepositoryName();
         String localBranch = view.getLocalBranch();
@@ -291,11 +294,10 @@ public class PullPresenter implements PullView.ActionDelegate {
      * @param t
      *         exception what happened
      */
-    private void handleError(Throwable t, String remoteUrl) {
+    private void handleError(@NotNull Throwable t, @NotNull String remoteUrl) {
         String errorMessage = (t.getMessage() != null) ? t.getMessage() : constant.pullFail(remoteUrl);
         console.print(errorMessage);
     }
-
 
     /** {@inheritDoc} */
     @Override

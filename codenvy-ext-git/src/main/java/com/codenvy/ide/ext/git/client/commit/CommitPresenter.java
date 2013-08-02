@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.git.client.commit;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -124,7 +125,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
     }
 
     /** Perform the commit to repository and process the response (sends request over HTTP). */
-    private void doCommitREST(Project project, String message, boolean all, boolean amend) {
+    private void doCommitREST(@NotNull Project project, @NotNull String message, boolean all, boolean amend) {
         DtoClientImpls.RevisionImpl revision = DtoClientImpls.RevisionImpl.make();
         revision.setMessage(message);
         revision.setCommitTime(0);
@@ -159,7 +160,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
      * @param revision
      *         a {@link Revision}
      */
-    private void onCommitSuccess(final Revision revision) {
+    private void onCommitSuccess(@NotNull final Revision revision) {
         resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
@@ -185,7 +186,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
      * @param e
      *         exception what happened
      */
-    private void handleError(Throwable e) {
+    private void handleError(@NotNull Throwable e) {
         String errorMessage = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : constant.commitFailed();
         console.print(errorMessage);
     }

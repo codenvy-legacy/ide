@@ -127,7 +127,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
      * @param remoteMode
      *         is a remote mode
      */
-    private void getBranches(String projectId, final String remoteMode) {
+    private void getBranches(@NotNull String projectId, @NotNull final String remoteMode) {
         BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller(JsonCollections.<Branch>createArray());
         try {
             service.branchList(resourceProvider.getVfsId(), projectId, remoteMode,
@@ -164,6 +164,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
      * @param remoteBranches
      *         remote branches
      */
+    @NotNull
     private JsonArray<String> getRemoteBranchesToDisplay(@NotNull String remoteName, @NotNull JsonArray<Branch> remoteBranches) {
         JsonArray<String> branches = JsonCollections.createArray();
 
@@ -192,6 +193,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
      * @param localBranches
      *         local branches
      */
+    @NotNull
     private JsonArray<String> getLocalBranchesToDisplay(@NotNull JsonArray<Branch> localBranches) {
         JsonArray<String> branches = JsonCollections.createArray();
 
@@ -234,7 +236,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
     }
 
     /** Perform fetch from remote repository (sends request over HTTP). */
-    private void doFetchREST(String remoteName, boolean removeDeletedRefs, final String remoteUrl) {
+    private void doFetchREST(@NotNull String remoteName, boolean removeDeletedRefs, @NotNull final String remoteUrl) {
         try {
             service.fetch(resourceProvider.getVfsId(), project, remoteName, getRefs(), removeDeletedRefs,
                           new AsyncRequestCallback<String>() {
@@ -254,6 +256,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
     }
 
     /** @return list of refs to fetch */
+    @NotNull
     private JsonArray<String> getRefs() {
         String localBranch = view.getLocalBranch();
         String remoteBranch = view.getRemoteBranch();
@@ -272,7 +275,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
      * @param t
      *         exception what happened
      */
-    private void handleError(Throwable t, String remoteUrl) {
+    private void handleError(@NotNull Throwable t, @NotNull String remoteUrl) {
         String errorMessage = (t.getMessage() != null) ? t.getMessage() : constant.fetchFail(remoteUrl);
         console.print(errorMessage);
     }

@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.git.client.add;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
@@ -90,7 +91,8 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
      *
      * @return {@link String} message to display
      */
-    private String formMessage(String workdir) {
+    @NotNull
+    private String formMessage(@NotNull String workdir) {
         Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
 
         Resource element;
@@ -183,6 +185,7 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
      *
      * @return pattern of the files to be added
      */
+    @NotNull
     private JsonArray<String> getFilePatterns() {
         String projectPath = project.getPath();
 
@@ -213,7 +216,7 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
      * @param e
      *         exception what happened
      */
-    private void handleError(Throwable e) {
+    private void handleError(@NotNull Throwable e) {
         String errorMessage = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : constant.addFailed();
         console.print(errorMessage);
     }

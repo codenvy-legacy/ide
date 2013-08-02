@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.git.client.pull;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.job.Job;
 import com.codenvy.ide.job.JobChangeEvent;
@@ -41,7 +42,8 @@ public class PullRequestHandler extends RequestStatusHandlerBase {
      * @param eventBus
      * @param constant
      */
-    public PullRequestHandler(String projectName, String refSpec, EventBus eventBus, GitLocalizationConstant constant) {
+    public PullRequestHandler(@NotNull String projectName, @NotNull String refSpec, @NotNull EventBus eventBus,
+                              @NotNull GitLocalizationConstant constant) {
         super(projectName, eventBus);
         String[] split = refSpec.split(":");
         this.localBranch = split[0];

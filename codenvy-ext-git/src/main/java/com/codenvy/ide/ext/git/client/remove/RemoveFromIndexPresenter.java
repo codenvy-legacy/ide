@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.git.client.remove;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
@@ -85,7 +86,8 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
      *
      * @return {@link String} message to display
      */
-    private String formMessage(String workdir) {
+    @NotNull
+    private String formMessage(@NotNull String workdir) {
         Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
 
         Resource element;
@@ -148,6 +150,7 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
      *
      * @return pattern of the files to be removed
      */
+    @NotNull
     private JsonArray<String> getFilePatterns() {
         String projectPath = project.getPath();
 
@@ -178,7 +181,7 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
      * @param e
      *         exception what happened
      */
-    private void handleError(Throwable e) {
+    private void handleError(@NotNull Throwable e) {
         String errorMessage = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : constant.removeFilesFailed();
         console.print(errorMessage);
     }

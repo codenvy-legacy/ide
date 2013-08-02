@@ -199,37 +199,37 @@ public class HistoryViewImpl extends BaseView<HistoryView.ActionDelegate> implem
 
     /** {@inheritDoc} */
     @Override
-    public void setCommitADate(String date) {
+    public void setCommitADate(@NotNull String date) {
         commitADate.setText(date);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setCommitBDate(String date) {
+    public void setCommitBDate(@NotNull String date) {
         commitBDate.setText(date);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setCommitARevision(String revision) {
+    public void setCommitARevision(@NotNull String revision) {
         commitARevision.setText(revision);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setCommitBRevision(String revision) {
+    public void setCommitBRevision(@NotNull String revision) {
         commitBRevision.setText(revision);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setCompareType(String type) {
+    public void setCompareType(@NotNull String type) {
         compareType.setHTML(type);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setDiffContext(String diffContext) {
+    public void setDiffContext(@NotNull String diffContext) {
         editor.setText(diffContext);
     }
 

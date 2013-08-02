@@ -218,7 +218,8 @@ public class MergePresenter implements MergeView.ActionDelegate {
      *         result of merge operation
      * @return {@link String} merge result message
      */
-    private String formMergeMessage(MergeResult mergeResult) {
+    @NotNull
+    private String formMergeMessage(@NotNull MergeResult mergeResult) {
         if (mergeResult.getMergeStatus().equals(ALREADY_UP_TO_DATE)) {
             return mergeResult.getMergeStatus().getValue();
         }

@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.git.client.init;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.job.Job;
 import com.codenvy.ide.job.JobChangeEvent;
@@ -37,7 +38,7 @@ public class InitRequestStatusHandler implements RequestStatusHandler {
      * @param projectName
      *         project's name
      */
-    public InitRequestStatusHandler(String projectName, EventBus eventBus, GitLocalizationConstant constant) {
+    public InitRequestStatusHandler(@NotNull String projectName, @NotNull EventBus eventBus, @NotNull GitLocalizationConstant constant) {
         super();
         this.projectName = projectName;
         this.eventBus = eventBus;

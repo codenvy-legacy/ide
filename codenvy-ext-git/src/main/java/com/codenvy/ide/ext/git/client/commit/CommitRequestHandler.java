@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.git.client.commit;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.job.Job;
 import com.codenvy.ide.job.JobChangeEvent;
@@ -40,7 +41,8 @@ public class CommitRequestHandler extends RequestStatusHandlerBase {
      * @param eventBus
      * @param constant
      */
-    public CommitRequestHandler(String projectName, String comment, EventBus eventBus, GitLocalizationConstant constant) {
+    public CommitRequestHandler(@NotNull String projectName, @NotNull String comment, @NotNull EventBus eventBus,
+                                @NotNull GitLocalizationConstant constant) {
         super(projectName, eventBus);
         this.comment = comment;
         this.constant = constant;

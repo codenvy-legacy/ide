@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.git.client.clone;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -100,7 +101,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      * @param project
      *         folder (root of GIT repository)
      */
-    private void cloneRepository(final String remoteUri, String remoteName, final Project project) {
+    private void cloneRepository(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
         DtoClientImpls.RepoInfoImpl repoInfo = DtoClientImpls.RepoInfoImpl.make();
         RepoInfoUnmarshallerWS unmarshallerWS = new RepoInfoUnmarshallerWS(repoInfo);
         try {
@@ -134,7 +135,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      * @param project
      *         folder (root of GIT repository)
      */
-    private void cloneRepositoryREST(final String remoteUri, String remoteName, final Project project) {
+    private void cloneRepositoryREST(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
         DtoClientImpls.RepoInfoImpl repoInfo = DtoClientImpls.RepoInfoImpl.make();
         RepoInfoUnmarshaller unmarshaller = new RepoInfoUnmarshaller(repoInfo);
         try {
@@ -163,7 +164,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      * @param project
      *         {@link Project} to clone
      */
-    private void onCloneSuccess(final RepoInfo gitRepositoryInfo, final Project project) {
+    private void onCloneSuccess(@NotNull final RepoInfo gitRepositoryInfo, @NotNull final Project project) {
         resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
@@ -183,7 +184,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      * @param path
      *         the path where project exist
      */
-    private void deleteFolder(Project path) {
+    private void deleteFolder(@NotNull Project path) {
         resourceProvider.delete(path, new AsyncCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -205,7 +206,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      * @param remoteUri
      *         rempote uri
      */
-    private void handleError(Throwable e, String remoteUri) {
+    private void handleError(@NotNull Throwable e, @NotNull String remoteUri) {
         String errorMessage =
                 (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : constant.cloneFailed(remoteUri);
         console.print(errorMessage);
