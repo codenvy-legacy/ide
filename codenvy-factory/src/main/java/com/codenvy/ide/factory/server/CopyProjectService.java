@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.factory.server;
 
+import org.everrest.websockets.WSConnection;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -25,13 +26,13 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import javax.inject.Inject;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -43,6 +44,8 @@ import java.net.URL;
  */
 @Path("{ws-name}/copy")
 public class CopyProjectService {
+    private static final Log LOG = ExoLogger.getLogger(CopyProjectService.class);
+
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
     @PathParam("ws-name")
@@ -51,19 +54,25 @@ public class CopyProjectService {
     @POST
     @Path("project")
     @Produces(MimeType.APPLICATION_JSON)
-    public Project copyProject(@QueryParam("projecturl") String projectUrl,  @QueryParam("projectname") String projectName)
+    public Project copyProject(@QueryParam("projecturl") String projectUrl,
+                               @QueryParam("projectname") String projectName, @Context WSConnection wsConnection)
             throws VirtualFileSystemException, IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(wsName).newInstance(null, null);
         Folder folder = vfs.createFolder(vfs.getInfo().getRoot().getId(), projectName);
         HttpURLConnection connection = null;
         InputStream inputStream = null;
+        String user = ConversationState.getCurrent().getIdentity().getUserId();
+        String sessionId = wsConnection.getHttpSession().getId();
         try {
             URL url = new URL(projectUrl);
             connection = (HttpURLConnection)url.openConnection();
             connection.setRequestMethod("GET");
             inputStream = connection.getInputStream();
             vfs.importZip(folder.getId(), inputStream, true);
-            return (Project)vfs.getItem(folder.getId(), false, PropertyFilter.ALL_FILTER);
+            Project project = (Project)vfs.getItem(folder.getId(), false, PropertyFilter.ALL_FILTER);
+            LOG.info("EVENT#factory-project-imported# SESSION-ID#" + sessionId + "# WS#" + wsName + "# USER#" + user +
+                     "# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType() + "#");
+            return project;
         } finally {
             if (connection != null) {
                 connection.disconnect();
