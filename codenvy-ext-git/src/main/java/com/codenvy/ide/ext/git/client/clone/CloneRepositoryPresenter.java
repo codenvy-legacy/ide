@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.git.client.clone;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.marshaller.RepoInfoUnmarshaller;
@@ -183,24 +184,17 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      *         the path where project exist
      */
     private void deleteFolder(Project path) {
-        // TODO need to add support of removing project
-//        try {
-//            VirtualFileSystem.getInstance().delete(path,
-//                                                   new AsyncRequestCallback<String>() {
-//                                                       @Override
-//                                                       protected void onSuccess(String result) {
-//                                                           // Do nothing
-//                                                       }
-//
-//                                                       @Override
-//                                                       protected void onFailure(Throwable exception) {
-//                                                           IDE.fireEvent(new ExceptionThrownEvent(exception,
-//                                                                                                  "Exception during folder removing"));
-//                                                       }
-//                                                   });
-//        } catch (RequestException e) {
-//            IDE.fireEvent(new ExceptionThrownEvent(e, "Exception during removing of directory project"));
-//        }
+        resourceProvider.delete(path, new AsyncCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                // do nothing
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                eventBus.fireEvent(new ExceptionThrownEvent(caught, "Exception during project removing"));
+            }
+        });
     }
 
     /**

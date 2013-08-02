@@ -457,4 +457,39 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     public String getRootId() {
         return vfsInfo.getRoot().getId();
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void delete(Resource item, final AsyncCallback<String> callback) {
+        String url = item.getLinkByRelation(Link.REL_DELETE).getHref();
+        if (item instanceof File) {
+            url = URL.decode(url).replace("[lockToken]", ((File)item).getLock().getLockToken());
+        }
+
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
+        AsyncRequestCallback<StringBuilder> internalCallback = new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+            @Override
+            protected void onSuccess(StringBuilder result) {
+                Folder rootFolder = vfsInfo.getRoot();
+                rootFolder.getChildren().clear();
+
+                eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
+                activeProject = null;
+
+                callback.onSuccess(result.toString());
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        };
+
+        loader.setMessage("Deleting item...");
+        try {
+            AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+        } catch (RequestException e) {
+            callback.onFailure(e);
+        }
+    }
 }
