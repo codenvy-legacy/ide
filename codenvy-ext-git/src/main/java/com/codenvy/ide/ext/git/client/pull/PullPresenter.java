@@ -31,10 +31,12 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -217,9 +219,17 @@ public class PullPresenter implements PullView.ActionDelegate {
             service.pullWS(resourceProvider.getVfsId(), project, getRefs(), remoteName, new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
-                    console.print(constant.pullSuccess(remoteUrl));
-                    // TODO
-                    // IDE.fireEvent(new RefreshBrowserEvent());
+                    resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
+                        @Override
+                        public void onSuccess(Project result) {
+                            console.print(constant.pullSuccess(remoteUrl));
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Log.error(PullPresenter.class, "can not get project " + project.getName());
+                        }
+                    });
                 }
 
                 @Override
@@ -242,9 +252,17 @@ public class PullPresenter implements PullView.ActionDelegate {
             service.pull(resourceProvider.getVfsId(), project, getRefs(), remoteName, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
-                    console.print(constant.pullSuccess(remoteUrl));
-                    // TODO
-                    // IDE.fireEvent(new RefreshBrowserEvent());
+                    resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
+                        @Override
+                        public void onSuccess(Project result) {
+                            console.print(constant.pullSuccess(remoteUrl));
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Log.error(PullPresenter.class, "can not get project " + project.getName());
+                        }
+                    });
                 }
 
                 @Override

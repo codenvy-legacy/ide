@@ -32,8 +32,11 @@ import com.codenvy.ide.ext.git.shared.MergeResult;
 import com.codenvy.ide.ext.git.shared.Reference;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -62,6 +65,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
     private GitLocalizationConstant constant;
     private Reference               selectedReference;
     private String                  projectId;
+    private String                  projectName;
 
     /**
      * Create presenter.
@@ -87,7 +91,9 @@ public class MergePresenter implements MergeView.ActionDelegate {
 
     /** Show dialog. */
     public void showDialog() {
-        projectId = resourceProvider.getActiveProject().getId();
+        Project project = resourceProvider.getActiveProject();
+        projectId = project.getId();
+        projectName = project.getName();
         selectedReference = null;
         view.setEnableMergeButton(false);
 
@@ -178,11 +184,19 @@ public class MergePresenter implements MergeView.ActionDelegate {
             service.merge(resourceProvider.getVfsId(), projectId, selectedReference.getDisplayName(),
                           new AsyncRequestCallback<MergeResult>(unmarshaller) {
                               @Override
-                              protected void onSuccess(MergeResult result) {
-                                  console.print(formMergeMessage(result));
-                                  view.close();
-                                  // TODO
-                                  // IDE.fireEvent(new RefreshBrowserEvent());
+                              protected void onSuccess(final MergeResult result) {
+                                  resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
+                                      @Override
+                                      public void onSuccess(Project project) {
+                                          console.print(formMergeMessage(result));
+                                          view.close();
+                                      }
+
+                                      @Override
+                                      public void onFailure(Throwable caught) {
+                                          Log.error(MergePresenter.class, "can not get project " + projectName);
+                                      }
+                                  });
                               }
 
                               @Override

@@ -25,7 +25,7 @@
 <body bgcolor="white">
 <table width="100%" height="100%">
     <tr align="center" valign="bottom">
-        <td><img alt="ide" src="/_app/codenvy-logo.png"></td>
+        <td><img alt="ide" src="/ide/_app/codenvy-logo.png"></td>
     </tr>
     <tr align="center" valign="top">
         <td>

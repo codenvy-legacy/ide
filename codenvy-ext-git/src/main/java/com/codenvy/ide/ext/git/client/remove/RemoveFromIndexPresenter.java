@@ -30,7 +30,9 @@ import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
 /**
@@ -116,18 +118,17 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
                            new AsyncRequestCallback<String>() {
                                @Override
                                protected void onSuccess(String result) {
-                                   console.print(constant.removeFilesSuccessfull());
-// TODO refresh project explorer tree
-//                                   if (display.getFromIndexValue().getValue().booleanValue()) {
-//                                       IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
-//                                   } else {
-//                                       if (selectedItem instanceof ItemContext) {
-//                                           IDE.fireEvent(new RefreshBrowserEvent(
-//                                                   ((ItemContext)selectedItem).getParent()));
-//                                       } else {
-//                                           IDE.fireEvent(new RefreshBrowserEvent());
-//                                       }
-//                                   }
+                                   resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
+                                       @Override
+                                       public void onSuccess(Project result) {
+                                           console.print(constant.removeFilesSuccessfull());
+                                       }
+
+                                       @Override
+                                       public void onFailure(Throwable caught) {
+                                           Log.error(RemoveFromIndexPresenter.class, "can not get project " + project.getName());
+                                       }
+                                   });
                                }
 
                                @Override

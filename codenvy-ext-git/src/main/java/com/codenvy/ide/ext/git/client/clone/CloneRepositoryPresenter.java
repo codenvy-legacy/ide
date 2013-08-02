@@ -30,6 +30,7 @@ import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -162,20 +163,17 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      *         {@link Project} to clone
      */
     private void onCloneSuccess(final RepoInfo gitRepositoryInfo, final Project project) {
-        console.print(constant.cloneSuccess(gitRepositoryInfo.getRemoteUri()));
-        // TODO
-        // IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), null));
+        resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
+            @Override
+            public void onSuccess(Project result) {
+                console.print(constant.cloneSuccess(gitRepositoryInfo.getRemoteUri()));
+            }
 
-        // TODO
-//        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-//            @Override
-//            public void execute() {
-//                String[] userRepo = GitURLParser.parseGitHubUrl(gitRepositoryInfo.getRemoteUri());
-//                if (userRepo != null) {
-//                    IDE.fireEvent(new CloneRepositoryCompleteEvent(userRepo[0], userRepo[1]));
-//                }
-//            }
-//        });
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(CloneRepositoryPresenter.class, "can not get project " + project.getName());
+            }
+        });
     }
 
     /**
