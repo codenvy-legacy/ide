@@ -1,6 +1,6 @@
 var greetingPaneContent = {
-   "anonymous": null,
-    "authenticated": null,
-    "anonymous-workspace-temporary": ide_base_path + "greeting/anonymous-workspace-temporary.html",
-    "authenticated-workspace-temporary": ide_base_path + "greeting/authenticated-workspace-temporary.html"
+    "anonymous": null,
+	"authenticated": null,
+	"anonymous-workspace-temporary": ide_base_path + "temporary-workspace-rightpane-not-authenticated.html",
+	"authenticated-workspace-temporary": ide_base_path + "temporary-workspace-rightpane-authenticated.html"
 };
