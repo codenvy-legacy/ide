@@ -18,7 +18,6 @@
  */
 package com.codenvy.ide.factory.client;
 
-import com.codenvy.ide.factory.client.copy.CopyProjectControl;
 import com.codenvy.ide.factory.client.copy.CopyProjectController;
 import com.codenvy.ide.factory.client.generate.CommitChangesPresenter;
 import com.codenvy.ide.factory.client.generate.FactoryURLHandler;
@@ -31,7 +30,6 @@ import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 

@@ -19,63 +19,74 @@
 package com.codenvy.ide.factory.client.copy;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Window;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.workspaceinfo.WorkspaceInfo;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class CopyProjectController implements CopyProjectHandler, ProjectOpenedHandler {
-
-    private ProjectModel project;
+public class CopyProjectController implements CopyProjectHandler {
 
     public CopyProjectController() {
         IDE.addHandler(CopyProjectEvent.TYPE, this);
-        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onCopyProject(CopyProjectEvent event) {
-        Window.alert(project + "");
-        try{
-        if(project == null){
-            return;
-        }
-        List<WorkspaceInfo> workspaces = IDE.user.getWorkspaces();
-        String url;
-        if(workspaces.size() > 1){
-            UrlBuilder builder = new UrlBuilder();
-            url = builder.setProtocol(Window.Location.getProtocol()).setHost(Window.Location.getHost())
-                              .setPath("/private/select-tenant").buildString();
-        }
-        else{
-            url = workspaces.get(0).getUrl();
+        try {
+            VirtualFileSystem.getInstance()
+                             .getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
+                                          ItemType.PROJECT,
+                                          new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>())) {
+                                              @Override
+                                              protected void onSuccess(List<Item> result) {
+                                                  if (!result.isEmpty()) {
+                                                      doCopy();
+                                                  }
+                                              }
 
+                                              @Override
+                                              protected void onFailure(Throwable exception) {
+                                                  Window.alert(exception.getMessage());
+                                              }
+                                          });
+        } catch (RequestException e) {
+            Window.alert(e.getMessage());
         }
-        url += "?projecturl=" + project.getLinkByRelation(Link.REL_DOWNLOAD_ZIP).getHref()+"&projectname=" + project.getName();
-        Window.alert(url);
-        Window.Location.replace(url);
-        }
-        catch (Throwable e){
+    }
+
+    private void doCopy() {
+        try {
+            List<WorkspaceInfo> workspaces = IDE.user.getWorkspaces();
+            String url;
+            if (workspaces.size() > 1) {
+                UrlBuilder builder = new UrlBuilder();
+                url = builder.setProtocol(Window.Location.getProtocol()).setHost(Window.Location.getHost())
+                             .setPath("/private/select-tenant").buildString();
+            }
+            else {
+                url = workspaces.get(0).getUrl();
+            }
+            url += "?vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
+            Window.Location.replace(url);
+        } catch (Throwable e) {
             Window.alert(e.getMessage());
             Log.error(getClass(), e);
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onProjectOpened(ProjectOpenedEvent event) {
-        project = event.getProject();
-    }
 }
