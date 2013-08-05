@@ -27,7 +27,6 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.workspaceinfo.WorkspaceInfo;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Link;
 
 import java.util.List;
 
@@ -47,27 +46,23 @@ public class CopyProjectController implements CopyProjectHandler, ProjectOpenedH
     /** {@inheritDoc} */
     @Override
     public void onCopyProject(CopyProjectEvent event) {
-        Window.alert(project + "");
-        try{
-        if(project == null){
-            return;
-        }
-        List<WorkspaceInfo> workspaces = IDE.user.getWorkspaces();
-        String url;
-        if(workspaces.size() > 1){
-            UrlBuilder builder = new UrlBuilder();
-            url = builder.setProtocol(Window.Location.getProtocol()).setHost(Window.Location.getHost())
-                              .setPath("/private/select-tenant").buildString();
-        }
-        else{
-            url = workspaces.get(0).getUrl();
-
-        }
-        url += "?projecturl=" + project.getLinkByRelation(Link.REL_DOWNLOAD_ZIP).getHref()+"&projectname=" + project.getName();
-        Window.alert(url);
-        Window.Location.replace(url);
-        }
-        catch (Throwable e){
+        try {
+            if (project == null) {
+                return;
+            }
+            List<WorkspaceInfo> workspaces = IDE.user.getWorkspaces();
+            String url;
+            if (workspaces.size() > 1) {
+                UrlBuilder builder = new UrlBuilder();
+                url = builder.setProtocol(Window.Location.getProtocol()).setHost(Window.Location.getHost())
+                             .setPath("/private/select-tenant").buildString();
+            }
+            else {
+                url = workspaces.get(0).getUrl();
+            }
+            url += "?vfsid=" + project.getVfsId();
+            Window.Location.replace(url);
+        } catch (Throwable e) {
             Window.alert(e.getMessage());
             Log.error(getClass(), e);
         }

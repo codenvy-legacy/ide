@@ -25,6 +25,8 @@ package com.codenvy.ide.factory.client.copy;
  */
 public interface CopySpec10 {
 
+    String VFS_ID = "vfsid";
+
     String PROJECT_URL = "projecturl";
 
     String PROJECT_NAME = "projectname";

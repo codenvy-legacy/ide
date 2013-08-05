@@ -61,8 +61,8 @@ import java.util.Map;
  */
 public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHandler {
 
-    private final String                restServiceContext;
-    private       VirtualFileSystemInfo vfs;
+    private final String          restServiceContext;
+    private VirtualFileSystemInfo vfs;
 
     public FanctoryHandler() {
         IDE.addHandler(VfsChangedEvent.TYPE, this);
@@ -85,8 +85,9 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
             handleFactory(event.getParameterMap());
         } else if (isCopyProjectValidParam(event.getParameterMap())) {
             handleCopyProject(event.getParameterMap());
+        } else if (isCopyAllProjectsValidParam(event.getParameterMap())) {
+            handleCopyAllProjects(event.getParameterMap());
         }
-
     }
 
     private void handleCopyProject(Map<String, List<String>> parameterMap) {
@@ -96,7 +97,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
             VirtualFileSystem.getInstance()
                              .getChildren(vfs.getRoot(), ItemType.PROJECT,
                                           new AsyncRequestCallback<List<Item>>(
-                                                  new ChildrenUnmarshaller(new ArrayList<Item>())) {
+                                                                               new ChildrenUnmarshaller(new ArrayList<Item>())) {
 
                                               @Override
                                               protected void onSuccess(List<Item> result) {
@@ -109,7 +110,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
 
                                                   }
                                                   if (itemExist) {
-                                                      doCopy(projectUrl, projectName +"-" + Random.nextInt(Integer.MAX_VALUE));
+                                                      doCopy(projectUrl, projectName + "-" + Random.nextInt(Integer.MAX_VALUE));
                                                   } else {
                                                       doCopy(projectUrl, projectName);
                                                   }
@@ -129,12 +130,33 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
         try {
             String uri = "/copy/project?projecturl=" + projectUrl + "&projectname=" + projectName;
             RequestMessage message =
-                    RequestMessageBuilder.build(RequestBuilder.POST, restServiceContext + uri).
-                            getRequestMessage();
+                                     RequestMessageBuilder.build(RequestBuilder.POST, restServiceContext + uri).
+                                                          getRequestMessage();
             IDE.messageBus().send(message, new RequestCallback<ProjectModel>(new WSProjectUnmarshaller(new ProjectModel())) {
                 @Override
                 protected void onSuccess(ProjectModel result) {
                     IDE.fireEvent(new OpenProjectEvent(result));
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                }
+            });
+        } catch (WebSocketException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    private void handleCopyAllProjects(Map<String, List<String>> parameterMap) {
+        final String vfsId = parameterMap.get(CopySpec10.VFS_ID).get(0);
+        try {
+            String uri = "/copy/projects?vfsid=" + vfsId;
+            RequestMessage message = RequestMessageBuilder.build(RequestBuilder.POST, restServiceContext + uri).getRequestMessage();
+            IDE.messageBus().send(message, new RequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    // do nothing
                 }
 
                 @Override
@@ -153,6 +175,13 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
         }
         return parameterMap.get(CopySpec10.PROJECT_URL) != null &&
                parameterMap.get(CopySpec10.PROJECT_NAME) != null;
+    }
+
+    private boolean isCopyAllProjectsValidParam(Map<String, List<String>> parameterMap) {
+        if (parameterMap == null || parameterMap.isEmpty()) {
+            return false;
+        }
+        return parameterMap.get(CopySpec10.VFS_ID) != null;
     }
 
     private void handleFactory(Map<String, List<String>> parameterMap) {
@@ -209,7 +238,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
             VirtualFileSystem.getInstance()
                              .getChildren(vfs.getRoot(), ItemType.PROJECT,
                                           new AsyncRequestCallback<List<Item>>(
-                                                  new ChildrenUnmarshaller(new ArrayList<Item>())) {
+                                                                               new ChildrenUnmarshaller(new ArrayList<Item>())) {
 
                                               @Override
                                               protected void onSuccess(List<Item> result) {
@@ -246,16 +275,12 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
 
     /**
      * Going to cloning repository. Clone process flow 3 steps: - create new folder with name workDir - clone repository to this folder -
-     * convert folder to project. This need because by default project with out file and folder not empty. It content ".project" item.
-     * Clone
+     * convert folder to project. This need because by default project with out file and folder not empty. It content ".project" item. Clone
      * is impossible to not empty folder
-     *
-     * @param remoteUri
-     *         - git url
-     * @param remoteName
-     *         - remote name (by default origin)
-     * @param workDir
-     *         - name of target folder
+     * 
+     * @param remoteUri - git url
+     * @param remoteName - remote name (by default origin)
+     * @param workDir - name of target folder
      */
     public void doClone(final String remoteUri, final String remoteName, final String workDir, final String prjType,
                         final String idCommit) {
@@ -272,36 +297,33 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                                                              @Override
                                                              protected void onFailure(Throwable exception) {
                                                                  String errorMessage =
-                                                                         (exception.getMessage() != null &&
-                                                                          exception.getMessage().length() > 0)
-                                                                         ? exception.getMessage()
-                                                                         : GitExtension.MESSAGES
-                                                                                       .cloneFailed(
+                                                                                       (exception.getMessage() != null &&
+                                                                                       exception.getMessage().length() > 0)
+                                                                                           ? exception.getMessage()
+                                                                                           : GitExtension.MESSAGES
+                                                                                                                  .cloneFailed(
 
 
-                                                                                               remoteUri);
+                                                                                                                  remoteUri);
                                                                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
                                                              }
                                                          });
         } catch (RequestException e) {
             e.printStackTrace();
             String errorMessage =
-                    (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
-                                                                            : GitExtension.MESSAGES
-                                                                                          .cloneFailed(remoteUri);
+                                  (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
+                                      : GitExtension.MESSAGES
+                                                             .cloneFailed(remoteUri);
             IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
         }
     }
 
     /**
      * Clone of the repository by sending request over WebSocket or HTTP.
-     *
-     * @param remoteUri
-     *         the location of the remote repository
-     * @param remoteName
-     *         remote name instead of "origin"
-     * @param folder
-     *         folder (root of GIT repository)
+     * 
+     * @param remoteUri the location of the remote repository
+     * @param remoteName remote name instead of "origin"
+     * @param folder folder (root of GIT repository)
      */
     private void cloneRepository(final String remoteUri, final String remoteName, final String prjType, final FolderModel folder,
                                  final String idCommit) {
@@ -309,8 +331,8 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
             String uri = "/factory/clone?vfsid=" + vfs.getId() + "&projectid=" + folder.getId() + "&remoteuri=" + remoteUri + "&idcommit=" +
                          idCommit;
             RequestMessage message =
-                    RequestMessageBuilder.build(RequestBuilder.POST, restServiceContext + uri).
-                            getRequestMessage();
+                                     RequestMessageBuilder.build(RequestBuilder.POST, restServiceContext + uri).
+                                                          getRequestMessage();
             IDE.messageBus().send(message, new RequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
@@ -350,9 +372,8 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
 
     /**
      * Perform actions when repository was successfully cloned.
-     *
-     * @param folder
-     *         {@link FolderModel} to clone
+     * 
+     * @param folder {@link FolderModel} to clone
      */
     private void onCloneSuccess(FolderModel folder, String prjType, String remoteUri) {
         IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(remoteUri), Type.GIT));
@@ -368,9 +389,9 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
 
     private void handleError(Throwable e, String remoteUri) {
         String errorMessage =
-                (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
-                                                                        : GitExtension.MESSAGES
-                                                                                      .cloneFailed(remoteUri);
+                              (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
+                                  : GitExtension.MESSAGES
+                                                         .cloneFailed(remoteUri);
         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
     }
 

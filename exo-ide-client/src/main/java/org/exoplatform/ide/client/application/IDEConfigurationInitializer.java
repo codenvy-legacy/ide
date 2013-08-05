@@ -249,6 +249,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                 IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
             } else if (parameterMap != null && parameterMap.get(CopySpec10.PROJECT_URL) != null) {
                 IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
+            } else if (parameterMap != null && parameterMap.get(CopySpec10.VFS_ID) != null) {
+                IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
             } else {
                 new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);
             }
