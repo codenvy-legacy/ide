@@ -70,6 +70,7 @@ public class CopyProjectService {
             CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
         HttpURLConnection connection = null;
 
+
         InputStream inputStream = null;
         try {
             URL url = new URL(projectUrl);
