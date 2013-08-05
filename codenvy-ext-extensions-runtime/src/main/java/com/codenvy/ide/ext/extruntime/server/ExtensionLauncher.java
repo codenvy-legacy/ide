@@ -80,7 +80,7 @@ import static com.codenvy.ide.ext.extruntime.server.Utils.enableSuperDevMode;
 import static com.codenvy.ide.ext.extruntime.server.Utils.fixMGWT332Bug;
 import static com.codenvy.ide.ext.extruntime.server.Utils.inheritGwtModule;
 import static com.codenvy.ide.ext.extruntime.server.Utils.readPom;
-import static com.codenvy.ide.ext.extruntime.server.Utils.setTomcatPort;
+import static com.codenvy.ide.ext.extruntime.server.Utils.setTomcatPorts;
 import static com.codenvy.ide.ext.extruntime.server.Utils.writePom;
 import static java.lang.Integer.parseInt;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -553,7 +553,7 @@ public class ExtensionLauncher implements Startable {
 
         try {
             unzip(tomcatBundleStream, tomcatDir.toFile());
-            setTomcatPort(tomcatDir, shutdownPort, httpPort, ajpPort);
+            setTomcatPorts(tomcatDir, shutdownPort, httpPort, ajpPort);
 
             File ideWar = downloadFile(new File(tomcatDir + "/webapps"), "app-", ".war", ideWarUrl);
             ideWar.renameTo(tomcatDir.resolve("webapps/IDE.war").toFile());

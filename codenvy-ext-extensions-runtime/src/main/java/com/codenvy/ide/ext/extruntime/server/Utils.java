@@ -76,6 +76,13 @@ class Utils {
                                                                   + "\r\n\t<set-configuration-property name='xsiframe.failIfScriptTag' value='false'/>"
                                                                   + "\r\n\t<set-property name='compiler.useSourceMaps' value='true' />";
 
+    /**
+     * Read pom.xml.
+     * 
+     * @param path pom.xml path
+     * @return a project object model
+     * @throws IllegalStateException if any error occurred while reading a file
+     */
     static Model readPom(Path path) {
         try {
             return readPom(Files.newInputStream(path));
@@ -84,6 +91,13 @@ class Utils {
         }
     }
 
+    /**
+     * Read pom.xml.
+     * 
+     * @param stream input stream that represents a pom.xml
+     * @return a project object model
+     * @throws IllegalStateException if any error occurred while reading a file
+     */
     static Model readPom(InputStream stream) {
         try {
             return pomReader.read(stream, true);
@@ -92,6 +106,13 @@ class Utils {
         }
     }
 
+    /**
+     * Write provided project object model to the specified path.
+     * 
+     * @param pom a project object model
+     * @param path pom.xml path
+     * @throws IllegalStateException if any error occurred while writing a file
+     */
     static void writePom(Model pom, Path path) {
         try {
             pomWriter.write(Files.newOutputStream(path), pom);
@@ -100,50 +121,74 @@ class Utils {
         }
     }
 
-    static void addDependencyToPom(Path pomPath, String groupId, String artifactId, String version) {
+    /**
+     * Add dependency with provided coordinates to the specified pom.xml.
+     * 
+     * @param path pom.xml path
+     * @param groupId groupId
+     * @param artifactId artifactId
+     * @param version artifact version
+     */
+    static void addDependencyToPom(Path path, String groupId, String artifactId, String version) {
         Dependency dep = new Dependency();
         dep.setGroupId(groupId);
         dep.setArtifactId(artifactId);
         dep.setVersion(version);
 
-        Model pom = readPom(pomPath);
+        Model pom = readPom(path);
         pom.getDependencies().add(dep);
 
-        writePom(pom, pomPath);
-    }
-
-    /** Add the provided module to the specified reactor POM. */
-    static void addModuleToReactorPom(Path reactorPomPath, String newModuleRelativePath) {
-        addModuleToReactorPom(reactorPomPath, newModuleRelativePath, null);
+        writePom(pom, path);
     }
 
     /**
-     * Add the provided module to the specified reactor POM. If moduleAfter isn't null - new module will be inserted before the moduleAfter.
+     * Add the provided module to the specified reactor pom.xml.
+     * 
+     * @param path pom.xml path
+     * @param moduleRelativePath relative path of module to add
      */
-    static void addModuleToReactorPom(Path reactorPomPath, String newModuleRelativePath, String moduleAfter) {
-        Model pom = readPom(reactorPomPath);
+    static void addModuleToReactorPom(Path path, String moduleRelativePath) {
+        addModuleToReactorPom(path, moduleRelativePath, null);
+    }
+
+    /**
+     * Add the provided module to the specified reactor pom.xml. If <code>moduleAfter</code> isn't null - new module will be inserted before
+     * the <code>moduleAfter</code>.
+     * 
+     * @param path pom.xml path
+     * @param moduleRelativePath relative path of module to add
+     * @param moduleAfter relative path of module that should be after the inserted module
+     */
+    static void addModuleToReactorPom(Path path, String moduleRelativePath, String moduleAfter) {
+        Model pom = readPom(path);
         List<String> modulesList = pom.getModules();
         if (moduleAfter == null) {
-            modulesList.add(newModuleRelativePath);
+            modulesList.add(moduleRelativePath);
         } else {
             int n = 0;
             for (String module : modulesList) {
                 if (moduleAfter.equals(module)) {
-                    pom.getModules().add(n, newModuleRelativePath);
+                    pom.getModules().add(n, moduleRelativePath);
                     break;
                 }
                 n++;
             }
         }
-        writePom(pom, reactorPomPath);
+        writePom(pom, path);
     }
 
-    /** Change GWT Maven plug-in configuration into the specified pom.xml file, to set a new code server's working directory. */
+    /**
+     * Change GWT Maven plug-in configuration in the specified pom.xml file, to set a new code server's working directory.
+     * 
+     * @param pomPath pom.xml path
+     * @param codeServerWorkDir code server's working directory to set
+     * @throws IllegalStateException if any error occurred while writing a file
+     */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    static void changeCodeServerWorkDir(Path pomPath, Path dirPath) throws ExtensionLauncherException {
+    static void changeCodeServerWorkDir(Path pomPath, Path codeServerWorkDir) {
         final String configString = String.format("<configuration>"
                                                   + "<codeServerWorkDir>%s</codeServerWorkDir>"
-                                                  + "</configuration>", dirPath);
+                                                  + "</configuration>", codeServerWorkDir);
         try {
             Xpp3Dom additionalConfiguration = build(new StringReader(configString));
 
@@ -162,10 +207,15 @@ class Utils {
         }
     }
 
-    /** Enable SuperDevMode for the specified GWT module descriptor. */
-    static void enableSuperDevMode(Path gwtModuleDescriptorPath) throws ExtensionLauncherException {
+    /**
+     * Enable SuperDevMode for the specified GWT module descriptor.
+     * 
+     * @param path GWT module descriptor path
+     * @throws IllegalStateException if any error occurred while reading or writing a file
+     */
+    static void enableSuperDevMode(Path path) {
         try {
-            List<String> content = Files.readAllLines(gwtModuleDescriptorPath, UTF_8);
+            List<String> content = Files.readAllLines(path, UTF_8);
             int penultimateLine = 0;
             for (String str : content) {
                 penultimateLine++;
@@ -175,17 +225,23 @@ class Utils {
             }
             content.add(penultimateLine - 1, SUPER_DEV_MODE_DIRECTIVE);
 
-            Files.write(gwtModuleDescriptorPath, content, UTF_8);
+            Files.write(path, content, UTF_8);
         } catch (IOException e) {
-            throw new IllegalStateException(String.format("Error occurred while reading or writing file: %s.", gwtModuleDescriptorPath));
+            throw new IllegalStateException(String.format("Error occurred while reading or writing file: %s.", path));
         }
     }
 
-    /** Add the provided module name as a dependency to the specified GWT module descriptor. */
-    static void inheritGwtModule(Path gwtModuleDescriptorPath, String inheritableGwtModuleLogicalName) throws ExtensionLauncherException {
-        final String inheritsString = "\t<inherits name='" + inheritableGwtModuleLogicalName + "'/>";
+    /**
+     * Add the specified module name as a dependency to the provided GWT module descriptor.
+     * 
+     * @param path GWT module descriptor
+     * @param inheritableModuleLogicalName logical name of the GWT module to inherit
+     * @throws IllegalStateException if any error occurred while reading or writing a file
+     */
+    static void inheritGwtModule(Path path, String inheritableModuleLogicalName) throws ExtensionLauncherException {
+        final String inheritsString = "\t<inherits name='" + inheritableModuleLogicalName + "'/>";
         try {
-            List<String> content = Files.readAllLines(gwtModuleDescriptorPath, UTF_8);
+            List<String> content = Files.readAllLines(path, UTF_8);
             // insert custom module as last 'inherits' entry
             int i = 0, lastInheritsLine = 0;
             for (String str : content) {
@@ -196,9 +252,9 @@ class Utils {
             }
             content.add(lastInheritsLine, inheritsString);
 
-            Files.write(gwtModuleDescriptorPath, content, UTF_8);
+            Files.write(path, content, UTF_8);
         } catch (IOException e) {
-            throw new IllegalStateException(String.format("Error occurred while reading or writing file: %s.", gwtModuleDescriptorPath));
+            throw new IllegalStateException(String.format("Error occurred while reading or writing file: %s.", path));
         }
     }
 
@@ -238,7 +294,16 @@ class Utils {
         }
     }
 
-    static void setTomcatPort(Path tomcatRootPath, int shutdownPort, int httpPort, int ajpPort) {
+    /**
+     * Change the default ports of Tomcat server.
+     * 
+     * @param tomcatRootPath Tomcat root path
+     * @param shutdownPort server shutdown port
+     * @param httpPort HTTP-connector port
+     * @param ajpPort AJP-connector port
+     * @throws IllegalStateException if any error occurred while reading or writing a file
+     */
+    static void setTomcatPorts(Path tomcatRootPath, int shutdownPort, int httpPort, int ajpPort) {
         File serverXml = tomcatRootPath.resolve("conf/server.xml").toFile();
 
         try {
@@ -249,7 +314,7 @@ class Utils {
             Node serverElement = doc.getElementsByTagName("Server").item(0);
             Node serverShutdownPortNode = serverElement.getAttributes().getNamedItem("port");
             serverShutdownPortNode.setNodeValue(String.valueOf(shutdownPort));
-            
+
             NodeList serverChildNodes = serverElement.getChildNodes();
             for (int i = 0; i < serverChildNodes.getLength(); i++) {
                 Node serverChildNode = serverChildNodes.item(i);
@@ -262,7 +327,7 @@ class Utils {
                             if ("8080".equals(portNode.getNodeValue())) {
                                 portNode.setNodeValue(String.valueOf(httpPort));
                             } else if ("8009".equals(portNode.getNodeValue())) {
-                                portNode.setNodeValue(String.valueOf(ajpPort));                                
+                                portNode.setNodeValue(String.valueOf(ajpPort));
                             }
                         }
                     }
@@ -276,8 +341,7 @@ class Utils {
             StreamResult result = new StreamResult(serverXml);
             transformer.transform(source, result);
         } catch (ParserConfigurationException | TransformerException | SAXException | IOException e) {
-            // TODO
-            e.printStackTrace();
+            throw new IllegalStateException(String.format("Error occurred while reading or writing file: %s.", tomcatRootPath));
         }
     }
 }
