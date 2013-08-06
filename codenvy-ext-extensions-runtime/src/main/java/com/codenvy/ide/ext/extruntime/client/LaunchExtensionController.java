@@ -169,7 +169,7 @@ public class LaunchExtensionController {
     private void afterApplicationLaunched() {
         UrlBuilder builder = new UrlBuilder();
         String launchedAppHost;
-        if (launchedApp.getHost().isEmpty()) {
+        if (launchedApp.getHost() == null || launchedApp.getHost().isEmpty()) {
             launchedAppHost = Window.Location.getHostName();
         } else {
             launchedAppHost = launchedApp.getHost();
