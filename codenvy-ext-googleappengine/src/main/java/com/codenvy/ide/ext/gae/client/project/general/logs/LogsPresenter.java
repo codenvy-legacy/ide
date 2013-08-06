@@ -12,6 +12,8 @@ import com.codenvy.ide.ext.gae.client.GAELocalization;
 import com.codenvy.ide.ext.gae.client.GAEResources;
 import com.codenvy.ide.ext.gae.client.actions.LoginAction;
 import com.codenvy.ide.ext.gae.client.marshaller.StringUnmarshaller;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.part.base.BasePresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.http.client.RequestException;
@@ -37,6 +39,17 @@ public class LogsPresenter extends BasePresenter implements LogsView.ActionDeleg
     private WorkspaceAgent   workspaceAgent;
     private GAELocalization  constant;
     private Project          project;
+
+    private JsonStringMap<String> severityFormatted = JsonCollections.createStringMap();
+
+    {
+        severityFormatted.put("All", "");
+        severityFormatted.put("Error", "ERROR");
+        severityFormatted.put("Info", "INFO");
+        severityFormatted.put("Warning", "WARNING");
+        severityFormatted.put("Debug", "DEBUG");
+        severityFormatted.put("Critical", "CRITICAL");
+    }
 
     @Inject
     public LogsPresenter(LogsView view, GAEClientService service, EventBus eventBus,
@@ -74,10 +87,8 @@ public class LogsPresenter extends BasePresenter implements LogsView.ActionDeleg
     }
 
     public void getLogs() {
-        String severity = view.getLogsSeverity();
+        String severity = severityFormatted.get(view.getLogsSeverity());
         int numDays = view.getLogsDaysCount();
-
-        //Need to transform num days into enum values
 
         final String vfsId = resourceProvider.getVfsId();
 
