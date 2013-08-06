@@ -100,7 +100,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void configureBackend(String vfsId, String projectId, String backendName,
                                  GAEAsyncRequestCallback<Object> callback) throws RequestException {
-        String url = restServiceContext + BACKEND_CONFIGURE;
+        String url = restServiceContext + '/' + wsName + BACKEND_CONFIGURE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId).append("&backend_name=")
@@ -113,7 +113,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void cronInfo(String vfsId, String projectId, GAEAsyncRequestCallback<JsonArray<CronEntry>> callback)
             throws RequestException {
-        String url = restServiceContext + CRON_INFO;
+        String url = restServiceContext + '/' + wsName + CRON_INFO;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -126,7 +126,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void deleteBackend(String vfsId, String projectId, String backendName,
                               GAEAsyncRequestCallback<Object> callback) throws RequestException {
-        String url = restServiceContext + BACKEND_DELETE;
+        String url = restServiceContext + '/' + wsName + BACKEND_DELETE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId).append("&backend_name=")
@@ -140,7 +140,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void getResourceLimits(String vfsId, String projectId, GAEAsyncRequestCallback<JsonArray<ResourceLimit>> callback)
             throws RequestException {
-        String url = restServiceContext + RESOURCE_LIMITS;
+        String url = restServiceContext + '/' + wsName + RESOURCE_LIMITS;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -153,7 +153,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void listBackends(String vfsId, String projectId, GAEAsyncRequestCallback<JsonArray<Backend>> callback)
             throws RequestException {
-        String url = restServiceContext + BACKENDS_LIST;
+        String url = restServiceContext + '/' + wsName + BACKENDS_LIST;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -166,7 +166,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void requestLogs(String vfsId, String projectId, int numDays, String logSeverity,
                             GAEAsyncRequestCallback<StringBuilder> callback) throws RequestException {
-        String url = restServiceContext + LOGS;
+        String url = restServiceContext + '/' + wsName + LOGS;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId).append("&num_days=")
@@ -184,7 +184,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     /** {@inheritDoc} */
     @Override
     public void rollback(String vfsId, String projectId, GAEAsyncRequestCallback<Object> callback) throws RequestException {
-        String url = restServiceContext + ROLLBACK;
+        String url = restServiceContext + '/' + wsName + ROLLBACK;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -196,7 +196,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void rollbackBackend(String vfsId, String projectId, String backendName, GAEAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + BACKEND_ROLLBACK;
+        String url = restServiceContext + '/' + wsName + BACKEND_ROLLBACK;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId).append("&backend_name=")
@@ -209,7 +209,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void rollbackAllBackends(String vfsId, String projectId, GAEAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + BACKENDS_ROLLBACK;
+        String url = restServiceContext + '/' + wsName + BACKENDS_ROLLBACK;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -221,7 +221,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void setBackendState(String vfsId, String projectId, String backendName, String backendState,
                                 GAEAsyncRequestCallback<Object> callback) throws RequestException {
-        String url = restServiceContext + BACKEND_SET_STATE;
+        String url = restServiceContext + '/' + wsName + BACKEND_SET_STATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId).append("&backend_name=")
@@ -234,7 +234,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void update(String vfsId, Project project, String bin, GAEAsyncRequestCallback<ApplicationInfo> callback)
             throws RequestException {
-        String url = wsName + UPDATE;
+        String url = restServiceContext + '/' + wsName + UPDATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(project.getId());
@@ -250,7 +250,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void updateAllBackends(String vfsId, String projectId, GAEAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = wsName + BACKENDS_UPDATE_ALL;
+        String url = restServiceContext + '/' + wsName + BACKENDS_UPDATE_ALL;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -263,7 +263,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void updateBackend(String vfsId, String projectId, String backendName, GAEAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = wsName + BACKEND_UPDATE;
+        String url = restServiceContext + '/' + wsName + BACKEND_UPDATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId).append("&backend_name=")
@@ -276,7 +276,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     /** {@inheritDoc} */
     @Override
     public void updateCron(String vfsId, String projectId, GAEAsyncRequestCallback<Object> callback) throws RequestException {
-        String url = restServiceContext + CRON_UPDATE;
+        String url = restServiceContext + '/' + wsName + CRON_UPDATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -287,7 +287,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     /** {@inheritDoc} */
     @Override
     public void updateDos(String vfsId, String projectId, GAEAsyncRequestCallback<Object> callback) throws RequestException {
-        String url = restServiceContext + DOS_UPDATE;
+        String url = restServiceContext + '/' + wsName + DOS_UPDATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -299,7 +299,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void updateIndexes(String vfsId, String projectId, GAEAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + INDEXES_UPDATE;
+        String url = restServiceContext + '/' + wsName + INDEXES_UPDATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -311,7 +311,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void updatePagespeed(String vfsId, String projectId, GAEAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + PAGE_SPEED_UPDATE;
+        String url = restServiceContext + '/' + wsName + PAGE_SPEED_UPDATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -322,7 +322,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     /** {@inheritDoc} */
     @Override
     public void updateQueues(String vfsId, String projectId, GAEAsyncRequestCallback<Object> callback) throws RequestException {
-        String url = restServiceContext + QUEUES_UPDATE;
+        String url = restServiceContext + '/' + wsName + QUEUES_UPDATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -334,7 +334,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void vacuumIndexes(String vfsId, String projectId, GAEAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + VACUUM_INDEXES;
+        String url = restServiceContext + '/' + wsName + VACUUM_INDEXES;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -361,7 +361,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     @Override
     public void setApplicationId(String vfsId, String projectId, String appId, GAEAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + SET_APP_ID + "/" + vfsId + "/" + projectId;
+        String url = restServiceContext + '/' + wsName + SET_APP_ID + "/" + vfsId + "/" + projectId;
 
         StringBuilder params = new StringBuilder("?");
         params.append("app_id=").append("s~").append(appId);
@@ -372,7 +372,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     /** {@inheritDoc} */
     @Override
     public void getLoggedUser(GAEAsyncRequestCallback<GaeUser> callback) throws RequestException {
-        String url = restServiceContext + USER;
+        String url = restServiceContext + '/' + wsName + USER;
 
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }

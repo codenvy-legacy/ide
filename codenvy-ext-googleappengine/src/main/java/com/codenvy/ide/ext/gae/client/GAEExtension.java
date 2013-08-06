@@ -23,11 +23,17 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
+import com.codenvy.ide.ext.gae.client.actions.CreateApplicationAction;
 import com.codenvy.ide.ext.gae.client.actions.LoginAction;
+import com.codenvy.ide.ext.gae.client.actions.ManageApplicationAction;
+import com.codenvy.ide.ext.gae.client.actions.UpdateApplicationAction;
+import com.codenvy.ide.ext.gae.client.wizard.GAEWizardPresenter;
 import com.codenvy.ide.ext.gae.shared.Token;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -38,27 +44,45 @@ import com.google.inject.Singleton;
 @Singleton
 @Extension(title = "GoogleAppEngine Support.", version = "3.0.0")
 public class GAEExtension {
-    public static final String ID = "GAE";
-    public static final String APPENGINE_SCOPE = "https://www.googleapis.com/auth/appengine.admin";
+    public static final String ID               = "GAE";
+    public static final String APP_ENGINE_SCOPE = "https://www.googleapis.com/auth/appengine.admin";
+    public static final String CREATE_APP_URL   = "https://appengine.google.com/start/createapp";
 
     @Inject
-    public GAEExtension(PaaSAgent paasAgent, GAEResources resources, ActionManager actionManager, LoginAction loginAction) {
+    public GAEExtension(PaaSAgent paasAgent, GAEResources resources, ActionManager actionManager,
+                        LoginAction loginAction, CreateApplicationAction createApplicationAction,
+                        Provider<GAEWizardPresenter> wizardPage, UpdateApplicationAction updateApplicationAction,
+                        ManageApplicationAction manageApplicationAction) {
         // TODO change hard code types
-        JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Java", "Python", "Django", "Servlet/JSP", "War");
-        // TODO wizard page is empty
-        paasAgent.registerPaaS(ID, ID, resources.googleAppEngine48(), requiredProjectTypes, null, null);
+        JsonArray<String> requiredProjectTypes =
+                JsonCollections.createArray("Python", "Servlet/JSP", "War");
+
+        paasAgent.registerPaaS(ID, ID, resources.googleAppEngine48(), requiredProjectTypes, wizardPage, null);
 
         actionManager.registerAction("gaeLoginAction", loginAction);
+        actionManager.registerAction("gaeCreateAppAction", createApplicationAction);
+        actionManager.registerAction("gaeUpdateAppAction", updateApplicationAction);
 
         DefaultActionGroup paas = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PAAS);
-        DefaultActionGroup aws = new DefaultActionGroup("Google App Engine", true, actionManager);
-        actionManager.registerAction("GAE", aws);
-        paas.add(aws);
+        DefaultActionGroup gaeActionGroup = new DefaultActionGroup("Google App Engine", true, actionManager);
+        actionManager.registerAction("Google App Engine", gaeActionGroup);
 
-        aws.add(loginAction);
+        paas.add(gaeActionGroup);
+
+        gaeActionGroup.add(loginAction);
+        gaeActionGroup.add(createApplicationAction);
+        gaeActionGroup.add(updateApplicationAction);
+
+        DefaultActionGroup projectPaaS = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PROJECT_PAAS);
+        projectPaaS.add(manageApplicationAction);
     }
 
     public static boolean isUserHasGaeScopes(Token token) {
-        return token != null && token.getScope() != null && token.getScope().contains(APPENGINE_SCOPE);
+        return token != null && token.getScope() != null && token.getScope().contains(APP_ENGINE_SCOPE);
+    }
+
+    //TODO complete checking for gae project
+    public static boolean isAppEngineProject(Project project) {
+        return true;
     }
 }

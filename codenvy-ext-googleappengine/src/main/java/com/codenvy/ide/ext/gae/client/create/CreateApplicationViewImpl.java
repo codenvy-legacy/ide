@@ -28,11 +28,14 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@Singleton
 public class CreateApplicationViewImpl extends DialogBox implements CreateApplicationView {
     interface CreateApplicationViewImplUiBinder extends UiBinder<Widget, CreateApplicationViewImpl> {}
 
@@ -57,6 +60,7 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
 
     private ActionDelegate delegate;
 
+    @Inject
     public CreateApplicationViewImpl(GAELocalization constant) {
         this.constant = constant;
 

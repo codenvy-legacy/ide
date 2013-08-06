@@ -33,9 +33,11 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.security.oauth.JsOAuthWindow;
 import com.codenvy.ide.security.oauth.OAuthCallback;
 import com.codenvy.ide.security.oauth.OAuthStatus;
+import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
@@ -48,18 +50,21 @@ import javax.inject.Inject;
  */
 @Singleton
 public class LoginAction extends Action implements OAuthCallback {
-    private String            restContext;
-    private UserClientService userClientService;
-    private GAEResources      resources;
-    private GAEClientService  service;
-    private EventBus          eventBus;
-    private ConsolePart       console;
-    private GAELocalization   constant;
-    private OAuthStatus       authStatus;
+    private String                 restContext;
+    private UserClientService      userClientService;
+    private GAEResources           resources;
+    private GAEClientService       service;
+    private EventBus               eventBus;
+    private ConsolePart            console;
+    private GAELocalization        constant;
+    private Loader                 loader;
+    private OAuthStatus            authStatus;
+    private AsyncCallback<Boolean> callback;
 
     @Inject
-    public LoginAction(@Named("restContext") String restContext, UserClientService userClientService, GAEResources resources,
-                       GAEClientService service, EventBus eventBus, ConsolePart console, GAELocalization constant) {
+    public LoginAction(@Named("restContext") String restContext, UserClientService userClientService,
+                       GAEResources resources, GAEClientService service, EventBus eventBus, ConsolePart console,
+                       GAELocalization constant, Loader loader) {
         super("Login...", "Login to Google App Engine.", resources.login());
         this.restContext = restContext;
         this.userClientService = userClientService;
@@ -68,6 +73,7 @@ public class LoginAction extends Action implements OAuthCallback {
         this.eventBus = eventBus;
         this.console = console;
         this.constant = constant;
+        this.loader = loader;
 
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
@@ -82,7 +88,7 @@ public class LoginAction extends Action implements OAuthCallback {
         if (authStatus == OAuthStatus.LOGGED_IN) {
             doLogout();
         } else {
-            doLogin();
+            doLogin(null);
         }
     }
 
@@ -103,29 +109,45 @@ public class LoginAction extends Action implements OAuthCallback {
     @Override
     public void onAuthenticated(OAuthStatus authStatus) {
         this.authStatus = authStatus;
+        if (callback != null) {
+            callback.onSuccess(authStatus == OAuthStatus.LOGGED_IN);
+        }
     }
 
-    private void isUserLoggedIn() {
+    public void isUserLoggedIn() {
+        isUserLoggedIn(null);
+    }
+
+    public void isUserLoggedIn(AsyncCallback<Boolean> callback) {
+        this.callback = callback;
+
         DtoClientImpls.GaeUserImpl gaeUser = DtoClientImpls.GaeUserImpl.make();
         GaeUserUnmarshaller unmarshaller = new GaeUserUnmarshaller(gaeUser);
 
         try {
-            service.getLoggedUser(new GAEAsyncRequestCallback<GaeUser>(unmarshaller, console, eventBus, constant, null) {
-                @Override
-                protected void onSuccess(GaeUser result) {
-                    if (GAEExtension.isUserHasGaeScopes(result.getToken())) {
-                        onAuthenticated(OAuthStatus.LOGGED_IN);
-                    } else {
-                        onAuthenticated(OAuthStatus.LOGGED_OUT);
-                    }
-                }
-            });
+            service.getLoggedUser(
+                    new GAEAsyncRequestCallback<GaeUser>(unmarshaller, console, eventBus, constant, null) {
+                        @Override
+                        protected void onSuccess(GaeUser result) {
+                            if (GAEExtension.isUserHasGaeScopes(result.getToken())) {
+                                onAuthenticated(OAuthStatus.LOGGED_IN);
+                            } else {
+                                onAuthenticated(OAuthStatus.LOGGED_OUT);
+                            }
+                        }
+                    });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
         }
     }
 
+    public void doLogin(AsyncCallback<Boolean> callback) {
+        this.callback = callback;
+        doLogin();
+    }
+
+    //Todo need to be improved to fetch user id from something else, not by rest service
     public void doLogin() {
         com.codenvy.ide.client.DtoClientImpls.UserImpl dtoUser = com.codenvy.ide.client.DtoClientImpls.UserImpl.make();
         UserUnmarshaller unmarshaller = new UserUnmarshaller(dtoUser);
@@ -177,4 +199,40 @@ public class LoginAction extends Action implements OAuthCallback {
             console.print(e.getMessage());
         }
     }
+
+//    private void checkUserLogged(@NotNull final AsyncCallback<Boolean> authCallback) {
+//        loader.setMessage("Checking if user has Google App Engine scope...");
+//        loader.show();
+//
+//        DtoClientImpls.GaeUserImpl user = DtoClientImpls.GaeUserImpl.make();
+//        GaeUserUnmarshaller unmarshaller = new GaeUserUnmarshaller(user);
+//
+//        try {
+//            service.getLoggedUser(
+//                    new GAEAsyncRequestCallback<GaeUser>(unmarshaller, console, eventBus, constant, null) {
+//                        @Override
+//                        protected void onSuccess(GaeUser result) {
+//                            loader.hide();
+//
+//                            if (!GAEExtension.isUserHasGaeScopes(result.getToken())) {
+////                                boolean doLogin = Window.confirm(
+////                                        "You aren't authorize to complete this operation.\nDo you want to login on " +
+////                                        "Google App Engine?");
+////                                if (doLogin) {
+//                                    doLogin(authCallback);
+////                                } else {
+////                                    authCallback.onSuccess(false);
+////                                }
+//                                onAuthenticated(OAuthStatus.LOGGED_IN);
+//                            } else {
+////                                authCallback.onSuccess(true);
+//                                onAuthenticated(OAuthStatus.LOGGED_OUT);
+//                            }
+//                        }
+//                    });
+//        } catch (RequestException e) {
+//            eventBus.fireEvent(new ExceptionThrownEvent(e));
+//            console.print(e.getMessage());
+//        }
+//    }
 }

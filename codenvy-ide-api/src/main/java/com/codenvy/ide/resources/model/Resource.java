@@ -163,7 +163,7 @@ public abstract class Resource {
     /** @see java.lang.Object#toString() */
     @Override
     public String toString() {
-        return "Resourece [id=" + id + ", name=" + name + ", type=" + resourceType + ']';
+        return "Resource [id=" + id + ", name=" + name + ", type=" + resourceType + ']';
     }
 
     /**

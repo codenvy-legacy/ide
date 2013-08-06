@@ -61,6 +61,6 @@ public class BeanstalkManagementAction extends Action {
     @Override
     public void update(ActionEvent e) {
         e.getPresentation()
-         .setEnabled(resourceProvider.getActiveProject() != null/* && resourceProvider.getActiveProject().hasProperty("Aws Application")*/);
+         .setVisible(resourceProvider.getActiveProject() != null && resourceProvider.getActiveProject().hasProperty("aws-application"));
     }
 }
