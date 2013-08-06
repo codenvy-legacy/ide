@@ -42,7 +42,7 @@
             <g:FlowPanel>
                 <c:Button ui:field="btnConfigure" text="{constant.configureButton}"
                           icon="{resource.configure}" type="SUCCESS" styleName="{style.right}"/>
-                <c:Button ui:field="btnDelete"text="{constant.deleteButton}"
+                <c:Button ui:field="btnDelete" text="{constant.deleteButton}"
                           icon="{resource.remove}" type="SUCCESS" styleName="{style.right} {style.space}"/>
                 <c:Button ui:field="btnUpdate" text="{constant.updateButton}"
                           icon="{resource.update}" type="SUCCESS" styleName="{style.right} {style.space}"/>
