@@ -19,7 +19,6 @@
 package com.codenvy.ide.factory.server;
 
 import com.codenvy.commons.env.EnvironmentContext;
-import com.codenvy.commons.lang.NameGenerator;
 
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -57,10 +56,11 @@ public class CopyProjectService {
      * @param baseDownloadUrl base URL to download project
      * @param projectIds identifiers and names of projects to copy. String should be in the following format:
      *            <p/>
+     * 
      *            <pre>
      *            project1_id:project1_name;
      *            project2_id:project2_name;
-     *            </pre>
+     * </pre>
      * @throws VirtualFileSystemException if any error occurred on vfs
      * @throws IOException if any error occurred while sending request
      */
@@ -74,13 +74,8 @@ public class CopyProjectService {
         for (String projectInfo : projectIdArray) {
             String[] projectIdAndName = projectInfo.split(":");
             final String projectId = projectIdAndName[0];
-            String projectName = projectIdAndName[1];
-            try {
-                vfs.getItem(projectId, false, PropertyFilter.NONE_FILTER);
-                projectName = NameGenerator.generate(projectName + "-", 6);
-            } catch (ItemNotFoundException e) {
-                // Do nothing. Project name is unique.
-            }
+            final String projectName = getNextItemName(vfs, projectIdAndName[1]);
+
             Folder folder = vfs.createFolder(vfs.getInfo().getRoot().getId(), projectName);
             final String projectUrl = baseDownloadUrl + projectId;
 
@@ -107,6 +102,18 @@ public class CopyProjectService {
                     }
                 }
             }
+        }
+    }
+
+    private String getNextItemName(VirtualFileSystem vfs, String itemName) throws VirtualFileSystemException {
+        String itemNameWithSuffix = itemName;
+        try {
+            for (int suffix = 1;; suffix++) {
+                vfs.getItemByPath(itemNameWithSuffix, null, false, PropertyFilter.NONE_FILTER);
+                itemNameWithSuffix = itemName + "_" + suffix;
+            }
+        } catch (ItemNotFoundException e) {
+            return itemNameWithSuffix;
         }
     }
 }
