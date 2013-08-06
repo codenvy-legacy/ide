@@ -30,6 +30,7 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Link;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,27 +50,34 @@ public class CopyProjectController implements CopyProjectHandler {
     public void onCopyProject(CopyProjectEvent event) {
         try {
             VirtualFileSystem.getInstance()
-                             .getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
-                                          ItemType.PROJECT,
-                                          new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>())) {
-                                              @Override
-                                              protected void onSuccess(List<Item> result) {
-                                                  if (!result.isEmpty()) {
-                                                      doCopy();
-                                                  }
-                                              }
+                 .getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
+                              ItemType.PROJECT,
+                              new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>())) {
+                                  @Override
+                                  protected void onSuccess(List<Item> result) {
+                                      List<String> projectIds = new ArrayList<String>();
+                                      for (Item project : result) {
+                                          projectIds.add(project.getId() + ':' + project.getName());
+                                      }
+                                      if (!projectIds.isEmpty()) {
+                                          Item firstItem = result.get(0);
+                                          String projectsDownloadUrl = firstItem.getLinkByRelation(Link.REL_DOWNLOAD_ZIP).getHref();
+                                          projectsDownloadUrl = projectsDownloadUrl.substring(0, projectsDownloadUrl.length() - firstItem.getId().length());
+                                          doCopy(projectsDownloadUrl, projectIds);
+                                      }
+                                  }
 
-                                              @Override
-                                              protected void onFailure(Throwable exception) {
-                                                  Window.alert(exception.getMessage());
-                                              }
-                                          });
+                                  @Override
+                                  protected void onFailure(Throwable exception) {
+                                      Window.alert(exception.getMessage());
+                                  }
+                              });
         } catch (RequestException e) {
             Window.alert(e.getMessage());
         }
     }
 
-    private void doCopy() {
+    private void doCopy(String projectsDownloadUrl, List<String> projectIdList) {
         try {
             List<WorkspaceInfo> workspaces = IDE.user.getWorkspaces();
             String url;
@@ -81,12 +89,15 @@ public class CopyProjectController implements CopyProjectHandler {
             else {
                 url = workspaces.get(0).getUrl();
             }
-            url += "?vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
+            String projectIds = "";
+            for (String projectId : projectIdList) {
+                projectIds += projectId + ";";
+            }
+            url += "?" + CopySpec10.DOWNLOAD_URL + "=" + projectsDownloadUrl + "&" + CopySpec10.PROJECT_ID + "=" + projectIds;
             Window.Location.replace(url);
         } catch (Throwable e) {
             Window.alert(e.getMessage());
             Log.error(getClass(), e);
         }
     }
-
 }

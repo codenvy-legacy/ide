@@ -20,14 +20,22 @@ package com.codenvy.ide.factory.client.copy;
 
 /**
  * Copy Project from temp workspace spec.
+ * 
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
 public interface CopySpec10 {
 
-    String VFS_ID = "vfsid";
+    String DOWNLOAD_URL = "downloadurl";
 
-    String PROJECT_URL = "projecturl";
-
-    String PROJECT_NAME = "projectname";
+    /**
+     * Identifiers and names of projects to copy. String should be in the following format:
+     * <p/>
+     * 
+     * <pre>
+     * project1_id:project1_name;
+     * project2_id:project2_name;
+     * </pre>
+     */
+    String PROJECT_ID   = "projectid";
 }
