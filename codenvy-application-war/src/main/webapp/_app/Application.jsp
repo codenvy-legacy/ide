@@ -37,7 +37,7 @@
             "context": "/ide/rest/",
             "websocketContext": "/ide/websocket/"
         };
-        
+
         var hiddenFiles = ".*";
         var ws = "<%= request.getAttribute("ws")%>";
         var project = <%= request.getAttribute("project") != null ? "\"" + request.getAttribute("project")  + "\"" : null%>;
@@ -46,6 +46,38 @@
         var authorizationContext = "/rest";
         var authorizationErrorPageURL = "/ide/ide/error_oauth.html";
         var securityCheckURL = "/ide/j_security_check";
+        var isTargetWindow = false;
+        var uuid;
+
+        window.onload = function () {
+            uuid = generate();
+            sendSessionStatus("ide", uuid, "start");
+        }
+
+        window.onfocus = function () {
+            if (isTargetWindow == true) {
+                isTargetWindow = false;
+                uuid = generate();
+                sendSessionStatus("ide", uuid, "start");
+            }
+            return false;
+        }
+
+        window.onblur = function () {
+            if (isTargetWindow == false) {
+                isTargetWindow = true;
+                sendSessionStatus("ide", uuid, "stop");
+            }
+            return false;
+        }
+
+        function generate() {
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+        }
+
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+        }
     </script>
 
     <link rel="shortcut icon" href="/images/favicon.ico"/>
@@ -98,7 +130,7 @@
 <script>
   var _gaq = _gaq || [];
   if (window.location.hostname == 'localhost')
-    {//patch for tracking localhost in chrome 
+    {//patch for tracking localhost in chrome
     _gaq.push(['_setDomainName', 'none']); }
     _gaq.push(
       ['_setAccount', "UA-37306001-1"], // codenvy account

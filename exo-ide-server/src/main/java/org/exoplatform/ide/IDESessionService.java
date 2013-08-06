@@ -2,10 +2,12 @@ package org.exoplatform.ide;
 
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 
 /**
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
@@ -23,14 +25,15 @@ public class IDESessionService {
 
     @GET
     @Path("start")
-    public void startSession() {
-        LOG.info("EVENT#session-started# WINDOW#" + appName + "#");
+    public void startSession(@QueryParam("sessionId") String sessionId) {
+        String userId = ConversationState.getCurrent().getIdentity().getUserId();
+        LOG.info("EVENT#session-started# SESSION-ID#" + sessionId + "# USER#" + userId + "# WS#" + wsName + "# WINDOW#" + appName + "#");
     }
 
     @GET
     @Path("stop")
-    public void stopSession() {
-        LOG.info("EVENT#session-finished# WINDOW#" + appName + "#");
+    public void stopSession(@QueryParam("sessionId") String sessionId) {
+        String userId = ConversationState.getCurrent().getIdentity().getUserId();
+        LOG.info("EVENT#session-finished# SESSION-ID#" + sessionId + "# USER#" + userId + "# WS#" + wsName + "# WINDOW#" + appName + "#");
     }
-
 }

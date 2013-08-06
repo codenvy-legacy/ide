@@ -10,20 +10,6 @@ function addMenuAddition(html) {
 
  var htmlLogin = "<span id=\"loginButton\" onClick=\"window.location = '/ide/login';\">Login</span>";
  addMenuAddition(htmlLogin);
- 
+
  var htmlLogout = "<span id=\"logoutButton\" onClick=\"window.location = '/ide/_app/logout.jsp';\">Logout</span>";
  addMenuAddition(htmlLogout);
-
-window.onload = function () {
-    window.onfocus = function() {
-        sendSessionStatus("ide", "start");
-        return false;
-    }
-
-    window.onblur = function() {
-        sendSessionStatus("ide", "stop");
-        return false;
-    }
-
-    sendSessionStatus("ide", "start");
-}
