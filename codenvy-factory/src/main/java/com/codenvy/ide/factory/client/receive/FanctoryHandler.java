@@ -83,75 +83,16 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
     public void onStartWithInitParams(StartWithInitParamsEvent event) {
         if (isFactoryValidParam(event.getParameterMap())) {
             handleFactory(event.getParameterMap());
-        } else if (isCopyProjectValidParam(event.getParameterMap())) {
-            handleCopyProject(event.getParameterMap());
         } else if (isCopyAllProjectsValidParam(event.getParameterMap())) {
             handleCopyAllProjects(event.getParameterMap());
         }
     }
 
-    private void handleCopyProject(Map<String, List<String>> parameterMap) {
-        try {
-            final String projectName = parameterMap.get(CopySpec10.PROJECT_NAME).get(0);
-            final String projectUrl = parameterMap.get(CopySpec10.PROJECT_URL).get(0);
-            VirtualFileSystem.getInstance()
-                             .getChildren(vfs.getRoot(), ItemType.PROJECT,
-                                          new AsyncRequestCallback<List<Item>>(
-                                                                               new ChildrenUnmarshaller(new ArrayList<Item>())) {
-
-                                              @Override
-                                              protected void onSuccess(List<Item> result) {
-                                                  boolean itemExist = false;
-                                                  for (Item item : result) {
-                                                      if (item.getName().equals(projectName)) {
-                                                          itemExist = true;
-                                                          break;
-                                                      }
-
-                                                  }
-                                                  if (itemExist) {
-                                                      doCopy(projectUrl, projectName + "-" + Random.nextInt(Integer.MAX_VALUE));
-                                                  } else {
-                                                      doCopy(projectUrl, projectName);
-                                                  }
-                                              }
-
-                                              @Override
-                                              protected void onFailure(Throwable exception) {
-                                                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                              }
-                                          });
-        } catch (RequestException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-        }
-    }
-
-    private void doCopy(String projectUrl, String projectName) {
-        try {
-            String uri = "/copy/project?projecturl=" + projectUrl + "&projectname=" + projectName;
-            RequestMessage message =
-                                     RequestMessageBuilder.build(RequestBuilder.POST, restServiceContext + uri).
-                                                          getRequestMessage();
-            IDE.messageBus().send(message, new RequestCallback<ProjectModel>(new WSProjectUnmarshaller(new ProjectModel())) {
-                @Override
-                protected void onSuccess(ProjectModel result) {
-                    IDE.fireEvent(new OpenProjectEvent(result));
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    IDE.fireEvent(new ExceptionThrownEvent(exception));
-                }
-            });
-        } catch (WebSocketException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-        }
-    }
-
     private void handleCopyAllProjects(Map<String, List<String>> parameterMap) {
-        final String vfsId = parameterMap.get(CopySpec10.VFS_ID).get(0);
+        final String downloadUrl = parameterMap.get(CopySpec10.DOWNLOAD_URL).get(0);
+        final String projectId = parameterMap.get(CopySpec10.PROJECT_ID).get(0);
         try {
-            String uri = "/copy/projects?vfsid=" + vfsId;
+            String uri = "/copy/projects?" + CopySpec10.DOWNLOAD_URL + "=" + downloadUrl + "&" + CopySpec10.PROJECT_ID + "=" + projectId;
             RequestMessage message = RequestMessageBuilder.build(RequestBuilder.POST, restServiceContext + uri).getRequestMessage();
             IDE.messageBus().send(message, new RequestCallback<Void>() {
                 @Override
@@ -169,19 +110,12 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
         }
     }
 
-    private boolean isCopyProjectValidParam(Map<String, List<String>> parameterMap) {
-        if (parameterMap == null || parameterMap.isEmpty()) {
-            return false;
-        }
-        return parameterMap.get(CopySpec10.PROJECT_URL) != null &&
-               parameterMap.get(CopySpec10.PROJECT_NAME) != null;
-    }
-
     private boolean isCopyAllProjectsValidParam(Map<String, List<String>> parameterMap) {
         if (parameterMap == null || parameterMap.isEmpty()) {
             return false;
         }
-        return parameterMap.get(CopySpec10.VFS_ID) != null;
+        return parameterMap.get(CopySpec10.DOWNLOAD_URL) != null &&
+               parameterMap.get(CopySpec10.PROJECT_ID) != null;
     }
 
     private void handleFactory(Map<String, List<String>> parameterMap) {
