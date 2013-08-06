@@ -179,7 +179,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
     private String                socialPostTitle                      = "Check out my Codenvy project";
 
     /** A summary info to display in a special area in the bottom of Facebook's post. */
-    private String                facebookSummaryInfo                  = "Check out my Codenvy project";
+    private String                facebookSummaryInfo                  = "Code, Build, Test and Deploy instantly using Codenvy";
 
     private String                latestCommitId;
 

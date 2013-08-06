@@ -25,6 +25,10 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.workspaceinfo.WorkspaceInfo;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -50,8 +54,21 @@ public class CopyProjectControl extends SimpleControl implements IDEControl, Pro
     /** {@inheritDoc} */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
-        if(IDE.currentWorkspace.isTemporary() && !IDE.user.isTemporary()){
+        if(IDE.currentWorkspace.isTemporary() && !IDE.user.isTemporary() && userHasPermanentWs()){
             setEnabled(true);
         }
     }
+
+
+    private boolean userHasPermanentWs(){
+        List<WorkspaceInfo> workspaces = IDE.user.getWorkspaces();
+        if (workspaces == null || workspaces.isEmpty())
+            return false;
+        for (WorkspaceInfo workspace : workspaces) {
+            if (!workspace.isTemporary())
+                return true;
+        }
+        return false;
+    }
+
 }
