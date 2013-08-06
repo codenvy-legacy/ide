@@ -35,6 +35,9 @@ import javax.ws.rs.QueryParam;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -70,6 +73,11 @@ public class CopyProjectService {
                                                                                                                            IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID)
                                                                           .toString()).newInstance(null, null);
+
+        if (CookieHandler.getDefault() == null) {
+            CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
+        }
+
         final String[] projectIdArray = projectIds.split(";");
         for (String projectInfo : projectIdArray) {
             String[] projectIdAndName = projectInfo.split(":");
