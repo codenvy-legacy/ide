@@ -168,7 +168,13 @@ public class LaunchExtensionController {
     /** Performs actions after application was successfully launched. */
     private void afterApplicationLaunched() {
         UrlBuilder builder = new UrlBuilder();
-        final String uri = builder.setProtocol("http:").setHost(launchedApp.getHost())
+        String launchedAppHost;
+        if (launchedApp.getHost().isEmpty()) {
+            launchedAppHost = Window.Location.getHostName();
+        } else {
+            launchedAppHost = launchedApp.getHost();
+        }
+        final String uri = builder.setProtocol("http:").setHost(launchedAppHost)
                                   .setPort(launchedApp.getPort())
                                   .setPath("IDE").buildString();
         console.print(constant.applicationStartedOnUrls(project.getName(), "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));

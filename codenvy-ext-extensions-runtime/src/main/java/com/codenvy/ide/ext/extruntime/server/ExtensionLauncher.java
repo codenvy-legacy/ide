@@ -188,7 +188,7 @@ public class ExtensionLauncher implements Startable {
 
         Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.NONE_FILTER);
         File tempDir = null;
-        final String extId = generate("ext-", 16);
+        final String appId = generate("app-", 16);
         try {
             tempDir = createTempDirectory("Extension-");
             final Path codeServerDirPath = createTempDirectory(tempDir, "code-server-").toPath();
@@ -275,14 +275,12 @@ public class ExtensionLauncher implements Startable {
 
             // TODO wait while Tomcat & code server will start and check that they started successfully
 
-            applications.put(extId, new CodenvyExtensionResources(extId, codeServer, tomcatProcess, shutdownPort, httpPort, ajpPort,
+            applications.put(appId, new CodenvyExtensionResources(appId, codeServer, tomcatProcess, shutdownPort, httpPort, ajpPort,
                                                                   tomcatDir, tempDir));
-            LOG.debug("Start Codenvy extension {}", extId);
-
-            // TODO
-            return ApplicationInstanceImpl.make().setName(extId).setHost("127.0.0.1").setPort(httpPort);
+            LOG.debug("Start Codenvy extension {}", appId);
+            return ApplicationInstanceImpl.make().setName(appId).setPort(httpPort);
         } catch (Exception e) {
-            LOG.warn("Codenvy extension {} failed to start, cause: {}", extId, e);
+            LOG.warn("Codenvy extension {} failed to start, cause: {}", appId, e);
             if (tempDir != null && tempDir.exists()) {
                 deleteRecursive(tempDir, false);
             }
