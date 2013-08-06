@@ -1,8 +1,5 @@
 function sendSessionStatus(appName, status) {
-//    var xmlhttp;
-//    var url = window.location.protocol +'//'+window.location.host + '/ide/rest/' + ws + '/session/' + appName + '/' + status;
-
-//    xmlhttp=new XMLHttpRequest();
-//    xmlhttp.open("GET", url, true);
-//    xmlhttp.send();
+    var url = '//' + window.location.host + '/ide/rest/' + ws + '/session/' + appName + '/' + status;
+    var websocket = new WebSocket('https:' == window.location.protocol ? 'wss:' : 'ws:' + url);
+    websocket.send(appName);
 }
