@@ -156,8 +156,7 @@ public class GreetingUserPresenter implements
 
         boolean workspaceTemporary = initialConfiguration.getCurrentWorkspace() == null ? false : initialConfiguration.getCurrentWorkspace().isTemporary();
         
-        String userName = initialConfiguration.getUserInfo().getName();
-        if (userName.equals("_anonim") || userName.equals("__anonim") || userName.startsWith("tmp-")) {
+        if (IDE.user.isTemporary()) {
             if (workspaceTemporary) {
                 key = "anonymous-workspace-temporary";
             } else {
