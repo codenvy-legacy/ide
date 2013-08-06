@@ -49,6 +49,9 @@ public interface FactoryLocalizationConstants extends Messages {
     @Key("messages.checkRepoStatusFailed")
     String checkRepoStatusFailed();
 
+    @Key("messages.saveAllChangesBeforeCopying")
+    String saveAllChangesBeforeCopying();
+
     /*
      * Controls
      */
