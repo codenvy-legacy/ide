@@ -29,8 +29,10 @@ import com.codenvy.ide.ext.gae.client.actions.ManageApplicationAction;
 import com.codenvy.ide.ext.gae.client.actions.UpdateApplicationAction;
 import com.codenvy.ide.ext.gae.client.wizard.GAEWizardPresenter;
 import com.codenvy.ide.ext.gae.shared.Token;
+import com.codenvy.ide.ext.java.client.JavaExtension;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -55,7 +57,7 @@ public class GAEExtension {
                         ManageApplicationAction manageApplicationAction) {
         // TODO change hard code types
         JsonArray<String> requiredProjectTypes =
-                JsonCollections.createArray("Python", "Servlet/JSP", "War");
+                JsonCollections.createArray("Python", "PHP", "War");
 
         paasAgent.registerPaaS(ID, ID, resources.googleAppEngine48(), requiredProjectTypes, wizardPage, null);
 
@@ -81,8 +83,17 @@ public class GAEExtension {
         return token != null && token.getScope() != null && token.getScope().contains(APP_ENGINE_SCOPE);
     }
 
-    //TODO complete checking for gae project
     public static boolean isAppEngineProject(Project project) {
-        return true;
+        if (project == null) {
+            return false;
+        }
+
+        final String projectType = (String)project.getPropertyValue("vfs:projectType");
+
+        if (projectType.equals(JavaExtension.JAVA_WEB_APPLICATION_PROJECT_TYPE)) {
+            return project.findResourceByName("appengine-web.xml", File.TYPE) != null;
+        } else {
+            return project.findResourceByName("app.yaml", File.TYPE) != null;
+        }
     }
 }

@@ -188,6 +188,32 @@
 
     <component>
         <type>org.exoplatform.ide.security.oauth.ExoGitHubOAuthAuthenticator</type>
+        <init-params>
+            <value-param>
+                <name>type</name>
+                <value>web</value>
+            </value-param>
+            <value-param>
+                <name>client-id</name>
+                <value><!-- need to be filled --></value>
+            </value-param>
+            <value-param>
+                <name>client-secret</name>
+                <value><!-- need to be filled --></value>
+            </value-param>
+            <value-param>
+                <name>auth-uri</name>
+                <value>https://github.com/login/oauth/authorize</value>
+            </value-param>
+            <value-param>
+                <name>token-uri</name>
+                <value>https://github.com/login/oauth/access_token</value>
+            </value-param>
+            <values-param>
+                <name>redirect-uris</name>
+                <value><!-- need to be filled --></value>
+            </values-param>
+        </init-params>
     </component>
 
     <!--

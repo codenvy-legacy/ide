@@ -22,6 +22,7 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.ext.gae.client.GAEExtension;
 import com.codenvy.ide.ext.gae.client.GAEResources;
 import com.codenvy.ide.ext.gae.client.create.CreateApplicationPresenter;
 import com.codenvy.ide.resources.model.Project;
@@ -51,5 +52,12 @@ public class CreateApplicationAction extends Action {
         Project project = resourceProvider.getActiveProject();
 
         presenter.showDialog(project);
+    }
+
+    @Override
+    public void update(ActionEvent e) {
+        Project project = resourceProvider.getActiveProject();
+
+        e.getPresentation().setEnabled(GAEExtension.isAppEngineProject(project));
     }
 }

@@ -25,15 +25,19 @@
         .buttonSpace {
             margin-right: 5px;
         }
+
+        .visible {
+            overflow: visible !important;
+        }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="450px" height="125px">
         <g:south size="36.0">
-            <g:FlowPanel styleName="{style.right}" width="100%">
-                <c:Button text="{constant.createButton}" size="SMALL"
+            <g:FlowPanel styleName="{style.right} {style.visible}" width="100%">
+                <c:Button text="{constant.createButton}" size="DEFAULT"
                           type="SUCCESS" ui:field="createButton" styleName="{style.buttonSpace}"/>
-                <c:Button text="{constant.deployButton}" size="SMALL"
+                <c:Button text="{constant.deployButton}" size="DEFAULT"
                           type="SUCCESS" ui:field="deployButton" styleName="{style.buttonSpace}"/>
-                <c:Button text="{constant.cancelButton}" size="SMALL"
+                <c:Button text="{constant.cancelButton}" size="DEFAULT"
                           type="DANGER" ui:field="cancelButton" styleName="{style.buttonSpace}"/>
             </g:FlowPanel>
         </g:south>

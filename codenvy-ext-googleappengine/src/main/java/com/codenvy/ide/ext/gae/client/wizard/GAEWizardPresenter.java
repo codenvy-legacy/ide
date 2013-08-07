@@ -44,7 +44,6 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
     private TemplateAgent              templateAgent;
     private CreateApplicationPresenter createApplicationPresenter;
     private ResourceProvider           resourceProvider;
-    private Loader                     loader;
     private CreateProjectProvider      createProjectProvider;
     private boolean                    isLoggedIn;
 
@@ -52,8 +51,7 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
     public GAEWizardPresenter(EventBus eventBus, GAEWizardView view, ConsolePart console,
                               GAELocalization constant, LoginAction loginAction,
                               GAEClientService service, TemplateAgent templateAgent, GAEResources resources,
-                              CreateApplicationPresenter createApplicationPresenter, ResourceProvider resourceProvider,
-                              Loader loader) {
+                              CreateApplicationPresenter createApplicationPresenter, ResourceProvider resourceProvider) {
         super("Deploy project to Google App Engine", resources.googleAppEngine48());
 
         this.eventBus = eventBus;
@@ -65,7 +63,6 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
         this.templateAgent = templateAgent;
         this.createApplicationPresenter = createApplicationPresenter;
         this.resourceProvider = resourceProvider;
-        this.loader = loader;
 
         this.view.setDelegate(this);
     }
