@@ -52,6 +52,7 @@
         window.onload = function () {
             uuid = generate();
             sendSessionStatus("ide", uuid, "start");
+            window.buildMenu();
         }
 
         window.onfocus = function () {
@@ -69,6 +70,9 @@
                 sendSessionStatus("ide", uuid, "stop");
             }
             return false;
+        }
+
+        window.buildMenu = function () {
         }
 
         function generate() {
