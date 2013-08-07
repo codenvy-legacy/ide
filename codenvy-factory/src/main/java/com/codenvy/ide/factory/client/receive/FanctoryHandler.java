@@ -20,6 +20,8 @@ package com.codenvy.ide.factory.client.receive;
 
 import com.codenvy.ide.factory.client.FactorySpec10;
 import com.codenvy.ide.factory.client.copy.CopySpec10;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Random;
@@ -29,6 +31,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -84,38 +87,8 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
         if (isFactoryValidParam(event.getParameterMap())) {
             handleFactory(event.getParameterMap());
         } else if (isCopyAllProjectsValidParam(event.getParameterMap())) {
-            handleCopyAllProjects(event.getParameterMap());
+            handleCopyProjects(event.getParameterMap());
         }
-    }
-
-    private void handleCopyAllProjects(Map<String, List<String>> parameterMap) {
-        final String downloadUrl = parameterMap.get(CopySpec10.DOWNLOAD_URL).get(0);
-        final String projectId = parameterMap.get(CopySpec10.PROJECT_ID).get(0);
-        try {
-            String uri = "/copy/projects?" + CopySpec10.DOWNLOAD_URL + "=" + downloadUrl + "&" + CopySpec10.PROJECT_ID + "=" + projectId;
-            RequestMessage message = RequestMessageBuilder.build(RequestBuilder.POST, restServiceContext + uri).getRequestMessage();
-            IDE.messageBus().send(message, new RequestCallback<Void>() {
-                @Override
-                protected void onSuccess(Void result) {
-                    // do nothing
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    IDE.fireEvent(new ExceptionThrownEvent(exception));
-                }
-            });
-        } catch (WebSocketException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-        }
-    }
-
-    private boolean isCopyAllProjectsValidParam(Map<String, List<String>> parameterMap) {
-        if (parameterMap == null || parameterMap.isEmpty()) {
-            return false;
-        }
-        return parameterMap.get(CopySpec10.DOWNLOAD_URL) != null &&
-               parameterMap.get(CopySpec10.PROJECT_ID) != null;
     }
 
     private void handleFactory(Map<String, List<String>> parameterMap) {
@@ -164,6 +137,41 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
             return false;
         }
         return true;
+    }
+
+    private void handleCopyProjects(Map<String, List<String>> parameterMap) {
+        final String downloadUrl = parameterMap.get(CopySpec10.DOWNLOAD_URL).get(0);
+        final String projectId = parameterMap.get(CopySpec10.PROJECT_ID).get(0);
+        try {
+            String uri = "/copy/projects?" + CopySpec10.DOWNLOAD_URL + "=" + downloadUrl + "&" + CopySpec10.PROJECT_ID + "=" + projectId;
+            RequestMessage message = RequestMessageBuilder.build(RequestBuilder.POST, restServiceContext + uri).getRequestMessage();
+            IDE.messageBus().send(message, new RequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            IDE.fireEvent(new IDELoadCompleteEvent());
+                        }
+                    });
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                }
+            });
+        } catch (WebSocketException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    private boolean isCopyAllProjectsValidParam(Map<String, List<String>> parameterMap) {
+        if (parameterMap == null || parameterMap.isEmpty()) {
+            return false;
+        }
+        return parameterMap.get(CopySpec10.DOWNLOAD_URL) != null &&
+               parameterMap.get(CopySpec10.PROJECT_ID) != null;
     }
 
     private void cloneProject(final String giturl, final String prjName, final String prjType, final String idCommit) {

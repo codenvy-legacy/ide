@@ -613,9 +613,6 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
         }
     }
     
-    /**
-     * 
-     */
     private void refreshProjectsList(final GwtEvent event) {
         try {
             VirtualFileSystem.getInstance().getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
@@ -639,7 +636,7 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    IDE.fireEvent(new ExceptionThrownEvent(exception, "Error loading Searching of projects failed."));
+                    IDE.fireEvent(new ExceptionThrownEvent(exception, "Error loading. Searching of projects failed."));
                 }
             });
         } catch (RequestException e) {
