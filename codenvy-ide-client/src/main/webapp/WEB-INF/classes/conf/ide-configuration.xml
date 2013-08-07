@@ -145,6 +145,14 @@
         </init-params>
     </component>
 
+    <component>
+        <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineClient</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
+    </component>
+
     <!--
     ***************************************************************************************
     ********************************** OAuth Support **************************************
@@ -225,17 +233,5 @@
     <component>
         <type>org.exoplatform.ide.git.server.GitIgnoreConfigChecker</type>
     </component>
-    <!-- OAuth support end -->
-
-    <!-- Google AppEngine  -->
-    <component>
-        <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineClient</type>
-    </component>
-
-    <component>
-        <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
-    </component>
-
-    <!-- End Google AppEngine  -->
 
 </configuration>

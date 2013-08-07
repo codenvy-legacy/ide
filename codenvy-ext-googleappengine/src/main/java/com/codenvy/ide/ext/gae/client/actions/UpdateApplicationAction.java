@@ -1,6 +1,5 @@
 package com.codenvy.ide.ext.gae.client.actions;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
@@ -32,7 +31,6 @@ public class UpdateApplicationAction extends Action {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        @NotNull
         Project project = resourceProvider.getActiveProject();
 
         presenter.deploy(project);

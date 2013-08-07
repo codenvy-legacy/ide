@@ -29,7 +29,7 @@
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="570px" height="270px">
         <g:north size="260.0">
-            <l:CellTable ui:field="limitsTable" height="260px" width="560px" />
+            <l:CellTable ui:field="limitsTable" width="560px" />
         </g:north>
     </g:DockLayoutPanel>
 </ui:UiBinder>

@@ -36,26 +36,26 @@
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="570px" height="270px">
         <g:north size="220.0">
-            <l:CellTable ui:field="backendsTable" height="260px" width="560px"/>
+            <l:CellTable ui:field="backendsTable" width="560px"/>
         </g:north>
         <g:north size="26.0">
             <g:FlowPanel>
                 <c:Button ui:field="btnConfigure" text="{constant.configureButton}"
-                          icon="{resource.configure}" type="SUCCESS" styleName="{style.right}"/>
+                          icon="{resource.configure}" type="SUCCESS" styleName="{style.right}" size="SMALL"/>
                 <c:Button ui:field="btnDelete" text="{constant.deleteButton}"
-                          icon="{resource.remove}" type="SUCCESS" styleName="{style.right} {style.space}"/>
+                          icon="{resource.remove}" type="SUCCESS" styleName="{style.right} {style.space}" size="SMALL"/>
                 <c:Button ui:field="btnUpdate" text="{constant.updateButton}"
-                          icon="{resource.update}" type="SUCCESS" styleName="{style.right} {style.space}"/>
+                          icon="{resource.update}" type="SUCCESS" styleName="{style.right} {style.space}" size="SMALL"/>
                 <c:Button ui:field="btnRollBack" text="{constant.rollbackButton}"
-                          icon="{resource.rollback}" type="SUCCESS" styleName="{style.right} {style.space}"/>
+                          icon="{resource.rollback}" type="SUCCESS" styleName="{style.right} {style.space}" size="SMALL"/>
             </g:FlowPanel>
         </g:north>
         <g:north size="26.0">
             <g:FlowPanel>
                 <c:Button ui:field="btnUpdateAll" text="{constant.rollbackAllButton}"
-                          icon="{resource.update}" type="SUCCESS" styleName="{style.right}"/>
+                          icon="{resource.update}" type="SUCCESS" styleName="{style.right}" size="SMALL"/>
                 <c:Button ui:field="btnRollBackAll" text="{constant.updateButton}"
-                          icon="{resource.rollbackAll}" type="SUCCESS" styleName="{style.right} {style.space}"/>
+                          icon="{resource.rollbackAll}" type="SUCCESS" styleName="{style.right} {style.space}" size="SMALL"/>
             </g:FlowPanel>
         </g:north>
     </g:DockLayoutPanel>

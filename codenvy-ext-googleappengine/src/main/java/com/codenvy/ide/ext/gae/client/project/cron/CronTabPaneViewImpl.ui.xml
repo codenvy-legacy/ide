@@ -33,10 +33,10 @@
             <g:Label text="{constant.cronGridMessage}" width="100%"/>
         </g:north>
         <g:north size="220.0">
-            <l:CellTable ui:field="cronTable" height="260px" width="560px"/>
+            <l:CellTable ui:field="cronTable" width="560px" />
         </g:north>
         <g:north size="26.0">
-            <c:Button ui:field="btnUpdate" width="50px" height="18px" text="{constant.updateButton}"
+            <c:Button ui:field="btnUpdate" width="70px" height="18px" text="{constant.updateButton}"
                       icon="{resource.update}" type="SUCCESS"/>
         </g:north>
     </g:DockLayoutPanel>

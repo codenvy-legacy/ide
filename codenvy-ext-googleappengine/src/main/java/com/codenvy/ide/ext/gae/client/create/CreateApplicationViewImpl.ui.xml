@@ -10,7 +10,7 @@
         }
 
         .right {
-            text-align: right;
+           float: right;
         }
 
         .label {
@@ -24,6 +24,7 @@
 
         .buttonSpace {
             margin-right: 5px;
+            margin-top: 10px;
         }
 
         .visible {
@@ -32,16 +33,16 @@
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="450px" height="125px">
         <g:south size="36.0">
-            <g:FlowPanel styleName="{style.right} {style.visible}" width="100%">
-                <c:Button text="{constant.createButton}" size="DEFAULT"
-                          type="SUCCESS" ui:field="createButton" styleName="{style.buttonSpace}"/>
-                <c:Button text="{constant.deployButton}" size="DEFAULT"
-                          type="SUCCESS" ui:field="deployButton" styleName="{style.buttonSpace}"/>
-                <c:Button text="{constant.cancelButton}" size="DEFAULT"
-                          type="DANGER" ui:field="cancelButton" styleName="{style.buttonSpace}"/>
+            <g:FlowPanel styleName="{style.visible}">
+                <c:Button text="{constant.createButton}" size="SMALL"
+                          type="SUCCESS" ui:field="createButton" styleName="{style.buttonSpace} {style.right}"/>
+                <c:Button text="{constant.deployButton}" size="SMALL"
+                          type="SUCCESS" ui:field="deployButton" styleName="{style.buttonSpace} {style.right}"/>
+                <c:Button text="{constant.cancelButton}" size="SMALL"
+                          type="DANGER" ui:field="cancelButton" styleName="{style.buttonSpace} {style.right}"/>
             </g:FlowPanel>
         </g:south>
-        <g:center>
+        <g:north size="80.0">
             <g:FlowPanel>
                 <g:DockLayoutPanel unit="PX" width="100%" height="80px">
                     <g:west size="100.0">
@@ -53,6 +54,6 @@
                     </g:center>
                 </g:DockLayoutPanel>
             </g:FlowPanel>
-        </g:center>
+        </g:north>
     </g:DockLayoutPanel>
 </ui:UiBinder>

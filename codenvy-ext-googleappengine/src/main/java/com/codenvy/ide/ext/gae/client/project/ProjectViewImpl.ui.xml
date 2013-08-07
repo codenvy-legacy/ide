@@ -25,7 +25,9 @@
     <ui:with field='resource' type='com.codenvy.ide.ext.gae.client.GAEResources'/>
     <ui:with field='constant' type='com.codenvy.ide.ext.gae.client.GAELocalization'/>
     <ui:style>
-
+        .tabPanel {
+            padding: 10px;
+        }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="625px" height="350px">
         <g:south size="26.0">
@@ -37,7 +39,7 @@
         <g:north size="320.0">
             <g:DockLayoutPanel unit="PX" width="100%" height="100%">
                 <g:center>
-                    <g:TabPanel width="270px" ui:field="applicationTabPanel"/>
+                    <g:TabPanel width="270px" ui:field="applicationTabPanel" styleName="{style.tabPanel}"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>

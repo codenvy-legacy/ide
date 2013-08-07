@@ -30,7 +30,7 @@ import com.codenvy.ide.ext.gae.client.actions.LoginAction;
 import com.codenvy.ide.ext.gae.client.marshaller.ApplicationInfoUnmarshaller;
 import com.codenvy.ide.ext.gae.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.gae.shared.ApplicationInfo;
-import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
+import com.codenvy.ide.ext.java.client.JavaExtension;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
@@ -184,7 +184,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
     public void deploy() {
         String projectType = (String)project.getPropertyValue("vfs:projectType");
-        if (projectType.equals(JavaProject.PRIMARY_NATURE)) {
+        if (projectType.equals(JavaExtension.JAVA_WEB_APPLICATION_PROJECT_TYPE)) {
             startBuildingApplication();
         } else {
             uploadApplication();
@@ -214,6 +214,12 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                                                                                    result.getWebURL() + "</a>"));
 
                                    eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(project));
+                               }
+
+                               @Override
+                               protected void onFailure(Throwable exception) {
+                                   console.print(exception.getMessage());
+                                   super.onFailure(exception);
                                }
                            });
         } catch (RequestException e) {
