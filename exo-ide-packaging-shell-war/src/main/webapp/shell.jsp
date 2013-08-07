@@ -23,7 +23,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Codenvy Shell</title>
-    
+
     <%!
       public String genShellStaticResourceUrl(HttpServletRequest request, String name) {
         return request.getContextPath() + "/" + request.getAttribute("ws") + "/_app/" + name;
@@ -39,13 +39,32 @@
     </script>
 
     <script>
-        window.onblur = function() {
-            sendSessionStatus("shell", "stop");
+        var isTargetWindow = false;
+        var uuid;
+
+        window.onload = function () {
+            uuid = generate();
+            sendSessionStatus("shell", uuid, "start");
+        }
+
+        window.onunload = function () {
+            sendSessionStatus("shell", uuid, "stop");
+        }
+
+        window.onfocus = function () {
+            if (isTargetWindow == true) {
+                isTargetWindow = false;
+                uuid = generate();
+                sendSessionStatus("shell", uuid, "start");
+            }
             return false;
         }
 
-        window.onfocus = function() {
-            sendSessionStatus("shell", "start");
+        window.onblur = function () {
+            if (isTargetWindow == false) {
+                isTargetWindow = true;
+                sendSessionStatus("shell", uuid, "stop");
+            }
             return false;
         }
     </script>
