@@ -166,6 +166,24 @@
 
     <component>
         <type>org.exoplatform.ide.security.oauth.ExoGoogleOAuthAuthenticator</type>
+        <init-params>
+            <value-param>
+                <name>type</name>
+                <value>web</value>
+            </value-param>
+            <value-param>
+                <name>client-id</name>
+                <value>854018091723-fjpehkqiflfmhafcp6j3o1kvb504te2l.apps.googleusercontent.com</value>
+            </value-param>
+            <value-param>
+                <name>client-secret</name>
+                <value>8jxkJ8ROPCMoDY_7E52n6PAc</value>
+            </value-param>
+            <values-param>
+                <name>redirect-uris</name>
+                <value>http://ide2.codenvy-dev.com/ide/rest/ide/oauth/callback</value>
+            </values-param>
+        </init-params>
     </component>
 
     <component>
