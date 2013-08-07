@@ -117,7 +117,7 @@ public class CreateProjectClientServiceImpl implements CreateProjectClientServic
             throws RequestException {
         String requestUrl = restContext + CREATE_EMPTY_PROJECT;
 
-        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName;
+        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootId=" + resourceProvider.getRootId();
         String url = requestUrl + param;
 
         loader.setMessage("Creating project...");
