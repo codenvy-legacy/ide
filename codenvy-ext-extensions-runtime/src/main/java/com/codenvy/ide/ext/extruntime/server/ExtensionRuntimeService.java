@@ -97,7 +97,7 @@ public class ExtensionRuntimeService {
         Folder projectFolder = vfs.createFolder(rootId, name);
 
         InputStream templateStream = Thread.currentThread().getContextClassLoader()
-                                           .getResourceAsStream("conf/GistExtensionSample.zip");
+                                           .getResourceAsStream("GistExtensionSample.zip");
         if (templateStream == null) {
             throw new InvalidArgumentException("Can't find project template.");
         }
@@ -125,7 +125,7 @@ public class ExtensionRuntimeService {
     }
 
     /**
-     * Launch Codenvy extension in a separate Codenvy instance.
+     * Launch Codenvy application with a custom extension.
      * 
      * @param vfsId identifier of virtual file system
      * @param projectId identifier of project we want to launch
@@ -144,29 +144,29 @@ public class ExtensionRuntimeService {
     }
 
     /**
-     * Get logs of launched Codenvy extension.
+     * Get logs of launched Codenvy application.
      * 
-     * @param extId id of extension to get its logs
+     * @param appId id of Codenvy application to get its logs
      * @return retrieved logs
      * @throws ExtensionLauncherException if any error occurred while getting logs
      */
-    @Path("logs/{extid}")
+    @Path("logs/{appid}")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String getLogs(@PathParam("extid") String extId) throws ExtensionLauncherException {
-        return launcher.getLogs(extId);
+    public String getLogs(@PathParam("appid") String appId) throws ExtensionLauncherException {
+        return launcher.getLogs(appId);
     }
 
     /**
-     * Stop previously launched Codenvy with custom extension.
+     * Stop previously launched Codenvy application.
      * 
-     * @param extId identifier of extension to stop
-     * @throws ExtensionLauncherException if error occurred while stopping an extension
+     * @param appId identifier of Codenvy application to stop
+     * @throws ExtensionLauncherException if error occurred while stopping an application
      */
-    @Path("stop/{extid}")
+    @Path("stop/{appid}")
     @GET
-    public void stop(@PathParam("extid") String extId) throws ExtensionLauncherException {
-        launcher.stop(extId);
+    public void stop(@PathParam("appid") String appId) throws ExtensionLauncherException {
+        launcher.stop(appId);
     }
 
     private void updateProperties(String name, List<Property> properties, VirtualFileSystem vfs, Folder projectFolder)

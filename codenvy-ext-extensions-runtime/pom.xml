@@ -179,7 +179,7 @@
                                     <artifactId>tomcat</artifactId>
                                     <type>zip</type>
                                     <version>7.0.37</version>
-                                    <outputDirectory>${project.build.directory}/classes/conf/tomcat</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat</outputDirectory>
                                     <destFileName>tomcat.zip</destFileName>
                                 </artifactItem>
                                 <artifactItem>
@@ -187,35 +187,35 @@
                                     <artifactId>codenvy-organization-packaging-api-war</artifactId>
                                     <type>war</type>
                                     <version>${com.codenvy.organization.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/conf/tomcat</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat</outputDirectory>
                                     <destFileName>userdb.war</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.slf4j</groupId>
                                     <artifactId>slf4j-api</artifactId>
                                     <version>${org.slf4j.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/conf/tomcat/lib</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat/lib</outputDirectory>
                                     <destFileName>slf4j-api.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.slf4j</groupId>
                                     <artifactId>jul-to-slf4j</artifactId>
                                     <version>${org.slf4j.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/conf/tomcat/lib</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat/lib</outputDirectory>
                                     <destFileName>jul-to-slf4j.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>ch.qos.logback</groupId>
                                     <artifactId>logback-core</artifactId>
                                     <version>${ch.qos.logback.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/conf/tomcat/lib</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat/lib</outputDirectory>
                                     <destFileName>logback-core.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>ch.qos.logback</groupId>
                                     <artifactId>logback-classic</artifactId>
                                     <version>${ch.qos.logback.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/conf/tomcat/lib</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat/lib</outputDirectory>
                                     <destFileName>logback-classic.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
@@ -236,8 +236,8 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <unzip src="${project.build.directory}/classes/conf/tomcat/tomcat.zip"
-                                       dest="${project.build.directory}/classes/conf/tomcat/unzip">
+                                <unzip src="${project.build.directory}/classes/tomcat/tomcat.zip"
+                                       dest="${project.build.directory}/classes/tomcat/unzip">
                                     <patternset>
                                         <exclude name="**/ROOT/**"/>
                                         <exclude name="**/docs/**"/>
@@ -246,25 +246,25 @@
                                         <exclude name="**/host-manager/**"/>
                                     </patternset>
                                 </unzip>
-                                <delete file="${project.build.directory}/classes/conf/tomcat/tomcat.zip"/>
-                                <move todir="${project.build.directory}/classes/conf/tomcat/unzip">
-                                    <fileset dir="${project.build.directory}/classes/conf/tomcat/unzip/apache-tomcat-7.0.37"/>
+                                <delete file="${project.build.directory}/classes/tomcat/tomcat.zip"/>
+                                <move todir="${project.build.directory}/classes/tomcat/unzip">
+                                    <fileset dir="${project.build.directory}/classes/tomcat/unzip/apache-tomcat-7.0.37"/>
                                 </move>
                                 <delete dir="${project.build.directory}/classes/conf/tomcat/unzip/apache-tomcat-7.0.37"/>
-                                <move todir="${project.build.directory}/classes/conf/tomcat/unzip/lib">
-                                    <fileset dir="${project.build.directory}/classes/conf/tomcat/lib"/>
+                                <move todir="${project.build.directory}/classes/tomcat/unzip/lib">
+                                    <fileset dir="${project.build.directory}/classes/tomcat/lib"/>
                                 </move>
-                                <move file="${project.build.directory}/classes/conf/tomcat/userdb.war"
-                                      tofile="${project.build.directory}/classes/conf/tomcat/unzip/webapps/userdb.war"/>
-                                <move file="${project.build.directory}/classes/conf/tomcat/setenv.sh"
-                                      tofile="${project.build.directory}/classes/conf/tomcat/unzip/bin/setenv.sh"/>
-                                <move file="${project.build.directory}/classes/conf/tomcat/logback.xml"
-                                      tofile="${project.build.directory}/classes/conf/tomcat/unzip/conf/logback.xml"/>
-                                <move file="${project.build.directory}/classes/conf/tomcat/jaas.conf"
-                                      tofile="${project.build.directory}/classes/conf/tomcat/unzip/conf/jaas.conf"/>
-                                <zip basedir="${project.build.directory}/classes/conf/tomcat/unzip"
-                                     destfile="${project.build.directory}/classes/conf/tomcat/tomcat.zip"/>
-                                <delete dir="${project.build.directory}/classes/conf/tomcat/unzip"/>
+                                <move file="${project.build.directory}/classes/tomcat/userdb.war"
+                                      tofile="${project.build.directory}/classes/tomcat/unzip/webapps/userdb.war"/>
+                                <move file="${project.build.directory}/classes/tomcat/setenv.sh"
+                                      tofile="${project.build.directory}/classes/tomcat/unzip/bin/setenv.sh"/>
+                                <move file="${project.build.directory}/classes/tomcat/logback.xml"
+                                      tofile="${project.build.directory}/classes/tomcat/unzip/conf/logback.xml"/>
+                                <move file="${project.build.directory}/classes/tomcat/jaas.conf"
+                                      tofile="${project.build.directory}/classes/tomcat/unzip/conf/jaas.conf"/>
+                                <zip basedir="${project.build.directory}/classes/tomcat/unzip"
+                                     destfile="${project.build.directory}/classes/tomcat/tomcat.zip"/>
+                                <delete dir="${project.build.directory}/classes/tomcat/unzip"/>
                             </tasks>
                         </configuration>
                     </execution>

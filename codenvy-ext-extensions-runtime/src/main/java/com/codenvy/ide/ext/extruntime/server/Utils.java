@@ -177,19 +177,46 @@ class Utils {
     }
 
     /**
-     * Change GWT Maven plug-in configuration in the specified pom.xml file, to set a new code server's working directory.
+     * Set GWT Maven plug-in configuration in the specified pom.xml file, to set a code server's working directory. Code server working
+     * directory is the root of the directory tree where the code server will write compiler output. If not supplied, a system temporary
+     * directory will be used.
      * 
      * @param pomPath pom.xml path
-     * @param codeServerWorkDir code server's working directory to set
+     * @param workDir the root of the directory tree where the code server will write compiler output
+     * @throws IllegalStateException if any error occurred while writing a file
+     */
+    static void setCodeServerWorkDir(Path pomPath, Path workDir) {
+        setCodeServerConfiguration(pomPath, workDir, -1);
+    }
+
+    /**
+     * Set GWT Maven plug-in configuration in the specified pom.xml file, to set a code server's port. If -1 supplied, a default port will
+     * be 9876.
+     * 
+     * @param pomPath pom.xml path
+     * @param port port on which code server will run
+     * @throws IllegalStateException if any error occurred while writing a file
+     */
+    static void setCodeServerPort(Path pomPath, int port) {
+        setCodeServerConfiguration(pomPath, null, port);
+    }
+
+    /**
+     * Set GWT Maven plug-in configuration in the specified pom.xml file, to set a code server configuration.
+     * 
+     * @param pomPath pom.xml path
+     * @param workDir code server working directory is the root of the directory tree where the code server will write compiler output. If
+     *            not supplied, a system temporary directory will be used
+     * @param port port on which code server will run. If -1 supplied, a default port will be 9876
      * @throws IllegalStateException if any error occurred while writing a file
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    static void changeCodeServerWorkDir(Path pomPath, Path codeServerWorkDir) {
-        final String configString = String.format("<configuration>"
-                                                  + "<codeServerWorkDir>%s</codeServerWorkDir>"
-                                                  + "</configuration>", codeServerWorkDir);
+    static void setCodeServerConfiguration(Path pomPath, Path workDir, int port) {
+        final String workDirConf = workDir == null ? "" : "<codeServerWorkDir>" + workDir + "</codeServerWorkDir>";
+        final String portConf = port == -1 ? "" : "<codeServerPort>" + port + "</codeServerPort>";
+        final String codeServerConf = String.format("<configuration>%s%s</configuration>", workDirConf, portConf);
         try {
-            Xpp3Dom additionalConfiguration = build(new StringReader(configString));
+            Xpp3Dom additionalConfiguration = build(new StringReader(codeServerConf));
 
             Model pom = readPom(pomPath);
             Build build = pom.getBuild();

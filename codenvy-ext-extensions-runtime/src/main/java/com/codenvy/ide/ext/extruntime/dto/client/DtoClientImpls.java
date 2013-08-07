@@ -19,16 +19,30 @@
 // GENERATED SOURCE. DO NOT EDIT.
 package com.codenvy.ide.ext.extruntime.dto.client;
 
-@SuppressWarnings({"unchecked", "cast"})
+@SuppressWarnings({"cast"})
 public class DtoClientImpls {
 
   private  DtoClientImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "d31e55ce0f4d3818d4006b775ad01432e034db2d";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "56ba43ccc89eb770776177a49fc68b56f986803b";
 
 
   public static class ApplicationInstanceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.extruntime.shared.ApplicationInstance {
     protected ApplicationInstanceImpl() {}
+
+    @Override
+    public final native int getCodeServerPort() /*-{
+      return this["codeServerPort"];
+    }-*/;
+
+    public final native ApplicationInstanceImpl setCodeServerPort(int codeServerPort) /*-{
+      this["codeServerPort"] = codeServerPort;
+      return this;
+    }-*/;
+
+    public final native boolean hasCodeServerPort() /*-{
+      return this.hasOwnProperty("codeServerPort");
+    }-*/;
 
     @Override
     public final native java.lang.String getName() /*-{

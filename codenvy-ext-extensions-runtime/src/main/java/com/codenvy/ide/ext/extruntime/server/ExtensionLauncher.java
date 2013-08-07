@@ -74,48 +74,50 @@ import static com.codenvy.ide.commons.server.FileUtils.downloadFile;
 import static com.codenvy.ide.commons.server.NameGenerator.generate;
 import static com.codenvy.ide.ext.extruntime.server.Utils.addDependencyToPom;
 import static com.codenvy.ide.ext.extruntime.server.Utils.addModuleToReactorPom;
-import static com.codenvy.ide.ext.extruntime.server.Utils.changeCodeServerWorkDir;
 import static com.codenvy.ide.ext.extruntime.server.Utils.enableSuperDevMode;
 import static com.codenvy.ide.ext.extruntime.server.Utils.fixMGWT332Bug;
 import static com.codenvy.ide.ext.extruntime.server.Utils.inheritGwtModule;
 import static com.codenvy.ide.ext.extruntime.server.Utils.readPom;
+import static com.codenvy.ide.ext.extruntime.server.Utils.setCodeServerConfiguration;
 import static com.codenvy.ide.ext.extruntime.server.Utils.setTomcatPorts;
 import static com.codenvy.ide.ext.extruntime.server.Utils.writePom;
 import static java.lang.Integer.parseInt;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
- * Launcher for managing (creating/launching/stopping/getting logs) Codenvy-extension projects.
+ * Launcher for managing (creating/launching/getting logs/stopping) Codenvy-extension projects.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtensionLauncher.java Jul 7, 2013 3:17:41 PM azatsarynnyy $
  */
 public class ExtensionLauncher implements Startable {
-    private static final Log                                       LOG                    = ExoLogger.getLogger(ExtensionLauncher.class);
+    private static final Log                         LOG                    = ExoLogger.getLogger(ExtensionLauncher.class);
 
     /** System property that contains build server URL. */
-    public static final String                                     BUILD_SERVER_BASE_URL  = "exo.ide.builder.build-server-base-url";
+    public static final String                       BUILD_SERVER_BASE_URL  = "exo.ide.builder.build-server-base-url";
     /** Default name of the client module directory. */
-    public static final String                                     CLIENT_MODULE_DIR_NAME = "codenvy-ide-client";
+    public static final String                       CLIENT_MODULE_DIR_NAME = "codenvy-ide-client";
     /** Id of Maven profile that used to add (re)sources of custom's extension. */
-    public static final String                                     ADD_SOURCES_PROFILE    = "customExtensionSources";
+    public static final String                       ADD_SOURCES_PROFILE    = "customExtensionSources";
 
     /** Base URL of build server. */
-    private final String                                           buildServerBaseURL;
+    private final String                             buildServerBaseURL;
 
-    private PortManager                                            portManager;
+    private TomcatPortManager                        portManager;
+    private CodeServerPortManager                    codeServerPortManager;
 
-    /** Launched Codenvy applications with custom applications. */
-    private final ConcurrentMap<String, CodenvyExtensionResources> applications;
+    /** Launched Codenvy applications with custom extension. */
+    private final ConcurrentMap<String, Application> applications;
 
     public ExtensionLauncher(InitParams initParams) {
         this(readValueParam(initParams, "build-server-base-url", System.getProperty(BUILD_SERVER_BASE_URL)),
-             parsePortRange(readValuesParam(initParams, "catalina-shutdown-port-ranges")),
-             parsePortRange(readValuesParam(initParams, "http-connector-port-ranges")),
-             parsePortRange(readValuesParam(initParams, "ajp-connector-port-ranges")));
+             parsePortRanges(readValuesParam(initParams, "catalina-shutdown-port-ranges")),
+             parsePortRanges(readValuesParam(initParams, "http-connector-port-ranges")),
+             parsePortRanges(readValuesParam(initParams, "ajp-connector-port-ranges")),
+             parsePortRanges(readValuesParam(initParams, "code-server-port-ranges")));
     }
 
-    private static List<Integer> parsePortRange(List<String> portRanges) {
+    private static List<Integer> parsePortRanges(List<String> portRanges) {
         List<Integer> portList = new ArrayList<Integer>(portRanges.size());
         try {
             for (String portRange : portRanges) {
@@ -139,29 +141,25 @@ public class ExtensionLauncher implements Startable {
         return portList;
     }
 
-    /**
-     * Constructs a new {@link ExtensionLauncher} with the provided URL of build server.
-     * 
-     * @param buildServerBaseURL base URL of build server
-     * @param catalinaShutdownPortRanges
-     * @param httpConnectorPortRanges ranges of ports to bind newly launched Codenvy instances
-     * @param ajpConnectorPortRanges
-     */
+    /** Constructs a new {@link ExtensionLauncher} with provided build server URL and server's port ranges. */
     protected ExtensionLauncher(String buildServerBaseURL,
-                                List<Integer> catalinaShutdownPortRanges,
-                                List<Integer> httpConnectorPortRanges,
-                                List<Integer> ajpConnectorPortRanges) {
+                                List<Integer> catalinaShutdownPortList,
+                                List<Integer> httpConnectorPortList,
+                                List<Integer> ajpConnectorPortList,
+                                List<Integer> codeServerPortList) {
         if (buildServerBaseURL == null || buildServerBaseURL.isEmpty()) {
             throw new IllegalArgumentException("Base URL of build server may not be null or empty string.");
         }
-        if (httpConnectorPortRanges == null || httpConnectorPortRanges.isEmpty() ||
-            catalinaShutdownPortRanges == null || catalinaShutdownPortRanges.isEmpty() ||
-            ajpConnectorPortRanges == null || ajpConnectorPortRanges.isEmpty()) {
+        if (httpConnectorPortList == null || httpConnectorPortList.isEmpty() ||
+            catalinaShutdownPortList == null || catalinaShutdownPortList.isEmpty() ||
+            ajpConnectorPortList == null || ajpConnectorPortList.isEmpty()) {
             throw new IllegalArgumentException("Port range may not be null or empty list.");
         }
         this.buildServerBaseURL = buildServerBaseURL;
-        this.portManager = new PortManager(catalinaShutdownPortRanges, httpConnectorPortRanges, ajpConnectorPortRanges);
-        applications = new ConcurrentHashMap<String, CodenvyExtensionResources>();
+        this.portManager = new TomcatPortManager(catalinaShutdownPortList, httpConnectorPortList, ajpConnectorPortList);
+        this.codeServerPortManager = new CodeServerPortManager(codeServerPortList);
+
+        applications = new ConcurrentHashMap<String, Application>();
     }
 
     /**
@@ -180,10 +178,15 @@ public class ExtensionLauncher implements Startable {
             throw new IllegalArgumentException("Project id required.");
         }
 
-        final int shutdownPort = portManager.getNextShutdownPort();
-        final int httpPort = portManager.getNextHttpPort();
-        final int ajpPort = portManager.getNextAjpPort();
-        // TODO check if no free ports
+        final int shutdownPort = portManager.nextShutdownPort();
+        final int httpPort = portManager.nextHttpPort();
+        final int ajpPort = portManager.nextAjpPort();
+        final int codeServerPort = codeServerPortManager.nextPort();
+        if (shutdownPort == -1 || httpPort == -1 || ajpPort == -1 || codeServerPort == -1) {
+            portManager.releasePorts(shutdownPort, httpPort, ajpPort);
+            codeServerPortManager.releasePort(codeServerPort);
+            throw new IllegalStateException("Not enough resources to launch new application. Max number of applications was reached.");
+        }
 
         Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.NONE_FILTER);
         File tempDir = null;
@@ -200,7 +203,7 @@ public class ExtensionLauncher implements Startable {
 
             // Unpack Codenvy Platform sources & user's extension project into temporary directory.
             InputStream codenvyPlatformSourcesStream = Thread.currentThread().getContextClassLoader()
-                                                             .getResourceAsStream("conf/CodenvyPlatform.zip");
+                                                             .getResourceAsStream("CodenvyPlatform.zip");
             if (codenvyPlatformSourcesStream == null) {
                 throw new InvalidArgumentException("Can't find Codenvy Platform sources package.");
             }
@@ -210,7 +213,7 @@ public class ExtensionLauncher implements Startable {
 
             // Use special ide-configuration.xml with removed unnecessary components.
             InputStream confStream = Thread.currentThread().getContextClassLoader()
-                                           .getResourceAsStream("conf/tomcat/ide-configuration.xml");
+                                           .getResourceAsStream("tomcat/ide-configuration.xml");
             Files.copy(confStream, clientModuleDirPath.resolve("src/main/webapp/WEB-INF/classes/conf/ide-configuration.xml"),
                        REPLACE_EXISTING);
 
@@ -228,10 +231,9 @@ public class ExtensionLauncher implements Startable {
             // Add sources from custom's project to allow code server access it.
             fixMGWT332Bug(clientModulePomPath, customModulePath.getFileName().toString(), ADD_SOURCES_PROFILE);
 
-            // Set code server's own working directory instead of system temp directory.
-            changeCodeServerWorkDir(clientModulePomPath, codeServerDirPath);
+            setCodeServerConfiguration(clientModulePomPath, codeServerDirPath, codeServerPort);
 
-            // TODO detect logical name of custom's GWT module
+            // TODO detect logical name of custom GWT module
             Path gwtModuleDescriptorPath = codeServerDirPath.resolve(CLIENT_MODULE_DIR_NAME)
                                                             .resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
             inheritGwtModule(gwtModuleDescriptorPath, "com.codenvy.ide.extension.demo.Demo");
@@ -272,10 +274,8 @@ public class ExtensionLauncher implements Startable {
             File tomcatDir = createTempDirectory(tempDir, "tomcat-");
             Process tomcatProcess = runTomcat(tomcatDir.toPath(), new URL(buildStatus.getDownloadUrl()), shutdownPort, httpPort, ajpPort);
 
-            // TODO wait while Tomcat & code server will start and check that they started successfully
-
-            applications.put(appId, new CodenvyExtensionResources(appId, codeServer, tomcatProcess, shutdownPort, httpPort, ajpPort,
-                                                                  tomcatDir, tempDir));
+            applications.put(appId, new Application(appId, codeServer, tomcatProcess, shutdownPort, httpPort, ajpPort, codeServerPort,
+                                                    tomcatDir, tempDir));
             LOG.debug("Start Codenvy extension {}", appId);
             return ApplicationInstanceImpl.make().setName(appId).setPort(httpPort);
         } catch (Exception e) {
@@ -288,22 +288,22 @@ public class ExtensionLauncher implements Startable {
     }
 
     /**
-     * Get extension logs.
+     * Get application logs.
      * 
-     * @param extId id of extension to get its logs
-     * @return extension's logs
+     * @param appId id of Codenvy application to get its logs
+     * @return application's logs
      * @throws ExtensionLauncherException if any error occurred while getting logs
      */
-    public String getLogs(String extId) throws ExtensionLauncherException {
-        CodenvyExtensionResources extension = applications.get(extId);
-        if (extension == null) {
-            throw new ExtensionLauncherException(String.format("Unable to get logs. Extension %s not found.", extId));
+    public String getLogs(String appId) throws ExtensionLauncherException {
+        Application app = applications.get(appId);
+        if (app == null) {
+            throw new ExtensionLauncherException(String.format("Unable to get logs. Extension %s not found.", appId));
         }
 
         StringBuilder logs = new StringBuilder();
 
         try {
-            final String codeServerLogs = extension.codeServer.getLogs();
+            final String codeServerLogs = app.codeServer.getLogs();
             if (!(codeServerLogs == null || codeServerLogs.isEmpty())) {
                 logs.append("====> code-server.log <====");
                 logs.append("\n\n");
@@ -312,7 +312,7 @@ public class ExtensionLauncher implements Startable {
             }
 
             // read all catalina*.log files
-            File logsDir = extension.tomcatDir.toPath().resolve("logs").toFile();
+            File logsDir = app.tomcatDir.toPath().resolve("logs").toFile();
             File[] catalinaLogFiles = logsDir.listFiles(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
@@ -332,7 +332,7 @@ public class ExtensionLauncher implements Startable {
                 }
             }
         } catch (IOException | CodeServerException e) {
-            throw new ExtensionLauncherException(String.format("Unable to get logs of extension %s.", extId));
+            throw new ExtensionLauncherException(String.format("Unable to get logs of extension %s.", appId));
         }
 
         return logs.toString();
@@ -345,7 +345,7 @@ public class ExtensionLauncher implements Startable {
      * @throws ExtensionLauncherException if error occurred while stopping an app
      */
     public void stop(String appId) throws ExtensionLauncherException {
-        CodenvyExtensionResources extension = applications.get(appId);
+        Application extension = applications.get(appId);
         if (extension == null) {
             throw new ExtensionLauncherException(String.format("Unable to stop Codenvy with extension %s. Extension not found.", appId));
         }
@@ -357,6 +357,7 @@ public class ExtensionLauncher implements Startable {
         // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
         ProcessUtil.kill(extension.tomcatProcess);
         portManager.releasePorts(extension.shutdownPort, extension.httpPort, extension.ajpPort);
+        codeServerPortManager.releasePort(extension.codeServerPort);
 
         extension.codeServer.stop();
 
@@ -543,7 +544,7 @@ public class ExtensionLauncher implements Startable {
     }
 
     private Process runTomcat(Path tomcatDir, URL ideWarUrl, int shutdownPort, int httpPort, int ajpPort) throws ExtensionLauncherException {
-        InputStream tomcatBundleStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("conf/tomcat/tomcat.zip");
+        InputStream tomcatBundleStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("tomcat/tomcat.zip");
         if (tomcatBundleStream == null) {
             throw new ExtensionLauncherException("Unable to launch extension.");
         }
@@ -564,86 +565,34 @@ public class ExtensionLauncher implements Startable {
         }
     }
 
-    private static class PortManager {
-        private List<Integer> catalinaShutdownPortRanges;
-        private List<Integer> httpConnectorPortRanges;
-        private List<Integer> ajpConnectorPortRanges;
-
-        private List<Integer> bindedCatalinaShutdownPortRanges;
-        private List<Integer> bindedHttpConnectorPortRanges;
-        private List<Integer> bindedAjpConnectorPortRanges;
-
-        PortManager(List<Integer> catalinaShutdownPortRanges, List<Integer> httpConnectorPortRanges, List<Integer> ajpConnectorPortRanges) {
-            this.catalinaShutdownPortRanges = catalinaShutdownPortRanges;
-            this.httpConnectorPortRanges = httpConnectorPortRanges;
-            this.ajpConnectorPortRanges = ajpConnectorPortRanges;
-
-            this.bindedCatalinaShutdownPortRanges = new ArrayList<Integer>();
-            this.bindedHttpConnectorPortRanges = new ArrayList<Integer>();
-            this.bindedAjpConnectorPortRanges = new ArrayList<Integer>();
-        }
-
-        int getNextShutdownPort() {
-            for (int portNumber : catalinaShutdownPortRanges) {
-                if (!bindedCatalinaShutdownPortRanges.contains(portNumber)) {
-                    bindedCatalinaShutdownPortRanges.add(portNumber);
-                    return portNumber;
-                }
-            }
-            return 0;
-        }
-
-        int getNextHttpPort() {
-            for (int portNumber : httpConnectorPortRanges) {
-                if (!bindedHttpConnectorPortRanges.contains(portNumber)) {
-                    bindedHttpConnectorPortRanges.add(portNumber);
-                    return portNumber;
-                }
-            }
-            return 0;
-        }
-
-        int getNextAjpPort() {
-            for (int portNumber : ajpConnectorPortRanges) {
-                if (!bindedAjpConnectorPortRanges.contains(portNumber)) {
-                    bindedAjpConnectorPortRanges.add(portNumber);
-                    return portNumber;
-                }
-            }
-            return 0;
-        }
-
-        void releasePorts(int catalinaShutdownPort, int httpConnectorPort, int ajpConnectorPort) {
-            bindedCatalinaShutdownPortRanges.remove((Integer)catalinaShutdownPort);
-            bindedHttpConnectorPortRanges.remove((Integer)httpConnectorPort);
-            bindedAjpConnectorPortRanges.remove((Integer)ajpConnectorPort);
-        }
-    }
-
-    private class CodenvyExtensionResources {
+    /** Stores application resources. */
+    private class Application {
         final String id;
         CodeServer   codeServer;
         Process      tomcatProcess;
         int          shutdownPort;
         int          httpPort;
         int          ajpPort;
+        int          codeServerPort;
         File         tomcatDir;
         File         tempDir;
 
-        CodenvyExtensionResources(String id,
-                                  CodeServer codeServer,
-                                  Process tomcatProcess,
-                                  int shutdownPort,
-                                  int httpPort,
-                                  int ajpPort,
-                                  File tomcatDir,
-                                  File tempDir) {
+        Application(String id,
+                    CodeServer codeServer,
+                    Process tomcatProcess,
+                    int shutdownPort,
+                    int httpPort,
+                    int ajpPort,
+                    int codeServerPort,
+                    File tomcatDir,
+                    File tempDir) {
             this.id = id;
             this.codeServer = codeServer;
             this.tomcatProcess = tomcatProcess;
             this.shutdownPort = shutdownPort;
             this.httpPort = httpPort;
             this.ajpPort = ajpPort;
+            this.codeServerPort = codeServerPort;
             this.tomcatDir = tomcatDir;
             this.tempDir = tempDir;
         }

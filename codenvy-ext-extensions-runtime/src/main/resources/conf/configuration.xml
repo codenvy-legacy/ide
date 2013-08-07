@@ -21,6 +21,7 @@
                xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
+    <!-- Note: a several values may be supplied for each 'ranges' parameter. -->
     <component>
         <type>com.codenvy.ide.ext.extruntime.server.ExtensionLauncher</type>
         <init-params>
@@ -30,19 +31,19 @@
             </value-param>
             <values-param>
                 <name>catalina-shutdown-port-ranges</name>
-                <value>8006-8007</value>
+                <value>8006-8008</value>
             </values-param>
             <values-param>
                 <name>http-connector-port-ranges</name>
-                <value>8081-8082</value>
+                <value>8081-8083</value>
             </values-param>
             <values-param>
                 <name>ajp-connector-port-ranges</name>
-                <value>8010-8011</value>
+                <value>8010-8012</value>
             </values-param>
             <values-param>
                 <name>code-server-port-ranges</name>
-                <value>9876-9877</value>
+                <value>9876-9878</value>
             </values-param>
         </init-params>
     </component>

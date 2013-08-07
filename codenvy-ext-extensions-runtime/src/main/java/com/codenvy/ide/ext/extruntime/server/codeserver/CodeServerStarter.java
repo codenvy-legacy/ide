@@ -30,11 +30,11 @@ public interface CodeServerStarter {
     /**
      * Starts a new code server.
      * 
-     * @param workingDirectory working directory of a code server
+     * @param processWorkingDirectory working directory of a code server process
      * @return a new code server that started
      * @throws CodeServerException if any error has occurred while starting a code server
      */
-    CodeServer start(Path workingDirectory) throws CodeServerException;
+    CodeServer start(Path processWorkingDirectory) throws CodeServerException;
 
     /** Interface represents a code server. */
     public interface CodeServer {

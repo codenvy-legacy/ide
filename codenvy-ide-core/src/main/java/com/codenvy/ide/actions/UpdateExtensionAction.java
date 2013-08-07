@@ -25,7 +25,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action to update launched Codenvy-extension.
+ * Action to update launched Codenvy application with a custom extension.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: UpdateExtensionAction.java Jul 3, 2013 1:58:47 PM azatsarynnyy $
@@ -50,8 +50,9 @@ public class UpdateExtensionAction extends Action {
         e.getPresentation().setEnabledAndVisible(!Window.Location.getPort().equals("8080"));
     }
 
-    /** Update already launched Codenvy extension. */
+    /** Update already launched Codenvy application with a custom extension. */
     public static native void update()
+    // TODO code server may be binded to port which differs from a default one (9876)
     /*-{
         $wnd.__gwt_bookmarklet_params = {server_url: 'http://localhost:9876/', module_name: 'IDE'};
         var s = $doc.createElement('script');

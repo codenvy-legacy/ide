@@ -26,7 +26,7 @@ import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 
 /**
- * Client service to work with Codenvy extensions (create/launch/get logs/stop).
+ * Client service to work with Codenvy extensions (creating/launching/getting logs/stopping).
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtRuntimeClientService.java Jul 3, 2013 12:48:08 PM azatsarynnyy $
@@ -51,10 +51,10 @@ public interface ExtRuntimeClientService {
                                        AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
-     * Launch Codenvy extension.
+     * Launch Codenvy application with custom extension.
      * 
      * @param vfsId identifier of the virtual file system
-     * @param projectId identifier of the user's extension project we want to launch
+     * @param projectId identifier of the custom's extension project we want to launch
      * @param callback callback
      * @throws WebSocketException
      */
@@ -62,9 +62,9 @@ public interface ExtRuntimeClientService {
                                                                                                      throws WebSocketException;
 
     /**
-     * Get logs of launched Codenvy extension.
+     * Get logs of launched Codenvy application.
      * 
-     * @param appId identifier of launched extension to get its logs
+     * @param appId identifier of launched Codenvy application to get its logs
      * @param callback callback
      * @throws RequestException
      */
@@ -72,9 +72,9 @@ public interface ExtRuntimeClientService {
                                                                                    throws RequestException;
 
     /**
-     * Stop Codenvy extension.
+     * Stop Codenvy application.
      * 
-     * @param appId identifier of extension to stop
+     * @param appId identifier of Codenvy application to stop
      * @param callback callback
      * @throws RequestException
      */

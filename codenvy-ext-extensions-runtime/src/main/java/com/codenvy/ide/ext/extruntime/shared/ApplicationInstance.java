@@ -18,15 +18,21 @@
 package com.codenvy.ide.ext.extruntime.shared;
 
 /**
- * Interface represents an launched Codenvy extension.
+ * Interface represents an launched Codenvy application with custom extension.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationInstance.java Jul 31, 2013 4:21:09 PM azatsarynnyy $
  */
 public interface ApplicationInstance {
+    /** Return application name. */
     String getName();
 
+    /** Returns the host name on which application was started. */
     String getHost();
 
+    /** Returns the port number of web-server on which application was started. */
     int getPort();
+
+    /** Returns the port number on which code server was started. */
+    int getCodeServerPort();
 }
