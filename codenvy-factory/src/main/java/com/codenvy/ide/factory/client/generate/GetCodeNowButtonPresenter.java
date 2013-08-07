@@ -75,6 +75,23 @@ import static com.google.gwt.http.client.URL.encodeQueryString;
 public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewClosedHandler, VfsChangedHandler,
                                       ProjectOpenedHandler, ProjectClosedHandler {
 
+    /** A title to display in a special area in the top of Facebook's post. */
+    private String socialPostTitle = "Check out my Codenvy project";
+
+    /** A summary info to display in a special area in the bottom of Facebook's post. */
+    private String facebookSummaryInfo = "Code, Build, Test and Deploy instantly using Codenvy";
+
+    /** URL to CodeNow button. */
+    //private static final String CODE_NOW_BUTTON_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow-embed.html";
+    private static final String CODE_NOW_BUTTON_URL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("codenow-embed.html").buildString();
+
+    /** URL of image which will be used as link for CodeNow button for GitHub Pages. */
+    private static final String CODE_NOW_BUTTON_FOR_GITHUB_IMAGE_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow_gh.png";
+
+    /** Base URL for Codenvy Factory. */
+    private final String BASE_FACTORY_URL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("factory").buildString();
+    
+    
     public interface Display extends IsView {
 
         HasValue<Boolean> getShowCounterField();
@@ -175,24 +192,10 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
     /** A Factory URL itself. */
     private String                factoryURL;
 
-    /** A title to display in a special area in the top of Facebook's post. */
-    private String                socialPostTitle                      = "Check out my Codenvy project";
-
-    /** A summary info to display in a special area in the bottom of Facebook's post. */
-    private String                facebookSummaryInfo                  = "Code, Build, Test and Deploy instantly using Codenvy";
-
     private String                latestCommitId;
 
     private String                vcsURL;
 
-    /** URL to CodeNow button. */
-    private static final String   CODE_NOW_BUTTON_URL                  = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow.html";
-
-    /** URL of image which will be used as link for CodeNow button for GitHub Pages. */
-    private static final String   CODE_NOW_BUTTON_FOR_GITHUB_IMAGE_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow_gh.png";
-
-    /** Base URL for Codenvy Factory. */
-    private final String          BASE_FACTORY_URL;
 
     public GetCodeNowButtonPresenter() {
         IDE.addHandler(GetCodeNowButtonEvent.TYPE, this);
@@ -200,8 +203,6 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
-        UrlBuilder builder = new UrlBuilder();
-        BASE_FACTORY_URL = builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("factory").buildString();
     }
 
     public void bindDisplay() {
@@ -348,25 +349,23 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
 
     private void getLatestCommitIdAndOpenView() {
         try {
-            GitClientService.getInstance()
-                            .log(vfs.getId(), openedProject.getId(), false,
-                                 new AsyncRequestCallback<LogResponse>(new LogResponseUnmarshaller(new LogResponse(), false)) {
-                                     @Override
-                                     protected void onSuccess(LogResponse result) {
-                                         if (result.getCommits().size() > 0) {
-                                             latestCommitId = result.getCommits().get(0).getId();
-                                         }
-                                         getRepoUrlAndOpenView();
-                                     }
-
-                                     @Override
-                                     protected void onFailure(Throwable exception) {
-                                         String errorMessage =
-                                                               (exception.getMessage() != null) ? exception.getMessage()
-                                                                   : GitExtension.MESSAGES.logFailed();
-                                         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-                                     }
-                                 });
+            GitClientService.getInstance().log(vfs.getId(), openedProject.getId(), false,
+                     new AsyncRequestCallback<LogResponse>(new LogResponseUnmarshaller(new LogResponse(), false)) {
+                         @Override
+                         protected void onSuccess(LogResponse result) {
+                             if (result.getCommits().size() > 0) {
+                                 latestCommitId = result.getCommits().get(0).getId();
+                             }
+                             getRepoUrlAndOpenView();
+                         }
+    
+                         @Override
+                         protected void onFailure(Throwable exception) {
+                             String errorMessage = (exception.getMessage() != null) ?
+                                 exception.getMessage() : GitExtension.MESSAGES.logFailed();
+                             IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+                         }
+                     });
         } catch (RequestException e) {
             String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.logFailed();
             IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
@@ -375,30 +374,24 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
 
     private void getRepoUrlAndOpenView() {
         try {
-            GitClientService.getInstance()
-                            .getGitReadOnlyUrl(vfs.getId(),
-                                               openedProject.getId(),
-                                               new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
-                                                   @Override
-                                                   protected void onSuccess(StringBuilder result) {
-                                                       vcsURL = result.toString();
-                                                       generateSnippetsAndOpenView();
-                                                   }
+            GitClientService.getInstance().getGitReadOnlyUrl(vfs.getId(), openedProject.getId(),
+                   new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
+                       @Override
+                       protected void onSuccess(StringBuilder result) {
+                           vcsURL = result.toString();
+                           generateSnippetsAndOpenView();
+                       }
 
-                                                   @Override
-                                                   protected void onFailure(Throwable exception) {
-                                                       String errorMessage =
-                                                                             (exception.getMessage() != null && exception.getMessage()
-                                                                                                                         .length() > 0)
-                                                                                 ? exception.getMessage()
-                                                                                 : GitExtension.MESSAGES.initFailed();
-                                                       IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-                                                   }
-                                               });
+                       @Override
+                       protected void onFailure(Throwable exception) {
+                           String errorMessage = (exception.getMessage() != null && exception.getMessage().length() > 0) ?
+                               exception.getMessage() : GitExtension.MESSAGES.initFailed();
+                           IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+                       }
+                   });
         } catch (RequestException e) {
-            String errorMessage =
-                                  (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
-                                      : GitExtension.MESSAGES.initFailed();
+            String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ?
+                e.getMessage() : GitExtension.MESSAGES.initFailed();
             IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
         }
     }
@@ -412,35 +405,37 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
                      VCS_URL + "=" + encodeQueryString(vcsURL) + "&" + //
                      COMMIT_ID + "=" + latestCommitId + "&" + //
                      ACTION_PARAMETER + "=" + DEFAULT_ACTION;
+        
         logFactoryCreated(UriUtils.fromString(factoryURL).asString());
-        generateSnippetForWebsites(true, false);
+        generateSnippetForWebsites(false, false);
         gitHubPagesSnippet = "[![alt](" + CODE_NOW_BUTTON_FOR_GITHUB_IMAGE_URL + ")](" + factoryURL + ")";
         openView();
     }
 
     private void logFactoryCreated(String factoryURL) {
         try {
-            FactoryClientService.getInstance()
-                            .logFactoryCreated(vfs.getId(),
-                                               openedProject.getId(), factoryURL,
-                                               new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
-                                                   @Override
-                                                   protected void onSuccess(StringBuilder result) {
-                                                   }
+            FactoryClientService.getInstance().logFactoryCreated(vfs.getId(), openedProject.getId(), factoryURL,
+                   new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
+                       @Override
+                       protected void onSuccess(StringBuilder result) {
+                       }
 
-                                                   @Override
-                                                   protected void onFailure(Throwable exception) {
-                                                   }
-                                               });
+                       @Override
+                       protected void onFailure(Throwable exception) {
+                       }
+                   });
         } catch (RequestException e) {
-            String errorMessage =
-                    (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
-                                                                            : GitExtension.MESSAGES.initFailed();
+            String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ?
+                e.getMessage() : GitExtension.MESSAGES.initFailed();
             IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
         }
     }
 
-    private void generateSnippetForWebsites(boolean isShowCounter, boolean isVerticalStyle) {
+    private void generateSnippetForWebsites(boolean showCounter, boolean verticalStyle) {
+        websitesSnippet = "<iframe src=\"" + CODE_NOW_BUTTON_URL + "\" frameborder=\"no\" style=\"width:77px; height:21px;\" " +
+            "onload=\"this.contentWindow.document.factoryURL='" + factoryURL + "';\"></iframe>";
+        
+        /*
         final String showCounterParameter = "&counter=true";
         final String verticalSTyleParameter = "&style=vertical";
 
@@ -453,8 +448,16 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
                           COMMIT_ID + "=" + latestCommitId + "&" + //
                           ACTION_PARAMETER + "=" + DEFAULT_ACTION + //
                           // (isShowCounter ? showCounterParameter : "") + //
-                          (isVerticalStyle ? verticalSTyleParameter : "") + //
+                          (verticalStyle ? verticalSTyleParameter : "") + //
                           "></iframe>";
+         */
+
+/*
+<iframe src="http://gavrik.codenvy-dev.com/ide/tmp-dev-monit/_app/codenow-button/codenow-embed.html" 
+    frameborder="no" style="position:absolute; left:10px; top:10px; width:77px; height:21px;"
+    onload="this.contentWindow.document.factoryURL='http://gavrik.codenvy-dev.com/ide/tmp-dev-monit?v=1.0&pname=jar-1&wname=dev-monit&vcs=git&vcsurl=http%3A%2F%2Fgavrik.codenvy-dev.com%2Fgit%2F7f%2F95%2Faf%2Fdev-monit%2Fjar-1&idcommit=4a665ccc85fb81b05e6bd6b173064ea16a5af967&action=openproject';"></iframe>
+*/
+        
     }
 
 }

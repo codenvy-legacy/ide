@@ -55,6 +55,10 @@
             window.buildMenu();
         }
 
+        window.onunload = function () {
+            sendSessionStatus("ide", uuid, "stop");
+        }
+
         window.onfocus = function () {
             if (isTargetWindow == true) {
                 isTargetWindow = false;
@@ -73,14 +77,6 @@
         }
 
         window.buildMenu = function () {
-        }
-
-        function generate() {
-            return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-        }
-
-        function s4() {
-            return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
         }
     </script>
 
