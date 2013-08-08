@@ -98,7 +98,7 @@ public class FactoryService {
 
     /**
      * Logs event generated during factory URL creation.
-     * 
+     *
      * @param vfsId
      * @param projectId
      * @param action
