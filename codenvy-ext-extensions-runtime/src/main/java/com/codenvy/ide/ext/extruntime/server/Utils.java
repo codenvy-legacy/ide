@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.extruntime.server;
 
-import org.apache.maven.model.Build;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
@@ -26,7 +25,6 @@ import org.apache.maven.model.Profile;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.codehaus.plexus.util.xml.Xpp3DomUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -61,7 +59,7 @@ import static org.codehaus.plexus.util.xml.Xpp3DomBuilder.build;
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: Utils.java Jul 31, 2013 11:30:14 AM azatsarynnyy $
  */
-class Utils {
+public class Utils {
     /** Maven POM reader. */
     private static MavenXpp3Reader pomReader                = new MavenXpp3Reader();
     /** Maven POM writer. */
@@ -82,7 +80,7 @@ class Utils {
      * @return a project object model
      * @throws IllegalStateException if any error occurred while reading a file
      */
-    static Model readPom(Path path) {
+    public static Model readPom(Path path) {
         try {
             return readPom(Files.newInputStream(path));
         } catch (IOException e) {
@@ -112,7 +110,7 @@ class Utils {
      * @param path pom.xml path
      * @throws IllegalStateException if any error occurred while writing a file
      */
-    static void writePom(Model pom, Path path) {
+    public static void writePom(Model pom, Path path) {
         try {
             pomWriter.write(Files.newOutputStream(path), pom);
         } catch (IOException e) {
@@ -174,63 +172,6 @@ class Utils {
             }
         }
         writePom(pom, path);
-    }
-
-    /**
-     * Set GWT Maven plug-in configuration in the specified pom.xml file, to set a code server's working directory. Code server working
-     * directory is the root of the directory tree where the code server will write compiler output. If not supplied, a system temporary
-     * directory will be used.
-     * 
-     * @param pomPath pom.xml path
-     * @param workDir the root of the directory tree where the code server will write compiler output
-     * @throws IllegalStateException if any error occurred while writing a file
-     */
-    static void setCodeServerWorkDir(Path pomPath, Path workDir) {
-        setCodeServerConfiguration(pomPath, workDir, -1);
-    }
-
-    /**
-     * Set GWT Maven plug-in configuration in the specified pom.xml file, to set a code server's port. If -1 supplied, a default port will
-     * be 9876.
-     * 
-     * @param pomPath pom.xml path
-     * @param port port on which code server will run
-     * @throws IllegalStateException if any error occurred while writing a file
-     */
-    static void setCodeServerPort(Path pomPath, int port) {
-        setCodeServerConfiguration(pomPath, null, port);
-    }
-
-    /**
-     * Set GWT Maven plug-in configuration in the specified pom.xml file, to set a code server configuration.
-     * 
-     * @param pomPath pom.xml path
-     * @param workDir code server working directory is the root of the directory tree where the code server will write compiler output. If
-     *            not supplied, a system temporary directory will be used
-     * @param port port on which code server will run. If -1 supplied, a default port will be 9876
-     * @throws IllegalStateException if any error occurred while writing a file
-     */
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    static void setCodeServerConfiguration(Path pomPath, Path workDir, int port) {
-        final String workDirConf = workDir == null ? "" : "<codeServerWorkDir>" + workDir + "</codeServerWorkDir>";
-        final String portConf = port == -1 ? "" : "<codeServerPort>" + port + "</codeServerPort>";
-        final String codeServerConf = String.format("<configuration>%s%s</configuration>", workDirConf, portConf);
-        try {
-            Xpp3Dom additionalConfiguration = build(new StringReader(codeServerConf));
-
-            Model pom = readPom(pomPath);
-            Build build = pom.getBuild();
-            Map<String, Plugin> plugins = build.getPluginsAsMap();
-            Plugin gwtPlugin = plugins.get("org.codehaus.mojo:gwt-maven-plugin");
-            Xpp3Dom existingConfiguration = (Xpp3Dom)gwtPlugin.getConfiguration();
-            Xpp3Dom mergedConfiguration = Xpp3DomUtils.mergeXpp3Dom(existingConfiguration, additionalConfiguration);
-            gwtPlugin.setConfiguration(mergedConfiguration);
-            build.setPlugins(new ArrayList(plugins.values()));
-
-            writePom(pom, pomPath);
-        } catch (IOException | XmlPullParserException e) {
-            throw new IllegalStateException("Can't parse pom.xml.");
-        }
     }
 
     /**

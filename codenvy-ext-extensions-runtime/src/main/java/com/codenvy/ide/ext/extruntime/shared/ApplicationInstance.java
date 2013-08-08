@@ -24,15 +24,18 @@ package com.codenvy.ide.ext.extruntime.shared;
  * @version $Id: ApplicationInstance.java Jul 31, 2013 4:21:09 PM azatsarynnyy $
  */
 public interface ApplicationInstance {
-    /** Return application name. */
-    String getName();
+    /** Returns application id. */
+    String getId();
 
-    /** Returns the host name on which application was started. */
+    /** Returns the domain name or IP-address of host on which application was started. */
     String getHost();
 
-    /** Returns the port number of web-server on which application was started. */
+    /** Returns the port number of host on which application was started. */
     int getPort();
 
-    /** Returns the port number on which code server was started. */
+    /** Returns the domain name or IP-address of host on which code server was started. */
+    String getCodeServerHost();
+
+    /** Returns the port number of host on which code server was started. */
     int getCodeServerPort();
 }

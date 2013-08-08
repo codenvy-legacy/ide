@@ -52,7 +52,7 @@
         <version.enforcer.plugin>1.0.1</version.enforcer.plugin>
         <appengine.version>1.6.5</appengine.version>
         <ch.qos.logback.version>0.9.29</ch.qos.logback.version>
-        <com.codenvy.organization.version>0.5</com.codenvy.organization.version>
+        <com.codenvy.organization.version>0.6.0-SNAPSHOT</com.codenvy.organization.version>
         <maven.build.timestamp.format>dd.MM.yy HH:mm</maven.build.timestamp.format>
         <buildNumber>${maven.build.timestamp}</buildNumber>
     </properties>

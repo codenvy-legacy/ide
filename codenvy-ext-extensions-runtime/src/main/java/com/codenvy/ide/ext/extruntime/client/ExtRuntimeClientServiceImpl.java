@@ -58,11 +58,11 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     /** Launch method's path. */
     private static final String LAUNCH   = "/launch";
 
-    /** Stop method's path. */
-    private static final String STOP     = "/stop";
-
     /** Get logs method's path. */
     private static final String LOGS     = "/logs";
+
+    /** Stop method's path. */
+    private static final String STOP     = "/stop";
 
     /** REST-service context. */
     private String              restContext;
@@ -102,8 +102,7 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
                                               String groupId,
                                               String artifactId,
                                               String version,
-                                              AsyncRequestCallback<Void> callback)
-                                                                                  throws RequestException {
+                                              AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = restContext + BASE_URL + CREATE;
         final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" + resourceProvider.getRootId()
                              + "&groupid=" + groupId + "&artifactid=" + artifactId + "&version=" + version;
@@ -115,8 +114,7 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void launch(String vfsId, String projectId, RequestCallback<ApplicationInstance> callback)
-                                                                                                     throws WebSocketException {
+    public void launch(String vfsId, String projectId, RequestCallback<ApplicationInstance> callback) throws WebSocketException {
         final String params = "?vfsid=" + vfsId + "&projectid=" + projectId;
         MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, BASE_URL + LAUNCH + params);
         builder.header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON);
@@ -129,7 +127,7 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     public void getLogs(String appId, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
         final String url = restContext + BASE_URL + LOGS + "/" + appId;
         loader.setMessage("Retrieving logs...");
-        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */

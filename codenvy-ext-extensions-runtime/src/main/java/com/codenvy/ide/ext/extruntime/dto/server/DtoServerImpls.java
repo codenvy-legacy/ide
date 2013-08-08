@@ -35,7 +35,7 @@ public class DtoServerImpls {
 
   private  DtoServerImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "56ba43ccc89eb770776177a49fc68b56f986803b";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "cb6e6cff55105511d79cf75bbea2b5560e30514a";
 
   public static class ApplicationInstanceImpl implements com.codenvy.ide.ext.extruntime.shared.ApplicationInstance, JsonSerializable {
 
@@ -43,14 +43,31 @@ public class DtoServerImpls {
       return new ApplicationInstanceImpl();
     }
 
+    protected java.lang.String codeServerHost;
+    private boolean _hasCodeServerHost;
     protected int codeServerPort;
     private boolean _hasCodeServerPort;
-    protected java.lang.String name;
-    private boolean _hasName;
+    protected java.lang.String id;
+    private boolean _hasId;
     protected java.lang.String host;
     private boolean _hasHost;
     protected int port;
     private boolean _hasPort;
+
+    public boolean hasCodeServerHost() {
+      return _hasCodeServerHost;
+    }
+
+    @Override
+    public java.lang.String getCodeServerHost() {
+      return codeServerHost;
+    }
+
+    public ApplicationInstanceImpl setCodeServerHost(java.lang.String v) {
+      _hasCodeServerHost = true;
+      codeServerHost = v;
+      return this;
+    }
 
     public boolean hasCodeServerPort() {
       return _hasCodeServerPort;
@@ -67,18 +84,18 @@ public class DtoServerImpls {
       return this;
     }
 
-    public boolean hasName() {
-      return _hasName;
+    public boolean hasId() {
+      return _hasId;
     }
 
     @Override
-    public java.lang.String getName() {
-      return name;
+    public java.lang.String getId() {
+      return id;
     }
 
-    public ApplicationInstanceImpl setName(java.lang.String v) {
-      _hasName = true;
-      name = v;
+    public ApplicationInstanceImpl setId(java.lang.String v) {
+      _hasId = true;
+      id = v;
       return this;
     }
 
@@ -118,6 +135,14 @@ public class DtoServerImpls {
         return false;
       }
       ApplicationInstanceImpl other = (ApplicationInstanceImpl) o;
+      if (this._hasCodeServerHost != other._hasCodeServerHost) {
+        return false;
+      }
+      if (this._hasCodeServerHost) {
+        if (!this.codeServerHost.equals(other.codeServerHost)) {
+          return false;
+        }
+      }
       if (this._hasCodeServerPort != other._hasCodeServerPort) {
         return false;
       }
@@ -126,11 +151,11 @@ public class DtoServerImpls {
           return false;
         }
       }
-      if (this._hasName != other._hasName) {
+      if (this._hasId != other._hasId) {
         return false;
       }
-      if (this._hasName) {
-        if (!this.name.equals(other.name)) {
+      if (this._hasId) {
+        if (!this.id.equals(other.id)) {
           return false;
         }
       }
@@ -156,8 +181,9 @@ public class DtoServerImpls {
     @Override
     public int hashCode() {
       int hash = 1;
+      hash = hash * 31 + (_hasCodeServerHost ? codeServerHost.hashCode() : 0);
       hash = hash * 31 + (_hasCodeServerPort ? java.lang.Integer.valueOf(codeServerPort).hashCode() : 0);
-      hash = hash * 31 + (_hasName ? name.hashCode() : 0);
+      hash = hash * 31 + (_hasId ? id.hashCode() : 0);
       hash = hash * 31 + (_hasHost ? host.hashCode() : 0);
       hash = hash * 31 + (_hasPort ? java.lang.Integer.valueOf(port).hashCode() : 0);
       return hash;
@@ -167,11 +193,14 @@ public class DtoServerImpls {
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
 
+      JsonElement codeServerHostOut = (codeServerHost == null) ? JsonNull.INSTANCE : new JsonPrimitive(codeServerHost);
+      result.add("codeServerHost", codeServerHostOut);
+
       JsonPrimitive codeServerPortOut = new JsonPrimitive(codeServerPort);
       result.add("codeServerPort", codeServerPortOut);
 
-      JsonElement nameOut = (name == null) ? JsonNull.INSTANCE : new JsonPrimitive(name);
-      result.add("name", nameOut);
+      JsonElement idOut = (id == null) ? JsonNull.INSTANCE : new JsonPrimitive(id);
+      result.add("id", idOut);
 
       JsonElement hostOut = (host == null) ? JsonNull.INSTANCE : new JsonPrimitive(host);
       result.add("host", hostOut);
@@ -199,16 +228,22 @@ public class DtoServerImpls {
       ApplicationInstanceImpl dto = new ApplicationInstanceImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
+      if (json.has("codeServerHost")) {
+        JsonElement codeServerHostIn = json.get("codeServerHost");
+        java.lang.String codeServerHostOut = gson.fromJson(codeServerHostIn, java.lang.String.class);
+        dto.setCodeServerHost(codeServerHostOut);
+      }
+
       if (json.has("codeServerPort")) {
         JsonElement codeServerPortIn = json.get("codeServerPort");
         int codeServerPortOut = codeServerPortIn.getAsInt();
         dto.setCodeServerPort(codeServerPortOut);
       }
 
-      if (json.has("name")) {
-        JsonElement nameIn = json.get("name");
-        java.lang.String nameOut = gson.fromJson(nameIn, java.lang.String.class);
-        dto.setName(nameOut);
+      if (json.has("id")) {
+        JsonElement idIn = json.get("id");
+        java.lang.String idOut = gson.fromJson(idIn, java.lang.String.class);
+        dto.setId(idOut);
       }
 
       if (json.has("host")) {

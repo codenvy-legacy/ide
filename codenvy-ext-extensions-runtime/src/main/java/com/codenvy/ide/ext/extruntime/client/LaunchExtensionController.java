@@ -76,7 +76,7 @@ public class LaunchExtensionController {
         return launchedApp != null;
     }
 
-    /** Launch the Codenvy extension project which is currently opened. */
+    /** Launch the Codenvy application with custom extesnion. */
     public void launch() {
         project = resourceProvider.getActiveProject();
         if (project == null) {
@@ -99,7 +99,7 @@ public class LaunchExtensionController {
 
                                @Override
                                protected void onFailure(Throwable exception) {
-                                   onApplicationLaunchFailure(exception);
+                                   onFail(constant.startApplicationFailed(), exception);
                                }
                            });
         } catch (WebSocketException e) {
@@ -107,7 +107,32 @@ public class LaunchExtensionController {
         }
     }
 
-    /** Launch the Codenvy extension project which is currently opened. */
+    /** Get logs of launched application. */
+    public void getLogs() {
+        if (project == null) {
+            Window.alert("Project is not opened.");
+            return;
+        }
+
+        try {
+            service.getLogs(launchedApp.getId(),
+                            new AsyncRequestCallback<StringBuilder>(new com.codenvy.ide.resources.marshal.StringUnmarshaller()) {
+                                @Override
+                                protected void onSuccess(StringBuilder result) {
+                                    console.print("<pre>" + result.toString() + "</pre>");
+                                }
+
+                                @Override
+                                protected void onFailure(Throwable exception) {
+                                    onFail(constant.getApplicationLogsFailed(), exception);
+                                }
+                            });
+        } catch (RequestException e) {
+            console.print(e.getMessage());
+        }
+    }
+
+    /** Stop the Codenvy application. */
     public void stop() {
         if (project == null) {
             Window.alert("Project is not opened.");
@@ -115,7 +140,7 @@ public class LaunchExtensionController {
         }
 
         try {
-            service.stop(launchedApp.getName(),
+            service.stop(launchedApp.getId(),
                          new AsyncRequestCallback<Void>() {
                              @Override
                              protected void onSuccess(Void result) {
@@ -125,34 +150,9 @@ public class LaunchExtensionController {
 
                              @Override
                              protected void onFailure(Throwable exception) {
-                                 onApplicationStopFailure(exception);
+                                 onFail(constant.stopApplicationFailed(), exception);
                              }
                          });
-        } catch (RequestException e) {
-            console.print(e.getMessage());
-        }
-    }
-
-    /** Get logs of launched extension. */
-    public void getLogs() {
-        if (project == null) {
-            Window.alert("Project is not opened.");
-            return;
-        }
-
-        try {
-            service.getLogs(launchedApp.getName(),
-                            new AsyncRequestCallback<StringBuilder>(new com.codenvy.ide.resources.marshal.StringUnmarshaller()) {
-                                @Override
-                                protected void onSuccess(StringBuilder result) {
-                                    console.print("<pre>" + result.toString() + "</pre>");
-                                }
-
-                                @Override
-                                protected void onFailure(Throwable exception) {
-                                    onGetApplicationLogsFailure(exception);
-                                }
-                            });
         } catch (RequestException e) {
             console.print(e.getMessage());
         }
@@ -167,40 +167,19 @@ public class LaunchExtensionController {
     /** Performs actions after application was successfully launched. */
     private void afterApplicationLaunched() {
         UrlBuilder builder = new UrlBuilder();
-        String launchedAppHost;
-        if (launchedApp.getHost() == null || launchedApp.getHost().isEmpty()) {
-            launchedAppHost = Window.Location.getHostName();
-        } else {
-            launchedAppHost = launchedApp.getHost();
-        }
-        final String uri = builder.setProtocol("http:").setHost(launchedAppHost)
+        final String uri =
+                           builder.setProtocol("http:").setHost(launchedApp.getHost())
                                   .setPort(launchedApp.getPort())
-                                  .setPath("IDE").buildString();
+                                  .setPath("IDE").setParameter("h", launchedApp.getCodeServerHost())
+                                  .setParameter("p", String.valueOf(launchedApp.getCodeServerPort())).buildString();
         console.print(constant.applicationStartedOnUrls(project.getName(), "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
     }
 
-    private void onApplicationLaunchFailure(Throwable exception) {
-        String msg = constant.startApplicationFailed();
+    private void onFail(String message, Throwable exception) {
         if (exception != null && exception.getMessage() != null) {
-            msg += ": " + exception.getMessage();
+            message += ": " + exception.getMessage();
         }
-        console.print(msg);
-    }
-
-    private void onGetApplicationLogsFailure(Throwable exception) {
-        String msg = constant.getApplicationLogsFailed();
-        if (exception != null && exception.getMessage() != null) {
-            msg += ": " + exception.getMessage();
-        }
-        console.print(msg);
-    }
-
-    private void onApplicationStopFailure(Throwable exception) {
-        String msg = constant.stopApplicationFailed();
-        if (exception != null && exception.getMessage() != null) {
-            msg += ": " + exception.getMessage();
-        }
-        console.print(msg);
+        console.print(message);
     }
 
 }

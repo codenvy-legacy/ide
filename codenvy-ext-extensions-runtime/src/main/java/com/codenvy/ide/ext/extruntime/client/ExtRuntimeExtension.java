@@ -54,11 +54,12 @@ public class ExtRuntimeExtension {
                                ExtRuntimeResources resources,
                                ActionManager actionManager,
                                LaunchAction launchAction,
-                               StopAction stopAction,
-                               GetLogsAction getLogsAction) {
+                               GetLogsAction getLogsAction,
+                               StopAction stopAction) {
         // register actions
-        actionManager.registerAction(localizationConstants.launchExtensionActionlId(), launchAction);
         DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
+
+        actionManager.registerAction(localizationConstants.launchExtensionActionlId(), launchAction);
         runMenuActionGroup.add(launchAction);
 
         actionManager.registerAction(localizationConstants.getExtensionLogsActionId(), getLogsAction);

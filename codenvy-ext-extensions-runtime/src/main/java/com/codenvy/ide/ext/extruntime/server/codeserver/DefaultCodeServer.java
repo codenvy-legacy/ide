@@ -17,35 +17,77 @@
  */
 package com.codenvy.ide.ext.extruntime.server.codeserver;
 
-import com.codenvy.ide.ext.extruntime.server.codeserver.CodeServerStarter.CodeServer;
+import com.codenvy.ide.ext.extruntime.server.Utils;
 import com.codenvy.ide.ext.extruntime.server.tools.ProcessUtil;
 
+import org.apache.maven.model.Build;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.Plugin;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.codehaus.plexus.util.xml.Xpp3DomUtils;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+
+import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Map;
+
+import static com.codenvy.ide.ext.extruntime.server.ExtensionLauncher.ADD_SOURCES_PROFILE;
+import static org.codehaus.plexus.util.xml.Xpp3DomBuilder.build;
 
 /**
- * Default code server inplementation.
+ * Implementation of code server that uses GWT Maven plug-in.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: DefaultCodeServer.java Jul 26, 2013 3:15:52 PM azatsarynnyy $
  */
 public class DefaultCodeServer implements CodeServer {
     /** Process that represents a started code server. */
-    private Process process;
+    private Process                 process;
 
     /** Path to code server's log file. */
-    private Path    logFilePath;
+    private Path                    logFilePath;
 
-    /**
-     * Creates default code server.
-     * 
-     * @param process {@link Process} that represents this code server
-     * @param logFilePath {@link Path} to code server's log file
-     */
-    public DefaultCodeServer(Process process, Path logFilePath) {
-        this.process = process;
-        this.logFilePath = logFilePath;
+    private CodeServerConfiguration configuration;
+
+    /** {@inheritDoc} */
+    @Override
+    public void start(CodeServerConfiguration configuration) throws CodeServerException {
+        this.configuration = configuration;
+        this.logFilePath = configuration.getWorkDir().resolve("code-server.log");
+        setCodeServerConfiguration(configuration.getWorkDir().resolve("pom.xml"), configuration.getWorkDir(), configuration.getPort());
+
+        // need 'clean compile' to get 'IDEInjector.java' and 'ExtensionManager.java' in a target folder
+        final String[] command = new String[]{
+                getMavenExecCommand(),
+                "clean",
+                "compile",
+                "gwt:run-codeserver", // org.codehaus.mojo:gwt-maven-plugin should be described in a pom.xml
+                "-P" + ADD_SOURCES_PROFILE};
+
+        ProcessBuilder processBuilder = new ProcessBuilder(command).directory(configuration.getWorkDir().toFile());
+        processBuilder.redirectOutput(logFilePath.toFile());
+
+        try {
+            this.process = processBuilder.start();
+        } catch (IOException e) {
+            throw new CodeServerException("Unable to start code server.");
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getLogs() throws CodeServerException {
+        try {
+            // It should work fine for the files less than 2GB (Integer.MAX_VALUE).
+            // One recompiling procedure writes about 1KB output information to logs.
+            return new String(Files.readAllBytes(logFilePath));
+        } catch (IOException e) {
+            throw new CodeServerException("Unable to get code server's logs.");
+        }
     }
 
     /** {@inheritDoc} */
@@ -61,13 +103,58 @@ public class DefaultCodeServer implements CodeServer {
 
     /** {@inheritDoc} */
     @Override
-    public String getLogs() throws CodeServerException {
+    public CodeServerConfiguration getConfiguration() {
+        return configuration;
+    }
+
+    private String getMavenExecCommand() {
+        final File mvnHome = getMavenHome();
+        if (mvnHome != null) {
+            final String mvn = "bin" + File.separatorChar + "mvn";
+            return new File(mvnHome, mvn).getAbsolutePath(); // use Maven home directory if it's set
+        } else {
+            return "mvn"; // otherwise 'mvn' should be in PATH variable
+        }
+    }
+
+    private File getMavenHome() {
+        final String m2HomeEnv = System.getenv("M2_HOME");
+        if (m2HomeEnv == null) {
+            return null;
+        }
+        final File m2Home = new File(m2HomeEnv);
+        return m2Home.exists() ? m2Home : null;
+    }
+
+    /**
+     * Set GWT Maven plug-in configuration in the specified pom.xml file, to set a code server configuration.
+     * 
+     * @param pomPath pom.xml path
+     * @param workDir code server working directory is the root of the directory tree where the code server will write compiler output. If
+     *            not supplied, a system temporary directory will be used
+     * @param port port on which code server will run. If -1 supplied, a default port will be 9876
+     * @throws IllegalStateException if any error occurred while writing a file
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static void setCodeServerConfiguration(Path pomPath, Path workDir, int port) {
+        final String workDirConf = workDir == null ? "" : "<codeServerWorkDir>" + workDir + "</codeServerWorkDir>";
+        final String portConf = port == -1 ? "" : "<codeServerPort>" + port + "</codeServerPort>";
+        final String codeServerConf = String.format("<configuration>%s%s</configuration>", workDirConf, portConf);
         try {
-            // It should work fine for the files less than 2GB (Integer.MAX_VALUE).
-            // One recompiling procedure writes about 1KB output information to logs.
-            return new String(Files.readAllBytes(logFilePath));
-        } catch (IOException e) {
-            throw new CodeServerException("Unable to get code server's logs.");
+            Xpp3Dom additionalConfiguration = build(new StringReader(codeServerConf));
+
+            Model pom = Utils.readPom(pomPath);
+            Build build = pom.getBuild();
+            Map<String, Plugin> plugins = build.getPluginsAsMap();
+            Plugin gwtPlugin = plugins.get("org.codehaus.mojo:gwt-maven-plugin");
+            Xpp3Dom existingConfiguration = (Xpp3Dom)gwtPlugin.getConfiguration();
+            Xpp3Dom mergedConfiguration = Xpp3DomUtils.mergeXpp3Dom(existingConfiguration, additionalConfiguration);
+            gwtPlugin.setConfiguration(mergedConfiguration);
+            build.setPlugins(new ArrayList(plugins.values()));
+
+            Utils.writePom(pom, pomPath);
+        } catch (IOException | XmlPullParserException e) {
+            throw new IllegalStateException("Can't parse pom.xml.");
         }
     }
 }

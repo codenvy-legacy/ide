@@ -19,9 +19,10 @@ package com.codenvy.ide.ext.extruntime.server;
 
 import com.codenvy.ide.commons.JsonHelper;
 import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls.ApplicationInstanceImpl;
+import com.codenvy.ide.ext.extruntime.server.codeserver.CodeServer;
+import com.codenvy.ide.ext.extruntime.server.codeserver.CodeServerConfiguration;
 import com.codenvy.ide.ext.extruntime.server.codeserver.CodeServerException;
-import com.codenvy.ide.ext.extruntime.server.codeserver.CodeServerStarter.CodeServer;
-import com.codenvy.ide.ext.extruntime.server.codeserver.GwtMvnCodeServerStarter;
+import com.codenvy.ide.ext.extruntime.server.codeserver.DefaultCodeServer;
 import com.codenvy.ide.ext.extruntime.server.tools.ProcessUtil;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 import com.codenvy.ide.extension.maven.shared.BuildStatus.Status;
@@ -78,7 +79,6 @@ import static com.codenvy.ide.ext.extruntime.server.Utils.enableSuperDevMode;
 import static com.codenvy.ide.ext.extruntime.server.Utils.fixMGWT332Bug;
 import static com.codenvy.ide.ext.extruntime.server.Utils.inheritGwtModule;
 import static com.codenvy.ide.ext.extruntime.server.Utils.readPom;
-import static com.codenvy.ide.ext.extruntime.server.Utils.setCodeServerConfiguration;
 import static com.codenvy.ide.ext.extruntime.server.Utils.setTomcatPorts;
 import static com.codenvy.ide.ext.extruntime.server.Utils.writePom;
 import static java.lang.Integer.parseInt;
@@ -199,7 +199,7 @@ public class ExtensionLauncher implements Startable {
 
             Item pomFile = vfs.getItemByPath(project.getName() + "/pom.xml", null, false, PropertyFilter.NONE_FILTER);
             InputStream extPomContent = vfs.getContent(pomFile.getId()).getStream();
-            Model extPom = readPom(extPomContent);
+            Model extensionPom = readPom(extPomContent);
 
             // Unpack Codenvy Platform sources & user's extension project into temporary directory.
             InputStream codenvyPlatformSourcesStream = Thread.currentThread().getContextClassLoader()
@@ -208,7 +208,7 @@ public class ExtensionLauncher implements Startable {
                 throw new InvalidArgumentException("Can't find Codenvy Platform sources package.");
             }
             unzip(codenvyPlatformSourcesStream, codeServerDirPath.toFile());
-            Path customModulePath = codeServerDirPath.resolve(extPom.getArtifactId());
+            Path customModulePath = codeServerDirPath.resolve(extensionPom.getArtifactId());
             unzip(vfs.exportZip(projectId).getStream(), customModulePath.toFile());
 
             // Use special ide-configuration.xml with removed unnecessary components.
@@ -223,7 +223,7 @@ public class ExtensionLauncher implements Startable {
 
             addModuleToReactorPom(codeServerDirPath.resolve("pom.xml"), customModulePath.getFileName().toString(),
                                   CLIENT_MODULE_DIR_NAME);
-            addDependencyToPom(clientModulePomPath, extPom.getGroupId(), extPom.getArtifactId(), extPom.getVersion());
+            addDependencyToPom(clientModulePomPath, extensionPom.getGroupId(), extensionPom.getArtifactId(), extensionPom.getVersion());
 
             // Change output directory for the WAR to allow builder return link to download WAR.
             configureWarPlugin(clientModulePomPath);
@@ -231,11 +231,9 @@ public class ExtensionLauncher implements Startable {
             // Add sources from custom's project to allow code server access it.
             fixMGWT332Bug(clientModulePomPath, customModulePath.getFileName().toString(), ADD_SOURCES_PROFILE);
 
-            setCodeServerConfiguration(clientModulePomPath, codeServerDirPath, codeServerPort);
-
-            // TODO detect logical name of custom GWT module
             Path gwtModuleDescriptorPath = codeServerDirPath.resolve(CLIENT_MODULE_DIR_NAME)
                                                             .resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
+            // TODO detect logical name of custom GWT module
             inheritGwtModule(gwtModuleDescriptorPath, "com.codenvy.ide.extension.demo.Demo");
             enableSuperDevMode(gwtModuleDescriptorPath);
 
@@ -263,7 +261,8 @@ public class ExtensionLauncher implements Startable {
             final String buildId = build(zippedProjectFile);
 
             // Run code server while project is building.
-            CodeServer codeServer = new GwtMvnCodeServerStarter().start(codeServerDirPath.resolve(CLIENT_MODULE_DIR_NAME));
+            CodeServer codeServer = new DefaultCodeServer();
+            codeServer.start(new CodeServerConfiguration(codeServerPort, clientModuleDirPath));
 
             final String status = startCheckingBuildStatus(buildId);
             BuildStatusBean buildStatus = JsonHelper.fromJson(status, BuildStatusBean.class, null);
@@ -274,10 +273,9 @@ public class ExtensionLauncher implements Startable {
             File tomcatDir = createTempDirectory(tempDir, "tomcat-");
             Process tomcatProcess = runTomcat(tomcatDir.toPath(), new URL(buildStatus.getDownloadUrl()), shutdownPort, httpPort, ajpPort);
 
-            applications.put(appId, new Application(appId, codeServer, tomcatProcess, shutdownPort, httpPort, ajpPort, codeServerPort,
-                                                    tomcatDir, tempDir));
+            applications.put(appId, new Application(appId, codeServer, tomcatProcess, shutdownPort, httpPort, ajpPort, tomcatDir, tempDir));
             LOG.debug("Start Codenvy extension {}", appId);
-            return ApplicationInstanceImpl.make().setName(appId).setPort(httpPort);
+            return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort).setCodeServerPort(codeServerPort);
         } catch (Exception e) {
             LOG.warn("Codenvy extension {} failed to start, cause: {}", appId, e);
             if (tempDir != null && tempDir.exists()) {
@@ -297,7 +295,7 @@ public class ExtensionLauncher implements Startable {
     public String getLogs(String appId) throws ExtensionLauncherException {
         Application app = applications.get(appId);
         if (app == null) {
-            throw new ExtensionLauncherException(String.format("Unable to get logs. Extension %s not found.", appId));
+            throw new ExtensionLauncherException(String.format("Unable to get logs. Application %s not found.", appId));
         }
 
         StringBuilder logs = new StringBuilder();
@@ -332,7 +330,7 @@ public class ExtensionLauncher implements Startable {
                 }
             }
         } catch (IOException | CodeServerException e) {
-            throw new ExtensionLauncherException(String.format("Unable to get logs of extension %s.", appId));
+            throw new ExtensionLauncherException(String.format("Unable to get logs of application %s.", appId));
         }
 
         return logs.toString();
@@ -347,7 +345,7 @@ public class ExtensionLauncher implements Startable {
     public void stop(String appId) throws ExtensionLauncherException {
         Application extension = applications.get(appId);
         if (extension == null) {
-            throw new ExtensionLauncherException(String.format("Unable to stop Codenvy with extension %s. Extension not found.", appId));
+            throw new ExtensionLauncherException(String.format("Unable to stop Codenvy with extension %s. Application not found.", appId));
         }
 
         // TODO
@@ -357,7 +355,7 @@ public class ExtensionLauncher implements Startable {
         // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
         ProcessUtil.kill(extension.tomcatProcess);
         portManager.releasePorts(extension.shutdownPort, extension.httpPort, extension.ajpPort);
-        codeServerPortManager.releasePort(extension.codeServerPort);
+        codeServerPortManager.releasePort(extension.codeServer.getConfiguration().getPort());
 
         extension.codeServer.stop();
 
@@ -546,7 +544,7 @@ public class ExtensionLauncher implements Startable {
     private Process runTomcat(Path tomcatDir, URL ideWarUrl, int shutdownPort, int httpPort, int ajpPort) throws ExtensionLauncherException {
         InputStream tomcatBundleStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("tomcat/tomcat.zip");
         if (tomcatBundleStream == null) {
-            throw new ExtensionLauncherException("Unable to launch extension.");
+            throw new ExtensionLauncherException("Unable to launch Codenvy with extension.");
         }
 
         try {
@@ -573,7 +571,6 @@ public class ExtensionLauncher implements Startable {
         int          shutdownPort;
         int          httpPort;
         int          ajpPort;
-        int          codeServerPort;
         File         tomcatDir;
         File         tempDir;
 
@@ -583,7 +580,6 @@ public class ExtensionLauncher implements Startable {
                     int shutdownPort,
                     int httpPort,
                     int ajpPort,
-                    int codeServerPort,
                     File tomcatDir,
                     File tempDir) {
             this.id = id;
@@ -592,7 +588,6 @@ public class ExtensionLauncher implements Startable {
             this.shutdownPort = shutdownPort;
             this.httpPort = httpPort;
             this.ajpPort = ajpPort;
-            this.codeServerPort = codeServerPort;
             this.tomcatDir = tomcatDir;
             this.tempDir = tempDir;
         }

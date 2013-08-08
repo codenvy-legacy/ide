@@ -23,6 +23,7 @@ import com.codenvy.ide.ext.extruntime.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.rest.Unmarshallable;
+import com.google.gwt.user.client.Window;
 
 /**
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
@@ -51,9 +52,21 @@ public class ApplicationInstanceUnmarshallerWS implements Unmarshallable<Applica
 
         DtoClientImpls.ApplicationInstanceImpl applicationInstance = DtoClientImpls.ApplicationInstanceImpl.deserialize(text);
 
-        this.applicationInstance.setName(applicationInstance.getName());
-        this.applicationInstance.setHost(applicationInstance.getHost());
+        this.applicationInstance.setId(applicationInstance.getId());
+        final String host = applicationInstance.getHost();
+        if (host == null || host.isEmpty()) {
+            this.applicationInstance.setHost(Window.Location.getHostName());
+        } else {
+            this.applicationInstance.setHost(host);
+        }
         this.applicationInstance.setPort(applicationInstance.getPort());
+        final String codeServerHost = applicationInstance.getCodeServerHost();
+        if (codeServerHost == null || codeServerHost.isEmpty()) {
+            this.applicationInstance.setCodeServerHost(Window.Location.getHostName());
+        } else {
+            this.applicationInstance.setCodeServerHost(codeServerHost);
+        }
+        this.applicationInstance.setCodeServerPort(applicationInstance.getCodeServerPort());
     }
 
     /** {@inheritDoc} */

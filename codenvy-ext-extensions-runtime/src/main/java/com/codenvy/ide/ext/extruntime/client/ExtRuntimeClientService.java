@@ -58,8 +58,7 @@ public interface ExtRuntimeClientService {
      * @param callback callback
      * @throws WebSocketException
      */
-    public void launch(String vfsId, String projectId, RequestCallback<ApplicationInstance> callback)
-                                                                                                     throws WebSocketException;
+    public void launch(String vfsId, String projectId, RequestCallback<ApplicationInstance> callback) throws WebSocketException;
 
     /**
      * Get logs of launched Codenvy application.
@@ -68,8 +67,7 @@ public interface ExtRuntimeClientService {
      * @param callback callback
      * @throws RequestException
      */
-    public void getLogs(String appId, AsyncRequestCallback<StringBuilder> callback)
-                                                                                   throws RequestException;
+    public void getLogs(String appId, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
     /**
      * Stop Codenvy application.
@@ -78,6 +76,5 @@ public interface ExtRuntimeClientService {
      * @param callback callback
      * @throws RequestException
      */
-    public void stop(String appId, AsyncRequestCallback<Void> callback)
-                                                                       throws RequestException;
+    public void stop(String appId, AsyncRequestCallback<Void> callback) throws RequestException;
 }

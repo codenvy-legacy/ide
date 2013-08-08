@@ -17,36 +17,33 @@
  */
 package com.codenvy.ide.ext.extruntime.server.codeserver;
 
-import java.nio.file.Path;
-
 /**
- * Interface represents a code servers starter. Class that implements this interface should provide an implementation of starting of a code
- * server.
+ * Interface represents a code servers.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: CodeServerStarter.java Jul 26, 2013 10:23:07 AM azatsarynnyy $
+ * @version $Id: CodeServer.java Jul 26, 2013 10:23:07 AM azatsarynnyy $
  */
-public interface CodeServerStarter {
+public interface CodeServer {
+
     /**
      * Starts a new code server.
      * 
-     * @param processWorkingDirectory working directory of a code server process
-     * @return a new code server that started
+     * @param configuration code server configuration
      * @throws CodeServerException if any error has occurred while starting a code server
      */
-    CodeServer start(Path processWorkingDirectory) throws CodeServerException;
+    void start(CodeServerConfiguration configuration) throws CodeServerException;
 
-    /** Interface represents a code server. */
-    public interface CodeServer {
-        /**
-         * Get code server's logs.
-         * 
-         * @return code server's logs
-         * @throws CodeServerException if any error has occurred while getting code server logs
-         */
-        String getLogs() throws CodeServerException;
+    /**
+     * Get code server's logs.
+     * 
+     * @return code server's logs
+     * @throws CodeServerException if any error has occurred while getting code server logs
+     */
+    String getLogs() throws CodeServerException;
 
-        /** Stop a code server. */
-        void stop();
-    }
+    /** Stop this code server. */
+    void stop();
+
+    /** Returns code server configuration. */
+    CodeServerConfiguration getConfiguration();
 }

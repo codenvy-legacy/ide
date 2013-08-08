@@ -153,7 +153,7 @@ public class ExtensionRuntimeService {
     @Path("logs/{appid}")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String getLogs(@PathParam("appid") String appId) throws ExtensionLauncherException {
+    public String logs(@PathParam("appid") String appId) throws ExtensionLauncherException {
         return launcher.getLogs(appId);
     }
 

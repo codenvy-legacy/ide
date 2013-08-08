@@ -24,11 +24,24 @@ public class DtoClientImpls {
 
   private  DtoClientImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "56ba43ccc89eb770776177a49fc68b56f986803b";
-
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "cb6e6cff55105511d79cf75bbea2b5560e30514a";
 
   public static class ApplicationInstanceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.extruntime.shared.ApplicationInstance {
     protected ApplicationInstanceImpl() {}
+
+    @Override
+    public final native java.lang.String getCodeServerHost() /*-{
+      return this["codeServerHost"];
+    }-*/;
+
+    public final native ApplicationInstanceImpl setCodeServerHost(java.lang.String codeServerHost) /*-{
+      this["codeServerHost"] = codeServerHost;
+      return this;
+    }-*/;
+
+    public final native boolean hasCodeServerHost() /*-{
+      return this.hasOwnProperty("codeServerHost");
+    }-*/;
 
     @Override
     public final native int getCodeServerPort() /*-{
@@ -45,17 +58,17 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String getName() /*-{
-      return this["name"];
+    public final native java.lang.String getId() /*-{
+      return this["id"];
     }-*/;
 
-    public final native ApplicationInstanceImpl setName(java.lang.String name) /*-{
-      this["name"] = name;
+    public final native ApplicationInstanceImpl setId(java.lang.String id) /*-{
+      this["id"] = id;
       return this;
     }-*/;
 
-    public final native boolean hasName() /*-{
-      return this.hasOwnProperty("name");
+    public final native boolean hasId() /*-{
+      return this.hasOwnProperty("id");
     }-*/;
 
     @Override

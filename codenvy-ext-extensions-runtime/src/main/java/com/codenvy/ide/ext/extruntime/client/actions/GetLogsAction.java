@@ -30,7 +30,7 @@ import com.google.inject.Singleton;
 import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
 
 /**
- * Action to get logs of launched extension.
+ * Action to get logs of launched Codenvy application.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: GetLogsAction.java Jul 3, 2013 1:58:47 PM azatsarynnyy $
@@ -46,7 +46,7 @@ public class GetLogsAction extends Action {
                          ExtRuntimeResources resources,
                          ResourceProvider resourceProvider,
                          ExtRuntimeLocalizationConstant localizationConstants) {
-        super(localizationConstants.getExtensionLogsActionText(), localizationConstants.getExtensionLogsDescription(),
+        super(localizationConstants.getExtensionLogsActionText(), localizationConstants.getExtensionLogsActionDescription(),
               resources.getAppLogs());
         this.controller = controller;
         this.resourceProvider = resourceProvider;

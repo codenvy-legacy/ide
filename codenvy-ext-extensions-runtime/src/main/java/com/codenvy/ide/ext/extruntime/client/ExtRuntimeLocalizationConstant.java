@@ -36,6 +36,15 @@ public interface ExtRuntimeLocalizationConstant extends Messages {
     @Key("control.launchExtension.description")
     String launchExtensionActionDescription();
 
+    @Key("control.getExtensionLogs.id")
+    String getExtensionLogsActionId();
+
+    @Key("control.getExtensionLogs.text")
+    String getExtensionLogsActionText();
+
+    @Key("control.getExtensionLogs.description")
+    String getExtensionLogsActionDescription();
+
     @Key("control.stopExtension.id")
     String stopExtensionActionId();
 
@@ -44,15 +53,6 @@ public interface ExtRuntimeLocalizationConstant extends Messages {
 
     @Key("control.stopExtension.description")
     String stopExtensionActionDescription();
-
-    @Key("control.getExtensionLogs.id")
-    String getExtensionLogsActionId();
-
-    @Key("control.getExtensionLogs.text")
-    String getExtensionLogsActionText();
-
-    @Key("control.getExtensionLogs.description")
-    String getExtensionLogsDescription();
 
     /* Messages */
     @Key("appStarting")
@@ -64,12 +64,12 @@ public interface ExtRuntimeLocalizationConstant extends Messages {
     @Key("startAppFailed")
     String startApplicationFailed();
 
+    @Key("getAppLogsFailed")
+    String getApplicationLogsFailed();
+
     @Key("appStopped")
     String applicationStopped(String name);
 
     @Key("stopAppFailed")
     String stopApplicationFailed();
-
-    @Key("getAppLogsFailed")
-    String getApplicationLogsFailed();
 }

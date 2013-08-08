@@ -41,22 +41,25 @@ public class UpdateExtensionAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        update();
+        update(Window.Location.getParameter("h"), Window.Location.getParameter("p"));
     }
 
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setEnabledAndVisible(!Window.Location.getPort().equals("8080"));
+        if (Window.Location.getParameter("h") == null || Window.Location.getParameter("p") == null) {
+            e.getPresentation().setEnabledAndVisible(false);
+        } else {
+            e.getPresentation().setEnabledAndVisible(true);
+        }
     }
 
     /** Update already launched Codenvy application with a custom extension. */
-    public static native void update()
-    // TODO code server may be binded to port which differs from a default one (9876)
+    public static native void update(String host, String port)
     /*-{
-        $wnd.__gwt_bookmarklet_params = {server_url: 'http://localhost:9876/', module_name: 'IDE'};
+        $wnd.__gwt_bookmarklet_params = {server_url: 'http://' + host + ':' + port + '/', module_name: 'IDE'};
         var s = $doc.createElement('script');
-        s.src = 'http://localhost:9876/dev_mode_on.js';
+        s.src = 'http://' + host + ':' + port + '/dev_mode_on.js';
         void($doc.getElementsByTagName('head')[0].appendChild(s));
     }-*/;
 }
