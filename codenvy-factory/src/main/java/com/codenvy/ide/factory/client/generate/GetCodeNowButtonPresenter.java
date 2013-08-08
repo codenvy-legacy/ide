@@ -81,15 +81,8 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
     /** A summary info to display in a special area in the bottom of Facebook's post. */
     private String facebookSummaryInfo = "Code, Build, Test and Deploy instantly using Codenvy";
 
-    /** URL to CodeNow button. */
-    //private static final String CODE_NOW_BUTTON_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow-embed.html";
-    private static final String CODE_NOW_BUTTON_URL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("codenow-embed.html").buildString();
-
-    /** URL of image which will be used as link for CodeNow button for GitHub Pages. */
-    private static final String CODE_NOW_BUTTON_FOR_GITHUB_IMAGE_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow_gh.png";
-
-    /** Base URL for Codenvy Factory. */
-    private final String BASE_FACTORY_URL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("factory").buildString();
+//    /** Base URL for Codenvy Factory. */
+//    private final String BASE_FACTORY_URL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("factory").buildString();
     
     
     public interface Display extends IsView {
@@ -204,7 +197,59 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
     }
+    
+//    /** URL to CodeNow button. */
+//    //private static final String CODE_NOW_BUTTON_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow-embed.html";
+//    private static final String CODE_NOW_BUTTON_URL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("factory/codenow-embed.html").buildString();
+//
+//    /** URL of image which will be used as link for CodeNow button for GitHub Pages. */
+//    private static final String CODE_NOW_BUTTON_FOR_GITHUB_IMAGE_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow_gh.png";
 
+    /**
+     * Returns URL to CodeNow button template
+     * 
+     * @return
+     */
+    private String getCodeNowButtonJavascriptURL() {
+        if (Location.getHost().indexOf("localhost:8080") >= 0 ||
+            Location.getHost().indexOf("127.0.0.1:8080") >= 0 ||
+            Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
+            return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                .setPath("ide/_app/factory/factory.js").buildString();
+        }
+        
+        return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+            .setPath("factory/factory.js").buildString();
+    }
+    
+    /**
+     * Returns URL of image which will be used as link for CodeNow button for GitHub Pages.
+     * 
+     * @return
+     */
+    private String getCodeNowGitHubImageURL() {
+        return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+            .setPath("/ide/" + Utils.getWorkspaceName() + "/_app/codenow_gh.png").buildString();
+    }
+    
+    /**
+     * Returns base URL for Codenvy Factory.
+     * 
+     * @return
+     */
+    private String getBaseFactoryURL() {
+        if (Location.getHost().indexOf("localhost:8080") >= 0 ||
+            Location.getHost().indexOf("127.0.0.1:8080") >= 0 ||
+            Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
+            
+            return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                .setPath("ide/tmp-dev-monit").buildString();
+        }
+        
+        return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+            .setPath("factory").buildString();
+    }
+    
     public void bindDisplay() {
         final String factoryURLEscaped = encodeQueryString(factoryURL);
 
@@ -212,12 +257,12 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
             @Override
             public void onValueChange(ValueChangeEvent<Boolean> event) {
                 if (event.getValue() == true) {
-                    display.getPreviewFrame().setUrl(UriUtils.fromString(CODE_NOW_BUTTON_URL + "?counter=true"));
+                    display.getPreviewFrame().setUrl(UriUtils.fromString(getCodeNowButtonJavascriptURL() + "?counter=true"));
 
                     generateSnippetForWebsites(true, display.getVerticalStyleField().getValue());
                     display.getWebsitesURLField().setValue(websitesSnippet);
                 } else if (event.getValue() == false) {
-                    display.getPreviewFrame().setUrl(UriUtils.fromString(CODE_NOW_BUTTON_URL));
+                    display.getPreviewFrame().setUrl(UriUtils.fromString(getCodeNowButtonJavascriptURL()));
 
                     generateSnippetForWebsites(false, display.getVerticalStyleField().getValue());
                     display.getWebsitesURLField().setValue(websitesSnippet);
@@ -297,7 +342,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         }
 
         display.getShowCounterField().setValue(true);
-        display.getPreviewFrame().setUrl(UriUtils.fromString(CODE_NOW_BUTTON_URL + "?counter=true"));
+        display.getPreviewFrame().setUrl(UriUtils.fromString(getCodeNowButtonJavascriptURL() + "?counter=true"));
         display.getHorizontalStyleField().setValue(true);
         display.getWebsitesURLField().setValue(websitesSnippet);
         display.getGitHubURLField().setValue(gitHubPagesSnippet);
@@ -397,7 +442,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
     }
 
     private void generateSnippetsAndOpenView() {
-        factoryURL = BASE_FACTORY_URL + "?" + //
+        factoryURL = getBaseFactoryURL() + "?" + //
                      VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
                      PROJECT_NAME + "=" + openedProject.getName() + "&" + //
                      WORKSPACE_NAME + "=" + Utils.getWorkspaceName() + "&" + //
@@ -408,7 +453,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         
         logFactoryCreated(UriUtils.fromString(factoryURL).asString());
         generateSnippetForWebsites(false, false);
-        gitHubPagesSnippet = "[![alt](" + CODE_NOW_BUTTON_FOR_GITHUB_IMAGE_URL + ")](" + factoryURL + ")";
+        gitHubPagesSnippet = "[![alt](" + getCodeNowGitHubImageURL() + ")](" + factoryURL + ")";
         openView();
     }
 
@@ -432,8 +477,11 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
     }
 
     private void generateSnippetForWebsites(boolean showCounter, boolean verticalStyle) {
-        websitesSnippet = "<iframe src=\"" + CODE_NOW_BUTTON_URL + "\" frameborder=\"no\" style=\"width:77px; height:21px;\" " +
-            "onload=\"this.contentWindow.document.factoryURL='" + factoryURL + "';\"></iframe>";
+        websitesSnippet = "<script " +
+        		"type=\"text/javascript\" " +
+        		"language=\"javascript\" " +
+        		"src=\"" + getCodeNowButtonJavascriptURL() + "\" " +
+        		"target=\"" + factoryURL + "\"></script>";
         
         /*
         final String showCounterParameter = "&counter=true";
