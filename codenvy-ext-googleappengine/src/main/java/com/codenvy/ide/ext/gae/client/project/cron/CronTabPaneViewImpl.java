@@ -26,12 +26,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The implementation of {@link CronTabPaneView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 05.08.13 vlad $
  */
 @Singleton
 public class CronTabPaneViewImpl extends Composite implements CronTabPaneView {
-    interface CronTabPaneViewImplUiBinder extends UiBinder<Widget, CronTabPaneViewImpl> {}
+    interface CronTabPaneViewImplUiBinder extends UiBinder<Widget, CronTabPaneViewImpl> {
+    }
 
     private static CronTabPaneViewImplUiBinder uiBinder = GWT.create(CronTabPaneViewImplUiBinder.class);
 
@@ -46,6 +49,9 @@ public class CronTabPaneViewImpl extends Composite implements CronTabPaneView {
 
     private ActionDelegate delegate;
 
+    /**
+     * Constructor for View.
+     */
     @Inject
     public CronTabPaneViewImpl(GAELocalization constant) {
         this.constant = constant;
@@ -57,6 +63,9 @@ public class CronTabPaneViewImpl extends Composite implements CronTabPaneView {
         initWidget(widget);
     }
 
+    /**
+     * Initialize cron Cell table.
+     */
     private void initCronTable() {
         cronTable.setWidth("100%", true);
         cronTable.setAutoHeaderRefreshDisabled(true);
@@ -113,6 +122,7 @@ public class CronTabPaneViewImpl extends Composite implements CronTabPaneView {
         cronTable.setColumnWidth(timezoneColumn, "20%");
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setCronEntryData(JsonArray<CronEntry> entries) {
         List<CronEntry> cronEntries = new ArrayList<CronEntry>(entries.size());
@@ -123,6 +133,7 @@ public class CronTabPaneViewImpl extends Composite implements CronTabPaneView {
         cronTable.setRowData(cronEntries);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

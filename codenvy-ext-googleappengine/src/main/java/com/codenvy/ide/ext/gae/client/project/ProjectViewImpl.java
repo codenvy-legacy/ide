@@ -12,12 +12,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link ProjectView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 05.08.13 vlad $
  */
 @Singleton
 public class ProjectViewImpl extends DialogBox implements ProjectView {
-    interface ProjectViewImplUiBinder extends UiBinder<Widget, ProjectViewImpl> {}
+    interface ProjectViewImplUiBinder extends UiBinder<Widget, ProjectViewImpl> {
+    }
 
     private static ProjectViewImplUiBinder uiBinder = GWT.create(ProjectViewImplUiBinder.class);
 
@@ -34,6 +37,9 @@ public class ProjectViewImpl extends DialogBox implements ProjectView {
 
     private ActionDelegate delegate;
 
+    /**
+     * Constructor of View.
+     */
     @Inject
     public ProjectViewImpl(GAELocalization constant) {
         this.constant = constant;
@@ -44,6 +50,7 @@ public class ProjectViewImpl extends DialogBox implements ProjectView {
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public AcceptsOneWidget addTab(String tabTitle) {
         SimplePanel tabPanel = new SimplePanel();
@@ -52,16 +59,19 @@ public class ProjectViewImpl extends DialogBox implements ProjectView {
         return tabPanel;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void focusFirstTab() {
         applicationTabPanel.selectTab(0);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -69,12 +79,14 @@ public class ProjectViewImpl extends DialogBox implements ProjectView {
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

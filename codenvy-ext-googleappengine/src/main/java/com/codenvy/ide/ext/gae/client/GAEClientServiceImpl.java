@@ -49,7 +49,6 @@ public class GAEClientServiceImpl implements GAEClientService {
     private String restServiceContext;
     /** Loader to be displayed. */
     private Loader loader;
-    private final String AUTH_URL            = "rest/ide/oauth/authenticate";
     private final String LOGOUT              = "rest/ide/oauth/invalidate";
     private final String APP_ENGINE          = "/appengine/";
     private final String USER                = APP_ENGINE + "user";
@@ -79,12 +78,6 @@ public class GAEClientServiceImpl implements GAEClientService {
 
     /**
      * Create client service.
-     *
-     * @param restContext
-     * @param loader
-     *         loader to be displayed on request
-     * @param eventBus
-     * @param constant
      */
     @Inject
     protected GAEClientServiceImpl(@Named("restContext") String restContext, Loader loader, EventBus eventBus,
@@ -340,13 +333,6 @@ public class GAEClientServiceImpl implements GAEClientService {
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
 
         AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getAuthUrl() {
-        return AUTH_URL +
-               "?oauth_provider=google&scope=https://www.googleapis.com/auth/appengine.admin&redirect_after_login=/success_oauth.html";
     }
 
     /** {@inheritDoc} */

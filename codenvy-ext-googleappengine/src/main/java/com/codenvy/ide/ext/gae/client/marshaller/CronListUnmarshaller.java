@@ -38,9 +38,7 @@ public class CronListUnmarshaller implements Unmarshallable<JsonArray<CronEntry>
     private JsonArray<CronEntry> crons;
 
     /**
-     * Create unmarshaller.
-     *
-     * @param crons
+     * Constructor for unmarshaller.
      */
     public CronListUnmarshaller(JsonArray<CronEntry> crons) {
         this.crons = crons;

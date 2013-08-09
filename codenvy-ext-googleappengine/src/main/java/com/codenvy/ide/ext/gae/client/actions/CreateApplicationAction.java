@@ -30,6 +30,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Action for "PaaS/Google App Engine/Create Application..." to allow user to create application.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -38,6 +40,9 @@ public class CreateApplicationAction extends Action {
     private CreateApplicationPresenter presenter;
     private ResourceProvider           resourceProvider;
 
+    /**
+     * Constructor for action.
+     */
     @Inject
     public CreateApplicationAction(CreateApplicationPresenter presenter, GAEResources resources,
                                    ResourceProvider resourceProvider) {
@@ -46,6 +51,7 @@ public class CreateApplicationAction extends Action {
         this.resourceProvider = resourceProvider;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         @NotNull
@@ -54,6 +60,7 @@ public class CreateApplicationAction extends Action {
         presenter.showDialog(project);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
         Project project = resourceProvider.getActiveProject();

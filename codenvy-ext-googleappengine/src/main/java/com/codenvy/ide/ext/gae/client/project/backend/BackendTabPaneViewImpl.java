@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The implementation of {@link BackendTabPaneView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 05.08.13 vlad $
  */
@@ -65,6 +67,9 @@ public class BackendTabPaneViewImpl extends Composite implements BackendTabPaneV
 
     private Backend backend;
 
+    /**
+     * Constructor for View.
+     */
     @Inject
     public BackendTabPaneViewImpl(GAELocalization constant) {
         this.constant = constant;
@@ -76,6 +81,9 @@ public class BackendTabPaneViewImpl extends Composite implements BackendTabPaneV
         initWidget(widget);
     }
 
+    /**
+     * Initialize backends Cell table
+     */
     private void initBackendsTable() {
         backendsTable.setWidth("100%", true);
         backendsTable.setAutoHeaderRefreshDisabled(true);
@@ -116,7 +124,6 @@ public class BackendTabPaneViewImpl extends Composite implements BackendTabPaneV
         };
 
         Column<Backend, SafeHtml> dynamicColumn = new Column<Backend, SafeHtml>(new SafeHtmlCell()) {
-
             @Override
             public SafeHtml getValue(final Backend object) {
                 return new SafeHtml() {
@@ -135,7 +142,6 @@ public class BackendTabPaneViewImpl extends Composite implements BackendTabPaneV
         };
 
         Column<Backend, SafeHtml> publicColumn = new Column<Backend, SafeHtml>(new SafeHtmlCell()) {
-
             @Override
             public SafeHtml getValue(final Backend object) {
                 return new SafeHtml() {
@@ -194,6 +200,7 @@ public class BackendTabPaneViewImpl extends Composite implements BackendTabPaneV
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setEnableUpdateButtons(boolean enable) {
         btnConfigure.setEnabled(enable);
@@ -202,6 +209,7 @@ public class BackendTabPaneViewImpl extends Composite implements BackendTabPaneV
         btnRollBack.setEnabled(enable);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setBackendsList(JsonArray<Backend> backends) {
         List<Backend> backendList = new ArrayList<Backend>(backends.size());
@@ -212,11 +220,13 @@ public class BackendTabPaneViewImpl extends Composite implements BackendTabPaneV
         backendsTable.setRowData(backendList);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Backend getSelectedBackend() {
         return backend;

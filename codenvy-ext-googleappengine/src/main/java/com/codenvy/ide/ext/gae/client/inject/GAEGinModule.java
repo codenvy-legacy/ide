@@ -43,6 +43,7 @@ import com.google.inject.Singleton;
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @ExtensionGinModule
 public class GAEGinModule extends AbstractGinModule {
+
     /** {@inheritDoc} */
     @Override
     protected void configure() {

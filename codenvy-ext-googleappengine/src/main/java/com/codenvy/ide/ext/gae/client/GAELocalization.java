@@ -18,7 +18,11 @@
  */
 package com.codenvy.ide.ext.gae.client;
 
-/** @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a> */
+/**
+ * Google App Engine client localization resources.
+ *
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ */
 public interface GAELocalization extends com.google.gwt.i18n.client.Messages {
     /* Buttons */
     @Key("cancel.button")

@@ -36,9 +36,6 @@ public class UpdateBackendsStatusHandler implements RequestStatusHandler {
 
     /**
      * Update backends status handler.
-     *
-     * @param eventBus
-     * @param constant
      */
     public UpdateBackendsStatusHandler(EventBus eventBus, GAELocalization constant) {
         this.eventBus = eventBus;

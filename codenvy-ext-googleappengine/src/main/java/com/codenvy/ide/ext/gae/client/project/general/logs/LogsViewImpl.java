@@ -16,12 +16,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link LogsView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 06.08.13 vlad $
  */
 @Singleton
 public class LogsViewImpl extends BaseView<LogsView.ActionDelegate> implements LogsView {
-    interface LogsViewImplUiBinder extends UiBinder<Widget, LogsViewImpl> {}
+    interface LogsViewImplUiBinder extends UiBinder<Widget, LogsViewImpl> {
+    }
 
     private static LogsViewImplUiBinder uiBinder = GWT.create(LogsViewImplUiBinder.class);
 
@@ -40,6 +43,9 @@ public class LogsViewImpl extends BaseView<LogsView.ActionDelegate> implements L
     @UiField(provided = true)
     GAELocalization constant;
 
+    /**
+     * Constructor for View.
+     */
     @Inject
     public LogsViewImpl(PartStackUIResources partStackUIResources, GAELocalization constant) {
         super(partStackUIResources);
@@ -55,6 +61,9 @@ public class LogsViewImpl extends BaseView<LogsView.ActionDelegate> implements L
         initSeverityListBox();
     }
 
+    /**
+     * Initialize severity list box with default values.
+     */
     private void initSeverityListBox() {
         severity.addItem("All");
         severity.addItem("Error");
@@ -64,11 +73,13 @@ public class LogsViewImpl extends BaseView<LogsView.ActionDelegate> implements L
         severity.addItem("Critical");
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setLogsContent(String content) {
         output.add(new HTML(content));
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getLogsDaysCount() {
         String days = daysCount.getText();
@@ -76,11 +87,15 @@ public class LogsViewImpl extends BaseView<LogsView.ActionDelegate> implements L
         return (days != null && !days.isEmpty()) ? Integer.parseInt(days) : 1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getLogsSeverity() {
         return severity.getItemText(severity.getSelectedIndex());
     }
 
+    /**
+     * Handler that checks input text to prevent input text chars.
+     */
     KeyPressHandler numbersOnlyHandler = new KeyPressHandler() {
         @Override
         public void onKeyPress(KeyPressEvent event) {

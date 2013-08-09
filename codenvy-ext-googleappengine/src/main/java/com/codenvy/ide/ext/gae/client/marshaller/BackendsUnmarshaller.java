@@ -38,9 +38,7 @@ public class BackendsUnmarshaller implements Unmarshallable<JsonArray<Backend>> 
     private JsonArray<Backend> backends;
 
     /**
-     * Create unmarshaller.
-     *
-     * @param backends
+     * Constructor for unmarshaller.
      */
     public BackendsUnmarshaller(JsonArray<Backend> backends) {
         this.backends = backends;

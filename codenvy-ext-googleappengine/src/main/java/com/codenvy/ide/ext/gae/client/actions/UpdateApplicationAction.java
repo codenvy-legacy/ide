@@ -11,6 +11,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Action for "PaaS/Google App Engine/Update application..." to allow user to update deployed application on Google.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 05.08.13 vlad $
  */
@@ -19,8 +21,10 @@ public class UpdateApplicationAction extends Action {
     private CreateApplicationPresenter presenter;
     private ResourceProvider           resourceProvider;
 
+    /**
+     * Constructor for action.
+     */
     @Inject
-
     public UpdateApplicationAction(CreateApplicationPresenter presenter,
                                    ResourceProvider resourceProvider, GAEResources resources) {
         super("Update application...", "Update application on Google App Engine.", resources.updateApplication());
@@ -29,6 +33,7 @@ public class UpdateApplicationAction extends Action {
         this.resourceProvider = resourceProvider;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         Project project = resourceProvider.getActiveProject();
@@ -36,6 +41,7 @@ public class UpdateApplicationAction extends Action {
         presenter.deploy(project);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
         Project project = resourceProvider.getActiveProject();

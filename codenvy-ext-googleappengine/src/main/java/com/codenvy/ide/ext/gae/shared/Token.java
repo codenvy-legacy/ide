@@ -18,9 +18,23 @@
  */
 package com.codenvy.ide.ext.gae.shared;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * Information about Google App Engine token.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public interface Token {
+    /**
+     * Get authorization token.
+     *
+     * @return authorization token.
+     */
     String getToken();
 
+    /**
+     * Get authorization scopes.
+     *
+     * @return authorization scopes.
+     */
     String getScope();
 }

@@ -37,9 +37,7 @@ public class ResourceLimitsUnmarshaller implements Unmarshallable<JsonArray<Reso
     private JsonArray<ResourceLimit> resourceLimits;
 
     /**
-     * Create unmarshaller.
-     *
-     * @param resourceLimits
+     * Constructor for unmarshaller.
      */
     public ResourceLimitsUnmarshaller(JsonArray<ResourceLimit> resourceLimits) {
         this.resourceLimits = resourceLimits;

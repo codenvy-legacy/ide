@@ -25,6 +25,8 @@ import com.codenvy.ide.rest.RequestStatusHandler;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Handler to show current deployment status.
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 21, 2012 9:35:47 AM anya $
  */
@@ -35,10 +37,6 @@ public class DeployRequestStatusHandler implements RequestStatusHandler {
 
     /**
      * Deploy application status handler.
-     *
-     * @param projectName
-     * @param eventBus
-     * @param constant
      */
     public DeployRequestStatusHandler(String projectName, EventBus eventBus, GAELocalization constant) {
         this.projectName = projectName;

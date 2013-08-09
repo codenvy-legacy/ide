@@ -19,6 +19,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter that allow user to view limits for the selected application on Google App Engine.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 05.08.13 vlad $
  */
@@ -31,7 +33,9 @@ public class LimitTabPanePresenter implements Presenter, LimitTabPaneView.Action
     private ResourceProvider resourceProvider;
     private GAELocalization  constant;
 
-
+    /**
+     * Constructor for limits presenter.
+     */
     @Inject
     public LimitTabPanePresenter(LimitTabPaneView view, GAEClientService service, EventBus eventBus,
                                  ConsolePart console, ResourceProvider resourceProvider, GAELocalization constant) {
@@ -45,6 +49,12 @@ public class LimitTabPanePresenter implements Presenter, LimitTabPaneView.Action
         this.view.setDelegate(this);
     }
 
+    /**
+     * Initialize Backend tab presenter.
+     *
+     * @param project
+     *         project that opened in current moment.
+     */
     public void init(Project project) {
         final String vfsId = resourceProvider.getVfsId();
 
@@ -65,6 +75,7 @@ public class LimitTabPanePresenter implements Presenter, LimitTabPaneView.Action
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);

@@ -15,12 +15,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link GAEWizardView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class GAEWizardViewImpl extends Composite implements GAEWizardView {
-    interface GAEPageViewImplUiBinder extends UiBinder<Widget, GAEWizardViewImpl> {}
+    interface GAEPageViewImplUiBinder extends UiBinder<Widget, GAEWizardViewImpl> {
+    }
 
     private static GAEPageViewImplUiBinder uiBinder = GWT.create(GAEPageViewImplUiBinder.class);
 
@@ -35,6 +38,9 @@ public class GAEWizardViewImpl extends Composite implements GAEWizardView {
 
     private ActionDelegate delegate;
 
+    /**
+     * Constructor of Wizard View.
+     */
     @Inject
     public GAEWizardViewImpl(GAELocalization constant) {
         this.constant = constant;
@@ -42,31 +48,37 @@ public class GAEWizardViewImpl extends Composite implements GAEWizardView {
         initWidget(uiBinder.createAndBindUi(this));
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getApplicationId() {
         return existedAppId.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setApplicationId(String applicationId) {
         existedAppId.setText(applicationId);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean getAppIdRequired() {
         return requiredAppId.getValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setAppIdRequired(boolean enabled) {
         requiredAppId.setEnabled(enabled);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void enableApplicationIdField(boolean enable) {
         existedAppId.setEnabled(enable);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

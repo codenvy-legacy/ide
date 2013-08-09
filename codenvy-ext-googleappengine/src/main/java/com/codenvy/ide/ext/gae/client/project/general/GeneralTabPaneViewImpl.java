@@ -13,12 +13,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link GeneralTabPaneView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 05.08.13 vlad $
  */
 @Singleton
 public class GeneralTabPaneViewImpl extends Composite implements GeneralTabPaneView {
-    interface GeneralTabPaneViewImplUiBinder extends UiBinder<Widget, GeneralTabPaneViewImpl> {}
+    interface GeneralTabPaneViewImplUiBinder extends UiBinder<Widget, GeneralTabPaneViewImpl> {
+    }
 
     private static GeneralTabPaneViewImplUiBinder uiBinder = GWT.create(GeneralTabPaneViewImplUiBinder.class);
 
@@ -51,6 +54,9 @@ public class GeneralTabPaneViewImpl extends Composite implements GeneralTabPaneV
 
     private ActionDelegate delegate;
 
+    /**
+     * Constructor of View.
+     */
     @Inject
     public GeneralTabPaneViewImpl(GAELocalization constant) {
         this.constant = constant;
@@ -60,6 +66,7 @@ public class GeneralTabPaneViewImpl extends Composite implements GeneralTabPaneV
         initWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
