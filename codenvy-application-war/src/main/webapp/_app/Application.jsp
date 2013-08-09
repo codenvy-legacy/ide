@@ -48,11 +48,13 @@
         var securityCheckURL = "/ide/j_security_check";
         var isTargetWindow = false;
         var uuid;
+        var buildMenu = function(){
+        };
 
         window.onload = function () {
+            buildMenu();
             uuid = generate();
             sendSessionStatus("ide", uuid, "start");
-            window.buildMenu();
         }
 
         window.onunload = function () {
