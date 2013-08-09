@@ -25,7 +25,11 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import javax.inject.Inject;
 import javax.ws.rs.POST;
@@ -47,19 +51,21 @@ import java.net.URL;
  */
 @Path("{ws-name}/copy")
 public class CopyProjectService {
+    private static final Log LOG = ExoLogger.getLogger(CopyProjectService.class);
+
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
 
     @PathParam("ws-name")
-    private String                    wsName;
+    private String wsName;
 
     /**
      * Copy specified projects to a current workspace.
-     * 
+     *
      * @param baseDownloadUrl base URL to download project
      * @param projectIds identifiers and names of projects to copy. String should be in the following format:
      *            <p/>
-     * 
+     *
      *            <pre>
      *            project1_id:project1_name;
      *            project2_id:project2_name;
@@ -69,11 +75,14 @@ public class CopyProjectService {
      */
     @POST
     @Path("projects")
-    public void copyProjects(@QueryParam("downloadurl") String baseDownloadUrl, @QueryParam("projectid") String projectIds) throws VirtualFileSystemException,
-                                                                                                                           IOException {
+    public void copyProjects(@QueryParam("downloadurl") String baseDownloadUrl, @QueryParam("projectid") String projectIds)
+            throws VirtualFileSystemException,
+                   IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID)
                                                                           .toString()).newInstance(null, null);
 
+        String tmpWorkspace = baseDownloadUrl.substring(baseDownloadUrl.indexOf("tmp")).substring(0, baseDownloadUrl
+                .substring(baseDownloadUrl.indexOf("tmp")).indexOf("/"));
         if (CookieHandler.getDefault() == null) {
             CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
         }
@@ -98,6 +107,10 @@ public class CopyProjectService {
 
                 inputStream = connection.getInputStream();
                 vfs.importZip(folder.getId(), inputStream, true);
+                Project project = (Project)vfs.getItem(folder.getId(), false, PropertyFilter.ALL_FILTER);
+                LOG.info("EVENT#factory-project-imported# WS#" + tmpWorkspace + "# USER#" +
+                         ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + project.getName() + "# TYPE#" +
+                         project.getProjectType() + "#");
             } finally {
                 if (connection != null) {
                     connection.disconnect();
