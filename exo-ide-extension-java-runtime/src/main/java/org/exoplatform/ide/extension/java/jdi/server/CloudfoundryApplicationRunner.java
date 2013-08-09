@@ -358,7 +358,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                              + "# TYPE#War#");
                 }
             } else {
-                LOG.info("EVENT#run-finished# PROJECT#" + applications.get(name).projectName + "# TYPE#War#");
+                LOG.info("EVENT#run-finished# PROJECT#" + app.projectName + "# TYPE#War#");
             }
             applications.remove(name);
         } catch (Exception e) {
