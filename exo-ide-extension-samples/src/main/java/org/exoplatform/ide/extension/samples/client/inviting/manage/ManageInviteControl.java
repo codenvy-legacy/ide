@@ -43,11 +43,11 @@ public class ManageInviteControl extends SimpleControl implements IDEControl {
         setPrompt(PROMPT);
         setImages(SamplesClientBundle.INSTANCE.manageInvite(), SamplesClientBundle.INSTANCE.manageInviteDisable());
         setEvent(new ManageInviteEvent());
-        setVisible(true);
-        setEnabled(true);
     }
 
     @Override
     public void initialize() {
+        setVisible(true);
+        setEnabled(true);
     }
 }
