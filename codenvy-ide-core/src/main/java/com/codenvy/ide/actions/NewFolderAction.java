@@ -55,7 +55,7 @@ public class NewFolderAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         NewFolderPagePresenter page = new NewFolderPagePresenter(resources, resourceProvider, selectionAgent);
-        WizardPresenter wizardDialog = new WizardPresenter(page, "Create folder");
+        WizardPresenter wizardDialog = new WizardPresenter(page, "Create folder", resources);
         wizardDialog.showWizard();
     }
 }

@@ -38,6 +38,7 @@ public class NewResourceAction extends Action {
 
     private final Provider<NewResourcePagePresenter> firstPage;
     private       ResourceProvider                   resourceProvider;
+    private       Resources                          resources;
 
     @Inject
     public NewResourceAction(Resources resources,
@@ -45,12 +46,13 @@ public class NewResourceAction extends Action {
         super("Other", "Create new resource", resources.file());
         this.firstPage = firstPage;
         this.resourceProvider = resourceProvider;
+        this.resources = resources;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        WizardPresenter wizardDialog = new WizardPresenter(firstPage.get(), "Create resource");
+        WizardPresenter wizardDialog = new WizardPresenter(firstPage.get(), "Create resource", resources);
         wizardDialog.showWizard();
     }
 

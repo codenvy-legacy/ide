@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.wizard;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.mvp.View;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Image;
@@ -29,6 +31,21 @@ import com.google.gwt.user.client.ui.Image;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public interface WizardView extends View<WizardView.ActionDelegate> {
+    /** Needs for delegate some function into Wizard view. */
+    public interface ActionDelegate {
+        /** Performs any actions appropriate in response to the user having pressed the Next button */
+        void onNextClicked();
+
+        /** Performs any actions appropriate in response to the user having pressed the Back button */
+        void onBackClicked();
+
+        /** Performs any actions appropriate in response to the user having pressed the Finish button */
+        void onFinishClicked();
+
+        /** Performs any actions appropriate in response to the user having pressed the Cancel button */
+        void onCancelClicked();
+    }
+
     /**
      * Sets whether Next button is visible.
      *
@@ -70,21 +87,21 @@ public interface WizardView extends View<WizardView.ActionDelegate> {
      *
      * @param caption
      */
-    void setCaption(String caption);
+    void setCaption(@NotNull String caption);
 
     /**
      * Sets new notice of wizard's page
      *
      * @param notice
      */
-    void setNotice(String notice);
+    void setNotice(@Nullable String notice);
 
     /**
      * Sets new image of wizard's page
      *
      * @param image
      */
-    void setImage(Image image);
+    void setImage(@Nullable Image image);
 
     /** Close wizard */
     void close();
@@ -107,31 +124,4 @@ public interface WizardView extends View<WizardView.ActionDelegate> {
      * @return place of main form
      */
     AcceptsOneWidget getContentPanel();
-
-    /** Needs for delegate some function into Wizard view. */
-    public interface ActionDelegate {
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Next button
-         */
-        void onNextClicked();
-
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Back button
-         */
-        void onBackClicked();
-
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Finish button
-         */
-        void onFinishClicked();
-
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Cancel button
-         */
-        void onCancelClicked();
-    }
 }

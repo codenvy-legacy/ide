@@ -18,11 +18,14 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.paas.PaaSAgentImpl;
+import com.codenvy.ide.wizard.WizardResource;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -40,38 +43,45 @@ import com.google.inject.Inject;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class NewProjectPageViewImpl extends Composite implements NewProjectPageView {
+    interface NewProjectViewImplUiBinder extends UiBinder<Widget, NewProjectPageViewImpl> {
+    }
+
     private static NewProjectViewImplUiBinder uiBinder = GWT.create(NewProjectViewImplUiBinder.class);
 
     @UiField
     TextBox projectName;
-
     @UiField(provided = true)
-    Grid technologies;
-
+    Grid    technologies;
     @UiField(provided = true)
-    Grid paases;
-
-    private ActionDelegate delegate;
-
-    private ToggleButton selectedProjectType;
-
-    private ToggleButton selectedPaaS;
-
+    Grid    paases;
+    @UiField
+    Image   chooseTechnologyTooltip;
+    @UiField
+    Image   choosePaaSTooltip;
+    @UiField(provided = true)
+    final   WizardResource           res;
+    @UiField(provided = true)
+    final   CoreLocalizationConstant locale;
+    private ActionDelegate           delegate;
+    private ToggleButton             selectedProjectType;
+    private ToggleButton             selectedPaaS;
     private JsonArray<ToggleButton> paasButton = JsonCollections.createArray();
-
     private JsonArray<PaaS> availablePaaS;
-
-    interface NewProjectViewImplUiBinder extends UiBinder<Widget, NewProjectPageViewImpl> {
-    }
 
     /**
      * Create view.
      *
+     * @param resource
+     * @param locale
      * @param projectTypeAgent
      * @param paaSAgent
      */
     @Inject
-    protected NewProjectPageViewImpl(ProjectTypeAgentImpl projectTypeAgent, PaaSAgentImpl paaSAgent) {
+    protected NewProjectPageViewImpl(WizardResource resource, CoreLocalizationConstant locale, ProjectTypeAgentImpl projectTypeAgent,
+                                     PaaSAgentImpl paaSAgent) {
+        this.res = resource;
+        this.locale = locale;
+
         JsonArray<ProjectTypeData> projectTypes = projectTypeAgent.getProjectTypes();
         createTechnologiesTable(projectTypes);
 
@@ -152,6 +162,12 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
         }
     }
 
+    /**
+     * Create table with available paases.
+     *
+     * @param paases
+     *         available paases
+     */
     private void createPaasTable(JsonArray<PaaS> paases) {
         this.paases = new Grid(2, paases.size());
         HTMLTable.CellFormatter formatter = this.paases.getCellFormatter();
@@ -209,8 +225,32 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
         return projectName.getText();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void showPopup(String message, int left, int top) {
+        HTML htmlText = new HTML(message);
+
+        PopupPanel popup = new PopupPanel();
+        popup.setAutoHideEnabled(true);
+        popup.setWidth("auto");
+        popup.getElement().getStyle().setPadding(5.0, Style.Unit.PX);
+        popup.setPopupPosition(left, top);
+        popup.setWidget(htmlText);
+        popup.show();
+    }
+
     @UiHandler("projectName")
     public void handleKeyUp(KeyUpEvent event) {
         delegate.checkProjectName();
+    }
+
+    @UiHandler("chooseTechnologyTooltip")
+    public void onTechnologyIconClicked(ClickEvent event) {
+        delegate.onTechnologyIconClicked(event.getClientX() + 10, event.getClientY() + 10);
+    }
+
+    @UiHandler("choosePaaSTooltip")
+    public void onPaaSIconClicked(ClickEvent event) {
+        delegate.onPaaSIconClicked(event.getClientX() + 10, event.getClientY() + 10);
     }
 }

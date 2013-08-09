@@ -26,6 +26,7 @@ import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.wizard.WizardResource;
 import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -57,7 +58,7 @@ public class TemplatePagePresenter extends AbstractWizardPagePresenter implement
      * @param projectTypeAgent
      */
     @Inject
-    protected TemplatePagePresenter(TemplateWizardResources resources, TemplatePageView view, PaaSAgent paaSAgent,
+    protected TemplatePagePresenter(WizardResource resources, TemplatePageView view, PaaSAgent paaSAgent,
                                     TemplateAgentImpl templateAgent, ProjectTypeAgentImpl projectTypeAgent) {
         super("Choose project template", resources.templateIcon());
 

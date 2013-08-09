@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -45,6 +46,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     private ProjectTypeAgentImpl       projectTypeAgent;
     private PaaSAgentImpl              paasAgent;
     private TemplatePagePresenter      templatePage;
+    private CoreLocalizationConstant   constant;
     private boolean                    hasProjectNameIncorrectSymbol;
     private boolean                    hasSameProject;
     private boolean                    hasProjectList;
@@ -62,9 +64,10 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
      */
     @Inject
     protected NewProjectPagePresenter(ProjectTypeAgentImpl projectTypeAgent, Resources resources, NewProjectPageView view,
-                                      PaaSAgentImpl paasAgent, TemplatePagePresenter templatePage, ResourceProvider resourceProvider) {
+                                      PaaSAgentImpl paasAgent, TemplatePagePresenter templatePage, ResourceProvider resourceProvider,
+                                      CoreLocalizationConstant constant) {
 
-        super("Select a wizard", resources.newResourceIcon());
+        super("Select project type and paas", resources.newResourceIcon());
 
         resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>() {
             @Override
@@ -92,6 +95,8 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
 
         this.templatePage = templatePage;
         this.templatePage.setPrevious(this);
+
+        this.constant = constant;
     }
 
     /** {@inheritDoc} */
@@ -134,7 +139,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
         } else if (hasProjectNameIncorrectSymbol) {
             return "Incorrect project name.";
         } else if (projectTypeAgent.getSelectedProjectType() == null) {
-            return "Please, choose technology";
+            return constant.noTechnologyMessage();
         } else if (paasAgent.getSelectedPaaS() == null) {
             return "Please, choose PaaS";
         }
@@ -180,5 +185,17 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
         }
 
         delegate.updateControls();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onTechnologyIconClicked(int x, int y) {
+        view.showPopup(constant.chooseTechnologyTooltip(), x, y);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onPaaSIconClicked(int x, int y) {
+        view.showPopup(constant.choosePaaSTooltip(), x, y);
     }
 }

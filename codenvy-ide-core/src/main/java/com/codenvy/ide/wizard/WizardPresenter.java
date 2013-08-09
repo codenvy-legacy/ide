@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.wizard;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
@@ -44,8 +45,8 @@ public class WizardPresenter implements WizardPagePresenter.WizardUpdateDelegate
      * @param currentPage
      * @param title
      */
-    public WizardPresenter(WizardPagePresenter currentPage, String title) {
-        this(currentPage, new WizardViewImpl(title));
+    public WizardPresenter(@NotNull WizardPagePresenter currentPage, @NotNull String title, @NotNull WizardResource resource) {
+        this(currentPage, new WizardViewImpl(title, resource));
     }
 
     /**

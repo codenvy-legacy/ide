@@ -46,6 +46,26 @@ public interface NewProjectPageView extends View<NewProjectPageView.ActionDelega
 
         /** Checks whether project's name is complete or not and updates navigation buttons. */
         void checkProjectName();
+
+        /**
+         * Performs any actions appropriate in response to the user having pressed the Technology icon.
+         *
+         * @param x
+         *         the mouse x-position within the browser window's client area.
+         * @param y
+         *         the mouse y-position within the browser window's client area.
+         */
+        void onTechnologyIconClicked(int x, int y);
+
+        /**
+         * Performs any actions appropriate in response to the user having pressed the PaaS icon.
+         *
+         * @param x
+         *         the mouse x-position within the browser window's client area.
+         * @param y
+         *         the mouse y-position within the browser window's client area.
+         */
+        void onPaaSIconClicked(int x, int y);
     }
 
     /**
@@ -54,4 +74,16 @@ public interface NewProjectPageView extends View<NewProjectPageView.ActionDelega
      * @return project's name
      */
     String getProjectName();
+
+    /**
+     * Show popup with some message.
+     *
+     * @param message
+     *         message what need to show
+     * @param left
+     *         x-position element
+     * @param top
+     *         y-position element
+     */
+    void showPopup(String message, int left, int top);
 }

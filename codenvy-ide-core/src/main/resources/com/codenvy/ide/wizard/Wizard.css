@@ -1,0 +1,34 @@
+@CHARSET "UTF-8";
+
+.mainFont {
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    font-style: normal;
+    font-weight: normal;
+}
+
+.mainBoldFont {
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    font-style: normal;
+    font-weight: bold;
+}
+
+.errorFont {
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    font-style: normal;
+    font-weight: normal;
+    color: #d21a1a;
+}
+
+.greyFontColor {
+    color: #545454;
+}
+
+.cursorPointer {
+    cursor: pointer;
+}

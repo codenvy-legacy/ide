@@ -21,8 +21,6 @@ package com.codenvy.ide.actions;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.paas.PaaSAgentImpl;
-import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.WizardPresenter;
 import com.codenvy.ide.wizard.newproject.NewProjectPagePresenter;
 import com.google.inject.Inject;
@@ -36,25 +34,20 @@ import com.google.inject.Singleton;
 @Singleton
 public class NewProjectAction extends Action {
 
-    private final WizardAgentImpl                   wizardAgent;
     private final Resources                         resources;
-    private final PaaSAgentImpl                     paasAgent;
     private final Provider<NewProjectPagePresenter> firstPage;
 
     @Inject
-    public NewProjectAction(WizardAgentImpl wizardAgent, Resources resources, PaaSAgentImpl paasAgent,
-                            Provider<NewProjectPagePresenter> firstPage) {
+    public NewProjectAction(Resources resources, Provider<NewProjectPagePresenter> firstPage) {
         super("Project", "Create new project", resources.project());
 
-        this.wizardAgent = wizardAgent;
         this.resources = resources;
-        this.paasAgent = paasAgent;
         this.firstPage = firstPage;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        WizardPresenter wizardDialog = new WizardPresenter(firstPage.get(), "Create project");
+        WizardPresenter wizardDialog = new WizardPresenter(firstPage.get(), "Create project", resources);
         wizardDialog.showWizard();
     }
 }

@@ -18,12 +18,15 @@
  */
 package com.codenvy.ide.wizard;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import com.google.inject.Singleton;
 
 /**
  * WizardViewImpl is the view of wizard.
@@ -33,50 +36,46 @@ import com.google.gwt.user.client.ui.*;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
+@Singleton
 public class WizardViewImpl extends DialogBox implements WizardView {
+    interface ViewImplUiBinder extends UiBinder<Widget, WizardViewImpl> {
+    }
+
     private static ViewImplUiBinder uiBinder = GWT.create(ViewImplUiBinder.class);
 
     private final int ANIMATION_TIME = 400;
-
-    private final int NO_TIME = 0;
-
-    @UiField
-    Button btnCancel;
+    private final int NO_TIME        = 0;
 
     @UiField
-    Button btnFinish;
-
+    com.codenvy.ide.ui.Button btnCancel;
     @UiField
-    Button btnBack;
-
+    com.codenvy.ide.ui.Button btnFinish;
     @UiField
-    Button btnNext;
-
+    com.codenvy.ide.ui.Button btnBack;
     @UiField
-    SimplePanel imagePanel;
-
+    com.codenvy.ide.ui.Button btnNext;
     @UiField
-    Label caption;
-
+    SimplePanel               imagePanel;
     @UiField
-    Label notice;
-
+    Label                     caption;
     @UiField
-    DeckLayoutPanel contentPanel;
-
+    Label                     notice;
+    @UiField
+    DeckLayoutPanel           contentPanel;
+    @UiField(provided = true)
+    final   WizardResource res;
     private ActionDelegate delegate;
-
-    interface ViewImplUiBinder extends UiBinder<Widget, WizardViewImpl> {
-    }
 
     /**
      * Create view.
      *
      * @param title
+     * @param resource
      */
-    public WizardViewImpl(String title) {
-        Widget widget = uiBinder.createAndBindUi(this);
+    protected WizardViewImpl(@NotNull String title, @NotNull WizardResource resource) {
+        this.res = resource;
 
+        Widget widget = uiBinder.createAndBindUi(this);
         this.setText(title);
         this.setWidget(widget);
     }
@@ -108,17 +107,17 @@ public class WizardViewImpl extends DialogBox implements WizardView {
     }
 
     /** {@inheritDoc} */
-    public void setCaption(String caption) {
+    public void setCaption(@NotNull String caption) {
         this.caption.setText(caption);
     }
 
     /** {@inheritDoc} */
-    public void setNotice(String notice) {
+    public void setNotice(@Nullable String notice) {
         this.notice.setText(notice);
     }
 
     /** {@inheritDoc} */
-    public void setImage(Image image) {
+    public void setImage(@Nullable Image image) {
         imagePanel.setWidget(image);
     }
 
