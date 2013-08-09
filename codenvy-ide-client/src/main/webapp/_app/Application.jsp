@@ -44,7 +44,7 @@ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
         var securityCheckURL = "/ide/j_security_check";
     </script>
 
-    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="ide/_app/favicon.ico"/>
 </head>
 
 <body>
