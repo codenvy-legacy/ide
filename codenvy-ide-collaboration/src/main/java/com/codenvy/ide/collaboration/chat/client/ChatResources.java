@@ -40,6 +40,9 @@ public interface ChatResources extends ClientBundle {
 
         String link();
 
+        String chatDisabled();
+
+        String chatDissabledMessage();
     }
 
     @Source("Chat.css")

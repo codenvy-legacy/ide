@@ -258,4 +258,12 @@ public class DocumentCollaborationController implements DocOpRecoveryInitiator {
     public ParticipantModel getParticipantModel() {
         return participantModel;
     }
+
+    /**
+     * Return Document assigned with this controller
+     * @return
+     */
+    public Document getDocument() {
+        return document;
+    }
 }

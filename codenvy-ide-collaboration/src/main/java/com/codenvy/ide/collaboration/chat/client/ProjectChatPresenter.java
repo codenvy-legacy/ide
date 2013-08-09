@@ -47,9 +47,12 @@ import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.code.ParticipantModel;
 import com.google.collide.client.code.ParticipantModel.Listener;
 import com.google.collide.client.collaboration.CollaborationManager.ParticipantsListener;
+import com.google.collide.client.collaboration.CollaborationPropertiesUtil;
 import com.google.collide.client.collaboration.DocumentCollaborationController;
+import com.google.collide.client.disable.ProjectUsersChangedEvent;
 import com.google.collide.dto.UserDetails;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Timer;
@@ -58,6 +61,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.event.CollaborationChangedEvent;
+import org.exoplatform.ide.client.framework.event.CollaborationChangedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -79,7 +84,8 @@ import java.util.Date;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHandler, EditorActiveFileChangedHandler, SendCodePointHandler {
+public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHandler, EditorActiveFileChangedHandler, SendCodePointHandler,
+                                             CollaborationChangedHandler {
 
     public static final int                                   MESSAGE_DELIVER_TIMEOUT = 10000;
     private             ListenerManager<ProjectUsersListener> projectUsersListeners   = ListenerManager.create();
@@ -172,6 +178,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
         }
     };
     private ChatApi               chatApi;
+    private MessageFilter         messageFilter;
     private IDE                   ide;
     private ShowChatControl       control;
     private CollabEditorExtension collabExtension;
@@ -181,24 +188,46 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
     private SendCodePointerControl pointerControl;
     private String                 userId;
     private boolean viewClosed = true;
-    private ParticipantModel participantModel;
-    private ProjectModel     project;
-    private CollabEditor     editor;
-    private String           clientId;
-    private FileModel        file;
+    private ParticipantModel               participantModel;
+    private ProjectModel                   project;
+    private CollabEditor                   editor;
+    private String                         clientId;
+    private FileModel                      file;
+    private JsonArray<HandlerRegistration> handlerRegistration;
 
     public ProjectChatPresenter(ChatApi chatApi, MessageFilter messageFilter, IDE ide, ShowChatControl chatControl,
                                 SendCodePointerControl pointerControl, final String userId, CollabEditorExtension collabExtension) {
         this.chatApi = chatApi;
+        this.messageFilter = messageFilter;
         this.ide = ide;
         this.pointerControl = pointerControl;
         this.userId = userId;
         control = chatControl;
         this.collabExtension = collabExtension;
-        IDE.eventBus().addHandler(ViewClosedEvent.TYPE, this);
-        IDE.eventBus().addHandler(ShowHideChatEvent.TYPE, this);
-        IDE.eventBus().addHandler(SendCodePointEvent.TYPE, this);
-        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        IDE.addHandler(CollaborationChangedEvent.TYPE, this);
+        registerHandlers();
+    }
+
+    private void removeHandlers() {
+        if (handlerRegistration != null) {
+            for (HandlerRegistration registration : handlerRegistration.asIterable()) {
+                registration.removeHandler();
+            }
+            handlerRegistration.clear();
+        }
+        messageFilter.removeMessageRecipient(RoutingTypes.CHAT_MESSAGE);
+        messageFilter.removeMessageRecipient(RoutingTypes.CHAT_PARTISIPANT_ADD);
+        messageFilter.removeMessageRecipient(RoutingTypes.CHAT_PARTISIPANT_REMOVE);
+        messageFilter.removeMessageRecipient(RoutingTypes.CHAT_CODE_POINT);
+
+    }
+
+    private void registerHandlers() {
+        handlerRegistration = JsonCollections.createArray();
+        handlerRegistration.add(IDE.eventBus().addHandler(ViewClosedEvent.TYPE, this));
+        handlerRegistration.add(IDE.eventBus().addHandler(ShowHideChatEvent.TYPE, this));
+        handlerRegistration.add(IDE.eventBus().addHandler(SendCodePointEvent.TYPE, this));
+        handlerRegistration.add(IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this));
         messageFilter.registerMessageRecipient(RoutingTypes.CHAT_MESSAGE, new MessageRecipient<ChatMessage>() {
             @Override
             public void onMessageReceived(ChatMessage message) {
@@ -299,6 +328,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
                 listener.onUserCloseProject();
             }
         });
+        IDE.fireEvent(new ProjectUsersChangedEvent(users.size()));
     }
 
     private void addParticipant(ParticipantInfo user) {
@@ -335,6 +365,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
                 listener.onUserOpenProject();
             }
         });
+        IDE.fireEvent(new ProjectUsersChangedEvent(users.size()));
     }
 
     private void setParticipantColor(Participant user) {
@@ -440,7 +471,12 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         if (event.getEditor() != null && event.getEditor() instanceof CollabEditor) {
             if (event.getFile().getMimeType().equals(MimeType.TEXT_HTML)) {
-                display.clearEditParticipants();
+                if (display != null) {
+                    display.clearEditParticipants();
+                }
+                return;
+            }
+            if (!CollaborationPropertiesUtil.isCollaborationEnabled(event.getFile().getProject())) {
                 return;
             }
             editor = (CollabEditor)event.getEditor();
@@ -463,11 +499,14 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
             pointerControl.setVisible(true);
             pointerControl.setEnabled(true);
         } else {
-            display.clearEditParticipants();
-            pointerControl.setVisible(false);
-            pointerControl.setEnabled(false);
-            editor = null;
-            file = null;
+            if (display != null) {
+                display.clearEditParticipants();
+                pointerControl.setVisible(false);
+                pointerControl.setEnabled(false);
+                editor = null;
+                file = null;
+
+            }
         }
     }
 
@@ -524,6 +563,18 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
         return users;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void onCollaborationChanged(CollaborationChangedEvent event) {
+        if (event.isEnabled()) {
+            registerHandlers();
+            display.removeDisabledMessage();
+        } else {
+            display.showChatDisabled();
+            removeHandlers();
+        }
+    }
+
     public interface Display extends IsView {
         String ID = "codenvyIdeChat";
 
@@ -554,6 +605,10 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
         void addNotificationMessage(String message);
 
         void addNotificationMessage(String message, String link, MessageCallback callback);
+
+        void showChatDisabled();
+
+        void removeDisabledMessage();
     }
 
 
