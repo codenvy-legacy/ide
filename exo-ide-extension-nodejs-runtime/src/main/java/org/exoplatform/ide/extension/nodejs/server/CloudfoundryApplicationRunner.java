@@ -251,9 +251,13 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             cloudfoundry.stopApplication(target, name, null, null, "cloudfoundry");
             cloudfoundry.deleteApplication(target, name, null, null, "cloudfoundry", true);
             LOG.debug("Stop application {}.", name);
-            LOG.info("EVENT#run-finished# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
-                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#"
-                     + applications.get(name).projectName + "# TYPE#nodejs#");
+            if (ConversationState.getCurrent() != null) {
+                LOG.info("EVENT#run-finished# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                         + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#"
+                         + applications.get(name).projectName + "# TYPE#nodejs#");
+            }  else {
+                LOG.info("EVENT#run-finished# PROJECT#" + applications.get(name).projectName + "# TYPE#nodejs#");
+            }
             applications.remove(name);
         } catch (Exception e) {
             throw new ApplicationRunnerException(e.getMessage(), e);
