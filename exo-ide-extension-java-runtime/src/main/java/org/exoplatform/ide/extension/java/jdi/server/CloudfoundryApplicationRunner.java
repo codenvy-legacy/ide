@@ -347,14 +347,18 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             cloudfoundry.deleteApplication(target, name, null, null, "cloudfoundry", true);
             publishWebSocketMessage(null, "runner:application-stopped:" + name);
             LOG.debug("Stop application {}.", name);
-            if (app.type == 0) {
-                LOG.info("EVENT#run-finished# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
-                         + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + app.projectName
-                         + "# TYPE#War#");
-            } else if (app.type == 1) {
-                LOG.info("EVENT#debug-finished# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
-                         + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + app.projectName
-                         + "# TYPE#War#");
+            if (ConversationState.getCurrent() != null) {
+                if (app.type == 0) {
+                    LOG.info("EVENT#run-finished# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                             + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + app.projectName
+                             + "# TYPE#War#");
+                } else if (app.type == 1) {
+                    LOG.info("EVENT#debug-finished# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                             + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + app.projectName
+                             + "# TYPE#War#");
+                }
+            } else {
+                LOG.info("EVENT#run-finished# PROJECT#" + applications.get(name).projectName + "# TYPE#War#");
             }
             applications.remove(name);
         } catch (Exception e) {
