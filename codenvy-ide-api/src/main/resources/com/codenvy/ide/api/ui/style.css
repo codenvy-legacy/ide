@@ -51,11 +51,11 @@
 @def editorFontFamily 'Andale Mono', monospace;
 
     /* DialogBox*/
-@def dialogTopLeft url("ide/_app/style/light/window/window_TL.png") no-repeat;
-@def dialogTopCenter url("ide/_app/style/light/window/window_T.png") repeat-x;
-@def dialogTopRight url("ide/_app/style/light/window/window_TR.png") no-repeat;
-@def dialogMiddleLeft url("ide/_app/style/light/window/window_L.png") repeat-y;
-@def dialogMiddleRight url("ide/_app/style/light/window/window_R.png") repeat-y;
-@def dialogBottomLeft url("ide/_app/style/light/window/window_BL.png") no-repeat;
-@def dialogBottomCenter url("ide/_app/style/light/window/window_B.png") repeat-x;
-@def dialogBottomRight url("ide/_app/style/light/window/window_BR.png") no-repeat;
+@def dialogTopLeft url("/ide/_app/style/light/window/window_TL.png") no-repeat;
+@def dialogTopCenter url("/ide/_app/style/light/window/window_T.png") repeat-x;
+@def dialogTopRight url("/ide/_app/style/light/window/window_TR.png") no-repeat;
+@def dialogMiddleLeft url("/ide/_app/style/light/window/window_L.png") repeat-y;
+@def dialogMiddleRight url("/ide/_app/style/light/window/window_R.png") repeat-y;
+@def dialogBottomLeft url("/ide/_app/style/light/window/window_BL.png") no-repeat;
+@def dialogBottomCenter url("/ide/_app/style/light/window/window_B.png") repeat-x;
+@def dialogBottomRight url("/ide/_app/style/light/window/window_BR.png") no-repeat;
