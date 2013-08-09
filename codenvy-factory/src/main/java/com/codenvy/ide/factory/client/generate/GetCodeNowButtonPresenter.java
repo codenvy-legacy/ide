@@ -189,66 +189,13 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
 
     private String                vcsURL;
 
-
     public GetCodeNowButtonPresenter() {
         IDE.addHandler(GetCodeNowButtonEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
-    }
-    
-//    /** URL to CodeNow button. */
-//    //private static final String CODE_NOW_BUTTON_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow-embed.html";
-//    private static final String CODE_NOW_BUTTON_URL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("factory/codenow-embed.html").buildString();
-//
-//    /** URL of image which will be used as link for CodeNow button for GitHub Pages. */
-//    private static final String CODE_NOW_BUTTON_FOR_GITHUB_IMAGE_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow_gh.png";
-
-    /**
-     * Returns URL to CodeNow button template
-     * 
-     * @return
-     */
-    private String getCodeNowButtonJavascriptURL() {
-        if (Location.getHost().indexOf("localhost:8080") >= 0 ||
-            Location.getHost().indexOf("127.0.0.1:8080") >= 0 ||
-            Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
-            return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("ide/_app/factory/factory.js").buildString();
-        }
-        
-        return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-            .setPath("factory/factory.js").buildString();
-    }
-    
-    /**
-     * Returns URL of image which will be used as link for CodeNow button for GitHub Pages.
-     * 
-     * @return
-     */
-    private String getCodeNowGitHubImageURL() {
-        return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-            .setPath("/ide/" + Utils.getWorkspaceName() + "/_app/codenow_gh.png").buildString();
-    }
-    
-    /**
-     * Returns base URL for Codenvy Factory.
-     * 
-     * @return
-     */
-    private String getBaseFactoryURL() {
-        if (Location.getHost().indexOf("localhost:8080") >= 0 ||
-            Location.getHost().indexOf("127.0.0.1:8080") >= 0 ||
-            Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
-            
-            return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("ide/tmp-dev-monit").buildString();
-        }
-        
-        return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-            .setPath("factory").buildString();
-    }
+    }    
     
     public void bindDisplay() {
         final String factoryURLEscaped = encodeQueryString(factoryURL);
@@ -257,12 +204,12 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
             @Override
             public void onValueChange(ValueChangeEvent<Boolean> event) {
                 if (event.getValue() == true) {
-                    display.getPreviewFrame().setUrl(UriUtils.fromString(getCodeNowButtonJavascriptURL() + "?counter=true"));
+                    display.getPreviewFrame().setUrl(UriUtils.fromString(SpinnetGenerator.getCodeNowButtonJavascriptURL() + "?counter=true"));
 
                     generateSnippetForWebsites(true, display.getVerticalStyleField().getValue());
                     display.getWebsitesURLField().setValue(websitesSnippet);
                 } else if (event.getValue() == false) {
-                    display.getPreviewFrame().setUrl(UriUtils.fromString(getCodeNowButtonJavascriptURL()));
+                    display.getPreviewFrame().setUrl(UriUtils.fromString(SpinnetGenerator.getCodeNowButtonJavascriptURL()));
 
                     generateSnippetForWebsites(false, display.getVerticalStyleField().getValue());
                     display.getWebsitesURLField().setValue(websitesSnippet);
@@ -342,7 +289,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         }
 
         display.getShowCounterField().setValue(true);
-        display.getPreviewFrame().setUrl(UriUtils.fromString(getCodeNowButtonJavascriptURL() + "?counter=true"));
+        display.getPreviewFrame().setUrl(UriUtils.fromString(SpinnetGenerator.getCodeNowButtonJavascriptURL() + "?counter=true"));
         display.getHorizontalStyleField().setValue(true);
         display.getWebsitesURLField().setValue(websitesSnippet);
         display.getGitHubURLField().setValue(gitHubPagesSnippet);
@@ -442,7 +389,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
     }
 
     private void generateSnippetsAndOpenView() {
-        factoryURL = getBaseFactoryURL() + "?" + //
+        factoryURL = SpinnetGenerator.getBaseFactoryURL() + "?" + //
                      VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
                      PROJECT_NAME + "=" + openedProject.getName() + "&" + //
                      WORKSPACE_NAME + "=" + Utils.getWorkspaceName() + "&" + //
@@ -453,7 +400,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         
         logFactoryCreated(UriUtils.fromString(factoryURL).asString());
         generateSnippetForWebsites(false, false);
-        gitHubPagesSnippet = "[![alt](" + getCodeNowGitHubImageURL() + ")](" + factoryURL + ")";
+        gitHubPagesSnippet = "[![alt](" + SpinnetGenerator.getCodeNowGitHubImageURL() + ")](" + factoryURL + ")";
         openView();
     }
 
@@ -477,35 +424,13 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
     }
 
     private void generateSnippetForWebsites(boolean showCounter, boolean verticalStyle) {
+        String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
+        
         websitesSnippet = "<script " +
         		"type=\"text/javascript\" " +
         		"language=\"javascript\" " +
-        		"src=\"" + getCodeNowButtonJavascriptURL() + "\" " +
+        		"src=\"" + jsURL + "\" " +
         		"target=\"" + factoryURL + "\"></script>";
-        
-        /*
-        final String showCounterParameter = "&counter=true";
-        final String verticalSTyleParameter = "&style=vertical";
-
-        websitesSnippet = "<iframe width=\"140\" height=\"30\" frameborder=\"0\" src=" + CODE_NOW_BUTTON_URL + "?" + //
-                          VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
-                          PROJECT_NAME + "=" + openedProject.getName() + "&" + //
-                          WORKSPACE_NAME + "=" + Utils.getWorkspaceName() + "&" + //
-                          VCS + "=git&" + //
-                          VCS_URL + "=" + encodeQueryString(vcsURL) + "&" + //
-                          COMMIT_ID + "=" + latestCommitId + "&" + //
-                          ACTION_PARAMETER + "=" + DEFAULT_ACTION + //
-                          // (isShowCounter ? showCounterParameter : "") + //
-                          (verticalStyle ? verticalSTyleParameter : "") + //
-                          "></iframe>";
-         */
-
-/*
-<iframe src="http://gavrik.codenvy-dev.com/ide/tmp-dev-monit/_app/codenow-button/codenow-embed.html" 
-    frameborder="no" style="position:absolute; left:10px; top:10px; width:77px; height:21px;"
-    onload="this.contentWindow.document.factoryURL='http://gavrik.codenvy-dev.com/ide/tmp-dev-monit?v=1.0&pname=jar-1&wname=dev-monit&vcs=git&vcsurl=http%3A%2F%2Fgavrik.codenvy-dev.com%2Fgit%2F7f%2F95%2Faf%2Fdev-monit%2Fjar-1&idcommit=4a665ccc85fb81b05e6bd6b173064ea16a5af967&action=openproject';"></iframe>
-*/
-        
     }
 
 }
