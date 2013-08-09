@@ -252,7 +252,9 @@ public class CloudBeesClientServiceImpl implements CloudBeesClientService {
     @Override
     public void createAccount(CloudBeesAccount account, AsyncRequestCallback<CloudBeesAccount> callback) throws RequestException {
         String url = restServiceContext + ACCOUNTS;
-        String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(account)).getPayload();
+
+        DtoClientImpls.CloudBeesAccountImpl json = (DtoClientImpls.CloudBeesAccountImpl)account;
+        String data = json.serialize();
 
         AsyncRequest.build(RequestBuilder.POST, url).loader(loader)
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
@@ -267,7 +269,8 @@ public class CloudBeesClientServiceImpl implements CloudBeesClientService {
         url.append(ACCOUNTS).append("/").append(account).append(USERS);
         url.append("?existing_user=").append(isExisting);
 
-        String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(user)).getPayload();
+        DtoClientImpls.CloudBeesUserImpl json = (DtoClientImpls.CloudBeesUserImpl)user;
+        String data = json.serialize();
 
         AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
