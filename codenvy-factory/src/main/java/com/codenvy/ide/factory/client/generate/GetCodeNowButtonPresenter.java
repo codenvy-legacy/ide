@@ -242,7 +242,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
             public void onClick(ClickEvent event) {
                 Window.open("https://www.facebook.com/sharer/sharer.php?s=100&p[url]="
                             + factoryURLEscaped
-                            + "&p[images][0]=https://codenvy.com/images/logoCodenvy.png&p[title]=" + socialPostTitle
+                            + "&p[images][0]=https://codenvy.com/images/logoCodenvy.png&p[title]=" + openedProject.getName() + " - Codenvy "
                             + "&p[summary]=" + facebookSummaryInfo,
                             "", "width=626,height=436");
             }
@@ -259,7 +259,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         display.getShareTwitterButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                Window.open("https://twitter.com/share?url=" + factoryURLEscaped + "&text=" + socialPostTitle, "",
+                Window.open("https://twitter.com/share?url=" + factoryURLEscaped + "&text=" + facebookSummaryInfo, "",
                             "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=260,width=660");
             }
         });
