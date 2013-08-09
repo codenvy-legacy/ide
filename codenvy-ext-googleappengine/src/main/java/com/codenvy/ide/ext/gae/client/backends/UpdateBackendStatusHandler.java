@@ -31,18 +31,12 @@ import com.google.web.bindery.event.shared.EventBus;
  * @version $Id: May 31, 2012 10:28:19 AM anya $
  */
 public class UpdateBackendStatusHandler implements RequestStatusHandler {
-    /** Backend's name. */
     private String          backendName;
     private EventBus        eventBus;
     private GAELocalization constant;
 
     /**
      * Update backend status handler.
-     *
-     * @param backendName
-     *         backend's name
-     * @param eventBus
-     * @param constant
      */
     public UpdateBackendStatusHandler(String backendName, EventBus eventBus, GAELocalization constant) {
         this.backendName = backendName;

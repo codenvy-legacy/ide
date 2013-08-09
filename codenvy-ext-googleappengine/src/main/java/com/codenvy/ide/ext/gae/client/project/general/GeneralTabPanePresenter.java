@@ -18,6 +18,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter that allow user to control general state for application in Google App Engine.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 05.08.13 vlad $
  */
@@ -31,9 +33,12 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
     private ResourceProvider           resourceProvider;
     private LoginAction                loginAction;
     private GAELocalization            constant;
-    private LogsPresenter logsPresenter;
-    private Project project;
+    private LogsPresenter              logsPresenter;
+    private Project                    project;
 
+    /**
+     * Constructor for general control presenter.
+     */
     @Inject
     public GeneralTabPanePresenter(GeneralTabPaneView view, CreateApplicationPresenter createApplicationPresenter,
                                    EventBus eventBus, ConsolePart console, GAEClientService service,
@@ -52,15 +57,23 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
         this.view.setDelegate(this);
     }
 
+    /**
+     * Initialize Backend tab presenter.
+     *
+     * @param project
+     *         project that opened in current moment.
+     */
     public void init(Project project) {
         this.project = project;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onUpdateApplicationClicked() {
         createApplicationPresenter.deploy(project);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onRollBackApplicationClicked() {
         final String vfsId = resourceProvider.getVfsId();
@@ -78,11 +91,13 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onGetApplicationLogsClicked() {
         logsPresenter.showDialog(project);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onUpdateIndexesClicked() {
         final String vfsId = resourceProvider.getVfsId();
@@ -100,6 +115,7 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onVacuumIndexesClicked() {
         final String vfsId = resourceProvider.getVfsId();
@@ -117,6 +133,7 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onUpdatePageSpeedClicked() {
         final String vfsId = resourceProvider.getVfsId();
@@ -135,6 +152,7 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onUpdateQueuesClicked() {
         final String vfsId = resourceProvider.getVfsId();
@@ -152,6 +170,7 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onUpdateDoSClicked() {
         final String vfsId = resourceProvider.getVfsId();
@@ -169,6 +188,7 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);

@@ -45,35 +45,35 @@ import com.google.web.bindery.event.shared.EventBus;
 import javax.inject.Inject;
 
 /**
+ * Action for "PaaS/Google App Engine/Login..." to allow user to login on on Google.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class LoginAction extends Action implements OAuthCallback {
-    private String                 restContext;
     private UserClientService      userClientService;
     private GAEResources           resources;
     private GAEClientService       service;
     private EventBus               eventBus;
     private ConsolePart            console;
     private GAELocalization        constant;
-    private Loader                 loader;
     private OAuthStatus            authStatus;
     private AsyncCallback<Boolean> callback;
 
+    /**
+     * Constructor for action.
+     */
     @Inject
-    public LoginAction(@Named("restContext") String restContext, UserClientService userClientService,
-                       GAEResources resources, GAEClientService service, EventBus eventBus, ConsolePart console,
-                       GAELocalization constant, Loader loader) {
+    public LoginAction(UserClientService userClientService, GAEResources resources, GAEClientService service,
+                       EventBus eventBus, ConsolePart console, GAELocalization constant) {
         super("Login...", "Login to Google App Engine.", resources.login());
-        this.restContext = restContext;
         this.userClientService = userClientService;
         this.resources = resources;
         this.service = service;
         this.eventBus = eventBus;
         this.console = console;
         this.constant = constant;
-        this.loader = loader;
 
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
@@ -83,6 +83,7 @@ public class LoginAction extends Action implements OAuthCallback {
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (authStatus == OAuthStatus.LOGGED_IN) {
@@ -92,6 +93,7 @@ public class LoginAction extends Action implements OAuthCallback {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
         if (authStatus == OAuthStatus.LOGGED_IN) {
@@ -106,6 +108,7 @@ public class LoginAction extends Action implements OAuthCallback {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onAuthenticated(OAuthStatus authStatus) {
         this.authStatus = authStatus;
@@ -114,10 +117,20 @@ public class LoginAction extends Action implements OAuthCallback {
         }
     }
 
+    /**
+     * Checks if user is logged in.
+     */
     public void isUserLoggedIn() {
         isUserLoggedIn(null);
     }
 
+    /**
+     * Checks if user is logged in and run callback function on authorize status.
+     *
+     * @param callback
+     *         callback function for authorize status, function calls com.google.gwt.user.client.rpc
+     *         .AsyncCallback#onSuccess(Boolean) with true value if user is logged in and otherwise if logged out.
+     */
     public void isUserLoggedIn(AsyncCallback<Boolean> callback) {
         this.callback = callback;
 
@@ -142,12 +155,23 @@ public class LoginAction extends Action implements OAuthCallback {
         }
     }
 
+    /**
+     * Start login on Google Services with callback function.
+     *
+     * @param callback
+     *         callback function for authorize status, function calls com.google.gwt.user.client.rpc
+     *         .AsyncCallback#onSuccess(Boolean) with true value if user is logged in and otherwise if logged out.
+     */
     public void doLogin(AsyncCallback<Boolean> callback) {
         this.callback = callback;
         doLogin();
     }
 
-    //Todo need to be improved to fetch user id from something else, not by rest service
+    /**
+     * Start login on Google Services without callback function.
+     * <p/>
+     * Todo need to be improved to fetch user id from something else, not by rest service
+     */
     public void doLogin() {
         com.codenvy.ide.client.DtoClientImpls.UserImpl dtoUser = com.codenvy.ide.client.DtoClientImpls.UserImpl.make();
         UserUnmarshaller unmarshaller = new UserUnmarshaller(dtoUser);
@@ -171,6 +195,12 @@ public class LoginAction extends Action implements OAuthCallback {
         }
     }
 
+    /**
+     * Open native popup window for starting user authorization on Google Services.
+     *
+     * @param user
+     *         user id that logged in in Codenvy.
+     */
     private void openAuthWindow(User user) {
         String authUrl = "rest/ide/oauth/authenticate?oauth_provider=google"
                          + "&scope=https://www.googleapis.com/auth/appengine.admin"
@@ -179,6 +209,9 @@ public class LoginAction extends Action implements OAuthCallback {
         authWindow.loginWithOAuth();
     }
 
+    /**
+     * Starts log out from Google Services.
+     */
     public void doLogout() {
         try {
             service.logout(new AsyncRequestCallback<Object>() {
@@ -199,40 +232,4 @@ public class LoginAction extends Action implements OAuthCallback {
             console.print(e.getMessage());
         }
     }
-
-//    private void checkUserLogged(@NotNull final AsyncCallback<Boolean> authCallback) {
-//        loader.setMessage("Checking if user has Google App Engine scope...");
-//        loader.show();
-//
-//        DtoClientImpls.GaeUserImpl user = DtoClientImpls.GaeUserImpl.make();
-//        GaeUserUnmarshaller unmarshaller = new GaeUserUnmarshaller(user);
-//
-//        try {
-//            service.getLoggedUser(
-//                    new GAEAsyncRequestCallback<GaeUser>(unmarshaller, console, eventBus, constant, null) {
-//                        @Override
-//                        protected void onSuccess(GaeUser result) {
-//                            loader.hide();
-//
-//                            if (!GAEExtension.isUserHasGaeScopes(result.getToken())) {
-////                                boolean doLogin = Window.confirm(
-////                                        "You aren't authorize to complete this operation.\nDo you want to login on " +
-////                                        "Google App Engine?");
-////                                if (doLogin) {
-//                                    doLogin(authCallback);
-////                                } else {
-////                                    authCallback.onSuccess(false);
-////                                }
-//                                onAuthenticated(OAuthStatus.LOGGED_IN);
-//                            } else {
-////                                authCallback.onSuccess(true);
-//                                onAuthenticated(OAuthStatus.LOGGED_OUT);
-//                            }
-//                        }
-//                    });
-//        } catch (RequestException e) {
-//            eventBus.fireEvent(new ExceptionThrownEvent(e));
-//            console.print(e.getMessage());
-//        }
-//    }
 }

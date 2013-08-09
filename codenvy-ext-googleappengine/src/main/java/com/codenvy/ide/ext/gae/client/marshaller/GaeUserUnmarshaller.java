@@ -27,16 +27,22 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 /**
+ * Unmarshaller for the {@link com.codenvy.ide.ext.gae.shared.GaeUser}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class GaeUserUnmarshaller implements Unmarshallable<GaeUser> {
     private DtoClientImpls.GaeUserImpl gaeUser;
 
+    /**
+     * Constructor for unmarshaller.
+     */
     public GaeUserUnmarshaller(DtoClientImpls.GaeUserImpl gaeUser) {
         this.gaeUser = gaeUser;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         String text = response.getText();
@@ -55,6 +61,7 @@ public class GaeUserUnmarshaller implements Unmarshallable<GaeUser> {
         gaeUser.setToken(dtoGaeUser.getToken());
     }
 
+    /** {@inheritDoc} */
     @Override
     public GaeUser getPayload() {
         return gaeUser;

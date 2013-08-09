@@ -39,7 +39,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
- * Extension add GoogleAppEngine support to the IDE Application.
+ * Extension add Google App Engine support to the IDE Application.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -50,6 +50,9 @@ public class GAEExtension {
     public static final String APP_ENGINE_SCOPE = "https://www.googleapis.com/auth/appengine.admin";
     public static final String CREATE_APP_URL   = "https://appengine.google.com/start/createapp";
 
+    /**
+     * Constructor for Google App Engine extension.
+     */
     @Inject
     public GAEExtension(PaaSAgent paasAgent, GAEResources resources, ActionManager actionManager,
                         LoginAction loginAction, CreateApplicationAction createApplicationAction,
@@ -79,10 +82,24 @@ public class GAEExtension {
         projectPaaS.add(manageApplicationAction);
     }
 
+    /**
+     * Checks if user token has Google App Engine token.
+     *
+     * @param token
+     *         authorization token.
+     * @return true if Google App Engine scope exist, otherwise false.
+     */
     public static boolean isUserHasGaeScopes(Token token) {
         return token != null && token.getScope() != null && token.getScope().contains(APP_ENGINE_SCOPE);
     }
 
+    /**
+     * Checks if project has Google App Engine application configuration files.
+     *
+     * @param project
+     *         project to search.
+     * @return true if configuration files exist, otherwise false.
+     */
     public static boolean isAppEngineProject(Project project) {
         if (project == null) {
             return false;

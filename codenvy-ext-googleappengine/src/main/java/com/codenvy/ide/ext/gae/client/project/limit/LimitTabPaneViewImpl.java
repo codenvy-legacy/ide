@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The implementation of {@link LimitTabPaneView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 05.08.13 vlad $
  */
@@ -43,6 +45,9 @@ public class LimitTabPaneViewImpl extends Composite implements LimitTabPaneView 
 
     private JsonStringMap<String> limitsName = JsonCollections.createStringMap();
 
+    /**
+     * Constructor of View.
+     */
     @Inject
     public LimitTabPaneViewImpl(GAELocalization constant) {
         this.constant = constant;
@@ -55,6 +60,9 @@ public class LimitTabPaneViewImpl extends Composite implements LimitTabPaneView 
         initWidget(widget);
     }
 
+    /**
+     * Initialize constants of limits name.
+     */
     private void initLimitsName() {
         limitsName.put("max_blob_size", constant.maxBlobSize());
         limitsName.put("max_file_size", constant.maxFileSize());
@@ -62,6 +70,9 @@ public class LimitTabPaneViewImpl extends Composite implements LimitTabPaneView 
         limitsName.put("max_total_file_size", constant.maxTotalFileSize());
     }
 
+    /**
+     * Initialize limits Cell table.
+     */
     private void initLimitsTable() {
         limitsTable.setWidth("100%", true);
         limitsTable.setAutoHeaderRefreshDisabled(true);
@@ -91,11 +102,13 @@ public class LimitTabPaneViewImpl extends Composite implements LimitTabPaneView 
         limitsTable.addColumn(limitColumn, constant.limitColumnTitle());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setResourceLimits(JsonArray<ResourceLimit> limits) {
         List<ResourceLimit> resourceLimits = new ArrayList<ResourceLimit>(limits.size());

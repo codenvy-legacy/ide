@@ -10,6 +10,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Action for "Project/PaaS/Google App Engine Application..." to allow user to manage deployed application on Google
+ * Services.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 05.08.13 vlad $
  */
@@ -18,6 +21,9 @@ public class ManageApplicationAction extends Action {
     private ProjectPresenter presenter;
     private ResourceProvider resourceProvider;
 
+    /**
+     * Constructor for action.
+     */
     @Inject
     public ManageApplicationAction(ProjectPresenter presenter,
                                    ResourceProvider resourceProvider, GAEResources resources) {
@@ -26,11 +32,13 @@ public class ManageApplicationAction extends Action {
         this.resourceProvider = resourceProvider;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         presenter.showDialog();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
         Project project = resourceProvider.getActiveProject();

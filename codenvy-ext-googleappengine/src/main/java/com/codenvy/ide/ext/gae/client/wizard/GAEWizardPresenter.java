@@ -29,6 +29,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter that allow user to use Create Project Wizard to configure deployment application on Google App Engine.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -47,11 +49,15 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
     private CreateProjectProvider      createProjectProvider;
     private boolean                    isLoggedIn;
 
+    /**
+     * Constructor for Google App Engine Wizard page.
+     */
     @Inject
     public GAEWizardPresenter(EventBus eventBus, GAEWizardView view, ConsolePart console,
                               GAELocalization constant, LoginAction loginAction,
                               GAEClientService service, TemplateAgent templateAgent, GAEResources resources,
-                              CreateApplicationPresenter createApplicationPresenter, ResourceProvider resourceProvider) {
+                              CreateApplicationPresenter createApplicationPresenter,
+                              ResourceProvider resourceProvider) {
         super("Deploy project to Google App Engine", resources.googleAppEngine48());
 
         this.eventBus = eventBus;
@@ -67,16 +73,19 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
         this.view.setDelegate(this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onApplicationIdChanged() {
         this.existedAppId = view.getApplicationId();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onAppIdRequiredClicked() {
         view.enableApplicationIdField(view.getAppIdRequired());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         createProjectProvider = templateAgent.getSelectedTemplate().getCreateProjectProvider();
@@ -87,27 +96,31 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
         container.setWidget(view);
     }
 
-
+    /** {@inheritDoc} */
     @Override
     public WizardPagePresenter flipToNext() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean canFinish() {
         return validate();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean hasNext() {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isCompleted() {
         return validate();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void doFinish() {
         createProjectProvider.create(new AsyncCallback<Project>() {
@@ -123,6 +136,12 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
         });
     }
 
+    /**
+     * Creating Google App Engine configuration file into newly created project.
+     *
+     * @param project
+     *         project that created on previous step.
+     */
     private void insertIntoProjectGaeConfig(final Project project) {
         String projectType = (String)project.getPropertyValue("vfs:projectType");
 
@@ -188,6 +207,7 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
         clearFields();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getNotice() {
         if (!isLoggedIn) {
@@ -199,11 +219,19 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
         return null;
     }
 
+    /**
+     * Validate filling form if existed application id checkbox activated.
+     *
+     * @return true if checkbox activated and text box field with application id filled correctly.
+     */
     private boolean validate() {
         return !view.getAppIdRequired() ||
                view.getAppIdRequired() && view.getApplicationId() != null && !view.getApplicationId().isEmpty();
     }
 
+    /**
+     * Checks if user is logged in on Google Services. If user isn't logged in IDE ask user to login.
+     */
     private void isLoggedIn() {
         DtoClientImpls.GaeUserImpl user = DtoClientImpls.GaeUserImpl.make();
         GaeUserUnmarshaller unmarshaller = new GaeUserUnmarshaller(user);
@@ -232,6 +260,9 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
         }
     }
 
+    /**
+     * Ask user to login on Google Services, and when user agree, IDE open native popup window to start authorize user.
+     */
     private void askUserToLogin() {
         boolean startAuthorize = Window.confirm(
                 "You aren't authorize to complete creating application.\nDo you want to login on Google App Engine?");
@@ -242,6 +273,9 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
         }
     }
 
+    /**
+     * Handler that checks if user is logged in and sets login status.
+     */
     private AsyncCallback<Boolean> userLoggedInCallback = new AsyncCallback<Boolean>() {
         @Override
         public void onFailure(Throwable throwable) {
@@ -254,6 +288,13 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
         }
     };
 
+    /**
+     * Is user activated checkbox on wizard page sets application id into newly created project to allow user update existed application on
+     * Google App Engine.
+     *
+     * @param project
+     *         project in what should be changed configuration files.
+     */
     private void setExistedApplicationId(Project project) {
         final String vfsId = resourceProvider.getVfsId();
 
@@ -270,6 +311,9 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
         }
     }
 
+    /**
+     * Clear fields.
+     */
     private void clearFields() {
         view.setAppIdRequired(false);
         view.setApplicationId("");

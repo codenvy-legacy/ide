@@ -21,6 +21,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter that to allow user to control backends state.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 05.08.13 vlad $
  */
@@ -35,6 +37,9 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
     private LoginAction        loginAction;
     private Project            project;
 
+    /**
+     * Constructor for backends presenter.
+     */
     @Inject
     public BackendTabPanePresenter(BackendTabPaneView view, GAEClientService service,
                                    EventBus eventBus, ConsolePart console,
@@ -51,6 +56,12 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
         this.view.setDelegate(this);
     }
 
+    /**
+     * Initialize Backend tab presenter.
+     *
+     * @param project
+     *         project that opened in current moment.
+     */
     public void init(Project project) {
         this.project = project;
 
@@ -72,6 +83,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onConfigureBackendClicked() {
         final String vfsId = resourceProvider.getVfsId();
@@ -97,6 +109,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onDeleteBackendClicked() {
         final String vfsId = resourceProvider.getVfsId();
@@ -122,6 +135,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onUpdateBackendClicked() {
         final String vfsId = resourceProvider.getVfsId();
@@ -147,6 +161,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onRollBackBackendClicked() {
         final String vfsId = resourceProvider.getVfsId();
@@ -172,6 +187,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onUpdateAllBackendsClicked() {
         final String vfsId = resourceProvider.getVfsId();
@@ -191,6 +207,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onRollBackAllBackendsClicked() {
         final String vfsId = resourceProvider.getVfsId();
@@ -210,6 +227,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onUpdateBackendState(String backendName, Backend.State backendState) {
         final String vfsId = resourceProvider.getVfsId();
@@ -228,6 +246,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);

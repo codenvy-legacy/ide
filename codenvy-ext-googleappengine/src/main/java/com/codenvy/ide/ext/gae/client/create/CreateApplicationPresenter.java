@@ -47,6 +47,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
+ * Presenter that allow user to create application on Google App Engine.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -64,6 +66,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     private Project               project;
     private String                warUrl;
 
+    /**
+     * Constructor for Create Application Presenter.
+     */
     @Inject
     public CreateApplicationPresenter(CreateApplicationView view, EventBus eventBus, ConsolePart console,
                                       GAEClientService service, GAELocalization constant,
@@ -81,6 +86,12 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         this.view.setDelegate(this);
     }
 
+    /**
+     * Shows current dialog window.
+     *
+     * @param project
+     *         opened project in current moment.
+     */
     public void showDialog(Project project) {
         this.project = project;
 
@@ -93,47 +104,58 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCreateApplicationButtonClicked() {
-        final AsyncCallback<Boolean> onLoggedIn = new AsyncCallback<Boolean>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                //ignore
-            }
-
-            @Override
-            public void onSuccess(Boolean result) {
-                if (result) {
-                    onCreateApplicationButtonClicked();
-                } else {
-                    Window.alert(
-                            "You aren't allowed to create application on Google App Engine without authorization.");
-                }
-            }
-        };
-
-        AsyncCallback<Boolean> onIfUserLoggedIn = new AsyncCallback<Boolean>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                //ignore
-            }
-
-            @Override
-            public void onSuccess(Boolean userLoggedIn) {
-                if (userLoggedIn) {
-                    doCreateApplication();
-                } else {
-                    loginAction.doLogin(onLoggedIn);
-                }
-            }
-        };
-
         loginAction.isUserLoggedIn(onIfUserLoggedIn);
     }
 
-    private void doCreateApplication() {
-        //todo need to check if appengine-web.xml exist in java-based project for normal deploy
+    /**
+     * Handler to programmaticaly click on create application button when user logged in on Google Services.
+     */
+    private final AsyncCallback<Boolean> onLoggedIn = new AsyncCallback<Boolean>() {
+        @Override
+        public void onFailure(Throwable caught) {
+            //ignore
+        }
 
+        @Override
+        public void onSuccess(Boolean result) {
+            if (result) {
+                onCreateApplicationButtonClicked();
+            } else {
+                Window.alert(
+                        "You aren't allowed to create application on Google App Engine without authorization.");
+            }
+        }
+    };
+
+    /**
+     * Handler to run creating application when user logged in. When user isn't authorize on Google Services, login
+     * window opened to authorize user.
+     */
+    private final AsyncCallback<Boolean> onIfUserLoggedIn = new AsyncCallback<Boolean>() {
+        @Override
+        public void onFailure(Throwable caught) {
+            //ignore
+        }
+
+        @Override
+        public void onSuccess(Boolean userLoggedIn) {
+            if (userLoggedIn) {
+                doCreateApplication();
+            } else {
+                loginAction.doLogin(onLoggedIn);
+            }
+        }
+    };
+
+    /**
+     * Fetch current opened project and open new tab in browser to allow user create application on Google App Engine.
+     * <p/>
+     * TODO: need to check if appengine-web.xml exist in java-based project for normal deploy.
+     */
+    private void doCreateApplication() {
         view.enableDeployButton(true);
         view.enableCreateButton(false);
         view.setUserInstruction(constant.deployApplicationInstruction());
@@ -157,6 +179,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         openNativeWindow(url);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onDeployApplicationButtonClicked() {
         if (GAEExtension.isAppEngineProject(project)) {
@@ -168,20 +191,36 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         view.close();
     }
 
+    /**
+     * Open new tab in browser with specified URL.
+     *
+     * @param url
+     *         url address.
+     */
     private static native void openNativeWindow(String url) /*-{
         $wnd.open(url, "_blank");
     }-*/;
 
+    /** {@inheritDoc} */
     @Override
     public void onCancelButtonClicked() {
         view.close();
     }
 
+    /**
+     * Start deploying specified project to Google App Engine.
+     *
+     * @param project
+     *         project to deploy.
+     */
     public void deploy(Project project) {
         this.project = project;
         deploy();
     }
 
+    /**
+     * Start deploying opened project in current moment.
+     */
     public void deploy() {
         String projectType = (String)project.getPropertyValue("vfs:projectType");
         if (projectType.equals(JavaExtension.JAVA_WEB_APPLICATION_PROJECT_TYPE)) {
@@ -191,11 +230,17 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         }
     }
 
+    /**
+     * Starts building project.
+     */
     private void startBuildingApplication() {
         projectBuildHandler = eventBus.addHandler(ProjectBuiltEvent.TYPE, this);
         eventBus.fireEvent(new BuildProjectEvent(project));
     }
 
+    /**
+     * Starts upload application to Google App Engine.
+     */
     private void uploadApplication() {
         DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
         ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
@@ -228,6 +273,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onProjectBuilt(ProjectBuiltEvent event) {
         projectBuildHandler.removeHandler();

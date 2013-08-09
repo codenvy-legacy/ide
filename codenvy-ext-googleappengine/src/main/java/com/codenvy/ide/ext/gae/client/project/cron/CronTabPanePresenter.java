@@ -19,6 +19,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter that allow user to control crons information.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 05.08.13 vlad $
  */
@@ -32,10 +34,12 @@ public class CronTabPanePresenter implements Presenter, CronTabPaneView.ActionDe
     private GAELocalization  constant;
     private Project          project;
 
+    /**
+     * Constructor for crons presenter.
+     */
     @Inject
     public CronTabPanePresenter(CronTabPaneView view, GAEClientService service, EventBus eventBus, ConsolePart console,
                                 ResourceProvider resourceProvider, GAELocalization constant) {
-
         this.view = view;
         this.service = service;
         this.eventBus = eventBus;
@@ -46,6 +50,12 @@ public class CronTabPanePresenter implements Presenter, CronTabPaneView.ActionDe
         this.view.setDelegate(this);
     }
 
+    /**
+     * Initialize Backend tab presenter.
+     *
+     * @param project
+     *         project that opened in current moment.
+     */
     public void init(Project project) {
         this.project = project;
 
@@ -58,7 +68,7 @@ public class CronTabPanePresenter implements Presenter, CronTabPaneView.ActionDe
                                                                                constant, null) {
                                  @Override
                                  protected void onSuccess(JsonArray<CronEntry> result) {
-                                    view.setCronEntryData(result);
+                                     view.setCronEntryData(result);
                                  }
                              });
         } catch (RequestException e) {
@@ -66,6 +76,7 @@ public class CronTabPanePresenter implements Presenter, CronTabPaneView.ActionDe
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onUpdateButtonClicked() {
         final String vfsId = resourceProvider.getVfsId();
@@ -84,6 +95,7 @@ public class CronTabPanePresenter implements Presenter, CronTabPaneView.ActionDe
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);

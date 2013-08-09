@@ -24,6 +24,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter to allow user to show application startup logs on Google App Engine.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 06.08.13 vlad $
  */
@@ -51,6 +53,9 @@ public class LogsPresenter extends BasePresenter implements LogsView.ActionDeleg
         severityFormatted.put("Critical", "CRITICAL");
     }
 
+    /**
+     * Constructor for application logs presenter.
+     */
     @Inject
     public LogsPresenter(LogsView view, GAEClientService service, EventBus eventBus,
                          ConsolePart console, LoginAction loginAction, GAEResources resources,
@@ -69,6 +74,9 @@ public class LogsPresenter extends BasePresenter implements LogsView.ActionDeleg
         this.view.setTitle("Logs");
     }
 
+    /**
+     * Show current based dialog, placed in information panel of IDE.
+     */
     public void showDialog(Project project) {
         this.project = project;
 
@@ -81,11 +89,15 @@ public class LogsPresenter extends BasePresenter implements LogsView.ActionDeleg
         getLogs();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onGetLogsButtonClicked() {
         getLogs();
     }
 
+    /**
+     * Request logs from Google App Engine.
+     */
     public void getLogs() {
         String severity = severityFormatted.get(view.getLogsSeverity());
         int numDays = view.getLogsDaysCount();
@@ -108,21 +120,25 @@ public class LogsPresenter extends BasePresenter implements LogsView.ActionDeleg
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return "Logs";
     }
 
+    /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
         return resources.logs();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getTitleToolTip() {
         return "Display logs content.";
     }
 
+    /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
