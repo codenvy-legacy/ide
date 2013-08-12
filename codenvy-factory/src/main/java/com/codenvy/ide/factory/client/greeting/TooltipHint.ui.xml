@@ -8,55 +8,84 @@
 	
 	<ui:style>
 	
-		.tooltip {
-			position:absolute;
-			left:150px;
-			right:150px;
-			height:39px;
-			/* top:16px; */
-			top:-4px;
-			background-color:rgb(247, 243, 176);
-			border-style:solid;
-			border-width:1px;
-			border-color:rgb(51, 51, 51);
-			min-width:300px;
-			border-radius:10px;
-			box-shadow: 10px 10px 5px #888888;
-			opacity:0;
+		.tooltip-table-panel {
+			position: absolute;
+			left: 30px;
+			right: 30px;
+			top: 22px;
 		}
 		
-		.label {
-			position:absolute;
-			left:10px; 
-			top:7px; 
-			right:40px; 
-			line-height:25px; 
-			height:25px; 
-			text-align:center;
-			font-family: Verdana,Arial,sans-serif;
-			font-size: 12px;
-			font-weight: bold;
+		.tooltip-table {
+			position: relative;
+			
+		    margin-left: auto;
+		    margin-right: auto;
+		    
+		    min-width: 500px;		    
+		    max-width: 1200px;
+		    
+		    min-height: 27px;
+		    
+		    color: #AE7508;
+		    background-color: #fdeb8f;
+		    border-color: #FBCD75;
+		    border-width: 1px;
+		    border-style: solid;
+		    border-radius: 5px 5px 5px 5px;
 		}
 		
-		.close-button {
-			position:absolute; 
-			top:9px; 
-			right:10px; 
-			width:20px; 
-			height:20px; 
-			opacity:0.5;	
+		.tooltip-table-message {
+			background: transparent;
+			color: #ae7508;
+		    font-family: Verdana,Bitstream Vera Sans,sans-serif;
+		    font-size: 11px;
+		    font-weight: normal;
+		    font-style: normal;
+		    line-height: 20px;
+		    text-align: center;
+		    vertical-align: middle;
+		    padding-left:10px;
+		    padding-right:15px;
+		    text-shadow: 0px 0px 5px rgba(0,0,0,0.1);		
 		}
 		
-		.close-button:HOVER {
-			opacity:1!important;
+		.tooltip-table-button {
+			width: 23px;
+			text-align: center;
+			vertical-align: middle;
+		}
+		
+		.tooltip-close-button {
+			width:13px;
+			height:13px;
+			background-color: transparent;
+			cursor: pointer;
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAhElEQVR42mNgoASc2WDy//xWh//Y5K7s8fp/+3gsqtyZ9Sb/t/YwgDG6xiu7PeFyKBpBCmESyBqRNYDwld1eqLahazwwjx1NgydWp2NoJKgBBtBtAPHxakD3A67AwakB3UYMjZihBPEDrlAFA1D44/I0skZQAkCxDaQRVyiBNGJoIBUAAC8TyL/BsskoAAAAAElFTkSuQmCC);			
+		}
+		
+		.tooltip-close-button:HOVER {
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAg0lEQVR42mNgoAQca9D7f7LV6j82uXM9Lv+vTg9HlTtWr/d/fQwDGKNrPNftDJdD0QhSCJNA1oisAYTPdbug2oaucVceI5oGZ6xOx9BIUAMMoNsA4uPVgO4HXIGDUwO6jRgaMUMJ4gdcoQoGoPDH5WlkjaAEgGIbSCOuUAJpxNBAKgAAAt+20WyQC0UAAAAASUVORK5CYII=);
+		}
+
+		.tooltip-close-button:ACTIVE {
+			opacity: 0.5;
 		}
 		
 	</ui:style>
-	
-	<g:FlowPanel styleName="{style.tooltip}">
-		<g:Label styleName="{style.label}" ui:field="label"></g:Label>
-		<g:Image styleName="{style.close-button}" resource="{resource.closeNotification}" ui:field="closeButton"></g:Image>
-	</g:FlowPanel>
-	
+
+	<g:HTMLPanel styleName="{style.tooltip-table-panel}">
+	  	<table class="{style.tooltip-table}">
+	  		<tr>
+	  			<td class="{style.tooltip-table-message}" ui:field="messageElement">
+					<b>Welcome to Codenvy!</b> This is a temporary workspace. 
+					It will be deleted if you are inactive or close the browser.
+					<b>Login</b> or <b>Create your account</b> to save your work.
+	  			</td>
+	  			<td class="{style.tooltip-table-button}">
+	  				<g:Label styleName="{style.tooltip-close-button}" ui:field="closeButton"></g:Label>
+	  			</td>
+	  		</tr>
+	  	</table>
+	</g:HTMLPanel>
+
 </ui:UiBinder>
- 

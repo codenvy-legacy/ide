@@ -29,37 +29,37 @@
 
 .ideMenuAdditionsTable {
     height: 20px;
+    margin-right: 4px;
 }
 
 .ideMenuAdditionsTable td {
     height: 20px;
-    color: #333333;
+    color: #FFFFFF;
     font-family: Verdana, Bitstream Vera Sans, sans-serif;
     font-size: 11px;
     font-style: normal;
     font-weight: normal;
-    padding-left: 8px;
-    padding-right: 8px;
+    padding-left: 13px;
+    padding-right: 13px;
     cursor: default;
 }
 
 .ideMenuAdditionsTable td:HOVER {
-    background: url('ui/menu/menu-item-over.png');
+	background-color: #707070;
 }
 
 .ideMenuAdditionsTable td:ACTIVE {
-    background: url('ui/menu/menu-item-selected.png');
+    background-color: #FFFFFF;
+    color: #404040;
 }
 
 .ideMenuAdditionsTable td a {
     height: 20px;
-    color: #333333;
+    color: #FFFFFF;
     font-family: Verdana, Bitstream Vera Sans, sans-serif;
     font-size: 11px;
     font-style: normal;
     font-weight: normal;
-    padding-left: 8px;
-    padding-right: 8px;
     cursor: default;
     text-decoration: none;
 }

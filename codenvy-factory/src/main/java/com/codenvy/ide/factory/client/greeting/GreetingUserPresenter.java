@@ -19,6 +19,7 @@
 package com.codenvy.ide.factory.client.greeting;
 
 import com.codenvy.ide.factory.client.FactoryClientBundle;
+import com.codenvy.ide.factory.client.copy.CopyProjectEvent;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.Style;
@@ -40,11 +41,11 @@ import com.google.gwt.user.client.ui.RootPanel;
 import org.exoplatform.gwtframework.ui.client.command.ui.AddToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarShadowButton;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEInitialConfiguration;
 import org.exoplatform.ide.client.framework.configuration.InitialConfigurationReceivedEvent;
 import org.exoplatform.ide.client.framework.configuration.InitialConfigurationReceivedHandler;
-import org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent;
-import org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 
@@ -54,7 +55,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
  */
 public class GreetingUserPresenter implements 
         InitialConfigurationReceivedHandler,
-        IDELoadCompleteHandler {
+        InitializeServicesHandler {
 
     public interface GreetingDisplay extends IsView {
     }
@@ -69,7 +70,7 @@ public class GreetingUserPresenter implements
      */
     public GreetingUserPresenter() {
         IDE.addHandler(InitialConfigurationReceivedEvent.TYPE, this);
-        IDE.addHandler(IDELoadCompleteEvent.TYPE, this);
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
     }
 
     /**
@@ -93,12 +94,9 @@ public class GreetingUserPresenter implements
             return null;
         }
     }-*/;
-
-    /**
-     * @see org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler#onIDELoadComplete(org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent)
-     */
+    
     @Override
-    public void onIDELoadComplete(IDELoadCompleteEvent event) {
+    public void onInitializeServices(InitializeServicesEvent event) {
         new Timer() {
             @Override
             public void run() {
@@ -144,6 +142,7 @@ public class GreetingUserPresenter implements
                FactoryClientBundle.INSTANCE.copyToMyWorkspace(), FactoryClientBundle.INSTANCE.copyToMyWorkspaceHover(), new ClickHandler() {
                    @Override
                    public void onClick(ClickEvent event) {
+                       IDE.fireEvent(new CopyProjectEvent());
                    }
                });        
         IDE.fireEvent(new AddToolbarItemsEvent(copyToMyWorkspaceButton, true));        
@@ -157,8 +156,7 @@ public class GreetingUserPresenter implements
 
         boolean workspaceTemporary = initialConfiguration.getCurrentWorkspace() == null ? false : initialConfiguration.getCurrentWorkspace().isTemporary();
         
-        String userName = initialConfiguration.getUserInfo().getName();
-        if (userName.equals("_anonim") || userName.equals("__anonim") || userName.startsWith("tmp-")) {
+        if (IDE.user.isTemporary()) {
             if (workspaceTemporary) {
                 key = "anonymous-workspace-temporary";
             } else {

@@ -43,7 +43,7 @@
             </value-param>
             <value-param>
                 <name>jenkins-user</name>
-                <value>vparfonov@codenvy.com</value>
+                <value>ci@codenvy.com</value>
             </value-param>
             <value-param>
                 <name>jenkins-password</name>
@@ -63,11 +63,11 @@
             </value-param>
             <value-param>
                 <name>api-key</name>
-                <value>E57D932D13BE6FC0C4495230EECA2C28CD608BB6</value>
+                <value>C0E7D6AFA8B7708F</value>
             </value-param>
             <value-param>
                 <name>api-secret</name>
-                <value>RJXGVL1HYWWM7W7TZB/LXOCJ2CIAVEPQMMFXHKM+ZTI=</value>
+                <value>PSHOHFOU5GFVCQDGEHD7WG0K31R71RJW7DRDCBVGJBO=</value>
             </value-param>
         </init-params>
     </component>

@@ -57,4 +57,15 @@ public abstract class FactoryClientService {
      */
     public abstract void share(String recipient, String message,
                               AsyncRequestCallback<Object> callback) throws RequestException;
+
+    /**
+     * Logs event generated during factory URL creation.
+     *
+     * @param vfsId
+     * @param projectId
+     * @param factoryUrl
+     * @throws RequestException
+     */
+    public abstract void logFactoryCreated(String vfsId, String projectId, String factoryUrl,
+                                           AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 }

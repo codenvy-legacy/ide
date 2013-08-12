@@ -409,6 +409,10 @@ public class Utils {
     public static native String getProjectToOpen() /*-{
         return $wnd.project;
      }-*/;
+
+    public static native String getStartUpParams() /*-{
+        return $wnd.startUpParams;
+    }-*/;
     
     public static native String getFilePathToOpen() /*-{
       if ($wnd.path)
