@@ -353,6 +353,7 @@ public class ExtensionLauncher implements Startable {
 
         // Use ProcessUtil because java.lang.Process.destroy() method doesn't
         // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
+        LOG.debug("Killing process tree");
         ProcessUtil.kill(extension.tomcatProcess);
         portManager.releasePorts(extension.shutdownPort, extension.httpPort, extension.ajpPort);
         codeServerPortManager.releasePort(extension.codeServer.getConfiguration().getPort());

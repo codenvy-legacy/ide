@@ -26,6 +26,8 @@ import org.apache.maven.model.Plugin;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,6 +47,8 @@ import static org.codehaus.plexus.util.xml.Xpp3DomBuilder.build;
  * @version $Id: DefaultCodeServer.java Jul 26, 2013 3:15:52 PM azatsarynnyy $
  */
 public class DefaultCodeServer implements CodeServer {
+    private static final Log        LOG = ExoLogger.getLogger(DefaultCodeServer.class);
+
     /** Process that represents a started code server. */
     private Process                 process;
 
@@ -98,6 +102,7 @@ public class DefaultCodeServer implements CodeServer {
 
         // Use ProcessUtil because java.lang.Process.destroy() method doesn't
         // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
+        LOG.debug("Killing process tree");
         ProcessUtil.kill(process);
     }
 
