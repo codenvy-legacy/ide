@@ -37,6 +37,8 @@ public interface WizardResource extends ClientBundle {
         String greyFontColor();
 
         String cursorPointer();
+
+        String line();
     }
 
     @Source({"Wizard.css", "com/codenvy/ide/api/ui/style.css"})

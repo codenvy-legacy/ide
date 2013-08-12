@@ -32,3 +32,7 @@
 .cursorPointer {
     cursor: pointer;
 }
+
+.line {
+    border-bottom: 1px solid #DBDFE5;
+}
