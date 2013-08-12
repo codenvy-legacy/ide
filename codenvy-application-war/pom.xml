@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
-        <version>2.5.3-SNAPSHOT</version>
+        <version>2.6.0-SNAPSHOT</version>
     </parent>
     <groupId>org.exoplatform.ide</groupId>
     <artifactId>codenvy-application-war</artifactId>
@@ -376,8 +376,9 @@
                         <phase>prepare-package</phase>
                         <configuration>
                             <tasks>
-                               <!--  <unjar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar" dest="${project.build.directory}/share" /> -->
-                                 <unwar src="${project.build.directory}/dependency/exo-ide-packaging-shell-war-${project.version}.war" dest="${project.build.directory}/unwar/shell">
+                               <!--  <unjar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar"
+                                       dest="${project.build.directory}/share"/> -->
+                                 <unwar src="${project.build.directory}/dependency/exo-ide-packaging-shell-war-${project.version}.war" dest="${project.build.directory}/unwar/shell" >
 	                                <patternset>
 	                                    <exclude name="**/META-INF/**" />
 	                                    <exclude name="**/WEB-INF/**" />
@@ -385,7 +386,7 @@
 	                                </patternset>
                                 </unwar>
                                 <copy todir="${project.build.directory}/${project.artifactId}-${project.version}/_app">
-                                    <fileset dir="${project.build.directory}/unwar/shell" />
+                                    <fileset dir="${project.build.directory}/unwar/shell"/>
                                 </copy>
                             </tasks>
                         </configuration>

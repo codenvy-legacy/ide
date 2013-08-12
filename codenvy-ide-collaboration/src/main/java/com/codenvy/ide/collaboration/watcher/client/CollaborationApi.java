@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.collaboration.watcher.client;
 
+import com.codenvy.ide.collaboration.dto.DisableEnableCollaborationDto;
 import com.codenvy.ide.collaboration.dto.ProjectClosedDto;
 import com.codenvy.ide.collaboration.dto.ProjectOpenedDto;
 import com.codenvy.ide.collaboration.dto.ProjectOperationNotification;
@@ -39,6 +40,8 @@ public class CollaborationApi extends FrontendApi {
     public final SendApi<ProjectClosedDto> PROJECT_CLOSED = makeApi(Utils.getWorkspaceName() + "/vfs/watch/project/closed");
 
     public final SendApi<ProjectOperationNotification> PROJECT_NOTOFICATION = makeApi("ide/collaboration/notification/project");
+
+    public final SendApi<DisableEnableCollaborationDto> DISABLE_ENABLE_COLLAB = makeApi("ide/collaboration/notification/switch/collaboration");
 
 
     public CollaborationApi(MessageBus messageBus) {

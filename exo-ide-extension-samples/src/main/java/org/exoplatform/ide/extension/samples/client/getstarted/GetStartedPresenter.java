@@ -26,6 +26,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 
@@ -455,7 +456,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
      * @param project {@link ProjectModel}
      */
     private void writeUseJRebelProperty(ProjectModel project) {
-        project.getProperties().add(new PropertyImpl(JREBEL, String.valueOf(true)));
+        project.getProperties().add(new PropertyImpl(JREBEL, String.valueOf(!IDE.user.isTemporary())));
         try {
             VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
 

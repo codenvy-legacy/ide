@@ -23,7 +23,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Codenvy Shell</title>
-    
+
     <%!
       public String genShellStaticResourceUrl(HttpServletRequest request, String name) {
         return request.getContextPath() + "/" + request.getAttribute("ws") + "/_app/" + name;
@@ -38,7 +38,39 @@
         var ws = "<%= request.getAttribute("ws")%>";
     </script>
 
+    <script>
+        var isTargetWindow = false;
+        var uuid;
+
+        window.onload = function () {
+            uuid = generate();
+            sendSessionStatus("shell", uuid, "start");
+        }
+
+        window.onunload = function () {
+            sendSessionStatus("shell", uuid, "stop");
+        }
+
+        window.onfocus = function () {
+            if (isTargetWindow == true) {
+                isTargetWindow = false;
+                uuid = generate();
+                sendSessionStatus("shell", uuid, "start");
+            }
+            return false;
+        }
+
+        window.onblur = function () {
+            if (isTargetWindow == false) {
+                isTargetWindow = true;
+                sendSessionStatus("shell", uuid, "stop");
+            }
+            return false;
+        }
+    </script>
+
     <link rel="shortcut icon" href='<%= genShellStaticResourceUrl(request, "favicon.ico")%>'/>
+    <script type="text/javascript" language="javascript" src='<%= genShellStaticResourceUrl(request, "session.js")%>'></script>
     <script type="text/javascript" language="javascript" src='<%= genShellStaticResourceUrl(request, "Shell.nocache.js")%>'></script>
 </head>
 

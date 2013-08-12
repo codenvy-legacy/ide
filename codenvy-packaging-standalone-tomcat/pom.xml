@@ -6,12 +6,13 @@
 	License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
 	if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF 
 	site: http://www.fsf.org. -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.exoplatform.ide</groupId>
 		<artifactId>exo-ide-parent</artifactId>
-		<version>2.5.3-SNAPSHOT</version>
+		<version>2.6.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>codenvy-packaging-standalone-tomcat</artifactId>
@@ -199,10 +200,15 @@
                               <move file="${project.build.directory}/packager-conf/jar/logback-classic.jar" tofile="${project.build.directory}/tomcat-ide/lib/logback-classic.jar" />
                               <move file="${project.build.directory}/packager-conf/jar/slf4j-api.jar" tofile="${project.build.directory}/tomcat-ide/lib/slf4j-api.jar" />
                               <move file="${project.build.directory}/packager-conf/jar/jul-to-slf4j.jar" tofile="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j.jar" />
-                              <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true" />
-                              <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true" />
-                              <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true" />
-                              <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true" />
+                              <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war"
+                                 tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true" />
+                              <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war"
+                                 overwrite="true" />
+                              <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war"
+                                 tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true" />
+                              <copy
+                                 file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war"
+                                 tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true" />
                               <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}/tomcat-ide" />
                               <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}/tomcat-ide">
                                  <patternset>
@@ -270,7 +276,8 @@
 								<phase>prepare-package</phase>
 								<configuration>
 									<tasks>
-										<unwar src="${project.build.directory}/packager-conf/war/codenvy-application-war-${project.version}.war" dest="${project.build.directory}/packager-conf/war/ide">
+										<unwar src="${project.build.directory}/packager-conf/war/codenvy-application-war-${project.version}.war"
+											dest="${project.build.directory}/packager-conf/war/ide">
 										</unwar>
 										<war destfile="${project.build.directory}/tomcat-ide/webapps/ide.war" needxmlfile="false">
 											<fileset dir="${project.build.directory}/packager-conf/war/ide" />
@@ -301,15 +308,16 @@
                         <phase>prepare-package</phase>
                         <configuration>
                            <tasks>
-                              <unwar src="${project.build.directory}/packager-conf/war/codenvy-application-war-${project.version}.war" dest="${project.build.directory}/packager-conf/war/ide">
+                              <unwar src="${project.build.directory}/packager-conf/war/codenvy-application-war-${project.version}.war"
+                                 dest="${project.build.directory}/packager-conf/war/ide">
                               </unwar>
                               <move todir="${project.build.directory}/packager-conf/war/ide/">
-                                 <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/" />
+                                 <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/"/>
                               </move>
-                              <copy file="${project.basedir}/src/main/resources/devmode/web.xml" tofile="${project.build.directory}/packager-conf/war/ide/WEB-INF/web.xml" overwrite="true" />
-                              <copy file="${project.basedir}/src/main/resources/devmode/DevMode.html" tofile="${project.build.directory}/packager-conf/war/ide/DevMode.html" overwrite="true" />
-                              <copy file="${project.basedir}/src/main/resources/devmode/login.html" tofile="${project.build.directory}/packager-conf/war/ide/login.html" overwrite="true" />
-                              <copy file="${project.basedir}/src/main/resources/devmode/logout.jsp" tofile="${project.build.directory}/packager-conf/war/ide/logout.jsp" overwrite="true" />
+                              <copy file="${project.basedir}/src/main/resources/devmode/web.xml" tofile="${project.build.directory}/packager-conf/war/ide/WEB-INF/web.xml" overwrite="true"/>
+                              <copy file="${project.basedir}/src/main/resources/devmode/DevMode.html" tofile="${project.build.directory}/packager-conf/war/ide/DevMode.html" overwrite="true"/>
+                              <copy file="${project.basedir}/src/main/resources/devmode/login.html" tofile="${project.build.directory}/packager-conf/war/ide/login.html" overwrite="true"/>
+                              <copy file="${project.basedir}/src/main/resources/devmode/logout.jsp" tofile="${project.build.directory}/packager-conf/war/ide/logout.jsp" overwrite="true"/>
                               <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
                                  <fileset dir="${project.build.directory}/packager-conf/war/ide" />
                               </war>

@@ -39,13 +39,16 @@ public class ProjectUnmarshaller implements Unmarshallable<ProjectModel> {
     /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
+        doUnmarshal(response.getText());
+    }
+
+    protected void doUnmarshal(String text) throws UnmarshallerException {
         try {
-            item.init(JSONParser.parseLenient(response.getText()).isObject());
+            item.init(JSONParser.parseLenient(text).isObject());
         } catch (Exception exc) {
-            String message = "Can't parse item " + response.getText();
+            String message = "Can't parse item " + text;
             throw new UnmarshallerException(message);
         }
-
     }
 
     @Override

@@ -48,4 +48,18 @@ public class NotificationService {
         broadcast.remove(notification.clientId());
         VfsWatcher.broadcastToClients(message, broadcast);
     }
+
+    @POST
+    @Path("switch/collaboration")
+    public void switchCollaboration(String message){
+        DtoServerImpls.DisableEnableCollaborationDtoImpl dto =
+                DtoServerImpls.DisableEnableCollaborationDtoImpl.fromJsonString(message);
+        Set<String> users = projectUsers.getProjectUsers(dto.projectId());
+        if(users == null){
+            return;
+        }
+        Set<String> set = new HashSet<>(users);
+        set.remove(dto.clientId());
+        VfsWatcher.broadcastToClients(message, set);
+    }
 }

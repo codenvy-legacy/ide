@@ -5,7 +5,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>2.5.0-SNAPSHOT</version>
+      <version>2.6.0-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-dev-mode</artifactId>
@@ -54,6 +54,8 @@
          <artifactId>exo-ide-websocket</artifactId>
       </dependency>
       
+      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-jsp</artifactId>
@@ -223,10 +225,15 @@
       </dependency>
 
       <dependency>
-			<groupId>org.exoplatform.ide</groupId>
-			<artifactId>exo-ide-editor-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-api</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>codenvy-factory</artifactId>
+      </dependency>
    </dependencies>
 
    <build>
@@ -331,165 +338,165 @@
             </executions>
          </plugin>
          <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-dependency-plugin</artifactId>
-                  <executions>
-                     <execution>
-                        <id>copy-lucene-autocomplite-index</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                           <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                           <stripVersion>true</stripVersion>
-                           <artifactItems>
-                              <artifactItem>
-                                 <groupId>org.exoplatform.ide</groupId>
-                                 <artifactId>ide-codeassistant-lucene-index</artifactId>
-                                 <version>${ide.codeassistant.lucene.index.version}</version>
-                                 <type>zip</type>
-                              </artifactItem>
-                           </artifactItems>
-                           <outputDirectory>${project.build.directory}</outputDirectory>
-                        </configuration>
-                     </execution>
-                     <execution>
-                        <id>copy-appengine-zip</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                           <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                           <stripVersion>true</stripVersion>
-                           <outputDirectory>${project.build.directory}/packager-conf/appengine</outputDirectory>
-                           <artifactItems>
-                              <artifactItem>
-                                 <groupId>com.google.appengine</groupId>
-                                 <artifactId>appengine-java-sdk</artifactId>
-                                 <version>${appengine.version}</version>
-                                 <type>zip</type>
-                              </artifactItem>
-                              <artifactItem>
-                                 <groupId>com.google.appengine</groupId>
-                                 <artifactId>appengine-python-sdk</artifactId>
-                                 <version>${appengine.version}</version>
-                                 <type>zip</type>
-                              </artifactItem>
-                           </artifactItems>
-                        </configuration>
-                     </execution>
-                  </executions>
-               </plugin>
-               <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-resources-plugin</artifactId>
-                  <executions>
-                     <execution>
-                        <id>copy-prod-resources</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                           <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                           <outputDirectory>target/war/WEB-INF/</outputDirectory>
-                           <resources>
-                              <resource>
-                                 <directory>src/main/webapp</directory>
-                                 <filtering>true</filtering>
-                              </resource>
-                           </resources>
-                           <nonFilteredFileExtensions>
-                              <nonFilteredFileExtension>zip</nonFilteredFileExtension>
-                           </nonFilteredFileExtensions>
-                        </configuration>
-                     </execution>
-                  </executions>
-               </plugin>
-               <plugin>
-                  <artifactId>maven-antrun-plugin</artifactId>
-                  <executions>
-                     <execution>
-                        <id>create-git-folders</id>
-                        <phase>compile</phase>
-                        <goals>
-                           <goal>run</goal>
-                        </goals>
-                        <configuration>
-                           <tasks>
-                              <mkdir dir="target/git/repository/dev-monit"/>
-                              <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
-                                     dest="${project.build.directory}"/>
-                              overwrite="true" /&gt;
-                              <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip"
-                                     dest="${project.build.directory}">
-                                 <patternset>
-                                    <exclude name="**/bin/**"/>
-                                    <exclude name="**/demos/**"/>
-                                    <exclude name="**/src/**"/>
-                                    <exclude name="**/docs/javadoc/**"/>
-                                    <exclude name="**/docs/remoteapi/**"/>
-                                    <exclude name="**/docs/testing/**"/>
-                                    <exclude name="**/docs/tools/**"/>
-                                    <exclude name="**/docs/javadoc/**"/>
-                                    <exclude name="**/ABOUT"/>
-                                    <exclude name="**/COPYING"/>
-                                    <exclude name="**/README"/>
-                                    <exclude name="**/README.ORM"/>
-                                    <exclude name="**/RELEASE_NOTES"/>
-                                    <exclude name="**/RELEASE_NOTES.ORM"/>
-                                 </patternset>
-                              </unzip>
-                              <move file="${project.build.directory}/appengine-java-sdk-${appengine.version}"
-                                    tofile="${project.build.directory}/appengine-java-sdk"/>
-
-
-                              <unzip src="${project.build.directory}/packager-conf/appengine/appengine-python-sdk.zip"
-                                     dest="${project.build.directory}">
-                                 <patternset>
-                                    <exclude name="**/demos/**"/>
-                                    <exclude name="**/new_project_template/**"/>
-                                    <exclude name="**/BUGS"/>
-                                    <exclude name="**/LICENSE"/>
-                                    <exclude name="**/README"/>
-                                    <exclude name="**/RELEASE_NOTES"/>
-                                    <exclude name="**/VERSION"/>
-                                 </patternset>
-                              </unzip>
-                              <move file="${project.build.directory}/google_appengine"
-                                    tofile="${project.build.directory}/appengine-python-sdk"/>
-
-                           </tasks>
-                        </configuration>
-                     </execution>
-                  </executions>
-               </plugin>
-
-               <plugin>
-                  <groupId>org.codehaus.mojo</groupId>
-                  <artifactId>gwt-maven-plugin</artifactId>
-                  <version>${version.gwt.plugin}</version>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>copy-lucene-autocomplite-index</id>
+                  <phase>process-resources</phase>
+                  <goals>
+                     <goal>copy</goal>
+                  </goals>
                   <configuration>
-                     <runTarget>org.exoplatform.ide.Shell/Shell.html</runTarget>
-                     <logLevel>INFO</logLevel>
-                     <hostedWebapp>${basedir}/target/war</hostedWebapp>
-                     <skipTests>${gwt.test.skip}</skipTests>
-                     <!-- <port>${gwt.port}</port> -->
-                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.server.fs-root-path=target/git -Dorg.exoplatform.ide.git.server=git -Dorg.exoplatform.mimetypes=conf/mimetypes.properties</extraJvmArgs>
+                     <stripVersion>true</stripVersion>
+                     <artifactItems>
+                        <artifactItem>
+                           <groupId>org.exoplatform.ide</groupId>
+                           <artifactId>ide-codeassistant-lucene-index</artifactId>
+                           <version>${ide.codeassistant.lucene.index.version}</version>
+                           <type>zip</type>
+                        </artifactItem>
+                     </artifactItems>
+                     <outputDirectory>${project.build.directory}</outputDirectory>
                   </configuration>
-               </plugin>
-
-               <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-compiler-plugin</artifactId>
+               </execution>
+               <execution>
+                  <id>copy-appengine-zip</id>
+                  <phase>process-resources</phase>
+                  <goals>
+                     <goal>copy</goal>
+                  </goals>
                   <configuration>
-                     <source>${maven.compiler.source}</source>
-                     <target>${maven.compiler.target}</target>
-                     <showWarnings>false</showWarnings>
-                     <excludes>
-                        <exclude>**/IDEGadget.java</exclude>
-                     </excludes>
+                     <stripVersion>true</stripVersion>
+                     <outputDirectory>${project.build.directory}/packager-conf/appengine</outputDirectory>
+                     <artifactItems>
+                        <artifactItem>
+                           <groupId>com.google.appengine</groupId>
+                           <artifactId>appengine-java-sdk</artifactId>
+                           <version>${appengine.version}</version>
+                           <type>zip</type>
+                        </artifactItem>
+                        <artifactItem>
+                           <groupId>com.google.appengine</groupId>
+                           <artifactId>appengine-python-sdk</artifactId>
+                           <version>${appengine.version}</version>
+                           <type>zip</type>
+                        </artifactItem>
+                     </artifactItems>
                   </configuration>
-               </plugin>
-            </plugins>
-         </build>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>copy-prod-resources</id>
+                  <phase>process-resources</phase>
+                  <goals>
+                     <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+                     <outputDirectory>target/war/WEB-INF/</outputDirectory>
+                     <resources>
+                        <resource>
+                           <directory>src/main/webapp</directory>
+                           <filtering>true</filtering>
+                        </resource>
+                     </resources>
+                     <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>zip</nonFilteredFileExtension>
+                     </nonFilteredFileExtensions>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>create-git-folders</id>
+                  <phase>compile</phase>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+                  <configuration>
+                     <tasks>
+                        <mkdir dir="target/git/repository/dev-monit"/>
+                        <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
+                               dest="${project.build.directory}"/>
+                        overwrite="true" /&gt;
+                        <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip"
+                               dest="${project.build.directory}">
+                           <patternset>
+                              <exclude name="**/bin/**"/>
+                              <exclude name="**/demos/**"/>
+                              <exclude name="**/src/**"/>
+                              <exclude name="**/docs/javadoc/**"/>
+                              <exclude name="**/docs/remoteapi/**"/>
+                              <exclude name="**/docs/testing/**"/>
+                              <exclude name="**/docs/tools/**"/>
+                              <exclude name="**/docs/javadoc/**"/>
+                              <exclude name="**/ABOUT"/>
+                              <exclude name="**/COPYING"/>
+                              <exclude name="**/README"/>
+                              <exclude name="**/README.ORM"/>
+                              <exclude name="**/RELEASE_NOTES"/>
+                              <exclude name="**/RELEASE_NOTES.ORM"/>
+                           </patternset>
+                        </unzip>
+                        <move file="${project.build.directory}/appengine-java-sdk-${appengine.version}"
+                              tofile="${project.build.directory}/appengine-java-sdk"/>
+
+
+                        <unzip src="${project.build.directory}/packager-conf/appengine/appengine-python-sdk.zip"
+                               dest="${project.build.directory}">
+                           <patternset>
+                              <exclude name="**/demos/**"/>
+                              <exclude name="**/new_project_template/**"/>
+                              <exclude name="**/BUGS"/>
+                              <exclude name="**/LICENSE"/>
+                              <exclude name="**/README"/>
+                              <exclude name="**/RELEASE_NOTES"/>
+                              <exclude name="**/VERSION"/>
+                           </patternset>
+                        </unzip>
+                        <move file="${project.build.directory}/google_appengine"
+                              tofile="${project.build.directory}/appengine-python-sdk"/>
+
+                     </tasks>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+
+         <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>gwt-maven-plugin</artifactId>
+            <version>${version.gwt.plugin}</version>
+            <configuration>
+               <runTarget>org.exoplatform.ide.Shell/Shell.html</runTarget>
+               <logLevel>INFO</logLevel>
+               <hostedWebapp>${basedir}/target/war</hostedWebapp>
+               <skipTests>${gwt.test.skip}</skipTests>
+               <!-- <port>${gwt.port}</port> -->
+               <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.server.fs-root-path=target/git -Dorg.exoplatform.ide.git.server=git -Dorg.exoplatform.mimetypes=conf/mimetypes.properties</extraJvmArgs>
+            </configuration>
+         </plugin>
+
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+               <source>${maven.compiler.source}</source>
+               <target>${maven.compiler.target}</target>
+               <showWarnings>false</showWarnings>
+               <excludes>
+                  <exclude>**/IDEGadget.java</exclude>
+               </excludes>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
 </project>

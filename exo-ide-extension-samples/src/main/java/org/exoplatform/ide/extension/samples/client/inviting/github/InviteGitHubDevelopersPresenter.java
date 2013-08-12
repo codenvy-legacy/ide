@@ -206,7 +206,8 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
      */
     @Override
     public void onCloneRepositoryComplete(CloneRepositoryCompleteEvent event) {
-        loadGitHubCollaborators(event.getUser(), event.getRepositoryName(), false);
+        if (!IDE.currentWorkspace.isTemporary())
+            loadGitHubCollaborators(event.getUser(), event.getRepositoryName(), false);
     }
 
     /**

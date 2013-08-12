@@ -42,8 +42,10 @@ public class Dialog {
     private String                      message;
     private StringValueReceivedHandler  stringValueReceivedHandler;
     private String                      title;
-    private Type                        type;
-    private boolean                     modal;
+    private String                      confirmButton;
+    private String                      cancelButton;
+    private Type type;
+    private boolean modal;
 
     public Dialog(String title, String message, Type type) {
         this.title = title;
@@ -55,6 +57,14 @@ public class Dialog {
     public Dialog(String title, String message, Type type, boolean modal) {
         this.title = title;
         this.message = message;
+        this.type = type;
+        this.modal = modal;
+    }
+
+    public Dialog(String title, String message, String confirmButton, Type type, boolean modal) {
+        this.title = title;
+        this.message = message;
+        this.confirmButton = confirmButton;
         this.type = type;
         this.modal = modal;
     }
@@ -115,4 +125,19 @@ public class Dialog {
         this.type = type;
     }
 
+    public String getConfirmButton() {
+        return confirmButton;
+    }
+
+    public void setConfirmButton(String confirmButton) {
+        this.confirmButton = confirmButton;
+    }
+
+    public String getCancelButton() {
+        return cancelButton;
+    }
+
+    public void setCancelButton(String cancelButton) {
+        this.cancelButton = cancelButton;
+    }
 }

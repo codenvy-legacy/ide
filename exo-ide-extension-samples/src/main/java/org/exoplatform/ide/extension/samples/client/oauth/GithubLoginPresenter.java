@@ -68,7 +68,7 @@ public class GithubLoginPresenter implements GithubLoginHandler, ViewClosedHandl
                 String authUrl = Utils.getAuthorizationContext()
                                  + "/ide/oauth/authenticate?oauth_provider=github"
                                  + "&scope=user&userId=" + IDE.user.getName()
-                                 + "&scope=repo&redirect_after_login=/w/" + Utils.getWorkspaceName();
+                                 + "&scope=repo&redirect_after_login=/ide/" + Utils.getWorkspaceName();
                 JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500,
                                                                        GithubLoginPresenter.this);
                 authWindow.loginWithOAuth();

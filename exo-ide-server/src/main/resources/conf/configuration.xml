@@ -12,7 +12,7 @@
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
     <component>
-        <type>org.exoplatform.ide.IDEServiceApplication</type>
+        <type>com.codenvy.ide.IDEServiceApplication</type>
     </component>
 
     <!-- JRebel consumer service -->
@@ -20,10 +20,6 @@
         <type>org.exoplatform.ide.jrebel.server.JRebelConsumerApplication</type>
     </component>
     
-    <component>
-        <type>com.codenvy.ide.logger.LogEventApplication</type>
-    </component>
-
     <component>
          <type>com.codenvy.organization.invite.InviteService</type>
     </component>

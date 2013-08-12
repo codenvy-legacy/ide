@@ -31,25 +31,63 @@
      %>
 
     <script type="text/javascript" language="javascript">
+	var ide_base_path = '<%=request.getContextPath() + "/" + request.getAttribute("ws") + "/_app/"%>';
+
         var appConfig = {
             "context": "/ide/rest/",
             "websocketContext": "/ide/websocket/"
-        }
+        };
+
         var hiddenFiles = ".*";
         var ws = "<%= request.getAttribute("ws")%>";
         var project = <%= request.getAttribute("project") != null ? "\"" + request.getAttribute("project")  + "\"" : null%>;
         var path = <%= request.getAttribute("path") != null ? "\"" + request.getAttribute("path")  + "\"" : null%>;
+        var startUpParams = <%= request.getAttribute("startUpParams") != null ? "\"?" + request.getAttribute("startUpParams")  + "\"" : null%>;
         var authorizationContext = "/rest";
         var authorizationErrorPageURL = "/ide/ide/error_oauth.html";
         var securityCheckURL = "/ide/j_security_check";
+        var isTargetWindow = false;
+        var uuid;
+        var buildMenu = function(){
+        };
+
+        window.onload = function () {
+            buildMenu();
+            uuid = generate();
+            sendSessionStatus("ide", uuid, "start");
+        }
+
+        window.onunload = function () {
+            sendSessionStatus("ide", uuid, "stop");
+        }
+
+        window.onfocus = function () {
+            if (isTargetWindow == true) {
+                isTargetWindow = false;
+                uuid = generate();
+                sendSessionStatus("ide", uuid, "start");
+            }
+            return false;
+        }
+
+        window.onblur = function () {
+            if (isTargetWindow == false) {
+                isTargetWindow = true;
+                sendSessionStatus("ide", uuid, "stop");
+            }
+            return false;
+        }
+
+        window.buildMenu = function () {
+        }
     </script>
 
     <link rel="shortcut icon" href="/images/favicon.ico"/>
-<!--
-    <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "_app.nocache.js")%>'></script>
--->
+
+    <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "greeting.js")%>'></script>
+
     <link type="text/css" rel="stylesheet" href='<%= genIdeStaticResourceUrl(request, "top-menu.css")%>' media="all"/>
-    <link href='<%= genIdeStaticResourceUrl(request, "css/ide.css")%>' media="screen" rel="stylesheet" type="text/css"/>
+    <link href='<%= genIdeStaticResourceUrl(request, "css/ide01.css")%>' media="screen" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
@@ -74,6 +112,7 @@
     </table>
 </div>
 
+<script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "session.js")%>'></script>
 <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "cloud_menu.js")%>'></script>
 
 
@@ -93,7 +132,7 @@
 <script>
   var _gaq = _gaq || [];
   if (window.location.hostname == 'localhost')
-    {//patch for tracking localhost in chrome 
+    {//patch for tracking localhost in chrome
     _gaq.push(['_setDomainName', 'none']); }
     _gaq.push(
       ['_setAccount', "UA-37306001-1"], // codenvy account

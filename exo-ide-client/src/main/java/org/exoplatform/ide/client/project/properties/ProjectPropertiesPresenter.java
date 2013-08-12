@@ -271,8 +271,9 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
             display.setDeleteButtonEnabled(false);
             return;
         }
-            
-        if (selectedProperty.getName().equals(ProjectProperties.MIME_TYPE.value())) {
+
+        if (selectedProperty.getName().equals(ProjectProperties.MIME_TYPE.value())
+            || (selectedProperty.getName().equals(ProjectProperties.JREBEL.value()) && IDE.user.isTemporary())) {
             display.setEditButtonEnabled(false);
         } else {
             display.setEditButtonEnabled(true);

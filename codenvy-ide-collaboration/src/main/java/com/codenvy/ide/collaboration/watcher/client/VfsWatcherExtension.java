@@ -18,17 +18,26 @@
  */
 package com.codenvy.ide.collaboration.watcher.client;
 
+import com.codenvy.ide.collaboration.dto.DisableEnableCollaborationDto;
+import com.codenvy.ide.collaboration.dto.RoutingTypes;
+import com.codenvy.ide.collaboration.dto.client.DtoClientImpls;
 import com.codenvy.ide.dtogen.client.RoutableDtoClientImpl;
+import com.codenvy.ide.dtogen.shared.ServerError;
 import com.codenvy.ide.dtogen.shared.ServerToClientDto;
 import com.codenvy.ide.json.client.Jso;
-
 import com.codenvy.ide.notification.NotificationManager;
+import com.google.collide.client.bootstrap.BootstrapSession;
+import com.google.collide.client.disable.DisableEnableCollaborationEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 
+import org.exoplatform.ide.client.framework.event.CollaborationChangedEvent;
+import org.exoplatform.ide.client.framework.event.CollaborationChangedHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
+import org.exoplatform.ide.client.framework.websocket.FrontendApi;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.MessageHandler;
@@ -37,7 +46,8 @@ import org.exoplatform.ide.client.framework.websocket.events.MessageHandler;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class VfsWatcherExtension extends Extension implements ConnectionOpenedHandler, UserInfoReceivedHandler {
+public class VfsWatcherExtension extends Extension implements ConnectionOpenedHandler, UserInfoReceivedHandler,
+                                                              CollaborationChangedHandler {
 
     private UserInfo userInfo;
 
@@ -48,8 +58,9 @@ public class VfsWatcherExtension extends Extension implements ConnectionOpenedHa
     private boolean connectionOpened = false;
 
     public static VfsWatcherExtension instance;
+    private HandlerRegistration handlerRegistration;
 
-    public static VfsWatcherExtension get(){
+    public static VfsWatcherExtension get() {
         return instance;
     }
 
@@ -59,6 +70,7 @@ public class VfsWatcherExtension extends Extension implements ConnectionOpenedHa
         instance = this;
         IDE.eventBus().addHandler(UserInfoReceivedEvent.TYPE, this);
         IDE.messageBus().setOnOpenHandler(this);
+        handlerRegistration = IDE.addHandler(CollaborationChangedEvent.TYPE, this);
     }
 
     /** {@inheritDoc} */
@@ -80,13 +92,36 @@ public class VfsWatcherExtension extends Extension implements ConnectionOpenedHa
                 messageFilter.dispatchMessage(dto);
             }
         });
+        messageFilter.registerMessageRecipient(RoutingTypes.DISABLE_ENABLE_COLLABORATION, new FrontendApi.ApiCallback<DisableEnableCollaborationDto>() {
+            @Override
+            public void onFail(ServerError.FailureReason reason) {
+            }
+
+            @Override
+            public void onMessageReceived(DisableEnableCollaborationDto message) {
+                handlerRegistration.removeHandler();
+                IDE.fireEvent(new DisableEnableCollaborationEvent(message.isEnabled(), false));
+                handlerRegistration = IDE.addHandler(CollaborationChangedEvent.TYPE, VfsWatcherExtension.this);
+            }
+        });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onConnectionOpened() {
         connectionOpened = true;
         if (userInfo != null) {
             subscribe();
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onCollaborationChanged(CollaborationChangedEvent event) {
+        DtoClientImpls.DisableEnableCollaborationDtoImpl dto = DtoClientImpls.DisableEnableCollaborationDtoImpl.make();
+        dto.setIsEnabled(event.isEnabled());
+        dto.setProjectId(event.getProject().getId());
+        dto.setClientId(BootstrapSession.getBootstrapSession().getActiveClientId());
+        collaborationApi.DISABLE_ENABLE_COLLAB.send(dto);
     }
 }

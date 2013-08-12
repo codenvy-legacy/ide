@@ -19,35 +19,32 @@
 package org.exoplatform.ide.client.application;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.factory.client.FactorySpec10;
+import com.codenvy.ide.factory.client.copy.CopySpec10;
+import com.codenvy.ide.factory.client.receive.StartWithInitParamsEvent;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window.Location;
-import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.AddToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
-import org.exoplatform.gwtframework.ui.client.component.IconButton;
+import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarShadowButton;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.codenow.CodeNowSpec10;
-import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.configuration.IDEInitialConfiguration;
+import org.exoplatform.ide.client.framework.configuration.InitialConfigurationReceivedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
@@ -60,7 +57,6 @@ import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.menu.RefreshMenuEvent;
 import org.exoplatform.ide.client.model.IDEConfigurationLoader;
 import org.exoplatform.ide.client.model.IDEConfigurationUnmarshaller;
-import org.exoplatform.ide.client.model.IDEInitializationConfiguration;
 import org.exoplatform.ide.client.model.Settings;
 import org.exoplatform.ide.client.model.SettingsService;
 import org.exoplatform.ide.client.model.SettingsServiceImpl;
@@ -74,6 +70,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,8 +95,6 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
     private String               initialActiveFile;
 
-    protected ReadOnlyUserView   readOnlyUserView;
-
     /** @param controls */
     public IDEConfigurationInitializer(ControlsRegistration controls) {
         super();
@@ -108,17 +104,18 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
     public void loadConfiguration() {
         new IDEConfigurationLoader(IDE.eventBus(), IDELoader.get())
-                                                                   .loadConfiguration(new AsyncRequestCallback<IDEInitializationConfiguration>(
-                                                                                                                                               new IDEConfigurationUnmarshaller(
-                                                                                                                                                                                new IDEInitializationConfiguration(),
-                                                                                                                                                                                new JSONObject(
-                                                                                                                                                                                               IDEConfigurationLoader.getAppConfig()))) {
+                                                                   .loadConfiguration(new AsyncRequestCallback<IDEInitialConfiguration>(
+                                                                                                                                        new IDEConfigurationUnmarshaller(
+                                                                                                                                                                         new IDEInitialConfiguration(),
+                                                                                                                                                                         new JSONObject(
+                                                                                                                                                                                        IDEConfigurationLoader.getAppConfig()))) {
                                                                        @Override
-                                                                       protected void onSuccess(IDEInitializationConfiguration result) {
+                                                                       protected void onSuccess(IDEInitialConfiguration result) {
                                                                            try {
                                                                                applicationConfiguration = result.getIdeConfiguration();
                                                                                applicationSettings = result.getSettings();
                                                                                IDE.user = result.getUserInfo();
+                                                                               IDE.currentWorkspace = result.getCurrentWorkspace();
 
                                                                                // TODO: small hack need because currently user on client
                                                                                // must have it least one role
@@ -128,7 +125,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                                          .setRoles(Arrays.asList("not-in-role"));
 
 
-                                                                               controls.initControls(result.getUserInfo().getRoles());
+                                                                               controls.initControls(result.getUserInfo().getRoles(),
+                                                                                                     result.getCurrentWorkspace());
 
 
                                                                                new SettingsServiceImpl(IDE.eventBus(), result.getUserInfo()
@@ -149,8 +147,6 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                                    initialOpenedFiles.addAll(openedFiles);
                                                                                }
 
-                                                                               IDE.fireEvent(new ConfigurationReceivedSuccessfullyEvent(
-                                                                                                                                        applicationConfiguration));
 
                                                                                String hiddenFilesParameter =
                                                                                                              applicationConfiguration.getHiddenFiles();
@@ -161,6 +157,10 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                                }
                                                                                DirectoryFilter.get().setPattern(hiddenFilesParameter);
 
+                                                                               IDE.fireEvent(new InitialConfigurationReceivedEvent(result));
+
+                                                                               IDE.fireEvent(new ConfigurationReceivedSuccessfullyEvent(
+                                                                                                                                        applicationConfiguration));
                                                                                IDE.fireEvent(new ApplicationSettingsReceivedEvent(
                                                                                                                                   result.getSettings()));
                                                                                IDE.fireEvent(new UserInfoReceivedEvent(result.getUserInfo()));
@@ -201,8 +201,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
     public void onVfsChanged(VfsChangedEvent event) {
         IDE.removeHandler(VfsChangedEvent.TYPE, this);
         String projectToOpen = Utils.getProjectToOpen();
-        if (projectToOpen != null && !projectToOpen.isEmpty())
-        {
+        if (projectToOpen != null && !projectToOpen.isEmpty()) {
             try {
                 VirtualFileSystem.getInstance()
                                  .getItemByPath(projectToOpen,
@@ -233,7 +232,9 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                         initialOpenedProject = null;
                                                         initialOpenedFiles.clear();
                                                         initialActiveFile = null;
-                                                        Dialogs.getInstance().showError("Not found resource", "The requested project URL was not found in this workspace.");
+                                                        Dialogs.getInstance().showError("Not found resource",
+                                                                                        "The requested project URL was not found in this " +
+                                                                                            "workspace.");
                                                         new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject,
                                                                                     initialOpenedFiles, initialActiveFile);
                                                     }
@@ -242,12 +243,13 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                 Log.debug(getClass(), e);
             }
 
-        }
-
-        else {
-            Map<String, List<String>> parameterMap = Location.getParameterMap();
-            if (parameterMap != null && parameterMap.get(CodeNowSpec10.VERSION_PARAMETER) != null
-                && parameterMap.get(CodeNowSpec10.VERSION_PARAMETER).get(0).equals(CodeNowSpec10.CURRENT_VERSION)) {
+        } else {
+            Map<String, List<String>> parameterMap = buildListParamMap(Utils.getStartUpParams());
+            if (parameterMap != null && parameterMap.get(FactorySpec10.VERSION_PARAMETER) != null
+                && parameterMap.get(FactorySpec10.VERSION_PARAMETER).get(0).equals(FactorySpec10.CURRENT_VERSION)) {
+                IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
+            } else if (parameterMap != null && parameterMap.get(CopySpec10.DOWNLOAD_URL) != null
+                       && parameterMap.get(CopySpec10.PROJECT_ID) != null) {
                 IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
             } else {
                 new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);
@@ -255,9 +257,38 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
         }
     }
 
-    /**
-     * @param file
-     */
+
+    private Map<String, List<String>> buildListParamMap(String queryString) {
+        Map<String, List<String>> out = new HashMap<String, List<String>>();
+
+        if (queryString != null && queryString.length() > 1) {
+            String qs = queryString.substring(1);
+
+            for (String kvPair : qs.split("&")) {
+                String[] kv = kvPair.split("=", 2);
+                if (kv[0].length() == 0) {
+                    continue;
+                }
+
+                List<String> values = out.get(kv[0]);
+                if (values == null) {
+                    values = new ArrayList<String>();
+                    out.put(kv[0], values);
+                }
+                values.add(kv.length > 1 ? URL.decodeQueryString(kv[1]) : "");
+            }
+        }
+
+        for (Map.Entry<String, List<String>> entry : out.entrySet()) {
+            entry.setValue(Collections.unmodifiableList(entry.getValue()));
+        }
+
+        out = Collections.unmodifiableMap(out);
+
+        return out;
+    }
+
+    /** @param file */
     private void openFile(String file, final ProjectModel projectModel) {
         try {
             VirtualFileSystem.getInstance()
@@ -279,7 +310,9 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                 @Override
                                                 protected void onFailure(Throwable exception) {
                                                     Log.error(AsyncRequestCallback.class, exception);
-                                                    Dialogs.getInstance().showError("Not found resource", "The requested file URL was not found on this project.");
+                                                    Dialogs.getInstance().showError("Not found resource",
+                                                                                    "The requested file URL was not found on this project" +
+                                                                                        ".");
                                                     initialActiveFile = null;
                                                     initialOpenedFiles.clear();
                                                     new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject,
@@ -329,26 +362,18 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
 
         if (IDE.isRoUser()) {
-            IconButton iconButton =
-                                    new IconButton(new Image(IDEImageBundle.INSTANCE.readonly()),
-                                                   new Image(IDEImageBundle.INSTANCE.readonly()));
-            iconButton.setSize("89px", "29px");
-            iconButton.getElement().getStyle().setMarginTop(-4, Unit.PX);
-            iconButton.getElement().getStyle().setBackgroundImage("none");
-            iconButton.setHandleMouseEvent(false);
-            iconButton.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    if (IDE.isRoUser()) {
-                        if (readOnlyUserView == null)
-                            readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
-                        IDE.getInstance().openView(readOnlyUserView);
-                    }
-                }
-            });
-
-            IDE.fireEvent(new AddToolbarItemsEvent(iconButton));
+            ToolbarShadowButton readOnlyButton =
+                                                 new ToolbarShadowButton(
+                                                                         IDEImageBundle.INSTANCE.readOnly(),
+                                                                         IDEImageBundle.INSTANCE.readOnlyHover(),
+                                                                         new ClickHandler() {
+                                                                             @Override
+                                                                             public void onClick(ClickEvent event) {
+                                                                                 IDE.getInstance()
+                                                                                    .openView(new ReadOnlyUserView(IDE.user.getWorkspaces()));
+                                                                             }
+                                                                         });
+            IDE.fireEvent(new AddToolbarItemsEvent(readOnlyButton, true));
         }
     }
 
