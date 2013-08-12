@@ -59,11 +59,13 @@ public class FileSavedEvent extends GwtEvent<FileSavedHandler> {
         return sourceHref;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void dispatch(FileSavedHandler handler) {
         handler.onFileSaved(this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public com.google.gwt.event.shared.GwtEvent.Type<FileSavedHandler> getAssociatedType() {
         return TYPE;

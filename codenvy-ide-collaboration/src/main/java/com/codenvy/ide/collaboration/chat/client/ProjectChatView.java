@@ -20,7 +20,11 @@ package com.codenvy.ide.collaboration.chat.client;
 
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.html.*;
+import elemental.html.AnchorElement;
+import elemental.html.DivElement;
+import elemental.html.Element;
+import elemental.html.SpanElement;
+import elemental.html.TextAreaElement;
 
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.collaboration.chat.client.ChatResources.ChatCss;
@@ -35,6 +39,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -49,6 +54,9 @@ import java.util.Date;
  * @version $Id:
  */
 public class ProjectChatView extends ViewImpl implements Display {
+
+    private com.google.gwt.user.client.Element disabledMessage;
+
     interface ProjectChatViewUiBinder extends UiBinder<Widget, ProjectChatView> {
     }
 
@@ -228,6 +236,26 @@ public class ProjectChatView extends ViewImpl implements Display {
         lastClientId = "";
         chatPanel.getElement().appendChild((Node)messageElement);
         chatPanel.scrollToBottom();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void showChatDisabled() {
+        disabledMessage = DOM.createDiv();
+        disabledMessage.setClassName(css.chatDisabled());
+        com.google.gwt.user.client.Element span = DOM.createSpan();
+        span.setInnerText("Collaboration mode has been disabled for this project");
+        span.setClassName(css.chatDissabledMessage());
+        disabledMessage.appendChild(span);
+        getElement().appendChild(disabledMessage);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void removeDisabledMessage() {
+        if(disabledMessage != null){
+            disabledMessage.removeFromParent();
+        }
     }
 
     private AnchorElement createAnchorElement(final String message, final MessageCallback callback) {

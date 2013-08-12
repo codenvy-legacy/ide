@@ -16,15 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.collaboration.chat.client;
+package com.google.collide.client.disable;
 
+import com.google.collide.client.Resources;
 import com.google.collide.client.collaboration.CollaborationPropertiesUtil;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.event.CollaborationChangedEvent;
-import org.exoplatform.ide.client.framework.event.CollaborationChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
@@ -35,61 +33,54 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@RolesAllowed({"developer"})
-public class ShowChatControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler,
-                                                              CollaborationChangedHandler {
-    public static final String ID = "View/Collaboration";
+public class DisableEnableCollaborationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler {
 
-    private ChatResources resources;
+    public static final  String ID            = "Project/Disable \\ Enable Collaboration";
+    private static final String ENABLE_TITLE  = "Enable Collaboration Mode";
+    private static final String DISABLE_TITLE = "Disable Collaboration Mode";
 
+    private DisableEnableCollaborationEvent enableEvent = new DisableEnableCollaborationEvent(true, true);
+    private DisableEnableCollaborationEvent disableEvent = new DisableEnableCollaborationEvent(false, true);
 
-    public ShowChatControl(ChatResources resources) {
+    public DisableEnableCollaborationControl(Resources resources) {
         super(ID);
-        this.resources = resources;
-        setTitle("Collaboration");
-        setPrompt("Collaboration");
-        setImages(resources.collaborators(), resources.collaboratorsDisabled());
-        setEvent(new ShowHideChatEvent(true));
-        setCanBeSelected(true);
-        setVisible(true);
+        setTitle(DISABLE_TITLE);
+        setPrompt(DISABLE_TITLE);
         setEnabled(false);
+        setVisible(true);
+        setEvent(disableEvent);
+        setImages(resources.getCollaborationImage(), resources.getCollaborationImageDisabled());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void initialize() {
-        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
-        IDE.addHandler(CollaborationChangedEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         setEnabled(false);
     }
 
-    @Override
-    public void onProjectOpened(ProjectOpenedEvent event) {
-        if(CollaborationPropertiesUtil.isCollaborationEnabled(event.getProject())){
-          setEnabled(true);
-        }
-    }
-
-    public void chatOpened(boolean opened) {
-        setEvent(new ShowHideChatEvent(!opened));
-        setSelected(opened);
-    }
-
-    public void startBlink() {
-        setImages(resources.collaboratorsAnimation(), resources.collaboratorsDisabled());
-    }
-
-    public void stopBlink() {
-        setImages(resources.collaborators(), resources.collaboratorsDisabled());
-    }
-
     /** {@inheritDoc} */
     @Override
-    public void onCollaborationChanged(CollaborationChangedEvent event) {
-        setEnabled(event.isEnabled());
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        setEnabled(true);
+        boolean enabled = CollaborationPropertiesUtil.isCollaborationEnabled(event.getProject());
+        setState(enabled);
+    }
+
+    public void setState(boolean collaborationEnabled){
+        if(collaborationEnabled){
+            setEvent(disableEvent);
+            setTitle(DISABLE_TITLE);
+        }else{
+            setEvent(enableEvent);
+            setTitle(ENABLE_TITLE);
+        }
+
     }
 }
