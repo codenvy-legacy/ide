@@ -47,11 +47,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
 import static com.codenvy.commons.lang.IoUtil.createTempDirectory;
 import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 import static com.codenvy.commons.lang.NameGenerator.generate;
 import static com.codenvy.commons.lang.ZipUtils.unzip;
+import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
 
 
 /**
@@ -265,7 +265,13 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             cloudfoundry.stopApplication(target, name, null, null, "cloudfoundry");
             cloudfoundry.deleteApplication(target, name, null, null, "cloudfoundry", true);
             LOG.debug("Stop application {}.", name);
-            LOG.info("EVENT#run-finished# PROJECT#" + applications.get(name).projectName + "# TYPE#Python#");
+            if (ConversationState.getCurrent() != null) {
+                LOG.info("EVENT#run-finished# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                         + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" +
+                         applications.get(name).projectName + "# TYPE#Python#");
+            } else {
+                LOG.info("EVENT#run-finished# PROJECT#" + applications.get(name).projectName + "# TYPE#Python#");
+            }
             applications.remove(name);
         } catch (Exception e) {
             throw new ApplicationRunnerException(e.getMessage(), e);
