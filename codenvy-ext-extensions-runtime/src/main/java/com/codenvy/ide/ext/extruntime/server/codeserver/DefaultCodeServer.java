@@ -70,8 +70,7 @@ public class DefaultCodeServer implements CodeServer {
                 "clean",
                 "compile",
                 "gwt:run-codeserver", // org.codehaus.mojo:gwt-maven-plugin should be described in a pom.xml
-                "-P" + ADD_SOURCES_PROFILE,
-                "-o"};
+                "-P" + ADD_SOURCES_PROFILE};
 
         ProcessBuilder processBuilder = new ProcessBuilder(command).directory(configuration.getWorkDir().toFile());
         processBuilder.redirectOutput(logFilePath.toFile());
