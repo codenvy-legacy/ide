@@ -45,8 +45,8 @@
       <appengine.version>1.7.7</appengine.version>
       <ch.qos.logback.version>1.0.0</ch.qos.logback.version>
       <crash.version>1.0.0-beta21</crash.version>
-      <com.codenvy.commons.version>0.7.0-SNAPSHOT</com.codenvy.commons.version>
-      <com.codenvy.organization.version>0.6.0-SNAPSHOT</com.codenvy.organization.version>
+      <com.codenvy.commons.version>0.8.0-SNAPSHOT</com.codenvy.commons.version>
+      <com.codenvy.organization.version>0.7.0-SNAPSHOT</com.codenvy.organization.version>
 
       <tomcat.version>7.0.37</tomcat.version>
       <javax.annotation.version>1.0</javax.annotation.version>
