@@ -39,22 +39,6 @@ public class SpinnetGenerator {
 //  /** URL of image which will be used as link for CodeNow button for GitHub Pages. */
 //  private static final String CODE_NOW_BUTTON_FOR_GITHUB_IMAGE_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow_gh.png";
 
-    private static final String FACTORY_URL
-        = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-        .setPath("factory").buildString();
-
-    private static final String FACTORY_URL_STANDALONE
-        = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-        .setPath("ide/tmp-dev-monit").buildString();    
-
-    private static final String CODENOW_BUTTON_JAVASCRIPT 
-        = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-        .setPath("factory/factory.js").buildString();
-
-    private static final String CODENOW_BUTTON_JAVASCRIPT_STANDALONE
-        = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-        .setPath("ide/_app/factory/factory.js").buildString();
-
     /**
      * Returns URL to CodeNow button template
      * 
@@ -62,19 +46,19 @@ public class SpinnetGenerator {
      */
     public static String getCodeNowButtonJavascriptURL() {
         String jsURL;
+        
         if (Location.getHost().indexOf("localhost:8080") >= 0 ||
             Location.getHost().indexOf("127.0.0.1:8080") >= 0 ||
             Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
-            
-            jsURL = CODENOW_BUTTON_JAVASCRIPT_STANDALONE;            
-//            jsURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-//                .setPath("ide/_app/factory/factory.js").buildString();
+
+            jsURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                .setPath("ide/_app/factory/factory.js").buildString();
         } else {
-            jsURL = CODENOW_BUTTON_JAVASCRIPT;
-            //jsURL = new UrlBuilder().setHost(Location.getHost()).setPath("factory/factory.js").buildString();
+            jsURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                .setPath("factory/factory.js").buildString();            
         }
         
-        jsURL = jsURL.substring(jsURL.indexOf("//"));
+        //jsURL = jsURL.substring(jsURL.indexOf("//"));
         return jsURL;
     }
     
@@ -94,18 +78,8 @@ public class SpinnetGenerator {
      * @return
      */
     public static String getBaseFactoryURL() {
-        if (Location.getHost().indexOf("localhost:8080") >= 0 ||
-            Location.getHost().indexOf("127.0.0.1:8080") >= 0 ||
-            Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
-            
-            return FACTORY_URL_STANDALONE;
-//            return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-//                .setPath("ide/tmp-dev-monit").buildString();
-        }
-
-            return FACTORY_URL;
-//        return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-//            .setPath("factory").buildString();
+        return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+            .setPath("factory").buildString();
     }
     
 }
