@@ -24,7 +24,7 @@
         <!-- eXo Modules -->
         <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
         <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
-        <org.exoplatform.ide.version>2.6.0-SNAPSHOT</org.exoplatform.ide.version>
+        <org.exoplatform.ide.version>2.6.0</org.exoplatform.ide.version>
         <!-- CodeAssistant DataBase -->
         <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
         <!-- Everrest -->
@@ -52,8 +52,8 @@
         <version.enforcer.plugin>1.0.1</version.enforcer.plugin>
         <appengine.version>1.7.7</appengine.version>
         <ch.qos.logback.version>0.9.29</ch.qos.logback.version>
-        <com.codenvy.organization.version>0.6.0-SNAPSHOT</com.codenvy.organization.version>
-        <com.codenvy.commons.version>0.7.0-SNAPSHOT</com.codenvy.commons.version>
+        <com.codenvy.organization.version>0.6.0</com.codenvy.organization.version>
+        <com.codenvy.commons.version>0.7.0</com.codenvy.commons.version>
         <maven.build.timestamp.format>dd.MM.yy HH:mm</maven.build.timestamp.format>
         <buildNumber>${maven.build.timestamp}</buildNumber>
     </properties>
