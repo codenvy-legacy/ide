@@ -1,74 +1,58 @@
 /*
- * CODENVY CONFIDENTIAL
- * __________________
+ *  Copyright 2012 GWT-Bootstrap
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 package com.codenvy.ide.ui;
 
-import com.codenvy.ide.ui.base.Constants;
-import com.codenvy.ide.ui.base.HasHref;
-import com.codenvy.ide.ui.base.HasIcon;
-import com.codenvy.ide.ui.base.IconPosition;
-import com.codenvy.ide.ui.base.TextNode;
+import com.codenvy.ide.ui.base.*;
 import com.google.gwt.dom.client.AnchorElement;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasMouseDownHandlers;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.Focusable;
-import com.google.gwt.user.client.ui.HasEnabled;
-import com.google.gwt.user.client.ui.HasName;
-import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 
 /**
  * An Anchor with optional image and caret.
- *
+ * <p/>
  * <p>
  * It uses a HTML {@code <a>} tag and can contain text and child widgets. But
  * not both at the same time.
  * </p>
- *
+ * <p/>
  * <p>
  * <h3>UiBinder Usage:</h3>
  * {@code <b:IconAnchor icon="plane" href="www.twitter.com">Some Text</b:IconAnchor>}
  * </p>
- *
+ * <p/>
  * <p>
  * Here we add a second Icon:
- *
+ * <p/>
  * <pre>
  * {@code <b:IconAnchor icon="STAR" text="There is a widget so the text goes here">
  *     <b:Icon type="STAR" />
  * </b:IconAnchor>}
  * </pre>
- *
+ * <p/>
  * All parameter are optional. All setters can be used as parameters.
  * </p>
  *
- * @since 2.0.4.0
- *
  * @author Dominik Mayer
  * @author ohashi keisuke
+ * @since 2.0.4.0
  */
 public class IconAnchor extends ComplexWidget implements HasText, HasIcon, HasHref, HasClickHandlers, HasEnabled, Focusable, HasName,
                                                          HasMouseDownHandlers {
@@ -93,9 +77,7 @@ public class IconAnchor extends ComplexWidget implements HasText, HasIcon, HasHr
         setEmptyHref();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setIconPosition(IconPosition position) {
 
@@ -116,9 +98,7 @@ public class IconAnchor extends ComplexWidget implements HasText, HasIcon, HasHr
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setIcon(ImageResource type) {
 //        setBaseIcon(type);
@@ -133,32 +113,24 @@ public class IconAnchor extends ComplexWidget implements HasText, HasIcon, HasHr
 //        this.icon.setBaseType(type);
 //    }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public void setText(String text) {
         this.text.removeFromParent();
         this.text = new TextNode(" " + text + " ");
         setIconPosition(iconPosition);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public String getText() {
         return text.getText();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public void setHref(String href) {
         getElement().setAttribute("href", href);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public String getHref() {
         return getElement().getAttribute("href");
     }
@@ -176,16 +148,12 @@ public class IconAnchor extends ComplexWidget implements HasText, HasIcon, HasHr
 //            super.remove(caret);
 //    }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public void setTargetHistoryToken(String targetHistoryToken) {
         setHref("#" + targetHistoryToken);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public String getTargetHistoryToken() {
         String[] hrefs = getHref().split("#");
         return hrefs[1];
@@ -199,55 +167,45 @@ public class IconAnchor extends ComplexWidget implements HasText, HasIcon, HasHr
         setHref(Constants.EMPTY_HREF);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public HandlerRegistration addClickHandler(ClickHandler handler) {
-		return addDomHandler(handler, ClickEvent.getType());
-	}
+        return addDomHandler(handler, ClickEvent.getType());
+    }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
         return addDomHandler(handler, MouseDownEvent.getType());
     }
 
-    /**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isEnabled() {
-		return !DOM.getElementPropertyBoolean(getElement(), "disabled");
-	}
+    /** {@inheritDoc} */
+    @Override
+    public boolean isEnabled() {
+        return !DOM.getElementPropertyBoolean(getElement(), "disabled");
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setEnabled(boolean enabled) {
-		DOM.setElementPropertyBoolean(getElement(), "disabled", !enabled);
-	}
+    /** {@inheritDoc} */
+    @Override
+    public void setEnabled(boolean enabled) {
+        DOM.setElementPropertyBoolean(getElement(), "disabled", !enabled);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void onBrowserEvent(Event event) {
-		switch (DOM.eventGetType(event)) {
-		case Event.ONCLICK:
-			if (isEnabled()) {
-				super.onBrowserEvent(event);
-			}
-			break;
-		default:
-			super.onBrowserEvent(event);
-			break;
-		}
+    /** {@inheritDoc} */
+    @Override
+    public void onBrowserEvent(Event event) {
+        switch (DOM.eventGetType(event)) {
+            case Event.ONCLICK:
+                if (isEnabled()) {
+                    super.onBrowserEvent(event);
+                }
+                break;
+            default:
+                super.onBrowserEvent(event);
+                break;
+        }
 
-	}
+    }
 
     @Override
     public int getTabIndex() {
@@ -290,7 +248,9 @@ public class IconAnchor extends ComplexWidget implements HasText, HasIcon, HasHr
 
     /**
      * Set active style name.
-     * @param active <code>true</code> : set active <code>false</code> : unset active
+     *
+     * @param active
+     *         <code>true</code> : set active <code>false</code> : unset active
      */
     public void setActive(boolean active) {
         setStyleName(Constants.ACTIVE, active);
@@ -298,23 +258,20 @@ public class IconAnchor extends ComplexWidget implements HasText, HasIcon, HasHr
 
     /**
      * Has the active css style name?
+     *
      * @return <code>true</code>: has <code>false</code> : none.
      */
     public boolean isActive() {
         return getStyleName().contains(Constants.ACTIVE);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setName(String name) {
         getAnchorElement().setName(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return getAnchorElement().getName();
@@ -322,7 +279,9 @@ public class IconAnchor extends ComplexWidget implements HasText, HasIcon, HasHr
 
     /**
      * Set target attribute
-     * @param target target name
+     *
+     * @param target
+     *         target name
      */
     public void setTarget(String target) {
         getAnchorElement().setTarget(target);
@@ -330,6 +289,7 @@ public class IconAnchor extends ComplexWidget implements HasText, HasIcon, HasHr
 
     /**
      * Get target attribute value
+     *
      * @return target attribute value
      */
     public String getTarget() {
@@ -340,9 +300,7 @@ public class IconAnchor extends ComplexWidget implements HasText, HasIcon, HasHr
         return AnchorElement.as(getElement());
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setCustomIconStyle(String customIconStyle) {
         icon.addStyleName(customIconStyle);

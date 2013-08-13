@@ -1,38 +1,22 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
- *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+/*******************************************************************************
+* Copyright (c) 2000, 2011 IBM Corporation and others.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*     IBM Corporation - initial API and implementation
+*     Benjamin Muskalla <bmuskalla@eclipsesource.com> - [extract method] Does not replace similar code in parent class of anonymous
+class - https://bugs.eclipse.org/bugs/show_bug.cgi?id=160853
+*     Benjamin Muskalla <bmuskalla@eclipsesource.com> - [extract method] Extract method and continue https://bugs.eclipse
+.org/bugs/show_bug.cgi?id=48056
+*     Benjamin Muskalla <bmuskalla@eclipsesource.com> - [extract method] should declare method static if extracted from anonymous in
+static method - https://bugs.eclipse.org/bugs/show_bug.cgi?id=152004
+*******************************************************************************/
 
 package com.codenvy.ide.ext.java.client.internal.corext.refactoring.code;
-///*******************************************************************************
-// * Copyright (c) 2000, 2011 IBM Corporation and others.
-// * All rights reserved. This program and the accompanying materials
-// * are made available under the terms of the Eclipse Public License v1.0
-// * which accompanies this distribution, and is available at
-// * http://www.eclipse.org/legal/epl-v10.html
-// *
-// * Contributors:
-// *     IBM Corporation - initial API and implementation
-// *     Benjamin Muskalla <bmuskalla@eclipsesource.com> - [extract method] Does not replace similar code in parent class of anonymous
-// class - https://bugs.eclipse.org/bugs/show_bug.cgi?id=160853
-// *     Benjamin Muskalla <bmuskalla@eclipsesource.com> - [extract method] Extract method and continue https://bugs.eclipse
-// .org/bugs/show_bug.cgi?id=48056
-// *     Benjamin Muskalla <bmuskalla@eclipsesource.com> - [extract method] should declare method static if extracted from anonymous in
-// static method - https://bugs.eclipse.org/bugs/show_bug.cgi?id=152004
-// *******************************************************************************/
+
 //package com.codenvy.ide.java.client.internal.corext.refactoring.code;
 //
 //import java.util.ArrayList;
