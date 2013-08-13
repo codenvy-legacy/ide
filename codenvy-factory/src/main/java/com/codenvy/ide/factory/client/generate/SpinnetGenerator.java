@@ -68,8 +68,13 @@ public class SpinnetGenerator {
      * @return
      */
     public static String getCodeNowGitHubImageURL() {
-        return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-            .setPath("/ide/" + Utils.getWorkspaceName() + "/_app/codenow_gh.png").buildString();
+        if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
+            return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                .setPath("ide/" + Utils.getWorkspaceName() + "/_app/factory/factory.png").buildString();
+        } else {
+            return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                .setPath("factory/factory.png").buildString();
+        }
     }
     
     /**
@@ -78,8 +83,13 @@ public class SpinnetGenerator {
      * @return
      */
     public static String getBaseFactoryURL() {
-        return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-            .setPath("factory").buildString();
+        if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
+            return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                .setPath("ide/tmp-dev-monit").buildString();
+        } else {
+            return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                .setPath("factory").buildString();
+        }
     }
     
 }
