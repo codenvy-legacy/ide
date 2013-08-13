@@ -154,16 +154,16 @@ public class GreetingUserPresenter implements
     private void loadGreeting() {
         String key = "anonymous";
 
-        boolean workspaceTemporary = initialConfiguration.getCurrentWorkspace() == null ? false : initialConfiguration.getCurrentWorkspace().isTemporary();
+        boolean workspaceTemporary = initialConfiguration.getCurrentWorkspace() == null ? false 
+            : initialConfiguration.getCurrentWorkspace().isTemporary();
         
         if (IDE.user.isTemporary()) {
             if (workspaceTemporary) {
                 key = "anonymous-workspace-temporary";
+                addButtonsForNoneAuthenticatedUser();
             } else {
                 key = "anonymous";
             }
-
-            addButtonsForNoneAuthenticatedUser();
         } else {
             if (workspaceTemporary) {
                 key = "authenticated-workspace-temporary";
