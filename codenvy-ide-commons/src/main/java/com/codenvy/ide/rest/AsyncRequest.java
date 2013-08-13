@@ -26,13 +26,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window.Location;
 
 
-/**
- * Created by The eXo Platform SAS .
- * <p/>
- * Wrapper under RequestBuilder to simplify the stuffs
- *
- * @version $Id: $
- */
+/** Wrapper under RequestBuilder to simplify the stuffs */
 
 public class AsyncRequest {
 

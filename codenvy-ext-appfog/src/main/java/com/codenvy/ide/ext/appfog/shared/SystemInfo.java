@@ -19,11 +19,7 @@ package com.codenvy.ide.ext.appfog.shared;
 
 import com.codenvy.ide.json.JsonStringMap;
 
-/**
- * Created by The eXo Platform SAS.
- *
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- */
+/** @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a> */
 public interface SystemInfo {
     SystemResources getUsage();
 

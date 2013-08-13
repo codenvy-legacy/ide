@@ -182,22 +182,21 @@ public class DtoTemplate {
 
     private void emitPreamble(StringBuilder builder) {
         builder.append("/*\n");
-        builder.append(" * Copyright (C) 2013 eXo Platform SAS.\n");
+        builder.append(" * CODENVY CONFIDENTIAL\n");
+        builder.append(" * __________________\n");
         builder.append(" *\n");
-        builder.append(" * This is free software; you can redistribute it and/or modify it\n");
-        builder.append(" * under the terms of the GNU Lesser General Public License as\n");
-        builder.append(" * published by the Free Software Foundation; either version 2.1 of\n");
-        builder.append(" * the License, or (at your option) any later version.\n");
+        builder.append(" * [2012] - [2013] Codenvy, S.A.\n");
+        builder.append(" * All Rights Reserved.\n");
         builder.append(" *\n");
-        builder.append(" * This software is distributed in the hope that it will be useful,\n");
-        builder.append(" * but WITHOUT ANY WARRANTY; without even the implied warranty of\n");
-        builder.append(" * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU\n");
-        builder.append(" * Lesser General Public License for more details.\n");
-        builder.append(" *\n");
-        builder.append(" * You should have received a copy of the GNU Lesser General Public\n");
-        builder.append(" * License along with this software; if not, write to the Free\n");
-        builder.append(" * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA\n");
-        builder.append(" * 02110-1301 USA, or see the FSF site: http://www.fsf.org.\n");
+        builder.append(" * NOTICE:  All information contained herein is, and remains\n");
+        builder.append(" * the property of Codenvy S.A. and its suppliers,\n");
+        builder.append(" * if any.  The intellectual and technical concepts contained\n");
+        builder.append(" * herein are proprietary to Codenvy S.A.\n\n");
+        builder.append(" * and its suppliers and may be covered by U.S. and Foreign Patents,\n");
+        builder.append(" * patents in process, and are protected by trade secret or copyright law.\n");
+        builder.append(" * Dissemination of this information or reproduction of this material\n");
+        builder.append(" * is strictly forbidden unless prior written permission is obtained\n");
+        builder.append(" * from Codenvy S.A..\n");
         builder.append(" */\n\n\n");
         builder.append("// GENERATED SOURCE. DO NOT EDIT.\npackage ");
         builder.append(packageName);

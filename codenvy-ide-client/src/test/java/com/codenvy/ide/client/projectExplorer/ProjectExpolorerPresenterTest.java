@@ -38,10 +38,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
 /**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- * exo@exoplatform.com
- * Aug 3, 2012
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ *         Aug 3, 2012
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectExpolorerPresenterTest {

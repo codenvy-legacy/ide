@@ -18,10 +18,9 @@
 package com.codenvy.ide.commons.exception;
 
 /**
- * Created by The eXo Platform SAS. Notifies about unmarshalling error accured.
+ * Notifies about unmarshalling error accured.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: $
  */
 @SuppressWarnings("serial")
 public class UnmarshallerException extends Exception {

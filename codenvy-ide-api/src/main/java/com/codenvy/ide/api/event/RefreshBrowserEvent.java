@@ -24,12 +24,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by The eXo Platform SAS.
- *
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
- */
+/** @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a> */
 public class RefreshBrowserEvent extends GwtEvent<RefreshBrowserHandler> {
 
     public static final GwtEvent.Type<RefreshBrowserHandler> TYPE = new Type<RefreshBrowserHandler>();

@@ -19,8 +19,6 @@
 package com.codenvy.ide.rest;
 
 /**
- * Created by The eXo Platform SAS        .
- *
  * @version $Id: $
  *          <p/>
  *          Marshaller of a request body to be passed to server

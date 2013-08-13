@@ -26,8 +26,6 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: RepoInfoUnmarshaller.java Aug 13, 2012
  */

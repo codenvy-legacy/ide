@@ -18,11 +18,7 @@
 
 package com.codenvy.ide.ui.loader;
 
-/**
- * Created by The eXo Platform SAS .
- *
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- */
+/** @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a> */
 public class EmptyLoader extends Loader {
 
     public void hide() {

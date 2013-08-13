@@ -22,10 +22,9 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 /**
  * Common interface for Presenters that are responsible for driving the UI
  * <p/>
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- * exo@exoplatform.com
- * Jul 24, 2012
+ *
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ *         Jul 24, 2012
  */
 public interface Presenter {
     /**

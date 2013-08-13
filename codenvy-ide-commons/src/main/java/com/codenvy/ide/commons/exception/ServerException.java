@@ -21,12 +21,7 @@ package com.codenvy.ide.commons.exception;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.google.gwt.http.client.Response;
 
-/**
- * Created by The eXo Platform SAS .
- *
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
- */
+/** @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a> */
 
 @SuppressWarnings("serial")
 public class ServerException extends Exception {

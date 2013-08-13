@@ -20,8 +20,6 @@ package com.codenvy.ide.ext.java.shared;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */

@@ -26,12 +26,6 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 
 
-/**
- * Created by The eXo Platform SAS        .
- *
- * @version $Id: $
- */
-
 public abstract class AsyncRequestCallback<T> implements RequestCallback {
 
     // http code 207 is "Multi-Status"

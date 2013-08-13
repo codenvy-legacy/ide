@@ -29,27 +29,16 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.ui.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- * <p/>
  * PopupMenu is visual component represents all known Popup Menu.
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
  */
 
 public class PopupMenu extends Composite {

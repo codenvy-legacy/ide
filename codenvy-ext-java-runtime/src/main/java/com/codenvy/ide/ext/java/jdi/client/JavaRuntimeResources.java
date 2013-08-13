@@ -20,11 +20,7 @@ package com.codenvy.ide.ext.java.jdi.client;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
-/**
- * Created by The eXo Platform SAS.
- *
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- */
+/** @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a> */
 public interface JavaRuntimeResources extends ClientBundle {
     @Source("resume.png")
     ImageResource resumeButton();
