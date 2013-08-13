@@ -18,23 +18,23 @@
 package com.codenvy.ide.ext.extruntime.server.codeserver;
 
 /**
- * Signals that any error occurred with code server.
+ * Signals that any error occurred with a GWT code server.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: CodeServerException.java Jul 31, 2013 4:51:25 PM azatsarynnyy $
+ * @version $Id: GWTCodeServerException.java Jul 31, 2013 4:51:25 PM azatsarynnyy $
  */
 @SuppressWarnings("serial")
-public class CodeServerException extends Exception {
+public class GWTCodeServerException extends Exception {
 
-    public CodeServerException(String message) {
+    public GWTCodeServerException(String message) {
         super(message);
     }
 
-    public CodeServerException(Throwable cause) {
+    public GWTCodeServerException(Throwable cause) {
         super(cause);
     }
 
-    public CodeServerException(String message, Throwable cause) {
+    public GWTCodeServerException(String message, Throwable cause) {
         super(message, cause);
     }
 }

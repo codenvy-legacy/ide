@@ -19,10 +19,10 @@ package com.codenvy.ide.ext.extruntime.server;
 
 import com.codenvy.ide.commons.JsonHelper;
 import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls.ApplicationInstanceImpl;
-import com.codenvy.ide.ext.extruntime.server.codeserver.CodeServer;
-import com.codenvy.ide.ext.extruntime.server.codeserver.CodeServerConfiguration;
-import com.codenvy.ide.ext.extruntime.server.codeserver.CodeServerException;
-import com.codenvy.ide.ext.extruntime.server.codeserver.DefaultCodeServer;
+import com.codenvy.ide.ext.extruntime.server.codeserver.GWTCodeServerLauncher;
+import com.codenvy.ide.ext.extruntime.server.codeserver.GWTCodeServerConfiguration;
+import com.codenvy.ide.ext.extruntime.server.codeserver.GWTCodeServerException;
+import com.codenvy.ide.ext.extruntime.server.codeserver.GWTMavenCodeServerLauncher;
 import com.codenvy.ide.ext.extruntime.server.tools.ProcessUtil;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 import com.codenvy.ide.extension.maven.shared.BuildStatus.Status;
@@ -136,7 +136,7 @@ public class ExtensionLauncher implements Startable {
                 }
             }
         } catch (Exception e) {
-            throw new IllegalArgumentException(e.getMessage());
+            throw new IllegalArgumentException(e);
         }
         return portList;
     }
@@ -264,8 +264,8 @@ public class ExtensionLauncher implements Startable {
             final String buildId = build(zippedProjectFile);
 
             // Run code server while project is building.
-            CodeServer codeServer = new DefaultCodeServer();
-            codeServer.start(new CodeServerConfiguration(codeServerPort, clientModuleDirPath));
+            GWTCodeServerLauncher codeServer = new GWTMavenCodeServerLauncher();
+            codeServer.start(new GWTCodeServerConfiguration(codeServerPort, clientModuleDirPath));
 
             final String status = startCheckingBuildStatus(buildId);
             BuildStatusBean buildStatus = JsonHelper.fromJson(status, BuildStatusBean.class, null);
@@ -284,7 +284,7 @@ public class ExtensionLauncher implements Startable {
             if (tempDir != null && tempDir.exists()) {
                 deleteRecursive(tempDir, false);
             }
-            throw new ExtensionLauncherException(String.format("Unable to launch Codenvy with extension %s.", project.getName()));
+            throw new ExtensionLauncherException(String.format("Unable to launch Codenvy with extension %s.", project.getName()), e);
         }
     }
 
@@ -332,8 +332,8 @@ public class ExtensionLauncher implements Startable {
                     logs.append("\n\n");
                 }
             }
-        } catch (IOException | CodeServerException e) {
-            throw new ExtensionLauncherException(String.format("Unable to get logs of application %s.", appId));
+        } catch (IOException | GWTCodeServerException e) {
+            throw new ExtensionLauncherException(String.format("Unable to get logs of application %s.", appId), e);
         }
 
         return logs.toString();
@@ -399,7 +399,7 @@ public class ExtensionLauncher implements Startable {
             clientPomBuild.setPlugins(new ArrayList(clientPomPlugins.values()));
             writePom(clientPom, pomPath);
         } catch (IOException | XmlPullParserException e) {
-            throw new IllegalStateException("Can't parse pom.xml.");
+            throw new IllegalStateException("Can't parse pom.xml.", e);
         }
     }
 
@@ -454,7 +454,7 @@ public class ExtensionLauncher implements Startable {
         try {
             return run(new URL(buildServerBaseURL + "/builder/maven/build"), new FileInputStream(zippedProjectFile));
         } catch (Exception e) {
-            throw new ExtensionLauncherException(String.format("Unable to build project."));
+            throw new ExtensionLauncherException(String.format("Unable to build project."), e);
         }
     }
 
@@ -462,7 +462,7 @@ public class ExtensionLauncher implements Startable {
         try {
             return run(new URL(buildServerBaseURL + "/builder/maven/deploy"), new FileInputStream(zippedProjectFile));
         } catch (Exception e) {
-            throw new ExtensionLauncherException(String.format("Unable to deploy project."));
+            throw new ExtensionLauncherException(String.format("Unable to deploy project."), e);
         }
     }
 
@@ -563,14 +563,14 @@ public class ExtensionLauncher implements Startable {
 
             return new ProcessBuilder(catalinaPath.toString(), "run").start();
         } catch (IOException e) {
-            throw new ExtensionLauncherException("Unable to launch Codenvy with extension.");
+            throw new ExtensionLauncherException("Unable to launch Codenvy with extension.", e);
         }
     }
 
     /** Stores application resources. */
     private class Application {
         final String id;
-        CodeServer   codeServer;
+        GWTCodeServerLauncher   codeServer;
         Process      tomcatProcess;
         int          shutdownPort;
         int          httpPort;
@@ -579,7 +579,7 @@ public class ExtensionLauncher implements Startable {
         File         tempDir;
 
         Application(String id,
-                    CodeServer codeServer,
+                    GWTCodeServerLauncher codeServer,
                     Process tomcatProcess,
                     int shutdownPort,
                     int httpPort,

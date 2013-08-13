@@ -20,12 +20,12 @@ package com.codenvy.ide.ext.extruntime.server.codeserver;
 import java.nio.file.Path;
 
 /**
- * Code server configuration.
+ * GWT code server configuration.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: CodeServerConfiguration.java Aug 8, 2013 5:35:00 PM azatsarynnyy $
+ * @version $Id: GWTCodeServerConfiguration.java Aug 8, 2013 5:35:00 PM azatsarynnyy $
  */
-public class CodeServerConfiguration {
+public class GWTCodeServerConfiguration {
     /** Code server port. */
     private int  port;
 
@@ -33,12 +33,12 @@ public class CodeServerConfiguration {
     private Path workDir;
 
     /**
-     * Constructs new {@link CodeServerConfiguration} with the specified parameters.
+     * Constructs new {@link GWTCodeServerConfiguration} with the specified parameters.
      * 
      * @param port code server port
      * @param workDir code server working directory
      */
-    public CodeServerConfiguration(int port, Path workDir) {
+    public GWTCodeServerConfiguration(int port, Path workDir) {
         this.port = port;
         this.workDir = workDir;
     }

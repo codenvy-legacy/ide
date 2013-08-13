@@ -41,25 +41,25 @@ import static com.codenvy.ide.ext.extruntime.server.ExtensionLauncher.ADD_SOURCE
 import static org.codehaus.plexus.util.xml.Xpp3DomBuilder.build;
 
 /**
- * Implementation of code server that uses GWT Maven plug-in.
+ * Implementation of {@link GWTCodeServerLauncher} interface that that uses GWT Maven plug-in.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: DefaultCodeServer.java Jul 26, 2013 3:15:52 PM azatsarynnyy $
+ * @version $Id: GWTMavenCodeServerLauncher.java Jul 26, 2013 3:15:52 PM azatsarynnyy $
  */
-public class DefaultCodeServer implements CodeServer {
-    private static final Log        LOG = ExoLogger.getLogger(DefaultCodeServer.class);
+public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
+    private static final Log           LOG = ExoLogger.getLogger(GWTMavenCodeServerLauncher.class);
 
-    /** Process that represents a started code server. */
-    private Process                 process;
+    /** Process that represents a started GWT code server. */
+    private Process                    process;
 
     /** Path to code server's log file. */
-    private Path                    logFilePath;
+    private Path                       logFilePath;
 
-    private CodeServerConfiguration configuration;
+    private GWTCodeServerConfiguration configuration;
 
     /** {@inheritDoc} */
     @Override
-    public void start(CodeServerConfiguration configuration) throws CodeServerException {
+    public void start(GWTCodeServerConfiguration configuration) throws GWTCodeServerException {
         this.configuration = configuration;
         this.logFilePath = configuration.getWorkDir().resolve("code-server.log");
         setCodeServerConfiguration(configuration.getWorkDir().resolve("pom.xml"), configuration.getWorkDir(), configuration.getPort());
@@ -78,19 +78,19 @@ public class DefaultCodeServer implements CodeServer {
         try {
             this.process = processBuilder.start();
         } catch (IOException e) {
-            throw new CodeServerException("Unable to start code server.");
+            throw new GWTCodeServerException("Unable to start code server.");
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public String getLogs() throws CodeServerException {
+    public String getLogs() throws GWTCodeServerException {
         try {
             // It should work fine for the files less than 2GB (Integer.MAX_VALUE).
             // One recompiling procedure writes about 1KB output information to logs.
             return new String(Files.readAllBytes(logFilePath));
         } catch (IOException e) {
-            throw new CodeServerException("Unable to get code server's logs.");
+            throw new GWTCodeServerException("Unable to get code server's logs.");
         }
     }
 
@@ -108,7 +108,7 @@ public class DefaultCodeServer implements CodeServer {
 
     /** {@inheritDoc} */
     @Override
-    public CodeServerConfiguration getConfiguration() {
+    public GWTCodeServerConfiguration getConfiguration() {
         return configuration;
     }
 

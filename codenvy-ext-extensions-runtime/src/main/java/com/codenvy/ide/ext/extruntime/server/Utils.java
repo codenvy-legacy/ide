@@ -84,7 +84,7 @@ public class Utils {
         try {
             return readPom(Files.newInputStream(path));
         } catch (IOException e) {
-            throw new IllegalStateException(String.format("Error occurred while reading content of file: %s.", path));
+            throw new IllegalStateException(String.format("Error occurred while reading content of file: %s.", path), e);
         }
     }
 
@@ -99,7 +99,7 @@ public class Utils {
         try {
             return pomReader.read(stream, true);
         } catch (IOException | XmlPullParserException e) {
-            throw new IllegalStateException("Error occurred while parsing pom.xml.");
+            throw new IllegalStateException("Error occurred while parsing pom.xml.", e);
         }
     }
 
@@ -114,7 +114,7 @@ public class Utils {
         try {
             pomWriter.write(Files.newOutputStream(path), pom);
         } catch (IOException e) {
-            throw new IllegalStateException(String.format("Error occurred while writing content to file: %s.", path));
+            throw new IllegalStateException(String.format("Error occurred while writing content to file: %s.", path), e);
         }
     }
 
@@ -194,7 +194,7 @@ public class Utils {
 
             Files.write(path, content, UTF_8);
         } catch (IOException e) {
-            throw new IllegalStateException(String.format("Error occurred while reading or writing file: %s.", path));
+            throw new IllegalStateException(String.format("Error occurred while reading or writing file: %s.", path), e);
         }
     }
 
@@ -221,7 +221,7 @@ public class Utils {
 
             Files.write(path, content, UTF_8);
         } catch (IOException e) {
-            throw new IllegalStateException(String.format("Error occurred while reading or writing file: %s.", path));
+            throw new IllegalStateException(String.format("Error occurred while reading or writing file: %s.", path), e);
         }
     }
 
@@ -257,7 +257,7 @@ public class Utils {
 
             writePom(pom, pomPath);
         } catch (IOException | XmlPullParserException e) {
-            throw new IllegalStateException("Can't parse pom.xml.");
+            throw new IllegalStateException("Can't parse pom.xml.", e);
         }
     }
 
@@ -308,7 +308,7 @@ public class Utils {
             StreamResult result = new StreamResult(serverXml);
             transformer.transform(source, result);
         } catch (ParserConfigurationException | TransformerException | SAXException | IOException e) {
-            throw new IllegalStateException(String.format("Error occurred while reading or writing file: %s.", tomcatRootPath));
+            throw new IllegalStateException(String.format("Error occurred while reading or writing file: %s.", tomcatRootPath), e);
         }
     }
 }
