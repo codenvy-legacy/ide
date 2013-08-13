@@ -37,6 +37,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPStatus;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestBuilder;
@@ -63,15 +64,17 @@ import java.util.Set;
  */
 public class NameEnvironment implements INameEnvironment {
 
-    private static final String GET_CLASS_URL = "/ide/code-assistant/java/class-description?fqn=";
+    private static final String GET_CLASS_URL = "/code-assistant/java/class-description?fqn=";
 
-    private static final String FIND_CLASS_BY_PREFIX = "/ide/code-assistant/java/find-by-prefix/";
+    private static final String FIND_CLASS_BY_PREFIX = "/code-assistant/java/find-by-prefix/";
 
     protected Loader loader;
 
     protected String restServiceContext;
 
     private String projectId;
+
+    private String wsName;
 
     private static Set<String> blackSet = new HashSet<String>();
 
@@ -90,6 +93,7 @@ public class NameEnvironment implements INameEnvironment {
         this.projectId = projectId;
         this.autoBeanFactory = autoBeanFactory;
         restServiceContext = restContenxt;
+        wsName = '/' + Utils.getWorkspaceName();
     }
 
     /**
@@ -103,7 +107,7 @@ public class NameEnvironment implements INameEnvironment {
      */
     public void getClassDescription(String fqn, String projectId, AsyncRequestCallback<TypeInfo> callback) {
         String url =
-                restServiceContext + GET_CLASS_URL + fqn + "&projectid=" + projectId + "&vfsid="
+                restServiceContext + wsName + GET_CLASS_URL + fqn + "&projectid=" + projectId + "&vfsid="
                 + "dev-monit";
         int status[] = {HTTPStatus.NO_CONTENT, HTTPStatus.OK};
         callback.setSuccessCodes(status);
@@ -126,7 +130,7 @@ public class NameEnvironment implements INameEnvironment {
      */
     public void findClassesByPrefix(String prefix, String projectId, AsyncRequestCallback<TypesList> callback) {
         String url =
-                restServiceContext + FIND_CLASS_BY_PREFIX + prefix + "?where=className" + "&projectid=" + projectId
+                restServiceContext + wsName + FIND_CLASS_BY_PREFIX + prefix + "?where=className" + "&projectid=" + projectId
                 //TODO configure vfs id
                 + "&vfsid=" + "dev-monit";
         try {
@@ -280,7 +284,7 @@ public class NameEnvironment implements INameEnvironment {
             }
         }
         String url =
-                restServiceContext + "/ide/code-assistant/java/classes-by-prefix" + "?prefix=" + new String(simpleName)
+                restServiceContext + wsName + "/code-assistant/java/classes-by-prefix" + "?prefix=" + new String(simpleName)
                 + "&projectid=" + projectId + "&vfsid=" + "dev-monit";
         try {
             List<JSONObject> typesByNamePrefix =
@@ -406,11 +410,11 @@ public class NameEnvironment implements INameEnvironment {
                 typeSearch = "fqn";
             }
             url =
-                    restServiceContext + "/ide/code-assistant/java/find-by-prefix/" + new String(qualifiedName) + "?where="
+                    restServiceContext + wsName + "/code-assistant/java/find-by-prefix/" + new String(qualifiedName) + "?where="
                     + typeSearch + "&projectid=" + projectId + "&vfsid=" + "dev-monit";
         } else {
             url =
-                    restServiceContext + "/ide/code-assistant/java/find-by-type/" + searchType + "?prefix="
+                    restServiceContext + wsName + "/code-assistant/java/find-by-type/" + searchType + "?prefix="
                     + new String(qualifiedName) + "&projectid=" + projectId + "&vfsid="
                     + "dev-monit";
         }
@@ -421,44 +425,11 @@ public class NameEnvironment implements INameEnvironment {
             AutoBeanCodex.decodeInto(data, autoBean);
 
             for (ShortTypeInfo info : autoBean.as().getTypes()) {
-
-                requestor
-                        .acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(), info.getName()
-                                                                                                                    .substring(
-                                                                                                                            info.getName()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                                                                                                .lastIndexOf(
-                                                                                                                                        ".") +
-                                                                                                                            1)
-                                                                                                                    .toCharArray(), null,
-                                    info.getModifiers(), null);
+                requestor.acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(),
+                                     info.getName().substring(info.getName().lastIndexOf(".") + 1).toCharArray(),
+                                     null,
+                                     info.getModifiers(),
+                                     null);
             }
             TypeInfoStorage.get().setShortTypesInfo(typesJson);
         } catch (Throwable e) {

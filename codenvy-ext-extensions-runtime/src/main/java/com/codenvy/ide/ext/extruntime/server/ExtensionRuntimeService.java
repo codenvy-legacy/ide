@@ -59,7 +59,7 @@ import static org.exoplatform.ide.vfs.shared.PropertyFilter.ALL_FILTER;
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtensionRuntimeService.java Jul 3, 2013 3:21:23 PM azatsarynnyy $
  */
-@Path("ide/extruntime")
+@Path("{ws-name}/extruntime")
 public class ExtensionRuntimeService {
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;

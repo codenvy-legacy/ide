@@ -124,7 +124,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
      * @param remoteMode
      *         is a remote mode
      */
-    private void getBranches(String projectId, final String remoteMode) {
+    private void getBranches(@NotNull String projectId, @NotNull final String remoteMode) {
         BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller(JsonCollections.<Branch>createArray());
         try {
             service.branchList(resourceProvider.getVfsId(), projectId, remoteMode,
@@ -161,6 +161,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
      * @param remoteBranches
      *         remote branches
      */
+    @NotNull
     private JsonArray<String> getRemoteBranchesToDisplay(@NotNull String remoteName, @NotNull JsonArray<Branch> remoteBranches) {
         JsonArray<String> branches = JsonCollections.createArray();
 
@@ -189,6 +190,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
      * @param localBranches
      *         local branches
      */
+    @NotNull
     private JsonArray<String> getLocalBranchesToDisplay(@NotNull JsonArray<Branch> localBranches) {
         JsonArray<String> branches = JsonCollections.createArray();
 
@@ -232,7 +234,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
     }
 
     /** Push changes to remote repository (sends request over HTTP). */
-    private void doPushREST(final String repository) {
+    private void doPushREST(@NotNull final String repository) {
         try {
             service.push(resourceProvider.getVfsId(), project, getRefs(), repository, false, new AsyncRequestCallback<String>() {
                 @Override
@@ -254,6 +256,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
     }
 
     /** @return list of refs to push */
+    @NotNull
     private JsonArray<String> getRefs() {
         String localBranch = view.getLocalBranch();
         String remoteBranch = view.getRemoteBranch();
@@ -268,7 +271,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
      * @param t
      *         exception what happened
      */
-    private void handleError(Throwable t) {
+    private void handleError(@NotNull Throwable t) {
         String errorMessage = t.getMessage() != null ? t.getMessage() : constant.pushFail();
         console.print(errorMessage);
     }

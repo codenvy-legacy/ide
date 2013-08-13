@@ -24,12 +24,6 @@
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-rest-war</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-packaging-shell-war</artifactId>
             <version>${org.exoplatform.ide.version}</version>
             <type>war</type>
@@ -58,12 +52,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-storage</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-gadget-server</artifactId>
             <version>${org.exoplatform.ide.version}</version>
             <type>war</type>
         </dependency>
@@ -189,29 +177,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
             <version>${ch.qos.logback.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-gadget</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-ui</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-commons</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>gwt-user</artifactId>
-                    <groupId>com.google.gwt</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -780,18 +745,20 @@
                                       tofile="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j.jar"/>
 
                                 <unwar src="${project.build.directory}/packager-conf/war/codenvy-ide-client-${project.version}.war"
-                                       dest="${project.build.directory}/packager-conf/war/IDE">
+                                       dest="${project.build.directory}/packager-conf/war/ide">
                                     <patternset>
                                         <exclude name="**/lib/**"/>
                                     </patternset>
                                 </unwar>
 
-                                <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
-                                    <fileset dir="${project.build.directory}/packager-conf/war/IDE"/>
+                                <move todir="${project.build.directory}/packager-conf/war/ide/_app">
+                                    <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/"/>
+                                </move>
+
+                                <war destfile="${project.build.directory}/tomcat-ide/webapps/ide.war" needxmlfile="false">
+                                    <fileset dir="${project.build.directory}/packager-conf/war/ide"/>
                                 </war>
 
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${org.exoplatform.ide.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${org.exoplatform.ide.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${project.version}.war"
@@ -802,8 +769,6 @@
                                       tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${org.exoplatform.ide.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
                                 <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"

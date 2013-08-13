@@ -20,6 +20,13 @@ package com.codenvy.ide.actions;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ExternalTextResource;
+import com.google.gwt.resources.client.ResourceCallback;
+import com.google.gwt.resources.client.ResourceException;
+import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -32,6 +39,10 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class UpdateExtensionAction extends Action {
+    public interface Bundle extends ClientBundle {
+        @Source("com/codenvy/ide/codesrv")
+        ExternalTextResource codesrvAddress();
+    }
 
     @Inject
     public UpdateExtensionAction(Resources resources) {
@@ -41,23 +52,39 @@ public class UpdateExtensionAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        update(Window.Location.getParameter("h"), Window.Location.getParameter("p"));
+        Bundle bundle = GWT.create(Bundle.class);
+        try {
+            bundle.codesrvAddress().getText(new ResourceCallback<TextResource>() {
+                @Override
+                public void onSuccess(TextResource resource) {
+                    if (resource.getText() == null || resource.getText().isEmpty()) {
+                        update(Window.Location.getHostName(), "9876");
+                    } else {
+                        final String[] codeSrvAddress = resource.getText().split(":");
+                        update(codeSrvAddress[0].isEmpty() ? Window.Location.getHostName() : codeSrvAddress[0], codeSrvAddress[1]);
+                    }
+                }
+
+                @Override
+                public void onError(ResourceException e) {
+                    Log.error(getClass(), e.getMessage());
+                }
+            });
+        } catch (ResourceException ex) {
+            Log.error(getClass(), ex.getMessage());
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        if (Window.Location.getParameter("h") == null || Window.Location.getParameter("p") == null) {
-            e.getPresentation().setEnabledAndVisible(false);
-        } else {
-            e.getPresentation().setEnabledAndVisible(true);
-        }
+        e.getPresentation().setEnabledAndVisible(!Window.Location.getPort().equals("8080"));
     }
 
     /** Update already launched Codenvy application with a custom extension. */
     public static native void update(String host, String port)
     /*-{
-        $wnd.__gwt_bookmarklet_params = {server_url: 'http://' + host + ':' + port + '/', module_name: 'IDE'};
+        $wnd.__gwt_bookmarklet_params = {server_url: 'http://' + host + ':' + port + '/', module_name: '_app'};
         var s = $doc.createElement('script');
         s.src = 'http://' + host + ':' + port + '/dev_mode_on.js';
         void($doc.getElementsByTagName('head')[0].appendChild(s));

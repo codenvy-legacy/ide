@@ -1,23 +1,24 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.wizard;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.mvp.View;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Image;
@@ -29,6 +30,21 @@ import com.google.gwt.user.client.ui.Image;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public interface WizardView extends View<WizardView.ActionDelegate> {
+    /** Needs for delegate some function into Wizard view. */
+    public interface ActionDelegate {
+        /** Performs any actions appropriate in response to the user having pressed the Next button */
+        void onNextClicked();
+
+        /** Performs any actions appropriate in response to the user having pressed the Back button */
+        void onBackClicked();
+
+        /** Performs any actions appropriate in response to the user having pressed the Finish button */
+        void onFinishClicked();
+
+        /** Performs any actions appropriate in response to the user having pressed the Cancel button */
+        void onCancelClicked();
+    }
+
     /**
      * Sets whether Next button is visible.
      *
@@ -70,21 +86,21 @@ public interface WizardView extends View<WizardView.ActionDelegate> {
      *
      * @param caption
      */
-    void setCaption(String caption);
+    void setCaption(@NotNull String caption);
 
     /**
      * Sets new notice of wizard's page
      *
      * @param notice
      */
-    void setNotice(String notice);
+    void setNotice(@Nullable String notice);
 
     /**
      * Sets new image of wizard's page
      *
      * @param image
      */
-    void setImage(Image image);
+    void setImage(@Nullable Image image);
 
     /** Close wizard */
     void close();
@@ -107,31 +123,4 @@ public interface WizardView extends View<WizardView.ActionDelegate> {
      * @return place of main form
      */
     AcceptsOneWidget getContentPanel();
-
-    /** Needs for delegate some function into Wizard view. */
-    public interface ActionDelegate {
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Next button
-         */
-        void onNextClicked();
-
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Back button
-         */
-        void onBackClicked();
-
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Finish button
-         */
-        void onFinishClicked();
-
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Cancel button
-         */
-        void onCancelClicked();
-    }
 }

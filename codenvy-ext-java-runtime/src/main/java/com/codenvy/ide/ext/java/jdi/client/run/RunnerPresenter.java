@@ -158,7 +158,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
                     // ide/java/runner/stop?name=app-zcuz5b5wawcn5u23
                     // but it must be like:
                     // http://127.0.0.1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
-                    if (!result.getStopURL().matches("http[s]?://.+/IDE/rest/private/.*/stop\\?name=.+")) {
+                    if (!result.getStopURL().matches("http[s]?://.+/ide/rest/.*/stop\\?name=.+")) {
                         String fixedStopURL =
                                 Window.Location.getProtocol() + "//" + Window.Location.getHost() + restContext + "/" + result.getStopURL();
                         ((DtoClientImpls.ApplicationInstanceImpl)result).setStopURL(fixedStopURL);

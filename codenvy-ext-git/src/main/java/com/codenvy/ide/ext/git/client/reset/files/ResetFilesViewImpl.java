@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.git.client.reset.files;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.IndexFile;
@@ -128,7 +129,7 @@ public class ResetFilesViewImpl extends DialogBox implements ResetFilesView {
 
     /** {@inheritDoc} */
     @Override
-    public void setIndexedFiles(JsonArray<IndexFile> indexedFiles) {
+    public void setIndexedFiles(@NotNull JsonArray<IndexFile> indexedFiles) {
         // Wraps JsonArray in java.util.List
         List<IndexFile> appList = new ArrayList<IndexFile>();
         for (int i = 0; i < indexedFiles.size(); i++) {

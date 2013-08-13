@@ -28,6 +28,7 @@ import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -46,7 +47,7 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 @Singleton
 public class GitHubClientServiceImpl implements GitHubClientService {
-    private static final String BASE_URL      = "/ide" + "/github";
+    private static final String BASE_URL      = '/' + Utils.getWorkspaceName() + "/github";
     private static final String LIST          = BASE_URL + "/list";
     private static final String LOGIN         = BASE_URL + "/login";
     private static final String LIST_USER     = BASE_URL + "/list/user";

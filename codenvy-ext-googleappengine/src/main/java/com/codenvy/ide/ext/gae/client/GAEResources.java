@@ -22,7 +22,7 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
- * GAE client resources.
+ * Google App Engine client resources.
  *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 16, 2012 5:43:05 PM anya $

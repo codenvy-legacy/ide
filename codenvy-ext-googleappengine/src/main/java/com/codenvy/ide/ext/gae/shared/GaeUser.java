@@ -18,11 +18,30 @@
  */
 package com.codenvy.ide.ext.gae.shared;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/**
+ * Information about Google App Engine user.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ */
 public interface GaeUser {
+    /**
+     * Get authorization token.
+     *
+     * @return authorization token.
+     */
     Token getToken();
 
+    /**
+     * Get logged in user id.
+     *
+     * @return user id.
+     */
     String getId();
 
+    /**
+     * Get logged in user email.
+     *
+     * @return user email.
+     */
     String getEmail();
 }

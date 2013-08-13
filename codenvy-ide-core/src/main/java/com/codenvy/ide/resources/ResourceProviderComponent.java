@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2003-2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.resources;
 
@@ -30,6 +31,7 @@ import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.http.client.RequestBuilder;
@@ -75,12 +77,12 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
      */
     @Inject
     public ResourceProviderComponent(ModelProvider genericModelProvider, Loader loader, EventBus eventBus,
-                                     @Named("defaultFileType") FileType defaulFile) {
+                                     @Named("defaultFileType") FileType defaulFile, @Named("restContext") String restContext) {
         super();
         this.genericModelProvider = genericModelProvider;
         this.eventBus = eventBus;
         this.defaulFile = defaulFile;
-        this.workspaceURL = "rest/ide/vfs/v2";
+        this.workspaceURL = restContext + '/' + Utils.getWorkspaceName() + "/vfs/v2";
         this.modelProviders = JsonCollections.<ModelProvider>createStringMap();
         this.natures = JsonCollections.<ProjectNature>createStringMap();
         this.fileTypes = JsonCollections.createIntegerMap();
@@ -455,5 +457,40 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     @Override
     public String getRootId() {
         return vfsInfo.getRoot().getId();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void delete(Resource item, final AsyncCallback<String> callback) {
+        String url = item.getLinkByRelation(Link.REL_DELETE).getHref();
+        if (item instanceof File) {
+            url = URL.decode(url).replace("[lockToken]", ((File)item).getLock().getLockToken());
+        }
+
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
+        AsyncRequestCallback<StringBuilder> internalCallback = new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+            @Override
+            protected void onSuccess(StringBuilder result) {
+                Folder rootFolder = vfsInfo.getRoot();
+                rootFolder.getChildren().clear();
+
+                eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
+                activeProject = null;
+
+                callback.onSuccess(result.toString());
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        };
+
+        loader.setMessage("Deleting item...");
+        try {
+            AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+        } catch (RequestException e) {
+            callback.onFailure(e);
+        }
     }
 }

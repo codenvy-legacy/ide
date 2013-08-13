@@ -68,11 +68,11 @@ import static com.codenvy.ide.commons.FileUtils.ANY_FILTER;
 import static com.codenvy.ide.commons.FileUtils.deleteRecursive;
 import static com.codenvy.ide.commons.ZipUtils.unzip;
 import static com.codenvy.ide.commons.ZipUtils.zipDir;
-import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
-import static com.codenvy.ide.commons.server.ContainerUtils.readValuesParam;
-import static com.codenvy.ide.commons.server.FileUtils.createTempDirectory;
-import static com.codenvy.ide.commons.server.FileUtils.downloadFile;
-import static com.codenvy.ide.commons.server.NameGenerator.generate;
+import static com.codenvy.ide.commons.ContainerUtils.readValueParam;
+import static com.codenvy.ide.commons.ContainerUtils.readValuesParam;
+import static com.codenvy.ide.commons.FileUtils.createTempDirectory;
+import static com.codenvy.ide.commons.FileUtils.downloadFile;
+import static com.codenvy.ide.commons.NameGenerator.generate;
 import static com.codenvy.ide.ext.extruntime.server.Utils.addDependencyToPom;
 import static com.codenvy.ide.ext.extruntime.server.Utils.addModuleToReactorPom;
 import static com.codenvy.ide.ext.extruntime.server.Utils.enableSuperDevMode;
@@ -249,6 +249,9 @@ public class ExtensionLauncher implements Startable {
             Files.delete(customModulePath.resolve("pom.xml"));
             Files.createSymbolicLink(customModulePath.resolve("src"), extensionDirInFSRoot.resolve("src"));
             Files.createSymbolicLink(customModulePath.resolve("pom.xml"), extensionDirInFSRoot.resolve("pom.xml"));
+
+            Files.write(codeServerDirPath.resolve("codenvy-ide-core/src/main/resources/com/codenvy/ide/codesrv"),
+                        (":" + codeServerPort).getBytes());
 
             // Deploy custom project to maven repository.
             File zippedExtensionProjectFile = tempDir.toPath().resolve("extension-project.zip").toFile();
@@ -553,7 +556,7 @@ public class ExtensionLauncher implements Startable {
             setTomcatPorts(tomcatDir, shutdownPort, httpPort, ajpPort);
 
             File ideWar = downloadFile(new File(tomcatDir + "/webapps"), "app-", ".war", ideWarUrl);
-            ideWar.renameTo(tomcatDir.resolve("webapps/IDE.war").toFile());
+            ideWar.renameTo(tomcatDir.resolve("webapps/ide.war").toFile());
 
             final Path catalinaPath = tomcatDir.resolve("bin/catalina.sh");
             Files.setPosixFilePermissions(catalinaPath, PosixFilePermissions.fromString("rwxr--r--"));

@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.git.client.commit;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -29,10 +30,12 @@ import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -122,7 +125,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
     }
 
     /** Perform the commit to repository and process the response (sends request over HTTP). */
-    private void doCommitREST(Project project, String message, boolean all, boolean amend) {
+    private void doCommitREST(@NotNull Project project, @NotNull String message, boolean all, boolean amend) {
         DtoClientImpls.RevisionImpl revision = DtoClientImpls.RevisionImpl.make();
         revision.setMessage(message);
         revision.setCommitTime(0);
@@ -157,16 +160,24 @@ public class CommitPresenter implements CommitView.ActionDelegate {
      * @param revision
      *         a {@link Revision}
      */
-    private void onCommitSuccess(Revision revision) {
-        DateTimeFormat formatter = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_MEDIUM);
-        String date = formatter.format(new Date((long)revision.getCommitTime()));
-        String message = constant.commitMessage(revision.getId(), date);
-        message += (revision.getCommitter() != null && revision.getCommitter().getName() != null &&
-                    !revision.getCommitter().getName().isEmpty())
-                   ? " " + constant.commitUser(revision.getCommitter().getName()) : "";
-        console.print(message);
-        // TODO refresh tree
-        // IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
+    private void onCommitSuccess(@NotNull final Revision revision) {
+        resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
+            @Override
+            public void onSuccess(Project result) {
+                DateTimeFormat formatter = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_MEDIUM);
+                String date = formatter.format(new Date((long)revision.getCommitTime()));
+                String message = constant.commitMessage(revision.getId(), date);
+                message += (revision.getCommitter() != null && revision.getCommitter().getName() != null &&
+                            !revision.getCommitter().getName().isEmpty())
+                           ? " " + constant.commitUser(revision.getCommitter().getName()) : "";
+                console.print(message);
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(CommitPresenter.class, "can not get project " + project.getName());
+            }
+        });
     }
 
     /**
@@ -175,7 +186,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
      * @param e
      *         exception what happened
      */
-    private void handleError(Throwable e) {
+    private void handleError(@NotNull Throwable e) {
         String errorMessage = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : constant.commitFailed();
         console.print(errorMessage);
     }

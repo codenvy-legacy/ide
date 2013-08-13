@@ -26,6 +26,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.MessageBus;
@@ -50,7 +51,7 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
 @Singleton
 public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     /** Base url. */
-    private static final String BASE_URL = "/ide/extruntime";
+    private static final String BASE_URL = '/' + Utils.getWorkspaceName() + "/extruntime";
 
     /** Create method's path. */
     private static final String CREATE   = "/create";
@@ -76,6 +77,8 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     /** Message bus to communicate through WebSocket. */
     private MessageBus          wsMessageBus;
 
+    private final String        workspaceName;
+
     /**
      * Create service.
      * 
@@ -93,6 +96,7 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
         this.restContext = restContext;
         this.resourceProvider = resourceProvider;
         this.wsMessageBus = wsMessageBus;
+        this.workspaceName = Utils.getWorkspaceName();
     }
 
     /** {@inheritDoc} */

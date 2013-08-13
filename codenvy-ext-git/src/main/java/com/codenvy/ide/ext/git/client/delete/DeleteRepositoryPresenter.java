@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.git.client.delete;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -81,7 +82,7 @@ public class DeleteRepositoryPresenter {
      * @param repository
      *         repository name
      */
-    private void askBeforeDelete(String repository) {
+    private void askBeforeDelete(@NotNull String repository) {
         boolean needToDelete = Window.confirm(constant.deleteGitRepositoryQuestion(repository));
         if (needToDelete) {
             doDeleteRepository();

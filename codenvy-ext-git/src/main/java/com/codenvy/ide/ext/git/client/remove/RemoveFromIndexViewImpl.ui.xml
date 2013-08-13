@@ -21,7 +21,7 @@
             margin-right: 5px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="350px" height="100px" addStyleNames="{style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="400px" height="100px" addStyleNames="{style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
                 <c:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" size="SMALL" type="DANGER"

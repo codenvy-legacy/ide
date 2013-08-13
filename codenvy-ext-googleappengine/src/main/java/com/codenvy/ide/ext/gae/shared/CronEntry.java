@@ -19,17 +19,44 @@
 package com.codenvy.ide.ext.gae.shared;
 
 /**
+ * Information about cron entry.
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 23, 2012 4:40:20 PM anya $
  */
 public interface CronEntry {
+    /**
+     * Get cron entry description.
+     *
+     * @return description of cron entry.
+     */
     String getDescription();
 
+    /**
+     * Get cron entry schedule.
+     *
+     * @return schedule of cron entry.
+     */
     String getSchedule();
 
+    /**
+     * Get cron entry time zone.
+     *
+     * @return time zone.
+     */
     String getTimezone();
 
+    /**
+     * Get cron entry url.
+     *
+     * @return cron entry url.
+     */
     String getUrl();
 
+    /**
+     * Get next time iteration.
+     *
+     * @return next time iteration.
+     */
     Object getNextTimesIterato();
 }

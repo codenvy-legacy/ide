@@ -23,8 +23,7 @@ import com.codenvy.ide.tree.FileTreeNodeRenderer;
 import com.codenvy.ide.ui.DialogBoxResources;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.tree.Tree;
-import com.codenvy.ide.wizard.newproject.NewProjectWizardResource;
-import com.codenvy.ide.wizard.newresource.NewResourceWizardResources;
+import com.codenvy.ide.wizard.WizardResource;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.resources.client.ImageResource;
@@ -43,7 +42,7 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorViewImpl.Resources,
                                    LineNumberRenderer.Resources, EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources,
-                                   NewProjectWizardResource, NewResourceWizardResources, MenuResources, DialogBoxResources {
+                                   WizardResource, MenuResources, DialogBoxResources {
 
     /** Interface for css resources. */
     public interface CoreCss extends CssResource {

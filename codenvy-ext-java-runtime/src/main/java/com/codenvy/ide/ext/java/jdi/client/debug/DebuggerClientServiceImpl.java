@@ -25,6 +25,7 @@ import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -54,7 +55,7 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
      */
     @Inject
     protected DebuggerClientServiceImpl(@Named("restContext") String restContext, Loader loader) {
-        BASE_URL = restContext + "/ide" + "/java/debug";
+        BASE_URL = restContext + '/' + Utils.getWorkspaceName() + "/java/debug";
         this.loader = loader;
     }
 

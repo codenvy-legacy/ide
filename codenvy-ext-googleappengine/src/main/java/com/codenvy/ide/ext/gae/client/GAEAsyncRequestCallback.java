@@ -28,6 +28,8 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Callback that uses to proceed request.
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 18, 2012 11:25:43 AM anya $
  */
@@ -38,12 +40,7 @@ public abstract class GAEAsyncRequestCallback<T> extends AsyncRequestCallback<T>
     private GAELocalization constant;
 
     /**
-     * Create callback.
-     *
-     * @param unmarshaller
-     * @param console
-     * @param eventBus
-     * @param constant
+     * Construct of the callback.
      */
     public GAEAsyncRequestCallback(Unmarshallable<T> unmarshaller, ConsolePart console, EventBus eventBus,
                                    GAELocalization constant, LoginAction loginAction) {

@@ -1,0 +1,56 @@
+/*
+ * CODENVY CONFIDENTIAL
+ * __________________
+ *
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
+ */
+
+@CHARSET "UTF-8";
+
+.mainFont {
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    font-style: normal;
+    font-weight: normal;
+}
+
+.mainBoldFont {
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    font-style: normal;
+    font-weight: bold;
+}
+
+.errorFont {
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    font-style: normal;
+    font-weight: normal;
+    color: #d21a1a;
+}
+
+.greyFontColor {
+    color: #545454;
+}
+
+.cursorPointer {
+    cursor: pointer;
+}
+
+.line {
+    border-bottom: 1px solid #DBDFE5;
+}

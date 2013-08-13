@@ -18,10 +18,7 @@ package com.codenvy.ide.api.resources;
 
 import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.ProjectNature;
-import com.codenvy.ide.resources.model.Property;
+import com.codenvy.ide.resources.model.*;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 
@@ -143,4 +140,12 @@ public interface ResourceProvider {
      * @return
      */
     public String getRootId();
+
+    /**
+     * Delete resource item.
+     *
+     * @param item
+     * @param callback
+     */
+    public void delete(Resource item, AsyncCallback<String> callback);
 }

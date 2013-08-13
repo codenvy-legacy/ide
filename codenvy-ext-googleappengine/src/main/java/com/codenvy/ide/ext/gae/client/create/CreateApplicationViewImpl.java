@@ -28,13 +28,19 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
+ * The implementation of {@link CreateApplicationView}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@Singleton
 public class CreateApplicationViewImpl extends DialogBox implements CreateApplicationView {
-    interface CreateApplicationViewImplUiBinder extends UiBinder<Widget, CreateApplicationViewImpl> {}
+    interface CreateApplicationViewImplUiBinder extends UiBinder<Widget, CreateApplicationViewImpl> {
+    }
 
     private static CreateApplicationViewImplUiBinder uiBinder = GWT.create(CreateApplicationViewImplUiBinder.class);
 
@@ -57,6 +63,10 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
 
     private ActionDelegate delegate;
 
+    /**
+     * Constructor for View.
+     */
+    @Inject
     public CreateApplicationViewImpl(GAELocalization constant) {
         this.constant = constant;
 
@@ -66,26 +76,31 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void enableDeployButton(boolean enable) {
         deployButton.setEnabled(enable);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void enableCreateButton(boolean enable) {
         createButton.setEnabled(enable);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setUserInstruction(String userInstruction) {
         instructionLabel.setText(userInstruction);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -93,12 +108,14 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

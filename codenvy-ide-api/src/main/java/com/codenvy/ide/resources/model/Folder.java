@@ -133,12 +133,12 @@ public class Folder extends Resource {
     public Resource findResourceByName(String name, String type) {
         for (int i = 0; i < children.size(); i++) {
             Resource child = children.get(i);
-            if (child.getId().equals(id) && child.getResourceType().equals(type)) {
+            if (child.getName().equals(name) && child.getResourceType().equals(type)) {
                 return child;
             }
 
             if (child instanceof Folder) {
-                Resource resourceById = ((Folder)child).findResourceByName(id, type);
+                Resource resourceById = ((Folder)child).findResourceByName(name, type);
                 if (resourceById != null) {
                     return resourceById;
                 }

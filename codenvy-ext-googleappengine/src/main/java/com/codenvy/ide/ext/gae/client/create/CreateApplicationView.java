@@ -21,27 +21,68 @@ package com.codenvy.ide.ext.gae.client.create;
 import com.codenvy.ide.api.mvp.View;
 
 /**
+ * The view of {@link CreateApplicationPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface CreateApplicationView extends View<CreateApplicationView.ActionDelegate> {
+    /** Needs for delegate some function into Applications view. */
     interface ActionDelegate {
+        /**
+         * Perform action when application create button clicked.
+         */
         void onCreateApplicationButtonClicked();
 
+        /**
+         * Perform action when application deploy button clicked.
+         */
         void onDeployApplicationButtonClicked();
 
+        /**
+         * Perform action when cancel button clicked.
+         */
         void onCancelButtonClicked();
     }
 
+    /**
+     * Enable deploy button.
+     *
+     * @param enable
+     *         true sets button to enable state, otherwise false.
+     */
     void enableDeployButton(boolean enable);
 
+    /**
+     * Enable create button.
+     *
+     * @param enable
+     *         true sets button to enable state, otherwise false.
+     */
     void enableCreateButton(boolean enable);
 
+    /**
+     * Set user instructions for create and deploy steps.
+     *
+     * @param userInstruction
+     *         message what user should to do.
+     */
     void setUserInstruction(String userInstruction);
 
+    /**
+     * Return state of window.
+     *
+     * @return true if windows already showed, otherwise false.
+     */
     boolean isShown();
 
+    /**
+     * Show current dialog window.
+     */
     void showDialog();
 
+    /**
+     * Close current dialog window.
+     */
     void close();
 }

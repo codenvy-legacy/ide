@@ -24,6 +24,7 @@ import com.codenvy.ide.ext.extruntime.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -167,11 +168,9 @@ public class LaunchExtensionController {
     /** Performs actions after application was successfully launched. */
     private void afterApplicationLaunched() {
         UrlBuilder builder = new UrlBuilder();
-        final String uri =
-                           builder.setProtocol("http:").setHost(launchedApp.getHost())
+        final String uri = builder.setProtocol("http:").setHost(launchedApp.getHost())
                                   .setPort(launchedApp.getPort())
-                                  .setPath("IDE").setParameter("h", launchedApp.getCodeServerHost())
-                                  .setParameter("p", String.valueOf(launchedApp.getCodeServerPort())).buildString();
+                                  .setPath("ide" + '/' + Utils.getWorkspaceName()).buildString();
         console.print(constant.applicationStartedOnUrls(project.getName(), "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
     }
 

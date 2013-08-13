@@ -113,7 +113,7 @@ public interface HistoryView extends View<HistoryView.ActionDelegate> {
      * @param date
      *         commit A date
      */
-    void setCommitADate(String date);
+    void setCommitADate(@NotNull String date);
 
     /**
      * Set commit B date into view.
@@ -121,7 +121,7 @@ public interface HistoryView extends View<HistoryView.ActionDelegate> {
      * @param date
      *         commit B date
      */
-    void setCommitBDate(String date);
+    void setCommitBDate(@NotNull String date);
 
     /**
      * Set commit A revision into view.
@@ -129,7 +129,7 @@ public interface HistoryView extends View<HistoryView.ActionDelegate> {
      * @param revision
      *         commit A revision
      */
-    void setCommitARevision(String revision);
+    void setCommitARevision(@NotNull String revision);
 
     /**
      * Set commit B revision into view.
@@ -137,7 +137,7 @@ public interface HistoryView extends View<HistoryView.ActionDelegate> {
      * @param revision
      *         commit B revision
      */
-    void setCommitBRevision(String revision);
+    void setCommitBRevision(@NotNull String revision);
 
     /**
      * Set compare type into view.
@@ -145,7 +145,7 @@ public interface HistoryView extends View<HistoryView.ActionDelegate> {
      * @param type
      *         compare type
      */
-    void setCompareType(String type);
+    void setCompareType(@NotNull String type);
 
     /**
      * Set diff context into view.
@@ -153,7 +153,7 @@ public interface HistoryView extends View<HistoryView.ActionDelegate> {
      * @param diffContext
      *         diff between different commits
      */
-    void setDiffContext(String diffContext);
+    void setDiffContext(@NotNull String diffContext);
 
     /**
      * Change the visible state of the commit B panel.

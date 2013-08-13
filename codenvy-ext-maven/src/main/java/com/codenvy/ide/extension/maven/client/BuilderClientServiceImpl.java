@@ -25,6 +25,7 @@ import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
@@ -40,7 +41,7 @@ import com.google.inject.name.Named;
 @Singleton
 public class BuilderClientServiceImpl implements BuilderClientService {
     /** Base url. */
-    private static final String BASE_URL = "/ide/maven";
+    private static final String BASE_URL = '/' + Utils.getWorkspaceName() + "/maven";
     /** Build project method's path. */
     private static final String BUILD    = BASE_URL + "/build";
     /** Build project method's path. */

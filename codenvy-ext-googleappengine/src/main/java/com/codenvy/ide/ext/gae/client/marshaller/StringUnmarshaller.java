@@ -22,7 +22,7 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 
 /**
- * Deserializer for response's body.
+ * Unmarshaller for response's body.
  *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 24, 2012 12:22:34 PM anya $
@@ -30,6 +30,9 @@ import com.google.gwt.http.client.Response;
 public class StringUnmarshaller implements Unmarshallable<StringBuilder> {
     private StringBuilder builder;
 
+    /**
+     * Constructor for unmarshaller.
+     */
     public StringUnmarshaller(StringBuilder builder) {
         this.builder = builder;
     }

@@ -197,7 +197,6 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
      * @param status
      */
     private void updateJobStatus(JobStatus status) {
-        System.out.println(((DtoClientImpls.JobStatusImpl)status).serialize());
         if (status.getStatus() == JobStatus.Status.QUEUE && prevStatus != JobStatus.Status.QUEUE) {
             setBuildStatusQueue(status);
             return;
@@ -298,8 +297,7 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
             return;
         }
 
-        Project activeProject = project;
-        if (activeProject == null) {
+        if (project == null) {
             this.project = resourceProvider.getActiveProject();
         }
 

@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.client.editor;
 
+import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.ext.java.client.JavaAutoBeanFactory;
 import com.codenvy.ide.ext.java.client.NameEnvironment;
 import com.codenvy.ide.ext.java.client.TypeInfoStorage;
@@ -28,8 +29,6 @@ import com.codenvy.ide.ext.java.client.core.dom.ASTNode;
 import com.codenvy.ide.ext.java.client.core.dom.ASTParser;
 import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment;
-
-import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.text.Document;
@@ -82,7 +81,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider 
         file = editor.getEditorInput().getFile();
         nameEnvironment =
                 new NameEnvironment(file.getProject().getId(), GWT.<JavaAutoBeanFactory>create(JavaAutoBeanFactory.class),
-                                    "/rest");
+                                    "/ide/rest");
         TypeInfoStorage.get().setPackages(file.getProject().getId(), JsonCollections.createStringSet());
     }
 

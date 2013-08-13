@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,17 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.wizard.newresource;
-
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ImageResource;
+package com.codenvy.ide.util;
 
 /**
- * Contains of resource for new resource wizard page view.
+ * The class for getting some params from jsp page.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  */
-public interface NewResourceWizardResources extends ClientBundle {
-    @Source("com/codenvy/ide/wizard/images/NewResourceIcon.png")
-    ImageResource newResourceIcon();
+public class Utils {
+    /** @return workspace name */
+    public static native String getWorkspaceName() /*-{
+        return $wnd.ws;
+    }-*/;
 }

@@ -42,14 +42,13 @@ public class VFSInfoUnmarshaller implements Unmarshallable<VirtualFileSystemInfo
         this.virtualFileSystemInfo = virtualFileSystemInfo;
     }
 
-    /** @see com.codenvy.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         JSONObject jsonObject = JSONParser.parseLenient(response.getText()).isObject();
         virtualFileSystemInfo.setId(JSONDeserializer.STRING_DESERIALIZER.toObject(jsonObject.get("id")));
         virtualFileSystemInfo.setVersioningSupported(JSONDeserializer.BOOLEAN_DESERIALIZER.toObject(jsonObject
-                                                                                                            .get("versioningSupported")))
-        ; //
+                                                                                                            .get("versioningSupported")));
         virtualFileSystemInfo.setLockSupported(JSONDeserializer.BOOLEAN_DESERIALIZER.toObject(jsonObject
                                                                                                       .get("lockSupported"))); //
         virtualFileSystemInfo.setAnonymousPrincipal(JSONDeserializer.STRING_DESERIALIZER.toObject(jsonObject
@@ -68,9 +67,9 @@ public class VFSInfoUnmarshaller implements Unmarshallable<VirtualFileSystemInfo
         virtualFileSystemInfo.setRoot(new Folder(root));
     }
 
+    /** {@inheritDoc} */
     @Override
     public VirtualFileSystemInfo getPayload() {
         return this.virtualFileSystemInfo;
     }
-
 }

@@ -29,8 +29,10 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -161,9 +163,17 @@ public class BranchPresenter implements BranchView.ActionDelegate {
             service.branchCheckout(resourceProvider.getVfsId(), projectId, name, startingPoint, remote, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
-                    getBranches(projectId);
-                    // TODO refresh project explorer tree
-                    // IDE.fireEvent(new RefreshBrowserEvent());
+                    resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
+                        @Override
+                        public void onSuccess(Project result) {
+                            getBranches(projectId);
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Log.error(BranchPresenter.class, "can not get project " + project.getName());
+                        }
+                    });
                 }
 
                 @Override
@@ -184,7 +194,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
      * @param projectId
      *         project id
      */
-    public void getBranches(String projectId) {
+    public void getBranches(@NotNull String projectId) {
         BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller(JsonCollections.<Branch>createArray());
 
         try {

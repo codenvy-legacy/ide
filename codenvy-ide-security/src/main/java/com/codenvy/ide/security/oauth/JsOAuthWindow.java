@@ -87,7 +87,7 @@ public class JsOAuthWindow {
                     if (href) {
                         console.log(href);
                         var path = popupWindow.location.pathname;
-                        if (path == "/IDE/IDE.html") {
+                        if (path == ("/ide/" + $wnd.ws)) {
                             instance.@com.codenvy.ide.security.oauth.JsOAuthWindow::setAuthenticationStatus(I)(3);
                             popupWindow.close();
                             popupWindow = null;

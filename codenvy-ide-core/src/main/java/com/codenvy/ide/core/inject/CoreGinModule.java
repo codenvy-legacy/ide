@@ -1,35 +1,28 @@
 /*
- * Copyright (C) 2003-2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.core.inject;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.ActionManagerImpl;
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
-import com.codenvy.ide.api.editor.DocumentProvider;
-import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.editor.EditorProvider;
-import com.codenvy.ide.api.editor.EditorRegistry;
+import com.codenvy.ide.api.editor.*;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.paas.PaaSAgent;
-import com.codenvy.ide.api.parts.ConsolePart;
-import com.codenvy.ide.api.parts.OutlinePart;
-import com.codenvy.ide.api.parts.ProjectExplorerPart;
-import com.codenvy.ide.api.parts.SearchPart;
-import com.codenvy.ide.api.parts.WelcomePart;
+import com.codenvy.ide.api.parts.*;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
@@ -61,13 +54,8 @@ import com.codenvy.ide.outline.OutlinePartPresenter;
 import com.codenvy.ide.outline.OutlinePartView;
 import com.codenvy.ide.outline.OutlinePartViewImpl;
 import com.codenvy.ide.paas.PaaSAgentImpl;
-import com.codenvy.ide.part.EditorPartStackPresenter;
-import com.codenvy.ide.part.EditorPartStackView;
-import com.codenvy.ide.part.FocusManager;
-import com.codenvy.ide.part.PartStackPresenter;
+import com.codenvy.ide.part.*;
 import com.codenvy.ide.part.PartStackPresenter.PartStackEventHandler;
-import com.codenvy.ide.part.PartStackUIResources;
-import com.codenvy.ide.part.PartStackViewImpl;
 import com.codenvy.ide.part.console.ConsolePartPresenter;
 import com.codenvy.ide.part.console.ConsolePartView;
 import com.codenvy.ide.part.console.ConsolePartViewImpl;
@@ -93,6 +81,7 @@ import com.codenvy.ide.toolbar.ToolbarViewImpl;
 import com.codenvy.ide.ui.loader.IdeLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.user.UserClientServiceImpl;
+import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.MessageBusImpl;
@@ -107,11 +96,7 @@ import com.codenvy.ide.wizard.newresource.NewResourcePageViewImpl;
 import com.codenvy.ide.wizard.template.TemplateAgentImpl;
 import com.codenvy.ide.wizard.template.TemplatePageView;
 import com.codenvy.ide.wizard.template.TemplatePageViewImpl;
-import com.codenvy.ide.workspace.PartStackPresenterFactory;
-import com.codenvy.ide.workspace.PartStackViewFactory;
-import com.codenvy.ide.workspace.WorkspacePresenter;
-import com.codenvy.ide.workspace.WorkspaceView;
-import com.codenvy.ide.workspace.WorkspaceViewImpl;
+import com.codenvy.ide.workspace.*;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.gwt.user.client.Window;
@@ -233,7 +218,7 @@ public class CoreGinModule extends AbstractGinModule {
     @Named("restContext")
     @Singleton
     protected String provideDefaultRestContext() {
-        return "/IDE/rest/private";
+        return "/ide/rest";
     }
 
     @Provides
@@ -241,6 +226,6 @@ public class CoreGinModule extends AbstractGinModule {
     @Singleton
     protected String provideDefaultWebsocketUrl() {
         boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
-        return (isSecureConnection ? "wss://" : "ws://") + Window.Location.getHost() + "/IDE/websocket";
+        return (isSecureConnection ? "wss://" : "ws://") + Window.Location.getHost() + "/ide/websocket/" + Utils.getWorkspaceName();
     }
 }

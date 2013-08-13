@@ -42,7 +42,7 @@ import static org.exoplatform.ide.vfs.shared.PropertyFilter.ALL_FILTER;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@Path("ide/maven/create")
+@Path("{ws-name}/maven/create")
 public class CreateProjectService {
     @Inject
     VirtualFileSystemRegistry registry;
@@ -111,6 +111,26 @@ public class CreateProjectService {
         InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("conf/Simple_spring.zip");
         if (templateStream == null) {
             throw new InvalidArgumentException("Can't find Simple_spring.zip");
+        }
+        try {
+            vfs.importZip(projectFolder.getId(), templateStream, true);
+            updateProperties(name, properties, vfs, projectFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Path("project/empty")
+    @POST
+    @Produces(APPLICATION_JSON)
+    public void createEmptyProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, @QueryParam("rootId") String rootId,
+                                 List<Property> properties) throws VirtualFileSystemException {
+        VirtualFileSystem vfs = registry.getProvider(vfsId).newInstance(null, eventListenerList);
+        Folder projectFolder = vfs.createFolder(rootId, name);
+
+        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("conf/Simple_empty.zip");
+        if (templateStream == null) {
+            throw new InvalidArgumentException("Can't find Simple_empty.zip");
         }
         try {
             vfs.importZip(projectFolder.getId(), templateStream, true);

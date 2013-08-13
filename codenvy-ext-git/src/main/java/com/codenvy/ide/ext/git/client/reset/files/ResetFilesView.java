@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.git.client.reset.files;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.ext.git.shared.IndexFile;
 import com.codenvy.ide.json.JsonArray;
@@ -45,7 +46,7 @@ public interface ResetFilesView extends View<ResetFilesView.ActionDelegate> {
      * @param indexedFiles
      *         indexed files
      */
-    void setIndexedFiles(JsonArray<IndexFile> indexedFiles);
+    void setIndexedFiles(@NotNull JsonArray<IndexFile> indexedFiles);
 
     /** Close dialog. */
     void close();

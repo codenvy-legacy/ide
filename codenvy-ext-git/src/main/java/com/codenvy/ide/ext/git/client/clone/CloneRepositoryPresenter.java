@@ -18,8 +18,10 @@
  */
 package com.codenvy.ide.ext.git.client.clone;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.marshaller.RepoInfoUnmarshaller;
@@ -30,6 +32,7 @@ import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -98,7 +101,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      * @param project
      *         folder (root of GIT repository)
      */
-    private void cloneRepository(final String remoteUri, String remoteName, final Project project) {
+    private void cloneRepository(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
         DtoClientImpls.RepoInfoImpl repoInfo = DtoClientImpls.RepoInfoImpl.make();
         RepoInfoUnmarshallerWS unmarshallerWS = new RepoInfoUnmarshallerWS(repoInfo);
         try {
@@ -132,7 +135,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      * @param project
      *         folder (root of GIT repository)
      */
-    private void cloneRepositoryREST(final String remoteUri, String remoteName, final Project project) {
+    private void cloneRepositoryREST(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
         DtoClientImpls.RepoInfoImpl repoInfo = DtoClientImpls.RepoInfoImpl.make();
         RepoInfoUnmarshaller unmarshaller = new RepoInfoUnmarshaller(repoInfo);
         try {
@@ -161,21 +164,18 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      * @param project
      *         {@link Project} to clone
      */
-    private void onCloneSuccess(final RepoInfo gitRepositoryInfo, final Project project) {
-        console.print(constant.cloneSuccess(gitRepositoryInfo.getRemoteUri()));
-        // TODO
-        // IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), null));
+    private void onCloneSuccess(@NotNull final RepoInfo gitRepositoryInfo, @NotNull final Project project) {
+        resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
+            @Override
+            public void onSuccess(Project result) {
+                console.print(constant.cloneSuccess(gitRepositoryInfo.getRemoteUri()));
+            }
 
-        // TODO
-//        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-//            @Override
-//            public void execute() {
-//                String[] userRepo = GitURLParser.parseGitHubUrl(gitRepositoryInfo.getRemoteUri());
-//                if (userRepo != null) {
-//                    IDE.fireEvent(new CloneRepositoryCompleteEvent(userRepo[0], userRepo[1]));
-//                }
-//            }
-//        });
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(CloneRepositoryPresenter.class, "can not get project " + project.getName());
+            }
+        });
     }
 
     /**
@@ -184,25 +184,18 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      * @param path
      *         the path where project exist
      */
-    private void deleteFolder(Project path) {
-        // TODO need to add support of removing project
-//        try {
-//            VirtualFileSystem.getInstance().delete(path,
-//                                                   new AsyncRequestCallback<String>() {
-//                                                       @Override
-//                                                       protected void onSuccess(String result) {
-//                                                           // Do nothing
-//                                                       }
-//
-//                                                       @Override
-//                                                       protected void onFailure(Throwable exception) {
-//                                                           IDE.fireEvent(new ExceptionThrownEvent(exception,
-//                                                                                                  "Exception during folder removing"));
-//                                                       }
-//                                                   });
-//        } catch (RequestException e) {
-//            IDE.fireEvent(new ExceptionThrownEvent(e, "Exception during removing of directory project"));
-//        }
+    private void deleteFolder(@NotNull Project path) {
+        resourceProvider.delete(path, new AsyncCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                // do nothing
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                eventBus.fireEvent(new ExceptionThrownEvent(caught, "Exception during project removing"));
+            }
+        });
     }
 
     /**
@@ -213,7 +206,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      * @param remoteUri
      *         rempote uri
      */
-    private void handleError(Throwable e, String remoteUri) {
+    private void handleError(@NotNull Throwable e, @NotNull String remoteUri) {
         String errorMessage =
                 (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : constant.cloneFailed(remoteUri);
         console.print(errorMessage);

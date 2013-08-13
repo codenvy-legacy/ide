@@ -103,6 +103,11 @@
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-security</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-java</artifactId>
+        </dependency>
+
     </dependencies>
 
     <profiles>

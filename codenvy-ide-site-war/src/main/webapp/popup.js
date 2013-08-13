@@ -35,7 +35,7 @@ function Popup(authUrl, redirectAfterLogin, popupWindowWidth, popupWindowHeight)
 
             if (href
                 && (popupWindow.location.pathname == redirectAfterLogin
-                || popupWindow.location.pathname == "/IDE/IDE.html"
+                || popupWindow.location.pathname == "/ide/dev-monit"
                 || popupWindow.location.pathname.match("j_security_check$")
                 )) {
                 //console.log(href);

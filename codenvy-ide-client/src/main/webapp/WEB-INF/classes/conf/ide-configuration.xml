@@ -26,30 +26,51 @@
 
     <!--
     ***************************************************************************************
-    ********************** eXo IDE Commons Components *************************************
+    ********************** Codenvy IDE Commons Components *********************************
     ***************************************************************************************
     -->
+
     <component>
-        <type>org.exoplatform.ide.IDEServiceApplication</type>
+        <type>com.codenvy.ide.IDEServiceApplication</type>
     </component>
 
     <component>
         <type>com.codenvy.ide.server.IdeUserApplication</type>
     </component>
 
-    <!-- VirtualFileSystem -->
+    <component>
+        <key>org.exoplatform.ide.extension.ssh.server.SshKeyStore</key>
+        <type>org.exoplatform.ide.extension.ssh.server.DummySshKeyStore</type>
+    </component>
 
+    <!-- VirtualFileSystem -->
     <component>
         <type>org.exoplatform.ide.vfs.impl.fs.LocalFileSystemInitializer</type>
         <init-params>
             <values-param>
                 <name>ids</name>
                 <value>dev-monit</value>
+                <value>tmp-dev-monit</value>
             </values-param>
         </init-params>
     </component>
 
-    <!-- Java -->
+    <!-- End VirtualFileSystem -->
+
+    <!-- LogReader -->
+    <component>
+        <key>com.codenvy.logreader.LogPathProvider</key>
+        <type>com.codenvy.logreader.SystemLogPathProvider</type>
+    </component>
+    <!-- End LogReader -->
+
+    <!--
+    ***************************************************************************************
+    ********************** Language & Technology Supporting *******************************
+    ***************************************************************************************
+    -->
+
+    <!--  Java  Support-->
     <component>
         <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
     </component>
@@ -72,8 +93,37 @@
         <key>org.exoplatform.ide.extension.java.jdi.server.ApplicationRunner</key>
         <type>org.exoplatform.ide.extension.java.jdi.server.CloudfoundryApplicationRunner</type>
     </component>
+    <!-- End Java Support -->
 
-    <!-- End Java -->
+    <!--
+    ***************************************************************************************
+    **************************** Builder System Supporting ********************************
+    ***************************************************************************************
+    -->
+
+    <component>
+        <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.extension.maven.server.BuilderApplication</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.extension.maven.server.BuilderClient</type>
+        <init-params>
+            <value-param>
+                <name>build-server-base-url</name>
+                <value>http://localhost:8080/builder</value>
+            </value-param>
+        </init-params>
+    </component>
+
+    <!--
+    ***************************************************************************************
+    ********************************** PaaS's *********************************************
+    ***************************************************************************************
+    -->
 
     <component>
         <type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
@@ -95,7 +145,20 @@
         </init-params>
     </component>
 
-    <!-- OAuth support start -->
+    <component>
+        <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineClient</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
+    </component>
+
+    <!--
+    ***************************************************************************************
+    ********************************** OAuth Support **************************************
+    ***************************************************************************************
+    -->
+
     <component>
         <type>com.codenvy.commons.security.oauth.OAuthAuthenticationApplication</type>
     </component>
@@ -111,10 +174,64 @@
 
     <component>
         <type>org.exoplatform.ide.security.oauth.ExoGoogleOAuthAuthenticator</type>
+        <init-params>
+            <value-param>
+                <name>type</name>
+                <value>web</value>
+            </value-param>
+            <value-param>
+                <name>client-id</name>
+                <value>854018091723-fjpehkqiflfmhafcp6j3o1kvb504te2l.apps.googleusercontent.com</value>
+            </value-param>
+            <value-param>
+                <name>client-secret</name>
+                <value>8jxkJ8ROPCMoDY_7E52n6PAc</value>
+            </value-param>
+            <values-param>
+                <name>redirect-uris</name>
+                <value>http://ide2.codenvy-dev.com/ide/rest/ide/oauth/callback</value>
+            </values-param>
+        </init-params>
     </component>
 
     <component>
         <type>org.exoplatform.ide.security.oauth.ExoGitHubOAuthAuthenticator</type>
+        <init-params>
+            <value-param>
+                <name>type</name>
+                <value>web</value>
+            </value-param>
+            <value-param>
+                <name>client-id</name>
+                <value><!-- need to be filled --></value>
+            </value-param>
+            <value-param>
+                <name>client-secret</name>
+                <value><!-- need to be filled --></value>
+            </value-param>
+            <value-param>
+                <name>auth-uri</name>
+                <value>https://github.com/login/oauth/authorize</value>
+            </value-param>
+            <value-param>
+                <name>token-uri</name>
+                <value>https://github.com/login/oauth/access_token</value>
+            </value-param>
+            <values-param>
+                <name>redirect-uris</name>
+                <value><!-- need to be filled --></value>
+            </values-param>
+        </init-params>
     </component>
-    <!-- OAuth support end -->
+
+    <!--
+    ***************************************************************************************
+    ******************************* GitIgnoreConfigChecker ********************************
+    ***************************************************************************************
+    -->
+
+    <component>
+        <type>org.exoplatform.ide.git.server.GitIgnoreConfigChecker</type>
+    </component>
+
 </configuration>

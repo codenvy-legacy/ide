@@ -18,23 +18,15 @@
  */
 package com.codenvy.ide.ext.gae.client;
 
-/** @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a> */
+/**
+ * Google App Engine client localization resources.
+ *
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ */
 public interface GAELocalization extends com.google.gwt.i18n.client.Messages {
-    @Key("google.app.engine.control")
-    String googleAppEngineControl();
-
     /* Buttons */
-    @Key("authenticate.button")
-    String authenticateButton();
-
-    @Key("ok.button")
-    String okButton();
-
     @Key("cancel.button")
     String cancelButton();
-
-    @Key("login.button")
-    String loginButton();
 
     @Key("deploy.button")
     String deployButton();
@@ -55,9 +47,6 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages {
     @Key("update.button")
     String updateButton();
 
-    @Key("update.all.button")
-    String updateAllButton();
-
     @Key("rollback.button")
     String rollbackButton();
 
@@ -71,45 +60,19 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages {
     String vacuumButton();
 
     /* Create application */
-    @Key("create.application.control.title")
-    String createApplicationControlTitle();
-
-    @Key("create.application.control.prompt")
-    String createApplicationControlPrompt();
-
     @Key("create.application.view.title")
     String createApplicationViewTitle();
 
     @Key("create.application.instruction")
     String createApplicationInstruction();
 
-    @Key("create.application.logged.note")
-    String createApplicationLoggedNote();
-
-    @Key("create.application.deploy.field")
-    String createApplicationDeployField();
-
     @Key("create.application.cannot.deploy")
     String createApplicationCannotDeploy();
 
     /* Deploy application */
-    @Key("deploy.application.use.existed.id.field")
-    String deployApplicationUseExistedIdField();
-
-    @Key("deploy.application.empty.id.message")
-    String deployApplicationEmptyIdMessage();
-
-    @Key("deploy.application.control.title")
-    String deployApplicationControlTitle();
-
-    @Key("deploy.application.control.prompt")
-    String deployApplicationControlPrompt();
 
     @Key("deploy.application.success")
     String deployApplicationSuccess(String project, String link);
-
-    @Key("deploy.application.message")
-    String deployApplicationMessage(String projectName);
 
     @Key("deploy.application.started")
     String deployApplicationStarted(String projectName);
@@ -123,15 +86,6 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages {
     /* Manage Application */
     @Key("manage.application.view.title")
     String manageApplicationViewTitle();
-
-    @Key("manage.application.backends.tab")
-    String manageApplicationBackendsTab();
-
-    @Key("manage.application.crons.tab")
-    String manageApplicationCronsTab();
-
-    @Key("manage.application.general.tab")
-    String manageApplicationGeneralTab();
 
     @Key("manage.application.indexes")
     String manageApplicationIndexes();
@@ -149,56 +103,16 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages {
     String manageApplicationDos();
 
     /* Rollback update */
-    @Key("rollback.update.control.title")
-    String rollbackUpdateControlTitle();
-
-    @Key("rollback.update.control.prompt")
-    String rollbackUpdateControlPrompt();
 
     @Key("rollback.update.success")
     String rollbackUpdateSuccess();
 
     /* Log in */
-    @Key("login.view.title")
-    String loginViewTitle();
-
-    @Key("login.message")
-    String loginMessage();
-
-    @Key("login.control.title")
-    String loginControlTitle();
-
-    @Key("login.control.prompt")
-    String loginControlPrompt();
-
-    @Key("logout.control.title")
-    String logoutControlTitle();
-
-    @Key("logout.control.prompt")
-    String logoutControlPrompt();
-
     @Key("logout.not.logged")
     String logoutNotLogged();
 
     @Key("logout.success")
     String logoutSuccess();
-
-    /* Logs */
-    @Key("logs.view.title")
-    String logsViewTitle();
-
-    @Key("num.days.field.title")
-    String numDaysFieldTitle();
-
-    @Key("logs.severity.field.title")
-    String logsSeverityFieldTitle();
-
-    @Key("get.logs.button")
-    String getLogsButton();
-
-    /* Error */
-    @Key("not.app.engine.project")
-    String notAppEngineProjectError();
 
     @Key("unknown.error.message")
     String unknownErrorMessage();
@@ -239,42 +153,6 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages {
     @Key("rollback.all.backends.successfully")
     String rollbackAllBackendsSuccessfully();
 
-    @Key("configure.backend.button")
-    @DefaultMessage("Configure Backend")
-    String configureBackendButton();
-
-    @Key("delete.backend.button")
-    @DefaultMessage("Delete Backend")
-    String deleteBackendButton();
-
-    @Key("list.backends.button")
-    @DefaultMessage("Backends")
-    String getListBackendsButton();
-
-    @Key("rollback.backend.button")
-    @DefaultMessage("Rollback Backend")
-    String rollbackBackendButton();
-
-    @Key("rollback.allbackends.button")
-    @DefaultMessage("Rollback All Backends")
-    String rollbackAllBackendsButton();
-
-    @Key("set.backend.state.button")
-    @DefaultMessage("Set Backend State")
-    String setBackendStateButton();
-
-    @Key("update.all.backends.button")
-    @DefaultMessage("Update All Backends")
-    String updateAllBackendsButton();
-
-    @Key("update.backend.button")
-    @DefaultMessage("Update Backend")
-    String updateBackendButton();
-
-    @Key("update.backends.button")
-    @DefaultMessage("Update Backends")
-    String updateBackendsButton();
-
     @Key("update.crons.successfully")
     String updateCronsSuccessfully();
 
@@ -285,19 +163,10 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages {
     @Key("cron.description.title")
     String cronDescriptionTitle();
 
-    @Key("cron.schedule.title")
-    String cronScheduleTitle();
-
-    @Key("cron.timezone.title")
-    String cronTimezoneTitle();
-
     @Key("cron.grid.message")
     String cronGridMessage();
 
     /* Resource limits */
-    @Key("resource.limits.tab.title")
-    String resourceLimitsTabTitle();
-
     @Key("resource.column.title")
     String resourceColumnTitle();
 
@@ -335,12 +204,6 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages {
     @Key("backend.public.title")
     String backendPublicTitle();
 
-    @Key("backend.delete.title")
-    String backendDeleteTitle();
-
-    @Key("backend.delete.question")
-    String backendDeleteQuestion(String backend);
-
     @Key("backend.update.started")
     String backendUpdateStarted(String backend);
 
@@ -352,10 +215,4 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages {
 
     @Key("backends.update.finished")
     String backendsUpdateFinished();
-
-    @Key("login.oauth.title")
-    String loginOAuthTitle();
-
-    @Key("login.oauth.label")
-    String loginOAuthLabel();
 }

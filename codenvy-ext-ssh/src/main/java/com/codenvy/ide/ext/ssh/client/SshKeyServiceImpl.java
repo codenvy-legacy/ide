@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.ssh.client;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.ssh.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.ssh.shared.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.shared.KeyItem;
@@ -26,6 +27,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
@@ -44,6 +46,7 @@ import com.google.inject.name.Named;
 public class SshKeyServiceImpl implements SshKeyService {
     private final String restContext;
     private final Loader loader;
+    private final String wsName;
 
     /**
      * Create service.
@@ -55,22 +58,23 @@ public class SshKeyServiceImpl implements SshKeyService {
     protected SshKeyServiceImpl(@Named("restContext") String restContext, Loader loader) {
         this.restContext = restContext;
         this.loader = loader;
+        this.wsName = '/' + Utils.getWorkspaceName();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getAllKeys(JsonpAsyncCallback<JavaScriptObject> callback) {
+    public void getAllKeys(@NotNull JsonpAsyncCallback<JavaScriptObject> callback) {
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
         loader.setMessage("Getting SSH keys....");
         loader.show();
         callback.setLoader(loader);
-        jsonp.requestObject(restContext + "/ide" + "/ssh-keys/all", callback);
+        jsonp.requestObject(restContext + wsName + "/ssh-keys/all", callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void generateKey(String host, AsyncRequestCallback<GenKeyRequest> callback) throws RequestException {
-        String url = restContext + "/ide" + "/ssh-keys/gen";
+    public void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<GenKeyRequest> callback) throws RequestException {
+        String url = restContext + wsName + "/ssh-keys/gen";
 
         DtoClientImpls.GenKeyRequestImpl keyRequest = DtoClientImpls.GenKeyRequestImpl.make();
         keyRequest.setHost(host);
@@ -84,7 +88,7 @@ public class SshKeyServiceImpl implements SshKeyService {
 
     /** {@inheritDoc} */
     @Override
-    public void getPublicKey(KeyItem keyItem, JsonpAsyncCallback<JavaScriptObject> callback) {
+    public void getPublicKey(@NotNull KeyItem keyItem, @NotNull JsonpAsyncCallback<JavaScriptObject> callback) {
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
         loader.setMessage("Getting public SSH key for " + keyItem.getHost());
         loader.show();
@@ -94,7 +98,7 @@ public class SshKeyServiceImpl implements SshKeyService {
 
     /** {@inheritDoc} */
     @Override
-    public void deleteKey(KeyItem keyItem, JsonpAsyncCallback<Void> callback) {
+    public void deleteKey(@NotNull KeyItem keyItem, @NotNull JsonpAsyncCallback<Void> callback) {
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
         loader.setMessage("Deleting SSH keys for " + keyItem.getHost());
         loader.show();

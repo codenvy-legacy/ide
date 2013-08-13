@@ -23,6 +23,7 @@ import com.codenvy.ide.ext.jenkins.shared.JobStatus;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
@@ -36,7 +37,7 @@ import com.google.inject.name.Named;
  */
 @Singleton
 public class JenkinsServiceImpl implements JenkinsService {
-    private static final String JENKINS = "/ide/jenkins";
+    private static final String JENKINS = '/' + Utils.getWorkspaceName() + "/jenkins";
     private String restContext;
     private Loader loader;
 

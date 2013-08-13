@@ -260,6 +260,8 @@
                                       tofile="${project.build.directory}/classes/tomcat/unzip/bin/setenv.sh"/>
                                 <move file="${project.build.directory}/classes/tomcat/logback.xml"
                                       tofile="${project.build.directory}/classes/tomcat/unzip/conf/logback.xml"/>
+                                <move file="${project.build.directory}/classes/tomcat/server.xml"
+                                      tofile="${project.build.directory}/classes/tomcat/unzip/conf/server.xml"/>
                                 <move file="${project.build.directory}/classes/tomcat/jaas.conf"
                                       tofile="${project.build.directory}/classes/tomcat/unzip/conf/jaas.conf"/>
                                 <zip basedir="${project.build.directory}/classes/tomcat/unzip"

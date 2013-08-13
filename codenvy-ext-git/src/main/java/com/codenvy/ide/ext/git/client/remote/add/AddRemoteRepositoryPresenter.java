@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.git.client.remote.add;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -55,7 +56,7 @@ public class AddRemoteRepositoryPresenter implements AddRemoteRepositoryView.Act
     }
 
     /** Show dialog. */
-    public void showDialog(AsyncCallback<Void> callback) {
+    public void showDialog(@NotNull AsyncCallback<Void> callback) {
         this.callback = callback;
         view.setUrl("");
         view.setName("");
