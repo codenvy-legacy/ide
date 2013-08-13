@@ -30,10 +30,9 @@ import com.codenvy.ide.resources.model.Property;
  * {@link ResourceProvider} used to get proper {@link ModelProvider} and the
  * new {@link Project} instance that is filled with response data.
  * <p/>
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- * exo@exoplatform.com
- * Sep 10, 2012
+ *
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ *         Sep 10, 2012
  */
 public class ProjectModelProviderAdapter {
     private final ResourceProvider resourceProvider;

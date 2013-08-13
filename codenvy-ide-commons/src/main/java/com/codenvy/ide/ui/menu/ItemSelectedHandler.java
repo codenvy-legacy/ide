@@ -19,12 +19,7 @@
 package com.codenvy.ide.ui.menu;
 
 
-/**
- * Created by The eXo Platform SAS .
- *
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
- */
+/** @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a> */
 
 public interface ItemSelectedHandler {
 

@@ -18,8 +18,6 @@
 package com.codenvy.ide.ext.git.shared;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: GitHubUser.java Aug 6, 2012
  */

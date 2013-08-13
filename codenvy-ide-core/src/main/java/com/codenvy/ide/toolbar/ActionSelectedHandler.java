@@ -21,12 +21,7 @@ package com.codenvy.ide.toolbar;
 
 import com.codenvy.ide.api.ui.action.Action;
 
-/**
- * Created by The eXo Platform SAS .
- *
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
- */
+/** @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a> */
 
 public interface ActionSelectedHandler {
 

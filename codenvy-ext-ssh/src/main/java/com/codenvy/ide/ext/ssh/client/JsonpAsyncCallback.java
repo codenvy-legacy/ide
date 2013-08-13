@@ -21,13 +21,7 @@ import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-/**
- * Created by The eXo Platform SAS.
- *
- * @param <T>
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: $
- */
+/** @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a> */
 public abstract class JsonpAsyncCallback<T> implements AsyncCallback<T> {
     private Loader loader;
 

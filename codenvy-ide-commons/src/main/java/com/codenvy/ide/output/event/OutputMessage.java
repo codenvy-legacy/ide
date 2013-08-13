@@ -17,12 +17,7 @@
  */
 package com.codenvy.ide.output.event;
 
-/**
- * Created by The eXo Platform SAS .
- *
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version @version $Id: $
- */
+/** @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a> */
 
 public class OutputMessage {
 

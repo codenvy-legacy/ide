@@ -26,8 +26,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Element;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  *          <p/>

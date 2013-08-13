@@ -1,29 +1,22 @@
 /*
- * CODENVY CONFIDENTIAL
- * __________________
+ *  Copyright 2012 GWT-Bootstrap
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 package com.codenvy.ide.ui;
 
-import com.codenvy.ide.ui.base.ButtonSize;
-import com.codenvy.ide.ui.base.ButtonType;
-import com.codenvy.ide.ui.base.Constants;
-import com.codenvy.ide.ui.base.HasType;
-import com.codenvy.ide.ui.base.StyleHelper;
+import com.codenvy.ide.ui.base.*;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.ImageResource;
@@ -33,26 +26,24 @@ import com.google.gwt.user.client.ui.HasEnabled;
 
 /**
  * Button with optional icon.
- *
+ * <p/>
  * <p>
  * <h3>UiBinder Usage:</h3>
- *
+ * <p/>
  * <pre>
- * {@code <b:Button icon="TRASH" type="ERROR" toggle="true" loadingText="I'm loading..." completeText="Oh hoh, I completed the action!">Delete</b:Button>}
+ * {@code <b:Button icon="TRASH" type="ERROR" toggle="true" loadingText="I'm loading..." completeText="Oh hoh, I completed the
+ * action!">Delete</b:Button>}
  * </pre>
- *
+ * <p/>
  * All arguments are optional.
  * </p>
  *
- * @since 2.0.4.0
- *
  * @author Carlos Alexandro Becker
- *
  * @author Dominik Mayer
- *
  * @see <a
  *      href="http://twitter.github.com/bootstrap/base-css.html#buttons">Bootstrap
  *      documentation</a>
+ * @since 2.0.4.0
  */
 // @formatter:on
 public class Button extends IconAnchor implements HasClickHandlers,
@@ -61,7 +52,7 @@ public class Button extends IconAnchor implements HasClickHandlers,
                                                   HasAllKeyHandlers, HasAllMouseHandlers, HasAllTouchHandlers {
     private static final ButtonResources resources = GWT.create(ButtonResources.class);
 
-    static{
+    static {
         resources.buttonCss().ensureInjected();
     }
 
@@ -69,9 +60,7 @@ public class Button extends IconAnchor implements HasClickHandlers,
     private ButtonType type;
     private ButtonSize size;
 
-    /**
-     * Creates an empty Button.
-     */
+    /** Creates an empty Button. */
     public Button() {
         super();
         addStyleName(Constants.BTN);
@@ -79,7 +68,9 @@ public class Button extends IconAnchor implements HasClickHandlers,
 
     /**
      * Creates an Button with ClickHandler
-     * @param handler Butotn ClickHandler
+     *
+     * @param handler
+     *         Butotn ClickHandler
      */
     public Button(ClickHandler handler) {
         this();
@@ -91,7 +82,7 @@ public class Button extends IconAnchor implements HasClickHandlers,
      * Creates a Button with the given caption.
      *
      * @param caption
-     *            the caption of the Button
+     *         the caption of the Button
      */
     public Button(String caption) {
         this();
@@ -100,8 +91,11 @@ public class Button extends IconAnchor implements HasClickHandlers,
 
     /**
      * Create Button with click handler.
-     * @param caption the caption of the Button
-     * @param handler Button Click Handler
+     *
+     * @param caption
+     *         the caption of the Button
+     * @param handler
+     *         Button Click Handler
      */
     public Button(String caption, ClickHandler handler) {
         this(caption);
@@ -112,9 +106,9 @@ public class Button extends IconAnchor implements HasClickHandlers,
      * Creates a Button with the given caption and icon.
      *
      * @param caption
-     *            the caption of the Button
+     *         the caption of the Button
      * @param icon
-     *            the Icon on the caption's left
+     *         the Icon on the caption's left
      */
     public Button(String caption, ImageResource icon) {
         this(caption);
@@ -125,11 +119,11 @@ public class Button extends IconAnchor implements HasClickHandlers,
      * Creates a Button with the given caption and icon and ClickHandler.
      *
      * @param caption
-     *            the caption of the Button
+     *         the caption of the Button
      * @param icon
-     *            the Icon on the caption's left
+     *         the Icon on the caption's left
      * @param handler
-     *            the ClickHandler of the Button.
+     *         the ClickHandler of the Button.
      */
     public Button(String caption, ImageResource icon, ClickHandler handler) {
         this(caption, icon);
@@ -138,11 +132,11 @@ public class Button extends IconAnchor implements HasClickHandlers,
 
     /**
      * Sets the type of the Button.
-     * <p>
+     * <p/>
      * Different types give the button a different look.
      *
      * @param type
-     *            the type of the Button.
+     *         the type of the Button.
      */
     public void setType(ButtonType type) {
         this.type = type;
@@ -153,7 +147,7 @@ public class Button extends IconAnchor implements HasClickHandlers,
      * Sets the size of the Button.
      *
      * @param size
-     *            the size of the Button.
+     *         the size of the Button.
      */
     public void setSize(ButtonSize size) {
         this.size = size;
@@ -162,7 +156,7 @@ public class Button extends IconAnchor implements HasClickHandlers,
 
     /**
      * Whether the Button is enabled or disabled.
-     * <p>
+     * <p/>
      * A disabled widget cannot be used.
      *
      * @return <code>false</code> if the Button is disabled.
@@ -173,40 +167,40 @@ public class Button extends IconAnchor implements HasClickHandlers,
 
     /**
      * Sets whether the Button is enabled or disabled.
-     * <p>
+     * <p/>
      * A disabled widget cannot be used.
      *
      * @param enabled
-     *            <code>false</code> if the Button should be disabled. Default:
-     *            <code>true</code>
-	 */
-	public void setEnabled(boolean enabled) {
-		if (enabled)
-			removeStyleName(Constants.DISABLED);
-		else
-			addStyleName(Constants.DISABLED);
-	}
+     *         <code>false</code> if the Button should be disabled. Default:
+     *         <code>true</code>
+     */
+    public void setEnabled(boolean enabled) {
+        if (enabled)
+            removeStyleName(Constants.DISABLED);
+        else
+            addStyleName(Constants.DISABLED);
+    }
 
-	/**
-	 * Enable ou disable the data-toggle behavior.
-	 *
-	 * @param toggle
-	 *            <code>true</code> will enable this behavior.
-	 *            <code>false</code> will disable it or do nothing if it never
-	 *            was enabled.
-	 */
-	public void setToggle(boolean toggle) {
-		if (toggle)
-			getElement().setAttribute(Constants.DATA_TOGGLE, "button");
-		else
-			getElement().removeAttribute(Constants.DATA_TOGGLE);
-	}
+    /**
+     * Enable ou disable the data-toggle behavior.
+     *
+     * @param toggle
+     *         <code>true</code> will enable this behavior.
+     *         <code>false</code> will disable it or do nothing if it never
+     *         was enabled.
+     */
+    public void setToggle(boolean toggle) {
+        if (toggle)
+            getElement().setAttribute(Constants.DATA_TOGGLE, "button");
+        else
+            getElement().removeAttribute(Constants.DATA_TOGGLE);
+    }
 
     /**
      * Verify if the property "toggle" is set.
      *
-     * @return  true: if the data-toggle is equal 'button'
-     *          false: otherwise
+     * @return true: if the data-toggle is equal 'button'
+     *         false: otherwise
      */
     public boolean isToggle() {
         return getElement().getAttribute(Constants.DATA_TOGGLE).equals("button");
@@ -214,8 +208,9 @@ public class Button extends IconAnchor implements HasClickHandlers,
 
     /**
      * Verify if the button is toggled.
+     *
      * @return true: if yes (it will contain the "active" styleclass
-     *          false: otherwise.
+     *         false: otherwise.
      */
     public boolean isToggled() {
         return getStyleName().toLowerCase().contains("active");
@@ -299,199 +294,146 @@ public class Button extends IconAnchor implements HasClickHandlers,
 //		}-*/;
 //	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addClickHandler(ClickHandler handler) {
-		return addDomHandler(handler, ClickEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addClickHandler(ClickHandler handler) {
+        return addDomHandler(handler, ClickEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler) {
-		return addDomHandler(handler, DoubleClickEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler) {
+        return addDomHandler(handler, DoubleClickEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addDragEndHandler(DragEndHandler handler) {
-		return addDomHandler(handler, DragEndEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addDragEndHandler(DragEndHandler handler) {
+        return addDomHandler(handler, DragEndEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addDragEnterHandler(DragEnterHandler handler) {
-		return addDomHandler(handler, DragEnterEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addDragEnterHandler(DragEnterHandler handler) {
+        return addDomHandler(handler, DragEnterEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addDragLeaveHandler(DragLeaveHandler handler) {
-		return addDomHandler(handler, DragLeaveEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addDragLeaveHandler(DragLeaveHandler handler) {
+        return addDomHandler(handler, DragLeaveEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addDragHandler(DragHandler handler) {
-		return addDomHandler(handler, DragEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addDragHandler(DragHandler handler) {
+        return addDomHandler(handler, DragEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addDragOverHandler(DragOverHandler handler) {
-		return addDomHandler(handler, DragOverEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addDragOverHandler(DragOverHandler handler) {
+        return addDomHandler(handler, DragOverEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addDragStartHandler(DragStartHandler handler) {
-		return addDomHandler(handler, DragStartEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addDragStartHandler(DragStartHandler handler) {
+        return addDomHandler(handler, DragStartEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addDropHandler(DropHandler handler) {
-		return addDomHandler(handler, DropEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addDropHandler(DropHandler handler) {
+        return addDomHandler(handler, DropEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addFocusHandler(FocusHandler handler) {
-		return addDomHandler(handler, FocusEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addFocusHandler(FocusHandler handler) {
+        return addDomHandler(handler, FocusEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addBlurHandler(BlurHandler handler) {
-		return addDomHandler(handler, BlurEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addBlurHandler(BlurHandler handler) {
+        return addDomHandler(handler, BlurEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addGestureStartHandler(
-			GestureStartHandler handler) {
-		return addDomHandler(handler, GestureStartEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addGestureStartHandler(
+            GestureStartHandler handler) {
+        return addDomHandler(handler, GestureStartEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addGestureChangeHandler(
-			GestureChangeHandler handler) {
-		return addDomHandler(handler, GestureChangeEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addGestureChangeHandler(
+            GestureChangeHandler handler) {
+        return addDomHandler(handler, GestureChangeEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addGestureEndHandler(GestureEndHandler handler) {
-		return addDomHandler(handler, GestureEndEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addGestureEndHandler(GestureEndHandler handler) {
+        return addDomHandler(handler, GestureEndEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addKeyUpHandler(KeyUpHandler handler) {
-		return addDomHandler(handler, KeyUpEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addKeyUpHandler(KeyUpHandler handler) {
+        return addDomHandler(handler, KeyUpEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
-		return addDomHandler(handler, KeyDownEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
+        return addDomHandler(handler, KeyDownEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addKeyPressHandler(KeyPressHandler handler) {
-		return addDomHandler(handler, KeyPressEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addKeyPressHandler(KeyPressHandler handler) {
+        return addDomHandler(handler, KeyPressEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
-		return addDomHandler(handler, MouseDownEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
+        return addDomHandler(handler, MouseDownEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addMouseUpHandler(MouseUpHandler handler) {
-		return addDomHandler(handler, MouseUpEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addMouseUpHandler(MouseUpHandler handler) {
+        return addDomHandler(handler, MouseUpEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
-		return addDomHandler(handler, MouseOutEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
+        return addDomHandler(handler, MouseOutEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
-		return addDomHandler(handler, MouseOverEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
+        return addDomHandler(handler, MouseOverEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
-		return addDomHandler(handler, MouseMoveEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
+        return addDomHandler(handler, MouseMoveEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addMouseWheelHandler(MouseWheelHandler handler) {
-		return addDomHandler(handler, MouseWheelEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addMouseWheelHandler(MouseWheelHandler handler) {
+        return addDomHandler(handler, MouseWheelEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addTouchStartHandler(TouchStartHandler handler) {
-		return addDomHandler(handler, TouchStartEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addTouchStartHandler(TouchStartHandler handler) {
+        return addDomHandler(handler, TouchStartEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addTouchMoveHandler(TouchMoveHandler handler) {
-		return addDomHandler(handler, TouchMoveEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addTouchMoveHandler(TouchMoveHandler handler) {
+        return addDomHandler(handler, TouchMoveEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addTouchEndHandler(TouchEndHandler handler) {
-		return addDomHandler(handler, TouchEndEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addTouchEndHandler(TouchEndHandler handler) {
+        return addDomHandler(handler, TouchEndEvent.getType());
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HandlerRegistration addTouchCancelHandler(TouchCancelHandler handler) {
-		return addDomHandler(handler, TouchCancelEvent.getType());
-	}
+    /** {@inheritDoc} */
+    public HandlerRegistration addTouchCancelHandler(TouchCancelHandler handler) {
+        return addDomHandler(handler, TouchCancelEvent.getType());
+    }
 
     /**
      * Get Button Type
+     *
      * @return Current Button Type
      */
     public ButtonType getType() {
@@ -500,15 +442,18 @@ public class Button extends IconAnchor implements HasClickHandlers,
 
     /**
      * Get Button Size
+     *
      * @return Current Button Size
      */
     public ButtonSize getSize() {
         return size;
     }
-    
+
     /**
      * Set element as a Block Level Button
-     * @param block true:Block Level false:Default
+     *
+     * @param block
+     *         true:Block Level false:Default
      */
     public void setBlock(boolean block) {
         setStyleName(Constants.BTN_BLOCK, block);

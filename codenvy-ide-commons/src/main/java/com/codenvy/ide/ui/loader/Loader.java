@@ -20,12 +20,7 @@ package com.codenvy.ide.ui.loader;
 
 import com.codenvy.ide.rest.AsyncRequestLoader;
 
-/**
- * Created by The eXo Platform SAS .
- *
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
- */
+/** @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a> */
 public abstract class Loader implements AsyncRequestLoader {
     protected final String DEFAULT_MESSAGE = "Loading data...";
     private         String message         = DEFAULT_MESSAGE;

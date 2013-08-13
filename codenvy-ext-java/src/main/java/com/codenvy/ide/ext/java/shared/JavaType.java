@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.ext.java.shared;
 
-
-/** Created by The eXo Platform SAS. */
 public enum JavaType {
     CLASS, INTERFACE, ANNOTATION, ENUM;
 

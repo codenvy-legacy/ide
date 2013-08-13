@@ -17,12 +17,7 @@
  */
 package com.codenvy.ide.ext.ssh.shared;
 
-/**
- * Created by The eXo Platform SAS.
- *
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: $
- */
+/** @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a> */
 public interface PublicKey {
     String getHost();
 

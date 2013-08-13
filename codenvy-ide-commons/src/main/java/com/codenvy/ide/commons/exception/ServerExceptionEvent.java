@@ -21,12 +21,7 @@ package com.codenvy.ide.commons.exception;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 
-/**
- * Created by The eXo Platform SAS .
- *
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version @version $Id: $
- */
+/** @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a> */
 
 public abstract class ServerExceptionEvent<H extends EventHandler> extends GwtEvent<H> {
 

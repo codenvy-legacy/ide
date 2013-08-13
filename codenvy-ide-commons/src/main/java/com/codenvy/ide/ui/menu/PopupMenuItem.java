@@ -27,12 +27,7 @@ import com.google.gwt.user.client.Command;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by The eXo Platform SAS .
- *
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
- */
+/** @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a> */
 public class PopupMenuItem implements MenuItem {
 
     private ImageResource image;
