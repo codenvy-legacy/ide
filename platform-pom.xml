@@ -345,7 +345,7 @@
         
     </dependencyManagement>
 
-    <profiles>
+    <!-- <profiles>
         <profile>
             <id>osx_profile</id>
             <activation>
@@ -363,7 +363,7 @@
                 </dependency>
             </dependencies>
         </profile>
-    </profiles>
+    </profiles> -->
 
     <build>
         <pluginManagement>

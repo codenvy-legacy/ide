@@ -444,7 +444,7 @@
         </dependencies>
     </dependencyManagement>
 
-    <profiles>
+    <!-- <profiles>
         <profile>
             <id>osx_profile</id>
             <activation>
@@ -471,7 +471,7 @@
 				<module>codenvy-ext-extensions-runtime</module>
 			</modules>
 		</profile>
-    </profiles>
+    </profiles> -->
 
     <build>
         <pluginManagement>
