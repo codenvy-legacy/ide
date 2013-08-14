@@ -267,7 +267,7 @@
 									<goal>add-source</goal>
 								</goals>
 								<!-- configuration section should be added by
-								com.codenvy.ide.ext.extruntime.server.ExtensionLauncher.fixGwtSources(Path, String) -->
+								com.codenvy.ide.ext.extruntime.server.Utils.fixMGWT332Bug -->
 							</execution>
 						</executions>
 					</plugin>

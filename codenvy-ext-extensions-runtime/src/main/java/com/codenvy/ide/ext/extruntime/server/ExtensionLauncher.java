@@ -250,6 +250,7 @@ public class ExtensionLauncher implements Startable {
             Files.createSymbolicLink(customModulePath.resolve("src"), extensionDirInFSRoot.resolve("src"));
             Files.createSymbolicLink(customModulePath.resolve("pom.xml"), extensionDirInFSRoot.resolve("pom.xml"));
 
+            // When Codenvy with custom extension will be launched, it need to know GWT code server address to be able to update themselves.
             Files.write(codeServerDirPath.resolve("codenvy-ide-core/src/main/resources/com/codenvy/ide/codesrv"),
                         (":" + codeServerPort).getBytes());
 
@@ -569,14 +570,14 @@ public class ExtensionLauncher implements Startable {
 
     /** Stores application resources. */
     private class Application {
-        final String id;
-        GWTCodeServerLauncher   codeServer;
-        Process      tomcatProcess;
-        int          shutdownPort;
-        int          httpPort;
-        int          ajpPort;
-        File         tomcatDir;
-        File         tempDir;
+        final String          id;
+        GWTCodeServerLauncher codeServer;
+        Process               tomcatProcess;
+        int                   shutdownPort;
+        int                   httpPort;
+        int                   ajpPort;
+        File                  tomcatDir;
+        File                  tempDir;
 
         Application(String id,
                     GWTCodeServerLauncher codeServer,
