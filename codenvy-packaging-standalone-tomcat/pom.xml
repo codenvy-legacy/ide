@@ -819,7 +819,6 @@
                                 </unzip>
                                 <move file="${project.build.directory}/tomcat-ide/google_appengine"
                                       tofile="${project.build.directory}/tomcat-ide/appengine-python-sdk"/>
-
                             </tasks>
                         </configuration>
                         <goals>
