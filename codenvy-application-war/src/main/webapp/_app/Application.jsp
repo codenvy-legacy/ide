@@ -48,7 +48,7 @@
         var securityCheckURL = "/ide/j_security_check";
         var isTargetWindow = false;
         var uuid;
-        var buildMenu = function(){
+        var buildMenu = function () {
         };
 
         window.onload = function () {
@@ -57,7 +57,7 @@
             sendSessionStatus("ide", uuid, "start");
         }
 
-        window.onunload = function () {
+        window.onbeforeunload = function () {
             sendSessionStatus("ide", uuid, "stop");
         }
 
@@ -76,9 +76,6 @@
                 sendSessionStatus("ide", uuid, "stop");
             }
             return false;
-        }
-
-        window.buildMenu = function () {
         }
     </script>
 
