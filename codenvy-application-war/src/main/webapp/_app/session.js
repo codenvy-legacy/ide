@@ -1,10 +1,10 @@
-var websocket = new WebSocket('https:' == window.location.protocol ? 'wss:' : 'ws:' + '//' + window.location.host + '/ide/websocket/' + ws);
+var websocket = new WebSocket((('https:' == window.location.protocol) ? 'wss:' : 'ws:') + '//' + window.location.host + '/ide/websocket/' + ws);
 var messages = [];
 
 websocket.onopen = function () {
     for (var message in messages)
         sendMessage(message);
-    messages.clear();
+    messages = [];
 };
 
 websocket.onclose = function () {
