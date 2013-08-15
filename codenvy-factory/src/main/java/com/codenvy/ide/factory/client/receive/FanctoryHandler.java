@@ -94,7 +94,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
     private void handleFactory(Map<String, List<String>> parameterMap) {
         String giturl = parameterMap.get(FactorySpec10.VCS_URL).get(0);
 
-        String prjName = null;
+        String prjName;
 
         if (parameterMap.get(FactorySpec10.PROJECT_NAME) != null
             && !parameterMap.get(FactorySpec10.PROJECT_NAME).isEmpty()) {
@@ -103,7 +103,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
             prjName = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
         }
 
-        String prjType = null;
+        String prjType;
 
         if (parameterMap.get(FactorySpec10.PROJECT_TYPE) != null
             && !parameterMap.get(FactorySpec10.PROJECT_TYPE).isEmpty()) {

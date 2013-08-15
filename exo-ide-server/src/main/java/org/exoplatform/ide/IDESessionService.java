@@ -68,7 +68,7 @@ public class IDESessionService {
         Workspace workspace = workspaceManager.getWorkspaceByName(wsName);
         if (workspace.isTemporary()) {
             LOG.info("EVENT#session-factory-started# SESSION-ID#" + sessionId + "# WS#" + wsName + "# USER#" + userId + "# AUTHENTICATED#" +
-                     userManager.getUserByAlias(userId).isTemporary() + "# BROWSER-TYPE#" +
+                     !userManager.getUserByAlias(userId).isTemporary() + "# BROWSER-TYPE#" +
                      browserInfo.substring(0, browserInfo.indexOf("/")) + "# BROWSER-VER#" +
                      browserInfo.substring(browserInfo.indexOf("/") + 1) + "#");
         }

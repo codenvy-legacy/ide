@@ -27,10 +27,8 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -56,15 +54,7 @@ import org.exoplatform.ide.git.client.marshaller.LogResponseUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import static com.codenvy.ide.factory.client.FactorySpec10.ACTION_PARAMETER;
-import static com.codenvy.ide.factory.client.FactorySpec10.COMMIT_ID;
-import static com.codenvy.ide.factory.client.FactorySpec10.CURRENT_VERSION;
-import static com.codenvy.ide.factory.client.FactorySpec10.DEFAULT_ACTION;
-import static com.codenvy.ide.factory.client.FactorySpec10.PROJECT_NAME;
-import static com.codenvy.ide.factory.client.FactorySpec10.VCS;
-import static com.codenvy.ide.factory.client.FactorySpec10.VCS_URL;
-import static com.codenvy.ide.factory.client.FactorySpec10.VERSION_PARAMETER;
-import static com.codenvy.ide.factory.client.FactorySpec10.WORKSPACE_NAME;
+import static com.codenvy.ide.factory.client.FactorySpec10.*;
 import static com.google.gwt.http.client.URL.encodeQueryString;
 
 /**
@@ -317,18 +307,15 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         display.getDirectSharingURLField().setValue(factoryURL);
     }
 
-    /**
-     * @see com.codenvy.ide.factory.client.generate.ShareWithFactoryUrlHandler#onCreateFactoryURL(com.codenvy.ide.factory.client.ShareWithFactoryUrlEvent)
-     */
+
+    /** {@inheritDoc} */
     @Override
     public void onGetCodeNowButton(GetCodeNowButtonEvent event) {
         getLatestCommitIdAndOpenView();
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     *      .event.ViewClosedEvent)
-     */
+
+    /** {@inheritDoc} */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -417,7 +404,8 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
                      VCS + "=git&" + //
                      VCS_URL + "=" + encodeQueryString(vcsURL) + "&" + //
                      COMMIT_ID + "=" + latestCommitId + "&" + //
-                     ACTION_PARAMETER + "=" + DEFAULT_ACTION;
+                     ACTION_PARAMETER + "=" + DEFAULT_ACTION +"&" +//
+                     PROJECT_TYPE + "=" + openedProject.getProjectType();
         
         logFactoryCreated(UriUtils.fromString(factoryURL).asString());
         generateSnippetForWebsites(false, false);

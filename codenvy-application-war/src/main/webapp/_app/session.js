@@ -1,21 +1,8 @@
-var websocket = new WebSocket('https:' == window.location.protocol ? 'wss:' : 'ws:' + '//' + window.location.host + '/ide/websocket/' + ws);
+var url = (('https:' == window.location.protocol) ? 'wss:' : 'ws:') + '//' + window.location.host + '/ide/websocket/' + ws;
+var websocket = new WebSocket(url);
+window["ide_websoket"] = websocket;
+websocket.url = url;
 var messages = [];
-
-websocket.onopen = function () {
-    for (var message in messages)
-        sendMessage(message);
-    messages.clear();
-};
-
-websocket.onclose = function () {
-    websocket.open();
-}
-
-websocket.onerror = function (err) {
-    if (window.console) {
-        window.console.error(err);
-    }
-}
 
 function sendSessionStatus(appName, sessionId, status) {
     var nVer = navigator.appVersion;
@@ -62,6 +49,11 @@ function sendSessionStatus(appName, sessionId, status) {
     ]};
 
     if (websocket.readyState == WebSocket.OPEN) {
+        if (messages.length > 0) {
+            for (var message in messages)
+                sendMessage(message);
+            messages = [];
+        }
         sendMessage(mes);
     } else {
         messages[messages.length] = mes;
