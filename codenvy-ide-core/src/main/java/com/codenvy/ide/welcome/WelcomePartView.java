@@ -19,15 +19,24 @@ package com.codenvy.ide.welcome;
 
 import com.codenvy.ide.api.mvp.View;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The view of {@link WelcomePartPresenter}.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public interface WelcomePartView extends View<WelcomePartView.ActionDelegate> {
+    /** Needs for delegate some function into WelcomePart view. */
     public interface ActionDelegate {
+        /** Performs any actions appropriate in response to the user having pressed the Create project link. */
         void onCreateProjectClicked();
 
+        /** Performs any actions appropriate in response to the user having pressed the Import from GitHub link. */
         void onImportFromGitHubClicked();
 
+        /** Performs any actions appropriate in response to the user having pressed the Clone link. */
         void onCloneClicked();
 
+        /** Performs any actions appropriate in response to the user having pressed the Invite people link. */
         void onInvitePeopleClicked();
     }
 }

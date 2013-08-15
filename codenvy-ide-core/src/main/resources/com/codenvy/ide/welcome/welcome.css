@@ -30,8 +30,6 @@
 
     @sprite .welcomeTopContainer {
         gwt-image: "welcomePageBgTopContainer";
-        background-repeat: no-repeat;
-        background-position: center top;
     }
 
     .welcomeLabel {
@@ -56,10 +54,6 @@
     .link:hover {
         color: #5E5E5E;
         text-decoration: underline;
-    }
-
-    .scroll {
-        overflow-x: scroll;
     }
 
     .socialPanel {

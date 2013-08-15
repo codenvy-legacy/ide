@@ -19,16 +19,23 @@ package com.codenvy.ide.welcome;
 
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The implementation of {@link WelcomePartView}.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 @Singleton
 public class WelcomePartViewImpl extends Composite implements WelcomePartView {
     interface WelcomePartViewImplUiBinder extends UiBinder<Widget, WelcomePartViewImpl> {
@@ -37,15 +44,29 @@ public class WelcomePartViewImpl extends Composite implements WelcomePartView {
     private static WelcomePartViewImplUiBinder ourUiBinder = GWT.create(WelcomePartViewImplUiBinder.class);
 
     @UiField
-    Frame fbFrame;
+    Frame  fbFrame;
     @UiField
-    Frame googleFrame;
+    Frame  googleFrame;
+    @UiField
+    Anchor invitationsLink;
+    @UiField
+    Anchor cloneLink;
+    @UiField
+    Anchor importLink;
+    @UiField
+    Anchor projectLink;
     @UiField(provided = true)
     final   WelcomePageResources        res;
     @UiField(provided = true)
     final   WelcomeLocalizationConstant locale;
     private ActionDelegate              delegate;
 
+    /**
+     * Create view.
+     *
+     * @param res
+     * @param locale
+     */
     @Inject
     protected WelcomePartViewImpl(WelcomePageResources res, WelcomeLocalizationConstant locale) {
         this.res = res;
@@ -62,5 +83,25 @@ public class WelcomePartViewImpl extends Composite implements WelcomePartView {
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
+    }
+
+    @UiHandler("invitationsLink")
+    public void onInvitationClicked(ClickEvent event) {
+        delegate.onInvitePeopleClicked();
+    }
+
+    @UiHandler("cloneLink")
+    public void onCloneClicked(ClickEvent event) {
+        delegate.onCloneClicked();
+    }
+
+    @UiHandler("importLink")
+    public void onImportClicked(ClickEvent event) {
+        delegate.onImportFromGitHubClicked();
+    }
+
+    @UiHandler("projectLink")
+    public void onCreateProjectClicked(ClickEvent event) {
+        delegate.onCreateProjectClicked();
     }
 }

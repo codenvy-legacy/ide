@@ -34,8 +34,6 @@ public interface WelcomePageResources extends ClientBundle {
 
         String link();
 
-        String scroll();
-
         String socialPanel();
     }
 
@@ -86,4 +84,7 @@ public interface WelcomePageResources extends ClientBundle {
 
     @Source("invite-background-48.png")
     ImageResource invitePageHeaderBackground48();
+
+    @Source("welcome.png")
+    ImageResource welcome();
 }

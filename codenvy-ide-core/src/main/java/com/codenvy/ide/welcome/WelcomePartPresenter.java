@@ -17,27 +17,42 @@
  */
 package com.codenvy.ide.welcome;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
+import com.codenvy.ide.wizard.WizardPresenter;
+import com.codenvy.ide.wizard.newproject.NewProjectPagePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 
 /**
- * Simple Welcome Page
- * TODO : reimplement MVP
+ * Simple Welcome Page.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
 public class WelcomePartPresenter extends AbstractPartPresenter implements WelcomePart, WelcomePartView.ActionDelegate {
-    private WelcomePartView view;
+    private WelcomePartView                   view;
+    private Resources                         resources;
+    private Provider<NewProjectPagePresenter> newProjectPage;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param resources
+     * @param newProjectPage
+     */
     @Inject
-    public WelcomePartPresenter(WelcomePartView view) {
+    public WelcomePartPresenter(WelcomePartView view, Resources resources, Provider<NewProjectPagePresenter> newProjectPage) {
         this.view = view;
+        this.view.setDelegate(this);
+        this.resources = resources;
+        this.newProjectPage = newProjectPage;
     }
 
     /** {@inheritDoc} */
@@ -55,7 +70,7 @@ public class WelcomePartPresenter extends AbstractPartPresenter implements Welco
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
-        return null;
+        return resources.welcome();
     }
 
     /** {@inheritDoc} */
@@ -67,7 +82,8 @@ public class WelcomePartPresenter extends AbstractPartPresenter implements Welco
     /** {@inheritDoc} */
     @Override
     public void onCreateProjectClicked() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        WizardPresenter wizardDialog = new WizardPresenter(newProjectPage.get(), "Create project", resources);
+        wizardDialog.showWizard();
     }
 
     /** {@inheritDoc} */
