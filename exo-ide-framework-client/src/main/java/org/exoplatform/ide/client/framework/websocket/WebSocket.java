@@ -46,12 +46,6 @@ public class WebSocket extends JavaScriptObject {
      */
     public static native WebSocket create(String url)
    /*-{
-       if($wnd["ide_websoket"]){
-          soket = $wnd["ide_websoket"];
-          if(url === soket.url){
-              return soket;
-          }
-       }
        return new WebSocket(url);
    }-*/;
 
