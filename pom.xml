@@ -444,8 +444,8 @@
         </dependencies>
     </dependencyManagement>
 
-    <!-- <profiles>
-        <profile>
+    <profiles>
+        <!-- <profile>
             <id>osx_profile</id>
             <activation>
                 <os>
@@ -461,7 +461,7 @@
                     <systemPath>${java.home}/../Classes/classes.jar</systemPath>
                 </dependency>
             </dependencies>
-        </profile>
+        </profile> -->
         <profile>
 			<id>ext-runtime</id>
 			<activation>
@@ -471,7 +471,7 @@
 				<module>codenvy-ext-extensions-runtime</module>
 			</modules>
 		</profile>
-    </profiles> -->
+    </profiles>
 
     <build>
         <pluginManagement>
