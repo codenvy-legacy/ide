@@ -1,3 +1,22 @@
+var websocket = new WebSocket((('https:' == window.location.protocol) ? 'wss:' : 'ws:') + '//' + window.location.host + '/ide/websocket/' + ws);
+var messages = [];
+
+websocket.onopen = function () {
+    for (var message in messages)
+        sendMessage(message);
+    messages = [];
+};
+
+websocket.onclose = function () {
+    websocket.open();
+}
+
+websocket.onerror = function (err) {
+    if (window.console) {
+        window.console.error(err);
+    }
+}
+
 function sendSessionStatus(appName, sessionId, status) {
     var nVer = navigator.appVersion;
     var nAgt = navigator.userAgent;
@@ -37,13 +56,27 @@ function sendSessionStatus(appName, sessionId, status) {
         fullVersion = fullVersion.substring(0, ix);
 
     var browserInfo = browserName + '/' + fullVersion;
+    var url = ws + '/session/' + appName + '/' + status;
+    var mes = {body: JSON.stringify({sessionId: sessionId, browserInfo: browserInfo}), method: "POST", path: url, uuid: generate(), "headers": [
+        {name: "content-type", value: "application/json"}
+    ]};
 
-    var url = '//' + window.location.host + '/ide/rest/' + ws + '/session/'
-        + appName + '/' + status + '?sessionId=' + sessionId
-        + '&browserInfo=' + browserInfo;
-    var websocket = new WebSocket('https:' == window.location.protocol ? 'wss:'
-        : 'ws:' + url);
-    websocket.send(appName);
+    if (websocket.readyState == WebSocket.OPEN) {
+        sendMessage(mes);
+    } else {
+        messages[messages.length] = mes;
+    }
+}
+
+function sendMessage(message) {
+    try {
+        websocket.send(JSON.stringify(message));
+    }
+    catch (err) {
+        if (window.console) {
+            window.console.error(err);
+        }
+    }
 }
 
 function generate() {
