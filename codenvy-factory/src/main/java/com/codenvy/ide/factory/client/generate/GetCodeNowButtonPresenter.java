@@ -20,6 +20,7 @@ package com.codenvy.ide.factory.client.generate;
 
 import com.codenvy.ide.factory.client.FactoryClientService;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -87,21 +88,21 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
     
     public interface Display extends IsView {
 
-        HasValue<Boolean> getShowCounterField();
+        //HasValue<Boolean> getShowCounterField();
 
-        /**
-         * Get 'Vertical' radio field.
-         * 
-         * @return {@link HasValue}
-         */
-        HasValue<Boolean> getVerticalStyleField();
+//        /**
+//         * Get 'Vertical' radio field.
+//         * 
+//         * @return {@link HasValue}
+//         */
+//        HasValue<Boolean> getVerticalStyleField();
 
-        /**
-         * Get 'Horizontal' radio field.
-         * 
-         * @return {@link HasValue}
-         */
-        HasValue<Boolean> getHorizontalStyleField();
+//        /**
+//         * Get 'Horizontal' radio field.
+//         * 
+//         * @return {@link HasValue}
+//         */
+//        HasValue<Boolean> getHorizontalStyleField();
 
         /**
          * Preview area is displayed to let the user see the style of configured CodeNow button.
@@ -178,6 +179,8 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
 
     /** A snippet to embed the 'CodeNow' button on web-pages. */
     private String                websitesSnippet;
+    
+    private String                  websitesPreviewSnippet;
 
     /** A snippet to embed the 'CodeNow' button on GitHub Pages. */
     private String                gitHubPagesSnippet;
@@ -200,42 +203,42 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
     public void bindDisplay() {
         final String factoryURLEscaped = encodeQueryString(factoryURL);
 
-        display.getShowCounterField().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Boolean> event) {
-                if (event.getValue() == true) {
-                    display.getPreviewFrame().setUrl(UriUtils.fromString(SpinnetGenerator.getCodeNowButtonJavascriptURL() + "?counter=true"));
+//        display.getShowCounterField().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+//            @Override
+//            public void onValueChange(ValueChangeEvent<Boolean> event) {
+//                if (event.getValue() == true) {
+//                    display.getPreviewFrame().setUrl(UriUtils.fromString(SpinnetGenerator.getCodeNowButtonJavascriptURL() + "?counter=true"));
+//
+//                    generateSnippetForWebsites(true, display.getVerticalStyleField().getValue());
+//                    display.getWebsitesURLField().setValue(websitesSnippet);
+//                } else if (event.getValue() == false) {
+//                    display.getPreviewFrame().setUrl(UriUtils.fromString(SpinnetGenerator.getCodeNowButtonJavascriptURL()));
+//
+//                    generateSnippetForWebsites(false, display.getVerticalStyleField().getValue());
+//                    display.getWebsitesURLField().setValue(websitesSnippet);
+//                }
+//            }
+//        });
 
-                    generateSnippetForWebsites(true, display.getVerticalStyleField().getValue());
-                    display.getWebsitesURLField().setValue(websitesSnippet);
-                } else if (event.getValue() == false) {
-                    display.getPreviewFrame().setUrl(UriUtils.fromString(SpinnetGenerator.getCodeNowButtonJavascriptURL()));
+//        display.getVerticalStyleField().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+//            @Override
+//            public void onValueChange(ValueChangeEvent<Boolean> event) {
+//                if (event.getValue() == true) {
+//                    generateSnippetForWebsites(display.getShowCounterField().getValue(), true);
+//                    display.getWebsitesURLField().setValue(websitesSnippet);
+//                }
+//            }
+//        });
 
-                    generateSnippetForWebsites(false, display.getVerticalStyleField().getValue());
-                    display.getWebsitesURLField().setValue(websitesSnippet);
-                }
-            }
-        });
-
-        display.getVerticalStyleField().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Boolean> event) {
-                if (event.getValue() == true) {
-                    generateSnippetForWebsites(display.getShowCounterField().getValue(), true);
-                    display.getWebsitesURLField().setValue(websitesSnippet);
-                }
-            }
-        });
-
-        display.getHorizontalStyleField().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Boolean> event) {
-                if (event.getValue() == true) {
-                    generateSnippetForWebsites(display.getShowCounterField().getValue(), false);
-                    display.getWebsitesURLField().setValue(websitesSnippet);
-                }
-            }
-        });
+//        display.getHorizontalStyleField().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+//            @Override
+//            public void onValueChange(ValueChangeEvent<Boolean> event) {
+//                if (event.getValue() == true) {
+//                    generateSnippetForWebsites(display.getShowCounterField().getValue(), false);
+//                    display.getWebsitesURLField().setValue(websitesSnippet);
+//                }
+//            }
+//        });
 
         display.getShareFacebookButton().addClickHandler(new ClickHandler() {
             @Override
@@ -281,6 +284,14 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         });
     }
 
+    private native void writeToPreviewFrame(Element ifrm, String content) /*-{
+        //var ifrm = document.getElementById('myIframe');
+        ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;
+        ifrm.document.open();
+        ifrm.document.write(content);
+        ifrm.document.close();        
+    }-*/;
+    
     private void openView() {
         if (display == null) {
             display = GWT.create(Display.class);
@@ -288,9 +299,19 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
             bindDisplay();
         }
 
-        display.getShowCounterField().setValue(true);
-        display.getPreviewFrame().setUrl(UriUtils.fromString(SpinnetGenerator.getCodeNowButtonJavascriptURL() + "?counter=true"));
-        display.getHorizontalStyleField().setValue(true);
+//        display.getShowCounterField().setValue(true);
+//        display.getPreviewFrame().setUrl(
+//                                         UriUtils.fromString(SpinnetGenerator.getCodeNowButtonJavascriptURL() + "?counter=true")
+//            );
+        
+        writeToPreviewFrame(display.getPreviewFrame().getElement(), "" +
+        		"<html>" +
+        		"<head></head>" +
+        		"<body style=\"margin: 0px; padding: 0px;\"><center>" + websitesPreviewSnippet + "</center></body>" +
+        		"</html>" +
+        		"");
+        
+//        display.getHorizontalStyleField().setValue(true);
         display.getWebsitesURLField().setValue(websitesSnippet);
         display.getGitHubURLField().setValue(gitHubPagesSnippet);
         display.getDirectSharingURLField().setValue(factoryURL);
@@ -431,6 +452,12 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         		"language=\"javascript\" " +
         		"src=\"" + jsURL + "\" " +
         		"target=\"" + factoryURL + "\"></script>";
+        
+        websitesPreviewSnippet = "<script " +
+            "type=\"text/javascript\" " +
+            "language=\"javascript\" " +
+            "src=\"" + jsURL + "\" ></script>";
+        
     }
 
 }
