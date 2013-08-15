@@ -29,14 +29,6 @@
     <ui:with field='locale' type='com.codenvy.ide.factory.client.FactoryLocalizationConstants'/>
     
     <ui:style>
-        .displayNone {
-            display: none;
-        }
-
-        .padding {
-            padding: 15px;
-        }
-
         .center {
             display: block;
             margin-left: auto;
@@ -78,7 +70,9 @@
             font-size: 14px;
             font-family: Verdana, Bitstream Vera Sans, sans-serif;
             font-weight: bold;
+            /*
             margin-top: 10px;
+            */
             margin-bottom: 10px;
         }
 
@@ -86,30 +80,43 @@
             border-bottom: 1px solid #DBDFE5;
         }
 
-        .snippetPanel {
-			margin: 0px 7px 0px 7px;
-			box-shadow: 0 0 7px rgba(82, 168, 236, 0.75);
-			border-radius: 4px;
-			padding: 10px 15px 10px 15px;
-		}
+
 
         .textArea {
+	/*
             width: 220px;
             height: 165px;
+            */
             font-size: 12px;
             resize: none;
             overflow: hidden;
             color: #666;
             padding: 5px;
             border: 1px solid #aaa !important;
+            /*
             box-shadow: 0 0 5px rgba(82,168,236,.75);
+            */
             border-radius: 4px;
             outline: none;
+            
+            position: absolute;
+            left: 0px;
+            top: 37px;
+            right: 0px;
+            bottom: 3px;
+            box-shadow: 0px 0px 5px rgba(200, 200, 200, 0.6);
+            /*
+            */
         }
+        
+        .textArea:HOVER {
+			background: #F0F0F0;
+			overflow: auto;
+		}
 
         .textAreaLabel {
             font-weight: bold;
-            margin-top: 7px;
+            margin-top: 10px;
         }
 
         .image {
@@ -118,87 +125,119 @@
             height: 32px;
             margin-right: 10px;
             margin-bottom: 5px;
-        }
-
-        .shareButton {
-            float: left;
-            width: 32px;
-            height: 32px;
-            margin: 5px 10px 5px 10px;
-            cursor: pointer;
+            margin-left:0px;
         }
 
         .previewFrame {
-			width: 140px;
-			height: 50px;
             border: none;
+            /*
+            background: #FFEEAA;
+            */
 		}
-    </ui:style>
+		
+		.embedContentPanel {
+			overflow: hidden;
+			margin-bottom: 10px;
+			position: relative;
+		}
+		
+        .snippetPanel {
+			/*
+			box-shadow: 0 0 7px rgba(82, 168, 236, 0.75);
+			*/
+			border-radius: 4px;
+			height: 100%;
+			overflow: hidden;
+		}		
+		
+		.snippetPanelLeft {
+			position: absolute;
+			left: 0px;
+			width: 32%;
+		}
+		
+		.snippetPanelCenter {
+			position: relative;		
+			width: 32%;
+			margin-left: auto;
+			margin-right: auto;
+		}
 
-    <f:Border margin="15" borderColor="transparent">
+		.snippetPanelRight {
+			position: absolute;
+			right: 0px;
+			width: 32%;
+			top: 0px;
+		}
+		
+        .shareButton {
+            float: left;
+            width: 50px;
+            height: 50px;
+            margin: 0px 10px 0px 10px;
+            cursor: pointer;
+        }		
+	        
+
+    </ui:style>
+    
+    
+    
+    
+    <f:Border margin="10" borderColor="transparent">
         <f:layer>
-            <g:FlowPanel styleName="{style.padding}">
+            <g:FlowPanel>
 
                 <!-- Customize area -->
-                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom} {style.displayNone}" text="Customize"></g:Label>
-                <g:FlowPanel width="100%" height="10%" addStyleNames="{style.displayNone}">
-                    <g:FlowPanel width="70%" addStyleNames="{style.floatLeft}">
-<!--                         <g:Label width="320px" addStyleNames="{style.label} {style.floatLeft}" text="{locale.factoryURLFieldShowCounterTitle}"></g:Label> -->
-                        <g:CheckBox ui:field="showCounter" addStyleNames="{style.checkbox} {style.floatLeft}" HTML="{locale.factoryURLFieldShowCounterTitle}"></g:CheckBox>
-
-                        <g:Label width="140px" addStyleNames="{style.label} {style.floatLeft} {style.clearLeft}" text="{locale.factoryURLFieldPositionTitle}"></g:Label>
-           	            <g:RadioButton height="22px" width="80px" ui:field="verticalStyleField" text="{locale.factoryURLFieldVerticalModeTitle}"
-           	                           name="factoryURL.field.position" addStyleNames="{style.radioButton}"></g:RadioButton>
-           	            <g:RadioButton height="22px" width="80px" ui:field="horizontalStyleField" text="{locale.factoryURLFieldHorizontalModeTitle}"
-           	                           name="factoryURL.field.position" addStyleNames="{style.radioButton}"></g:RadioButton>
-                    </g:FlowPanel>
-                    <g:FlowPanel addStyleNames="{style.floatLeft} {style.marginTop}">
-                        <g:Frame ui:field="previewFrame" styleName="{style.previewFrame}"></g:Frame>
-                    </g:FlowPanel>
-                </g:FlowPanel>
+                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Customize"></g:Label>
+                
+                <g:Frame width="100%" height="30px" ui:field="previewFrame" styleName="{style.previewFrame}"></g:Frame>
 
                 <!-- Embed area -->
                 <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Embed"></g:Label>
-                <g:FlowPanel width="100%" height="60%">
-                    <g:FlowPanel addStyleNames="{style.floatLeft} {style.snippetPanel}">
+                
+                <g:FlowPanel width="100%" height="140px" addStyleNames="{style.embedContentPanel}">
+                    <g:FlowPanel addStyleNames="{style.snippetPanel} {style.snippetPanelLeft}">
                         <g:Image resource="{resource.world}" styleName="{style.image}"></g:Image>
                         <g:Label addStyleNames="{style.textAreaLabel}" text="on Websites"></g:Label>
-                        <f:TextAreaInput ui:field="websitesURLField" addStyleNames="{style.floatLeft} {style.textArea}">
-                        </f:TextAreaInput>
+                        <f:TextAreaInput ui:field="websitesURLField" addStyleNames="{style.floatLeft} {style.textArea}"></f:TextAreaInput>
 	                </g:FlowPanel>
 
-                    <g:FlowPanel addStyleNames="{style.floatLeft} {style.snippetPanel}">
+                    <g:FlowPanel addStyleNames="{style.snippetPanel} {style.snippetPanelCenter}">
                         <g:Image resource="{resource.gitHub}" styleName="{style.image}"></g:Image>
                         <g:Label addStyleNames="{style.textAreaLabel}" text="on GitHub Pages"></g:Label>
-                        <f:TextAreaInput ui:field="gitHubURLField" addStyleNames="{style.floatLeft} {style.textArea}">
-                        </f:TextAreaInput>
+                        <f:TextAreaInput ui:field="gitHubURLField" addStyleNames="{style.floatLeft} {style.textArea}"></f:TextAreaInput>
                     </g:FlowPanel>
 
-                    <g:FlowPanel addStyleNames="{style.floatLeft} {style.snippetPanel}">
+                    <g:FlowPanel addStyleNames="{style.snippetPanel} {style.snippetPanelRight}">
                         <g:Image resource="{resource.link}" styleName="{style.image}"></g:Image>
                         <g:Label addStyleNames="{style.textAreaLabel}" text="Direct Sharing"></g:Label>
-                        <f:TextAreaInput ui:field="directSharingURLField" addStyleNames="{style.floatLeft} {style.textArea}">
-                        </f:TextAreaInput>
+                        <f:TextAreaInput ui:field="directSharingURLField" addStyleNames="{style.floatLeft} {style.textArea}"></f:TextAreaInput>
                     </g:FlowPanel>
                 </g:FlowPanel>
 
                 <!-- Share buttons area -->
                 <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Share it to your friends"></g:Label>
-                <g:FlowPanel width="208px" height="10%" styleName="{style.center}">
+                
+                <g:FlowPanel width="280px" height="50px" styleName="{style.center}">
                     <g:Image ui:field="shareFacebookButton" resource="{resource.facebook}" styleName="{style.shareButton}"></g:Image>
                     <g:Image ui:field="shareGooglePlusButton" resource="{resource.gplus}" styleName="{style.shareButton}"></g:Image>
                     <g:Image ui:field="shareTwitterButton" resource="{resource.twitter}" styleName="{style.shareButton}"></g:Image>
                     <g:Image ui:field="shareEmailButton" resource="{resource.mail}" styleName="{style.shareButton}"></g:Image>
                 </g:FlowPanel>
 
+<!-- 
                 <g:Label width="100%" height="5px" addStyleNames="{style.borderBottom}"></g:Label>
+ -->
             </g:FlowPanel>
         </f:layer>
-        <f:layer height="22px" bottom="0">
+        
+        <f:layer height="22px" bottom="0" width="100%">
             <g:FlowPanel width="90px" addStyleNames="{style.center}">
                 <f:ImageButton ui:field="okButton" width="90" height="22" text="{locale.buttonOk}" imageResource="{resource.ok}"
                                disabledImageResource="{resource.okDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
             </g:FlowPanel>
         </f:layer>
+        
     </f:Border>
 </ui:UiBinder>
