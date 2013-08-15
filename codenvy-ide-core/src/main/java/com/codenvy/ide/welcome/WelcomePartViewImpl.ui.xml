@@ -1,0 +1,201 @@
+<!--
+  ~ CODENVY CONFIDENTIAL
+  ~ __________________
+  ~
+  ~ [2012] - [2013] Codenvy, S.A.
+  ~ All Rights Reserved.
+  ~
+  ~ NOTICE:  All information contained herein is, and remains
+  ~ the property of Codenvy S.A. and its suppliers,
+  ~ if any.  The intellectual and technical concepts contained
+  ~ herein are proprietary to Codenvy S.A.
+  ~ and its suppliers and may be covered by U.S. and Foreign Patents,
+  ~ patents in process, and are protected by trade secret or copyright law.
+  ~ Dissemination of this information or reproduction of this material
+  ~ is strictly forbidden unless prior written permission is obtained
+  ~ from Codenvy S.A..
+  -->
+
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field='res' type='com.codenvy.ide.welcome.WelcomePageResources'/>
+    <ui:with field='locale' type='com.codenvy.ide.welcome.WelcomeLocalizationConstant'/>
+
+    <ui:style>
+        .emptyBorder {
+            margin: 6px;
+        }
+
+        .welcomeHeaderLogo {
+            margin-top: 15px;
+            margin-left: 10px;
+        }
+
+        .welcomeHeaderText {
+            background-position: left center;
+            padding-top: 25px;
+            padding-left: 12px;
+            width: auto !important;
+        }
+
+        .fbLikePanel {
+            top: 28px !important;
+        }
+
+        .googleOnePanel {
+            top: 20px !important;
+        }
+
+        .linkText {
+            margin-left: 0;
+        }
+
+        .item {
+            margin-left: 10px;
+            margin-top: 20px;
+        }
+
+        .textAlignLeft {
+            text-align: left;
+        }
+    </ui:style>
+
+    <g:SimplePanel width="100%" height="100%" addStyleNames="{style.emptyBorder}">
+        <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+            <g:north size="75">
+                <g:DockLayoutPanel unit="PX" width="100%" addStyleNames="{res.welcomeCSS.welcomeHeader}">
+                    <g:west size="120">
+                        <g:Image resource="{res.ideLogo}" addStyleNames="{style.welcomeHeaderLogo}"/>
+                    </g:west>
+                    <g:east size="100">
+                        <g:Frame ui:field="fbFrame" addStyleNames="{style.fbLikePanel} {res.welcomeCSS.socialPanel}"/>
+                    </g:east>
+                    <g:east size="100">
+                        <g:Frame ui:field="googleFrame" addStyleNames="{style.googleOnePanel} {res.welcomeCSS.socialPanel}"/>
+                    </g:east>
+                    <g:center>
+                        <g:Label text="{locale.aboutIde}" addStyleNames="{style.welcomeHeaderText} {res.welcomeCSS.welcomeHeaderText}"/>
+                    </g:center>
+                </g:DockLayoutPanel>
+            </g:north>
+            <g:center>
+                <g:DockLayoutPanel unit="PCT" width="100%" height="100%"
+                                   addStyleNames="{res.welcomeCSS.scroll} {res.welcomeCSS.welcomeTopContainer}">
+                    <g:west size="50">
+                        <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+                            <g:north size="110">
+                                <g:SimplePanel width="100%" height="100%" addStyleNames="{style.item}">
+                                    <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+                                        <g:west size="90">
+                                            <g:Image resource="{res.welcomeProject}"/>
+                                        </g:west>
+                                        <g:center>
+                                            <g:FlowPanel>
+                                                <g:Anchor ui:field="projectLink" text="{locale.projectTitle}"
+                                                          addStyleNames="{res.welcomeCSS.link} {style.textAlignLeft}"/>
+                                                <g:Label text="{locale.projectText}"
+                                                         addStyleNames="{style.linkText} {res.welcomeCSS.welcomeLabel}"/>
+                                            </g:FlowPanel>
+                                        </g:center>
+                                    </g:DockLayoutPanel>
+                                </g:SimplePanel>
+                            </g:north>
+                            <g:north size="110">
+                                <g:SimplePanel width="100%" height="100%" addStyleNames="{style.item}">
+                                    <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+                                        <g:west size="90">
+                                            <g:Image resource="{res.importFromGithub}"/>
+                                        </g:west>
+                                        <g:center>
+                                            <g:FlowPanel>
+                                                <g:Anchor ui:field="importLink" text="{locale.importTitle}"
+                                                          styleName="{res.welcomeCSS.link} {style.textAlignLeft}"/>
+                                                <g:Label text="{locale.importText}"
+                                                         styleName="{style.linkText} {res.welcomeCSS.welcomeLabel}"/>
+                                            </g:FlowPanel>
+                                        </g:center>
+                                    </g:DockLayoutPanel>
+                                </g:SimplePanel>
+                            </g:north>
+                            <g:north size="110">
+                                <g:SimplePanel width="100%" height="100%" addStyleNames="{style.item}">
+                                    <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+                                        <g:west size="90">
+                                            <g:Image resource="{res.welcomeClone}"/>
+                                        </g:west>
+                                        <g:center>
+                                            <g:FlowPanel>
+                                                <g:Anchor ui:field="cloneLink" text="{locale.cloneTitle}"
+                                                          styleName="{res.welcomeCSS.link} {style.textAlignLeft}"/>
+                                                <g:Label text="{locale.cloneText}"
+                                                         styleName="{style.linkText} {res.welcomeCSS.welcomeLabel}"/>
+                                            </g:FlowPanel>
+                                        </g:center>
+                                    </g:DockLayoutPanel>
+                                </g:SimplePanel>
+                            </g:north>
+                        </g:DockLayoutPanel>
+                    </g:west>
+                    <g:center>
+                        <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+                            <g:north size="110">
+                                <g:SimplePanel width="100%" height="100%" addStyleNames="{style.item}">
+                                    <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+                                        <g:west size="90">
+                                            <g:Image resource="{res.documentation}"/>
+                                        </g:west>
+                                        <g:center>
+                                            <g:FlowPanel>
+                                                <g:Anchor ui:field="documentationLink"
+                                                          addStyleNames="{res.welcomeCSS.link} {style.textAlignLeft}"
+                                                          text="{locale.documentationTitle}" target="_blank"
+                                                          href="http://docs.codenvy.com"/>
+                                                <g:Label text="{locale.documentationText}" addStyleNames="{res.welcomeCSS.welcomeLabel}"/>
+                                            </g:FlowPanel>
+                                        </g:center>
+                                    </g:DockLayoutPanel>
+                                </g:SimplePanel>
+                            </g:north>
+                            <g:north size="110">
+                                <g:SimplePanel width="100%" height="100%" addStyleNames="{style.item}">
+                                    <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+                                        <g:west size="90">
+                                            <g:Image resource="{res.invitation}"/>
+                                        </g:west>
+                                        <g:center>
+                                            <g:FlowPanel>
+                                                <g:Anchor ui:field="invitationsLink" text="{locale.invitationTitle}"
+                                                          styleName="{res.welcomeCSS.link} {style.textAlignLeft}"/>
+                                                <g:Label text="{locale.invitationText}"
+                                                         styleName="{style.linkText} {res.welcomeCSS.welcomeLabel}"/>
+                                            </g:FlowPanel>
+                                        </g:center>
+                                    </g:DockLayoutPanel>
+                                </g:SimplePanel>
+                            </g:north>
+                            <g:north size="110">
+                                <g:SimplePanel width="100%" height="100%" addStyleNames="{style.item}">
+                                    <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+                                        <g:west size="90">
+                                            <g:Image resource="{res.support}"/>
+                                        </g:west>
+                                        <g:center>
+                                            <g:FlowPanel>
+                                                <g:Anchor ui:field="supportLink" text="{locale.supportTitle}"
+                                                          styleName="{res.welcomeCSS.link} {style.textAlignLeft}"
+                                                          href="javascript:UserVoice.showPopupWidget();"/>
+                                                <g:Label text="{locale.supportText}"
+                                                         styleName="{style.linkText} {res.welcomeCSS.welcomeLabel}"/>
+                                            </g:FlowPanel>
+                                        </g:center>
+                                    </g:DockLayoutPanel>
+                                </g:SimplePanel>
+                            </g:north>
+                        </g:DockLayoutPanel>
+                    </g:center>
+                </g:DockLayoutPanel>
+            </g:center>
+        </g:DockLayoutPanel>
+    </g:SimplePanel>
+</ui:UiBinder>
