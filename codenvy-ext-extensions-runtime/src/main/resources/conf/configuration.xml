@@ -31,19 +31,19 @@
             </value-param>
             <values-param>
                 <name>catalina-shutdown-port-ranges</name>
-                <value>8006-8016</value>
+                <value>9100-9124</value>
             </values-param>
             <values-param>
                 <name>http-connector-port-ranges</name>
-                <value>8081-8091</value>
+                <value>9125-9149</value>
             </values-param>
             <values-param>
                 <name>ajp-connector-port-ranges</name>
-                <value>8010-8020</value>
+                <value>9150-9174</value>
             </values-param>
             <values-param>
                 <name>code-server-port-ranges</name>
-                <value>9876-9886</value>
+                <value>9175-9199</value>
             </values-param>
         </init-params>
     </component>
