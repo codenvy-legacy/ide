@@ -77,8 +77,6 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     /** Message bus to communicate through WebSocket. */
     private MessageBus          wsMessageBus;
 
-    private final String        workspaceName;
-
     /**
      * Create service.
      * 
@@ -96,7 +94,6 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
         this.restContext = restContext;
         this.resourceProvider = resourceProvider;
         this.wsMessageBus = wsMessageBus;
-        this.workspaceName = Utils.getWorkspaceName();
     }
 
     /** {@inheritDoc} */
