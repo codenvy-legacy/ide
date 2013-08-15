@@ -17,64 +17,90 @@
  */
 package com.codenvy.ide.welcome;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
+import com.codenvy.ide.wizard.WizardPresenter;
+import com.codenvy.ide.wizard.newproject.NewProjectPagePresenter;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 
 /**
- * Simple Welcome Page
- * TODO : reimplement MVP
+ * Simple Welcome Page.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
-public class WelcomePartPresenter extends AbstractPartPresenter implements WelcomePart {
+public class WelcomePartPresenter extends AbstractPartPresenter implements WelcomePart, WelcomePartView.ActionDelegate {
+    private WelcomePartView                   view;
+    private Resources                         resources;
+    private Provider<NewProjectPagePresenter> newProjectPage;
 
-    private static WelcomePartPresenterUiBinder uiBinder = GWT.create(WelcomePartPresenterUiBinder.class);
-
-    private Element element;
-
-    interface WelcomePartPresenterUiBinder extends UiBinder<Element, WelcomePartPresenter> {
-    }
-
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param resources
+     * @param newProjectPage
+     */
     @Inject
-    public WelcomePartPresenter() {
-        element = uiBinder.createAndBindUi(this);
+    public WelcomePartPresenter(WelcomePartView view, Resources resources, Provider<NewProjectPagePresenter> newProjectPage) {
+        this.view = view;
+        this.view.setDelegate(this);
+        this.resources = resources;
+        this.newProjectPage = newProjectPage;
     }
 
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        HTML h = new HTML();
-        h.getElement().appendChild(element);
-        h.setSize("100%", "100%");
-        container.setWidget(h);
+        container.setWidget(view);
     }
 
-    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#getTitle() */
+    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return "Welcome";
     }
 
-    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#getTitleImage() */
+    /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
-        return null;
+        return resources.welcome();
     }
 
-    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#getTitleToolTip() */
+    /** {@inheritDoc} */
     @Override
     public String getTitleToolTip() {
         return "This is Welcome page, it shows general information about Project Development.";
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void onCreateProjectClicked() {
+        WizardPresenter wizardDialog = new WizardPresenter(newProjectPage.get(), "Create project", resources);
+        wizardDialog.showWizard();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onImportFromGitHubClicked() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onCloneClicked() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onInvitePeopleClicked() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

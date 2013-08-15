@@ -1,0 +1,63 @@
+    /*
+     * CODENVY CONFIDENTIAL
+     * __________________
+     *
+     * [2012] - [2013] Codenvy, S.A.
+     * All Rights Reserved.
+     *
+     * NOTICE:  All information contained herein is, and remains
+     * the property of Codenvy S.A. and its suppliers,
+     * if any.  The intellectual and technical concepts contained
+     * herein are proprietary to Codenvy S.A.
+     * and its suppliers and may be covered by U.S. and Foreign Patents,
+     * patents in process, and are protected by trade secret or copyright law.
+     * Dissemination of this information or reproduction of this material
+     * is strictly forbidden unless prior written permission is obtained
+     * from Codenvy S.A..
+     */
+
+    @sprite .welcomeHeader {
+        gwt-image: "welcomePageBgHeader";
+        background-repeat: repeat-x;
+    }
+
+    @sprite .welcomeHeaderText {
+        gwt-image: "welcomePageSpliter";
+        background-repeat: no-repeat;
+        font-size: productFontSize;
+        color: #FFFFFF;
+    }
+
+    @sprite .welcomeTopContainer {
+        gwt-image: "welcomePageBgTopContainer";
+    }
+
+    .welcomeLabel {
+        font-size: largeDropdownLabel;
+        color: #5E5E5E;
+    }
+
+    .link {
+        cursor: pointer;
+        border: none;
+        background-color: transparent;
+        font-size: titleFontSize;
+        font-weight: bold;
+        color: #5E5E5E;
+        text-decoration: none;
+    }
+
+    .link:visited {
+        color: #5E5E5E;
+    }
+
+    .link:hover {
+        color: #5E5E5E;
+        text-decoration: underline;
+    }
+
+    .socialPanel {
+        background: none;
+        border: none;
+        overflow: hidden;
+    }
