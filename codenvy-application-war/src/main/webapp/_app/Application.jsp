@@ -53,30 +53,30 @@
 
         window.onload = function () {
             buildMenu();
-            uuid = generate();
-            sendSessionStatus("ide", uuid, "start");
+//            uuid = generate();
+//            sendSessionStatus("ide", uuid, "start");
         }
 
-        window.onbeforeunload = function () {
-            sendSessionStatus("ide", uuid, "stop");
-        }
-
-        window.onfocus = function () {
-            if (isTargetWindow == true) {
-                isTargetWindow = false;
-                uuid = generate();
-                sendSessionStatus("ide", uuid, "start");
-            }
-            return false;
-        }
-
-        window.onblur = function () {
-            if (isTargetWindow == false) {
-                isTargetWindow = true;
-                sendSessionStatus("ide", uuid, "stop");
-            }
-            return false;
-        }
+//        window.onbeforeunload = function () {
+//            sendSessionStatus("ide", uuid, "stop");
+//        }
+//
+//        window.onfocus = function () {
+//            if (isTargetWindow == true) {
+//                isTargetWindow = false;
+//                uuid = generate();
+//                sendSessionStatus("ide", uuid, "start");
+//            }
+//            return false;
+//        }
+//
+//        window.onblur = function () {
+//            if (isTargetWindow == false) {
+//                isTargetWindow = true;
+//                sendSessionStatus("ide", uuid, "stop");
+//            }
+//            return false;
+//        }
     </script>
 
     <link rel="shortcut icon" href="/images/favicon.ico"/>
@@ -109,7 +109,7 @@
     </table>
 </div>
 
-<script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "session.js")%>'></script>
+<%--<script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "session.js")%>'></script>--%>
 <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "cloud_menu.js")%>'></script>
 
 

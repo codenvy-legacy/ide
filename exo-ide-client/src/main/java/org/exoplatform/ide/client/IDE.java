@@ -25,7 +25,16 @@ import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
-import org.exoplatform.ide.client.application.*;
+import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
+import org.exoplatform.ide.client.application.ControlsRegistration;
+import org.exoplatform.ide.client.application.EditControlsFormatter;
+import org.exoplatform.ide.client.application.IDEFileTypeRegistry;
+import org.exoplatform.ide.client.application.IDEForm;
+import org.exoplatform.ide.client.application.IDEPresenter;
+import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
+import org.exoplatform.ide.client.application.NewItemControlsFormatter;
+import org.exoplatform.ide.client.application.PaaSMenuControlsFormatter;
+import org.exoplatform.ide.client.application.ViewControlsFormatter;
 import org.exoplatform.ide.client.authentication.LoginPresenter;
 import org.exoplatform.ide.client.debug.IDEDebug;
 import org.exoplatform.ide.client.dialogs.AskForValueDialog;
@@ -45,7 +54,16 @@ import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
 import org.exoplatform.ide.client.framework.util.IDEAutoBeanFactory;
-import org.exoplatform.ide.client.messages.*;
+import org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant;
+import org.exoplatform.ide.client.messages.IdeErrorsLocalizationConstant;
+import org.exoplatform.ide.client.messages.IdeLocalizationMessages;
+import org.exoplatform.ide.client.messages.IdeNavigationLocalizationConstant;
+import org.exoplatform.ide.client.messages.IdeOperationLocalizationConstant;
+import org.exoplatform.ide.client.messages.IdePermissionsLocalizationConstant;
+import org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant;
+import org.exoplatform.ide.client.messages.IdeTemplateLocalizationConstant;
+import org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant;
+import org.exoplatform.ide.client.messages.IdeVersionsLocalizationConstant;
 import org.exoplatform.ide.client.navigation.NavigationModule;
 import org.exoplatform.ide.client.outline.OutlineItemCreatorFactory;
 import org.exoplatform.ide.client.outline.OutlinePresenter;
@@ -109,6 +127,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE {
     public static final IdeLocalizationMessages IDE_LOCALIZATION_MESSAGES = GWT.create(IdeLocalizationMessages.class);
 
     private FileTypeRegistry fileTypeRegistry = new IDEFileTypeRegistry();
+    private UserSession userSession;
 
     public IDE() {
         // Remember browser's window.alert(...) function
@@ -163,6 +182,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE {
         new PreferencesModule();
 
         new WebSocketHandler();
+        userSession = new UserSession();
 
         new IDEDebug();
         new ProjectPreparePresenter();
@@ -243,6 +263,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE {
         Window.addCloseHandler(new CloseHandler<Window>() {
             @Override
             public void onClose(CloseEvent<Window> event) {
+                userSession.close();
                 fireEvent(new ApplicationClosedEvent());
             }
         });
