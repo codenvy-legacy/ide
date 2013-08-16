@@ -17,6 +17,7 @@
 		
 		.tooltip-table {
 			position: relative;
+			top: 22px;
 			
 		    margin-left: auto;
 		    margin-right: auto;
@@ -73,19 +74,26 @@
 		
 	</ui:style>
 
+	<!-- 
 	<g:HTMLPanel styleName="{style.tooltip-table-panel}">
-	  	<table class="{style.tooltip-table}">
-	  		<tr>
-	  			<td class="{style.tooltip-table-message}" ui:field="messageElement">
-					<b>Welcome to Codenvy!</b> This is a temporary workspace. 
-					It will be deleted if you are inactive or close the browser.
-					<b>Login</b> or <b>Create your account</b> to save your work.
-	  			</td>
-	  			<td class="{style.tooltip-table-button}">
-	  				<g:Label styleName="{style.tooltip-close-button}" ui:field="closeButton"></g:Label>
-	  			</td>
-	  		</tr>
-	  	</table>
+	 -->
+  	<table class="{style.tooltip-table}">
+  		<tr>
+  			<td class="{style.tooltip-table-message}" ui:field="messageElement">
+				<b>Welcome to Codenvy!</b> This is a temporary workspace. 
+				It will be deleted if you are inactive or close the browser.
+				<b>Login</b> or <b>Create your account</b> to save your work.
+  			</td>
+  			<td class="{style.tooltip-table-button}">
+  				<div class="{style.tooltip-close-button}" ui:field="closeButton"></div>
+  				<!-- 
+  				<g:Label styleName="{style.tooltip-close-button}" ui:field="closeButton"></g:Label>
+  				 -->
+  			</td>
+  		</tr>
+  	</table>
+	<!-- 
 	</g:HTMLPanel>
+	 -->
 
 </ui:UiBinder>
