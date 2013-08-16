@@ -19,47 +19,56 @@
 package com.codenvy.ide.factory.client.greeting;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableCellElement;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.UIObject;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-public class TooltipHint extends Composite implements ClickHandler {
+public class TooltipHint extends UIObject {
 
     private static TooltipHintUiBinder uiBinder = GWT.create(TooltipHintUiBinder.class);
 
-    interface TooltipHintUiBinder extends UiBinder<Widget, TooltipHint> {
+    interface TooltipHintUiBinder extends UiBinder<Element, TooltipHint> {
     }
 
     @UiField
     TableCellElement messageElement;
     
     @UiField
-    Label closeButton;
+    DivElement closeButton;
     
     private int opacity = 0;
     
     private int top = 2;
     
     public TooltipHint(String text) {
-        initWidget(uiBinder.createAndBindUi(this));
+        //initWidget(uiBinder.createAndBindUi(this));
+        setElement(uiBinder.createAndBindUi(this));
         messageElement.setInnerHTML(text);
-        closeButton.addClickHandler(this);
+        //closeButton.addClickHandler(this);
+        
+        DOM.sinkEvents((com.google.gwt.user.client.Element)closeButton.cast(), Event.ONCLICK);
+        DOM.setEventListener((com.google.gwt.user.client.Element)closeButton.cast(), new EventListener() {
+              public void onBrowserEvent(Event event) {
+                  close();     
+              }
+        });        
         
         getElement().getStyle().setProperty("opacity", "0");
         getElement().getStyle().setTop(top, Unit.PX);
-        RootPanel.get().add(this);
+        RootPanel.get().getElement().appendChild(getElement());
         
         new Timer() {
             @Override
@@ -77,9 +86,8 @@ public class TooltipHint extends Composite implements ClickHandler {
             }
         }.scheduleRepeating(50);
     }
-
-    @Override
-    public void onClick(ClickEvent event) {
+    
+    private void close() {
         opacity = 10;
         
         // Hide animation
@@ -89,12 +97,12 @@ public class TooltipHint extends Composite implements ClickHandler {
                 opacity--;
                 if (opacity <= 0) {
                     cancel();
-                    removeFromParent();
+                    getElement().getParentElement().removeChild(getElement());
                 } else {
                     getElement().getStyle().setProperty("opacity", "0." + opacity);
                 }
             }
-        }.scheduleRepeating(50);
-    }        
+        }.scheduleRepeating(50);        
+    }
 
 }

@@ -26,7 +26,11 @@ if (!injected) {
 }
 
 // add CodeNow button
-document.write("<div class=\"codenow\" onclick=\"window.open('" + script.getAttribute("target") + "', '_blank');\"></div>");
+if (script.hasAttribute("target")) {
+  document.write("<div class=\"codenow\" onclick=\"window.open('" + script.getAttribute("target") + "', '_blank');\"></div>");
+} else {
+  document.write("<div class=\"codenow\" onclick=\"\"></div>");
+}
 
 // remove self from DOM
 script.parentNode.removeChild(script);
