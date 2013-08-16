@@ -40,10 +40,14 @@
         }
 
         .fbLikePanel {
+            width: 110px;
+            height: 25px;
             top: 28px !important;
         }
 
         .googleOnePanel {
+            width: 205px;
+            height: 480px;
             top: 20px !important;
         }
 
@@ -61,8 +65,8 @@
         }
     </ui:style>
 
-    <g:SimplePanel width="100%" height="100%" addStyleNames="{style.emptyBorder}">
-        <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+    <g:SimplePanel width="100%" height="100%">
+        <g:DockLayoutPanel unit="PX" height="100%" addStyleNames="{style.emptyBorder}">
             <g:north size="75">
                 <g:DockLayoutPanel unit="PX" width="100%" addStyleNames="{res.welcomeCSS.welcomeHeader}">
                     <g:west size="120">
