@@ -1,7 +1,7 @@
-var url = (('https:' == window.location.protocol) ? 'wss:' : 'ws:') + '//' + window.location.host + '/ide/websocket/' + ws;
-var websocket = new WebSocket(url);
-window["ide_websoket"] = websocket;
-websocket.url = url;
+//var url = (('https:' == window.location.protocol) ? 'wss:' : 'ws:') + '//' + window.location.host + '/ide/websocket/' + ws;
+//var websocket = new WebSocket(url);
+//window["ide_websoket"] = websocket;
+//websocket.url = url;
 var messages = [];
 
 function sendSessionStatus(appName, sessionId, status) {
@@ -48,16 +48,16 @@ function sendSessionStatus(appName, sessionId, status) {
         {name: "content-type", value: "application/json"}
     ]};
 
-    if (websocket.readyState == WebSocket.OPEN) {
-        if (messages.length > 0) {
-            for (var message in messages)
-                sendMessage(message);
-            messages = [];
-        }
-        sendMessage(mes);
-    } else {
-        messages[messages.length] = mes;
-    }
+//    if (websocket.readyState == WebSocket.OPEN) {
+//        if (messages.length > 0) {
+//            for (var message in messages)
+//                sendMessage(message);
+//            messages = [];
+//        }
+//        sendMessage(mes);
+//    } else {
+//        messages[messages.length] = mes;
+//    }
 }
 
 function sendMessage(message) {
