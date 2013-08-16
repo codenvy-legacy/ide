@@ -23,11 +23,10 @@ import com.codenvy.commons.servlet.Condition;
 import com.codenvy.commons.servlet.DispatcherServletConfiguration;
 import com.codenvy.commons.servlet.DispatcherServletConfigurationFactory;
 
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -132,6 +131,27 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                                  }
                                              })
                                              .priority(300)
+                                             .done()
+                                             // Allow specify parameters apps that launched in Codenvy SDK.
+                                             // h - GWT code server's host, p - GWT code server's port
+                                             .when(new Condition() {
+                                                 @Override
+                                                 public boolean matches(HttpServletRequest request, HttpServletResponse response) {
+                                                     final String host = request.getParameter("h");
+                                                     final String port = request.getParameter("p");
+                                                     return host != null && port != null;
+                                                     
+                                                 }
+                                             })
+                                             .execute(new Action() {
+                                                 @Override
+                                                 public void perform(HttpServletRequest request, HttpServletResponse response)
+                                                     throws ServletException,
+                                                     IOException {
+                                                     request.getRequestDispatcher("/_app/main").forward(request, response);
+                                                 }
+                                             })
+                                             .priority(350)
                                              .done()
                                              .when(Condition.MATCH)
                                              .execute(new Action() {

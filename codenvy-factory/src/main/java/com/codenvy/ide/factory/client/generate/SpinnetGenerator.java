@@ -70,10 +70,10 @@ public class SpinnetGenerator {
     public static String getCodeNowGitHubImageURL() {
         if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
             return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("ide/" + Utils.getWorkspaceName() + "/_app/factory/factory.png").buildString();
+                .setPath("ide/" + Utils.getWorkspaceName() + "/_app/images/factory/factory.png").buildString();
         } else {
             return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("factory/factory.png").buildString();
+                .setPath("images/factory/factory.png").buildString();
         }
     }
     
