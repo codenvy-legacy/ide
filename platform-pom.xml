@@ -24,7 +24,7 @@
         <!-- eXo Modules -->
         <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
         <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
-        <org.exoplatform.ide.version>2.6.0</org.exoplatform.ide.version>
+        <org.exoplatform.ide.version>2.7.0-SNAPSHOT</org.exoplatform.ide.version>
         <!-- CodeAssistant DataBase -->
         <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
         <!-- Everrest -->

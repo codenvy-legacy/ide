@@ -60,12 +60,7 @@ public class ApplicationInstanceUnmarshallerWS implements Unmarshallable<Applica
             this.applicationInstance.setHost(host);
         }
         this.applicationInstance.setPort(applicationInstance.getPort());
-        final String codeServerHost = applicationInstance.getCodeServerHost();
-        if (codeServerHost == null || codeServerHost.isEmpty()) {
-            this.applicationInstance.setCodeServerHost(Window.Location.getHostName());
-        } else {
-            this.applicationInstance.setCodeServerHost(codeServerHost);
-        }
+        this.applicationInstance.setCodeServerHost(applicationInstance.getCodeServerHost());
         this.applicationInstance.setCodeServerPort(applicationInstance.getCodeServerPort());
     }
 
