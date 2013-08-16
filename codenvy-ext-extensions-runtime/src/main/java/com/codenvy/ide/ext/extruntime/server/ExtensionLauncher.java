@@ -19,9 +19,9 @@ package com.codenvy.ide.ext.extruntime.server;
 
 import com.codenvy.ide.commons.JsonHelper;
 import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls.ApplicationInstanceImpl;
-import com.codenvy.ide.ext.extruntime.server.codeserver.GWTCodeServerLauncher;
 import com.codenvy.ide.ext.extruntime.server.codeserver.GWTCodeServerConfiguration;
 import com.codenvy.ide.ext.extruntime.server.codeserver.GWTCodeServerException;
+import com.codenvy.ide.ext.extruntime.server.codeserver.GWTCodeServerLauncher;
 import com.codenvy.ide.ext.extruntime.server.codeserver.GWTMavenCodeServerLauncher;
 import com.codenvy.ide.ext.extruntime.server.tools.ProcessUtil;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
@@ -64,15 +64,15 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import static com.codenvy.ide.commons.FileUtils.ANY_FILTER;
-import static com.codenvy.ide.commons.FileUtils.deleteRecursive;
-import static com.codenvy.ide.commons.ZipUtils.unzip;
-import static com.codenvy.ide.commons.ZipUtils.zipDir;
 import static com.codenvy.ide.commons.ContainerUtils.readValueParam;
 import static com.codenvy.ide.commons.ContainerUtils.readValuesParam;
+import static com.codenvy.ide.commons.FileUtils.ANY_FILTER;
 import static com.codenvy.ide.commons.FileUtils.createTempDirectory;
+import static com.codenvy.ide.commons.FileUtils.deleteRecursive;
 import static com.codenvy.ide.commons.FileUtils.downloadFile;
 import static com.codenvy.ide.commons.NameGenerator.generate;
+import static com.codenvy.ide.commons.ZipUtils.unzip;
+import static com.codenvy.ide.commons.ZipUtils.zipDir;
 import static com.codenvy.ide.ext.extruntime.server.Utils.addDependencyToPom;
 import static com.codenvy.ide.ext.extruntime.server.Utils.addModuleToReactorPom;
 import static com.codenvy.ide.ext.extruntime.server.Utils.enableSuperDevMode;
@@ -104,17 +104,21 @@ public class ExtensionLauncher implements Startable {
     private final String                             buildServerBaseURL;
 
     private TomcatPortManager                        portManager;
+    /** GWT code server's bind address. */
+    private String                                   codeServerBindAddress;
     private CodeServerPortManager                    codeServerPortManager;
 
     /** Launched Codenvy applications with custom extension. */
     private final ConcurrentMap<String, Application> applications;
+
 
     public ExtensionLauncher(InitParams initParams) {
         this(readValueParam(initParams, "build-server-base-url", System.getProperty(BUILD_SERVER_BASE_URL)),
              parsePortRanges(readValuesParam(initParams, "catalina-shutdown-port-ranges")),
              parsePortRanges(readValuesParam(initParams, "http-connector-port-ranges")),
              parsePortRanges(readValuesParam(initParams, "ajp-connector-port-ranges")),
-             parsePortRanges(readValuesParam(initParams, "code-server-port-ranges")));
+             parsePortRanges(readValuesParam(initParams, "code-server-port-ranges")),
+             readValueParam(initParams, "code-server-bind-address"));
     }
 
     private static List<Integer> parsePortRanges(List<String> portRanges) {
@@ -146,7 +150,8 @@ public class ExtensionLauncher implements Startable {
                                 List<Integer> catalinaShutdownPortList,
                                 List<Integer> httpConnectorPortList,
                                 List<Integer> ajpConnectorPortList,
-                                List<Integer> codeServerPortList) {
+                                List<Integer> codeServerPortList,
+                                String codeServerBindAddress) {
         if (buildServerBaseURL == null || buildServerBaseURL.isEmpty()) {
             throw new IllegalArgumentException("Base URL of build server may not be null or empty string.");
         }
@@ -157,6 +162,7 @@ public class ExtensionLauncher implements Startable {
         }
         this.buildServerBaseURL = buildServerBaseURL;
         this.portManager = new TomcatPortManager(catalinaShutdownPortList, httpConnectorPortList, ajpConnectorPortList);
+        this.codeServerBindAddress = codeServerBindAddress;
         this.codeServerPortManager = new CodeServerPortManager(codeServerPortList);
 
         applications = new ConcurrentHashMap<String, Application>();
@@ -266,11 +272,12 @@ public class ExtensionLauncher implements Startable {
 
             // Run code server while project is building.
             GWTCodeServerLauncher codeServer = new GWTMavenCodeServerLauncher();
-            codeServer.start(new GWTCodeServerConfiguration(codeServerPort, clientModuleDirPath));
+            codeServer.start(new GWTCodeServerConfiguration(codeServerBindAddress, codeServerPort, clientModuleDirPath));
 
             final String status = startCheckingBuildStatus(buildId);
             BuildStatusBean buildStatus = JsonHelper.fromJson(status, BuildStatusBean.class, null);
             if (buildStatus.getStatus() != Status.SUCCESSFUL) {
+                LOG.error("Unable to build project: " + buildStatus.getError());
                 throw new Exception("Unable to build project: " + buildStatus.getError());
             }
 

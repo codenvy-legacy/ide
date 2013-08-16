@@ -135,6 +135,7 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     @Override
     public void stop(String appId, AsyncRequestCallback<Void> callback) throws RequestException {
         final String url = restContext + BASE_URL + STOP + "/" + appId;
+        loader.setMessage("Stopping an application...");
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
 }

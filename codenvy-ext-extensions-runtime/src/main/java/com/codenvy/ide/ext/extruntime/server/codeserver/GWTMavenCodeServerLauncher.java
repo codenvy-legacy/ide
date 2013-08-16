@@ -62,7 +62,8 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
     public void start(GWTCodeServerConfiguration configuration) throws GWTCodeServerException {
         this.configuration = configuration;
         this.logFilePath = configuration.getWorkDir().resolve("code-server.log");
-        setCodeServerConfiguration(configuration.getWorkDir().resolve("pom.xml"), configuration.getWorkDir(), configuration.getPort());
+        setCodeServerConfiguration(configuration.getWorkDir().resolve("pom.xml"), configuration.getWorkDir(),
+                                   configuration.getBindAddress(), configuration.getPort());
 
         // need 'clean compile' to get 'IDEInjector.java' and 'ExtensionManager.java' in a target folder
         final String[] command = new String[]{
@@ -141,10 +142,11 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
      * @throws IllegalStateException if any error occurred while writing a file
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static void setCodeServerConfiguration(Path pomPath, Path workDir, int port) {
+    private static void setCodeServerConfiguration(Path pomPath, Path workDir, String bindAddress, int port) {
         final String workDirConf = workDir == null ? "" : "<codeServerWorkDir>" + workDir + "</codeServerWorkDir>";
+        final String bindAddressConf = bindAddress == null ? "" : "<bindAddress>" + bindAddress + "</bindAddress>";
         final String portConf = port == -1 ? "" : "<codeServerPort>" + port + "</codeServerPort>";
-        final String codeServerConf = String.format("<configuration>%s%s</configuration>", workDirConf, portConf);
+        final String codeServerConf = String.format("<configuration>%s%s%s</configuration>", workDirConf, bindAddressConf, portConf);
         try {
             Xpp3Dom additionalConfiguration = build(new StringReader(codeServerConf));
 

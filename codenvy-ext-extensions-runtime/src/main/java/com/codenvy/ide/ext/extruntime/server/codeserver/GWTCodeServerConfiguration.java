@@ -26,36 +26,59 @@ import java.nio.file.Path;
  * @version $Id: GWTCodeServerConfiguration.java Aug 8, 2013 5:35:00 PM azatsarynnyy $
  */
 public class GWTCodeServerConfiguration {
-    /** Code server port. */
-    private int  port;
+    /** GWT code server's bind address. */
+    private String bindAddress;
+
+    /** GWT code server's port. */
+    private int    port;
 
     /** Code server working directory. */
-    private Path workDir;
+    private Path   workDir;
 
     /**
      * Constructs new {@link GWTCodeServerConfiguration} with the specified parameters.
      * 
+     * @param bindAddress code server bind address
      * @param port code server port
      * @param workDir code server working directory
      */
-    public GWTCodeServerConfiguration(int port, Path workDir) {
+    public GWTCodeServerConfiguration(String bindAddress, int port, Path workDir) {
+        this.bindAddress = bindAddress;
         this.port = port;
         this.workDir = workDir;
     }
 
     /**
-     * Returns code server port.
+     * Returns code server's bind address.
      * 
-     * @return the code server port
+     * @return the code server's bind address
+     */
+    public String getBindAddress() {
+        return bindAddress;
+    }
+
+    /**
+     * Set the code server's bind address.
+     * 
+     * @param port the code server's bind address to set
+     */
+    public void setBindAddress(String bindAddress) {
+        this.bindAddress = bindAddress;
+    }
+
+    /**
+     * Returns code server's port.
+     * 
+     * @return the code server's port
      */
     public int getPort() {
         return port;
     }
 
     /**
-     * Set the code server port.
+     * Set the code server's port.
      * 
-     * @param port the code server port to set
+     * @param port the code server's port to set
      */
     public void setPort(int port) {
         this.port = port;
