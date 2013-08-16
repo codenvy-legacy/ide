@@ -23,11 +23,10 @@ import com.codenvy.commons.servlet.Condition;
 import com.codenvy.commons.servlet.DispatcherServletConfiguration;
 import com.codenvy.commons.servlet.DispatcherServletConfigurationFactory;
 
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -133,7 +132,8 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                              })
                                              .priority(300)
                                              .done()
-                                              // Need for Codenvy SDK.
+                                             // Allow specify parameters apps that launched in Codenvy SDK.
+                                             // h - GWT code server's host, p - GWT code server's port
                                              .when(new Condition() {
                                                  @Override
                                                  public boolean matches(HttpServletRequest request, HttpServletResponse response) {
