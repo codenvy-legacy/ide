@@ -98,6 +98,7 @@ public class ExtensionLauncher implements Startable {
 
     /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
     private static final int                         DEFAULT_APPLICATION_LIFETIME     = 60;
+    /** Default address where GWT code server should binded . */
     private static final String                      DEFAULT_CODE_SERVER_BIND_ADDRESS = "127.0.0.1";
 
     /** System property that contains build server URL. */
@@ -284,9 +285,9 @@ public class ExtensionLauncher implements Startable {
                                                     shutdownPort, httpPort, ajpPort,
                                                     tomcatDir,
                                                     tempDir));
+
             LOG.debug("Start Codenvy extension {}", appId);
-            return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort)
-                                          .setCodeServerHost(codeServerBindAddress).setCodeServerPort(codeServerPort);
+            return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort).setCodeServerPort(codeServerPort);
         } catch (Exception e) {
             LOG.warn("Codenvy extension {} failed to start, cause: {}", appId, e);
             tomcatPortManager.releasePorts(shutdownPort, httpPort, ajpPort);
