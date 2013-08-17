@@ -9,7 +9,7 @@
 Open in browser http://127.0.0.1:8080/IDE/IDE.html?gwt.codesvr=127.0.0.1:9997
 
 ##How to run Codenvy with SDK?
-See the following docs for details:
+The documentation is maintained on wiki.codenvycorp.com. Please see here for more information:
 * https://wiki.codenvycorp.com/x/vAE-/
 * https://wiki.codenvycorp.com/x/_QE-/
 
