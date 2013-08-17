@@ -54,7 +54,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.codehaus.plexus.util.xml.Xpp3DomBuilder.build;
 
 /**
- * Utils to work with Maven POM and GWT module descriptor (gwt.xml) files.
+ * A collection of utility methods that simplify editing of Maven POM and GWT module descriptor (gwt.xml) files.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: Utils.java Jul 31, 2013 11:30:14 AM azatsarynnyy $
