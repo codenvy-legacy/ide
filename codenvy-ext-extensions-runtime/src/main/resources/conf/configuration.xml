@@ -29,11 +29,10 @@
                 <name>build-server-base-url</name>
                 <value>http://localhost:8080/builder</value>
             </value-param>
-            <value-param>
+            <!-- <value-param>
                 <name>code-server-bind-address</name>
-                <value>127.0.0.1</value>
-<!--                 <value>10.235.2.182</value> -->
-            </value-param>
+                <value>10.234.17.26</value>
+            </value-param> -->
             <values-param>
                 <name>catalina-shutdown-port-ranges</name>
                 <value>9100-9124</value>

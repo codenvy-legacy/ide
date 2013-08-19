@@ -170,7 +170,9 @@ public class LaunchExtensionController {
         UrlBuilder builder = new UrlBuilder();
         final String uri = builder.setProtocol("http:").setHost(launchedApp.getHost())
                                   .setPort(launchedApp.getPort())
-                                  .setPath("ide" + '/' + Utils.getWorkspaceName()).buildString();
+                                  .setPath("ide" + '/' + Utils.getWorkspaceName())
+                                  .setParameter("h", launchedApp.getCodeServerHost())
+                                  .setParameter("p", String.valueOf(launchedApp.getCodeServerPort())).buildString();
         console.print(constant.applicationStartedOnUrls(project.getName(), "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
     }
 

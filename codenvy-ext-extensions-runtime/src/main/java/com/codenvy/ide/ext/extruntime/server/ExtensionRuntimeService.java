@@ -166,7 +166,7 @@ public class ExtensionRuntimeService {
     @Path("stop/{appid}")
     @GET
     public void stop(@PathParam("appid") String appId) throws ExtensionLauncherException {
-        launcher.stop(appId);
+        launcher.stopApp(appId);
     }
 
     private void updateProperties(String name, List<Property> properties, VirtualFileSystem vfs, Folder projectFolder)
