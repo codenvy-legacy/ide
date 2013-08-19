@@ -29,6 +29,8 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 
+import java.util.Set;
+
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
@@ -71,6 +73,10 @@ public class DisableEnableCollaborationControl extends SimpleControl implements 
         setEnabled(true);
         boolean enabled = CollaborationPropertiesUtil.isCollaborationEnabled(event.getProject());
         setState(enabled);
+        Set<String> permissions = event.getProject().getPermissions();
+        if (permissions != null) {
+            setVisible(permissions.contains("write") || permissions.contains("all"));
+        }
     }
 
     public void setState(boolean collaborationEnabled){
