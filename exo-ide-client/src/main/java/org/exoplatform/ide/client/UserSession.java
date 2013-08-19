@@ -55,7 +55,6 @@ public class UserSession implements ConnectionOpenedHandler {
         uuid = UUID.uuid();
         if (targetWindow) {
             targetWindow = false;
-            uuid = UUID.uuid();
             sendLog(uuid, "start");
         }
     }
