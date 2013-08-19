@@ -24,6 +24,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Random;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -107,7 +108,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
 
         if (parameterMap.get(FactorySpec10.PROJECT_TYPE) != null
             && !parameterMap.get(FactorySpec10.PROJECT_TYPE).isEmpty()) {
-            prjType = parameterMap.get(FactorySpec10.PROJECT_TYPE).get(0);
+            prjType = URL.decodeQueryString(parameterMap.get(FactorySpec10.PROJECT_TYPE).get(0));
         } else {
             prjType = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
         }
