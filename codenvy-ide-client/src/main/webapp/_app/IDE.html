@@ -46,7 +46,15 @@
     <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono&subset=latin,cyrillic-ext,latin-ext,cyrillic,greek-ext' rel='stylesheet'
           type='text/css'>
     <script type="text/javascript" language="javascript">
+        var appConfig = {
+            "context": "/ide/rest/",
+            "websocketContext": "/ide/websocket/"
+        }
+        var hiddenFiles = ".*";
         var ws = "dev-monit";
+        var authorizationContext = "ide/rest";
+        var authorizationErrorPageURL = "/ide/ide/error_oauth.html";
+        var securityCheckURL = "/ide/j_security_check";
     </script>
     <script type="text/javascript" language="javascript" src="_app.nocache.js"></script>
 </head>
@@ -57,6 +65,18 @@
 <!-- to create a completely dynamic UI.        -->
 <!--                                           -->
 <body>
+
+<script type="text/javascript">
+    var uvOptions = {};
+    (function () {
+        var uv = document.createElement('script');
+        uv.type = 'text/javascript';
+        uv.async = true;
+        uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/jWE2fqGrmh1pa5tszJtZQA.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(uv, s);
+    })();
+</script>
 
 <!-- OPTIONAL: include this if you want history support -->
 <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>

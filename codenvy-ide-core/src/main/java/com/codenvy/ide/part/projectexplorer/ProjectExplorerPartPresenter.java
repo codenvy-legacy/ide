@@ -25,11 +25,15 @@ import com.codenvy.ide.api.event.ResourceChangedHandler;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEvent.FileOperation;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.part.base.BasePresenter;
 import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -45,8 +49,9 @@ import com.google.web.bindery.event.shared.EventBus;
 public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
     protected ProjectExplorerView view;
 
-    protected EventBus  eventBus;
-    private   Resources resources;
+    protected EventBus         eventBus;
+    private   Resources        resources;
+    private   ResourceProvider resourceProvider;
 
     /**
      * Instantiates the ProjectExplorer Presenter
@@ -55,10 +60,12 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      * @param eventBus
      */
     @Inject
-    public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, Resources resources) {
+    public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, Resources resources,
+                                        ResourceProvider resourceProvider) {
         this.view = view;
         this.eventBus = eventBus;
         this.resources = resources;
+        this.resourceProvider = resourceProvider;
         view.setTitle("Project Explorer");
         bind();
     }
@@ -149,5 +156,19 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         if (resource.isFile()) {
             eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
         }
+        //open project
+        if (resource.getResourceType().equals(Project.TYPE) && resourceProvider.getActiveProject() == null) {
+            resourceProvider.getProject(resource.getName(), new AsyncCallback<Project>() {
+                @Override
+                public void onSuccess(Project result) {
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    Log.error(ProjectExplorerPartPresenter.class, "Can not get project", caught);
+                }
+            });
+        }
     }
 }
+

@@ -18,14 +18,14 @@
 package com.codenvy.ide.welcome;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.parts.WelcomeItemAction;
 import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
-import com.codenvy.ide.wizard.WizardPresenter;
-import com.codenvy.ide.wizard.newproject.NewProjectPagePresenter;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 
@@ -36,23 +36,22 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class WelcomePartPresenter extends AbstractPartPresenter implements WelcomePart, WelcomePartView.ActionDelegate {
-    private WelcomePartView                   view;
-    private Resources                         resources;
-    private Provider<NewProjectPagePresenter> newProjectPage;
+    private WelcomePartView              view;
+    private Resources                    resources;
+    private JsonArray<WelcomeItemAction> actions;
 
     /**
      * Create presenter.
      *
      * @param view
      * @param resources
-     * @param newProjectPage
      */
     @Inject
-    public WelcomePartPresenter(WelcomePartView view, Resources resources, Provider<NewProjectPagePresenter> newProjectPage) {
+    public WelcomePartPresenter(WelcomePartView view, Resources resources) {
         this.view = view;
         this.view.setDelegate(this);
         this.resources = resources;
-        this.newProjectPage = newProjectPage;
+        this.actions = JsonCollections.createArray();
     }
 
     /** {@inheritDoc} */
@@ -81,26 +80,15 @@ public class WelcomePartPresenter extends AbstractPartPresenter implements Welco
 
     /** {@inheritDoc} */
     @Override
-    public void onCreateProjectClicked() {
-        WizardPresenter wizardDialog = new WizardPresenter(newProjectPage.get(), "Create project", resources);
-        wizardDialog.showWizard();
+    public void addItem(WelcomeItemAction action) {
+        actions.add(action);
+        view.addItem(action.getTitle(), action.getCaption(), action.getIcon(), actions.size() - 1);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onImportFromGitHubClicked() {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onCloneClicked() {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onInvitePeopleClicked() {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void onItemClicked(int itemIndex) {
+        WelcomeItemAction action = actions.get(itemIndex);
+        action.execute();
     }
 }

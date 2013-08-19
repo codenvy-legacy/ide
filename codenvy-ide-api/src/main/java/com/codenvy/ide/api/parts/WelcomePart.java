@@ -25,5 +25,11 @@ import com.codenvy.ide.api.ui.workspace.PartPresenter;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public interface WelcomePart extends PartPresenter {
-
+    /**
+     * Add item on welcome page.
+     *
+     * @param action
+     *         action what need to execute when current item is clicked
+     */
+    void addItem(WelcomeItemAction action);
 }

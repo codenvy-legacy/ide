@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.client;
 
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
@@ -57,7 +58,7 @@ public class BootstrapController {
     public BootstrapController(final ComponentRegistry componentRegistry, final Provider<WorkspacePresenter> workspaceProvider,
                                StyleInjector styleInjector, final ExtensionInitializer extensionInitializer,
                                final ExtensionsPage extensionsPage, final PreferencesManagerImpl preferencesManager,
-                               UserClientService userService) {
+                               UserClientService userService, final ResourceProvider resourceProvider) {
         styleInjector.inject();
 
         try {
@@ -83,6 +84,8 @@ public class BootstrapController {
                             workspacePresenter.go(mainPanel);
                             // TODO FOR DEMO
                             workspacePresenter.openPart(extensionsPage, PartStackType.EDITING);
+                            //Display list of projects in project explorer
+                            resourceProvider.showListProjects();
                         }
 
                         @Override

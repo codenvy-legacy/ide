@@ -18,15 +18,9 @@
 package com.codenvy.ide.core;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.actions.NewFolderAction;
-import com.codenvy.ide.actions.NewProjectAction;
-import com.codenvy.ide.actions.NewResourceAction;
-import com.codenvy.ide.actions.OpenProjectAction;
-import com.codenvy.ide.actions.SaveAction;
-import com.codenvy.ide.actions.SaveAllAction;
-import com.codenvy.ide.actions.ShowPreferencesAction;
-import com.codenvy.ide.actions.UpdateExtensionAction;
+import com.codenvy.ide.actions.*;
 import com.codenvy.ide.api.paas.PaaSAgent;
+import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
@@ -35,6 +29,11 @@ import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
+import com.codenvy.ide.welcome.WelcomeLocalizationConstant;
+import com.codenvy.ide.welcome.action.ConnectSupportAction;
+import com.codenvy.ide.welcome.action.CreateProjectAction;
+import com.codenvy.ide.welcome.action.InviteAction;
+import com.codenvy.ide.welcome.action.ShowDocumentationAction;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newfile.NewTextFilePagePresenter;
 import com.codenvy.ide.wizard.newfolder.NewFolderPagePresenter;
@@ -102,6 +101,24 @@ public class StandardComponentInitializer {
     @Inject
     private ToolbarPresenter toolbarPresenter;
 
+    @Inject
+    private WelcomePart welcomePart;
+
+    @Inject
+    private WelcomeLocalizationConstant welcomeConstant;
+
+    @Inject
+    private CreateProjectAction createProjectAction;
+
+    @Inject
+    private ShowDocumentationAction showDocumentationAction;
+
+    @Inject
+    private InviteAction inviteAction;
+
+    @Inject
+    private ConnectSupportAction connectSupportAction;
+
     /** Instantiates {@link StandardComponentInitializer} an creates standard content */
     @Inject
     public StandardComponentInitializer() {
@@ -157,5 +174,10 @@ public class StandardComponentInitializer {
 
         toolbarPresenter.bindMainGroup(toolbarGroup);
         paasAgent.registerPaaS("None", "None", null, JsonCollections.<String>createArray("", "java", "War"), null, null);
+
+        welcomePart.addItem(createProjectAction);
+        welcomePart.addItem(showDocumentationAction);
+        welcomePart.addItem(inviteAction);
+        welcomePart.addItem(connectSupportAction);
     }
 }

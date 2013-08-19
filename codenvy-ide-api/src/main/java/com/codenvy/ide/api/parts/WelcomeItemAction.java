@@ -15,35 +15,26 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.welcome;
+package com.codenvy.ide.api.parts;
 
-import com.codenvy.ide.api.mvp.View;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
- * The view of {@link WelcomePartPresenter}.
+ * The presentation of welcome page item. This class provides general information of item as like title, caption and icon.
+ * Also it provides implementation of action what happened when item is clicked.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface WelcomePartView extends View<WelcomePartView.ActionDelegate> {
-    /** Needs for delegate some function into WelcomePart view. */
-    public interface ActionDelegate {
-        /**
-         * Performs any actions appropriate in response to the user having pressed some item on welcome page.
-         *
-         * @param itemIndex
-         *         index of item
-         */
-        void onItemClicked(int itemIndex);
-    }
+public interface WelcomeItemAction {
+    /** @return title of item */
+    String getTitle();
 
-    /**
-     * Add item on welcome page.
-     *
-     * @param title
-     * @param caption
-     * @param icon
-     * @param itemIndex
-     */
-    void addItem(String title, String caption, ImageResource icon, int itemIndex);
+    /** @return caption of item */
+    String getCaption();
+
+    /** @return icon */
+    ImageResource getIcon();
+
+    /** Perform some action when item is clicked. */
+    void execute();
 }

@@ -30,7 +30,7 @@ public interface GitResources extends ClientBundle {
         String textFont();
     }
 
-    @Source({"Git.css", "com/codenvy/ide/api/ui/style.css"})
+    @Source({"git.css", "com/codenvy/ide/api/ui/style.css"})
     GitCSS gitCSS();
 
     @Source("push/arrow.png")
@@ -161,4 +161,10 @@ public interface GitResources extends ClientBundle {
 
     @Source("controls/repository.png")
     ImageResource projectReadOnlyGitUrl();
+
+    @Source("welcome/import-from-github.png")
+    ImageResource importFromGithub();
+
+    @Source("welcome/clone-git-repository.png")
+    ImageResource welcomeClone();
 }

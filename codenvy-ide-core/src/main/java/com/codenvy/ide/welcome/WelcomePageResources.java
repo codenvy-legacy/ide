@@ -35,6 +35,8 @@ public interface WelcomePageResources extends ClientBundle {
         String link();
 
         String socialPanel();
+
+        String item();
     }
 
     @Source({"welcome.css", "com/codenvy/ide/api/ui/style.css"})
@@ -55,9 +57,6 @@ public interface WelcomePageResources extends ClientBundle {
     @Source("tutorials.png")
     ImageResource welcomeTutorial();
 
-    @Source("clone-git-repository.png")
-    ImageResource welcomeClone();
-
     @Source("new-project.png")
     ImageResource welcomeProject();
 
@@ -66,9 +65,6 @@ public interface WelcomePageResources extends ClientBundle {
 
     @Source("documentation.png")
     ImageResource documentation();
-
-    @Source("import-from-github.png")
-    ImageResource importFromGithub();
 
     @Source("support.png")
     ImageResource support();
