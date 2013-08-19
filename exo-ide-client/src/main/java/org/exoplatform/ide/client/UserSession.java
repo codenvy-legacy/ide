@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.client;
 
-import elemental.client.Browser;
-import elemental.events.Event;
-import elemental.events.EventListener;
-import elemental.html.Document;
+import com.codenvy.ide.client.util.logging.Log;
+import com.google.gwt.http.client.RequestBuilder;
 
 import org.exoplatform.ide.client.framework.util.UUID;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -36,31 +36,51 @@ public class UserSession implements ConnectionOpenedHandler {
 
     private boolean targetWindow = false;
 
+    private static UserSession instance;
+
     public UserSession() {
+        instance = this;
         uuid = UUID.uuid();
         IDE.messageBus().setOnOpenHandler(this);
-        Document document = Browser.getDocument();
-        document.setOnFocus(new EventListener() {
-            @Override
-            public void handleEvent(Event evt) {
-                uuid = UUID.uuid();
-                if (targetWindow) {
-                    targetWindow = false;
-                    uuid = UUID.uuid();
-                    sendLog(uuid, "start");
-                }
-            }
-        });
-        document.setOnBlur(new EventListener() {
-            @Override
-            public void handleEvent(Event evt) {
-                if (!targetWindow) {
-                    targetWindow = true;
-                    sendLog(uuid, "stop");
-                }
-            }
-        });
+        addFocusHandler();
+        addBlurHandler();
+
     }
+
+    protected static UserSession get() {
+        return instance;
+    }
+
+    private void handleFocus(){
+        uuid = UUID.uuid();
+        if (targetWindow) {
+            targetWindow = false;
+            uuid = UUID.uuid();
+            sendLog(uuid, "start");
+        }
+    }
+
+    private void handleBlur(){
+        if (!targetWindow) {
+            targetWindow = true;
+            sendLog(uuid, "stop");
+        }
+    }
+
+
+    private native void addFocusHandler() /*-{
+        $wnd.onfocus = function (){
+            var newVar = @org.exoplatform.ide.client.UserSession::get()();
+            newVar.@org.exoplatform.ide.client.UserSession::handleFocus()();
+        }
+    }-*/;
+
+    private native void addBlurHandler() /*-{
+        $wnd.onblur = function (){
+            var newVar = @org.exoplatform.ide.client.UserSession::get()();
+            newVar.@org.exoplatform.ide.client.UserSession::handleBlur()();
+        }
+    }-*/;
 
     /** {@inheritDoc} */
     @Override
@@ -69,18 +89,23 @@ public class UserSession implements ConnectionOpenedHandler {
     }
 
     private void sendLog(String uuid, String status){
-//        RequestMessageBuilder builder =
-//                RequestMessageBuilder.build(RequestBuilder.POST, IDE.currentWorkspace.getName() + "/session/ide/" + status);
-//        builder.data("{\"sessionId\":\""+uuid+"\",\"browserInfo\":\""+getBrowserInfo()+"\"}");
-//        IDE.messageBus().send(builder.getRequestMessage(), new RequestCallback<Void>() {
-//            @Override
-//            protected void onSuccess(Void result) {
-//            }
-//
-//            @Override
-//            protected void onFailure(Throwable exception) {
-//            }
-//        });
+        try{
+        RequestMessageBuilder builder =
+                RequestMessageBuilder.build(RequestBuilder.POST, IDE.currentWorkspace.getName() + "/session/ide/" + status);
+        builder.data("{\"sessionId\":\""+uuid+"\",\"browserInfo\":\""+getBrowserInfo()+"\"}");
+        IDE.messageBus().send(builder.getRequestMessage(), new RequestCallback<Void>() {
+            @Override
+            protected void onSuccess(Void result) {
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.debug(getClass(), exception);
+            }
+        });
+        }catch (Throwable e){
+            Log.debug(getClass(), e);
+        }
     }
 
     private native String getBrowserInfo()/*-{
