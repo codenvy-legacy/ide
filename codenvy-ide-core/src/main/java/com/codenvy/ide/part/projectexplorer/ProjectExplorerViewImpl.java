@@ -61,7 +61,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     @Override
     public void setItems(Resource resource) {
         tree.getModel().setRoot(resource);
-        tree.renderTree();
+        tree.renderTree(1);
     }
 
     /** {@inheritDoc} */
