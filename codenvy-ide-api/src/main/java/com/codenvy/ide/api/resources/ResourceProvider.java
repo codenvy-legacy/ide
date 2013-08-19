@@ -74,6 +74,12 @@ public interface ResourceProvider {
     public void listProjects(AsyncCallback<JsonArray<String>> callback);
 
     /**
+     * Reads already stored projects and shows them in project explorer.
+     *
+     */
+    public void showListProjects();
+
+    /**
      * Registers ModelProvider instance for given Primary Project Nature
      *
      * @param primaryNature

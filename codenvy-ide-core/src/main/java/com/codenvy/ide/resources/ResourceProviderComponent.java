@@ -493,4 +493,25 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
             callback.onFailure(e);
         }
     }
+
+    @Override
+    public void showListProjects () {
+        activeProject = null;
+        listProjects(new AsyncCallback<JsonArray<String>>() {
+            @Override
+            public void onSuccess(JsonArray<String> result) {
+                for (String projectName: result.asIterable()){
+                    Project project = new Project(eventBus);
+                    project.setName(projectName);
+                    Folder rootFolder = vfsInfo.getRoot();
+                    rootFolder.addChild(project);
+                    eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
+                }
+            }
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(ResourceProviderComponent.class, "Can not get list of projects", caught);
+            }
+        });
+    }
 }
