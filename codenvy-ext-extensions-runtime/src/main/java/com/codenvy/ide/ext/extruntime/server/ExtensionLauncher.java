@@ -82,7 +82,7 @@ import static com.codenvy.ide.ext.extruntime.server.Utils.enableSuperDevMode;
 import static com.codenvy.ide.ext.extruntime.server.Utils.fixMGWT332Bug;
 import static com.codenvy.ide.ext.extruntime.server.Utils.inheritGwtModule;
 import static com.codenvy.ide.ext.extruntime.server.Utils.readPom;
-import static com.codenvy.ide.ext.extruntime.server.Utils.setTomcatPorts;
+import static com.codenvy.ide.ext.extruntime.server.Utils.configureTomcatPorts;
 import static com.codenvy.ide.ext.extruntime.server.Utils.writePom;
 import static java.lang.Integer.parseInt;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -100,7 +100,6 @@ public class ExtensionLauncher implements Startable {
     private static final int                         DEFAULT_APPLICATION_LIFETIME     = 60;
     /** Default address where GWT code server should binded . */
     private static final String                      DEFAULT_CODE_SERVER_BIND_ADDRESS = "127.0.0.1";
-
     /** System property that contains build server URL. */
     public static final String                       BUILD_SERVER_BASE_URL            = "exo.ide.builder.build-server-base-url";
     /** Default name of the client module directory. */
@@ -121,8 +120,7 @@ public class ExtensionLauncher implements Startable {
     /** GWT code server's bind address. */
     private String                                   codeServerBindAddress;
 
-    private TomcatPortManager                        tomcatPortManager;
-    private CodeServerPortManager                    codeServerPortManager;
+    private PortManager                              portManager;
 
     public ExtensionLauncher(InitParams initParams) {
         this(readValueParam(initParams, "build-server-base-url", System.getProperty(BUILD_SERVER_BASE_URL)),
@@ -158,9 +156,11 @@ public class ExtensionLauncher implements Startable {
         }
 
         this.buildServerBaseURL = buildServerBaseURL;
-        this.tomcatPortManager = new TomcatPortManager(catalinaShutdownPortList, httpConnectorPortList, ajpConnectorPortList);
+        this.portManager = new PortManager(codeServerPortList,
+                                           catalinaShutdownPortList,
+                                           httpConnectorPortList,
+                                           ajpConnectorPortList);
         this.codeServerBindAddress = codeServerBindAddress;
-        this.codeServerPortManager = new CodeServerPortManager(codeServerPortList);
 
         this.applicationLifetime = applicationLifetime * 60 * 1000;
 
@@ -185,13 +185,12 @@ public class ExtensionLauncher implements Startable {
             throw new IllegalArgumentException("Project id required.");
         }
 
-        final int shutdownPort = tomcatPortManager.nextShutdownPort();
-        final int httpPort = tomcatPortManager.nextHttpPort();
-        final int ajpPort = tomcatPortManager.nextAjpPort();
-        final int codeServerPort = codeServerPortManager.nextPort();
+        final int codeServerPort = portManager.nextCodeServerPort();
+        final int shutdownPort = portManager.nextShutdownPort();
+        final int httpPort = portManager.nextHttpPort();
+        final int ajpPort = portManager.nextAjpPort();
         if (shutdownPort == -1 || httpPort == -1 || ajpPort == -1 || codeServerPort == -1) {
-            tomcatPortManager.releasePorts(shutdownPort, httpPort, ajpPort);
-            codeServerPortManager.releasePort(codeServerPort);
+            portManager.releasePorts(codeServerPort, shutdownPort, httpPort, ajpPort);
             throw new IllegalStateException("Not enough resources to launch new application. Max number of applications was reached.");
         }
 
@@ -290,14 +289,13 @@ public class ExtensionLauncher implements Startable {
             return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort).setCodeServerPort(codeServerPort);
         } catch (Exception e) {
             LOG.warn("Codenvy extension {} failed to start, cause: {}", appId, e);
-            tomcatPortManager.releasePorts(shutdownPort, httpPort, ajpPort);
-            codeServerPortManager.releasePort(codeServerPort);
+            portManager.releasePorts(codeServerPort, shutdownPort, httpPort, ajpPort);
             if (tempDir != null && tempDir.exists()) {
                 deleteRecursive(tempDir, false);
             }
             throw new ExtensionLauncherException(String.format("Unable to launch Codenvy with extension %s.", project.getName()), e);
         }
-        // TODO consider catching OutOfMemoryError
+        // TODO consider to handling OutOfMemoryError
     }
 
     /**
@@ -364,14 +362,16 @@ public class ExtensionLauncher implements Startable {
         }
 
         // TODO
-        // Use com.codenvy.api.tools.ProcessUtil from 'codenvy-organization-api' project when it finished.
+        // Use com.codenvy.api.tools.ProcessUtil from 'codenvy-api-tools' project when it finished.
 
         // Use ProcessUtil because java.lang.Process.destroy() method doesn't
         // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
         LOG.debug("Killing process tree");
         ProcessUtil.kill(extension.tomcatProcess);
-        tomcatPortManager.releasePorts(extension.shutdownPort, extension.httpPort, extension.ajpPort);
-        codeServerPortManager.releasePort(extension.codeServer.getConfiguration().getPort());
+        portManager.releasePorts(extension.codeServer.getConfiguration().getPort(),
+                                 extension.shutdownPort,
+                                 extension.httpPort,
+                                 extension.ajpPort);
 
         extension.codeServer.stop();
 
@@ -446,9 +446,7 @@ public class ExtensionLauncher implements Startable {
             Build clientPomBuild = clientPom.getBuild();
             Map<String, Plugin> clientPomPlugins = clientPomBuild.getPluginsAsMap();
             Plugin warPlugin = clientPomPlugins.get("org.apache.maven.plugins:maven-war-plugin");
-            Xpp3Dom warPluginConfiguration =
-                                             Xpp3DomBuilder.build(new StringReader(
-                                                                                   "<configuration><outputDirectory>./target/</outputDirectory></configuration>"));
+            Xpp3Dom warPluginConfiguration = Xpp3DomBuilder.build(new StringReader("<configuration><outputDirectory>./target/</outputDirectory></configuration>"));
             warPlugin.setConfiguration(warPluginConfiguration);
             clientPomBuild.setPlugins(new ArrayList(clientPomPlugins.values()));
             writePom(clientPom, pomPath);
@@ -607,7 +605,7 @@ public class ExtensionLauncher implements Startable {
 
         try {
             unzip(tomcatBundleStream, tomcatDir.toFile());
-            setTomcatPorts(tomcatDir, shutdownPort, httpPort, ajpPort);
+            configureTomcatPorts(tomcatDir, shutdownPort, httpPort, ajpPort);
 
             File ideWar = downloadFile(new File(tomcatDir + "/webapps"), "app-", ".war", ideWarUrl);
             ideWar.renameTo(tomcatDir.resolve("webapps/ide.war").toFile());

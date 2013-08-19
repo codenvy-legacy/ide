@@ -270,7 +270,7 @@ public class Utils {
      * @param ajpPort AJP-connector port
      * @throws IllegalStateException if any error occurred while reading or writing a file
      */
-    static void setTomcatPorts(Path tomcatRootPath, int shutdownPort, int httpPort, int ajpPort) {
+    static void configureTomcatPorts(Path tomcatRootPath, int shutdownPort, int httpPort, int ajpPort) {
         File serverXml = tomcatRootPath.resolve("conf/server.xml").toFile();
 
         try {

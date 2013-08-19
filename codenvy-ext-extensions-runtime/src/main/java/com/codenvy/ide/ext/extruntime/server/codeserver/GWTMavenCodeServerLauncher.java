@@ -99,7 +99,7 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
     @Override
     public void stop() {
         // TODO
-        // Use com.codenvy.api.tools.ProcessUtil from 'codenvy-organization-api' project when it finished.
+        // Use com.codenvy.api.tools.ProcessUtil from 'codenvy-api-tools' project when it finished.
 
         // Use ProcessUtil because java.lang.Process.destroy() method doesn't
         // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
