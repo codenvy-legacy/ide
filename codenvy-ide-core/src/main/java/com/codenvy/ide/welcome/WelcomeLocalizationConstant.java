@@ -34,12 +34,6 @@ public interface WelcomeLocalizationConstant extends Messages {
     @Key("welcome.tutorial.text")
     String tutorialText();
 
-    @Key("welcome.clone.title")
-    String cloneTitle();
-
-    @Key("welcome.clone.text")
-    String cloneText();
-
     @Key("welcome.title")
     String welcomeTitle();
 
@@ -54,12 +48,6 @@ public interface WelcomeLocalizationConstant extends Messages {
 
     @Key("welcome.convert.text")
     String convertText();
-
-    @Key("welcome.import.title")
-    String importTitle();
-
-    @Key("welcome.import.text")
-    String importText();
 
     @Key("welcome.documentation.title")
     String documentationTitle();

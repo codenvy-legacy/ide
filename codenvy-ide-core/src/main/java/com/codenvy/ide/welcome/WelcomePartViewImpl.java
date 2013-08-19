@@ -19,15 +19,14 @@ package com.codenvy.ide.welcome;
 
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Frame;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -44,17 +43,13 @@ public class WelcomePartViewImpl extends Composite implements WelcomePartView {
     private static WelcomePartViewImplUiBinder ourUiBinder = GWT.create(WelcomePartViewImplUiBinder.class);
 
     @UiField
-    Frame  fbFrame;
+    Frame           fbFrame;
     @UiField
-    Frame  googleFrame;
+    Frame           googleFrame;
     @UiField
-    Anchor invitationsLink;
+    DockLayoutPanel westPanel;
     @UiField
-    Anchor cloneLink;
-    @UiField
-    Anchor importLink;
-    @UiField
-    Anchor projectLink;
+    DockLayoutPanel eastPanel;
     @UiField(provided = true)
     final   WelcomePageResources        res;
     @UiField(provided = true)
@@ -85,23 +80,47 @@ public class WelcomePartViewImpl extends Composite implements WelcomePartView {
         this.delegate = delegate;
     }
 
-    @UiHandler("invitationsLink")
-    public void onInvitationClicked(ClickEvent event) {
-        delegate.onInvitePeopleClicked();
-    }
+    /** {@inheritDoc} */
+    @Override
+    public void addItem(String title, String caption, ImageResource icon, final int itemIndex) {
+        SimplePanel panel = new SimplePanel();
+        panel.setWidth("100%");
+        panel.setHeight("100%");
+        panel.addStyleName(res.welcomeCSS().item());
 
-    @UiHandler("cloneLink")
-    public void onCloneClicked(ClickEvent event) {
-        delegate.onCloneClicked();
-    }
+        DockLayoutPanel item = new DockLayoutPanel(Style.Unit.PX);
+        item.setWidth("100%");
+        item.setHeight("100%");
 
-    @UiHandler("importLink")
-    public void onImportClicked(ClickEvent event) {
-        delegate.onImportFromGitHubClicked();
-    }
+        item.addWest(new Image(icon), 90);
 
-    @UiHandler("projectLink")
-    public void onCreateProjectClicked(ClickEvent event) {
-        delegate.onCreateProjectClicked();
+        FlowPanel center = new FlowPanel();
+
+        Anchor anchor = new Anchor();
+        anchor.addStyleName(res.welcomeCSS().link());
+        anchor.setText(title);
+        anchor.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onItemClicked(itemIndex);
+            }
+        });
+
+        Label label = new Label();
+        label.setText(caption);
+        label.addStyleName(res.welcomeCSS().welcomeLabel());
+
+        center.add(anchor);
+        center.add(label);
+
+        item.add(center);
+
+        panel.setWidget(item);
+
+        if (itemIndex % 2 == 0) {
+            westPanel.addNorth(panel, 110);
+        } else {
+            eastPanel.addNorth(panel, 110);
+        }
     }
 }

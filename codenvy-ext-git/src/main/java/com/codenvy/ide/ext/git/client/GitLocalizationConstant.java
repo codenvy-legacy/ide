@@ -722,4 +722,18 @@ public interface GitLocalizationConstant extends Messages {
 
     @Key("projectNameStartWith_Message")
     String projectNameStartWith_Message();
+
+    // Welcome page
+
+    @Key("welcome.clone.title")
+    String welcomeCloneTitle();
+
+    @Key("welcome.clone.text")
+    String welcomeCloneText();
+
+    @Key("welcome.import.title")
+    String welcomeImportTitle();
+
+    @Key("welcome.import.text")
+    String welcomeImportText();
 }
