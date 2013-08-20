@@ -26,7 +26,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -160,7 +159,6 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
     @SuppressWarnings("deprecation")
     private Property getTarget(Property currentType) {
         List<String> target = new ArrayList<String>();
-        Window.alert(currentType.getValue().get(0));
         org.exoplatform.ide.client.framework.project.ProjectType currentProjType =
                 org.exoplatform.ide.client.framework.project.ProjectType.fromValue(currentType.getValue()
                                                                                               .get(0));
@@ -206,13 +204,10 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
 
     private void setUserProjectType(String projectType) {
         final List<Property> properties = new ArrayList<Property>();
-        Window.alert("project t1 - " + projectType);
         properties.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
         properties.addAll(this.properties);
         if (!"none".equals(projectType)) {
             Property pt = new PropertyImpl("vfs:projectType", ProjectType.fromValue(projectType).toString());
-            Window.alert("project t2 - " + projectType);
-            Window.alert("project t3 - " + ProjectType.fromValue(projectType).toString());
             properties.add(pt);
             properties.add(getTarget(pt));
         }
@@ -224,7 +219,6 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
                                                         new AsyncRequestCallback<ItemWrapper>(unmarshaller) {
                                                             @Override
                                                             protected void onSuccess(ItemWrapper result) {
-                                                                Window.alert("project type write");
                                                                 Item item = result.getItem();
                                                                 item.getProperties().addAll(properties);
                                                                 writeUserPropertiesToProject(item);
