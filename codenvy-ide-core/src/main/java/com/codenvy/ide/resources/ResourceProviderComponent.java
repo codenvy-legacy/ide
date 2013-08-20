@@ -461,7 +461,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
     /** {@inheritDoc} */
     @Override
-    public void delete(Resource item, final AsyncCallback<String> callback) {
+    public void delete(final Resource item, final AsyncCallback<String> callback) {
         String url = item.getLinkByRelation(Link.REL_DELETE).getHref();
         if (item instanceof File) {
             url = URL.decode(url).replace("[lockToken]", ((File)item).getLock().getLockToken());
@@ -470,14 +470,23 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         StringUnmarshaller unmarshaller = new StringUnmarshaller();
         AsyncRequestCallback<StringBuilder> internalCallback = new AsyncRequestCallback<StringBuilder>(unmarshaller) {
             @Override
-            protected void onSuccess(StringBuilder result) {
-                Folder rootFolder = vfsInfo.getRoot();
-                rootFolder.getChildren().clear();
+            protected void onSuccess(final StringBuilder result) {
+                if (item instanceof Project) {
+                    showListProjects();
+                    callback.onSuccess(result.toString());
+                } else {
+                    getProject(activeProject.getName(), new AsyncCallback<Project>() {
+                        @Override
+                        public void onSuccess(Project result) {
+                            callback.onSuccess(result.toString());
+                        }
 
-                eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
-                activeProject = null;
-
-                callback.onSuccess(result.toString());
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            callback.onFailure(caught);
+                        }
+                    });
+                }
             }
 
             @Override
@@ -494,20 +503,26 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void showListProjects () {
+    public void showListProjects() {
+        eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
         activeProject = null;
+
+        final Folder rootFolder = vfsInfo.getRoot();
+        rootFolder.getChildren().clear();
+
         listProjects(new AsyncCallback<JsonArray<String>>() {
             @Override
             public void onSuccess(JsonArray<String> result) {
-                for (String projectName: result.asIterable()){
+                for (String projectName : result.asIterable()) {
                     Project project = new Project(eventBus);
                     project.setName(projectName);
-                    Folder rootFolder = vfsInfo.getRoot();
                     rootFolder.addChild(project);
                     eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
                 }
             }
+
             @Override
             public void onFailure(Throwable caught) {
                 Log.error(ResourceProviderComponent.class, "Can not get list of projects", caught);

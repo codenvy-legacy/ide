@@ -119,6 +119,12 @@ public class StandardComponentInitializer {
     @Inject
     private ConnectSupportAction connectSupportAction;
 
+    @Inject
+    private DeleteResourceAction deleteResourceAction;
+
+    @Inject
+    private CloseProjectAction closeProjectAction;
+
     /** Instantiates {@link StandardComponentInitializer} an creates standard content */
     @Inject
     public StandardComponentInitializer() {
@@ -167,6 +173,15 @@ public class StandardComponentInitializer {
         toolbarGroup.add(saveGroup);
         toolbarGroup.addSeparator();
         fileGroup.add(saveGroup);
+
+        DefaultActionGroup changeResourceGroup = new DefaultActionGroup(actionManager);
+        actionManager.registerAction("changeResourceGroup", changeResourceGroup);
+        actionManager.registerAction("closeProject", closeProjectAction);
+        actionManager.registerAction("deleteItem", deleteResourceAction);
+        changeResourceGroup.add(closeProjectAction);
+        changeResourceGroup.add(deleteResourceAction);
+        changeResourceGroup.addSeparator();
+        toolbarGroup.add(changeResourceGroup);
 
         actionManager.registerAction("updateExtension", updateExtensionAction);
         DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_RUN_MAIN_MENU);
