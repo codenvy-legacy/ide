@@ -88,6 +88,10 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
         String url = Utils.getRestContext() + Utils.getWorkspaceName() + "/project/prepare?vfsid=" + event.getVfsId() + "&folderid=" + event.getFolderId() +
                      (event.getProjectType() != null ? "&projecttype=" + event.getProjectType() : "");
         properties = event.getProperties();
+        if(event.getProjectType() != null){
+            setUserProjectType(event.getProjectType());
+            return;
+        }
         String data = JSONSerializer.PROPERTY_SERIALIZER.fromCollection(event.getProperties()).toString();
 
         try {

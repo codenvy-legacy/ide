@@ -24,9 +24,8 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;
@@ -405,7 +404,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
                      VCS_URL + "=" + encodeQueryString(vcsURL) + "&" + //
                      COMMIT_ID + "=" + latestCommitId + "&" + //
                      ACTION_PARAMETER + "=" + DEFAULT_ACTION +"&" +//
-                     PROJECT_TYPE + "=" + openedProject.getProjectType();
+                     PROJECT_TYPE + "=" + URL.encodeQueryString(openedProject.getProjectType());
         
         logFactoryCreated(UriUtils.fromString(factoryURL).asString());
         generateSnippetForWebsites(false, false);
