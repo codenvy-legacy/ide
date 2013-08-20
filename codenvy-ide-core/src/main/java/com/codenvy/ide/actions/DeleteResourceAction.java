@@ -23,6 +23,7 @@ import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -46,8 +47,9 @@ public class DeleteResourceAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
+        Project activeProject = resourceProvider.getActiveProject();
         Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
-        if (selection != null) {
+        if (activeProject != null && selection != null) {
             Resource resource = selection.getFirstElement();
             e.getPresentation().setEnabled(resource != null);
         } else {
