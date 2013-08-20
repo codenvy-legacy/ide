@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.factory.client.receive;
 
+import com.codenvy.ide.client.util.logging.Log;
 import com.codenvy.ide.factory.client.FactorySpec10;
 import com.codenvy.ide.factory.client.copy.CopySpec10;
 import com.google.gwt.core.client.Scheduler;
@@ -326,8 +327,12 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
 
         List<Property> properties = new ArrayList<Property>();
         properties.add(new PropertyImpl("codenow", remoteUri));
+        try{
+          IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), prjType, properties));
 
-        IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), prjType, properties));
+        } catch (Throwable e){
+            Log.debug(getClass(), e);
+        }
     }
 
     private void handleError(Throwable e, String remoteUri) {

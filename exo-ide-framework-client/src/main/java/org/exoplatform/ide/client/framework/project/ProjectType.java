@@ -68,4 +68,11 @@ public enum ProjectType {
         }
         throw new IllegalArgumentException(v);
     }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return value();
+    }
 }
