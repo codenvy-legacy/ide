@@ -170,12 +170,20 @@ public class GreetingUserPresenter implements
                FactoryClientBundle.INSTANCE.login(), FactoryClientBundle.INSTANCE.loginHover(), new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    goToURL("/login");
-
+                    //goToURL("/login");
+                    loginToIDE();
                 }
             });        
         IDE.fireEvent(new AddToolbarItemsEvent(loginButton, true));
     }
+    
+    private native void loginToIDE() /*-{
+            if ($wnd.location.search !== "") {
+                $wnd.location.search += "&login";
+            } else {
+                $wnd.location.search += "?login";
+            }        
+    }-*/;
     
     /**
      * Adds "Copy to my workspace" button on toolbar.
