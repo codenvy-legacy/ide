@@ -52,8 +52,8 @@ public class UserSession implements ConnectionOpenedHandler {
     }
 
     private void handleFocus(){
-        uuid = UUID.uuid();
         if (targetWindow) {
+            uuid = UUID.uuid();
             targetWindow = false;
             sendLog(uuid, "start");
         }
