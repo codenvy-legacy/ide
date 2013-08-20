@@ -170,7 +170,12 @@ public class ExtensionLauncher implements Startable {
     }
 
     /**
-     * Launch Codenvy with a custom extension.
+     * Launch Codenvy with a custom extension. This need some preparatory operations, such as:
+     * </p>
+     * <ul>
+     * <li> proper setup the Maven project setting, such as dependencies and module declaration;
+     * <li> add &lt;inherits&gt; to the IDEPlatform.gwt.xml in the Client project providing the logical name of extension's GWT module.
+     * </ul>
      * 
      * @param vfs virtual file system
      * @param projectId identifier of a project we want to launch
@@ -207,7 +212,7 @@ public class ExtensionLauncher implements Startable {
             InputStream extPomContent = vfs.getContent(pomFile.getId()).getStream();
             Model extensionPom = readPom(extPomContent);
 
-            // Unpack Codenvy Platform sources & user's extension project into temporary directory.
+            // Unpack Codenvy Platform sources and user's extension project into temporary directory.
             InputStream codenvyPlatformSourcesStream = Thread.currentThread().getContextClassLoader()
                                                              .getResourceAsStream("CodenvyPlatform.zip");
             if (codenvyPlatformSourcesStream == null) {
