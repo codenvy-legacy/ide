@@ -19,24 +19,23 @@
 package org.exoplatform.ide.client;
 
 import com.codenvy.ide.client.util.logging.Log;
-import com.google.gwt.http.client.RequestBuilder;
 
+import org.exoplatform.ide.client.framework.configuration.InitialConfigurationReceivedEvent;
+import org.exoplatform.ide.client.framework.configuration.InitialConfigurationReceivedHandler;
 import org.exoplatform.ide.client.framework.util.UUID;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
-import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
-import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class UserSession implements ConnectionOpenedHandler {
-
-    private String uuid;
-
-    private boolean targetWindow = false;
+public class UserSession implements ConnectionOpenedHandler, InitialConfigurationReceivedHandler {
 
     private static UserSession instance;
+    private        String      uuid;
+    private boolean targetWindow = false;
+    private boolean connectionOpened;
+    private boolean settingsReceived;
 
     public UserSession() {
         instance = this;
@@ -44,14 +43,14 @@ public class UserSession implements ConnectionOpenedHandler {
         IDE.messageBus().setOnOpenHandler(this);
         addFocusHandler();
         addBlurHandler();
-
+        IDE.addHandler(InitialConfigurationReceivedEvent.TYPE, this);
     }
 
     protected static UserSession get() {
         return instance;
     }
 
-    private void handleFocus(){
+    private void handleFocus() {
         if (targetWindow) {
             uuid = UUID.uuid();
             targetWindow = false;
@@ -59,23 +58,22 @@ public class UserSession implements ConnectionOpenedHandler {
         }
     }
 
-    private void handleBlur(){
+    private void handleBlur() {
         if (!targetWindow) {
             targetWindow = true;
             sendLog(uuid, "stop");
         }
     }
 
-
     private native void addFocusHandler() /*-{
-        $wnd.onfocus = function (){
+        $wnd.onfocus = function () {
             var newVar = @org.exoplatform.ide.client.UserSession::get()();
             newVar.@org.exoplatform.ide.client.UserSession::handleFocus()();
         }
     }-*/;
 
     private native void addBlurHandler() /*-{
-        $wnd.onblur = function (){
+        $wnd.onblur = function () {
             var newVar = @org.exoplatform.ide.client.UserSession::get()();
             newVar.@org.exoplatform.ide.client.UserSession::handleBlur()();
         }
@@ -84,26 +82,24 @@ public class UserSession implements ConnectionOpenedHandler {
     /** {@inheritDoc} */
     @Override
     public void onConnectionOpened() {
-        sendLog(uuid, "start");
+        try {
+            if (settingsReceived) {
+                sendLog(uuid, "start");
+            } else {
+                connectionOpened = true;
+            }
+
+        } catch (Throwable e) {
+            Log.error(getClass(), e);
+        }
     }
 
-    private void sendLog(String uuid, String status){
-        try{
-        RequestMessageBuilder builder =
-                RequestMessageBuilder.build(RequestBuilder.POST, IDE.currentWorkspace.getName() + "/session/ide/" + status);
-        builder.data("{\"sessionId\":\""+uuid+"\",\"browserInfo\":\""+getBrowserInfo()+"\"}");
-        IDE.messageBus().send(builder.getRequestMessage(), new RequestCallback<Void>() {
-            @Override
-            protected void onSuccess(Void result) {
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                Log.debug(getClass(), exception);
-            }
-        });
-        }catch (Throwable e){
-            Log.debug(getClass(), e);
+    private void sendLog(String uuid, String status) {
+        try {
+            IDE.messageBus().send(IDE.currentWorkspace.getName() + "/session/ide/" + status,
+                                  "{\"sessionId\":\"" + uuid + "\",\"browserInfo\":\"" + getBrowserInfo() + "\"}");
+        } catch (Throwable e) {
+            Log.error(getClass(), e);
         }
     }
 
@@ -149,5 +145,14 @@ public class UserSession implements ConnectionOpenedHandler {
 
     public void close() {
         sendLog(uuid, "stop");
+    }
+
+    @Override
+    public void onInitialConfigurationReceived(InitialConfigurationReceivedEvent event) {
+        if (connectionOpened) {
+            sendLog(uuid, "start");
+        } else {
+            settingsReceived = true;
+        }
     }
 }
