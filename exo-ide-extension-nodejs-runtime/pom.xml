@@ -55,6 +55,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.codenvy.commons</groupId>
+            <artifactId>codenvy-commons-env</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-commons</artifactId>
             <scope>provided</scope>

@@ -41,8 +41,8 @@ public final class CollaborationPropertiesUtil {
     public static boolean isCollaborationEnabled(ProjectModel project) {
         String value = project.getPropertyValue(COLLABORATION_MODE);
         if (value == null) {
-            //by default collaboration enabled
-            return true;
+            //by default collaboration disabled
+            return false;
         }
 
 

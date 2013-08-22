@@ -27,7 +27,6 @@ import com.google.collide.dto.DocOp;
 import com.google.collide.shared.ot.DocOpUtils;
 import com.google.gwt.user.client.Timer;
 
-
 import java.util.List;
 
 /**
@@ -190,7 +189,7 @@ class AckWatchdog implements DocOpListener {
     private StatusMessage createWarningMessage() {
         StatusMessage msg =
                 new StatusMessage(statusManager, MessageType.LOADING,
-                                  "Still saving your latest changes...");
+                                  "Error during autosave. A connectivity problem has been detected. We recommend you disable Collaboration mode (Project->Disable Collaboration) and then manually save files.");
         msg.setDismissable(true);
 
 //    XhrWarden.dumpRequestsToConsole();
