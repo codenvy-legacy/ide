@@ -60,3 +60,28 @@ a{
     background: -ms-linear-gradient(top, rgba(195,198,204,1) 0%,rgba(244,244,244,1) 14%,rgba(228,228,228,1) 57%,rgba(227,227,227,1) 71%,rgba(229,229,229,1) 86%,rgba(198,200,206,1) 100%); /* IE10+ */
     background: linear-gradient(to bottom, rgba(195,198,204,1) 0%,rgba(244,244,244,1) 14%,rgba(228,228,228,1) 57%,rgba(227,227,227,1) 71%,rgba(229,229,229,1) 86%,rgba(198,200,206,1) 100%); /* W3C */
 }
+
+.menuAdditionItems {
+    position: relative;
+    float: right;
+    height: 25px;
+    width: auto;
+    z-index: 900000;
+    padding: 0px;
+    -moz-box-sizing: border-box;
+    overflow: hidden;
+}
+
+.menuBarItem {
+    height: 25px;
+    padding-left: 8px;
+    padding-right: 8px;
+    cursor: default;
+
+    font-family: "Myriad Pro", arial, Verdana, Verdana, sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    font-style: normal;
+
+    color: #333333;
+}
