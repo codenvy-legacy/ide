@@ -183,6 +183,11 @@ public abstract class ItemImpl implements Item {
     }
 
     @Override
+    public void setProperties(List<Property> properties) {
+        this.properties = properties;
+    }
+
+    @Override
     public Property getProperty(String name) {
         for (Property p : getProperties()) {
             if (p.getName().equals(name)) {
@@ -225,6 +230,11 @@ public abstract class ItemImpl implements Item {
             links = new HashMap<String, Link>();
         }
         return links;
+    }
+
+    @Override
+    public void setLinks(Map<String, Link> links) {
+        this.links = links;
     }
 
     @Override

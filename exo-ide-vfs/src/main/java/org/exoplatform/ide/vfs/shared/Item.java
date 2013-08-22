@@ -107,6 +107,9 @@ public interface Item {
      */
     Property getProperty(String name);
 
+    /** @see #getProperties() */
+    void setProperties(List<Property> properties);
+
     /**
      * Check does item has property with specified name.
      *
@@ -152,6 +155,9 @@ public interface Item {
      * @return links map. Never <code>null</code> but empty map instead
      */
     Map<String, Link> getLinks();
+
+    /** @see #getLinks() */
+    void setLinks(Map<String, Link> links);
 
     /** @return set of relations */
     Set<String> getLinkRelations();
