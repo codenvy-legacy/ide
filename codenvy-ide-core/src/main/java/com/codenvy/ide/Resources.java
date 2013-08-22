@@ -59,4 +59,10 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
 
     @Source("tree/project_explorer.png")
     ImageResource projectExplorer();
+
+    @Source("tree/delete.png")
+    ImageResource delete();
+
+    @Source("tree/project-closed.png")
+    ImageResource projectClosed();
 }

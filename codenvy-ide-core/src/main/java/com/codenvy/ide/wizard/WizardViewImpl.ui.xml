@@ -47,10 +47,10 @@
                               ui:field="btnCancel"/>
                     <c:Button text="Finish" icon="{res.ok}" width="60px" size="SMALL" addStyleNames="{style.alignBtn} {style.space}"
                               ui:field="btnFinish"/>
-                    <c:Button text="Back" icon="{res.back}" width="60px" size="SMALL" addStyleNames="{style.alignBtn} {style.space}"
-                              ui:field="btnBack"/>
                     <c:Button text="Next" icon="{res.next}" width="60px" size="SMALL" addStyleNames="{style.alignBtn} {style.space}"
                               ui:field="btnNext"/>
+                    <c:Button text="Back" icon="{res.back}" width="60px" size="SMALL" addStyleNames="{style.alignBtn} {style.space}"
+                              ui:field="btnBack"/>
                 </g:FlowPanel>
             </g:FlowPanel>
         </g:south>
