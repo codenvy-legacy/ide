@@ -202,11 +202,11 @@ public class ExtensionLauncher implements Startable {
             InputStream extPomContent = vfs.getContent(pomFile.getId()).getStream();
             Model extensionPom = readPom(extPomContent);
 
-            // Unpack Codenvy client-module sources and user's extension project into temporary directory.
+            // Unpack codenvy-ide-client module sources and user's extension project into temporary directory.
             InputStream codenvyClientSourcesStream = Thread.currentThread().getContextClassLoader()
                                                            .getResourceAsStream("CodenvyClient.zip");
             if (codenvyClientSourcesStream == null) {
-                throw new InvalidArgumentException("Can't find Codenvy client-module source package.");
+                throw new InvalidArgumentException("Can't find codenvy-ide-client module sources.");
             }
             unzip(codenvyClientSourcesStream, codeServerDirPath.toFile());
             Path customModulePath = codeServerDirPath.resolve(extensionPom.getArtifactId());
@@ -225,8 +225,7 @@ public class ExtensionLauncher implements Startable {
             // Add sources from custom project to allow code server access it.
             fixMGWT332Bug(clientModulePomPath, customModulePath.getFileName().toString(), ADD_SOURCES_PROFILE);
 
-            Path gwtModuleDescriptorPath = codeServerDirPath.resolve(CLIENT_MODULE_DIR_NAME)
-                                                            .resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
+            Path gwtModuleDescriptorPath = clientModuleDirPath.resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
             // TODO Avoid hardcoded logical name of custom GWT module, but try to detect it.
             inheritGwtModule(gwtModuleDescriptorPath, "com.codenvy.ide.extension.demo.Demo");
             enableSuperDevMode(gwtModuleDescriptorPath);
@@ -253,8 +252,7 @@ public class ExtensionLauncher implements Startable {
             // Build Codenvy platform + custom project.
             File zippedProjectFile = tempDir.toPath().resolve("project.zip").toFile();
             // zipDir(codeServerDirPath.toString(), codeServerDirPath.toFile(), zippedProjectFile, ANY_FILTER);
-            zipDir(codeServerDirPath.resolve(CLIENT_MODULE_DIR_NAME).toString(),
-                   codeServerDirPath.resolve(CLIENT_MODULE_DIR_NAME).toFile(), zippedProjectFile, ANY_FILTER);
+            zipDir(clientModuleDirPath.toString(), clientModuleDirPath.toFile(), zippedProjectFile, ANY_FILTER);
             final String buildId = build(zippedProjectFile);
 
             // Launch code server while project is building.

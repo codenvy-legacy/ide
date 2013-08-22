@@ -236,6 +236,15 @@
                                     <outputDirectory>${project.build.directory}/classes/tomcat/lib</outputDirectory>
                                     <destFileName>logback-classic.jar</destFileName>
                                 </artifactItem>
+                                <!-- <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>codenvy-ide-client</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>jar</type>
+                                    <classifier>sources</classifier>
+                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                                    <destFileName>codenvy-ide-client.jar</destFileName>
+                                </artifactItem> -->
                             </artifactItems>
                         </configuration>
                     </execution>
