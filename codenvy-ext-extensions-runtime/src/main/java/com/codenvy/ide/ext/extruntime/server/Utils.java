@@ -66,11 +66,8 @@ public class Utils {
     private static MavenXpp3Writer pomWriter                = new MavenXpp3Writer();
 
     /** Directive for GWT-module descriptor to enable GWT SuperDevMode: use cross-site IFrame linker and enable using source maps. */
-    // Set 'failIfScriptTag' property to FALSE, to avoid error messages that <script> tags exist in Commons.gwt.xml.
-    // Enable source maps to allow debug Java code in browser's debugger.
     private static final String    SUPER_DEV_MODE_DIRECTIVE = "\r\n\t<add-linker name='xsiframe' />"
                                                                   + "\r\n\t<set-configuration-property name='devModeRedirectEnabled' value='true' />"
-                                                                  + "\r\n\t<set-configuration-property name='xsiframe.failIfScriptTag' value='false'/>"
                                                                   + "\r\n\t<set-property name='compiler.useSourceMaps' value='true' />";
 
     /**
@@ -119,7 +116,17 @@ public class Utils {
     }
 
     /**
-     * Add dependency with provided coordinates to the specified pom.xml.
+     * Add dependency to the specified pom.xml.
+     * 
+     * @param path pom.xml path
+     * @param pom POM of artifact to add as dependency
+     */
+    static void addDependencyToPom(Path path, Model pom) {
+        addDependencyToPom(path, pom.getGroupId(), pom.getArtifactId(), pom.getVersion());
+    }
+
+    /**
+     * Add dependency to the specified pom.xml.
      * 
      * @param path pom.xml path
      * @param groupId groupId
@@ -194,7 +201,7 @@ public class Utils {
 
             Files.write(path, content, UTF_8);
         } catch (IOException e) {
-            throw new IllegalStateException(String.format("Error occurred while reading or writing file: %s.", path), e);
+            throw new IllegalStateException(String.format("Error occurred while reading or writing a file: %s.", path), e);
         }
     }
 

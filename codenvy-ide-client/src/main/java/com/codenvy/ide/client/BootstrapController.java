@@ -31,6 +31,8 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -43,6 +45,7 @@ import com.google.inject.Provider;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class BootstrapController {
+
     /**
      * Create controller.
      *
@@ -53,6 +56,7 @@ public class BootstrapController {
      * @param extensionsPage
      * @param preferencesManager
      * @param userService
+     * @param resourceProvider
      */
     @Inject
     public BootstrapController(final ComponentRegistry componentRegistry, final Provider<WorkspacePresenter> workspaceProvider,
@@ -60,6 +64,8 @@ public class BootstrapController {
                                final ExtensionsPage extensionsPage, final PreferencesManagerImpl preferencesManager,
                                UserClientService userService, final ResourceProvider resourceProvider) {
         styleInjector.inject();
+        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW).inject();
+        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_parsers.js").setWindow(ScriptInjector.TOP_WINDOW).inject();
 
         try {
             DtoClientImpls.UserImpl user = DtoClientImpls.UserImpl.make();

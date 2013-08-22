@@ -27,12 +27,7 @@ import com.codenvy.ide.ext.extruntime.server.tools.ProcessUtil;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 import com.codenvy.ide.extension.maven.shared.BuildStatus.Status;
 
-import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.Plugin;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
@@ -51,7 +46,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
@@ -60,7 +54,6 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
@@ -77,13 +70,11 @@ import static com.codenvy.ide.commons.NameGenerator.generate;
 import static com.codenvy.ide.commons.ZipUtils.unzip;
 import static com.codenvy.ide.commons.ZipUtils.zipDir;
 import static com.codenvy.ide.ext.extruntime.server.Utils.addDependencyToPom;
-import static com.codenvy.ide.ext.extruntime.server.Utils.addModuleToReactorPom;
+import static com.codenvy.ide.ext.extruntime.server.Utils.configureTomcatPorts;
 import static com.codenvy.ide.ext.extruntime.server.Utils.enableSuperDevMode;
 import static com.codenvy.ide.ext.extruntime.server.Utils.fixMGWT332Bug;
 import static com.codenvy.ide.ext.extruntime.server.Utils.inheritGwtModule;
 import static com.codenvy.ide.ext.extruntime.server.Utils.readPom;
-import static com.codenvy.ide.ext.extruntime.server.Utils.configureTomcatPorts;
-import static com.codenvy.ide.ext.extruntime.server.Utils.writePom;
 import static java.lang.Integer.parseInt;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -170,11 +161,10 @@ public class ExtensionLauncher implements Startable {
     }
 
     /**
-     * Launch Codenvy with a custom extension. This need some preparatory operations, such as:
-     * </p>
+     * Launch Codenvy with a custom extension. This need some preparatory operations, such as: </p>
      * <ul>
-     * <li> proper setup the Maven project setting, such as dependencies and module declaration;
-     * <li> add &lt;inherits&gt; to the IDEPlatform.gwt.xml in the Client project providing the logical name of extension's GWT module.
+     * <li>proper setup the Maven project setting, such as dependencies and module declaration;
+     * <li>add &lt;inherits&gt; to the IDEPlatform.gwt.xml in the Client project providing the logical name of extension's GWT module.
      * </ul>
      * 
      * @param vfs virtual file system
@@ -212,39 +202,31 @@ public class ExtensionLauncher implements Startable {
             InputStream extPomContent = vfs.getContent(pomFile.getId()).getStream();
             Model extensionPom = readPom(extPomContent);
 
-            // Unpack Codenvy Platform sources and user's extension project into temporary directory.
-            InputStream codenvyPlatformSourcesStream = Thread.currentThread().getContextClassLoader()
-                                                             .getResourceAsStream("CodenvyPlatform.zip");
-            if (codenvyPlatformSourcesStream == null) {
-                throw new InvalidArgumentException("Can't find Codenvy Platform sources package.");
+            // Unpack codenvy-ide-client module sources and user's extension project into temporary directory.
+            InputStream codenvyClientSourcesStream = Thread.currentThread().getContextClassLoader()
+                                                           .getResourceAsStream("CodenvyClient.zip");
+            if (codenvyClientSourcesStream == null) {
+                throw new InvalidArgumentException("Can't find codenvy-ide-client module sources.");
             }
-            unzip(codenvyPlatformSourcesStream, codeServerDirPath.toFile());
+            unzip(codenvyClientSourcesStream, codeServerDirPath.toFile());
             Path customModulePath = codeServerDirPath.resolve(extensionPom.getArtifactId());
             unzip(vfs.exportZip(projectId).getStream(), customModulePath.toFile());
 
-            // Use special ide-configuration.xml with removed unnecessary components.
-            InputStream confStream = Thread.currentThread().getContextClassLoader()
-                                           .getResourceAsStream("tomcat/ide-configuration.xml");
+            // Use special ide-configuration.xml without unnecessary components.
+            InputStream confStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("tomcat/ide-configuration.xml");
             Files.copy(confStream, clientModuleDirPath.resolve("src/main/webapp/WEB-INF/classes/conf/ide-configuration.xml"),
                        REPLACE_EXISTING);
 
-            // Use special 'clean' pom.xml for parent & client module to build Codenvy Platform (without any applications).
-            Files.move(codeServerDirPath.resolve("platform-pom.xml"), codeServerDirPath.resolve("pom.xml"), REPLACE_EXISTING);
+            // Use special pom.xml to build 'clean' Codenvy Platform (without any deps on extensions).
             Files.move(clientModuleDirPath.resolve("platform-pom.xml"), clientModulePomPath, REPLACE_EXISTING);
 
-            addModuleToReactorPom(codeServerDirPath.resolve("pom.xml"), customModulePath.getFileName().toString(),
-                                  CLIENT_MODULE_DIR_NAME);
-            addDependencyToPom(clientModulePomPath, extensionPom.getGroupId(), extensionPom.getArtifactId(), extensionPom.getVersion());
+            addDependencyToPom(clientModulePomPath, extensionPom);
 
-            // Change output directory for the WAR to allow builder return link to download WAR.
-            configureWarPlugin(clientModulePomPath);
-
-            // Add sources from custom's project to allow code server access it.
+            // Add sources from custom project to allow code server access it.
             fixMGWT332Bug(clientModulePomPath, customModulePath.getFileName().toString(), ADD_SOURCES_PROFILE);
 
-            Path gwtModuleDescriptorPath = codeServerDirPath.resolve(CLIENT_MODULE_DIR_NAME)
-                                                            .resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
-            // TODO detect logical name of custom GWT module
+            Path gwtModuleDescriptorPath = clientModuleDirPath.resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
+            // TODO Avoid hardcoded logical name of custom GWT module, but try to detect it.
             inheritGwtModule(gwtModuleDescriptorPath, "com.codenvy.ide.extension.demo.Demo");
             enableSuperDevMode(gwtModuleDescriptorPath);
 
@@ -256,9 +238,10 @@ public class ExtensionLauncher implements Startable {
             }
             extensionDirInFSRoot = extensionDirInFSRoot.normalize();
 
+            // Create symbolic links to project sources and pom.xml to allow code server get an actual sources.
             deleteRecursive(customModulePath.resolve("src").toFile());
-            Files.delete(customModulePath.resolve("pom.xml"));
             Files.createSymbolicLink(customModulePath.resolve("src"), extensionDirInFSRoot.resolve("src"));
+            Files.delete(customModulePath.resolve("pom.xml"));
             Files.createSymbolicLink(customModulePath.resolve("pom.xml"), extensionDirInFSRoot.resolve("pom.xml"));
 
             // Deploy custom project to maven repository.
@@ -268,7 +251,8 @@ public class ExtensionLauncher implements Startable {
 
             // Build Codenvy platform + custom project.
             File zippedProjectFile = tempDir.toPath().resolve("project.zip").toFile();
-            zipDir(codeServerDirPath.toString(), codeServerDirPath.toFile(), zippedProjectFile, ANY_FILTER);
+            // zipDir(codeServerDirPath.toString(), codeServerDirPath.toFile(), zippedProjectFile, ANY_FILTER);
+            zipDir(clientModuleDirPath.toString(), clientModuleDirPath.toFile(), zippedProjectFile, ANY_FILTER);
             final String buildId = build(zippedProjectFile);
 
             // Launch code server while project is building.
@@ -442,22 +426,6 @@ public class ExtensionLauncher implements Startable {
             }
         }
         return DEFAULT_APPLICATION_LIFETIME;
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private void configureWarPlugin(Path pomPath) {
-        try {
-            Model clientPom = readPom(pomPath);
-            Build clientPomBuild = clientPom.getBuild();
-            Map<String, Plugin> clientPomPlugins = clientPomBuild.getPluginsAsMap();
-            Plugin warPlugin = clientPomPlugins.get("org.apache.maven.plugins:maven-war-plugin");
-            Xpp3Dom warPluginConfiguration = Xpp3DomBuilder.build(new StringReader("<configuration><outputDirectory>./target/</outputDirectory></configuration>"));
-            warPlugin.setConfiguration(warPluginConfiguration);
-            clientPomBuild.setPlugins(new ArrayList(clientPomPlugins.values()));
-            writePom(clientPom, pomPath);
-        } catch (IOException | XmlPullParserException e) {
-            throw new IllegalStateException("Can't parse pom.xml.", e);
-        }
     }
 
     private String startCheckingBuildStatus(String buildId) throws IOException, ExtensionLauncherException {

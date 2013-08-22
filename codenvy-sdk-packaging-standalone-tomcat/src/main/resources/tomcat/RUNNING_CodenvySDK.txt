@@ -1,14 +1,13 @@
 Pre-Requirements:
 ------------------
 Apache Maven 3 must be installed on the same machine where this Codenvy SDK Tomcat bundle will run.
-This step required to properly run the GWT code-server.
 
 Launching:
 ------------------
 1. Go to bin directory and launch Tomcat:
 
-$ ./catalina.sh run
+$ ./catalina.sh start
 
-2. Launched Codenvy will be available on port 8080.
+2. Codenvy will available on port 8080.
 
 127.0.0.1:8080
