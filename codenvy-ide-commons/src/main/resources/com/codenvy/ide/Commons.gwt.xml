@@ -69,7 +69,4 @@
         <when-type-is class="com.codenvy.ide.util.browser.UserAgentStaticProperties"/>
         <when-property-is name="mobile.user.agent" value="iphone"/>
     </replace-with>
-
-    <script src="codemirror2_base.js"/>
-    <script src="codemirror2_parsers.js"/>
 </module>
