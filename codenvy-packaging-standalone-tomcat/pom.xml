@@ -26,11 +26,11 @@
     </parent>
     <artifactId>codenvy-packaging-standalone-tomcat</artifactId>
     <packaging>pom</packaging>
-    <name>Codenvy IDE :: Assemblies Tomcat</name>
+    <name>Codenvy :: Assemblies Tomcat</name>
     <dependencies>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-client</artifactId>
+            <artifactId>codenvy-application-war</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
@@ -756,7 +756,7 @@
                                 <move file="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j-${org.slf4j.version}.jar"
                                       tofile="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j.jar"/>
 
-                                <unwar src="${project.build.directory}/packager-conf/war/codenvy-ide-client-${project.version}.war"
+                                <unwar src="${project.build.directory}/packager-conf/war/codenvy-application-war-${project.version}.war"
                                        dest="${project.build.directory}/packager-conf/war/ide">
                                     <patternset>
                                         <exclude name="**/lib/**"/>
@@ -849,20 +849,5 @@
             </plugin>
         </plugins>
     </build>
-
-	<profiles>
-		<profile>
-			<id>ext-runtime</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<dependencies>
-				<dependency>
-		            <groupId>com.codenvy.ide</groupId>
-		            <artifactId>codenvy-ext-extensions-runtime</artifactId>
-		        </dependency>
-			</dependencies>
-		</profile>
-	</profiles>
 
 </project>

@@ -1,6 +1,6 @@
-# eXo IDE 3.0
+# Codenvy IDE 3.0
 
-##How to run IDE 3 demo application?
+##How to run Codenvy IDE 3 demo application?
 1. Build all IDE3 modules from the root of the project:
 ```mvn clean install```
 2. Go to **codenvy-packaging-standalone-tomcat/target/tomcat-ide** and start Tomcat

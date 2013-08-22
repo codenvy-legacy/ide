@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<!--
+  ~ CODENVY CONFIDENTIAL
+  ~ __________________
+  ~
+  ~ [2012] - [2013] Codenvy, S.A.
+  ~ All Rights Reserved.
+  ~
+  ~ NOTICE:  All information contained herein is, and remains
+  ~ the property of Codenvy S.A. and its suppliers,
+  ~ if any.  The intellectual and technical concepts contained
+  ~ herein are proprietary to Codenvy S.A.
+  ~ and its suppliers and may be covered by U.S. and Foreign Patents,
+  ~ patents in process, and are protected by trade secret or copyright law.
+  ~ Dissemination of this information or reproduction of this material
+  ~ is strictly forbidden unless prior written permission is obtained
+  ~ from Codenvy S.A..
+  -->
+
+<!-- The DOCTYPE declaration above will set the    -->
+<!-- browser's rendering engine into               -->
+<!-- "Standards Mode". Replacing this declaration  -->
+<!-- with a "Quirks Mode" doctype may lead to some -->
+<!-- differences in layout.                        -->
+
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <!--                                                               -->
+    <!-- Consider inlining CSS to reduce the number of requested files -->
+    <!--                                                               -->
+    <!--link type="text/css" rel="stylesheet" href="IDE.css"-->
+
+    <!--                                           -->
+    <!-- Any title is fine                         -->
+    <!--                                           -->
+    <title>Codenvy IDE 2</title>
+
+    <!--                                           -->
+    <!-- This script loads your compiled module.   -->
+    <!-- If you add any GWT meta tags, they must   -->
+    <!-- be added before this line.                -->
+    <!--                                           -->
+    <link rel="icon" type="image/png" href="favicon.ico"/>
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono&subset=latin,cyrillic-ext,latin-ext,cyrillic,greek-ext' rel='stylesheet'
+          type='text/css'>
+    <script type="text/javascript" language="javascript">
+        var appConfig = {
+            "context": "/ide/rest/",
+            "websocketContext": "/ide/websocket/"
+        }
+        var hiddenFiles = ".*";
+        var ws = "dev-monit";
+        var authorizationContext = "ide/rest";
+        var authorizationErrorPageURL = "/ide/ide/error_oauth.html";
+        var securityCheckURL = "/ide/j_security_check";
+    </script>
+    <script type="text/javascript" language="javascript" src="_app.nocache.js"></script>
+</head>
+
+<!--                                           -->
+<!-- The body can have arbitrary html, or      -->
+<!-- you can leave the body empty if you want  -->
+<!-- to create a completely dynamic UI.        -->
+<!--                                           -->
+<body>
+
+<script type="text/javascript">
+    var uvOptions = {};
+    (function () {
+        var uv = document.createElement('script');
+        uv.type = 'text/javascript';
+        uv.async = true;
+        uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/jWE2fqGrmh1pa5tszJtZQA.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(uv, s);
+    })();
+</script>
+
+<!-- OPTIONAL: include this if you want history support -->
+<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
+
+<!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+<noscript>
+    <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+        Your web browser must have JavaScript enabled
+        in order for this application to display correctly.
+    </div>
+</noscript>
+</body>
+</html>

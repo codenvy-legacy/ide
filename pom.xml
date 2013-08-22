@@ -147,11 +147,6 @@
             </dependency>
             <dependency>
                 <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ext-extensions-runtime</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.codenvy.ide</groupId>
                 <artifactId>codenvy-ext-demo</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -208,6 +203,11 @@
             <dependency>
                 <groupId>com.codenvy.ide</groupId>
                 <artifactId>codenvy-ext-git</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.ide</groupId>
+                <artifactId>codenvy-ext-extensions-runtime</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -467,15 +467,6 @@
                 </dependency>
             </dependencies>
         </profile> -->
-        <profile>
-			<id>ext-runtime</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<modules>
-				<module>codenvy-ext-extensions-runtime</module>
-			</modules>
-		</profile>
     </profiles>
 
     <build>
@@ -527,9 +518,13 @@
         <module>codenvy-ext-git</module>
         <module>codenvy-ext-maven</module>
         <module>codenvy-ext-ssh</module>
+        <module>codenvy-ext-extensions-runtime</module>
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
+        <module>codenvy-application-war</module>
+        <module>codenvy-sdk-application-war</module>
         <module>codenvy-ide-site-war</module>
         <module>codenvy-packaging-standalone-tomcat</module>
+        <module>codenvy-sdk-packaging-standalone-tomcat</module>
     </modules>
 </project>

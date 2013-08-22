@@ -1,0 +1,859 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ CODENVY CONFIDENTIAL
+  ~ __________________
+  ~
+  ~ [2012] - [2013] Codenvy, S.A.
+  ~ All Rights Reserved.
+  ~
+  ~ NOTICE:  All information contained herein is, and remains
+  ~ the property of Codenvy S.A. and its suppliers,
+  ~ if any.  The intellectual and technical concepts contained
+  ~ herein are proprietary to Codenvy S.A.
+  ~ and its suppliers and may be covered by U.S. and Foreign Patents,
+  ~ patents in process, and are protected by trade secret or copyright law.
+  ~ Dissemination of this information or reproduction of this material
+  ~ is strictly forbidden unless prior written permission is obtained
+  ~ from Codenvy S.A..
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.codenvy.ide</groupId>
+        <artifactId>codenvy-ide-parent</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>codenvy-sdk-packaging-standalone-tomcat</artifactId>
+    <packaging>pom</packaging>
+    <name>Codenvy SDK :: Assemblies Tomcat</name>
+    <dependencies>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-sdk-application-war</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-packaging-shell-war</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-websocket</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>httpclient</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-maven</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-codeassistant-storage</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.organization</groupId>
+            <artifactId>codenvy-organization-packaging-api-war</artifactId>
+            <type>war</type>
+            <version>${com.codenvy.organization.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-codeassistant-asm</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-shell</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.gwt</groupId>
+                    <artifactId>gwt-dev</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
+                </exclusion>
+            </exclusions>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-site-war</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-core</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-maven</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.kernel</groupId>
+                    <artifactId>exo.kernel.container</artifactId>
+                </exclusion>
+            </exclusions>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-extensions-runtime</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-git-server</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform</groupId>
+            <artifactId>user-service</artifactId>
+            <version>1.0-Alpha02</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-collections</groupId>
+                    <artifactId>commons-collections</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.ws</groupId>
+                    <artifactId>exo.ws.rest.core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.portlet</groupId>
+                    <artifactId>portlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.ow2.spec.ee</groupId>
+                    <artifactId>ow2-jta-1.1-spec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.faces</groupId>
+                    <artifactId>jsf-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xstream</groupId>
+                    <artifactId>xstream</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-vfs-fs</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>${org.slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>${org.slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${org.slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${ch.qos.logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${ch.qos.logback.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-java</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-aws</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>httpclient</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-java-runtime</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gwt-user</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-python-runtime</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gwt-user</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-jenkins</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-googleappengine</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gwt-user</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>httpclient</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-git</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gwt-user</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-ssh</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-heroku</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gwt-user</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-openshift</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gwt-user</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gwt-elemental</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-cloudbees</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-cloudfoundry</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gwt-user</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-appfog</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gwt-user</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-logreader</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-maven</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-samples</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.ide</groupId>
+                    <artifactId>exo-ide-framework-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-vfs</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gwt-user</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>codenvy-ide-collaboration</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gwt-user</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-vfs-fs</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-ruby</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.ide</groupId>
+                    <artifactId>exo-ide-codeassistant-asm</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--GIT Server -->
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit.http.server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+        </dependency>
+
+        <!-- dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>ide-codeassistant-lucene-index</artifactId>
+            <type>zip</type>
+        </dependency-->
+
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-java-sdk</artifactId>
+            <type>zip</type>
+            <version>1.7.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-python-sdk</artifactId>
+            <type>zip</type>
+            <version>1.7.2</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-clear-tomcat</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.apache.tomcat</groupId>
+                                    <artifactId>tomcat</artifactId>
+                                    <type>zip</type>
+                                    <version>7.0.37</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip</outputDirectory>
+                                    <destFileName>tomcat.zip</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-dependencies-war</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeTypes>war</includeTypes>
+                            <silent>true</silent>
+                            <outputDirectory>${project.build.directory}/packager-conf/war</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-appengine-zip</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <stripVersion>true</stripVersion>
+                            <silent>true</silent>
+                            <outputDirectory>${project.build.directory}/packager-conf/appengine</outputDirectory>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.google.appengine</groupId>
+                                    <artifactId>appengine-java-sdk</artifactId>
+                                    <version>${appengine.version}</version>
+                                    <type>zip</type>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.google.appengine</groupId>
+                                    <artifactId>appengine-python-sdk</artifactId>
+                                    <version>${appengine.version}</version>
+                                    <type>zip</type>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-dependencies-jar</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeTypes>jar</includeTypes>
+                            <silent>true</silent>
+                            <outputDirectory>${project.build.directory}/tomcat-ide/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-lucene-autocomplite-index</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <stripVersion>true</stripVersion>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.exoplatform.ide</groupId>
+                                    <artifactId>ide-codeassistant-lucene-index</artifactId>
+                                    <version>${ide.codeassistant.lucene.index.version}</version>
+                                    <type>zip</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>check-environment-ready</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireProperty>
+                                    <property>exo.projects.directory.dependencies</property>
+                                    <message>You must define the property exo.projects.directory.dependencies to
+                                        give the path to
+                                        the directory where you store
+                                        your applications servers
+                                    </message>
+                                </requireProperty>
+                                <requireProperty>
+                                    <property>tomcat.version</property>
+                                    <message>You must define the property tomcat.version to give the name of the directory where is stored
+                                        tomcat
+                                    </message>
+                                    <regex>${tomcat.version}</regex>
+                                    <regexMessage>Tomcat version must be: ${tomcat.version}</regexMessage>
+                                </requireProperty>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Prepare Tomcat</id>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <tasks>
+                                <unzip src="${project.build.directory}/packager-conf/zip/tomcat.zip"
+                                       dest="${project.build.directory}">
+                                    <patternset>
+                                        <exclude name="**/ROOT/**"/>
+                                        <exclude name="**/docs/**"/>
+                                        <exclude name="**/examples/**"/>
+                                        <exclude name="**/manager/**"/>
+                                        <exclude name="**/host-manager/**"/>
+                                    </patternset>
+                                </unzip>
+                                <move file="${project.build.directory}/apache-tomcat-7.0.37"
+                                      tofile="${project.build.directory}/tomcat-ide"/>
+                                <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
+                                    <fileset dir="${basedir}/src/main/resources/tomcat"/>
+                                </copy>
+                                <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh"/>
+                                <move file="${project.build.directory}/tomcat-ide/lib/log4j-over-slf4j-${org.slf4j.version}.jar"
+                                      tofile="${project.build.directory}/tomcat-ide/lib/log4j-over-slf4j.jar"/>
+                                <move file="${project.build.directory}/tomcat-ide/lib/logback-core-${ch.qos.logback.version}.jar"
+                                      tofile="${project.build.directory}/tomcat-ide/lib/logback-core.jar"/>
+                                <move file="${project.build.directory}/tomcat-ide/lib/logback-classic-${ch.qos.logback.version}.jar"
+                                      tofile="${project.build.directory}/tomcat-ide/lib/logback-classic.jar"/>
+                                <move file="${project.build.directory}/tomcat-ide/lib/slf4j-api-${org.slf4j.version}.jar"
+                                      tofile="${project.build.directory}/tomcat-ide/lib/slf4j-api.jar"/>
+                                <move file="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j-${org.slf4j.version}.jar"
+                                      tofile="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j.jar"/>
+
+                                <unwar src="${project.build.directory}/packager-conf/war/codenvy-sdk-application-war-${project.version}.war"
+                                       dest="${project.build.directory}/packager-conf/war/ide">
+                                    <patternset>
+                                        <exclude name="**/lib/**"/>
+                                    </patternset>
+                                </unwar>
+
+                                <move todir="${project.build.directory}/packager-conf/war/ide/_app">
+                                    <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/"/>
+                                </move>
+
+                                <war destfile="${project.build.directory}/tomcat-ide/webapps/ide.war" needxmlfile="false">
+                                    <fileset dir="${project.build.directory}/packager-conf/war/ide"/>
+                                </war>
+
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${org.exoplatform.ide.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${project.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${org.exoplatform.ide.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${org.exoplatform.ide.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
+                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
+                                       dest="${project.build.directory}/tomcat-ide"/>
+                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip"
+                                       dest="${project.build.directory}/tomcat-ide">
+                                    <patternset>
+                                        <exclude name="**/bin/**"/>
+                                        <exclude name="**/demos/**"/>
+                                        <exclude name="**/src/**"/>
+                                        <exclude name="**/docs/javadoc/**"/>
+                                        <exclude name="**/docs/remoteapi/**"/>
+                                        <exclude name="**/docs/testing/**"/>
+                                        <exclude name="**/docs/tools/**"/>
+                                        <exclude name="**/docs/javadoc/**"/>
+                                        <exclude name="**/ABOUT"/>
+                                        <exclude name="**/COPYING"/>
+                                        <exclude name="**/README"/>
+                                        <exclude name="**/README.ORM"/>
+                                        <exclude name="**/RELEASE_NOTES"/>
+                                        <exclude name="**/RELEASE_NOTES.ORM"/>
+                                    </patternset>
+                                </unzip>
+                                <move file="${project.build.directory}/tomcat-ide/appengine-java-sdk-${appengine.version}"
+                                      tofile="${project.build.directory}/tomcat-ide/appengine-java-sdk"/>
+                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-python-sdk.zip"
+                                       dest="${project.build.directory}/tomcat-ide">
+                                    <patternset>
+                                        <exclude name="**/demos/**"/>
+                                        <exclude name="**/new_project_template/**"/>
+                                        <exclude name="**/BUGS"/>
+                                        <exclude name="**/LICENSE"/>
+                                        <exclude name="**/README"/>
+                                        <exclude name="**/RELEASE_NOTES"/>
+                                    </patternset>
+                                </unzip>
+                                <move file="${project.build.directory}/tomcat-ide/google_appengine"
+                                      tofile="${project.build.directory}/tomcat-ide/appengine-python-sdk"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <!-- Create the distribution zip and attach it to maven -->
+                    <execution>
+                        <id>tomcat-zip</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <updateOnly>false</updateOnly>
+                            <descriptors>
+                                <descriptor>${project.basedir}/src/main/assembly/tomcat-archive.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

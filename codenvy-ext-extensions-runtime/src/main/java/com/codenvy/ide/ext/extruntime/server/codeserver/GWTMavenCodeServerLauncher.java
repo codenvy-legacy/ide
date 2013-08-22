@@ -65,11 +65,11 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
         setCodeServerConfiguration(configuration.getWorkDir().resolve("pom.xml"), configuration.getWorkDir(),
                                    configuration.getBindAddress(), configuration.getPort());
 
-        // need 'clean compile' to get 'IDEInjector.java' and 'ExtensionManager.java' in a target folder
+        // Call 'generate-sources' phase to generate 'IDEInjector.java' and 'ExtensionManager.java'.
+        // For details, see com.codenvy.util.IDEInjectorGenerator and com.codenvy.util.ExtensionManagerGenerator.
         final String[] command = new String[]{
                 getMavenExecCommand(),
-                "clean",
-                "compile",
+                "generate-sources",
                 "gwt:run-codeserver", // org.codehaus.mojo:gwt-maven-plugin should be described in a pom.xml
                 "-P" + ADD_SOURCES_PROFILE};
 
