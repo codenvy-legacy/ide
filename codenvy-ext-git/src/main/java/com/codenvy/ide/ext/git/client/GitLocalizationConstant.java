@@ -76,6 +76,9 @@ public interface GitLocalizationConstant extends Messages {
     @Key("button.merge")
     String buttonMerge();
 
+    @Key("button.finish")
+    String finishButton();
+
     // MESSAGES
 
     @Key("messages.nothing_changed")
@@ -736,4 +739,58 @@ public interface GitLocalizationConstant extends Messages {
 
     @Key("welcome.import.text")
     String welcomeImportText();
+
+    /*
+     * ImportFromGitHub
+     */
+    @Key("import.github.title")
+    String importFromGithubTitle();
+
+    @Key("import.github.account")
+    String importFromGithubAccount();
+
+    @Key("import.github.selectProjectType")
+    String importFromGithubSelectProjectType();
+
+    @Key("import.github.login")
+    String importFromGithubLogin();
+
+    @Key("import.github.login.failed")
+    String importFromGithubLoginFailed();
+
+    @Key("git.read.only")
+    String gitReadOnly();
+
+    @Key("user.not.found")
+    String userNotFound();
+
+    @Key("login.oauth.title")
+    String loginOAuthTitle();
+
+    @Key("login.oauth.label")
+    String loginOAuthLabel();
+
+    /*
+     * Project
+     */
+    @Key("project.name")
+    String projectName();
+
+    /*
+     * SamplesListGrid
+     */
+    @Key("samplesListGrid.column.name")
+    String samplesListRepositoryColumn();
+
+    @Key("samplesListGrid.column.description")
+    String samplesListDescriptionColumn();
+
+    @Key("samplesListGrid.column.type")
+    String samplesListTypeColumn();
+
+    @Key("github.sshkey.title")
+    String githubSshKeyTitle();
+
+    @Key("github.sshkey.label")
+    String githubSshKeyLabel();
 }

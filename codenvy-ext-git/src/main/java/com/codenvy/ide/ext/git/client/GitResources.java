@@ -51,6 +51,9 @@ public interface GitResources extends ClientBundle {
     @Source("buttons/rename.png")
     ImageResource rename();
 
+    @Source("buttons/next.png")
+    ImageResource next();
+
     @Source("controls/remove.png")
     ImageResource removeFiles();
 
@@ -167,4 +170,7 @@ public interface GitResources extends ClientBundle {
 
     @Source("welcome/clone-git-repository.png")
     ImageResource welcomeClone();
+
+    @Source("welcome/project_open.png")
+    ImageResource project();
 }
