@@ -25,9 +25,36 @@ import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.MavenInvocationException;
 
-import java.io.*;
-import java.util.*;
-import java.util.concurrent.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
@@ -35,7 +62,6 @@ import static com.codenvy.commons.lang.IoUtil.createTempDirectory;
 import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 import static com.codenvy.commons.lang.ZipUtils.unzip;
 import static com.codenvy.commons.lang.ZipUtils.zipDir;
-
 
 
 /**
@@ -241,8 +267,17 @@ public class BuildService {
      *         if i/o error occur when try to unzip project
      */
     public MavenBuildTask build(InputStream data) throws IOException {
-        return addTask(makeProject(data), BUILD_GOALS, null, null, Collections.<Runnable>emptyList(),
-                       Collections.<Runnable>emptyList(), WAR_FILE_GETTER);
+        final File project = makeProject(data);
+        String packaging = null;
+        try {
+            packaging = PomUtils.parse(new FileInputStream(new File(project, "pom.xml"))).getPackaging();
+        } catch (Exception ignored) {
+        }
+        if (packaging == null) {
+            packaging = "jar";
+        }
+        return addTask(project, BUILD_GOALS, null, null, Collections.<Runnable>emptyList(),
+                       Collections.<Runnable>emptyList(), new FileGetter('.' + packaging));
     }
 
     /**
@@ -473,9 +508,13 @@ public class BuildService {
         }
     }
 
-    private static final ResultGetter WAR_FILE_GETTER = new WarFileGetter();
+    private static class FileGetter implements ResultGetter {
+        private final String ext;
 
-    private static class WarFileGetter implements ResultGetter {
+        private FileGetter(String ext) {
+            this.ext = ext;
+        }
+
         @Override
         public Result getResult(File projectDirectory) throws FileNotFoundException {
             File target = new File(projectDirectory, "target");
