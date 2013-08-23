@@ -1,0 +1,83 @@
+<!--
+  ~ CODENVY CONFIDENTIAL
+  ~ __________________
+  ~
+  ~ [2012] - [2013] Codenvy, S.A.
+  ~ All Rights Reserved.
+  ~
+  ~ NOTICE:  All information contained herein is, and remains
+  ~ the property of Codenvy S.A. and its suppliers,
+  ~ if any.  The intellectual and technical concepts contained
+  ~ herein are proprietary to Codenvy S.A.
+  ~ and its suppliers and may be covered by U.S. and Foreign Patents,
+  ~ patents in process, and are protected by trade secret or copyright law.
+  ~ Dissemination of this information or reproduction of this material
+  ~ is strictly forbidden unless prior written permission is obtained
+  ~ from Codenvy S.A..
+  -->
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:c='urn:import:com.codenvy.ide.ui'
+             xmlns:p1='urn:import:com.google.gwt.user.cellview.client'>
+    <ui:with field='locale' type='com.codenvy.ide.ext.git.client.GitLocalizationConstant'/>
+    <ui:with field='res' type='com.codenvy.ide.ext.git.client.GitResources'/>
+    <ui:style>
+        .alignRight {
+            float: right;
+        }
+
+        .alignLeft {
+            float: left;
+        }
+
+        .bottomSpace {
+            margin-bottom: 10px;
+        }
+
+        .topSpace {
+            margin-top: 10px;
+        }
+
+        .emptyBorder {
+            margin: 6px;
+        }
+
+        .rightSpace {
+            margin-right: 5px;
+        }
+
+        .textPosition {
+            position: relative;
+            top: 4px;
+        }
+    </ui:style>
+    <g:DockLayoutPanel unit="PX" width="500px" height="350px" addStyleNames="{style.emptyBorder}">
+        <g:south size="26.0">
+            <g:FlowPanel>
+                <c:Button text="{locale.buttonCancel}" width="60px" size="SMALL" type="DANGER" ui:field="btnCancel"/>
+                <c:Button addStyleNames="{style.alignRight} {style.rightSpace}" text="{locale.finishButton}" width="60px" size="SMALL"
+                          icon="{res.next}" ui:field="btnFinish"/>
+            </g:FlowPanel>
+        </g:south>
+        <g:south size="46.0">
+            <g:FlowPanel addStyleNames="{style.topSpace} {style.bottomSpace}">
+                <g:Label text="{locale.projectName}"
+                         addStyleNames="{res.gitCSS.textFont} {style.alignLeft} {style.textPosition} {style.rightSpace}"/>
+                <g:TextBox width="399px" height="16px" ui:field="projectName" addStyleNames="{res.gitCSS.textFont} {style.alignLeft}"/>
+            </g:FlowPanel>
+        </g:south>
+        <g:north size="36.0">
+            <g:FlowPanel addStyleNames="{style.bottomSpace}">
+                <g:Label text="{locale.importFromGithubAccount}"
+                         addStyleNames="{res.gitCSS.textFont} {style.alignLeft} {style.textPosition} {style.rightSpace}"/>
+                <g:ListBox width="393px" ui:field="accountName" addStyleNames="{res.gitCSS.textFont} {style.alignLeft}"/>
+            </g:FlowPanel>
+        </g:north>
+        <g:center>
+            <g:ScrollPanel width="100%" height="100%">
+                <p1:CellTable width="100%" ui:field="repositories" focus="false"/>
+            </g:ScrollPanel>
+        </g:center>
+    </g:DockLayoutPanel>
+</ui:UiBinder>

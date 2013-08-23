@@ -312,6 +312,29 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
 
                     // Select the node.
                     dispatchNodeSelectedEvent(treeNodeBody, signalEvent, css);
+                }
+
+                @Override
+                protected void onExpansionControlEvent(Event evt, Element expansionControl) {
+                    if (!CssUtils.containsClassName(expansionControl, css.leafIcon())) {
+                  /*
+                   * they've clicked on the expand control of a tree node that is a
+                   * directory (so expand it)
+                   */
+                        TreeNodeElement<D> treeNode =
+                                ((JsElement)expansionControl.getParentElement().getParentElement()).<TreeNodeElement<D>>cast();
+                        dispatchExpansionEvent(treeNode, css);
+                    }
+                }
+            }, false);
+
+            getElement().addEventListener(Event.DBLCLICK, new TreeNodeEventListener(true) {
+                @Override
+                protected void onTreeNodeBodyChildEvent(Event evt, Element treeNodeBody) {
+                    SignalEvent signalEvent = SignalEventImpl.create((com.google.gwt.user.client.Event)evt, true);
+
+                    // Select the node.
+                    dispatchNodeSelectedEvent(treeNodeBody, signalEvent, css);
 
                     // Don't dispatch a node action if there is a modifier key depressed.
                     if (!(signalEvent.getCommandKey() || signalEvent.getShiftKey())) {

@@ -21,7 +21,7 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 
 /**
- * The view of {@link InitRepositoryView}.
+ * The view of {@link InitRepositoryPresenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
