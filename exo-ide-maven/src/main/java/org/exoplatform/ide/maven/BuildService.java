@@ -520,7 +520,7 @@ public class BuildService {
             File target = new File(projectDirectory, "target");
             File[] filtered = target.listFiles(new FilenameFilter() {
                 public boolean accept(File parent, String name) {
-                    return name.endsWith(".war");
+                    return name.endsWith(".war") || name.endsWith(".apk");
                 }
             });
             if (filtered != null && filtered.length > 0) {

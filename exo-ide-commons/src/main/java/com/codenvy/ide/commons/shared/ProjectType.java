@@ -32,7 +32,8 @@ public enum ProjectType {
     SPRING("Spring"),
     MULTI_MODULE("Maven Multi-module"),
     DEFAULT("default"),
-    NODE_JS("nodejs");
+    NODE_JS("nodejs"),
+    ANDROID("Android");
 
     private final String value;
 

@@ -24,16 +24,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DockPanel;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.paas.PaaS;
@@ -45,63 +36,64 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class GetStartedView extends ViewImpl implements GetStartedPresenter.Display {
-    private static final String       ID              = "codenvyGetStartedView";
+    private static final String ID = "codenvyGetStartedView";
 
-    private static final String       PROJECT_NAME_ID = "codenvyGetStartedWizardProjectName";
+    private static final String PROJECT_NAME_ID = "codenvyGetStartedWizardProjectName";
 
-    private static final String       TITLE           = "Get started";
+    private static final String TITLE = "Get started";
 
-    private static final int          HEIGHT          = 300;
+    private static final int HEIGHT = 300;
 
-    private static final int          WIDTH           = 630;
+    private static final int WIDTH = 700;
 
-    private static GetStartedUiBinder uiBinder        = GWT.create(GetStartedUiBinder.class);
+    private static GetStartedUiBinder uiBinder = GWT.create(GetStartedUiBinder.class);
 
     interface GetStartedUiBinder extends UiBinder<Widget, GetStartedView> {
     }
 
     @UiField
-    Anchor                                skipAnchor;
+    Anchor skipAnchor;
 
     @UiField
-    Label                                 currentStepNumber;
+    Label currentStepNumber;
 
     @UiField
-    Button                                prevButton;
+    Button prevButton;
 
     @UiField
-    Button                                nextButton;
+    Button nextButton;
 
     @UiField
-    TextInput                             projectName;
+    TextInput projectName;
 
     @UiField
-    HTMLPanel                             chooseNamePanel;
+    HTMLPanel chooseNamePanel;
 
     @UiField
-    HTMLPanel                             chooseTechnologyPanel;
+    HTMLPanel chooseTechnologyPanel;
 
     @UiField
-    HTMLPanel                             choosePaaSPanel;
+    HTMLPanel choosePaaSPanel;
 
     @UiField
-    Grid                                  projectTypesGrid;
+    Grid projectTypesGrid;
 
     @UiField
-    Grid                                  paasGrid;
+    Grid paasGrid;
 
     @UiField
-    Label                                 errorLabel;
+    Label errorLabel;
 
     private List<ProjectTypeToggleButton> projectTypeToggleButtonList = new ArrayList<ProjectTypeToggleButton>();
 
-    private List<PaaSToggleButton>        paaSToggleButtonList        = new ArrayList<PaaSToggleButton>();
+    private List<PaaSToggleButton> paaSToggleButtonList = new ArrayList<PaaSToggleButton>();
 
     public GetStartedView() {
         super(ID, ViewType.MODAL, TITLE, null, WIDTH, HEIGHT, false);
@@ -111,7 +103,6 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
         chooseTechnologyPanel.setVisible(false);
         choosePaaSPanel.setVisible(false);
         errorLabel.setVisible(false);
-        setCloseOnEscape(true);
     }
 
     @Override
@@ -120,7 +111,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
         chooseTechnologyPanel.setVisible(false);
         choosePaaSPanel.setVisible(false);
 
-        // hide previous button and set to next button title "Get Started"
+        //hide previous button and set to next button title "Get Started"
         prevButton.setVisible(false);
         nextButton.setText("Get Started");
     }
@@ -156,8 +147,8 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
     }
 
     @Override
-    public void setProjectTypes(List<ProjectType> projectTypes) {
-        int columnCount = 9;
+    public void setProjectTypes(Set<ProjectType> projectTypes) {
+        int columnCount = 10;
         int rowCount = (int)Math.ceil((double)projectTypes.size() / columnCount);
 
         projectTypesGrid.clear();
@@ -208,7 +199,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
                         break;
                     case MultiModule:
                         labelForToggleButton = getNewButtonLabel("Maven Multi-Module");
-                        break;
+                        break;    
                     default:
                         labelForToggleButton = getNewButtonLabel(projectType.value());
                 }
@@ -223,7 +214,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
 
     @Override
     public void setPaaSTypes(List<PaaS> paaSTypes) {
-        int columnCount = 7;
+        int columnCount = 10;
         int rowCount = (int)Math.ceil((double)paaSTypes.size() / columnCount);
 
         paasGrid.clear();
@@ -331,7 +322,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
         }
     }
 
-    // -------------------------------------------
+    //-------------------------------------------
 
     private HTML getNewButtonLabel(String label) {
         HTML titleLabel = new HTML();
@@ -347,26 +338,17 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
 
     private ImageResource resolveProjectTypeImage(ProjectType projectType) {
         switch (projectType) {
-            case JAR:
-                return SamplesClientBundle.INSTANCE.jarTechnology();
-            case JAVASCRIPT:
-                return SamplesClientBundle.INSTANCE.jsTechnology();
-            case JSP:
-                return SamplesClientBundle.INSTANCE.jspTechnology();
-            case MultiModule:
-                return SamplesClientBundle.INSTANCE.multiModuleTechnology();
-            case PHP:
-                return SamplesClientBundle.INSTANCE.phpTechnology();
-            case PYTHON:
-                return SamplesClientBundle.INSTANCE.pythonTechnology();
-            case RUBY_ON_RAILS:
-                return SamplesClientBundle.INSTANCE.rorTechnology();
-            case SPRING:
-                return SamplesClientBundle.INSTANCE.springTechnology();
-            case NODE_JS:
-                return SamplesClientBundle.INSTANCE.nodejsTechnology();
-            default:
-                return null;
+            case JAR: return SamplesClientBundle.INSTANCE.jarTechnology();
+            case JAVASCRIPT: return SamplesClientBundle.INSTANCE.jsTechnology();
+            case JSP: return SamplesClientBundle.INSTANCE.jspTechnology();
+            case MultiModule: return SamplesClientBundle.INSTANCE.multiModuleTechnology();
+            case PHP: return SamplesClientBundle.INSTANCE.phpTechnology();
+            case PYTHON: return SamplesClientBundle.INSTANCE.pythonTechnology();
+            case RUBY_ON_RAILS: return SamplesClientBundle.INSTANCE.rorTechnology();
+            case SPRING: return SamplesClientBundle.INSTANCE.springTechnology();
+            case NODE_JS: return SamplesClientBundle.INSTANCE.nodejsTechnology();
+            case ANDROID: return SamplesClientBundle.INSTANCE.androidTechnology();
+            default: return null;
         }
     }
 
@@ -387,6 +369,8 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
             return !disable ? SamplesClientBundle.INSTANCE.beansTalkPaaS() : SamplesClientBundle.INSTANCE.beansTalkPaaSDisabled();
         } else if (paaS.getId().equals("Tier3WF")) {
             return !disable ? SamplesClientBundle.INSTANCE.tier3WebFabricPaaS() : SamplesClientBundle.INSTANCE.tier3WebFabricPaaSDisabled();
+        } else if (paaS.getId().equals("Manymo")) {
+            return !disable ? SamplesClientBundle.INSTANCE.manymoPaaS() : SamplesClientBundle.INSTANCE.manymoPaaS();
         } else {
             return !disable ? SamplesClientBundle.INSTANCE.nonePaaS() : SamplesClientBundle.INSTANCE.nonePaaS();
         }
