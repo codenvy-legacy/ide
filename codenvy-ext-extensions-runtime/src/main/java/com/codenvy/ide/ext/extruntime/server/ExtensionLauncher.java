@@ -251,7 +251,6 @@ public class ExtensionLauncher implements Startable {
 
             // Build Codenvy platform + custom project.
             File zippedProjectFile = tempDir.toPath().resolve("project.zip").toFile();
-            // zipDir(codeServerDirPath.toString(), codeServerDirPath.toFile(), zippedProjectFile, ANY_FILTER);
             zipDir(clientModuleDirPath.toString(), clientModuleDirPath.toFile(), zippedProjectFile, ANY_FILTER);
             final String buildId = build(zippedProjectFile);
 
@@ -271,8 +270,7 @@ public class ExtensionLauncher implements Startable {
             final long expirationTime = System.currentTimeMillis() + applicationLifetime;
             applications.put(appId, new Application(appId, expirationTime, codeServer, tomcatProcess,
                                                     shutdownPort, httpPort, ajpPort,
-                                                    tomcatDir,
-                                                    tempDir));
+                                                    tomcatDir, tempDir));
 
             LOG.debug("Start Codenvy extension {}", appId);
             return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort).setCodeServerPort(codeServerPort);
@@ -282,7 +280,8 @@ public class ExtensionLauncher implements Startable {
             if (tempDir != null && tempDir.exists()) {
                 deleteRecursive(tempDir, false);
             }
-            throw new ExtensionLauncherException(String.format("Unable to launch Codenvy with extension %s.", project.getName()), e);
+            throw new ExtensionLauncherException(String.format("Unable to launch Codenvy with extension %s. " + e.getMessage(),
+                                                               project.getName()), e);
         }
         // TODO consider to handling OutOfMemoryError
     }

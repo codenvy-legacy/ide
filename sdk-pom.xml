@@ -521,8 +521,8 @@
         <module>codenvy-ext-extensions-runtime</module>
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
-        <module>codenvy-application-war</module>
+        <module>codenvy-sdk-application-war</module>
         <module>codenvy-ide-site-war</module>
-        <module>codenvy-packaging-standalone-tomcat</module>
+        <module>codenvy-sdk-packaging-standalone-tomcat</module>
     </modules>
 </project>
