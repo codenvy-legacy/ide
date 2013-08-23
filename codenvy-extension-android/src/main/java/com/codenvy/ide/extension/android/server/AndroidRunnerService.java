@@ -34,7 +34,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
-@Path("ide/android")
+@Path("{ws-name}/android")
 public class AndroidRunnerService {
     // TODO : add abstraction to be able run android application in more than one environment.
     private static final byte[] NEW_LINE                = "\r\n".getBytes();
