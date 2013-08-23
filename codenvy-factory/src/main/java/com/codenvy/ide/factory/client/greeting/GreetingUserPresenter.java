@@ -42,6 +42,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.AddToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarShadowButton;
+import org.exoplatform.gwtframework.ui.client.command.ui.UniButton;
+import org.exoplatform.gwtframework.ui.client.command.ui.UniButton.Size;
+import org.exoplatform.gwtframework.ui.client.command.ui.UniButton.Type;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -125,55 +128,57 @@ public class GreetingUserPresenter implements
      * Adds "Create account" and "Login" buttons on toolbar.
      */
     private void addButtonsForNoneAuthenticatedUser() {
-        ToolbarShadowButton createAccountButton = new ToolbarShadowButton(
-               FactoryClientBundle.INSTANCE.createAccount(), FactoryClientBundle.INSTANCE.createAccountHover(), new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    try {
-                        VirtualFileSystem.getInstance()
-                                         .getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
-                                                      ItemType.PROJECT,
-                                                      new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>())) {
-                                                          @Override
-                                                          protected void onSuccess(List<Item> result) {
-                                                              List<String> projectIds = new ArrayList<String>();
-                                                              for (Item project : result) {
-                                                                  projectIds.add(project.getId() + ':' + project.getName());
-                                                              }
-                                                              if (!projectIds.isEmpty()) {
-                                                                  Item firstItem = result.get(0);
-                                                                  String projectsDownloadUrl = firstItem.getLinkByRelation(Link.REL_DOWNLOAD_ZIP).getHref();
-                                                                  projectsDownloadUrl = projectsDownloadUrl.substring(0, projectsDownloadUrl.length() - firstItem.getId().length());
-                                                                  StringBuilder projectIDS = new StringBuilder();
-                                                                  for (String projectId : projectIds) {
-                                                                      projectIDS.append(projectId).append(';');
-                                                                  }
-                                                                  goToURL("/create-account?" + CopySpec10.DOWNLOAD_URL + "=" + projectsDownloadUrl + "&" + CopySpec10.PROJECT_ID + "=" + projectIDS.toString());
-                                                              }
-                                                          }
-
-                                                          @Override
-                                                          protected void onFailure(Throwable exception) {
-                                                              Window.alert(exception.getMessage());
-                                                          }
-                                                      });
-                    } catch (RequestException e) {
-                        Window.alert(e.getMessage());
-                    }
-
-                }
-            });        
+        UniButton createAccountButton = new UniButton("Create account", Type.SUCCESS, Size.SMALL);
         IDE.fireEvent(new AddToolbarItemsEvent(createAccountButton, true));
-        
-        ToolbarShadowButton loginButton = new ToolbarShadowButton(
-               FactoryClientBundle.INSTANCE.login(), FactoryClientBundle.INSTANCE.loginHover(), new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    //goToURL("/login");
-                    loginToIDE();
-                }
-            });        
+        createAccountButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                createAccount();
+            }
+        });
+
+        UniButton loginButton = new UniButton("Login", Type.PRIMARY, Size.SMALL);
         IDE.fireEvent(new AddToolbarItemsEvent(loginButton, true));
+        loginButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                loginToIDE();
+            }
+        });
+    }
+
+    private void createAccount() {
+        try {
+            VirtualFileSystem.getInstance()
+            .getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
+                         ItemType.PROJECT,
+                         new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>())) {
+                @Override
+                protected void onSuccess(List<Item> result) {
+                    List<String> projectIds = new ArrayList<String>();
+                    for (Item project : result) {
+                        projectIds.add(project.getId() + ':' + project.getName());
+                    }
+                    if (!projectIds.isEmpty()) {
+                        Item firstItem = result.get(0);
+                        String projectsDownloadUrl = firstItem.getLinkByRelation(Link.REL_DOWNLOAD_ZIP).getHref();
+                        projectsDownloadUrl = projectsDownloadUrl.substring(0, projectsDownloadUrl.length() - firstItem.getId().length());
+                        StringBuilder projectIDS = new StringBuilder();
+                        for (String projectId : projectIds) {
+                            projectIDS.append(projectId).append(';');
+                        }
+                        goToURL("/create-account?" + CopySpec10.DOWNLOAD_URL + "=" + projectsDownloadUrl + "&" + CopySpec10.PROJECT_ID + "=" + projectIDS.toString());
+                    }
+                }
+                
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Window.alert(exception.getMessage());
+                }
+            });
+        } catch (RequestException e) {
+            Window.alert(e.getMessage());
+        }
     }
     
     private native void loginToIDE() /*-{
@@ -187,15 +192,15 @@ public class GreetingUserPresenter implements
     /**
      * Adds "Copy to my workspace" button on toolbar.
      */
-    private void addCopyToMyWorkspaceButton() {
-        ToolbarShadowButton copyToMyWorkspaceButton = new ToolbarShadowButton(
-               FactoryClientBundle.INSTANCE.copyToMyWorkspace(), FactoryClientBundle.INSTANCE.copyToMyWorkspaceHover(), new ClickHandler() {
-                   @Override
-                   public void onClick(ClickEvent event) {
-                       IDE.fireEvent(new CopyProjectEvent());
-                   }
-               });        
-        IDE.fireEvent(new AddToolbarItemsEvent(copyToMyWorkspaceButton, true));        
+    private void addCopyToMyWorkspaceButton() {        
+        UniButton copyToMyWorkspaceButton = new UniButton("Copy to my workspace", Type.PRIMARY, Size.SMALL);
+        IDE.fireEvent(new AddToolbarItemsEvent(copyToMyWorkspaceButton, true));
+        copyToMyWorkspaceButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.fireEvent(new CopyProjectEvent());
+            }
+        });
     }
     
     /**

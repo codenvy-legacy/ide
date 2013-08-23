@@ -96,8 +96,9 @@ public class UserSession implements ConnectionOpenedHandler, InitialConfiguratio
 
     private void sendLog(String uuid, String status) {
         try {
-            IDE.messageBus().send(IDE.currentWorkspace.getName() + "/session/ide/" + status,
-                                  "{\"sessionId\":\"" + uuid + "\",\"browserInfo\":\"" + getBrowserInfo() + "\"}");
+            if (IDE.messageBus() != null && IDE.currentWorkspace != null) {
+                IDE.messageBus().send(IDE.currentWorkspace.getName() + "/session/ide/" + status, "{\"sessionId\":\"" + uuid + "\",\"browserInfo\":\"" + getBrowserInfo() + "\"}");
+            }
         } catch (Throwable e) {
             Log.error(getClass(), e);
         }

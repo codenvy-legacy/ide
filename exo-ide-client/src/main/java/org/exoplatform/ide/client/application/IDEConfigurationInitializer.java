@@ -34,9 +34,10 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.AddToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
-import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarShadowButton;
+import org.exoplatform.gwtframework.ui.client.command.ui.UniButton;
+import org.exoplatform.gwtframework.ui.client.command.ui.UniButton.Size;
+import org.exoplatform.gwtframework.ui.client.command.ui.UniButton.Type;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
@@ -357,23 +358,19 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
         }
 
         IDE.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", toolbarItems, controls.getRegisteredControls()));
-        IDE.fireEvent(new SetToolbarItemsEvent("exoIDEStatusbar", controls.getStatusBarControls(), controls
-                                                                                                           .getRegisteredControls()));
-
+        IDE.fireEvent(new SetToolbarItemsEvent("exoIDEStatusbar", controls.getStatusBarControls(), controls.getRegisteredControls()));
 
         if (IDE.isRoUser()) {
-            ToolbarShadowButton readOnlyButton =
-                                                 new ToolbarShadowButton(
-                                                                         IDEImageBundle.INSTANCE.readOnly(),
-                                                                         IDEImageBundle.INSTANCE.readOnlyHover(),
-                                                                         new ClickHandler() {
-                                                                             @Override
-                                                                             public void onClick(ClickEvent event) {
-                                                                                 IDE.getInstance()
-                                                                                    .openView(new ReadOnlyUserView(IDE.user.getWorkspaces()));
-                                                                             }
-                                                                         });
+            
+            UniButton readOnlyButton = new UniButton("Read-only", Type.PRIMARY, Size.SMALL);
             IDE.fireEvent(new AddToolbarItemsEvent(readOnlyButton, true));
+            readOnlyButton.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    IDE.getInstance().openView(new ReadOnlyUserView(IDE.user.getWorkspaces()));
+                }
+            });
+            
         }
     }
 
