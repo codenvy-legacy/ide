@@ -17,15 +17,17 @@
  */
 package com.codenvy.ide.ext.extruntime.server.tools;
 
-import java.io.Closeable;
-import java.io.IOException;
-
 /**
- * Consumes text line by line for analysing, writing, storing, etc.
+ * Implementation of this interface may be used with {@link Watchdog} to make possible terminate task by timeout.
  *
- * @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a>
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  */
-public interface LineConsumer extends Closeable {
-    /** Consumes single line. */
-    void writeLine(String line) throws IOException;
+public interface Cancellable {
+    /**
+     * Attempts to cancel execution of this {@code Cancellable}.
+     *
+     * @throws Exception
+     *         if cancellation is failed
+     */
+    void cancel() throws Exception;
 }

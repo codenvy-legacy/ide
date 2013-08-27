@@ -69,12 +69,7 @@ import static com.codenvy.ide.commons.FileUtils.downloadFile;
 import static com.codenvy.ide.commons.NameGenerator.generate;
 import static com.codenvy.ide.commons.ZipUtils.unzip;
 import static com.codenvy.ide.commons.ZipUtils.zipDir;
-import static com.codenvy.ide.ext.extruntime.server.Utils.addDependencyToPom;
-import static com.codenvy.ide.ext.extruntime.server.Utils.configureTomcatPorts;
-import static com.codenvy.ide.ext.extruntime.server.Utils.enableSuperDevMode;
-import static com.codenvy.ide.ext.extruntime.server.Utils.fixMGWT332Bug;
-import static com.codenvy.ide.ext.extruntime.server.Utils.inheritGwtModule;
-import static com.codenvy.ide.ext.extruntime.server.Utils.readPom;
+import static com.codenvy.ide.ext.extruntime.server.Utils.*;
 import static java.lang.Integer.parseInt;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -90,7 +85,7 @@ public class ExtensionLauncher implements Startable {
     /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
     private static final int                         DEFAULT_APPLICATION_LIFETIME     = 60;
     /** Default address where GWT code server should binded . */
-    private static final String                      DEFAULT_CODE_SERVER_BIND_ADDRESS = "127.0.0.1";
+    private static final String                      DEFAULT_CODE_SERVER_BIND_ADDRESS = getLocalIPv4Address();
     /** System property that contains build server URL. */
     public static final String                       BUILD_SERVER_BASE_URL            = "exo.ide.builder.build-server-base-url";
     /** Default name of the client module directory. */
@@ -247,7 +242,13 @@ public class ExtensionLauncher implements Startable {
             // Deploy custom project to maven repository.
             File zippedExtensionProjectFile = tempDir.toPath().resolve("extension-project.zip").toFile();
             zipDir(customModulePath.toString(), customModulePath.toFile(), zippedExtensionProjectFile, ANY_FILTER);
-            startCheckingBuildStatus(deploy(zippedExtensionProjectFile));
+            String deployId = deploy(zippedExtensionProjectFile);
+            final String deployStatus = startCheckingBuildStatus(deployId);
+            BuildStatusBean deployStatusBean = JsonHelper.fromJson(deployStatus, BuildStatusBean.class, null);
+            if (deployStatusBean.getStatus() != Status.SUCCESSFUL) {
+                LOG.error("Unable to deploy maven artifact: " + deployStatusBean.getError());
+                throw new Exception(deployStatusBean.getError());
+            }
 
             // Build Codenvy platform + custom project.
             File zippedProjectFile = tempDir.toPath().resolve("project.zip").toFile();
@@ -258,32 +259,31 @@ public class ExtensionLauncher implements Startable {
             GWTCodeServerLauncher codeServer = new GWTMavenCodeServerLauncher();
             codeServer.start(new GWTCodeServerConfiguration(codeServerBindAddress, codeServerPort, clientModuleDirPath));
 
-            final String status = startCheckingBuildStatus(buildId);
-            BuildStatusBean buildStatus = JsonHelper.fromJson(status, BuildStatusBean.class, null);
-            if (buildStatus.getStatus() != Status.SUCCESSFUL) {
-                LOG.error("Unable to build project: " + buildStatus.getError());
-                throw new Exception("Unable to build project: " + buildStatus.getError());
+            final String buildStatus = startCheckingBuildStatus(buildId);
+            BuildStatusBean buildStatusBean = JsonHelper.fromJson(buildStatus, BuildStatusBean.class, null);
+            if (buildStatusBean.getStatus() != Status.SUCCESSFUL) {
+                LOG.error("Unable to build project: " + buildStatusBean.getError());
+                throw new Exception(buildStatusBean.getError());
             }
 
             File tomcatDir = createTempDirectory(tempDir, "tomcat-");
-            Process tomcatProcess = runTomcat(tomcatDir.toPath(), new URL(buildStatus.getDownloadUrl()), shutdownPort, httpPort, ajpPort);
+            Process tomcatProcess = runTomcat(tomcatDir.toPath(), new URL(buildStatusBean.getDownloadUrl()), shutdownPort, httpPort, ajpPort);
             final long expirationTime = System.currentTimeMillis() + applicationLifetime;
             applications.put(appId, new Application(appId, expirationTime, codeServer, tomcatProcess,
                                                     shutdownPort, httpPort, ajpPort,
                                                     tomcatDir, tempDir));
 
             LOG.debug("Start Codenvy extension {}", appId);
-            return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort).setCodeServerPort(codeServerPort);
+            return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort)
+                                          .setCodeServerHost(codeServerBindAddress).setCodeServerPort(codeServerPort);
         } catch (Exception e) {
-            LOG.warn("Codenvy extension {} failed to start, cause: {}", appId, e);
+            LOG.warn("Codenvy extension {} failed to launch, cause: {}", appId, e);
             portManager.releasePorts(codeServerPort, shutdownPort, httpPort, ajpPort);
             if (tempDir != null && tempDir.exists()) {
                 deleteRecursive(tempDir, false);
             }
-            throw new ExtensionLauncherException(String.format("Unable to launch Codenvy with extension %s. " + e.getMessage(),
-                                                               project.getName()), e);
+            throw new ExtensionLauncherException(e.getMessage(), e);
         }
-        // TODO consider to handling OutOfMemoryError
     }
 
     /**
@@ -348,9 +348,6 @@ public class ExtensionLauncher implements Startable {
         if (extension == null) {
             throw new ExtensionLauncherException(String.format("Unable to stop Codenvy with extension %s. Application not found.", appId));
         }
-
-        // TODO
-        // Use com.codenvy.api.tools.ProcessUtil from 'codenvy-api-tools' project when it finished.
 
         // Use ProcessUtil because java.lang.Process.destroy() method doesn't
         // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).

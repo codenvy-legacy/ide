@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * JAX-RS application for Codenvy extensions runtime.
+ * JAX-RS application for Codenvy-extensions runtime.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtensionRuntimeApplication.java Jul 3, 2013 3:26:32 PM azatsarynnyy $

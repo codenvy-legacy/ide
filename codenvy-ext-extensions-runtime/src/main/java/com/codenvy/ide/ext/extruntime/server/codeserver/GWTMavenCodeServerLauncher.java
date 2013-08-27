@@ -62,8 +62,12 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
     public void start(GWTCodeServerConfiguration configuration) throws GWTCodeServerException {
         this.configuration = configuration;
         this.logFilePath = configuration.getWorkDir().resolve("code-server.log");
-        setCodeServerConfiguration(configuration.getWorkDir().resolve("pom.xml"), configuration.getWorkDir(),
-                                   configuration.getBindAddress(), configuration.getPort());
+        try {
+            setCodeServerConfiguration(configuration.getWorkDir().resolve("pom.xml"), configuration.getWorkDir(),
+                                       configuration.getBindAddress(), configuration.getPort());
+        } catch (IOException e) {
+            throw new GWTCodeServerException("Unable to launch GWT code server: " + e.getMessage(), e);
+        }
 
         // Call 'generate-sources' phase to generate 'IDEInjector.java' and 'ExtensionManager.java'.
         // For details, see com.codenvy.util.IDEInjectorGenerator and com.codenvy.util.ExtensionManagerGenerator.
@@ -79,7 +83,7 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
         try {
             this.process = processBuilder.start();
         } catch (IOException e) {
-            throw new GWTCodeServerException("Unable to start code server.");
+            throw new GWTCodeServerException("Unable to launch GWT code server: " + e.getMessage(), e);
         }
     }
 
@@ -91,16 +95,13 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
             // One recompiling procedure writes about 1KB output information to logs.
             return new String(Files.readAllBytes(logFilePath));
         } catch (IOException e) {
-            throw new GWTCodeServerException("Unable to get code server's logs.");
+            throw new GWTCodeServerException("Unable to get GWT code server's logs: " + e.getMessage(), e);
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public void stop() {
-        // TODO
-        // Use com.codenvy.api.tools.ProcessUtil from 'codenvy-api-tools' project when it finished.
-
         // Use ProcessUtil because java.lang.Process.destroy() method doesn't
         // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
         LOG.debug("Killing process tree");
@@ -139,10 +140,10 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
      * @param workDir code server working directory is the root of the directory tree where the code server will write compiler output. If
      *            not supplied, a system temporary directory will be used
      * @param port port on which code server will run. If -1 supplied, a default port will be 9876
-     * @throws IllegalStateException if any error occurred while writing a file
+     * @throws IOException if any error occurred while writing a file
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static void setCodeServerConfiguration(Path pomPath, Path workDir, String bindAddress, int port) {
+    private static void setCodeServerConfiguration(Path pomPath, Path workDir, String bindAddress, int port) throws IOException {
         final String workDirConf = workDir == null ? "" : "<codeServerWorkDir>" + workDir + "</codeServerWorkDir>";
         final String bindAddressConf = bindAddress == null ? "" : "<bindAddress>" + bindAddress + "</bindAddress>";
         final String portConf = port == -1 ? "" : "<codeServerPort>" + port + "</codeServerPort>";
@@ -161,7 +162,7 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
             build.setPlugins(new ArrayList(plugins.values()));
 
             Utils.writePom(pom, pomPath);
-        } catch (IOException | XmlPullParserException e) {
+        } catch (XmlPullParserException e) {
             throw new IllegalStateException("Can't parse pom.xml.", e);
         }
     }

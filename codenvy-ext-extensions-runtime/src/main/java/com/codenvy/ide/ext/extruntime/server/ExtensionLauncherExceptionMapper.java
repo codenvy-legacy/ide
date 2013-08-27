@@ -23,6 +23,8 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 /**
+ * Maps {@link ExtensionLauncherException} to {@link javax.ws.rs.core.Response}.
+ * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtensionLauncherExceptionMapper.java Jul 19, 2013 4:11:26 PM azatsarynnyy $
  */
