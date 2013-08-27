@@ -48,14 +48,23 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.file.FileSystems;
+import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.FileVisitResult.CONTINUE;
+import static java.nio.file.FileVisitResult.TERMINATE;
 import static org.codehaus.plexus.util.xml.Xpp3DomBuilder.build;
 
 /**
@@ -185,9 +194,9 @@ public class Utils {
      */
     static void enableSuperDevMode(Path path) throws IOException {
         // Directive for GWT-module descriptor to enable GWT SuperDevMode.
-        final String superDevModeDirective = "\r\n\t<add-linker name='xsiframe' />"
-                                             + "\r\n\t<set-configuration-property name='devModeRedirectEnabled' value='true' />"
-                                             + "\r\n\t<set-property name='compiler.useSourceMaps' value='true' />";
+        final String superDevModeDirective = "    <add-linker name='xsiframe'/>\r\n" +
+                                             "    <set-configuration-property name='devModeRedirectEnabled' value='true'/>\r\n" +
+                                             "    <set-property name='compiler.useSourceMaps' value='true'/>\r\n";
 
         List<String> content = Files.readAllLines(path, UTF_8);
         int penultimateLine = 0;
@@ -210,7 +219,7 @@ public class Utils {
      * @throws IOException error occurred while reading or writing content of file
      */
     static void inheritGwtModule(Path path, String inheritableModuleLogicalName) throws IOException {
-        final String inheritsString = "\t<inherits name='" + inheritableModuleLogicalName + "'/>";
+        final String inheritsString = "    <inherits name='" + inheritableModuleLogicalName + "'/>";
         List<String> content = Files.readAllLines(path, UTF_8);
         // insert custom module as last 'inherits' entry
         int i = 0, lastInheritsLine = 0;
@@ -223,6 +232,22 @@ public class Utils {
         content.add(lastInheritsLine, inheritsString);
 
         Files.write(path, content, UTF_8);
+    }
+
+    static String detectGwtModuleLogicalName(Path folder) throws IOException {
+        final String fileExtension = ".gwt.xml";
+        final String resourcesDir = "/src/main/resources";
+
+        Finder finder = new Finder("*" + fileExtension);
+        Files.walkFileTree(folder, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, finder);
+        if (finder.getFirstMatchedFile() == null) {
+            throw new IllegalArgumentException("GWT module descriptor (gwt.xml) not found.");
+        }
+
+        String filePath = finder.getFirstMatchedFile().toString();
+        filePath = filePath.substring(filePath.indexOf(resourcesDir) + resourcesDir.length() + 1,
+                                      filePath.length() - fileExtension.length());
+        return filePath.replaceAll("/", ".");
     }
 
     /**
@@ -343,6 +368,32 @@ public class Utils {
             return "127.0.0.1";
         } catch (SocketException e) {
             return "127.0.0.1";
+        }
+    }
+
+    /** A {@code FileVisitor} that finds first file that match the specified pattern. */
+    private static class Finder extends SimpleFileVisitor<Path> {
+        private final PathMatcher matcher;
+        private Path              firstMatchedFile;
+
+        Finder(String pattern) {
+            matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            Path fileName = file.getFileName();
+            if (fileName != null && matcher.matches(fileName)) {
+                firstMatchedFile = file;
+                return TERMINATE;
+            }
+            return CONTINUE;
+        }
+
+        /** Returns the first matched {@link Path}. */
+        Path getFirstMatchedFile() {
+            return firstMatchedFile;
         }
     }
 }

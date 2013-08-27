@@ -69,7 +69,14 @@ import static com.codenvy.ide.commons.FileUtils.downloadFile;
 import static com.codenvy.ide.commons.NameGenerator.generate;
 import static com.codenvy.ide.commons.ZipUtils.unzip;
 import static com.codenvy.ide.commons.ZipUtils.zipDir;
-import static com.codenvy.ide.ext.extruntime.server.Utils.*;
+import static com.codenvy.ide.ext.extruntime.server.Utils.addDependencyToPom;
+import static com.codenvy.ide.ext.extruntime.server.Utils.configureTomcatPorts;
+import static com.codenvy.ide.ext.extruntime.server.Utils.detectGwtModuleLogicalName;
+import static com.codenvy.ide.ext.extruntime.server.Utils.enableSuperDevMode;
+import static com.codenvy.ide.ext.extruntime.server.Utils.fixMGWT332Bug;
+import static com.codenvy.ide.ext.extruntime.server.Utils.getLocalIPv4Address;
+import static com.codenvy.ide.ext.extruntime.server.Utils.inheritGwtModule;
+import static com.codenvy.ide.ext.extruntime.server.Utils.readPom;
 import static java.lang.Integer.parseInt;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -147,7 +154,6 @@ public class ExtensionLauncher implements Startable {
                                            httpConnectorPortList,
                                            ajpConnectorPortList);
         this.codeServerBindAddress = codeServerBindAddress;
-
         this.applicationLifetime = applicationLifetime * 60 * 1000;
 
         this.applications = new ConcurrentHashMap<String, Application>();
@@ -208,8 +214,8 @@ public class ExtensionLauncher implements Startable {
             unzip(vfs.exportZip(projectId).getStream(), customModulePath.toFile());
 
             // Use special ide-configuration.xml without unnecessary components.
-            InputStream confStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("tomcat/ide-configuration.xml");
-            Files.copy(confStream, clientModuleDirPath.resolve("src/main/webapp/WEB-INF/classes/conf/ide-configuration.xml"),
+            Files.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("tomcat/ide-configuration.xml"),
+                       clientModuleDirPath.resolve("src/main/webapp/WEB-INF/classes/conf/ide-configuration.xml"),
                        REPLACE_EXISTING);
 
             // Use special pom.xml to build 'clean' Codenvy Platform (without any deps on extensions).
@@ -221,8 +227,7 @@ public class ExtensionLauncher implements Startable {
             fixMGWT332Bug(clientModulePomPath, customModulePath.getFileName().toString(), ADD_SOURCES_PROFILE);
 
             Path gwtModuleDescriptorPath = clientModuleDirPath.resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
-            // TODO Avoid hardcoded logical name of custom GWT module, but try to detect it.
-            inheritGwtModule(gwtModuleDescriptorPath, "com.codenvy.ide.extension.demo.Demo");
+            inheritGwtModule(gwtModuleDescriptorPath, detectGwtModuleLogicalName(customModulePath));
             enableSuperDevMode(gwtModuleDescriptorPath);
 
             // Replace src and pom.xml by symlinks to an appropriate src and pom.xml
@@ -267,7 +272,9 @@ public class ExtensionLauncher implements Startable {
             }
 
             File tomcatDir = createTempDirectory(tempDir, "tomcat-");
-            Process tomcatProcess = runTomcat(tomcatDir.toPath(), new URL(buildStatusBean.getDownloadUrl()), shutdownPort, httpPort, ajpPort);
+            Process tomcatProcess =
+                                    runTomcat(tomcatDir.toPath(), new URL(buildStatusBean.getDownloadUrl()), shutdownPort, httpPort,
+                                              ajpPort);
             final long expirationTime = System.currentTimeMillis() + applicationLifetime;
             applications.put(appId, new Application(appId, expirationTime, codeServer, tomcatProcess,
                                                     shutdownPort, httpPort, ajpPort,
