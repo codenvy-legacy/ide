@@ -24,7 +24,12 @@ import org.exoplatform.ide.client.framework.project.Language;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.IconImageBundle;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -89,19 +94,16 @@ public class ProjectResolver {
         if (IconImageBundle.INSTANCE != null) {
             types.put(RAILS, IconImageBundle.INSTANCE.rubyProject());
             types.put(SPRING, IconImageBundle.INSTANCE.springProject());
-            types.put(EXO_APP, IconImageBundle.INSTANCE.exoProject());
             types.put(STATIC_WEB, IconImageBundle.INSTANCE.jsProject());
             types.put(SERVLET_JSP, IconImageBundle.INSTANCE.javaProject());
             types.put(PHP, IconImageBundle.INSTANCE.phpProject());
             types.put(UNDEFINED, IconImageBundle.INSTANCE.defaultProject());
             types.put(APP_ENGINE_JAVA, IconImageBundle.INSTANCE.gaeJavaProject());
             types.put(APP_ENGINE_PYTHON, IconImageBundle.INSTANCE.gaePythonProject());
-            types.put(AWS, IconImageBundle.INSTANCE.awsProject());
 
             projectImages.put(ProjectType.JAVA, IconImageBundle.INSTANCE.javaProject());
             projectImages.put(ProjectType.SPRING, IconImageBundle.INSTANCE.springProject());
             projectImages.put(ProjectType.JSP, IconImageBundle.INSTANCE.jspProject());
-            projectImages.put(ProjectType.EXO, IconImageBundle.INSTANCE.exoProject());
             projectImages.put(ProjectType.JAVASCRIPT, IconImageBundle.INSTANCE.jsProject());
             projectImages.put(ProjectType.PHP, IconImageBundle.INSTANCE.phpProject());
             projectImages.put(ProjectType.RUBY, IconImageBundle.INSTANCE.rubyProject());
@@ -109,7 +111,6 @@ public class ProjectResolver {
             projectImages.put(ProjectType.PYTHON, IconImageBundle.INSTANCE.pythonProject());
             projectImages.put(ProjectType.NODE_JS, IconImageBundle.INSTANCE.nodejsProject());
             projectImages.put(ProjectType.DJANGO, IconImageBundle.INSTANCE.djangoProject());
-            projectImages.put(ProjectType.AWS, IconImageBundle.INSTANCE.awsProject());
 
             projectLargeImages.put(ProjectType.JAR, IconImageBundle.INSTANCE.jarProject48());
             projectLargeImages.put(ProjectType.WAR, IconImageBundle.INSTANCE.jarProject48());
@@ -125,8 +126,7 @@ public class ProjectResolver {
         }
 
         projectTypes.put(Language.JAVA, Arrays.asList(ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING,//
-                                                      ProjectType.AWS, ProjectType.JAR, ProjectType.WAR));
-        projectTypes.put(Language.GROOVY, Arrays.asList(ProjectType.EXO));
+                                                     ProjectType.JAR, ProjectType.WAR));
         projectTypes.put(Language.JAVASCRIPT, Arrays.asList(ProjectType.JAVASCRIPT));
         projectTypes.put(Language.PHP, Arrays.asList(ProjectType.PHP));
         projectTypes.put(Language.NODE_JS, Arrays.asList(ProjectType.NODE_JS));

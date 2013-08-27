@@ -23,6 +23,7 @@ import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
@@ -32,17 +33,17 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 public class AndroidExtensionServiceImpl extends AndroidExtensionService {
     private final String restContext;
 
-    private static final String RUN_APPLICATION = "/ide/android/run";
+    private static final String RUN_APPLICATION = Utils.getWorkspaceName() + "/android/run";
 
     public AndroidExtensionServiceImpl(String restContext) {
         this.restContext = restContext;
     }
 
     @Override
-    public void start(String apkUrl, ProjectModel project, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+    public void start(String apkUrl, String oauthToken, ProjectModel project, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
         String requestUrl = restContext + RUN_APPLICATION;
 
-        AsyncRequest.build(RequestBuilder.GET, requestUrl + "?apk=" + apkUrl, true)
+        AsyncRequest.build(RequestBuilder.GET, requestUrl + "?apk=" + apkUrl +"&oauth_token=" +oauthToken, true)
                     .requestStatusHandler(new StartApplicationStatusHandler(project.getName()))
                     .send(callback);
     }

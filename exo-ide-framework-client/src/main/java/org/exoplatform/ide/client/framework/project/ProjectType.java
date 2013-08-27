@@ -39,7 +39,8 @@ public enum ProjectType {
     RUBY("Ruby"),
     SPRING("Spring"),
     DEFAULT("default"),
-    MultiModule("Maven Multi-module");
+    MultiModule("Maven Multi-module"),
+    ANDROID("Android");
 
     /** Project's type name. */
     private String type;

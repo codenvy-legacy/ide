@@ -23,6 +23,7 @@ import com.codenvy.ide.client.util.logging.Log;
 import org.exoplatform.ide.client.framework.configuration.InitialConfigurationReceivedEvent;
 import org.exoplatform.ide.client.framework.configuration.InitialConfigurationReceivedHandler;
 import org.exoplatform.ide.client.framework.util.UUID;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
 
 /**
@@ -96,8 +97,10 @@ public class UserSession implements ConnectionOpenedHandler, InitialConfiguratio
 
     private void sendLog(String uuid, String status) {
         try {
-            IDE.messageBus().send(IDE.currentWorkspace.getName() + "/session/ide/" + status,
-                                  "{\"sessionId\":\"" + uuid + "\",\"browserInfo\":\"" + getBrowserInfo() + "\"}");
+            if (IDE.messageBus().getReadyState() == MessageBus.ReadyState.OPEN) {
+                IDE.messageBus().send(IDE.currentWorkspace.getName() + "/session/ide/" + status,
+                                      "{\"sessionId\":\"" + uuid + "\",\"browserInfo\":\"" + getBrowserInfo() + "\"}");
+            }
         } catch (Throwable e) {
             Log.error(getClass(), e);
         }

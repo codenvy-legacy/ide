@@ -45,5 +45,5 @@ public abstract class AndroidExtensionService {
      *         callback
      * @throws RequestException
      */
-    public abstract void start(String apkUrl, ProjectModel project, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    public abstract void start(String apkUrl, String oauthToken, ProjectModel project, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 }
