@@ -23,7 +23,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
@@ -55,7 +54,16 @@ import org.exoplatform.ide.git.client.marshaller.LogResponseUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import static com.codenvy.ide.factory.client.FactorySpec10.*;
+import static com.codenvy.ide.factory.client.FactorySpec10.ACTION_PARAMETER;
+import static com.codenvy.ide.factory.client.FactorySpec10.COMMIT_ID;
+import static com.codenvy.ide.factory.client.FactorySpec10.CURRENT_VERSION;
+import static com.codenvy.ide.factory.client.FactorySpec10.DEFAULT_ACTION;
+import static com.codenvy.ide.factory.client.FactorySpec10.PROJECT_NAME;
+import static com.codenvy.ide.factory.client.FactorySpec10.PROJECT_TYPE;
+import static com.codenvy.ide.factory.client.FactorySpec10.VCS;
+import static com.codenvy.ide.factory.client.FactorySpec10.VCS_URL;
+import static com.codenvy.ide.factory.client.FactorySpec10.VERSION_PARAMETER;
+import static com.codenvy.ide.factory.client.FactorySpec10.WORKSPACE_NAME;
 import static com.google.gwt.http.client.URL.encodeQueryString;
 
 /**
@@ -73,27 +81,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
     /** A summary info to display in a special area in the bottom of Facebook's post. */
     private String facebookSummaryInfo = "Code, Build, Test and Deploy instantly using Codenvy";
 
-//    /** Base URL for Codenvy Factory. */
-//    private final String BASE_FACTORY_URL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("factory").buildString();
-    
-    
     public interface Display extends IsView {
-
-        //HasValue<Boolean> getShowCounterField();
-
-//        /**
-//         * Get 'Vertical' radio field.
-//         * 
-//         * @return {@link HasValue}
-//         */
-//        HasValue<Boolean> getVerticalStyleField();
-
-//        /**
-//         * Get 'Horizontal' radio field.
-//         * 
-//         * @return {@link HasValue}
-//         */
-//        HasValue<Boolean> getHorizontalStyleField();
 
         /**
          * Preview area is displayed to let the user see the style of configured CodeNow button.
@@ -201,43 +189,6 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
     public void bindDisplay() {
         final String factoryURLEscaped = encodeQueryString(factoryURL);
 
-//        display.getShowCounterField().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-//            @Override
-//            public void onValueChange(ValueChangeEvent<Boolean> event) {
-//                if (event.getValue() == true) {
-//                    display.getPreviewFrame().setUrl(UriUtils.fromString(SpinnetGenerator.getCodeNowButtonJavascriptURL() + "?counter=true"));
-//
-//                    generateSnippetForWebsites(true, display.getVerticalStyleField().getValue());
-//                    display.getWebsitesURLField().setValue(websitesSnippet);
-//                } else if (event.getValue() == false) {
-//                    display.getPreviewFrame().setUrl(UriUtils.fromString(SpinnetGenerator.getCodeNowButtonJavascriptURL()));
-//
-//                    generateSnippetForWebsites(false, display.getVerticalStyleField().getValue());
-//                    display.getWebsitesURLField().setValue(websitesSnippet);
-//                }
-//            }
-//        });
-
-//        display.getVerticalStyleField().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-//            @Override
-//            public void onValueChange(ValueChangeEvent<Boolean> event) {
-//                if (event.getValue() == true) {
-//                    generateSnippetForWebsites(display.getShowCounterField().getValue(), true);
-//                    display.getWebsitesURLField().setValue(websitesSnippet);
-//                }
-//            }
-//        });
-
-//        display.getHorizontalStyleField().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-//            @Override
-//            public void onValueChange(ValueChangeEvent<Boolean> event) {
-//                if (event.getValue() == true) {
-//                    generateSnippetForWebsites(display.getShowCounterField().getValue(), false);
-//                    display.getWebsitesURLField().setValue(websitesSnippet);
-//                }
-//            }
-//        });
-
         display.getShareFacebookButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -268,8 +219,6 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         display.getShareEmailButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                // Window.open("mailto:?subject=Codenvy Factory URL&body=" + factoryURLEscaped, "",
-                // "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=100,width=200");
                 IDE.fireEvent(new SendMailEvent(factoryURLEscaped));
             }
         });
@@ -301,11 +250,9 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
                 updateEmbedCodenowButton();
             }
         });
-        
     }
 
     private native void writeToPreviewFrame(Element ifrm, String content) /*-{
-        //var ifrm = document.getElementById('myIframe');
         ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;
         ifrm.document.open();
         ifrm.document.write(content);
@@ -319,22 +266,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
             bindDisplay();
         }
         
-//        display.getShowCounterField().setValue(true);
-//        display.getPreviewFrame().setUrl(
-//                                         UriUtils.fromString(SpinnetGenerator.getCodeNowButtonJavascriptURL() + "?counter=true")
-//            );
-        
-//        writeToPreviewFrame(display.getPreviewFrame().getElement(), "" +
-//        		"<html>" +
-//        		"<head></head>" +
-//        		"<body style=\"margin: 0px; padding: 0px;\"><center>" + websitesPreviewSnippet + "</center></body>" +
-//        		"</html>" +
-//        		"");
-        
-        updateEmbedCodenowButton();
-        
-//        display.getHorizontalStyleField().setValue(true);
-//        display.getWebsitesURLField().setValue(websitesSnippet);
+        updateEmbedCodenowButton();        
         display.getGitHubURLField().setValue(gitHubPagesSnippet);
         display.getDirectSharingURLField().setValue(factoryURL);
     }
@@ -343,20 +275,22 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         writeToPreviewFrame(display.getPreviewFrame().getElement(), "" +
             "<html>" +
             "<head></head>" +
-            "<body style=\"margin: 0px; padding: 0px;\"><center>" + websitesPreviewSnippet + "</center></body>" +
+            "<body style=\"margin: 0px; padding: 0px;\">" +
+                "<div style=\"margin-left:auto; margin-right:auto; width:77px; height:21px; position:relative; top:10px;\">" +
+                websitesPreviewSnippet +
+                "</div>" +
+            "</body>" +
             "</html>" +
             "");
         
         display.getWebsitesURLField().setValue(websitesSnippet);
     }
 
-
     /** {@inheritDoc} */
     @Override
     public void onGetCodeNowButton(GetCodeNowButtonEvent event) {
         getLatestCommitIdAndOpenView();
     }
-
 
     /** {@inheritDoc} */
     @Override
@@ -492,7 +426,6 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
             "src=\"" + jsURL + "\"" +
             "style=\"" + (darkStyle ? "dark" : "white") + "\" " +
             		" ></script>";
-        
     }
 
 }

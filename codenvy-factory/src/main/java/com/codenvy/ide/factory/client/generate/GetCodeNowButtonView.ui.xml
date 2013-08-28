@@ -42,70 +42,31 @@
             clear: left;
         }
 
-        .marginTop {
-            margin-top: 15px;
-        }
-
-        .checkbox {
-            margin-bottom: 10px;
-            font-size: 12px;
-        }
-
-        .radioButton {
-			margin-bottom: 3px;
-			font-size: 11px;
-			font-family: Verdana, Bitstream Vera Sans, sans-serif;
-			float: left;
-		}
-
-        .label {
-            font-size: 12px;
-            font-family: Verdana, Bitstream Vera Sans, sans-serif;
-            margin-top: 2px;
-            margin-bottom: 10px;
-        }
-
         .labelTitle {
             font-size: 14px;
             font-family: Verdana, Bitstream Vera Sans, sans-serif;
             font-weight: bold;
-            /*
-            margin-top: 10px;
-            */
             margin-bottom: 10px;
+            
+            overflow:hidden;
+            white-space:nowrap;
         }
-
-        .borderBottom {
-            border-bottom: 1px solid #DBDFE5;
-        }
-
-
 
         .textArea {
-	/*
-            width: 220px;
-            height: 165px;
-            */
             font-size: 12px;
             resize: none;
             overflow: hidden;
             color: #666;
             padding: 5px;
             border: 1px solid #aaa !important;
-            /*
-            box-shadow: 0 0 5px rgba(82,168,236,.75);
-            */
             border-radius: 4px;
             outline: none;
-            
             position: absolute;
             left: 0px;
             top: 37px;
             right: 0px;
             bottom: 3px;
             box-shadow: 0px 0px 5px rgba(200, 200, 200, 0.6);
-            /*
-            */
         }
         
         .textArea:HOVER {
@@ -135,9 +96,6 @@
 		}
 		
         .snippetPanel {
-			/*
-			box-shadow: 0 0 7px rgba(82, 168, 236, 0.75);
-			*/
 			border-radius: 4px;
 			height: 100%;
 			overflow: hidden;
@@ -173,31 +131,56 @@
         
         .customizeCodenow {
 			position: relative;
-			overflow: hidden;	
+			overflow: hidden;
+			margin-bottom: 10px;	
+		}
+        
+        .radioTitle {
+			position: absolute;
+			left:5px;
+			top:0px;
+			width:200px;
+			height:20px;
+			font-size: 12px;
+			font-family: Verdana, Bitstream Vera Sans, sans-serif;
+			font-weight: normal;			
 		}
         
         .radio {
 			position: absolute;
 			left:0px;
-			top:0px;
+			top:20px;
 			width:200px;
-			height:25px;
-			/*
-			background-color: #EEFFAA;
-			*/
+			height:20px;
+		}
+		
+		.radio tbody tr td span label {
+			font-size: 12px;
+			font-family: Verdana, Bitstream Vera Sans, sans-serif;
+			font-weight: normal;			
 		}
 		
         .previewFrame {
 			position: absolute;
-			right: 200px;
-			width: 300px;
-			height: 30px;
+			right: 0px;
+			width: 500px;
             border: none;
-            /*
-            background: #FFEEAA;
-            */
-		}		
-
+            top:0px;
+			height: 40px;
+            background-color: #F1F1F1;
+		}
+		
+		.labelTitle hr {
+			border-width: 0;
+			background-color:#AAAAAA;
+			height:1px;
+			display:inline-block;
+			width:100%;
+			position:relative;
+			top:4px;
+			margin-left:5px;
+		}
+		
     </ui:style>
     
     <f:Border margin="10" borderColor="transparent">
@@ -205,9 +188,10 @@
             <g:FlowPanel>
 
                 <!-- Customize area -->
-                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Customize"></g:Label>
+                <g:HTMLPanel height="20px" width="100%" addStyleNames="{style.labelTitle}">Customize<hr noshade="noshade" /></g:HTMLPanel>
 
-                <g:FlowPanel width="100%" height="35px" addStyleNames="{style.customizeCodenow}">
+                <g:FlowPanel width="100%" height="40px" addStyleNames="{style.customizeCodenow}">
+                	<g:Label addStyleNames="{style.radioTitle}" text="Configure your style:"></g:Label>
                 	<g:HorizontalPanel addStyleNames="{style.radio}">
 						<g:RadioButton ui:field="dark" name="color" value="true" enabled="true">Dark</g:RadioButton>
 		                <g:RadioButton ui:field="white" name="color" value="false" enabled="true">White</g:RadioButton>                	
@@ -216,7 +200,7 @@
                 </g:FlowPanel>
 
                 <!-- Embed area -->
-                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Embed"></g:Label>
+                <g:HTMLPanel height="20px" width="100%" addStyleNames="{style.labelTitle}">Embed<hr noshade="noshade" /></g:HTMLPanel>
                 
                 <g:FlowPanel width="100%" height="140px" addStyleNames="{style.embedContentPanel}">
                     <g:FlowPanel addStyleNames="{style.snippetPanel} {style.snippetPanelLeft}">
@@ -233,13 +217,13 @@
 
                     <g:FlowPanel addStyleNames="{style.snippetPanel} {style.snippetPanelRight}">
                         <g:Image resource="{resource.link}" styleName="{style.image}"></g:Image>
-                        <g:Label addStyleNames="{style.textAreaLabel}" text="Direct Sharing"></g:Label>
+                        <g:Label addStyleNames="{style.textAreaLabel}" text="Directly"></g:Label>
                         <f:TextAreaInput ui:field="directSharingURLField" addStyleNames="{style.floatLeft} {style.textArea}"></f:TextAreaInput>
                     </g:FlowPanel>
                 </g:FlowPanel>
 
                 <!-- Share buttons area -->
-                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Share it to your friends"></g:Label>
+                <g:HTMLPanel height="20px" width="100%" addStyleNames="{style.labelTitle}">Share with your friends<hr noshade="noshade" /></g:HTMLPanel>
                 
                 <g:FlowPanel width="280px" height="50px" styleName="{style.center}">
                     <g:Image ui:field="shareFacebookButton" resource="{resource.facebook}" styleName="{style.shareButton}"></g:Image>
@@ -247,10 +231,6 @@
                     <g:Image ui:field="shareTwitterButton" resource="{resource.twitter}" styleName="{style.shareButton}"></g:Image>
                     <g:Image ui:field="shareEmailButton" resource="{resource.mail}" styleName="{style.shareButton}"></g:Image>
                 </g:FlowPanel>
-
-<!-- 
-                <g:Label width="100%" height="5px" addStyleNames="{style.borderBottom}"></g:Label>
- -->
             </g:FlowPanel>
         </f:layer>
         
