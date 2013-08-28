@@ -127,13 +127,7 @@
             margin-left:0px;
         }
 
-        .previewFrame {
-            border: none;
-            /*
-            background: #FFEEAA;
-            */
-		}
-		
+
 		.embedContentPanel {
 			overflow: hidden;
 			margin-bottom: 10px;
@@ -176,12 +170,35 @@
             margin: 0px 10px 0px 10px;
             cursor: pointer;
         }		
-	        
+        
+        .customizeCodenow {
+			position: relative;
+			overflow: hidden;	
+		}
+        
+        .radio {
+			position: absolute;
+			left:0px;
+			top:0px;
+			width:200px;
+			height:25px;
+			/*
+			background-color: #EEFFAA;
+			*/
+		}
+		
+        .previewFrame {
+			position: absolute;
+			right: 200px;
+			width: 300px;
+			height: 30px;
+            border: none;
+            /*
+            background: #FFEEAA;
+            */
+		}		
 
     </ui:style>
-    
-    
-    
     
     <f:Border margin="10" borderColor="transparent">
         <f:layer>
@@ -189,8 +206,14 @@
 
                 <!-- Customize area -->
                 <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Customize"></g:Label>
-                
-                <g:Frame width="100%" height="30px" ui:field="previewFrame" styleName="{style.previewFrame}"></g:Frame>
+
+                <g:FlowPanel width="100%" height="35px" addStyleNames="{style.customizeCodenow}">
+                	<g:HorizontalPanel addStyleNames="{style.radio}">
+						<g:RadioButton ui:field="dark" name="color" value="true" enabled="true">Dark</g:RadioButton>
+		                <g:RadioButton ui:field="white" name="color" value="false" enabled="true">White</g:RadioButton>                	
+                	</g:HorizontalPanel>
+	                <g:Frame ui:field="previewFrame" styleName="{style.previewFrame}"></g:Frame>
+                </g:FlowPanel>
 
                 <!-- Embed area -->
                 <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Embed"></g:Label>

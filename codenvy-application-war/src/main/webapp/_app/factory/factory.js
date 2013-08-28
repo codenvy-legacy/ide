@@ -2,8 +2,17 @@
 // get URL to css file
 var scripts = document.getElementsByTagName('script');
 var script = scripts[scripts.length - 1];
+
 var css = script.src;
-css = css.substring(0, css.lastIndexOf(".")) + ".css";
+var className;
+
+if ("white" == script.getAttribute("style")) {
+  className = "codenow-white";
+  css = css.substring(0, css.lastIndexOf("/")) + "/factory-white.css";
+} else {
+  className = "codenow-dark";
+  css = css.substring(0, css.lastIndexOf("/")) + "/factory-dark.css";
+}
 
 // ensure css was injected before
 var head = document.getElementsByTagName('head')[0];
@@ -27,9 +36,9 @@ if (!injected) {
 
 // add CodeNow button
 if (script.hasAttribute("target")) {
-  document.write("<div class=\"codenow\" onclick=\"window.open('" + script.getAttribute("target") + "', '_blank');\"></div>");
+  document.write("<div class=\"" + className + "\" onclick=\"window.open('" + script.getAttribute("target") + "', '_blank');\"></div>");
 } else {
-  document.write("<div class=\"codenow\" onclick=\"\"></div>");
+  document.write("<div class=\"" + className + "\" onclick=\"\"></div>");
 }
 
 // remove self from DOM

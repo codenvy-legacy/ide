@@ -23,6 +23,9 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.safehtml.shared.UriUtils;
@@ -154,6 +157,11 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
          * @return 'Ok' button
          */
         HasClickHandlers getOkButton();
+        
+        HasValue<Boolean> getDarkStyleField();
+        
+        HasValue<Boolean> getWhiteStyleField();
+        
     }
 
     /** Current virtual file system. */
@@ -179,6 +187,8 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
     private String                latestCommitId;
 
     private String                vcsURL;
+    
+    private boolean darkStyle = true;
 
     public GetCodeNowButtonPresenter() {
         IDE.addHandler(GetCodeNowButtonEvent.TYPE, this);
@@ -270,6 +280,28 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
                 IDE.getInstance().closeView(display.asView().getId());
             }
         });
+        
+        display.getDarkStyleField().setValue(true);
+        display.getWhiteStyleField().setValue(false);
+        
+        display.getDarkStyleField().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                darkStyle = true;
+                generateSnippetForWebsites();
+                updateEmbedCodenowButton();
+            }
+        });
+        
+        display.getWhiteStyleField().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                darkStyle = false;
+                generateSnippetForWebsites();
+                updateEmbedCodenowButton();
+            }
+        });
+        
     }
 
     private native void writeToPreviewFrame(Element ifrm, String content) /*-{
@@ -286,23 +318,36 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
             IDE.getInstance().openView(display.asView());
             bindDisplay();
         }
-
+        
 //        display.getShowCounterField().setValue(true);
 //        display.getPreviewFrame().setUrl(
 //                                         UriUtils.fromString(SpinnetGenerator.getCodeNowButtonJavascriptURL() + "?counter=true")
 //            );
         
-        writeToPreviewFrame(display.getPreviewFrame().getElement(), "" +
-        		"<html>" +
-        		"<head></head>" +
-        		"<body style=\"margin: 0px; padding: 0px;\"><center>" + websitesPreviewSnippet + "</center></body>" +
-        		"</html>" +
-        		"");
+//        writeToPreviewFrame(display.getPreviewFrame().getElement(), "" +
+//        		"<html>" +
+//        		"<head></head>" +
+//        		"<body style=\"margin: 0px; padding: 0px;\"><center>" + websitesPreviewSnippet + "</center></body>" +
+//        		"</html>" +
+//        		"");
+        
+        updateEmbedCodenowButton();
         
 //        display.getHorizontalStyleField().setValue(true);
-        display.getWebsitesURLField().setValue(websitesSnippet);
+//        display.getWebsitesURLField().setValue(websitesSnippet);
         display.getGitHubURLField().setValue(gitHubPagesSnippet);
         display.getDirectSharingURLField().setValue(factoryURL);
+    }
+    
+    private void updateEmbedCodenowButton() {
+        writeToPreviewFrame(display.getPreviewFrame().getElement(), "" +
+            "<html>" +
+            "<head></head>" +
+            "<body style=\"margin: 0px; padding: 0px;\"><center>" + websitesPreviewSnippet + "</center></body>" +
+            "</html>" +
+            "");
+        
+        display.getWebsitesURLField().setValue(websitesSnippet);
     }
 
 
@@ -406,7 +451,8 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
                      PROJECT_TYPE + "=" + URL.encodeQueryString(openedProject.getProjectType());
         
         logFactoryCreated(UriUtils.fromString(factoryURL).asString());
-        generateSnippetForWebsites(false, false);
+        darkStyle = true;
+        generateSnippetForWebsites();
         gitHubPagesSnippet = "[![alt](" + SpinnetGenerator.getCodeNowGitHubImageURL() + ")](" + factoryURL + ")";
         openView();
     }
@@ -430,19 +476,22 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         }
     }
 
-    private void generateSnippetForWebsites(boolean showCounter, boolean verticalStyle) {
+    private void generateSnippetForWebsites() {
         String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
         
         websitesSnippet = "<script " +
         		"type=\"text/javascript\" " +
         		"language=\"javascript\" " +
         		"src=\"" + jsURL + "\" " +
+        		"style=\"" + (darkStyle ? "dark" : "white") + "\" " +
         		"target=\"" + factoryURL + "\"></script>";
         
         websitesPreviewSnippet = "<script " +
             "type=\"text/javascript\" " +
             "language=\"javascript\" " +
-            "src=\"" + jsURL + "\" ></script>";
+            "src=\"" + jsURL + "\"" +
+            "style=\"" + (darkStyle ? "dark" : "white") + "\" " +
+            		" ></script>";
         
     }
 
