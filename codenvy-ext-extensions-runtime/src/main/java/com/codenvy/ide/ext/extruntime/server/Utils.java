@@ -194,9 +194,9 @@ public class Utils {
      */
     static void enableSuperDevMode(Path path) throws IOException {
         // Directive for GWT-module descriptor to enable GWT SuperDevMode.
-        final String superDevModeDirective = "    <add-linker name='xsiframe'/>\r\n" +
-                                             "    <set-configuration-property name='devModeRedirectEnabled' value='true'/>\r\n" +
-                                             "    <set-property name='compiler.useSourceMaps' value='true'/>\r\n";
+        final String superDevModeDirective = "    <add-linker name='xsiframe'/>\n" +
+                                             "    <set-configuration-property name='devModeRedirectEnabled' value='true'/>\n" +
+                                             "    <set-property name='compiler.useSourceMaps' value='true'/>\n";
 
         List<String> content = Files.readAllLines(path, UTF_8);
         int penultimateLine = 0;
@@ -234,6 +234,14 @@ public class Utils {
         Files.write(path, content, UTF_8);
     }
 
+    /**
+     * Detects and returns GWT module logical name.
+     * 
+     * @param folder path to folder that contains project sources
+     * @return GWT module logical name
+     * @throws IOException if an I/O error is thrown while finding GWT module descriptor
+     * @throws IllegalArgumentException if GWT module descriptor not found
+     */
     static String detectGwtModuleLogicalName(Path folder) throws IOException {
         final String fileExtension = ".gwt.xml";
         final String resourcesDir = "/src/main/resources";

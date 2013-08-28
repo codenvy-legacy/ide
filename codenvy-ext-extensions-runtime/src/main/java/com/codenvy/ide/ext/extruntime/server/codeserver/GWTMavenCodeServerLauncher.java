@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.extruntime.server.codeserver;
 
+import com.codenvy.ide.ext.extruntime.server.ExtensionLauncherException;
 import com.codenvy.ide.ext.extruntime.server.Utils;
 import com.codenvy.ide.ext.extruntime.server.tools.ProcessUtil;
 
@@ -28,11 +29,20 @@ import org.codehaus.plexus.util.xml.Xpp3DomUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
-import java.nio.file.Files;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Map;
@@ -91,10 +101,9 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
     @Override
     public String getLogs() throws GWTCodeServerException {
         try {
-            // It should work fine for the files less than 2GB (Integer.MAX_VALUE).
-            // One recompiling procedure writes about 1KB output information to logs.
-            return new String(Files.readAllBytes(logFilePath));
-        } catch (IOException e) {
+            final String url = configuration.getBindAddress() + ':' + configuration.getPort() + "/log/_app";
+            return sendGet(new URL(url.startsWith("http://") ? url : "http://" + url));
+        } catch (IOException | ExtensionLauncherException e) {
             throw new GWTCodeServerException("Unable to get GWT code server's logs: " + e.getMessage(), e);
         }
     }
@@ -164,6 +173,80 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
             Utils.writePom(pom, pomPath);
         } catch (XmlPullParserException e) {
             throw new IllegalStateException("Can't parse pom.xml.", e);
+        }
+    }
+
+    private static String sendGet(URL url) throws IOException, ExtensionLauncherException {
+        HttpURLConnection http = null;
+        try {
+            http = (HttpURLConnection)url.openConnection();
+            http.setRequestMethod("GET");
+            int responseCode = http.getResponseCode();
+            if (responseCode != 200) {
+                responseFail(http);
+            }
+
+            InputStream data = http.getInputStream();
+            try {
+                return readBodyTagContent(data);
+            } finally {
+                data.close();
+            }
+        } finally {
+            if (http != null) {
+                http.disconnect();
+            }
+        }
+    }
+
+    private static String readBody(InputStream input, int contentLength) throws IOException {
+        String body = null;
+        if (contentLength > 0) {
+            byte[] b = new byte[contentLength];
+            int off = 0;
+            int i;
+            while ((i = input.read(b, off, contentLength - off)) > 0) {
+                off += i;
+            }
+            body = new String(b);
+        } else if (contentLength < 0) {
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            int i;
+            while ((i = input.read(buf)) != -1) {
+                bout.write(buf, 0, i);
+            }
+            body = bout.toString();
+        }
+        return body;
+    }
+
+    private static void responseFail(HttpURLConnection http) throws IOException, ExtensionLauncherException {
+        InputStream errorStream = null;
+        try {
+            int responseCode = http.getResponseCode();
+            int length = http.getContentLength();
+            errorStream = http.getErrorStream();
+            String body = null;
+            if (errorStream != null) {
+                body = readBody(errorStream, length);
+            }
+            throw new ExtensionLauncherException(responseCode, "Unable to get logs. " + body == null ? "" : body);
+        } finally {
+            if (errorStream != null) {
+                errorStream.close();
+            }
+        }
+    }
+
+    private static String readBodyTagContent(InputStream stream) throws IOException {
+        try {
+            DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = domFactory.newDocumentBuilder();
+            Document doc = builder.parse(stream);
+            return doc.getElementsByTagName("body").item(0).getTextContent();
+        } catch (ParserConfigurationException | SAXException e) {
+            throw new IllegalStateException(e.getMessage(), e);
         }
     }
 }

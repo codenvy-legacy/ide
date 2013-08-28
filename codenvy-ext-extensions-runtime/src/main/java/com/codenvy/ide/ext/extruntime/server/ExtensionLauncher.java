@@ -226,12 +226,12 @@ public class ExtensionLauncher implements Startable {
             // Add sources from custom project to allow code server access it.
             fixMGWT332Bug(clientModulePomPath, customModulePath.getFileName().toString(), ADD_SOURCES_PROFILE);
 
-            Path gwtModuleDescriptorPath = clientModuleDirPath.resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
-            inheritGwtModule(gwtModuleDescriptorPath, detectGwtModuleLogicalName(customModulePath));
-            enableSuperDevMode(gwtModuleDescriptorPath);
+            Path mainGwtModuleDescriptor = clientModuleDirPath.resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
+            inheritGwtModule(mainGwtModuleDescriptor, detectGwtModuleLogicalName(customModulePath));
+            enableSuperDevMode(mainGwtModuleDescriptor);
 
             // Replace src and pom.xml by symlinks to an appropriate src and pom.xml
-            // in 'fs-root' directory to allow code server always get the actual sources.
+            // in 'fs-root' directory to allow GWT code server always get the actual sources.
             Path extensionDirInFSRoot = Paths.get(wsMountPath + project.getPath());
             if (!extensionDirInFSRoot.isAbsolute()) {
                 extensionDirInFSRoot = extensionDirInFSRoot.toAbsolutePath();
@@ -307,11 +307,10 @@ public class ExtensionLauncher implements Startable {
         }
 
         StringBuilder logs = new StringBuilder();
-
         try {
             final String codeServerLogs = app.codeServer.getLogs();
             if (!(codeServerLogs == null || codeServerLogs.isEmpty())) {
-                logs.append("====> code-server.log <====");
+                logs.append("========> GWT code server.log <========");
                 logs.append("\n\n");
                 logs.append(codeServerLogs);
                 logs.append("\n\n");
@@ -329,16 +328,16 @@ public class ExtensionLauncher implements Startable {
             for (File catalinaLogFile : catalinaLogFiles) {
                 final String catalinaLogs = new String(Files.readAllBytes(catalinaLogFile.toPath()));
                 if (!(catalinaLogs == null || catalinaLogs.isEmpty())) {
-                    logs.append("====> ");
+                    logs.append("========> ");
                     logs.append(catalinaLogFile.getName());
-                    logs.append(" <====");
+                    logs.append(" <========");
                     logs.append("\n\n");
                     logs.append(catalinaLogs);
                     logs.append("\n\n");
                 }
             }
         } catch (IOException | GWTCodeServerException e) {
-            throw new ExtensionLauncherException(String.format("Unable to get logs of application %s.", appId), e);
+            throw new ExtensionLauncherException(e.getMessage(), e);
         }
 
         return logs.toString();
