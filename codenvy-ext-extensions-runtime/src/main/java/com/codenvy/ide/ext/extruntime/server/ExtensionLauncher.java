@@ -272,17 +272,15 @@ public class ExtensionLauncher implements Startable {
             }
 
             File tomcatDir = createTempDirectory(tempDir, "tomcat-");
-            Process tomcatProcess =
-                                    runTomcat(tomcatDir.toPath(), new URL(buildStatusBean.getDownloadUrl()), shutdownPort, httpPort,
-                                              ajpPort);
+            Process tomcatProcess = runTomcat(tomcatDir.toPath(), new URL(buildStatusBean.getDownloadUrl()),
+                                              shutdownPort, httpPort, ajpPort);
             final long expirationTime = System.currentTimeMillis() + applicationLifetime;
             applications.put(appId, new Application(appId, expirationTime, codeServer, tomcatProcess,
                                                     shutdownPort, httpPort, ajpPort,
                                                     tomcatDir, tempDir));
 
             LOG.debug("Start Codenvy extension {}", appId);
-            return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort)
-                                          .setCodeServerHost(codeServerBindAddress).setCodeServerPort(codeServerPort);
+            return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort).setCodeServerPort(codeServerPort);
         } catch (Exception e) {
             LOG.warn("Codenvy extension {} failed to launch, cause: {}", appId, e);
             portManager.releasePorts(codeServerPort, shutdownPort, httpPort, ajpPort);
