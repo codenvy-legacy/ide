@@ -18,6 +18,12 @@
 
         <dependency>
             <groupId>com.codenvy.commons</groupId>
+            <artifactId>codenvy-commons-lang</artifactId>
+            <version>${com.codenvy.commons.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-security</artifactId>
             <version>${com.codenvy.commons.version}</version>
         </dependency>

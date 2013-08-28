@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.extension.openshift.server;
 
-import com.codenvy.ide.commons.cache.Cache;
-import com.codenvy.ide.commons.cache.SLRUCache;
+import com.codenvy.commons.lang.cache.Cache;
+import com.codenvy.commons.lang.cache.SLRUCache;
 import com.openshift.client.ApplicationScale;
 import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
@@ -178,9 +178,9 @@ public class Express {
     }
 
     private void createDomain(IOpenShiftConnection connection, String namespace, boolean alter)
-                                                                                               throws ExpressException,
-                                                                                               SshKeyStoreException,
-                                                                                               CredentialStoreException {
+            throws ExpressException,
+                   SshKeyStoreException,
+                   CredentialStoreException {
         final String host = "rhcloud.com";
 
         SshKey publicKey;
@@ -215,7 +215,7 @@ public class Express {
 
     /**
      * Create new application.
-     * 
+     *
      * @param appName application name
      * @param type application type
      * @param scale enable|disable application scaling

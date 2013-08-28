@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.extension.ssh.server;
 
-import com.codenvy.ide.commons.cache.Cache;
-import com.codenvy.ide.commons.cache.SLRUCache;
+import com.codenvy.commons.lang.cache.Cache;
+import com.codenvy.commons.lang.cache.SLRUCache;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.User;
@@ -43,19 +43,19 @@ import java.util.concurrent.locks.ReentrantLock;
  * @version $Id: $
  */
 public class UserProfileSshKeyStore implements SshKeyStore {
-    private static final int            PRIVATE                      = 0;
-    private static final int            PUBLIC                       = 1;
-    private static final String         KEY_ATTRIBUTE_PREFIX         = "ssh.key.";
+    private static final int    PRIVATE                      = 0;
+    private static final int    PUBLIC                       = 1;
+    private static final String KEY_ATTRIBUTE_PREFIX         = "ssh.key.";
     /** Prefix for attribute of user profile that store private SSH key. */
-    private static final String         PRIVATE_KEY_ATTRIBUTE_PREFIX = KEY_ATTRIBUTE_PREFIX + "private.";
+    private static final String PRIVATE_KEY_ATTRIBUTE_PREFIX = KEY_ATTRIBUTE_PREFIX + "private.";
     /** Prefix for attribute of user profile that store public SSH key. */
-    private static final String         PUBLIC_KEY_ATTRIBUTE_PREFIX  = KEY_ATTRIBUTE_PREFIX + "public.";
+    private static final String PUBLIC_KEY_ATTRIBUTE_PREFIX  = KEY_ATTRIBUTE_PREFIX + "public.";
 
-    private final UserManager           userManager;
+    private final UserManager userManager;
     // protected with lock
-    private final Cache<String, SshKey> cache                        = new SLRUCache<String, SshKey>(50, 100);
-    private final Lock                  lock                         = new ReentrantLock();
-    private final JSch                  genJsch;
+    private final Cache<String, SshKey> cache = new SLRUCache<String, SshKey>(50, 100);
+    private final Lock                  lock  = new ReentrantLock();
+    private final JSch genJsch;
 
     public UserProfileSshKeyStore(UserManager userManager) {
         this.userManager = userManager;
