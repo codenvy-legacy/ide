@@ -27,6 +27,7 @@ import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
+import com.codenvy.ide.contexmenu.ContextMenuPresenter;
 import com.codenvy.ide.part.base.BasePresenter;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
@@ -47,26 +48,31 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
-    protected ProjectExplorerView view;
-
-    protected EventBus         eventBus;
-    private   Resources        resources;
-    private   ResourceProvider resourceProvider;
+    protected ProjectExplorerView  view;
+    protected EventBus             eventBus;
+    private   Resources            resources;
+    private   ResourceProvider     resourceProvider;
+    private   ContextMenuPresenter contextMenuPresenter;
 
     /**
      * Instantiates the ProjectExplorer Presenter
      *
      * @param view
      * @param eventBus
+     * @param resources
+     * @param resourceProvider
+     * @param contextMenuPresenter
      */
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, Resources resources,
-                                        ResourceProvider resourceProvider) {
+                                        ResourceProvider resourceProvider, ContextMenuPresenter contextMenuPresenter) {
         this.view = view;
         this.eventBus = eventBus;
         this.resources = resources;
         this.resourceProvider = resourceProvider;
-        view.setTitle("Project Explorer");
+        this.view.setTitle("Project Explorer");
+        this.contextMenuPresenter = contextMenuPresenter;
+
         bind();
     }
 
@@ -105,7 +111,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         });
 
         eventBus.addHandler(ResourceChangedEvent.TYPE, new ResourceChangedHandler() {
-
             @Override
             public void onResourceRenamed(ResourceChangedEvent event) {
                 // TODO handle it
@@ -170,5 +175,10 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             });
         }
     }
-}
 
+    /** {@inheritDoc} */
+    @Override
+    public void onContextMenu(int mouseX, int mouseY) {
+        contextMenuPresenter.show(mouseX, mouseY);
+    }
+}

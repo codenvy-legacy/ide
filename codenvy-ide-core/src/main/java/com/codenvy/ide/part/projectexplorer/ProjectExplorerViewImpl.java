@@ -51,12 +51,6 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         container.add(tree.asWidget());
     }
 
-//    /** {@inheritDoc} */
-//    @Override
-//    public Widget asWidget() {
-//        return tree.asWidget();
-//    }
-
     /** {@inheritDoc} */
     @Override
     public void setItems(Resource resource) {
@@ -97,6 +91,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
             @Override
             public void onRootContextMenu(int mouseX, int mouseY) {
+                delegate.onContextMenu(mouseX, mouseY);
             }
 
             @Override

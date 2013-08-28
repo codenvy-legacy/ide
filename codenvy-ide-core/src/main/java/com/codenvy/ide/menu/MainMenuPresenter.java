@@ -21,7 +21,6 @@ import com.codenvy.ide.api.mvp.Presenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 
 /**
@@ -32,34 +31,22 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class MainMenuPresenter implements Presenter, MainMenuView.ActionDelegate {
 
-    private final EventBus eventBus;
-
     private final MainMenuView view;
 
     /**
-     * Main Menu Presenter requires Event Bus to listen to Expression Changed Event
-     * and View implementation
+     * Main Menu Presenter requires View implementation
      *
-     * @param eventBus
      * @param view
      */
     @Inject
-    public MainMenuPresenter(EventBus eventBus, MainMenuView view) {
-        this.eventBus = eventBus;
+    public MainMenuPresenter(MainMenuView view) {
         this.view = view;
-        view.setDelegate(this);
-        bind();
+        this.view.setDelegate(this);
     }
-
-    /** Bind event handlers to Event Bus */
-    private void bind() {
-    }
-
 
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
     }
-
 }

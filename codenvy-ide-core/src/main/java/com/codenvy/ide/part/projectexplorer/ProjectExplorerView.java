@@ -35,6 +35,12 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
      */
     void setItems(Resource resource);
 
+    /**
+     * Sets title of part.
+     *
+     * @param title
+     *         title of part
+     */
     void setTitle(String title);
 
     /** Needs for delegate some function into ProjectTree view. */
@@ -46,5 +52,15 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          *         node
          */
         void onResourceAction(Resource resource);
+
+        /**
+         * Performs any actions appropriate in response to the user having clicked right button on mouse.
+         *
+         * @param mouseX
+         *         the mouse x-position within the browser window's client area.
+         * @param mouseY
+         *         the mouse y-position within the browser window's client area.
+         */
+        void onContextMenu(int mouseX, int mouseY);
     }
 }

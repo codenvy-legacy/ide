@@ -15,24 +15,20 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.toolbar;
+package com.codenvy.ide.contexmenu;
 
-import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.ui.action.ActionGroup;
 import com.codenvy.ide.api.ui.action.ActionPlaces;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-
 /**
- * Manages Toolbar items, changes item state and other.
+ * Manages Context Menu Items, their runtime visibility and enabled state.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ToolbarPresenter implements Presenter, ToolbarView.ActionDelegate {
-    private ToolbarView view;
+public class ContextMenuPresenter implements ContextMenuView.ActionDelegate {
+    private ContextMenuView view;
 
     /**
      * Create presenter.
@@ -40,20 +36,21 @@ public class ToolbarPresenter implements Presenter, ToolbarView.ActionDelegate {
      * @param view
      */
     @Inject
-    public ToolbarPresenter(ToolbarView view) {
+    public ContextMenuPresenter(ContextMenuView view) {
         this.view = view;
         this.view.setDelegate(this);
+        this.view.setPlace(ActionPlaces.MAIN_CONTEXT_MENU);
     }
 
-    public void bindMainGroup(ActionGroup group) {
-        view.setAddSeparatorFirst(true);
-        view.setPlace(ActionPlaces.MAIN_TOOLBAR);
-        view.setActionGroup(group);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void go(AcceptsOneWidget container) {
-        container.setWidget(view);
+    /**
+     * Show menu in specified position.
+     *
+     * @param x
+     *         the x-position on the browser window's client area.
+     * @param y
+     *         the y-position on the browser window's client area.
+     */
+    public void show(int x, int y) {
+        view.show(x, y);
     }
 }

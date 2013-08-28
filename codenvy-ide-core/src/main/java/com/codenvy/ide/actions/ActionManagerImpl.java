@@ -18,22 +18,11 @@
 package com.codenvy.ide.actions;
 
 
-import com.codenvy.ide.api.ui.action.Action;
-import com.codenvy.ide.api.ui.action.ActionGroup;
-import com.codenvy.ide.api.ui.action.ActionManager;
-import com.codenvy.ide.api.ui.action.Anchor;
-import com.codenvy.ide.api.ui.action.Constraints;
-import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.action.IdeActions;
+import com.codenvy.ide.api.ui.action.*;
 import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -82,6 +71,9 @@ public class ActionManagerImpl implements ActionManager {
         registerAction(IdeActions.GROUP_RUN_MAIN_MENU, runGroup);
         Constraints afterProject = new Constraints(Anchor.AFTER, IdeActions.GROUP_PROJECT);
         mainMenu.add(runGroup, afterProject);
+
+        DefaultActionGroup contextMenuGroup = new DefaultActionGroup(IdeActions.GROUP_MAIN_CONTEXT_MENU, false, this);
+        registerAction(IdeActions.GROUP_MAIN_CONTEXT_MENU, contextMenuGroup);
     }
 
     private static void reportActionError(final String pluginId, final String message) {

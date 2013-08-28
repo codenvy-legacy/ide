@@ -194,5 +194,21 @@ public class StandardComponentInitializer {
         welcomePart.addItem(showDocumentationAction);
         welcomePart.addItem(inviteAction);
         welcomePart.addItem(connectSupportAction);
+
+        DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_MAIN_CONTEXT_MENU);
+        contextMenuGroup.add(newGroup);
+        contextMenuGroup.addSeparator();
+
+        DefaultActionGroup resourceOperation = new DefaultActionGroup(actionManager);
+        resourceOperation.addSeparator();
+        actionManager.registerAction("resourceOperation", resourceOperation);
+        resourceOperation.add(deleteResourceAction);
+        contextMenuGroup.add(resourceOperation);
+
+        DefaultActionGroup closeProjectGroup = new DefaultActionGroup(actionManager);
+        closeProjectGroup.addSeparator();
+        actionManager.registerAction("closeProjectGroup", closeProjectGroup);
+        closeProjectGroup.add(closeProjectAction);
+        contextMenuGroup.add(closeProjectGroup);
     }
 }

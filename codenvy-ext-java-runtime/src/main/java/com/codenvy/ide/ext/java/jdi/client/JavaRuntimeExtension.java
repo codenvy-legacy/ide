@@ -53,15 +53,15 @@ public class JavaRuntimeExtension {
     public static final String APPLICATION_STOP_CHANNEL = "runner:application-stopped:";
 
     @Inject
-    public JavaRuntimeExtension(ActionManager actionManager, RunAction action, DebugAction debugAction, DebuggerManager debuggerManager,
+    public JavaRuntimeExtension(ActionManager actionManager, RunAction runAction, DebugAction debugAction, DebuggerManager debuggerManager,
                                 DebuggerPresenter debuggerPresenter, FqnResolverFactory resolverFactory, JavaFqnResolver javaFqnResolver,
                                 StopAction stopAction, LogsAction logsAction) {
-        actionManager.registerAction("runJavaProject", action);
+        actionManager.registerAction("runJavaProject", runAction);
         actionManager.registerAction("debugJavaProject", debugAction);
         actionManager.registerAction("stopJavaProject", stopAction);
         actionManager.registerAction("logsJavaProject", logsAction);
         DefaultActionGroup run = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
-        run.add(action);
+        run.add(runAction);
         run.add(debugAction);
         run.add(stopAction);
         run.add(logsAction);
@@ -69,9 +69,22 @@ public class JavaRuntimeExtension {
         DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);
         DefaultActionGroup runGroup = new DefaultActionGroup(GROUP_RUN_TOOLBAR, false, actionManager);
         actionManager.registerAction(GROUP_RUN_TOOLBAR, runGroup);
-        runGroup.add(action);
+        runGroup.add(runAction);
         runGroup.add(debugAction);
         mainToolbarGroup.add(runGroup);
+
+        DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
+
+        DefaultActionGroup runContextGroup = new DefaultActionGroup(GROUP_RUN_CONTEXT_MENU, false, actionManager);
+        actionManager.registerAction(GROUP_RUN_CONTEXT_MENU, runContextGroup);
+
+        runContextGroup.addSeparator();
+        runContextGroup.add(runAction);
+        runContextGroup.add(debugAction);
+        runContextGroup.add(stopAction);
+        runContextGroup.add(logsAction);
+
+        contextMenuGroup.add(runContextGroup);
 
         debuggerManager.registeredDebugger(SPRING_APPLICATION_PROJECT_TYPE, debuggerPresenter);
 

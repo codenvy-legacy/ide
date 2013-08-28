@@ -24,9 +24,10 @@ package com.codenvy.ide.api.ui.action;
 public class ActionPlaces {
     public static final String UNKNOWN = "unknown";
 
-    public static final String MAIN_MENU        = "MainMenu";
-    public static final String MAIN_TOOLBAR     = "MainToolbar";
-    public static final String EDITOR_POPUP     = "EditorPopup";
-    public static final String EDITOR_TOOLBAR   = "EditorToolbar";
-    public static final String EDITOR_TAB_POPUP = "EditorTabPopup";
+    public static final String MAIN_MENU         = "MainMenu";
+    public static final String MAIN_TOOLBAR      = "MainToolbar";
+    public static final String MAIN_CONTEXT_MENU = "MainContextMenu";
+    public static final String EDITOR_POPUP      = "EditorPopup";
+    public static final String EDITOR_TOOLBAR    = "EditorToolbar";
+    public static final String EDITOR_TAB_POPUP  = "EditorTabPopup";
 }

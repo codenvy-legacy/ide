@@ -39,6 +39,8 @@ import com.codenvy.ide.api.ui.workspace.PartStack;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.api.user.UserClientService;
+import com.codenvy.ide.contexmenu.ContextMenuView;
+import com.codenvy.ide.contexmenu.ContextMenuViewImpl;
 import com.codenvy.ide.core.StandardComponentInitializer;
 import com.codenvy.ide.core.editor.DefaultEditorProvider;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
@@ -189,6 +191,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(MainMenuView.class).to(MainMenuViewImpl.class).in(Singleton.class);
         bind(NewGenericFilePageView.class).to(NewGenericFilePageViewImpl.class).in(Singleton.class);
         bind(ToolbarView.class).to(ToolbarViewImpl.class).in(Singleton.class);
+        bind(ContextMenuView.class).to(ContextMenuViewImpl.class).in(Singleton.class);
 //        bind(PartStackView.class).to(PartStackViewImpl.class);
         bind(PartStackView.class).annotatedWith(Names.named("editorPartStack")).to(EditorPartStackView.class);
         bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
