@@ -19,9 +19,9 @@
 package org.exoplatform.ide.vfs.impl.fs;
 
 import com.codenvy.commons.lang.NameGenerator;
-import com.codenvy.ide.commons.cache.Cache;
-import com.codenvy.ide.commons.cache.LoadingValueSLRUCache;
-import com.codenvy.ide.commons.cache.SynchronizedCache;
+import com.codenvy.commons.lang.cache.Cache;
+import com.codenvy.commons.lang.cache.LoadingValueSLRUCache;
+import com.codenvy.commons.lang.cache.SynchronizedCache;
 
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;

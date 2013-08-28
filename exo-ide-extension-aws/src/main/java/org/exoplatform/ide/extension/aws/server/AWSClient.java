@@ -27,7 +27,7 @@ import com.amazonaws.services.elasticbeanstalk.AWSElasticBeanstalk;
 import com.amazonaws.services.elasticbeanstalk.AWSElasticBeanstalkClient;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.codenvy.ide.commons.cache.SLRUCache;
+import com.codenvy.commons.lang.cache.SLRUCache;
 
 import org.exoplatform.ide.security.paas.Credential;
 import org.exoplatform.ide.security.paas.CredentialStore;
