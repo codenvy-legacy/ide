@@ -71,8 +71,10 @@ import static com.codenvy.ide.commons.ZipUtils.unzip;
 import static com.codenvy.ide.commons.ZipUtils.zipDir;
 import static com.codenvy.ide.ext.extruntime.server.Utils.addDependencyToPom;
 import static com.codenvy.ide.ext.extruntime.server.Utils.configureTomcatPorts;
+import static com.codenvy.ide.ext.extruntime.server.Utils.detectGwtModuleLogicalName;
 import static com.codenvy.ide.ext.extruntime.server.Utils.enableSuperDevMode;
 import static com.codenvy.ide.ext.extruntime.server.Utils.fixMGWT332Bug;
+import static com.codenvy.ide.ext.extruntime.server.Utils.getLocalIPv4Address;
 import static com.codenvy.ide.ext.extruntime.server.Utils.inheritGwtModule;
 import static com.codenvy.ide.ext.extruntime.server.Utils.readPom;
 import static java.lang.Integer.parseInt;
@@ -90,7 +92,7 @@ public class ExtensionLauncher implements Startable {
     /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
     private static final int                         DEFAULT_APPLICATION_LIFETIME     = 60;
     /** Default address where GWT code server should binded . */
-    private static final String                      DEFAULT_CODE_SERVER_BIND_ADDRESS = "127.0.0.1";
+    private static final String                      DEFAULT_CODE_SERVER_BIND_ADDRESS = getLocalIPv4Address();
     /** System property that contains build server URL. */
     public static final String                       BUILD_SERVER_BASE_URL            = "exo.ide.builder.build-server-base-url";
     /** Default name of the client module directory. */
@@ -152,7 +154,6 @@ public class ExtensionLauncher implements Startable {
                                            httpConnectorPortList,
                                            ajpConnectorPortList);
         this.codeServerBindAddress = codeServerBindAddress;
-
         this.applicationLifetime = applicationLifetime * 60 * 1000;
 
         this.applications = new ConcurrentHashMap<String, Application>();
@@ -213,8 +214,8 @@ public class ExtensionLauncher implements Startable {
             unzip(vfs.exportZip(projectId).getStream(), customModulePath.toFile());
 
             // Use special ide-configuration.xml without unnecessary components.
-            InputStream confStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("tomcat/ide-configuration.xml");
-            Files.copy(confStream, clientModuleDirPath.resolve("src/main/webapp/WEB-INF/classes/conf/ide-configuration.xml"),
+            Files.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("tomcat/ide-configuration.xml"),
+                       clientModuleDirPath.resolve("src/main/webapp/WEB-INF/classes/conf/ide-configuration.xml"),
                        REPLACE_EXISTING);
 
             // Use special pom.xml to build 'clean' Codenvy Platform (without any deps on extensions).
@@ -225,13 +226,12 @@ public class ExtensionLauncher implements Startable {
             // Add sources from custom project to allow code server access it.
             fixMGWT332Bug(clientModulePomPath, customModulePath.getFileName().toString(), ADD_SOURCES_PROFILE);
 
-            Path gwtModuleDescriptorPath = clientModuleDirPath.resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
-            // TODO Avoid hardcoded logical name of custom GWT module, but try to detect it.
-            inheritGwtModule(gwtModuleDescriptorPath, "com.codenvy.ide.extension.demo.Demo");
-            enableSuperDevMode(gwtModuleDescriptorPath);
+            Path mainGwtModuleDescriptor = clientModuleDirPath.resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
+            inheritGwtModule(mainGwtModuleDescriptor, detectGwtModuleLogicalName(customModulePath));
+            enableSuperDevMode(mainGwtModuleDescriptor);
 
             // Replace src and pom.xml by symlinks to an appropriate src and pom.xml
-            // in 'fs-root' directory to allow code server always get the actual sources.
+            // in 'fs-root' directory to allow GWT code server always get the actual sources.
             Path extensionDirInFSRoot = Paths.get(wsMountPath + project.getPath());
             if (!extensionDirInFSRoot.isAbsolute()) {
                 extensionDirInFSRoot = extensionDirInFSRoot.toAbsolutePath();
@@ -247,7 +247,13 @@ public class ExtensionLauncher implements Startable {
             // Deploy custom project to maven repository.
             File zippedExtensionProjectFile = tempDir.toPath().resolve("extension-project.zip").toFile();
             zipDir(customModulePath.toString(), customModulePath.toFile(), zippedExtensionProjectFile, ANY_FILTER);
-            startCheckingBuildStatus(deploy(zippedExtensionProjectFile));
+            String deployId = deploy(zippedExtensionProjectFile);
+            final String deployStatus = startCheckingBuildStatus(deployId);
+            BuildStatusBean deployStatusBean = JsonHelper.fromJson(deployStatus, BuildStatusBean.class, null);
+            if (deployStatusBean.getStatus() != Status.SUCCESSFUL) {
+                LOG.error("Unable to deploy maven artifact: " + deployStatusBean.getError());
+                throw new Exception(deployStatusBean.getError());
+            }
 
             // Build Codenvy platform + custom project.
             File zippedProjectFile = tempDir.toPath().resolve("project.zip").toFile();
@@ -258,15 +264,16 @@ public class ExtensionLauncher implements Startable {
             GWTCodeServerLauncher codeServer = new GWTMavenCodeServerLauncher();
             codeServer.start(new GWTCodeServerConfiguration(codeServerBindAddress, codeServerPort, clientModuleDirPath));
 
-            final String status = startCheckingBuildStatus(buildId);
-            BuildStatusBean buildStatus = JsonHelper.fromJson(status, BuildStatusBean.class, null);
-            if (buildStatus.getStatus() != Status.SUCCESSFUL) {
-                LOG.error("Unable to build project: " + buildStatus.getError());
-                throw new Exception("Unable to build project: " + buildStatus.getError());
+            final String buildStatus = startCheckingBuildStatus(buildId);
+            BuildStatusBean buildStatusBean = JsonHelper.fromJson(buildStatus, BuildStatusBean.class, null);
+            if (buildStatusBean.getStatus() != Status.SUCCESSFUL) {
+                LOG.error("Unable to build project: " + buildStatusBean.getError());
+                throw new Exception(buildStatusBean.getError());
             }
 
             File tomcatDir = createTempDirectory(tempDir, "tomcat-");
-            Process tomcatProcess = runTomcat(tomcatDir.toPath(), new URL(buildStatus.getDownloadUrl()), shutdownPort, httpPort, ajpPort);
+            Process tomcatProcess = runTomcat(tomcatDir.toPath(), new URL(buildStatusBean.getDownloadUrl()),
+                                              shutdownPort, httpPort, ajpPort);
             final long expirationTime = System.currentTimeMillis() + applicationLifetime;
             applications.put(appId, new Application(appId, expirationTime, codeServer, tomcatProcess,
                                                     shutdownPort, httpPort, ajpPort,
@@ -275,15 +282,13 @@ public class ExtensionLauncher implements Startable {
             LOG.debug("Start Codenvy extension {}", appId);
             return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort).setCodeServerPort(codeServerPort);
         } catch (Exception e) {
-            LOG.warn("Codenvy extension {} failed to start, cause: {}", appId, e);
+            LOG.warn("Codenvy extension {} failed to launch, cause: {}", appId, e);
             portManager.releasePorts(codeServerPort, shutdownPort, httpPort, ajpPort);
             if (tempDir != null && tempDir.exists()) {
                 deleteRecursive(tempDir, false);
             }
-            throw new ExtensionLauncherException(String.format("Unable to launch Codenvy with extension %s. " + e.getMessage(),
-                                                               project.getName()), e);
+            throw new ExtensionLauncherException(e.getMessage(), e);
         }
-        // TODO consider to handling OutOfMemoryError
     }
 
     /**
@@ -300,11 +305,10 @@ public class ExtensionLauncher implements Startable {
         }
 
         StringBuilder logs = new StringBuilder();
-
         try {
             final String codeServerLogs = app.codeServer.getLogs();
             if (!(codeServerLogs == null || codeServerLogs.isEmpty())) {
-                logs.append("====> code-server.log <====");
+                logs.append("========> GWT code server.log <========");
                 logs.append("\n\n");
                 logs.append(codeServerLogs);
                 logs.append("\n\n");
@@ -322,16 +326,16 @@ public class ExtensionLauncher implements Startable {
             for (File catalinaLogFile : catalinaLogFiles) {
                 final String catalinaLogs = new String(Files.readAllBytes(catalinaLogFile.toPath()));
                 if (!(catalinaLogs == null || catalinaLogs.isEmpty())) {
-                    logs.append("====> ");
+                    logs.append("========> ");
                     logs.append(catalinaLogFile.getName());
-                    logs.append(" <====");
+                    logs.append(" <========");
                     logs.append("\n\n");
                     logs.append(catalinaLogs);
                     logs.append("\n\n");
                 }
             }
         } catch (IOException | GWTCodeServerException e) {
-            throw new ExtensionLauncherException(String.format("Unable to get logs of application %s.", appId), e);
+            throw new ExtensionLauncherException(e.getMessage(), e);
         }
 
         return logs.toString();
@@ -348,9 +352,6 @@ public class ExtensionLauncher implements Startable {
         if (extension == null) {
             throw new ExtensionLauncherException(String.format("Unable to stop Codenvy with extension %s. Application not found.", appId));
         }
-
-        // TODO
-        // Use com.codenvy.api.tools.ProcessUtil from 'codenvy-api-tools' project when it finished.
 
         // Use ProcessUtil because java.lang.Process.destroy() method doesn't
         // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).

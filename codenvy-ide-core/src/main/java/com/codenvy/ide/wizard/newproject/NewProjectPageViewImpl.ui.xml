@@ -92,7 +92,7 @@
         </g:north>
         <g:north size="140">
             <g:FlowPanel addStyleNames="{res.wizardCSS.line}">
-                <g:Label text="{locale.chooseTechnology}"
+                <g:Label text="{locale.choosePaaS}"
                          addStyleNames="{style.title} {res.wizardCSS.mainBoldFont} {res.wizardCSS.greyFontColor} {style.alignLeft}"/>
                 <g:Image ui:field="choosePaaSTooltip" resource="{res.question}"
                          addStyleNames="{style.questionImage} {res.wizardCSS.cursorPointer} {style.alignLeft}"/>

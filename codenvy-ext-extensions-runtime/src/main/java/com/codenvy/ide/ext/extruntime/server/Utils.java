@@ -44,13 +44,27 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.nio.file.FileSystems;
+import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.FileVisitResult.CONTINUE;
+import static java.nio.file.FileVisitResult.TERMINATE;
 import static org.codehaus.plexus.util.xml.Xpp3DomBuilder.build;
 
 /**
@@ -61,28 +75,19 @@ import static org.codehaus.plexus.util.xml.Xpp3DomBuilder.build;
  */
 public class Utils {
     /** Maven POM reader. */
-    private static MavenXpp3Reader pomReader                = new MavenXpp3Reader();
+    private static MavenXpp3Reader pomReader = new MavenXpp3Reader();
     /** Maven POM writer. */
-    private static MavenXpp3Writer pomWriter                = new MavenXpp3Writer();
-
-    /** Directive for GWT-module descriptor to enable GWT SuperDevMode: use cross-site IFrame linker and enable using source maps. */
-    private static final String    SUPER_DEV_MODE_DIRECTIVE = "\r\n\t<add-linker name='xsiframe' />"
-                                                                  + "\r\n\t<set-configuration-property name='devModeRedirectEnabled' value='true' />"
-                                                                  + "\r\n\t<set-property name='compiler.useSourceMaps' value='true' />";
+    private static MavenXpp3Writer pomWriter = new MavenXpp3Writer();
 
     /**
      * Read pom.xml.
      * 
      * @param path pom.xml path
      * @return a project object model
-     * @throws IllegalStateException if any error occurred while reading a file
+     * @throws IOException error occurred while reading content of file
      */
-    public static Model readPom(Path path) {
-        try {
-            return readPom(Files.newInputStream(path));
-        } catch (IOException e) {
-            throw new IllegalStateException(String.format("Error occurred while reading content of file: %s.", path), e);
-        }
+    public static Model readPom(Path path) throws IOException {
+        return readPom(Files.newInputStream(path));
     }
 
     /**
@@ -90,13 +95,13 @@ public class Utils {
      * 
      * @param stream input stream that represents a pom.xml
      * @return a project object model
-     * @throws IllegalStateException if any error occurred while reading a file
+     * @throws IOException error occurred while reading content of file
      */
-    static Model readPom(InputStream stream) {
+    static Model readPom(InputStream stream) throws IOException {
         try {
             return pomReader.read(stream, true);
-        } catch (IOException | XmlPullParserException e) {
-            throw new IllegalStateException("Error occurred while parsing pom.xml.", e);
+        } catch (XmlPullParserException e) {
+            throw new IllegalStateException("Error occurred while parsing pom.xml :" + e.getMessage(), e);
         }
     }
 
@@ -104,15 +109,11 @@ public class Utils {
      * Write provided project object model to the specified path.
      * 
      * @param pom a project object model
-     * @param path pom.xml path
-     * @throws IllegalStateException if any error occurred while writing a file
+     * @param path path to pom.xml
+     * @throws IOException error occurred while writing content of file
      */
-    public static void writePom(Model pom, Path path) {
-        try {
-            pomWriter.write(Files.newOutputStream(path), pom);
-        } catch (IOException e) {
-            throw new IllegalStateException(String.format("Error occurred while writing content to file: %s.", path), e);
-        }
+    public static void writePom(Model pom, Path path) throws IOException {
+        pomWriter.write(Files.newOutputStream(path), pom);
     }
 
     /**
@@ -120,8 +121,9 @@ public class Utils {
      * 
      * @param path pom.xml path
      * @param pom POM of artifact to add as dependency
+     * @throws IOException error occurred while reading or writing content of file
      */
-    static void addDependencyToPom(Path path, Model pom) {
+    static void addDependencyToPom(Path path, Model pom) throws IOException {
         addDependencyToPom(path, pom.getGroupId(), pom.getArtifactId(), pom.getVersion());
     }
 
@@ -132,8 +134,9 @@ public class Utils {
      * @param groupId groupId
      * @param artifactId artifactId
      * @param version artifact version
+     * @throws IOException error occurred while reading or writing content of file
      */
-    static void addDependencyToPom(Path path, String groupId, String artifactId, String version) {
+    static void addDependencyToPom(Path path, String groupId, String artifactId, String version) throws IOException {
         Dependency dep = new Dependency();
         dep.setGroupId(groupId);
         dep.setArtifactId(artifactId);
@@ -150,8 +153,9 @@ public class Utils {
      * 
      * @param path pom.xml path
      * @param moduleRelativePath relative path of module to add
+     * @throws IOException error occurred while reading or writing content of file
      */
-    static void addModuleToReactorPom(Path path, String moduleRelativePath) {
+    static void addModuleToReactorPom(Path path, String moduleRelativePath) throws IOException {
         addModuleToReactorPom(path, moduleRelativePath, null);
     }
 
@@ -162,8 +166,9 @@ public class Utils {
      * @param path pom.xml path
      * @param moduleRelativePath relative path of module to add
      * @param moduleAfter relative path of module that should be after the inserted module
+     * @throws IOException error occurred while reading or writing content of file
      */
-    static void addModuleToReactorPom(Path path, String moduleRelativePath, String moduleAfter) {
+    static void addModuleToReactorPom(Path path, String moduleRelativePath, String moduleAfter) throws IOException {
         Model pom = readPom(path);
         List<String> modulesList = pom.getModules();
         if (moduleAfter == null) {
@@ -185,24 +190,25 @@ public class Utils {
      * Enable SuperDevMode for the specified GWT module descriptor.
      * 
      * @param path GWT module descriptor path
-     * @throws IllegalStateException if any error occurred while reading or writing a file
+     * @throws IOException error occurred while reading or writing content of file
      */
-    static void enableSuperDevMode(Path path) {
-        try {
-            List<String> content = Files.readAllLines(path, UTF_8);
-            int penultimateLine = 0;
-            for (String str : content) {
-                penultimateLine++;
-                if (str.contains("</module>")) {
-                    break;
-                }
-            }
-            content.add(penultimateLine - 1, SUPER_DEV_MODE_DIRECTIVE);
+    static void enableSuperDevMode(Path path) throws IOException {
+        // Directive for GWT-module descriptor to enable GWT SuperDevMode.
+        final String superDevModeDirective = "    <add-linker name='xsiframe'/>\n" +
+                                             "    <set-configuration-property name='devModeRedirectEnabled' value='true'/>\n" +
+                                             "    <set-property name='compiler.useSourceMaps' value='true'/>\n";
 
-            Files.write(path, content, UTF_8);
-        } catch (IOException e) {
-            throw new IllegalStateException(String.format("Error occurred while reading or writing a file: %s.", path), e);
+        List<String> content = Files.readAllLines(path, UTF_8);
+        int penultimateLine = 0;
+        for (String str : content) {
+            penultimateLine++;
+            if (str.contains("</module>")) {
+                break;
+            }
         }
+        content.add(penultimateLine - 1, superDevModeDirective);
+
+        Files.write(path, content, UTF_8);
     }
 
     /**
@@ -210,31 +216,55 @@ public class Utils {
      * 
      * @param path GWT module descriptor
      * @param inheritableModuleLogicalName logical name of the GWT module to inherit
-     * @throws IllegalStateException if any error occurred while reading or writing a file
+     * @throws IOException error occurred while reading or writing content of file
      */
-    static void inheritGwtModule(Path path, String inheritableModuleLogicalName) throws ExtensionLauncherException {
-        final String inheritsString = "\t<inherits name='" + inheritableModuleLogicalName + "'/>";
-        try {
-            List<String> content = Files.readAllLines(path, UTF_8);
-            // insert custom module as last 'inherits' entry
-            int i = 0, lastInheritsLine = 0;
-            for (String str : content) {
-                i++;
-                if (str.contains("<inherits")) {
-                    lastInheritsLine = i;
-                }
+    static void inheritGwtModule(Path path, String inheritableModuleLogicalName) throws IOException {
+        final String inheritsString = "    <inherits name='" + inheritableModuleLogicalName + "'/>";
+        List<String> content = Files.readAllLines(path, UTF_8);
+        // insert custom module as last 'inherits' entry
+        int i = 0, lastInheritsLine = 0;
+        for (String str : content) {
+            i++;
+            if (str.contains("<inherits")) {
+                lastInheritsLine = i;
             }
-            content.add(lastInheritsLine, inheritsString);
-
-            Files.write(path, content, UTF_8);
-        } catch (IOException e) {
-            throw new IllegalStateException(String.format("Error occurred while reading or writing file: %s.", path), e);
         }
+        content.add(lastInheritsLine, inheritsString);
+
+        Files.write(path, content, UTF_8);
     }
 
-    /** It's a workaround for known bug in GWT Maven plug-in. See the https://jira.codehaus.org/browse/MGWT-332 for details. */
+    /**
+     * Detects and returns GWT module logical name.
+     * 
+     * @param folder path to folder that contains project sources
+     * @return GWT module logical name
+     * @throws IOException if an I/O error is thrown while finding GWT module descriptor
+     * @throws IllegalArgumentException if GWT module descriptor not found
+     */
+    static String detectGwtModuleLogicalName(Path folder) throws IOException {
+        final String fileExtension = ".gwt.xml";
+        final String resourcesDir = "/src/main/resources";
+
+        Finder finder = new Finder("*" + fileExtension);
+        Files.walkFileTree(folder, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, finder);
+        if (finder.getFirstMatchedFile() == null) {
+            throw new IllegalArgumentException("GWT module descriptor (gwt.xml) not found.");
+        }
+
+        String filePath = finder.getFirstMatchedFile().toString();
+        filePath = filePath.substring(filePath.indexOf(resourcesDir) + resourcesDir.length() + 1,
+                                      filePath.length() - fileExtension.length());
+        return filePath.replaceAll("/", ".");
+    }
+
+    /**
+     * It's a workaround for known bug in GWT Maven plug-in. See the https://jira.codehaus.org/browse/MGWT-332 for details.
+     * 
+     * @throws IOException error occurred while reading or writing content of file
+     */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    static void fixMGWT332Bug(Path pomPath, String extensionModuleName, String profileId) throws ExtensionLauncherException {
+    static void fixMGWT332Bug(Path pomPath, String extensionModuleName, String profileId) throws ExtensionLauncherException, IOException {
         Model pom = readPom(pomPath);
         List<Profile> profiles = pom.getProfiles();
         Profile profile = null;
@@ -252,10 +282,11 @@ public class Utils {
         Plugin buildHelperPlugin = plugins.get("org.codehaus.mojo:build-helper-maven-plugin");
         PluginExecution execution = buildHelperPlugin.getExecutionsAsMap().get("add-extension-sources");
 
-        final String confString = String.format("<configuration>"
-                                                + "<sources><source>../%1$s/src/main/java</source></sources>"
-                                                + "<resources><resource>../%1$s/src/main/resources</resource></resources>"
-                                                + "</configuration>", extensionModuleName);
+        final String confString = String.format("<configuration>" +
+                                                "  <sources>" +
+                                                "    <source>../%1$s/src/main/java</source>" +
+                                                "  </sources>" +
+                                                "</configuration>", extensionModuleName);
 
         try {
             Xpp3Dom configuration = build(new StringReader(confString));
@@ -263,8 +294,8 @@ public class Utils {
             profile.getBuild().setPlugins(new ArrayList(plugins.values()));
 
             writePom(pom, pomPath);
-        } catch (IOException | XmlPullParserException e) {
-            throw new IllegalStateException("Can't parse pom.xml.", e);
+        } catch (XmlPullParserException e) {
+            throw new IllegalStateException("Error occurred while parsing pom.xml :" + e.getMessage(), e);
         }
     }
 
@@ -315,7 +346,62 @@ public class Utils {
             StreamResult result = new StreamResult(serverXml);
             transformer.transform(source, result);
         } catch (ParserConfigurationException | TransformerException | SAXException | IOException e) {
-            throw new IllegalStateException(String.format("Error occurred while reading or writing file: %s.", tomcatRootPath), e);
+            throw new IllegalStateException(String.format("Error occurred while reading or writing file: %s.", tomcatRootPath)
+                                            + e.getMessage(), e);
+        }
+    }
+
+    /** Returns IPv4 address of this machine or loopback address. */
+    static String getLocalIPv4Address() {
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface current = interfaces.nextElement();
+                if (!current.isUp() || current.isLoopback() || current.isVirtual()) {
+                    continue;
+                }
+
+                Enumeration<InetAddress> addresses = current.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress current_addr = addresses.nextElement();
+                    if (current_addr.isLoopbackAddress()) {
+                        continue;
+                    }
+
+                    if (current_addr instanceof Inet4Address) {
+                        return current_addr.getHostAddress();
+                    }
+                }
+            }
+            return "127.0.0.1";
+        } catch (SocketException e) {
+            return "127.0.0.1";
+        }
+    }
+
+    /** A {@code FileVisitor} that finds first file that match the specified pattern. */
+    private static class Finder extends SimpleFileVisitor<Path> {
+        private final PathMatcher matcher;
+        private Path              firstMatchedFile;
+
+        Finder(String pattern) {
+            matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            Path fileName = file.getFileName();
+            if (fileName != null && matcher.matches(fileName)) {
+                firstMatchedFile = file;
+                return TERMINATE;
+            }
+            return CONTINUE;
+        }
+
+        /** Returns the first matched {@link Path}. */
+        Path getFirstMatchedFile() {
+            return firstMatchedFile;
         }
     }
 }

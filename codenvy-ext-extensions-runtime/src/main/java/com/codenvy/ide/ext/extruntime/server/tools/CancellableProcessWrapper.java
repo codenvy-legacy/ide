@@ -17,15 +17,20 @@
  */
 package com.codenvy.ide.ext.extruntime.server.tools;
 
-import java.io.Closeable;
-import java.io.IOException;
-
 /**
- * Consumes text line by line for analysing, writing, storing, etc.
+ * Cancellable wrapper of {@code Process}.
  *
- * @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a>
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  */
-public interface LineConsumer extends Closeable {
-    /** Consumes single line. */
-    void writeLine(String line) throws IOException;
+public final class CancellableProcessWrapper implements Cancellable {
+    private final Process process;
+
+    public CancellableProcessWrapper(Process process) {
+        this.process = process;
+    }
+
+    @Override
+    public void cancel() {
+        ProcessUtil.kill(process);
+    }
 }

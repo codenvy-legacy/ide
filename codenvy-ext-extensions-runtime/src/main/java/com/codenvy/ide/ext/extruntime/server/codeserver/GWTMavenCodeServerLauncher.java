@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.extruntime.server.codeserver;
 
+import com.codenvy.ide.ext.extruntime.server.ExtensionLauncherException;
 import com.codenvy.ide.ext.extruntime.server.Utils;
 import com.codenvy.ide.ext.extruntime.server.tools.ProcessUtil;
 
@@ -28,11 +29,20 @@ import org.codehaus.plexus.util.xml.Xpp3DomUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
-import java.nio.file.Files;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Map;
@@ -62,8 +72,12 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
     public void start(GWTCodeServerConfiguration configuration) throws GWTCodeServerException {
         this.configuration = configuration;
         this.logFilePath = configuration.getWorkDir().resolve("code-server.log");
-        setCodeServerConfiguration(configuration.getWorkDir().resolve("pom.xml"), configuration.getWorkDir(),
-                                   configuration.getBindAddress(), configuration.getPort());
+        try {
+            setCodeServerConfiguration(configuration.getWorkDir().resolve("pom.xml"), configuration.getWorkDir(),
+                                       configuration.getBindAddress(), configuration.getPort());
+        } catch (IOException e) {
+            throw new GWTCodeServerException("Unable to launch GWT code server: " + e.getMessage(), e);
+        }
 
         // Call 'generate-sources' phase to generate 'IDEInjector.java' and 'ExtensionManager.java'.
         // For details, see com.codenvy.util.IDEInjectorGenerator and com.codenvy.util.ExtensionManagerGenerator.
@@ -79,7 +93,7 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
         try {
             this.process = processBuilder.start();
         } catch (IOException e) {
-            throw new GWTCodeServerException("Unable to start code server.");
+            throw new GWTCodeServerException("Unable to launch GWT code server: " + e.getMessage(), e);
         }
     }
 
@@ -87,20 +101,16 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
     @Override
     public String getLogs() throws GWTCodeServerException {
         try {
-            // It should work fine for the files less than 2GB (Integer.MAX_VALUE).
-            // One recompiling procedure writes about 1KB output information to logs.
-            return new String(Files.readAllBytes(logFilePath));
-        } catch (IOException e) {
-            throw new GWTCodeServerException("Unable to get code server's logs.");
+            final String url = configuration.getBindAddress() + ':' + configuration.getPort() + "/log/_app";
+            return sendGet(new URL(url.startsWith("http://") ? url : "http://" + url));
+        } catch (IOException | ExtensionLauncherException e) {
+            throw new GWTCodeServerException("Unable to get GWT code server's logs: " + e.getMessage(), e);
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public void stop() {
-        // TODO
-        // Use com.codenvy.api.tools.ProcessUtil from 'codenvy-api-tools' project when it finished.
-
         // Use ProcessUtil because java.lang.Process.destroy() method doesn't
         // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
         LOG.debug("Killing process tree");
@@ -139,10 +149,10 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
      * @param workDir code server working directory is the root of the directory tree where the code server will write compiler output. If
      *            not supplied, a system temporary directory will be used
      * @param port port on which code server will run. If -1 supplied, a default port will be 9876
-     * @throws IllegalStateException if any error occurred while writing a file
+     * @throws IOException if any error occurred while writing a file
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static void setCodeServerConfiguration(Path pomPath, Path workDir, String bindAddress, int port) {
+    private static void setCodeServerConfiguration(Path pomPath, Path workDir, String bindAddress, int port) throws IOException {
         final String workDirConf = workDir == null ? "" : "<codeServerWorkDir>" + workDir + "</codeServerWorkDir>";
         final String bindAddressConf = bindAddress == null ? "" : "<bindAddress>" + bindAddress + "</bindAddress>";
         final String portConf = port == -1 ? "" : "<codeServerPort>" + port + "</codeServerPort>";
@@ -161,8 +171,82 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
             build.setPlugins(new ArrayList(plugins.values()));
 
             Utils.writePom(pom, pomPath);
-        } catch (IOException | XmlPullParserException e) {
+        } catch (XmlPullParserException e) {
             throw new IllegalStateException("Can't parse pom.xml.", e);
+        }
+    }
+
+    private static String sendGet(URL url) throws IOException, ExtensionLauncherException {
+        HttpURLConnection http = null;
+        try {
+            http = (HttpURLConnection)url.openConnection();
+            http.setRequestMethod("GET");
+            int responseCode = http.getResponseCode();
+            if (responseCode != 200) {
+                responseFail(http);
+            }
+
+            InputStream data = http.getInputStream();
+            try {
+                return readBodyTagContent(data);
+            } finally {
+                data.close();
+            }
+        } finally {
+            if (http != null) {
+                http.disconnect();
+            }
+        }
+    }
+
+    private static String readBody(InputStream input, int contentLength) throws IOException {
+        String body = null;
+        if (contentLength > 0) {
+            byte[] b = new byte[contentLength];
+            int off = 0;
+            int i;
+            while ((i = input.read(b, off, contentLength - off)) > 0) {
+                off += i;
+            }
+            body = new String(b);
+        } else if (contentLength < 0) {
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            int i;
+            while ((i = input.read(buf)) != -1) {
+                bout.write(buf, 0, i);
+            }
+            body = bout.toString();
+        }
+        return body;
+    }
+
+    private static void responseFail(HttpURLConnection http) throws IOException, ExtensionLauncherException {
+        InputStream errorStream = null;
+        try {
+            int responseCode = http.getResponseCode();
+            int length = http.getContentLength();
+            errorStream = http.getErrorStream();
+            String body = null;
+            if (errorStream != null) {
+                body = readBody(errorStream, length);
+            }
+            throw new ExtensionLauncherException(responseCode, "Unable to get logs. " + body == null ? "" : body);
+        } finally {
+            if (errorStream != null) {
+                errorStream.close();
+            }
+        }
+    }
+
+    private static String readBodyTagContent(InputStream stream) throws IOException {
+        try {
+            DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = domFactory.newDocumentBuilder();
+            Document doc = builder.parse(stream);
+            return doc.getElementsByTagName("body").item(0).getTextContent();
+        } catch (ParserConfigurationException | SAXException e) {
+            throw new IllegalStateException(e.getMessage(), e);
         }
     }
 }

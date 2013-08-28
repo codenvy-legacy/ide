@@ -35,6 +35,8 @@ import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.ProjectImpl;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -61,6 +63,8 @@ import static org.exoplatform.ide.vfs.shared.PropertyFilter.ALL_FILTER;
  */
 @Path("{ws-name}/extruntime")
 public class ExtensionRuntimeService {
+    private static final Log          LOG = ExoLogger.getLogger(ExtensionRuntimeService.class);
+
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
 
@@ -120,7 +124,8 @@ public class ExtensionRuntimeService {
             vfs.updateContent(pomFile.getId(), MediaType.valueOf(pomFile.getMimeType()), new ByteArrayInputStream(stream.toByteArray()),
                               null);
         } catch (XmlPullParserException e) {
-            throw new IllegalStateException("Error occurred while setting maven project coordinate.");
+            LOG.warn("Error occurred while setting maven project coordinates.", e);
+            throw new IllegalStateException(e.getMessage(), e);
         }
     }
 
@@ -169,8 +174,7 @@ public class ExtensionRuntimeService {
         launcher.stopApp(appId);
     }
 
-    private void updateProperties(String name, List<Property> properties, VirtualFileSystem vfs, Folder projectFolder)
-                                                                                                                      throws VirtualFileSystemException {
+    private void updateProperties(String name, List<Property> properties, VirtualFileSystem vfs, Folder projectFolder) throws VirtualFileSystemException {
         Item projectItem = vfs.getItem(projectFolder.getId(), false, ALL_FILTER);
         if (projectItem instanceof ProjectImpl) {
             Project project = (Project)projectItem;
