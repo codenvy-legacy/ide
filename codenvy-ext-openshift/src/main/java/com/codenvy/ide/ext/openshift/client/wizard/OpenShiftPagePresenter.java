@@ -26,18 +26,13 @@ import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.GitClientService;
-import com.codenvy.ide.ext.openshift.client.OpenShiftAsyncRequestCallback;
-import com.codenvy.ide.ext.openshift.client.OpenShiftClientService;
-import com.codenvy.ide.ext.openshift.client.OpenShiftLocalizationConstant;
-import com.codenvy.ide.ext.openshift.client.OpenShiftResources;
-import com.codenvy.ide.ext.openshift.client.OpenShiftWSRequestCallback;
+import com.codenvy.ide.ext.openshift.client.*;
 import com.codenvy.ide.ext.openshift.client.key.UpdateKeyPresenter;
 import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.openshift.client.login.LoginPresenter;
 import com.codenvy.ide.ext.openshift.client.marshaller.ApplicationInfoUnmarshaller;
 import com.codenvy.ide.ext.openshift.client.marshaller.ApplicationInfoUnmarshallerWS;
 import com.codenvy.ide.ext.openshift.client.marshaller.ListUnmarshaller;
-import com.codenvy.ide.ext.openshift.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -52,9 +47,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Wizard page for creating project on OpenShift.
@@ -199,17 +191,16 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
                 getApplicationTypes();
             }
         };
+        ListUnmarshaller unmarshaller = new ListUnmarshaller();
 
         try {
-            ListUnmarshaller unmarshaller = new ListUnmarshaller(new ArrayList<String>());
             service.getApplicationTypes(
-                    new OpenShiftAsyncRequestCallback<List<String>>(unmarshaller, loggedInHandler, null, eventBus, console, constant,
-                                                                    loginPresenter) {
+                    new OpenShiftAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, null, eventBus, console, constant,
+                                                                         loginPresenter) {
                         @Override
-                        protected void onSuccess(List<String> result) {
+                        protected void onSuccess(JsonArray<String> result) {
                             isLogged = true;
-                            JsonArray<String> types = JsonCollections.createArray(result);
-                            view.setApplicationTypes(types);
+                            view.setApplicationTypes(result);
                         }
                     });
         } catch (RequestException e) {
@@ -255,17 +246,13 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
                 createApplication();
             }
         };
+        ApplicationInfoUnmarshallerWS unmarshaller = new ApplicationInfoUnmarshallerWS();
 
         try {
-            DtoClientImpls.AppInfoImpl appInfo = DtoClientImpls.AppInfoImpl.make();
-            ApplicationInfoUnmarshallerWS unmarshaller = new ApplicationInfoUnmarshallerWS(appInfo);
-
             service.createApplicationWS(projectName, resourceProvider.getVfsId(), project.getId(), view.getApplicationType(),
                                         view.getScalingValue(),
                                         new OpenShiftWSRequestCallback<AppInfo>(unmarshaller, loggedInHandler, null, eventBus, console,
                                                                                 loginPresenter) {
-
-
                                             @Override
                                             protected void onSuccess(AppInfo result) {
                                                 updatePublicKey(result);
@@ -292,17 +279,13 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
                 createApplicationRest();
             }
         };
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
         try {
-            DtoClientImpls.AppInfoImpl appInfo = DtoClientImpls.AppInfoImpl.make();
-            ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(appInfo);
-
             service.createApplication(projectName, resourceProvider.getVfsId(), project.getId(), view.getApplicationType(),
                                       view.getScalingValue(),
                                       new OpenShiftAsyncRequestCallback<AppInfo>(unmarshaller, loggedInHandler, null, eventBus, console,
                                                                                  constant, loginPresenter) {
-
-
                                           @Override
                                           protected void onSuccess(AppInfo result) {
                                               updatePublicKey(result);

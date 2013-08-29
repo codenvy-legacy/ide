@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.openshift.client;
 import com.codenvy.ide.ext.openshift.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
 import com.codenvy.ide.ext.openshift.shared.RHUserInfo;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
@@ -37,8 +38,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
-
-import java.util.List;
 
 /**
  * The implementation of {@link OpenShiftClientService}.
@@ -176,7 +175,7 @@ public class OpenShiftClientServiceImpl implements OpenShiftClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void getApplicationTypes(AsyncRequestCallback<List<String>> callback) throws RequestException {
+    public void getApplicationTypes(AsyncRequestCallback<JsonArray<String>> callback) throws RequestException {
         String url = restServiceContext + APPLICATION_TYPES;
 
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
@@ -217,7 +216,7 @@ public class OpenShiftClientServiceImpl implements OpenShiftClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void getCartridges(AsyncRequestCallback<List<String>> callback) throws RequestException {
+    public void getCartridges(AsyncRequestCallback<JsonArray<String>> callback) throws RequestException {
         String url = restServiceContext + CARTRIDGES;
 
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);

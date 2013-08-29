@@ -28,14 +28,10 @@ import com.codenvy.ide.ext.openshift.client.marshaller.ListUnmarshaller;
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
 import com.codenvy.ide.ext.openshift.shared.OpenShiftEmbeddableCartridge;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Presenter to control creating cartridges for the application on OpenShift.
@@ -91,14 +87,14 @@ public class CreateCartridgePresenter implements CreateCartridgeView.ActionDeleg
                 setCartridges();
             }
         };
+        ListUnmarshaller unmarshaller = new ListUnmarshaller();
 
         try {
-            ListUnmarshaller unmarshaller = new ListUnmarshaller(new ArrayList<String>());
             service.getCartridges(
-                    new OpenShiftAsyncRequestCallback<List<String>>(unmarshaller, loggedInHandler, null, eventBus, console,
-                                                                    constant, loginPresenter) {
+                    new OpenShiftAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, null, eventBus, console,
+                                                                         constant, loginPresenter) {
                         @Override
-                        protected void onSuccess(List<String> result) {
+                        protected void onSuccess(JsonArray<String> result) {
                             JsonArray<OpenShiftEmbeddableCartridge> cartridges = application.getEmbeddedCartridges();
                             for (int i = 0; i < cartridges.size(); i++) {
                                 if (result.contains(cartridges.get(i).getName())) {
@@ -106,12 +102,7 @@ public class CreateCartridgePresenter implements CreateCartridgeView.ActionDeleg
                                 }
                             }
 
-                            JsonArray<String> list = JsonCollections.createArray();
-                            for (String cartridge : result) {
-                                list.add(cartridge);
-                            }
-
-                            view.setCartridgesList(list);
+                            view.setCartridgesList(result);
                             view.showDialog();
                         }
                     });

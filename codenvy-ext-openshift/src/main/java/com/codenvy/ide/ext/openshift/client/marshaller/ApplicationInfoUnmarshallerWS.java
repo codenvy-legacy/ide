@@ -32,15 +32,6 @@ import com.codenvy.ide.websocket.rest.Unmarshallable;
 public class ApplicationInfoUnmarshallerWS implements Unmarshallable<AppInfo> {
     private DtoClientImpls.AppInfoImpl appInfo;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param appInfo
-     */
-    public ApplicationInfoUnmarshallerWS(DtoClientImpls.AppInfoImpl appInfo) {
-        this.appInfo = appInfo;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Message response) throws UnmarshallerException {
@@ -50,14 +41,7 @@ public class ApplicationInfoUnmarshallerWS implements Unmarshallable<AppInfo> {
             return;
         }
 
-        DtoClientImpls.AppInfoImpl application = DtoClientImpls.AppInfoImpl.deserialize(text);
-
-        this.appInfo.setName(application.getName());
-        this.appInfo.setType(application.getType());
-        this.appInfo.setCreationTime(application.getCreationTime());
-        this.appInfo.setPublicUrl(application.getPublicUrl());
-        this.appInfo.setGitUrl(application.getGitUrl());
-        this.appInfo.setEmbeddedCartridges(application.getEmbeddedCartridges());
+        appInfo = DtoClientImpls.AppInfoImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */
