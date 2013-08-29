@@ -132,8 +132,7 @@ public class CreateAccountPresenter implements CreateAccountView.ActionDelegate 
         account.setName(view.getAccountName());
         account.setCompany(view.getCompany());
 
-        DtoClientImpls.CloudBeesAccountImpl cloudBeesAccount = DtoClientImpls.CloudBeesAccountImpl.make();
-        CloudBeesAccountUnmarshaller unmarshaller = new CloudBeesAccountUnmarshaller(cloudBeesAccount);
+        CloudBeesAccountUnmarshaller unmarshaller = new CloudBeesAccountUnmarshaller();
 
         try {
             service.createAccount(account, new AsyncRequestCallback<CloudBeesAccount>(unmarshaller) {
@@ -173,8 +172,7 @@ public class CreateAccountPresenter implements CreateAccountView.ActionDelegate 
             user.setRole("admin");
         }
 
-        DtoClientImpls.CloudBeesUserImpl cloudBeesUser = DtoClientImpls.CloudBeesUserImpl.make();
-        CloudBeesUserUnmarshaller unmarshaller = new CloudBeesUserUnmarshaller(cloudBeesUser);
+        CloudBeesUserUnmarshaller unmarshaller = new CloudBeesUserUnmarshaller();
 
         try {
             service.addUserToAccount(account.getName(), user, isExisting, new AsyncRequestCallback<CloudBeesUser>(unmarshaller) {

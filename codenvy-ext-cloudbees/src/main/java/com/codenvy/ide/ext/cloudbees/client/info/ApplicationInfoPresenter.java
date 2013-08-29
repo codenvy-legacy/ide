@@ -25,7 +25,6 @@ import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientService;
 import com.codenvy.ide.ext.cloudbees.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshaller;
-import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
@@ -91,8 +90,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
      * @param projectId
      */
     private void showApplicationInfo(final String projectId) {
-        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
             public void onLoggedIn() {

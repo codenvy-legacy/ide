@@ -28,7 +28,6 @@ import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationListUnmarshaller;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -85,7 +84,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
 
     /** Gets list of available application for current user. */
     private void getOrUpdateAppList() {
-        ApplicationListUnmarshaller unmarshaller = new ApplicationListUnmarshaller(JsonCollections.<ApplicationInfo>createArray());
+        ApplicationListUnmarshaller unmarshaller = new ApplicationListUnmarshaller();
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
             public void onLoggedIn() {

@@ -31,15 +31,6 @@ import com.google.gwt.http.client.Response;
 public class CloudBeesAccountUnmarshaller implements Unmarshallable<CloudBeesAccount> {
     private DtoClientImpls.CloudBeesAccountImpl account;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param account
-     */
-    public CloudBeesAccountUnmarshaller(DtoClientImpls.CloudBeesAccountImpl account) {
-        this.account = account;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -49,10 +40,7 @@ public class CloudBeesAccountUnmarshaller implements Unmarshallable<CloudBeesAcc
             return;
         }
 
-        DtoClientImpls.CloudBeesAccountImpl account = DtoClientImpls.CloudBeesAccountImpl.deserialize(text);
-
-        this.account.setName(account.getName());
-        this.account.setCompany(account.getCompany());
+        account = DtoClientImpls.CloudBeesAccountImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */

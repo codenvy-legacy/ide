@@ -30,7 +30,6 @@ import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshaller;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshallerWS;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.DomainsUnmarshaller;
-import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.ext.jenkins.client.build.BuildApplicationPresenter;
 import com.codenvy.ide.ext.jenkins.shared.JobStatus;
@@ -169,8 +168,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
     /** Deploy application to Cloud Bees by sending request over WebSocket or HTTP. */
     private void doDeployApplication() {
-        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-        ApplicationInfoUnmarshallerWS unmarshaller = new ApplicationInfoUnmarshallerWS(applicationInfo);
+        ApplicationInfoUnmarshallerWS unmarshaller = new ApplicationInfoUnmarshallerWS();
 
         try {
             service.initializeApplicationWS(view.getUrl(), resourcesProvider.getVfsId(), project.getId(), warUrl, null,
@@ -206,8 +204,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
     /** Deploy application to Cloud Bees by sending request over HTTP. */
     private void doDeployApplicationREST() {
-        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
         try {
             service.initializeApplication(view.getUrl(), resourcesProvider.getVfsId(), project.getId(), warUrl, null,
