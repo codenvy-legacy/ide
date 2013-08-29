@@ -89,10 +89,10 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
             } catch (RequestException e) {
                 IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
             }
-            return;
+        } else {
+            IDE.fireEvent(new FileSavedEvent(file, null));
         }
 
-        IDE.fireEvent(new FileSavedEvent(file, null));
     }
 
     private void getProperties(final FileModel file) {
@@ -119,8 +119,10 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
         activeFile = event.getFile();
     }
 
-    /** @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org
-     * .exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org
+     *      .exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent)
+     */
     public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
         if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null) {
             event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);

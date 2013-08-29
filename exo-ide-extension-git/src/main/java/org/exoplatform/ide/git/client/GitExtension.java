@@ -19,7 +19,6 @@
 package org.exoplatform.ide.git.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.server.Util;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -30,7 +29,24 @@ import org.exoplatform.ide.git.client.add.AddToIndexPresenter;
 import org.exoplatform.ide.git.client.branch.BranchPresenter;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter;
 import org.exoplatform.ide.git.client.commit.CommitPresenter;
-import org.exoplatform.ide.git.client.control.*;
+import org.exoplatform.ide.git.client.control.AddFilesControl;
+import org.exoplatform.ide.git.client.control.BranchesControl;
+import org.exoplatform.ide.git.client.control.CloneRepositoryControl;
+import org.exoplatform.ide.git.client.control.CommitControl;
+import org.exoplatform.ide.git.client.control.DeleteRepositoryControl;
+import org.exoplatform.ide.git.client.control.FetchControl;
+import org.exoplatform.ide.git.client.control.InitRepositoryControl;
+import org.exoplatform.ide.git.client.control.MergeControl;
+import org.exoplatform.ide.git.client.control.PullControl;
+import org.exoplatform.ide.git.client.control.PushToRemoteControl;
+import org.exoplatform.ide.git.client.control.RemoteControl;
+import org.exoplatform.ide.git.client.control.RemotesControl;
+import org.exoplatform.ide.git.client.control.RemoveFilesControl;
+import org.exoplatform.ide.git.client.control.ResetFilesControl;
+import org.exoplatform.ide.git.client.control.ResetToCommitControl;
+import org.exoplatform.ide.git.client.control.ShowHistoryControl;
+import org.exoplatform.ide.git.client.control.ShowProjectGitReadOnlyUrl;
+import org.exoplatform.ide.git.client.control.ShowStatusControl;
 import org.exoplatform.ide.git.client.delete.DeleteRepositoryCommandHandler;
 import org.exoplatform.ide.git.client.fetch.FetchPresenter;
 import org.exoplatform.ide.git.client.history.HistoryPresenter;
@@ -87,7 +103,6 @@ public class GitExtension extends Extension implements InitializeServicesHandler
         IDE.getInstance().addControlsFormatter(new GitControlsFormatter());
 
 
-        new CodeNowHandler();
         // Create presenters:
         new CloneRepositoryPresenter();
         new InitRepositoryPresenter();

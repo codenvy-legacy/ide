@@ -31,6 +31,7 @@ import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.workspaceinfo.CurrentWorkspaceInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,8 @@ public abstract class IDE {
     private static IDE instance;
 
     public static UserInfo user;
+    
+    public static CurrentWorkspaceInfo currentWorkspace;
     
     private static List<Extension> extensions = new ArrayList<Extension>();
 

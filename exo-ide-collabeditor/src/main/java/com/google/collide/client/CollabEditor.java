@@ -28,6 +28,7 @@ import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
 import com.google.collide.client.code.popup.EditorPopupController.PopupRenderer;
 import com.google.collide.client.code.popup.EditorPopupController.Remover;
+import com.google.collide.client.collaboration.CollaborationPropertiesUtil;
 import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.document.DocumentMetadata;
 import com.google.collide.client.documentparser.DocumentParser;
@@ -93,9 +94,6 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -229,34 +227,36 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
 
     @Override
     public void setFile(final FileModel file) {
-        if (file.getMimeType().equals(MimeType.TEXT_HTML)) {
+        if (CollaborationPropertiesUtil.isCollaborationEnabled(file.getProject()) && !file.getMimeType().equals(MimeType.TEXT_HTML)) {
+
+            PathUtil pathUtil = new PathUtil(file.getPath());
+            pathUtil.setWorkspaceId(VirtualFileSystem.getInstance().getInfo().getId());
+            CollabEditorExtension.get().getManager().getDocument(pathUtil, new DocumentManager.GetDocumentCallback() {
+                @Override
+                public void onDocumentReceived(Document document) {
+                    setDocument(document);
+                }
+
+                @Override
+                public void onUneditableFileContentsReceived(FileContents contents) {
+                    Log.error(CollabEditor.class, "UnEditable File received " + contents.getPath());
+                }
+
+                @Override
+                public void onFileNotFoundReceived() {
+                    Log.error(CollabEditor.class, "File not found " + file.getPath());
+                }
+            });
+        } else {
+
             FileContentLoader.getFileContent(file, new FileContentLoader.ContentCallback() {
                 @Override
                 public void onContentReceived(String content) {
                     setText(content);
                 }
             });
-            return;
+
         }
-
-        PathUtil pathUtil = new PathUtil(file.getPath());
-        pathUtil.setWorkspaceId(VirtualFileSystem.getInstance().getInfo().getId());
-        CollabEditorExtension.get().getManager().getDocument(pathUtil, new DocumentManager.GetDocumentCallback() {
-            @Override
-            public void onDocumentReceived(Document document) {
-                setDocument(document);
-            }
-
-            @Override
-            public void onUneditableFileContentsReceived(FileContents contents) {
-                Log.error(CollabEditor.class, "UnEditable File received " + contents.getPath());
-            }
-
-            @Override
-            public void onFileNotFoundReceived() {
-                Log.error(CollabEditor.class, "File not found " + file.getPath());
-            }
-        });
     }
 
     private void checkPermission(FileModel file) {

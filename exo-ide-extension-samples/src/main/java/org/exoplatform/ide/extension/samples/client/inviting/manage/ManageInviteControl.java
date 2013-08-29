@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.samples.client.inviting.manage;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.DisableInTempWorkspace;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
@@ -28,6 +29,7 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
  * @version $Id: $
  */
 @RolesAllowed({"developer"})
+@DisableInTempWorkspace
 public class ManageInviteControl extends SimpleControl implements IDEControl {
     private static final String ID = "Share/Manage Access";
 
@@ -41,11 +43,11 @@ public class ManageInviteControl extends SimpleControl implements IDEControl {
         setPrompt(PROMPT);
         setImages(SamplesClientBundle.INSTANCE.manageInvite(), SamplesClientBundle.INSTANCE.manageInviteDisable());
         setEvent(new ManageInviteEvent());
-        setVisible(true);
-        setEnabled(true);
     }
 
     @Override
     public void initialize() {
+        setVisible(true);
+        setEnabled(true);
     }
 }

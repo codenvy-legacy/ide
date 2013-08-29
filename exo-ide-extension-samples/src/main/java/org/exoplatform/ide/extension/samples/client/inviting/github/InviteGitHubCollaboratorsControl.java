@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.samples.client.inviting.github;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.DisableInTempWorkspace;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -30,13 +31,13 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
+@DisableInTempWorkspace
 public class InviteGitHubCollaboratorsControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
                                                                                ProjectClosedHandler, FolderRefreshedHandler {
 

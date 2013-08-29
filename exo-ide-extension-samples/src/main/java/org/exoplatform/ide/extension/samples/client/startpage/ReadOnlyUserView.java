@@ -33,6 +33,7 @@ import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.client.framework.workspaceinfo.WorkspaceInfo;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 
 import java.util.List;
@@ -70,20 +71,21 @@ public class ReadOnlyUserView extends ViewImpl {
     @UiField
     Label       label;
 
-    public ReadOnlyUserView(final List<String> workspaces) {
+    public ReadOnlyUserView(final List<WorkspaceInfo> workspaces) {
         super(ID, ViewType.MODAL, workspaces.size() == 0 ? SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyTitle()
             : SamplesExtension.LOCALIZATION_CONSTANT.switchWorkspaceTitle(),
               null, WIDTH, HEIGHT, false);
         add(uiBinder.createAndBindUi(this));
         label.setID(LABEL_ID);
+        label.setIsHTML(true);
         actionButton.setId(ACTION_BUTTON_ID);
         cancelButton.setId(CANCEL_BUTTON_ID);
         if (workspaces.size() == 0) {
-            label.setText(SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyMessage());
+            label.setValue(SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyMessage());
             actionButton.setText(SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyTitle());
         }
         else {
-            label.setText(SamplesExtension.LOCALIZATION_CONSTANT.switchWorkspaceMessage());
+            label.setValue(SamplesExtension.LOCALIZATION_CONSTANT.switchWorkspaceMessage());
             actionButton.setText(SamplesExtension.LOCALIZATION_CONSTANT.switchWorkspace());
         }
 
@@ -96,7 +98,7 @@ public class ReadOnlyUserView extends ViewImpl {
                     Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("/login")
                                                    .buildString());
                 else if (workspaces.size() == 1)
-                    Window.Location.replace(workspaces.get(0));
+                    Window.Location.replace(workspaces.get(0).getUrl());
                 else
                     Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost())
                                                    .setPath("/private/select-tenant").buildString());

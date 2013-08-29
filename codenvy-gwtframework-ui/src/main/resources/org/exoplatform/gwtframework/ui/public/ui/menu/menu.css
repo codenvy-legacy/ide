@@ -5,6 +5,7 @@ style prefix: exo-menuBar-
 ***********************************************************************************************/
 
 .exo-menuBarTable {
+	margin-left: 2px;
 }
 
 .exo-menuBar,
@@ -19,8 +20,8 @@ style prefix: exo-menuBar-
 .exo-menuBarItemOver,
 .exo-menuBarItemSelected,
 .exo-menuBarItemDisabled {
-    padding-left: 8px;
-    padding-right: 8px;
+    padding-left: 13px;
+    padding-right: 13px;
     cursor: default;
 
     font-family: Verdana, Bitstream Vera Sans, sans-serif;
@@ -31,21 +32,21 @@ style prefix: exo-menuBar-
 
 .exo-menuBar {
     width: 100%;
-    background: #FFFFFF url(menu-background.png) repeat-x;
+    background-color: #404040;
 }
 
 .exo-menuBarItem {
-    color: #333333;
+    color: #FFFFFF;
 }
 
 .exo-menuBarItemOver {
-    color: #333333;
-    background-image: url("menu-item-over.png");
+    color: #FFFFFF;
+    background-color: #707070;
 }
 
 .exo-menuBarItemSelected {
-    color: #333333;
-    background-image: url("menu-item-selected.png");
+    background-color: #FFFFFF;
+    color: #404040;
 }
 
 .exo-menuBarItemDisabled {

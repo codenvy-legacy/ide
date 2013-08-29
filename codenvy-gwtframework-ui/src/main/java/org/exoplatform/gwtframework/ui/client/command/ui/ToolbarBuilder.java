@@ -160,7 +160,7 @@ public class ToolbarBuilder implements SetToolbarItemsHandler, AddToolbarItemsHa
 
     @Override
     public void onAddToolbarItems(AddToolbarItemsEvent event) {
-        toolbars[0].addItem(event.getIconButton(), true);
+        toolbars[0].addItem(event.getWidget(), event.isRightDocking());
     }
 
 }

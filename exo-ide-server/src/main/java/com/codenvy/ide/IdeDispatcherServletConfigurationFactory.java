@@ -23,10 +23,13 @@ import com.codenvy.commons.servlet.Condition;
 import com.codenvy.commons.servlet.DispatcherServletConfiguration;
 import com.codenvy.commons.servlet.DispatcherServletConfigurationFactory;
 
+import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URL;
 
 /** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
 public class IdeDispatcherServletConfigurationFactory extends DispatcherServletConfigurationFactory {
@@ -42,8 +45,8 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                              .execute(new Action() {
                                                  @Override
                                                  public void perform(HttpServletRequest request, HttpServletResponse response)
-                                                                                                                              throws ServletException,
-                                                                                                                              IOException {
+                                                         throws ServletException,
+                                                                IOException {
                                                      request.getRequestDispatcher("/favicon.ico").forward(request, response);
                                                  }
                                              })
@@ -75,8 +78,8 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                              .execute(new Action() {
                                                  @Override
                                                  public void perform(HttpServletRequest request, HttpServletResponse response)
-                                                                                                                              throws ServletException,
-                                                                                                                              IOException {
+                                                         throws ServletException,
+                                                                IOException {
                                                      final String workspace = (String)request.getAttribute("ws");
                                                      final String requestPath = request.getPathInfo();
                                                      final String myPath = requestPath.substring(workspace.length() + 1);
@@ -98,8 +101,8 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                              .execute(new Action() {
                                                  @Override
                                                  public void perform(HttpServletRequest request, HttpServletResponse response)
-                                                                                                                              throws ServletException,
-                                                                                                                              IOException {
+                                                         throws ServletException,
+                                                                IOException {
                                                      final String workspace = (String)request.getAttribute("ws");
                                                      final String requestPath = request.getPathInfo();
                                                      final String myPath = requestPath.substring(workspace.length() + 1);
@@ -114,14 +117,14 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                                      final String workspace = (String)request.getAttribute("ws");
                                                      final String requestPath = request.getPathInfo();
                                                      return requestPath.startsWith("/" + workspace + "/_htmlapprunner");
-                                                     
+
                                                  }
                                              })
                                              .execute(new Action() {
                                                  @Override
                                                  public void perform(HttpServletRequest request, HttpServletResponse response)
-                                                     throws ServletException,
-                                                     IOException {
+                                                         throws ServletException,
+                                                                IOException {
                                                      final String workspace = (String)request.getAttribute("ws");
                                                      final String requestPath = request.getPathInfo();
                                                      final String myPath = requestPath.substring(workspace.length() + 1);
@@ -134,10 +137,12 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                              .execute(new Action() {
                                                  @Override
                                                  public void perform(HttpServletRequest request, HttpServletResponse response)
-                                                                                                                              throws ServletException,
-                                                                                                                              IOException {
+                                                         throws ServletException,
+                                                                IOException {
                                                      final String workspace = (String)request.getAttribute("ws");
                                                      final String requestPath = request.getPathInfo();
+
+
 //TODO need improve this code
                                                      String project = null;
                                                      String filePath = null;
@@ -146,36 +151,38 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                                      //addition attribute is setted in session to indicate that we need to parse
                                                      //referer to get project name and file path.
                                                      if (request.getSession().getAttribute("openProjectOperation") != null
+                                                         && request.getQueryString() == null
                                                          && request.getHeader("Referer") != null && !request.getHeader("Referer").isEmpty()
                                                          && request.getHeader("Referer").contains("/ide/")
-                                                         && !request.getHeader("Referer").contains("_app"))
-                                                     {
-                                                         String orginalUrl = request.getHeader("Referer");
-                                                         
-                                                         int i = orginalUrl.indexOf("?");
-                                                         if (i > 0)
-                                                             orginalUrl = orginalUrl.substring(0, i);
-                                                         
-                                                         if (orginalUrl.endsWith("/"))
-                                                             orginalUrl = orginalUrl.substring(0, orginalUrl.length()-1);
-                                                         
-                                                         String tmp = orginalUrl.substring(request.getRequestURL().length());
-                                                         int n = tmp.indexOf('/', 1);
-                                                         if (n > 0)
-                                                         {
-                                                             project = tmp.substring(0, n);
-                                                             filePath = tmp.substring(n);
-                                                         } else
-                                                             project = tmp;
+                                                         && !request.getHeader("Referer").contains("_app")) {
+
+                                                         String originalUrl = request.getHeader("Referer");
+
+
+
+
+                                                         URL url = new URL(originalUrl);
+                                                         String myPath1 = url.getPath().substring(("/ide/" + workspace).length());
+
+                                                         if (myPath1.startsWith("/"))
+                                                             myPath1 = myPath1.substring(1);
+
+                                                         if (myPath1.contains("/")) {
+                                                             project = myPath1.substring(0, myPath1.indexOf("/"));
+                                                             filePath = myPath1.substring(myPath1.indexOf("/"));
+                                                         }
+                                                         else
+                                                             project = myPath1;
 
                                                          request.setAttribute("project", project);
                                                          request.setAttribute("path", filePath);
+                                                         if (url.getQuery() != null && !url.getQuery().isEmpty())
+                                                            request.setAttribute("startUpParams", url.getQuery().contains("gwt.codesvr") ? null : url.getQuery());
                                                          request.getSession().removeAttribute("openProjectOperation");
                                                          final String myPath = "/_app/main";
                                                          request.getRequestDispatcher(myPath).forward(request, response);
                                                          return;
-                                                     }
-                                                     else {
+                                                     } else {
                                                          final int length = requestPath.length();
                                                          int p = workspace.length();
                                                          int n = requestPath.indexOf('/', p);
@@ -204,14 +211,15 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                                              }
                                                          }
                                                      }
-                                                     int trim = 0;
+                                                     int trim = -1;
                                                      if (project != null)
                                                          trim = project.length();
                                                      if (filePath != null)
                                                          trim += filePath.length();
+                                                     if (request.getQueryString() != null  && !request.getQueryString().contains("gwt.codesvr"))
+                                                         trim = 0;
 
-                                                     if (trim > 0)
-                                                     {
+                                                     if (trim >= 0) {
                                                          String wsUri = request.getRequestURL().toString();
                                                          wsUri = wsUri.substring(0, wsUri.length() - trim);
                                                          response.setContentType("text/html;charset=UTF-8");

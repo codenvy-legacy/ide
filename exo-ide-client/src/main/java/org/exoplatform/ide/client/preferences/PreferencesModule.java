@@ -75,7 +75,6 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
 
         new AutocompletionHandler();
         new AboutIDEPresenter();
-        new RestServicesDiscoveryPresenter();
         new ShowHotKeysPresenter();
         new PreferencesPresenter();
     }

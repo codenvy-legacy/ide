@@ -53,10 +53,10 @@ public interface Resources extends
     @NotStrict
     AppCss appCss();
 
-    @Source("com/google/collide/client/collaboration/delta_icon.png")
+    @Source("com/google/collide/client/collaboration/collaborators.png")
     ImageResource getCollaborationImage();
 
-    @Source("com/google/collide/client/collaboration/delta_icon_Disabled.png")
+    @Source("com/google/collide/client/collaboration/collaboratorsDisabled.png")
     ImageResource getCollaborationImageDisabled();
 
 }

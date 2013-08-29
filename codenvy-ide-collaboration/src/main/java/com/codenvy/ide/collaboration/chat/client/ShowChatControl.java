@@ -18,9 +18,13 @@
  */
 package com.codenvy.ide.collaboration.chat.client;
 
+import com.google.collide.client.collaboration.CollaborationPropertiesUtil;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.event.CollaborationChangedEvent;
+import org.exoplatform.ide.client.framework.event.CollaborationChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
@@ -32,7 +36,8 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  * @version $Id:
  */
 @RolesAllowed({"developer"})
-public class ShowChatControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler {
+public class ShowChatControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler,
+                                                              CollaborationChangedHandler {
     public static final String ID = "View/Collaboration";
 
     private ChatResources resources;
@@ -54,6 +59,7 @@ public class ShowChatControl extends SimpleControl implements IDEControl, Projec
     public void initialize() {
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(CollaborationChangedEvent.TYPE, this);
     }
 
     @Override
@@ -63,7 +69,9 @@ public class ShowChatControl extends SimpleControl implements IDEControl, Projec
 
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
-        setEnabled(true);
+        if(CollaborationPropertiesUtil.isCollaborationEnabled(event.getProject())){
+          setEnabled(true);
+        }
     }
 
     public void chatOpened(boolean opened) {
@@ -77,5 +85,11 @@ public class ShowChatControl extends SimpleControl implements IDEControl, Projec
 
     public void stopBlink() {
         setImages(resources.collaborators(), resources.collaboratorsDisabled());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onCollaborationChanged(CollaborationChangedEvent event) {
+        setEnabled(event.isEnabled());
     }
 }

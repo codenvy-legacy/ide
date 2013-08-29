@@ -194,7 +194,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler {
     protected void openAskDialog(Dialog dialog) {
         HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.askDialog(), dialog.getMessage());
         final IDEDialogsView view = new IDEDialogsView("ideAskModalView", dialog.getTitle(), 430, 150, content, dialog.getModal());
-        ImageButton yesButton = createButton("Yes", null);
+        ImageButton yesButton = createButton(dialog.getConfirmButton() == null? "Yes" : dialog.getConfirmButton() , null);
         view.getButtonsLayout().add(yesButton);
         yesButton.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
@@ -204,7 +204,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler {
             }
         });
 
-        ImageButton noButton = createButton("No", null);
+        ImageButton noButton = createButton(dialog.getCancelButton() == null ? "No" : dialog.getCancelButton(), null);
         view.getButtonsLayout().add(noButton);
         noButton.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
@@ -284,7 +284,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler {
      * 
      * @param title button's title
      * @param icon button's image
-     * @return {@link IButton}
+     * @return {@link org.exoplatform.gwtframework.ui.client.component.ImageButton}
      */
     public ImageButton createButton(String title, ImageResource icon) {
         ImageButton button = new DialogsImageButton(title);

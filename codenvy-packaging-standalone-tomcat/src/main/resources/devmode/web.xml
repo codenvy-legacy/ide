@@ -45,6 +45,11 @@
         <servlet-name>ExoIdeWebSocketServlet</servlet-name>
         <url-pattern>/websocket/*</url-pattern>
     </servlet-mapping>
+    
+     <filter>
+      <filter-name>LoginFilter</filter-name>
+      <filter-class>com.codenvy.ide.LoginFilter</filter-class>
+   </filter>
 
     <filter>
         <filter-name>SetCurrentIdentityFilter</filter-name>
@@ -55,6 +60,15 @@
         <filter-name>SetEnvironmentContextFilter</filter-name>
         <filter-class>com.codenvy.ide.SetEnvironmentContextFilter</filter-class>
     </filter>
+    
+    <filter-mapping>
+      <filter-name>LoginFilter</filter-name>
+      <url-pattern>/rest/*</url-pattern>
+   </filter-mapping>
+   <filter-mapping>
+      <filter-name>LoginFilter</filter-name>
+      <url-pattern>/websocket/*</url-pattern>
+   </filter-mapping>
 
 
     <filter-mapping>

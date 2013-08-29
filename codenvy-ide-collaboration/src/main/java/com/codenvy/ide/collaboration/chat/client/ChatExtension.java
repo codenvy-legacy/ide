@@ -28,6 +28,7 @@ import com.codenvy.ide.json.client.Jso;
 import com.codenvy.ide.json.shared.JsonArray;
 import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.CollabEditorExtension;
+import com.google.collide.client.collaboration.CollaborationPropertiesUtil;
 import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.ide.client.framework.control.Docking;
@@ -54,36 +55,26 @@ public class ChatExtension extends Extension
         implements ConnectionOpenedHandler, ProjectOpenedHandler, ProjectClosedHandler, UserInfoReceivedHandler {
 
     public static final ChatResources resources = GWT.create(ChatResources.class);
-    private static ChatExtension instance;
-
-    private ShowChatControl chatControl;
-
-    private MessageFilter messageFilter = new MessageFilter();
-
-    private MessageHandler handler = new MessageHandler() {
+    private static ChatExtension   instance;
+    private        ShowChatControl chatControl;
+    private MessageFilter  messageFilter = new MessageFilter();
+    private MessageHandler handler       = new MessageHandler() {
         @Override
         public void onMessage(String message) {
             ServerToClientDto dto = (ServerToClientDto)Jso.deserialize(message).<RoutableDtoClientImpl>cast();
             messageFilter.dispatchMessage(dto);
         }
     };
-
-    private ChatApi chatApi;
-
+    private ChatApi              chatApi;
     private ProjectChatPresenter chatPresenter;
-
-    private UserInfo userInfo;
-
-    private ProjectModel currentProject;
-
+    private UserInfo             userInfo;
+    private ProjectModel         currentProject;
     private boolean subscribeOnReady = false;
-
     private SendCodePointerControl pointerControl;
 
     public static ChatExtension get() {
         return instance;
     }
-
 
     /** {@inheritDoc} */
     @Override
@@ -110,11 +101,7 @@ public class ChatExtension extends Extension
 
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
-        try {
-            IDE.messageBus().unsubscribe("project_chat." + event.getProject().getId(), handler);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        unsubscribe(event.getProject());
 
         currentProject = null;
         if (chatPresenter != null) {
@@ -122,9 +109,20 @@ public class ChatExtension extends Extension
         }
     }
 
+    private void unsubscribe(ProjectModel project) {
+        try {
+            IDE.messageBus().unsubscribe("project_chat." + project.getId(), handler);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         currentProject = event.getProject();
+        if (!CollaborationPropertiesUtil.isCollaborationEnabled(currentProject)) {
+            return;
+        }
         if (IDE.messageBus().getReadyState() != ReadyState.OPEN) {
             subscribeOnReady = true;
         } else {
@@ -174,12 +172,11 @@ public class ChatExtension extends Extension
         if (chatPresenter == null) {
             return JsonCollections.createArray();
         }
-        
+
         return chatPresenter.getParticipants().getValues();
     }
 
     public ListenerManager<ProjectUsersListener> getProjectUserListeners() {
         return chatPresenter.getProjectUsersListeners();
     }
-
 }

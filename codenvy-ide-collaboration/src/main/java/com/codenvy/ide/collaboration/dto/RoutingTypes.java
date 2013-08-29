@@ -56,4 +56,6 @@ public class RoutingTypes {
 
     public static final int PROJECT_OPERATION_NOTIFICATION = 14;
 
+    public static final int DISABLE_ENABLE_COLLABORATION = 15;
+
 }

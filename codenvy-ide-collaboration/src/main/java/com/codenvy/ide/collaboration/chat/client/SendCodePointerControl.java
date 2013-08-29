@@ -18,10 +18,16 @@
  */
 package com.codenvy.ide.collaboration.chat.client;
 
+import com.google.collide.client.collaboration.CollaborationPropertiesUtil;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.event.CollaborationChangedEvent;
+import org.exoplatform.ide.client.framework.event.CollaborationChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 
@@ -30,7 +36,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
  * @version $Id:
  */
 @RolesAllowed({"developer"})
-public class SendCodePointerControl extends SimpleControl implements IDEControl, ViewActivatedHandler {
+public class SendCodePointerControl extends SimpleControl implements IDEControl, ViewActivatedHandler, ProjectOpenedHandler,
+                                                                     CollaborationChangedHandler {
 
     private static final String ID = "Edit/Send Code Pointer";
 
@@ -51,10 +58,25 @@ public class SendCodePointerControl extends SimpleControl implements IDEControl,
     @Override
     public void initialize() {
         IDE.eventBus().addHandler(ViewActivatedEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(CollaborationChangedEvent.TYPE, this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onViewActivated(ViewActivatedEvent event) {
         setShowInContextMenu(event.getView().getId().contains("editor-"));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        setVisible(CollaborationPropertiesUtil.isCollaborationEnabled(event.getProject()));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onCollaborationChanged(CollaborationChangedEvent event) {
+        setVisible(event.isEnabled());
     }
 }

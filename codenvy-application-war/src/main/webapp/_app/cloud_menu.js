@@ -10,7 +10,6 @@ function addMenuAddition(html) {
 
  var htmlLogin = "<span id=\"loginButton\" onClick=\"window.location = '/ide/login';\">Login</span>";
  addMenuAddition(htmlLogin);
- 
+
  var htmlLogout = "<span id=\"logoutButton\" onClick=\"window.location = '/ide/_app/logout.jsp';\">Logout</span>";
  addMenuAddition(htmlLogout);
-

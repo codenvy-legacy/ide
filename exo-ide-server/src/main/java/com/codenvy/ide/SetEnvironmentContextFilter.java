@@ -19,23 +19,39 @@
 package com.codenvy.ide;
 
 import com.codenvy.commons.env.EnvironmentContext;
-import com.codenvy.organization.client.WorkspaceManager;
-import com.codenvy.organization.exception.OrganizationServiceException;
 
 import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.MembershipEntry;
+
+import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.organization.client.WorkspaceManager;
+import com.codenvy.organization.exception.OrganizationServiceException;
+import com.codenvy.organization.model.Workspace;
 
 public class SetEnvironmentContextFilter implements Filter {
     private Map<String, Object> env;
-    private WorkspaceManager workspaceManager;
+    private WorkspaceManager    workspaceManager;
 
     /** Set current {@link EnvironmentContext} */
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
@@ -46,10 +62,15 @@ public class SetEnvironmentContextFilter implements Filter {
             {
                 String[] split = url.split("/");
                 String ws = split[3];
+                if (ws.equals("ide"))
+                {
+                    chain.doFilter(request, response);
+                    return;
+                }
                 if (workspaceManager != null)
                 {
                     try {
-                        workspaceManager.getWorkspaceByName(ws);
+                        Workspace workspace = workspaceManager.getWorkspaceByName(ws);
                         EnvironmentContext environment = EnvironmentContext.getCurrent();
                         for (Map.Entry<String, Object> entry : env.entrySet()) {
                             environment.setVariable(entry.getKey(), entry.getValue());
@@ -64,7 +85,7 @@ public class SetEnvironmentContextFilter implements Filter {
                         PrintWriter out = response.getWriter();
                         String msg = String.format("Workspace %s not found", ws);
                         httpResponse.setContentLength(msg.getBytes().length);
-                        
+
                         out.write(msg);
                         out.close();
                         return;
@@ -87,7 +108,7 @@ public class SetEnvironmentContextFilter implements Filter {
             workspaceManager = new WorkspaceManager();
         } catch (OrganizationServiceException e) {
             e.printStackTrace();
-        } 
+        }
         Map<String, Object> myEnv = new HashMap<String, Object>();
         myEnv.put(EnvironmentContext.GIT_SERVER, "git");
         myEnv.put(EnvironmentContext.TMP_DIR, new File("../temp"));
