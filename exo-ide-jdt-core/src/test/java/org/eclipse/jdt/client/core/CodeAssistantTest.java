@@ -50,14 +50,14 @@ public class CodeAssistantTest extends ParserBaseTest {
     @Test
     public void testCodeAssistantOnInnerInterface() {
         e.complete(new CompilationUnit(javaFiles, "CreateJavaClassPresenter", "UTF-8"),
-                   getCompletionPosition(javaFiles, 452, 19), 0);
+                   getCompletionPosition(javaFiles, 451, 19), 0);
         assertEquals(2, requestor.proposals.size());
     }
 
     @Test
     public void testLocalVariables() {
         e.complete(new CompilationUnit(javaFiles, "CreateJavaClassPresenter", "UTF-8"),
-                   getCompletionPosition(javaFiles, 481, 7), 0);
+                   getCompletionPosition(javaFiles, 480, 7), 0);
         assertTrue(requestor.proposals.size() > 30);
     }
 
