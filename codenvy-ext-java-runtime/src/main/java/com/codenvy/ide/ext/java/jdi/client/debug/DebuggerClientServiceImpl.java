@@ -169,7 +169,7 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void evaluateExpression(@NotNull String id, @NotNull String expression, @NotNull AsyncRequestCallback<StringBuilder> callback)
+    public void evaluateExpression(@NotNull String id, @NotNull String expression, @NotNull AsyncRequestCallback<String> callback)
             throws RequestException {
         AsyncRequest.build(POST, BASE_URL + "/expression/" + id).data(expression)
                     .header(ACCEPT, TEXT_PLAIN).header(CONTENTTYPE, TEXT_PLAIN)

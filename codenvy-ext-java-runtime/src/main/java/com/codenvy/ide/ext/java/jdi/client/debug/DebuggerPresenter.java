@@ -139,8 +139,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private Timer checkEventsTimer = new Timer() {
         @Override
         public void run() {
-            DtoClientImpls.DebuggerEventListImpl eventList = DtoClientImpls.DebuggerEventListImpl.make();
-            DebuggerEventListUnmarshaller unmarshaller = new DebuggerEventListUnmarshaller(eventList);
+            DebuggerEventListUnmarshaller unmarshaller = new DebuggerEventListUnmarshaller();
 
             try {
                 service.checkEvents(debuggerInfo.getId(), new AsyncRequestCallback<DebuggerEventList>(unmarshaller) {
@@ -255,8 +254,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
             }
         };
 
-        DtoClientImpls.DebuggerEventListImpl debuggerEventList = DtoClientImpls.DebuggerEventListImpl.make();
-        DebuggerEventListUnmarshallerWS unmarshallerWS = new DebuggerEventListUnmarshallerWS(debuggerEventList);
+        DebuggerEventListUnmarshallerWS unmarshallerWS = new DebuggerEventListUnmarshallerWS();
         this.debuggerEventsHandler = new SubscriptionHandler<DebuggerEventList>(unmarshallerWS) {
             @Override
             public void onMessageReceived(DebuggerEventList result) {
@@ -397,8 +395,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
     /** Get dump. */
     private void doGetDump() {
-        DtoClientImpls.StackFrameDumpImpl stackFrameDump = DtoClientImpls.StackFrameDumpImpl.make();
-        StackFrameDumpUnmarshaller unmarshaller = new StackFrameDumpUnmarshaller(stackFrameDump);
+        StackFrameDumpUnmarshaller unmarshaller = new StackFrameDumpUnmarshaller();
 
         try {
             service.dump(debuggerInfo.getId(), new AsyncRequestCallback<StackFrameDump>(unmarshaller) {
@@ -731,8 +728,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     public void onExpandTreeClicked() {
         JsonArray<Variable> rootVariables = selectedVariable.getVariables();
         if (rootVariables == null) {
-            DtoClientImpls.ValueImpl value = DtoClientImpls.ValueImpl.make();
-            ValueUnmarshaller unmarshaller = new ValueUnmarshaller(value);
+            ValueUnmarshaller unmarshaller = new ValueUnmarshaller();
 
             try {
                 service.getValue(debuggerInfo.getId(), selectedVariable, new AsyncRequestCallback<Value>(unmarshaller) {
@@ -932,8 +928,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      *         location of .war file
      */
     private void debugApplication(@NotNull String warUrl) {
-        DtoClientImpls.ApplicationInstanceImpl applicationInstance = DtoClientImpls.ApplicationInstanceImpl.make();
-        ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS(applicationInstance);
+        ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS();
 
         try {
             applicationRunnerClientService
@@ -993,8 +988,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      *         current application
      */
     private void connectDebugger(@NotNull final ApplicationInstance debugApplicationInstance) {
-        DtoClientImpls.DebuggerInfoImpl debuggerInfo = DtoClientImpls.DebuggerInfoImpl.make();
-        DebuggerInfoUnmarshaller unmarshaller = new DebuggerInfoUnmarshaller(debuggerInfo);
+        DebuggerInfoUnmarshaller unmarshaller = new DebuggerInfoUnmarshaller();
 
         try {
             service.connect(debugApplicationInstance.getDebugHost(), debugApplicationInstance.getDebugPort(),

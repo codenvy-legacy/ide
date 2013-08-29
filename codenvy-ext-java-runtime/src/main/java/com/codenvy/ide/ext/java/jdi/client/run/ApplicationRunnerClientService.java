@@ -85,7 +85,7 @@ public interface ApplicationRunnerClientService {
      * @param callback
      * @throws RequestException
      */
-    void getLogs(@NotNull String name, @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    void getLogs(@NotNull String name, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Prolong expiration time of the application.

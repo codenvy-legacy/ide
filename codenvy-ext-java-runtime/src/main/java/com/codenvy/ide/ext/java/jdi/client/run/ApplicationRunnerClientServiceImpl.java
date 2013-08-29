@@ -162,7 +162,7 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
 
     /** {@inheritDoc} */
     @Override
-    public void getLogs(@NotNull String name, @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+    public void getLogs(@NotNull String name, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restContext + BASE_URL + "/logs";
         String params = "?name=" + name;
 

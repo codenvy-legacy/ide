@@ -92,25 +92,23 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
     public void onEvaluateClicked() {
         view.setEnableEvaluateButton(false);
 
-        StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
-            service.evaluateExpression(debuggerInfo.getId(),
-                                       view.getExpression(),
-                                       new AsyncRequestCallback<StringBuilder>(unmarshaller) {
-                                           @Override
-                                           protected void onSuccess(StringBuilder result) {
-                                               view.setResult(result.toString());
-                                               view.setEnableEvaluateButton(true);
-                                           }
+            service.evaluateExpression(debuggerInfo.getId(), view.getExpression(), new AsyncRequestCallback<String>(unmarshaller) {
+                @Override
+                protected void onSuccess(String result) {
+                    view.setResult(result);
+                    view.setEnableEvaluateButton(true);
+                }
 
-                                           @Override
-                                           protected void onFailure(Throwable exception) {
-                                               String errorMessage = constant.evaluateExpressionFailed(exception.getMessage());
-                                               view.setResult(errorMessage);
-                                               view.setEnableEvaluateButton(true);
-                                           }
-                                       });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    String errorMessage = constant.evaluateExpressionFailed(exception.getMessage());
+                    view.setResult(errorMessage);
+                    view.setEnableEvaluateButton(true);
+                }
+            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
