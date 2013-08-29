@@ -52,7 +52,7 @@ public abstract class RequestCallback<T> {
     private final Unmarshallable<T> unmarshaller;
 
     /** An object deserialized from the response. */
-    private final T payload;
+    private T payload;
 
     /** Handler to show an execution state of operation. */
     private RequestStatusHandler statusHandler;
@@ -75,12 +75,6 @@ public abstract class RequestCallback<T> {
     public RequestCallback(Unmarshallable<T> unmarshaller) {
         this.successCodes = DEFAULT_SUCCESS_CODES;
         this.loader = new EmptyLoader();
-
-        if (unmarshaller == null) {
-            this.payload = null;
-        } else {
-            this.payload = unmarshaller.getPayload();
-        }
         this.unmarshaller = unmarshaller;
     }
 
@@ -109,6 +103,7 @@ public abstract class RequestCallback<T> {
             try {
                 if (unmarshaller != null) {
                     unmarshaller.unmarshal(message);
+                    payload = unmarshaller.getPayload();
                 }
                 if (statusHandler != null) {
                     statusHandler.requestFinished(uuid);

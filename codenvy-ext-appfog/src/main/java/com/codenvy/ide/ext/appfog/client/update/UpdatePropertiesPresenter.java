@@ -261,12 +261,12 @@ public class UpdatePropertiesPresenter {
         String encodedExp = URL.encodePathSegment(instancesExpression);
 
         try {
-            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+            StringUnmarshaller unmarshaller = new StringUnmarshaller();
             service.updateInstances(resourceProvider.getVfsId(), projectId, appName, server, encodedExp,
-                                    new AppfogAsyncRequestCallback<StringBuilder>(unmarshaller, updateInstancesLoggedInHandler, null,
-                                                                                  eventBus, constant, console, loginPresenter) {
+                                    new AppfogAsyncRequestCallback<String>(unmarshaller, updateInstancesLoggedInHandler, null,
+                                                                           eventBus, constant, console, loginPresenter) {
                                         @Override
-                                        protected void onSuccess(StringBuilder result) {
+                                        protected void onSuccess(String result) {
                                             AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
                                             try {

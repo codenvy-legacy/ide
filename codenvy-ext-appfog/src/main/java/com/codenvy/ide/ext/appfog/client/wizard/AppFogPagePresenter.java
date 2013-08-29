@@ -32,7 +32,6 @@ import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
 import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
 import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshallerWS;
 import com.codenvy.ide.ext.appfog.client.marshaller.InfrasUnmarshaller;
-import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.ext.appfog.shared.InfraDetail;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
@@ -239,8 +238,7 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
         // TODO Need to create some special service after this class
         // This class still doesn't have analog.
         // JobManager.get().showJobSeparated();
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshallerWS unmarshaller = new AppFogApplicationUnmarshallerWS(appfogApplication);
+        AppFogApplicationUnmarshallerWS unmarshaller = new AppFogApplicationUnmarshallerWS();
 
         try {
             // Application will be started after creation (IDE-1618)

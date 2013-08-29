@@ -151,12 +151,12 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
     /** Getting logs for AppFog Application. */
     protected void getLogs() {
         try {
-            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+            StringUnmarshaller unmarshaller = new StringUnmarshaller();
             service.getLogs(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
-                            new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                            new AsyncRequestCallback<String>(unmarshaller) {
                                 @Override
-                                protected void onSuccess(StringBuilder result) {
-                                    console.print("<pre>" + result.toString() + "</pre>");
+                                protected void onSuccess(String result) {
+                                    console.print("<pre>" + result + "</pre>");
                                 }
 
                                 @Override

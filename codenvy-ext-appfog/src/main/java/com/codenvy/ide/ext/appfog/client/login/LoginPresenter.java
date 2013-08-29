@@ -25,7 +25,6 @@ import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
 import com.codenvy.ide.ext.appfog.client.AppfogClientService;
 import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.marshaller.SystemInfoUnmarshaller;
-import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.SystemInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPStatus;
@@ -104,8 +103,7 @@ public class LoginPresenter implements LoginView.ActionDelegate {
 
     /** Get AppFog system information to fill the login field, if user is logged in. */
     protected void getSystemInformation() {
-        DtoClientImpls.SystemInfoImpl systemInfo = DtoClientImpls.SystemInfoImpl.make();
-        SystemInfoUnmarshaller unmarshaller = new SystemInfoUnmarshaller(systemInfo);
+        SystemInfoUnmarshaller unmarshaller = new SystemInfoUnmarshaller();
 
         try {
             service.getSystemInfo(AppFogExtension.DEFAULT_SERVER,
