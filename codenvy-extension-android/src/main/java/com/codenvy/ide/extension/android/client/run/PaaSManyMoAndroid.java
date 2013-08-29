@@ -19,6 +19,7 @@
 package com.codenvy.ide.extension.android.client.run;
 
 import com.codenvy.ide.extension.android.client.event.RunApplicationEvent;
+import com.google.gwt.user.client.Window;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
@@ -74,7 +75,6 @@ public class PaaSManyMoAndroid extends SimpleControl implements IDEControl, Proj
         String projectType = event.getProject().getProjectType();
 
         boolean isAndroidProject = ProjectType.ANDROID.value().equals(projectType);
-
         setVisible(isAndroidProject);
         setEnabled(isAndroidProject);
         setShowInContextMenu(isAndroidProject);
