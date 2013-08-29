@@ -37,7 +37,6 @@ import com.codenvy.ide.ext.jenkins.client.marshaller.JobStatusUnmarshaller;
 import com.codenvy.ide.ext.jenkins.client.marshaller.JobStatusUnmarshallerWS;
 import com.codenvy.ide.ext.jenkins.client.marshaller.JobUnmarshaller;
 import com.codenvy.ide.ext.jenkins.client.marshaller.StringContentUnmarshaller;
-import com.codenvy.ide.ext.jenkins.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.jenkins.shared.Job;
 import com.codenvy.ide.ext.jenkins.shared.JobStatus;
 import com.codenvy.ide.part.base.BasePresenter;
@@ -127,8 +126,7 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
         this.gitClientService = gitClientService;
         this.gitConstant = gitConstant;
 
-        DtoClientImpls.JobStatusImpl jobStatus = DtoClientImpls.JobStatusImpl.make();
-        JobStatusUnmarshallerWS unmarshaller = new JobStatusUnmarshallerWS(jobStatus);
+        JobStatusUnmarshallerWS unmarshaller = new JobStatusUnmarshallerWS();
 
         this.jobStatusHandler = new SubscriptionHandler<JobStatus>(unmarshaller) {
             @Override
@@ -261,23 +259,21 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
             // nothing to do
         }
 
+        StringContentUnmarshaller unmarshaller = new StringContentUnmarshaller();
         try {
-            StringContentUnmarshaller unmarshaller = new StringContentUnmarshaller(new StringBuilder());
+            service.getJenkinsOutput(resourceProvider.getVfsId(), project.getId(), jobName, new AsyncRequestCallback<String>(unmarshaller) {
+                @Override
+                protected void onSuccess(String result) {
+                    showBuildMessage(result);
+                    buildApplicationCallback.onSuccess(status);
+                }
 
-            service.getJenkinsOutput(resourceProvider.getVfsId(), project.getId(), jobName,
-                                     new AsyncRequestCallback<StringBuilder>(unmarshaller) {
-                                         @Override
-                                         protected void onSuccess(StringBuilder result) {
-                                             showBuildMessage(result.toString());
-                                             buildApplicationCallback.onSuccess(status);
-                                         }
-
-                                         @Override
-                                         protected void onFailure(Throwable exception) {
-                                             eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                             console.print(exception.getMessage());
-                                         }
-                                     });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                    console.print(exception.getMessage());
+                }
+            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
