@@ -646,7 +646,7 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void getGitReadOnlyUrl(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<StringBuilder> callback)
+    public void getGitReadOnlyUrl(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<String> callback)
             throws RequestException {
         String url = restServiceContext + RO_URL;
         url += "?vfsid=" + vfsId + "&projectid=" + projectid;

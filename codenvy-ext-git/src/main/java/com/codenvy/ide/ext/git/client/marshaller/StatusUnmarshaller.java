@@ -33,15 +33,6 @@ import com.google.gwt.json.client.JSONParser;
 public class StatusUnmarshaller implements Unmarshallable<Status> {
     private DtoClientImpls.StatusImpl status;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param status
-     */
-    public StatusUnmarshaller(DtoClientImpls.StatusImpl status) {
-        this.status = status;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -52,18 +43,8 @@ public class StatusUnmarshaller implements Unmarshallable<Status> {
 
         JSONObject json = JSONParser.parseStrict(text).isObject();
         String value = json.toString();
-        DtoClientImpls.StatusImpl status = DtoClientImpls.StatusImpl.deserialize(value);
-        this.status.setAdded(status.getAdded());
-        this.status.setChanged(status.getChanged());
-        this.status.setBranchName(status.getBranchName());
-        this.status.setClean(status.clean());
-        this.status.setConflicting(status.getConflicting());
-        this.status.setMissing(status.getMissing());
-        this.status.setModified(status.getModified());
-        this.status.setRemoved(status.getRemoved());
-        this.status.setShortFormat(status.getShortFormat());
-        this.status.setUntracked(status.getUntracked());
-        this.status.setUntrackedFolders(status.getUntrackedFolders());
+
+        status = DtoClientImpls.StatusImpl.deserialize(value);
     }
 
     /** {@inheritDoc} */

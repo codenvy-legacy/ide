@@ -30,19 +30,15 @@ import com.google.gwt.json.client.JSONParser;
  * @version $Id: RepoInfoUnmarshaller.java Aug 13, 2012
  */
 public class RepoInfoUnmarshaller implements Unmarshallable<RepoInfo> {
-    private final DtoClientImpls.RepoInfoImpl repoInfo;
-
-    public RepoInfoUnmarshaller(DtoClientImpls.RepoInfoImpl repoInfo) {
-        this.repoInfo = repoInfo;
-    }
+    private DtoClientImpls.RepoInfoImpl repoInfo;
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         JSONObject jsonObject = JSONParser.parseLenient(response.getText()).isObject();
         String value = jsonObject.toString();
-        DtoClientImpls.RepoInfoImpl repoInfo = DtoClientImpls.RepoInfoImpl.deserialize(value);
-        this.repoInfo.setRemoteUri(repoInfo.getRemoteUri());
+
+        repoInfo = DtoClientImpls.RepoInfoImpl.deserialize(value);
     }
 
     /** {@inheritDoc} */

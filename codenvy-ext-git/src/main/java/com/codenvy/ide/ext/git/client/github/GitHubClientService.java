@@ -84,7 +84,7 @@ public interface GitHubClientService {
      * @param callback
      * @throws RequestException
      */
-    void getUserToken(@NotNull String user, @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    void getUserToken(@NotNull String user, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Get the map of available public and private repositories of the authorized user and organizations he exists in.

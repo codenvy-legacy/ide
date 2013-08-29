@@ -21,6 +21,7 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -37,14 +38,6 @@ public class BranchListUnmarshaller implements Unmarshallable<JsonArray<Branch>>
     /** List of branches. */
     private JsonArray<Branch> branches;
 
-    /**
-     * @param branches
-     *         branches
-     */
-    public BranchListUnmarshaller(JsonArray<Branch> branches) {
-        this.branches = branches;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -57,6 +50,8 @@ public class BranchListUnmarshaller implements Unmarshallable<JsonArray<Branch>>
 
         if (array == null || array.size() <= 0)
             return;
+
+        branches = JsonCollections.createArray();
 
         for (int i = 0; i < array.size(); i++) {
             JSONObject object = array.get(i).isObject();

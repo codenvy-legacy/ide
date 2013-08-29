@@ -127,7 +127,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
      *         is a remote mode
      */
     private void getBranches(@NotNull String projectId, @NotNull final String remoteMode) {
-        BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller(JsonCollections.<Branch>createArray());
+        BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller();
         try {
             service.branchList(resourceProvider.getVfsId(), projectId, remoteMode,
                                new AsyncRequestCallback<JsonArray<Branch>>(unmarshaller) {

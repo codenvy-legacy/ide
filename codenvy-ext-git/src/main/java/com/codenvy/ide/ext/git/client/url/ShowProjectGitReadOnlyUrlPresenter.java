@@ -64,13 +64,13 @@ public class ShowProjectGitReadOnlyUrlPresenter implements ShowProjectGitReadOnl
     /** Show dialog. */
     public void showDialog() {
         String projectId = resourceProvider.getActiveProject().getId();
-        StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
-            service.getGitReadOnlyUrl(resourceProvider.getVfsId(), projectId, new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+            service.getGitReadOnlyUrl(resourceProvider.getVfsId(), projectId, new AsyncRequestCallback<String>(unmarshaller) {
                 @Override
-                protected void onSuccess(StringBuilder result) {
-                    view.setUrl(result.toString());
+                protected void onSuccess(String result) {
+                    view.setUrl(result);
                     view.showDialog();
                 }
 
