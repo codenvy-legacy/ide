@@ -177,13 +177,19 @@ public class Autocompleter implements ContentAssistant {
         }
     }
 
+    /**
+     * Perform checking if user type Ctrl + Space to show proposal popup.
+     *
+     * FYI: For Chrome OS Ctrl + Space binding is reserved for changing system language.
+     * That's why proposal popup is invoking via pressing Alt + Space in Chrome OS.
+     */
     private static boolean isActionSpace(SignalEventEssence trigger) {
-        if (UserAgent.isMac()) {
-            return (trigger.metaKey) && (trigger.keyCode == ' ') && (!trigger.altKey) && (!trigger.metaKey) && (!trigger.shiftKey) &&
-                   (trigger.type == KeySignalType.INPUT);
+        if (UserAgent.isCrOS()) {
+            return  (!trigger.ctrlKey) && (trigger.keyCode == ' ') && (trigger.altKey) && (!trigger.metaKey) && (!trigger.shiftKey) &&
+                    (trigger.type == KeySignalType.NOEFFECT);
         } else {
-            return (trigger.ctrlKey) && (trigger.keyCode == ' ') && (!trigger.altKey) && (!trigger.metaKey) && (!trigger.shiftKey) &&
-                   (trigger.type == KeySignalType.INPUT);
+            return  (trigger.ctrlKey) && (trigger.keyCode == ' ') && (!trigger.altKey) && (!trigger.metaKey) && (!trigger.shiftKey) &&
+                    (trigger.type == KeySignalType.INPUT);
         }
     }
 
