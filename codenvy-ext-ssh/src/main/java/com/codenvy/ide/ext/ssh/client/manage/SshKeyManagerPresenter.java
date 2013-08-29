@@ -236,10 +236,10 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
-            gitHubClientService.getUserToken(user, new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+            gitHubClientService.getUserToken(user, new AsyncRequestCallback<String>(unmarshaller) {
                 @Override
-                protected void onSuccess(StringBuilder result) {
-                    if (result == null || result.toString().isEmpty()) {
+                protected void onSuccess(String result) {
+                    if (result == null || result.isEmpty()) {
                         loader.hide();
                         oAuthLoginStart(user);
                     } else {

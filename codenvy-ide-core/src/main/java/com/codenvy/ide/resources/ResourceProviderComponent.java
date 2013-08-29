@@ -461,12 +461,12 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         }
 
         StringUnmarshaller unmarshaller = new StringUnmarshaller();
-        AsyncRequestCallback<StringBuilder> internalCallback = new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+        AsyncRequestCallback<String> internalCallback = new AsyncRequestCallback<String>(unmarshaller) {
             @Override
-            protected void onSuccess(final StringBuilder result) {
+            protected void onSuccess(final String result) {
                 if (item instanceof Project) {
                     showListProjects();
-                    callback.onSuccess(result.toString());
+                    callback.onSuccess(result);
                 } else {
                     getProject(activeProject.getName(), new AsyncCallback<Project>() {
                         @Override

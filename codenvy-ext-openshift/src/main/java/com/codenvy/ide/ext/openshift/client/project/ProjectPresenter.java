@@ -124,16 +124,15 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
                 getApplicationHealth();
             }
         };
-
         final StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
             service.getApplicationHealth(application.getName(),
-                                         new OpenShiftAsyncRequestCallback<StringBuilder>(unmarshaller, loggedInHandler, null, eventBus,
-                                                                                          console, constant, loginPresenter) {
+                                         new OpenShiftAsyncRequestCallback<String>(unmarshaller, loggedInHandler, null, eventBus,
+                                                                                   console, constant, loginPresenter) {
                                              @Override
-                                             protected void onSuccess(StringBuilder result) {
-                                                 view.setApplicationHealth(result.toString());
+                                             protected void onSuccess(String result) {
+                                                 view.setApplicationHealth(result);
                                              }
                                          });
         } catch (RequestException e) {

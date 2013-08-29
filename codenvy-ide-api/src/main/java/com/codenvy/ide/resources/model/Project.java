@@ -446,18 +446,17 @@ public class Project extends Folder {
         try {
             checkItemValid(file);
             // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<StringBuilder> internalCallback =
-                    new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller()) {
-                        @Override
-                        protected void onSuccess(StringBuilder result) {
-                            callback.onSuccess(result.toString());
-                        }
+            AsyncRequestCallback<String> internalCallback = new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                @Override
+                protected void onSuccess(String result) {
+                    callback.onSuccess(result);
+                }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            callback.onFailure(exception);
-                        }
-                    };
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            };
 
             String url = file.getLinkByRelation(Link.REL_LOCK).getHref();
             loader.setMessage("Locking file...");

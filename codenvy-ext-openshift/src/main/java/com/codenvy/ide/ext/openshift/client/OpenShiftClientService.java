@@ -181,7 +181,7 @@ public interface OpenShiftClientService {
      *         callback
      * @throws RequestException
      */
-    public void getApplicationHealth(String appName, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    public void getApplicationHealth(String appName, AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Get available embedded cartridges
