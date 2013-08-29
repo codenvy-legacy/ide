@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.extruntime.client.marshaller;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.extruntime.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
@@ -32,15 +31,6 @@ import com.google.gwt.user.client.Window;
 public class ApplicationInstanceUnmarshallerWS implements Unmarshallable<ApplicationInstance> {
     private DtoClientImpls.ApplicationInstanceImpl applicationInstance;
 
-    /**
-     * Create unmarshaller.
-     * 
-     * @param applicationInstance
-     */
-    public ApplicationInstanceUnmarshallerWS(@NotNull DtoClientImpls.ApplicationInstanceImpl applicationInstance) {
-        this.applicationInstance = applicationInstance;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Message response) throws UnmarshallerException {
@@ -50,23 +40,21 @@ public class ApplicationInstanceUnmarshallerWS implements Unmarshallable<Applica
             return;
         }
 
-        DtoClientImpls.ApplicationInstanceImpl applicationInstance = DtoClientImpls.ApplicationInstanceImpl.deserialize(text);
+        applicationInstance = DtoClientImpls.ApplicationInstanceImpl.deserialize(text);
 
-        this.applicationInstance.setId(applicationInstance.getId());
         final String host = applicationInstance.getHost();
         if (host == null || host.isEmpty()) {
-            this.applicationInstance.setHost(Window.Location.getHostName());
+            applicationInstance.setHost(Window.Location.getHostName());
         } else {
-            this.applicationInstance.setHost(host);
+            applicationInstance.setHost(host);
         }
-        this.applicationInstance.setPort(applicationInstance.getPort());
+
         final String codeServerHost = applicationInstance.getCodeServerHost();
         if (codeServerHost == null || codeServerHost.isEmpty()) {
-            this.applicationInstance.setCodeServerHost(Window.Location.getHostName());
+            applicationInstance.setCodeServerHost(Window.Location.getHostName());
         } else {
-            this.applicationInstance.setCodeServerHost(codeServerHost);
+            applicationInstance.setCodeServerHost(codeServerHost);
         }
-        this.applicationInstance.setCodeServerPort(applicationInstance.getCodeServerPort());
     }
 
     /** {@inheritDoc} */

@@ -20,7 +20,6 @@ package com.codenvy.ide.ext.extruntime.client;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.extruntime.client.marshaller.ApplicationInstanceUnmarshallerWS;
-import com.codenvy.ide.ext.extruntime.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -35,7 +34,7 @@ import com.google.inject.Singleton;
 
 /**
  * Controller for launching Codenvy extension.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: LaunchExtensionController.java Jul 3, 2013 3:07:52 PM azatsarynnyy $
  */
@@ -51,7 +50,7 @@ public class LaunchExtensionController {
 
     /**
      * Create controller.
-     * 
+     *
      * @param resourceProvider
      * @param console
      * @param service
@@ -70,7 +69,7 @@ public class LaunchExtensionController {
 
     /**
      * Check whether any application is launched.
-     * 
+     *
      * @return <code>true</code> if any application is launched, and <code>false</code> otherwise
      */
     public boolean isAnyAppLaunched() {
@@ -85,8 +84,7 @@ public class LaunchExtensionController {
             return;
         }
 
-        DtoClientImpls.ApplicationInstanceImpl app = DtoClientImpls.ApplicationInstanceImpl.make();
-        ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS(app);
+        ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS();
 
         try {
             beforeApplicationStart();
