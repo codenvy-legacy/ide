@@ -128,7 +128,7 @@ public class GreetingUserPresenter implements
      * Adds "Create account" and "Login" buttons on toolbar.
      */
     private void addButtonsForNoneAuthenticatedUser() {
-        UniButton createAccountButton = new UniButton("Create account", Type.SUCCESS, Size.SMALL);
+        UniButton createAccountButton = new UniButton("Create free account", Type.SUCCESS, Size.SMALL);
         IDE.fireEvent(new AddToolbarItemsEvent(createAccountButton, true));
         createAccountButton.addClickHandler(new ClickHandler() {
             @Override
