@@ -48,9 +48,17 @@
     .popupMenuHotKeyFieldDisabled,
     .popupMenuSubMenuField,
     .popupMenuSubMenuFieldOver,
-    .popupMenuSubMenuFieldDisabled,
-    .popupMenuDelimiter {
+    .popupMenuSubMenuFieldDisabled {
         height: 25px;
+        cursor: default;
+        font-family: mainFontFamily;
+        font-size: secondaryTextFontSize;
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    .popupMenuDelimiter {
+        height: auto;
         cursor: default;
         font-family: mainFontFamily;
         font-size: secondaryTextFontSize;
