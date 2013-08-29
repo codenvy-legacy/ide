@@ -1,68 +1,93 @@
 <!--
 
-    CODENVY CONFIDENTIAL
-    __________________
+    Copyright (C) 2012 eXo Platform SAS.
 
-    [2012] - [2013] Codenvy, S.A.
-    All Rights Reserved.
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
 
-    NOTICE:  All information contained herein is, and remains
-    the property of Codenvy S.A. and its suppliers,
-    if any.  The intellectual and technical concepts contained
-    herein are proprietary to Codenvy S.A.
-    and its suppliers and may be covered by U.S. and Foreign Patents,
-    patents in process, and are protected by trade secret or copyright law.
-    Dissemination of this information or reproduction of this material
-    is strictly forbidden unless prior written permission is obtained
-    from Codenvy S.A..
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		
+
 		<title>Welcome</title>
-		
-		<meta name="icon" url="_app/images/smile.png">
-		
+
+		<meta name="icon" url="/images/greeting/info.png">
+
 		<meta name="notification" 
 			content="<b>Welcome to Codenvy!</b> This is a temporary workspace. It will be deleted if you are inactive or close the browser. <b>Login</b> or <b>Create your account</b> to save your work.">
-		
+
 		<style type="text/css">
-		
-			body {
-				margin: 0px;
-				padding: 0px;
-				overflow: hidden;
-				background-color: #EEEEEE;
-			}
-		
-			.container {
-				position: absolute;
+
+		body {
+			margin: 0px;
+			padding: 0px;
+			overflow: hidden;
+			background-color: #FFFFFF;
+		}
+
+		.container {
+			position: absolute;
 	    		overflow-x: hidden;
 	    		overflow-y: auto;
-	    		
+
 	    		left:0px;
 	    		right:0px;
 	    		top:0px;
 	    		bottom:0px;
-	    		
-	    		background-color: #EEEEEE;
+
+	    		background-color: #FFFFFF;
 	    		padding: 15px;
 	    		font-family: Verdana,Bitstream Vera Sans,sans-serif;
-	    		font-size: 12px;    	
-			}
-			
-			.content {
+	    		font-size: 12px;
+	    		font-color: #464646;    	
+		}
+
+		.content {
 	    		position: relative;
 	    	}
 	    	
+	    	hr.style-gradient {
+              border: 0;
+              height: 1px;
+              background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+              background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+              background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+              background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+          }
+
 	    	.features {
 	    		width:100%;
 	    		border-collapse:collapse;
 	    	}
 	    	
+	    	.features a:link {
+	    	     font-family: Verdana,Bitstream Vera Sans,sans-serif;
+	    	     font-size: 12px;
+	    		font-weight:bold;
+	    		color: #334248;
+          }
+          
+          .features a:visited {
+	    	     font-family: Verdana,Bitstream Vera Sans,sans-serif;
+	    	     font-size: 12px;
+	    		font-weight:bold;
+	    		color: #334248;
+          }
+
 	    	.features-cell1 {
 	    		overflow:hidden;
 	    		width:50px;
@@ -70,7 +95,7 @@
 	    		vertical-align:middle;
 	    		text-align:center;
 	    	}
-	    	
+
 	    	.features-cell1-inner {
 	    		width:15px;
 	    		height:15px;
@@ -80,16 +105,16 @@
 	    		border:none;
 	    		border-radius:5px;
 	    	}
-	    	
+
 	    	.features-cell2 {
 	    		font-family: Verdana,Bitstream Vera Sans,sans-serif;
 	    		font-size: 12px;
 	    		font-weight:bold;
-	    		color: #488CAB;
+	    		color: #334248;
 	    	}
-			
+
 		</style>
-		
+
 	</head>
 
 <body>
@@ -97,41 +122,38 @@
 		<div class="content">
 			This project has been factory-created into a temporary workspace on Codenvy.<br />
 			<br />
-			<br />
 			Codenvy is your complete cloud environment to:<br />
 			<br />
 			<table border="0" class="features">
 				<tr>
-					<td class="features-cell1"><div class="features-cell1-inner"></div></td>
-					<td class="features-cell2">Code, Commit</td>
+					<td class="features-cell1"><img src="../images/greeting/feature-code.png" alt="Code"></td>
+					<td class="features-cell2"><a href="http://docs.codenvy.com/docs/editor/" target="_blank">Code</a>, <a href="http://docs.codenvy.com/docs/regular-git-operations/" target="_blank">Commit</a></td>
 				</tr>
 				<tr>
-					<td class="features-cell1"><div class="features-cell1-inner"></div></td>
-					<td class="features-cell2">Build, Package, Test</td>
+					<td class="features-cell1"><img src="../images/greeting/feature-build.png" alt="Build"></td>
+					<td class="features-cell2"><a href="http://docs.codenvy.com/docs/build/#about-codenvy-build" target="_blank">Build</a>, <a href="http://docs.codenvy.com/docs/build/#getting-started-with-maven" target="_blank">Package</a>, <a href="http://docs.codenvy.com/docs/build/#surefire-reports" target="_blank">Test</a></td>
 				</tr>
 				<tr>
-					<td class="features-cell1"><div class="features-cell1-inner"></div></td>
-					<td class="features-cell2">Run, Debug</td>
+					<td class="features-cell1"><img src="../images/greeting/feature-run.png" alt="Run"></td>
+					<td class="features-cell2"><a href="http://docs.codenvy.com/docs/running-applications/" target="_blank">Run</a>, <a href="http://docs.codenvy.com/docs/how-to-debug-a-java-application/" target="_blank">Debug</a></td>
 				</tr>
 				<tr>
-					<td class="features-cell1"><div class="features-cell1-inner"></div></td>
-					<td class="features-cell2">Paas Deploy</td>
+					<td class="features-cell1"><img src="../images/greeting/feature-paas.png" alt="PaaS"></td>
+					<td class="features-cell2"><a href="http://docs.codenvy.com/docs/google-app-engine/" target="_blank">PaaS Deploy</a></td>
 				</tr>
 				<tr>
-					<td class="features-cell1"><div class="features-cell1-inner"></div></td>
-					<td class="features-cell2">Collaborate, Share</td>
+					<td class="features-cell1"><img src="../images/greeting/feature-collaborate.png" alt="Collaborate"></td>
+					<td class="features-cell2"><a href="http://docs.codenvy.com/docs/collaboration/#chat-and-real-time-collaboration" target="_blank">Collaborate</a>, <a href="http://docs.codenvy.com/docs/collaboration/#inviting-developers-to-your-workspace" target="_blank">Share</a></td>
 				</tr>
 			</table>
 			<br />
+			<a href="http://www.codenvy.com" target="_blank">Home Page</a> | <a href="http://docs.codenvy.com" target="_blank">Docs</a> | <a href="https://codenvy.uservoice.com/knowledgebase" target="_blank">Support</a> | <a href="https://codenvy.uservoice.com" target="_blank">Feature Vote</a><br />
 			<br />
-			<a href="#">Home Page</a> | <a href="#">Docs</a> | <a href="#">Support</a> | <a href="#">Feature Vote</a><br />
-			<br />
-			<hr />
-			<br />
+			<hr class="style-gradient"></hr>
 			<br />
 			A temporary workspace will be deleted if you are inactive or close the browser.<br />
 			<br />
-			To save your work, Login or Create an Account.
+			To save your work, Login or Create your free Account.
 		</div>
 	</div>
 </body>
