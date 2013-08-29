@@ -71,9 +71,7 @@ public class LogsPresenter extends BasePresenter implements LogsView.ActionDeleg
         severityFormatted.put("Critical", "CRITICAL");
     }
 
-    /**
-     * Constructor for application logs presenter.
-     */
+    /** Constructor for application logs presenter. */
     @Inject
     public LogsPresenter(LogsView view, GAEClientService service, EventBus eventBus,
                          ConsolePart console, LoginAction loginAction, GAEResources resources,
@@ -92,9 +90,7 @@ public class LogsPresenter extends BasePresenter implements LogsView.ActionDeleg
         this.view.setTitle("Logs");
     }
 
-    /**
-     * Show current based dialog, placed in information panel of IDE.
-     */
+    /** Show current based dialog, placed in information panel of IDE. */
     public void showDialog(Project project) {
         this.project = project;
 
@@ -113,24 +109,19 @@ public class LogsPresenter extends BasePresenter implements LogsView.ActionDeleg
         getLogs();
     }
 
-    /**
-     * Request logs from Google App Engine.
-     */
+    /** Request logs from Google App Engine. */
     public void getLogs() {
         String severity = severityFormatted.get(view.getLogsSeverity());
         int numDays = view.getLogsDaysCount();
-
         final String vfsId = resourceProvider.getVfsId();
-
-        StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
             service.requestLogs(vfsId, project.getId(), numDays, severity,
-                                new GAEAsyncRequestCallback<StringBuilder>(unmarshaller, console, eventBus,
-                                                                           constant, loginAction) {
+                                new GAEAsyncRequestCallback<String>(unmarshaller, console, eventBus, constant, loginAction) {
                                     @Override
-                                    protected void onSuccess(StringBuilder result) {
-                                        view.setLogsContent(result.toString());
+                                    protected void onSuccess(String result) {
+                                        view.setLogsContent(result);
                                     }
                                 });
         } catch (RequestException e) {

@@ -21,6 +21,7 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.gae.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.gae.shared.ResourceLimit;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
@@ -35,13 +36,6 @@ import com.google.gwt.json.client.JSONParser;
 public class ResourceLimitsUnmarshaller implements Unmarshallable<JsonArray<ResourceLimit>> {
     private JsonArray<ResourceLimit> resourceLimits;
 
-    /**
-     * Constructor for unmarshaller.
-     */
-    public ResourceLimitsUnmarshaller(JsonArray<ResourceLimit> resourceLimits) {
-        this.resourceLimits = resourceLimits;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -55,6 +49,8 @@ public class ResourceLimitsUnmarshaller implements Unmarshallable<JsonArray<Reso
             if (json == null) {
                 return;
             }
+
+            resourceLimits = JsonCollections.createArray();
 
             for (String key : json.keySet()) {
                 Double value = json.get(key).isNumber().doubleValue();

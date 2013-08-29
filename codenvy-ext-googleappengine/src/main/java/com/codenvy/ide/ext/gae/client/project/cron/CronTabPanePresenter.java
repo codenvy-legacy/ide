@@ -28,7 +28,6 @@ import com.codenvy.ide.ext.gae.client.GAELocalization;
 import com.codenvy.ide.ext.gae.client.marshaller.CronListUnmarshaller;
 import com.codenvy.ide.ext.gae.shared.CronEntry;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -52,9 +51,7 @@ public class CronTabPanePresenter implements Presenter, CronTabPaneView.ActionDe
     private GAELocalization  constant;
     private Project          project;
 
-    /**
-     * Constructor for crons presenter.
-     */
+    /** Constructor for crons presenter. */
     @Inject
     public CronTabPanePresenter(CronTabPaneView view, GAEClientService service, EventBus eventBus, ConsolePart console,
                                 ResourceProvider resourceProvider, GAELocalization constant) {
@@ -78,7 +75,7 @@ public class CronTabPanePresenter implements Presenter, CronTabPaneView.ActionDe
         this.project = project;
 
         final String vfsId = resourceProvider.getVfsId();
-        CronListUnmarshaller unmarshaller = new CronListUnmarshaller(JsonCollections.<CronEntry>createArray());
+        CronListUnmarshaller unmarshaller = new CronListUnmarshaller();
 
         try {
             service.cronInfo(vfsId, project.getId(),

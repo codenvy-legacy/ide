@@ -21,6 +21,7 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.gae.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.gae.shared.CronEntry;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -36,13 +37,6 @@ import com.google.gwt.json.client.JSONParser;
 public class CronListUnmarshaller implements Unmarshallable<JsonArray<CronEntry>> {
     private JsonArray<CronEntry> crons;
 
-    /**
-     * Constructor for unmarshaller.
-     */
-    public CronListUnmarshaller(JsonArray<CronEntry> crons) {
-        this.crons = crons;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -56,6 +50,8 @@ public class CronListUnmarshaller implements Unmarshallable<JsonArray<CronEntry>
             if (array == null) {
                 return;
             }
+
+            crons = JsonCollections.createArray();
 
             for (int i = 0; i < array.size(); i++) {
                 JSONObject jsonObject = array.get(i).isObject();
