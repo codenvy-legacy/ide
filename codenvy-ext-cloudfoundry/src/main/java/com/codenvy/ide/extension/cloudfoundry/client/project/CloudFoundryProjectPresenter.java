@@ -36,7 +36,6 @@ import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationPrese
 import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.update.UpdatePropertiesPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter;
-import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -194,8 +193,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
      * @param project
      */
     protected void getApplicationInfo(final Project project) {
-        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
-        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
             public void onLoggedIn() {

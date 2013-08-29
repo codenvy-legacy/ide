@@ -221,8 +221,7 @@ public class PullApplicationSourceHandler {
     public void getRemotes(String projectId) {
         try {
             gitService.remoteList(vfsId, projectId, null, true,
-                                  new AsyncRequestCallback<JsonArray<Remote>>(
-                                          new RemoteListUnmarshaller(JsoArray.<Remote>create())) {
+                                  new AsyncRequestCallback<JsonArray<Remote>>(new RemoteListUnmarshaller()) {
                                       @Override
                                       protected void onSuccess(JsonArray<Remote> result) {
                                           if (result.size() == 0) {
@@ -241,5 +240,4 @@ public class PullApplicationSourceHandler {
             handleError(e);
         }
     }
-
 }

@@ -20,7 +20,6 @@ package com.codenvy.ide.ext.git.client.welcome;
 import com.codenvy.ide.api.parts.WelcomeItemAction;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
-import com.codenvy.ide.client.DtoClientImpls;
 import com.codenvy.ide.client.marshaller.UserUnmarshaller;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
@@ -81,8 +80,7 @@ public class ImportProjectAction implements WelcomeItemAction {
     /** {@inheritDoc} */
     @Override
     public void execute() {
-        DtoClientImpls.UserImpl user = DtoClientImpls.UserImpl.make();
-        UserUnmarshaller unmarshaller = new UserUnmarshaller(user);
+        UserUnmarshaller unmarshaller = new UserUnmarshaller();
         try {
             service.getUser(new AsyncRequestCallback<User>(unmarshaller) {
                 @Override

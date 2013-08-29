@@ -105,8 +105,7 @@ public class DescriptionUpdatePresenter implements DescriptionUpdateView.ActionD
         updateApplicationRequest.setApplicationName(applicationInfo.getName());
         updateApplicationRequest.setDescription(view.getDescriptionValue());
 
-        DtoClientImpls.ApplicationInfoImpl dtoApplicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(dtoApplicationInfo);
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
         try {
             service.updateApplication(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(), updateApplicationRequest,

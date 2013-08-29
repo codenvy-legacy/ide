@@ -385,8 +385,7 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
     private Timer refreshBuildStatusTimer = new Timer() {
         @Override
         public void run() {
-            DtoClientImpls.BuildStatusImpl buildStatus = DtoClientImpls.BuildStatusImpl.make();
-            BuildStatusUnmarshaller unmarshaller = new BuildStatusUnmarshaller(buildStatus);
+            BuildStatusUnmarshaller unmarshaller = new BuildStatusUnmarshaller();
 
             try {
                 service.status(buildID, new AsyncRequestCallback<BuildStatus>(unmarshaller) {

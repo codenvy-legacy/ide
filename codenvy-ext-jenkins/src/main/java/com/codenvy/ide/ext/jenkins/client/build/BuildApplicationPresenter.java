@@ -156,8 +156,7 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
         this.refreshJobStatusTimer = new Timer() {
             @Override
             public void run() {
-                DtoClientImpls.JobStatusImpl jobStatus = DtoClientImpls.JobStatusImpl.make();
-                JobStatusUnmarshaller unmarshaller = new JobStatusUnmarshaller(jobStatus);
+                JobStatusUnmarshaller unmarshaller = new JobStatusUnmarshaller();
 
                 try {
                     BuildApplicationPresenter.this.service
@@ -300,8 +299,7 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
             this.project = resourceProvider.getActiveProject();
         }
 
-        com.codenvy.ide.client.DtoClientImpls.UserImpl user = com.codenvy.ide.client.DtoClientImpls.UserImpl.make();
-        UserUnmarshaller unmarshaller = new UserUnmarshaller(user);
+        UserUnmarshaller unmarshaller = new UserUnmarshaller();
 
         try {
             this.userClientService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
@@ -404,8 +402,7 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
         String userId = user.getUserId();
         String mail = userId.contains("@") ? userId : userId + "@codenvy.local";
         String uName = userId.split("@")[0];// Jenkins don't allows in job name '@' character
-        DtoClientImpls.JobImpl job = DtoClientImpls.JobImpl.make();
-        JobUnmarshaller marshaller = new JobUnmarshaller(job);
+        JobUnmarshaller marshaller = new JobUnmarshaller();
 
         try {
             service.createJenkinsJob(uName + "-" + getProjectName() + "-" + Random.nextInt(Integer.MAX_VALUE), uName, mail,

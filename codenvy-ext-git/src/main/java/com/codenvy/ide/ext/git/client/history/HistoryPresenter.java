@@ -31,7 +31,6 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.marshaller.DiffResponseUnmarshaller;
 import com.codenvy.ide.ext.git.client.marshaller.LogResponseUnmarshaller;
-import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.LogResponse;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.json.JsonArray;
@@ -136,8 +135,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
 
     /** Get the log of the commits. If successfully received, then display in revision grid, otherwise - show error in output panel. */
     private void getCommitsLog(@NotNull String projectId) {
-        DtoClientImpls.LogResponseImpl logResponse = DtoClientImpls.LogResponseImpl.make();
-        LogResponseUnmarshaller unmarshaller = new LogResponseUnmarshaller(logResponse);
+        LogResponseUnmarshaller unmarshaller = new LogResponseUnmarshaller();
 
         try {
             service.log(resourceProvider.getVfsId(), projectId, false, new AsyncRequestCallback<LogResponse>(unmarshaller) {

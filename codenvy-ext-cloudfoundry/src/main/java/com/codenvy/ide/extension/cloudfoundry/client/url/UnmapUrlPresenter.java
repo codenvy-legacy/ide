@@ -27,7 +27,6 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationCon
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryApplicationUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.http.client.RequestException;
@@ -141,8 +140,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
     /** Gets registered urls. */
     private void getAppRegisteredUrls() {
         String projectId = resourceProvider.getActiveProject().getId();
-        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
-        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,

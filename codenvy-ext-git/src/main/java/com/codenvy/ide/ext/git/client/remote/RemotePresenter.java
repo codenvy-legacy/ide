@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.git.client.marshaller.RemoteListUnmarshaller;
 import com.codenvy.ide.ext.git.client.remote.add.AddRemoteRepositoryPresenter;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
@@ -84,7 +83,7 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
      * local).
      */
     private void getRemotes() {
-        RemoteListUnmarshaller unmarshaller = new RemoteListUnmarshaller(JsonCollections.<Remote>createArray());
+        RemoteListUnmarshaller unmarshaller = new RemoteListUnmarshaller();
         try {
             service.remoteList(resourceProvider.getVfsId(), projectId, null, true,
                                new AsyncRequestCallback<JsonArray<Remote>>(unmarshaller) {

@@ -26,19 +26,16 @@ import com.codenvy.ide.client.marshaller.UserUnmarshaller;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.gae.client.*;
 import com.codenvy.ide.ext.gae.client.marshaller.GaeUserUnmarshaller;
-import com.codenvy.ide.ext.gae.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.gae.shared.GaeUser;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.security.oauth.JsOAuthWindow;
 import com.codenvy.ide.security.oauth.OAuthCallback;
 import com.codenvy.ide.security.oauth.OAuthStatus;
-import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.inject.Inject;
@@ -60,9 +57,7 @@ public class LoginAction extends Action implements OAuthCallback {
     private OAuthStatus            authStatus;
     private AsyncCallback<Boolean> callback;
 
-    /**
-     * Constructor for action.
-     */
+    /** Constructor for action. */
     @Inject
     public LoginAction(UserClientService userClientService, GAEResources resources, GAEClientService service,
                        EventBus eventBus, ConsolePart console, GAELocalization constant) {
@@ -116,9 +111,7 @@ public class LoginAction extends Action implements OAuthCallback {
         }
     }
 
-    /**
-     * Checks if user is logged in.
-     */
+    /** Checks if user is logged in. */
     public void isUserLoggedIn() {
         isUserLoggedIn(null);
     }
@@ -132,22 +125,19 @@ public class LoginAction extends Action implements OAuthCallback {
      */
     public void isUserLoggedIn(AsyncCallback<Boolean> callback) {
         this.callback = callback;
-
-        DtoClientImpls.GaeUserImpl gaeUser = DtoClientImpls.GaeUserImpl.make();
-        GaeUserUnmarshaller unmarshaller = new GaeUserUnmarshaller(gaeUser);
+        GaeUserUnmarshaller unmarshaller = new GaeUserUnmarshaller();
 
         try {
-            service.getLoggedUser(
-                    new GAEAsyncRequestCallback<GaeUser>(unmarshaller, console, eventBus, constant, null) {
-                        @Override
-                        protected void onSuccess(GaeUser result) {
-                            if (GAEExtension.isUserHasGaeScopes(result.getToken())) {
-                                onAuthenticated(OAuthStatus.LOGGED_IN);
-                            } else {
-                                onAuthenticated(OAuthStatus.LOGGED_OUT);
-                            }
-                        }
-                    });
+            service.getLoggedUser(new GAEAsyncRequestCallback<GaeUser>(unmarshaller, console, eventBus, constant, null) {
+                @Override
+                protected void onSuccess(GaeUser result) {
+                    if (GAEExtension.isUserHasGaeScopes(result.getToken())) {
+                        onAuthenticated(OAuthStatus.LOGGED_IN);
+                    } else {
+                        onAuthenticated(OAuthStatus.LOGGED_OUT);
+                    }
+                }
+            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -172,8 +162,7 @@ public class LoginAction extends Action implements OAuthCallback {
      * Todo need to be improved to fetch user id from something else, not by rest service
      */
     public void doLogin() {
-        com.codenvy.ide.client.DtoClientImpls.UserImpl dtoUser = com.codenvy.ide.client.DtoClientImpls.UserImpl.make();
-        UserUnmarshaller unmarshaller = new UserUnmarshaller(dtoUser);
+        UserUnmarshaller unmarshaller = new UserUnmarshaller();
 
         try {
             this.userClientService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
@@ -208,9 +197,7 @@ public class LoginAction extends Action implements OAuthCallback {
         authWindow.loginWithOAuth();
     }
 
-    /**
-     * Starts log out from Google Services.
-     */
+    /** Starts log out from Google Services. */
     public void doLogout() {
         try {
             service.logout(new AsyncRequestCallback<Object>() {

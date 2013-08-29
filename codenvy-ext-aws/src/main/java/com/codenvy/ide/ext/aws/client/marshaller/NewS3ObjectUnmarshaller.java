@@ -34,15 +34,6 @@ import com.google.gwt.json.client.JSONParser;
 public class NewS3ObjectUnmarshaller implements Unmarshallable<NewS3Object> {
     private DtoClientImpls.NewS3ObjectImpl newS3Object;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param newS3Object
-     */
-    public NewS3ObjectUnmarshaller(DtoClientImpls.NewS3ObjectImpl newS3Object) {
-        this.newS3Object = newS3Object;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -57,11 +48,7 @@ public class NewS3ObjectUnmarshaller implements Unmarshallable<NewS3Object> {
             return;
         }
 
-        DtoClientImpls.NewS3ObjectImpl newS3ObjectDto = DtoClientImpls.NewS3ObjectImpl.deserialize(text);
-        this.newS3Object.setS3Bucket(newS3ObjectDto.getS3Bucket());
-        this.newS3Object.setS3Key(newS3ObjectDto.getS3Key());
-        this.newS3Object.setVersionId(newS3ObjectDto.getVersionId());
-
+        newS3Object = DtoClientImpls.NewS3ObjectImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */

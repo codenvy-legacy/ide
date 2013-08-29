@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.aws.client.login.LoginPresenter;
 import com.codenvy.ide.ext.aws.client.marshaller.InstanceListInfoUnmarshaller;
 import com.codenvy.ide.ext.aws.shared.ec2.InstanceInfo;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -88,10 +87,9 @@ public class EC2ManagerPresenter implements EC2ManagerView.ActionDelegate {
                 getInstanceInfo();
             }
         };
+        InstanceListInfoUnmarshaller unmarshaller = new InstanceListInfoUnmarshaller();
 
         try {
-            JsonArray<InstanceInfo> instanceList = JsonCollections.createArray();
-            InstanceListInfoUnmarshaller unmarshaller = new InstanceListInfoUnmarshaller(instanceList);
             service.getInstances(new AwsAsyncRequestCallback<JsonArray<InstanceInfo>>(unmarshaller, loggedInHandler, null, loginPresenter) {
                 @Override
                 protected void onSuccess(JsonArray<InstanceInfo> result) {

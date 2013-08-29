@@ -32,15 +32,6 @@ import com.google.gwt.http.client.Response;
 public class UserInfoUnmarshaller implements Unmarshallable<RHUserInfo> {
     private DtoClientImpls.RHUserInfoImpl userInfo;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param userInfo
-     */
-    public UserInfoUnmarshaller(DtoClientImpls.RHUserInfoImpl userInfo) {
-        this.userInfo = userInfo;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -50,13 +41,7 @@ public class UserInfoUnmarshaller implements Unmarshallable<RHUserInfo> {
             return;
         }
 
-        DtoClientImpls.RHUserInfoImpl userInfo = DtoClientImpls.RHUserInfoImpl.deserialize(text);
-
-        this.userInfo.setRhlogin(userInfo.getRhlogin());
-        this.userInfo.setNamespace(userInfo.getNamespace());
-        this.userInfo.setRhcDomain(userInfo.getRhcDomain());
-        this.userInfo.setUuid(userInfo.getUuid());
-        this.userInfo.setApps(userInfo.getApps());
+        userInfo = DtoClientImpls.RHUserInfoImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */

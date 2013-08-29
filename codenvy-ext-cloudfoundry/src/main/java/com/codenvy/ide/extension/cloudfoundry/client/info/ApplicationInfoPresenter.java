@@ -27,7 +27,6 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationCon
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryApplicationUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
@@ -95,8 +94,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
     private void showApplicationInfo(final String projectId, CloudFoundryExtension.PAAS_PROVIDER paasProvider) {
         try {
             this.paasProvider = paasProvider;
-            DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
-            CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
+            CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
             LoggedInHandler loggedInHandler = new LoggedInHandler() {
                 @Override
                 public void onLoggedIn() {

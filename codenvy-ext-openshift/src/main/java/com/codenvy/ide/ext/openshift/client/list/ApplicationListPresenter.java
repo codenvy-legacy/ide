@@ -30,7 +30,6 @@ import com.codenvy.ide.ext.openshift.client.info.ApplicationProperty;
 import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.openshift.client.login.LoginPresenter;
 import com.codenvy.ide.ext.openshift.client.marshaller.UserInfoUnmarshaller;
-import com.codenvy.ide.ext.openshift.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
 import com.codenvy.ide.ext.openshift.shared.OpenShiftEmbeddableCartridge;
 import com.codenvy.ide.ext.openshift.shared.RHUserInfo;
@@ -333,11 +332,9 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
                 getApplications();
             }
         };
+        UserInfoUnmarshaller unmarshaller = new UserInfoUnmarshaller();
 
         try {
-            DtoClientImpls.RHUserInfoImpl userInfo = DtoClientImpls.RHUserInfoImpl.make();
-            UserInfoUnmarshaller unmarshaller = new UserInfoUnmarshaller(userInfo);
-
             service.getUserInfo(true,
                                 new OpenShiftAsyncRequestCallback<RHUserInfo>(unmarshaller, loggedInHandler, null, eventBus, console,
                                                                               constant, loginPresenter) {

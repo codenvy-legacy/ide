@@ -32,7 +32,6 @@ import com.codenvy.ide.ext.aws.client.beanstalk.versions.create.CreateVersionPre
 import com.codenvy.ide.ext.aws.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.aws.client.login.LoginPresenter;
 import com.codenvy.ide.ext.aws.client.marshaller.ApplicationInfoUnmarshaller;
-import com.codenvy.ide.ext.aws.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.aws.shared.beanstalk.ApplicationInfo;
 import com.codenvy.ide.ext.aws.shared.beanstalk.ApplicationVersionInfo;
 import com.codenvy.ide.ext.aws.shared.beanstalk.EnvironmentInfo;
@@ -115,9 +114,7 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
                 loadApplication();
             }
         };
-
-        DtoClientImpls.ApplicationInfoImpl dtoApplicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(dtoApplicationInfo);
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),

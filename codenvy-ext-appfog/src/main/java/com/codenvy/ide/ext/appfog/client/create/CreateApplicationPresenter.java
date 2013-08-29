@@ -318,8 +318,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
      *         handler that should be called after success login
      */
     private void createApplicationREST(final AppData appData, final Project project, LoggedInHandler loggedInHandler) {
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             service.create(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,
@@ -616,7 +615,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                 getInfras(server);
             }
         };
-        InfrasUnmarshaller unmarshaller = new InfrasUnmarshaller(JsonCollections.<InfraDetail>createArray());
+        InfrasUnmarshaller unmarshaller = new InfrasUnmarshaller();
 
         try {
             service.infras(server, null, null,

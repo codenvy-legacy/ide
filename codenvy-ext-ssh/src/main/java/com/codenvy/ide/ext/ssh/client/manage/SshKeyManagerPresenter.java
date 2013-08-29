@@ -195,8 +195,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                     if (needToCreate) {
                         loader.show();
                         try {
-                            com.codenvy.ide.client.DtoClientImpls.UserImpl user = com.codenvy.ide.client.DtoClientImpls.UserImpl.make();
-                            UserUnmarshaller unmarshaller = new UserUnmarshaller(user);
+                            UserUnmarshaller unmarshaller = new UserUnmarshaller();
 
                             userService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
                                 @Override

@@ -27,7 +27,6 @@ import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryApplicationUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryServicesUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
@@ -244,8 +243,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
     /** Gets the list of services and put them to field. */
     private void getApplicationInfo() {
-        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
-        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
             this.service.getApplicationInfo(null, null, application.getName(), null,

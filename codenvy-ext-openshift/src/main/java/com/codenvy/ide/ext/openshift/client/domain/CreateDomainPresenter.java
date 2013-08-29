@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.openshift.client.OpenShiftLocalizationConstant;
 import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.openshift.client.login.LoginPresenter;
 import com.codenvy.ide.ext.openshift.client.marshaller.UserInfoUnmarshaller;
-import com.codenvy.ide.ext.openshift.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.openshift.shared.RHUserInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -144,15 +143,12 @@ public class CreateDomainPresenter implements CreateDomainView.ActionDelegate {
                 getUserInfo();
             }
         };
+        UserInfoUnmarshaller unmarshaller = new UserInfoUnmarshaller();
 
         try {
-            DtoClientImpls.RHUserInfoImpl userInfo = DtoClientImpls.RHUserInfoImpl.make();
-            UserInfoUnmarshaller unmarshaller = new UserInfoUnmarshaller(userInfo);
-
             service.getUserInfo(true,
                                 new OpenShiftAsyncRequestCallback<RHUserInfo>(unmarshaller, loggedInHandler, null, eventBus, console,
                                                                               constant, loginPresenter) {
-
                                     @Override
                                     protected void onSuccess(RHUserInfo result) {
                                         if (result.getNamespace() != null && !result.getNamespace().isEmpty()) {

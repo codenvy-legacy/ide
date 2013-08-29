@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.resources.marshal;
 
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
@@ -33,11 +34,11 @@ import com.google.gwt.json.client.JSONParser;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class ProjectModelUnmarshaller implements Unmarshallable<ProjectModelProviderAdapter> {
+    private       ProjectModelProviderAdapter modelProviderAdapter;
+    private final ResourceProvider            resourceProvider;
 
-    private final ProjectModelProviderAdapter modelProviderAdapter;
-
-    public ProjectModelUnmarshaller(ProjectModelProviderAdapter modelProviderAdapter) {
-        this.modelProviderAdapter = modelProviderAdapter;
+    public ProjectModelUnmarshaller(ResourceProvider resourceProvider) {
+        this.resourceProvider = resourceProvider;
     }
 
     /** {@inheritDoc} */
@@ -46,15 +47,15 @@ public class ProjectModelUnmarshaller implements Unmarshallable<ProjectModelProv
         try {
             // Read Primary nature of the project
             JSONObject jsonObject = JSONParser.parseLenient(response.getText()).isObject();
-            JsonArray<Property> properties =
-                    JSONDeserializer.PROPERTY_DESERIALIZER.toList(jsonObject.get("properties"));
+            JsonArray<Property> properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(jsonObject.get("properties"));
+
             // Create project instance using ModelProvider
+            modelProviderAdapter = new ProjectModelProviderAdapter(resourceProvider);
             modelProviderAdapter.init(properties).init(jsonObject);
         } catch (Exception exc) {
             String message = "Can't parse item " + response.getText();
             throw new UnmarshallerException(message, exc);
         }
-
     }
 
     /** {@inheritDoc} */
@@ -62,5 +63,4 @@ public class ProjectModelUnmarshaller implements Unmarshallable<ProjectModelProv
     public ProjectModelProviderAdapter getPayload() {
         return this.modelProviderAdapter;
     }
-
 }

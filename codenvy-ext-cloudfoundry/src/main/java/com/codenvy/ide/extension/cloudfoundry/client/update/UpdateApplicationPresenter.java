@@ -27,7 +27,6 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationCon
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryApplicationUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
@@ -107,12 +106,8 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler {
                                                                                    loginPresenter, paasProvider) {
                                           @Override
                                           protected void onSuccess(String result) {
+                                              CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
                                               try {
-                                                  DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication =
-                                                          DtoClientImpls.CloudFoundryApplicationImpl.make();
-                                                  CloudFoundryApplicationUnmarshaller unmarshaller =
-                                                          new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
-
                                                   service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                                                              new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                      unmarshaller, null, null, eventBus, console, constant,

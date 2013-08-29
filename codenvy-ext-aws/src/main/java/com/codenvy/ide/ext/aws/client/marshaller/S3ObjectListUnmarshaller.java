@@ -32,15 +32,6 @@ import com.google.gwt.http.client.Response;
 public class S3ObjectListUnmarshaller implements Unmarshallable<S3ObjectsList> {
     private DtoClientImpls.S3ObjectsListImpl objectsList;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param objectsList
-     */
-    public S3ObjectListUnmarshaller(DtoClientImpls.S3ObjectsListImpl objectsList) {
-        this.objectsList = objectsList;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -50,13 +41,7 @@ public class S3ObjectListUnmarshaller implements Unmarshallable<S3ObjectsList> {
             return;
         }
 
-        DtoClientImpls.S3ObjectsListImpl object = DtoClientImpls.S3ObjectsListImpl.deserialize(text);
-
-        objectsList.setMaxKeys(object.getMaxKeys());
-        objectsList.setNextMarker(object.getNextMarker());
-        objectsList.setPrefix(object.getPrefix());
-        objectsList.setS3Bucket(object.getS3Bucket());
-        objectsList.setObjects(object.getObjects());
+        objectsList = DtoClientImpls.S3ObjectsListImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */

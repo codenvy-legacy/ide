@@ -282,8 +282,7 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
      *         handler that should be called after success login
      */
     private void createApplicationREST(LoggedInHandler loggedInHandler) {
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             // Application will be started after creation (IDE-1618)
@@ -379,7 +378,7 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
                 delegate.updateControls();
             }
         };
-        InfrasUnmarshaller unmarshaller = new InfrasUnmarshaller(JsonCollections.<InfraDetail>createArray());
+        InfrasUnmarshaller unmarshaller = new InfrasUnmarshaller();
 
         try {
             service.infras(server, null, null,

@@ -34,13 +34,6 @@ import com.google.gwt.json.client.JSONParser;
 public class GaeUserUnmarshaller implements Unmarshallable<GaeUser> {
     private DtoClientImpls.GaeUserImpl gaeUser;
 
-    /**
-     * Constructor for unmarshaller.
-     */
-    public GaeUserUnmarshaller(DtoClientImpls.GaeUserImpl gaeUser) {
-        this.gaeUser = gaeUser;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -54,10 +47,7 @@ public class GaeUserUnmarshaller implements Unmarshallable<GaeUser> {
             return;
         }
 
-        DtoClientImpls.GaeUserImpl dtoGaeUser = DtoClientImpls.GaeUserImpl.deserialize(gaeObject.toString());
-        gaeUser.setId(dtoGaeUser.getId());
-        gaeUser.setEmail(dtoGaeUser.getEmail());
-        gaeUser.setToken(dtoGaeUser.getToken());
+        gaeUser = DtoClientImpls.GaeUserImpl.deserialize(gaeObject.toString());
     }
 
     /** {@inheritDoc} */

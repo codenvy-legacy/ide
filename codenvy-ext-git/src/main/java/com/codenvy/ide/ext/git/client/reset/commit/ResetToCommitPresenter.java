@@ -23,7 +23,6 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.marshaller.LogResponseUnmarshaller;
-import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.LogResponse;
 import com.codenvy.ide.ext.git.shared.ResetRequest;
 import com.codenvy.ide.ext.git.shared.Revision;
@@ -74,8 +73,7 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
     /** Show dialog. */
     public void showDialog() {
         projectId = resourceProvider.getActiveProject().getId();
-        DtoClientImpls.LogResponseImpl logResponse = DtoClientImpls.LogResponseImpl.make();
-        LogResponseUnmarshaller unmarshaller = new LogResponseUnmarshaller(logResponse);
+        LogResponseUnmarshaller unmarshaller = new LogResponseUnmarshaller();
 
         try {
             service.log(resourceProvider.getVfsId(), projectId, false, new AsyncRequestCallback<LogResponse>(unmarshaller) {

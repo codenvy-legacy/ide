@@ -43,7 +43,7 @@ public abstract class AsyncRequestCallback<T> implements RequestCallback {
 
     private AsyncRequestLoader loader;
 
-    private final T payload;
+    private T payload;
 
     private AsyncRequest request;
 
@@ -62,20 +62,10 @@ public abstract class AsyncRequestCallback<T> implements RequestCallback {
      * the object.
      *
      * @param unmarshaller
-     * @param loader
      */
     public AsyncRequestCallback(Unmarshallable<T> unmarshaller) {
         this.successCodes = DEFAULT_SUCCESS_CODES;
-        if (unmarshaller == null) {
-            this.payload = null;
-        } else {
-            this.payload = unmarshaller.getPayload();
-            //         if(unmarshaller == null)
-            //            throw new NullPointerException("Unmarshallable result is not initialized in advance");
-        }
         this.unmarshaller = unmarshaller;
-
-        //this.loader = loader;
     }
 
     /** @return the result */
@@ -130,6 +120,7 @@ public abstract class AsyncRequestCallback<T> implements RequestCallback {
             try {
                 if (unmarshaller != null) {
                     unmarshaller.unmarshal(response);
+                    payload = unmarshaller.getPayload();
                 }
 
                 onSuccess(payload);

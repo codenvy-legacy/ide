@@ -26,7 +26,6 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.SystemInfoUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -199,8 +198,7 @@ public class LoginPresenter implements LoginView.ActionDelegate {
 
     /** Get Cloud Foundry system information to fill the login field, if user is logged in. */
     protected void getSystemInformation() {
-        DtoClientImpls.SystemInfoImpl systemInfo = DtoClientImpls.SystemInfoImpl.make();
-        SystemInfoUnmarshaller unmarshaller = new SystemInfoUnmarshaller(systemInfo);
+        SystemInfoUnmarshaller unmarshaller = new SystemInfoUnmarshaller();
         try {
             service.getSystemInfo(server, paasProvider, new AsyncRequestCallback<SystemInfo>(unmarshaller) {
                 @Override

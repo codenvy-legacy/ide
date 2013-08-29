@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
 import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
-import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
@@ -131,8 +130,7 @@ public class StartApplicationPresenter {
     /** Gets information about active project and check its state. */
     private void checkIsStarted() {
         Project project = resourceProvider.getActiveProject();
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
@@ -169,8 +167,7 @@ public class StartApplicationPresenter {
         final String appName = (project != null && name == null) ? project.getProperty("appfog-application").getValue().get(0) : name;
         final String projectId = project != null ? project.getId() : null;
 
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             service.startApplication(null, null, appName, server,
@@ -245,8 +242,7 @@ public class StartApplicationPresenter {
     /** Gets information about active project and check its state. */
     private void checkIsStopped() {
         Project project = resourceProvider.getActiveProject();
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
@@ -289,10 +285,7 @@ public class StartApplicationPresenter {
                                                                            loginPresenter) {
                                         @Override
                                         protected void onSuccess(String result) {
-                                            DtoClientImpls.AppfogApplicationImpl appfogApplication =
-                                                    DtoClientImpls.AppfogApplicationImpl.make();
-                                            AppFogApplicationUnmarshaller unmarshaller =
-                                                    new AppFogApplicationUnmarshaller(appfogApplication);
+                                            AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
                                             try {
                                                 service.getApplicationInfo(resourceProvider.getVfsId(), projectId, name, null,
@@ -344,8 +337,7 @@ public class StartApplicationPresenter {
         final String server = project != null ? project.getProperty("appfog-target").getValue().get(0) : null;
         final String appName = (project != null && name == null) ? project.getProperty("appfog-application").getValue().get(0) : name;
         final String projectId = project != null ? project.getId() : null;
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             service.restartApplication(null, null, appName, server,

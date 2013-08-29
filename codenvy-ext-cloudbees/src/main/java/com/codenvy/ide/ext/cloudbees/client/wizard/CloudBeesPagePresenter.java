@@ -334,24 +334,23 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
 
     /** Gets deploy domains. */
     private void getFirstDeployDomains() {
+        DomainsUnmarshaller unmarshaller = new DomainsUnmarshaller();
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                isLogined = true;
+                getFirstDeployDomains();
+            }
+        };
+        LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
+            @Override
+            public void onLoginCanceled() {
+                isLogined = false;
+                delegate.updateControls();
+            }
+        };
+
         try {
-            DomainsUnmarshaller unmarshaller = new DomainsUnmarshaller(JsonCollections.<String>createArray());
-            LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                @Override
-                public void onLoggedIn() {
-                    isLogined = true;
-                    getFirstDeployDomains();
-                }
-            };
-
-            LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
-                @Override
-                public void onLoginCanceled() {
-                    isLogined = false;
-                    delegate.updateControls();
-                }
-            };
-
             service.getDomains(
                     new CloudBeesAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, loginCanceledHandler, eventBus,
                                                                          console, loginPresenter) {

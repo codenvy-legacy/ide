@@ -28,7 +28,6 @@ import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
 import com.codenvy.ide.ext.appfog.client.marshaller.AppfogServicesUnmarshaller;
 import com.codenvy.ide.ext.appfog.client.marshaller.ProvisionedServiceUnmarshaller;
-import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogProvisionedService;
 import com.codenvy.ide.ext.appfog.shared.AppfogServices;
 import com.codenvy.ide.resources.model.Project;
@@ -102,8 +101,7 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
         final Project project = resourceProvider.getActiveProject();
         final String infraName = project.getProperty("appfog-infra").getValue().get(0);
 
-        DtoClientImpls.AppfogProvisionedServiceImpl provisionedService = DtoClientImpls.AppfogProvisionedServiceImpl.make();
-        ProvisionedServiceUnmarshaller unmarshaller = new ProvisionedServiceUnmarshaller(provisionedService);
+        ProvisionedServiceUnmarshaller unmarshaller = new ProvisionedServiceUnmarshaller();
 
         try {
             service.createService(AppFogExtension.DEFAULT_SERVER, type, name, null, null, null, infraName,

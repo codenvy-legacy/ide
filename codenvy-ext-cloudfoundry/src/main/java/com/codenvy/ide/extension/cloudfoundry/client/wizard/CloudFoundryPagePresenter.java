@@ -202,8 +202,7 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
      *         handler that should be called after success login
      */
     private void createApplicationREST(LoggedInHandler loggedInHandler) {
-        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
-        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
         boolean noStart = false;
 
         try {
@@ -464,8 +463,7 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
                 delegate.updateControls();
             }
         };
-        DtoClientImpls.SystemInfoImpl systemInfo = DtoClientImpls.SystemInfoImpl.make();
-        SystemInfoUnmarshaller unmarshaller = new SystemInfoUnmarshaller(systemInfo);
+        SystemInfoUnmarshaller unmarshaller = new SystemInfoUnmarshaller();
 
         try {
             service.getSystemInfo(server, paasProvider,

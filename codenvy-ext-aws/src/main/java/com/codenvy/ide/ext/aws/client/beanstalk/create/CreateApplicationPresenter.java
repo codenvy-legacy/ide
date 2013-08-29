@@ -34,7 +34,9 @@ import com.codenvy.ide.ext.aws.client.marshaller.ApplicationInfoUnmarshaller;
 import com.codenvy.ide.ext.aws.client.marshaller.EnvironmentInfoUnmarshaller;
 import com.codenvy.ide.ext.aws.client.marshaller.SolutionStackListUnmarshaller;
 import com.codenvy.ide.ext.aws.dto.client.DtoClientImpls;
-import com.codenvy.ide.ext.aws.shared.beanstalk.*;
+import com.codenvy.ide.ext.aws.shared.beanstalk.ApplicationInfo;
+import com.codenvy.ide.ext.aws.shared.beanstalk.EnvironmentInfo;
+import com.codenvy.ide.ext.aws.shared.beanstalk.SolutionStack;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
@@ -115,16 +117,13 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                 getSolutionStacks();
             }
         };
-
         LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
             @Override
             public void onLoginCanceled() {
                 view.close();
             }
         };
-
-        JsonArray<SolutionStack> solutionStack = JsonCollections.createArray();
-        SolutionStackListUnmarshaller unmarshaller = new SolutionStackListUnmarshaller(solutionStack);
+        SolutionStackListUnmarshaller unmarshaller = new SolutionStackListUnmarshaller();
 
         try {
             service.getAvailableSolutionStacks(
@@ -243,9 +242,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         createApplicationRequest.setS3Key(view.getS3Key());
         createApplicationRequest.setWar(warUrl);
 
-
-        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
         try {
             service.createApplication(resourceProvider.getVfsId(), openedProject.getId(), createApplicationRequest,

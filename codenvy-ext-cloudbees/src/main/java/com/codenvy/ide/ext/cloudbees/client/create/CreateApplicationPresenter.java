@@ -35,7 +35,6 @@ import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.ext.jenkins.client.build.BuildApplicationPresenter;
 import com.codenvy.ide.ext.jenkins.shared.JobStatus;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -105,15 +104,15 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
     /** Gets domains. */
     private void getDomains() {
-        try {
-            DomainsUnmarshaller unmarshaller = new DomainsUnmarshaller(JsonCollections.<String>createArray());
-            LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                @Override
-                public void onLoggedIn() {
-                    getDomains();
-                }
-            };
+        DomainsUnmarshaller unmarshaller = new DomainsUnmarshaller();
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                getDomains();
+            }
+        };
 
+        try {
             service.getDomains(
                     new CloudBeesAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, null, eventBus, console,
                                                                          loginPresenter) {

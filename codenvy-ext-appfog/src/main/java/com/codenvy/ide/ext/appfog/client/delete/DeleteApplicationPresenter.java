@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
 import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
-import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.http.client.RequestException;
@@ -120,8 +119,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
     /** Get application's name and put it to the field. */
     private void getApplicationInfo() {
         String projectId = resourceProvider.getActiveProject().getId();
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,

@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
 import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
-import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
@@ -146,8 +145,7 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
     /** Get the application's information. */
     private void getApplicationInfo() {
         String projectId = resourceProvider.getActiveProject().getId();
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,

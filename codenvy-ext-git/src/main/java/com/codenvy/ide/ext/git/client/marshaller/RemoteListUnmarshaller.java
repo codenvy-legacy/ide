@@ -21,6 +21,7 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -37,13 +38,6 @@ public class RemoteListUnmarshaller implements Unmarshallable<JsonArray<Remote>>
     /** Remote repositories. */
     private JsonArray<Remote> remotes;
 
-    /**
-     * @param remotes
-     *         remote repositories
-     */
-    public RemoteListUnmarshaller(JsonArray<Remote> remotes) {
-        this.remotes = remotes;
-    }
 
     /** {@inheritDoc} */
     @Override
@@ -55,6 +49,8 @@ public class RemoteListUnmarshaller implements Unmarshallable<JsonArray<Remote>>
         JSONArray array = JSONParser.parseStrict(response.getText()).isArray();
         if (array == null || array.size() <= 0)
             return;
+
+        remotes = JsonCollections.createArray();
 
         for (int i = 0; i < array.size(); i++) {
             JSONObject object = array.get(i).isObject();

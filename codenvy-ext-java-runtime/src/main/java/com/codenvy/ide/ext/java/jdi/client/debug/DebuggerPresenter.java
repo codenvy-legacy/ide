@@ -1075,8 +1075,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      *         location of .war file
      */
     private void debugApplicationREST(@NotNull String warUrl) {
-        DtoClientImpls.ApplicationInstanceImpl applicationInstance = DtoClientImpls.ApplicationInstanceImpl.make();
-        ApplicationInstanceUnmarshaller unmarshaller = new ApplicationInstanceUnmarshaller(applicationInstance);
+        ApplicationInstanceUnmarshaller unmarshaller = new ApplicationInstanceUnmarshaller();
 
         try {
             applicationRunnerClientService.debugApplication(project.getName(), warUrl, isUseJRebel(),

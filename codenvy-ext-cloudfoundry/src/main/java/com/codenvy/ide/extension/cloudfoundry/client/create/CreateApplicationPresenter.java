@@ -330,8 +330,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
      *         handler that should be called after success login
      */
     private void createApplicationREST(final AppData appData, final Project project, LoggedInHandler loggedInHandler) {
-        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
-        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
             service.create(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,

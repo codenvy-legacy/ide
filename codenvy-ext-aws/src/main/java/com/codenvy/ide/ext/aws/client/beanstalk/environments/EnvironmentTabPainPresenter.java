@@ -150,8 +150,7 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
             return;
         }
 
-        JsonArray<InstanceLog> instanceLogs = JsonCollections.createArray();
-        EnvironmentsLogListUnmarshaller unmarshaller = new EnvironmentsLogListUnmarshaller(instanceLogs);
+        EnvironmentsLogListUnmarshaller unmarshaller = new EnvironmentsLogListUnmarshaller();
 
         try {
             service.getEnvironmentLogs(environment.getId(), new AsyncRequestCallback<JsonArray<InstanceLog>>(unmarshaller) {

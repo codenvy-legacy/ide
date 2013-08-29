@@ -33,14 +33,6 @@ public class LogResponseUnmarshaller implements Unmarshallable<LogResponse> {
     /** Log response. */
     private DtoClientImpls.LogResponseImpl logResponse;
 
-    /**
-     * @param logResponse
-     *         log response
-     */
-    public LogResponseUnmarshaller(DtoClientImpls.LogResponseImpl logResponse) {
-        this.logResponse = logResponse;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -51,10 +43,8 @@ public class LogResponseUnmarshaller implements Unmarshallable<LogResponse> {
 
         JSONObject logObject = JSONParser.parseStrict(text).isObject();
         String value = logObject.toString();
-        DtoClientImpls.LogResponseImpl logResponse = DtoClientImpls.LogResponseImpl.deserialize(value);
 
-        this.logResponse.setTextLog(logResponse.getTextLog());
-        this.logResponse.setCommits(logResponse.getCommits());
+        logResponse = DtoClientImpls.LogResponseImpl.deserialize(value);
     }
 
     /** {@inheritDoc} */

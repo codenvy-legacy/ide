@@ -88,7 +88,7 @@ public class PullPresenter implements PullView.ActionDelegate {
      * local).
      */
     private void getRemotes() {
-        RemoteListUnmarshaller unmarshaller = new RemoteListUnmarshaller(JsonCollections.<Remote>createArray());
+        RemoteListUnmarshaller unmarshaller = new RemoteListUnmarshaller();
         final String projectId = project.getId();
         view.setEnablePullButton(true);
 

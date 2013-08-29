@@ -27,42 +27,35 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
+import static com.codenvy.ide.resources.marshal.JSONDeserializer.*;
+
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: VFSInfoUnmarshaller Feb 2, 2011 2:16:15 PM evgen $
  */
 public class VFSInfoUnmarshaller implements Unmarshallable<VirtualFileSystemInfo> {
-
-    private final VirtualFileSystemInfo virtualFileSystemInfo;
-
-    /** @param virtualFileSystemInfo */
-    public VFSInfoUnmarshaller(VirtualFileSystemInfo virtualFileSystemInfo) {
-        this.virtualFileSystemInfo = virtualFileSystemInfo;
-    }
+    private VirtualFileSystemInfo virtualFileSystemInfo;
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         JSONObject jsonObject = JSONParser.parseLenient(response.getText()).isObject();
-        virtualFileSystemInfo.setId(JSONDeserializer.STRING_DESERIALIZER.toObject(jsonObject.get("id")));
-        virtualFileSystemInfo.setVersioningSupported(JSONDeserializer.BOOLEAN_DESERIALIZER.toObject(jsonObject
-                                                                                                            .get("versioningSupported")));
-        virtualFileSystemInfo.setLockSupported(JSONDeserializer.BOOLEAN_DESERIALIZER.toObject(jsonObject
-                                                                                                      .get("lockSupported"))); //
-        virtualFileSystemInfo.setAnonymousPrincipal(JSONDeserializer.STRING_DESERIALIZER.toObject(jsonObject
-                                                                                                          .get("anonymousPrincipal"))); //
-        virtualFileSystemInfo.setAnyPrincipal(JSONDeserializer.STRING_DESERIALIZER.toObject(jsonObject
-                                                                                                    .get("anyPrincipal"))); //
-        virtualFileSystemInfo.setPermissions(JSONDeserializer.STRING_DESERIALIZER.toList(jsonObject.get("permissions"))); //
-        virtualFileSystemInfo.setAclCapability(ACLCapability.fromValue(JSONDeserializer.STRING_DESERIALIZER.toObject(
-                jsonObject.get("aclCapability")).toLowerCase())); //
-        virtualFileSystemInfo.setQueryCapability(QueryCapability.fromValue(JSONDeserializer.STRING_DESERIALIZER.toObject(
-                jsonObject.get("queryCapability")).toLowerCase()));
-        virtualFileSystemInfo.setUrlTemplates(JSONDeserializer.LINK_DESERIALIZER.toMap(jsonObject.get("urlTemplates")));
+
+        virtualFileSystemInfo = new VirtualFileSystemInfo();
+        virtualFileSystemInfo.setId(STRING_DESERIALIZER.toObject(jsonObject.get("id")));
+        virtualFileSystemInfo.setVersioningSupported(BOOLEAN_DESERIALIZER.toObject(jsonObject.get("versioningSupported")));
+        virtualFileSystemInfo.setLockSupported(BOOLEAN_DESERIALIZER.toObject(jsonObject.get("lockSupported")));
+        virtualFileSystemInfo.setAnonymousPrincipal(STRING_DESERIALIZER.toObject(jsonObject.get("anonymousPrincipal")));
+        virtualFileSystemInfo.setAnyPrincipal(STRING_DESERIALIZER.toObject(jsonObject.get("anyPrincipal")));
+        virtualFileSystemInfo.setPermissions(STRING_DESERIALIZER.toList(jsonObject.get("permissions")));
+        virtualFileSystemInfo
+                .setAclCapability(ACLCapability.fromValue(STRING_DESERIALIZER.toObject(jsonObject.get("aclCapability")).toLowerCase()));
+        virtualFileSystemInfo.setQueryCapability(
+                QueryCapability.fromValue(STRING_DESERIALIZER.toObject(jsonObject.get("queryCapability")).toLowerCase()));
+        virtualFileSystemInfo.setUrlTemplates(LINK_DESERIALIZER.toMap(jsonObject.get("urlTemplates")));
 
         JSONObject root = jsonObject.get("root").isObject();
-
         virtualFileSystemInfo.setRoot(new Folder(root));
     }
 

@@ -109,16 +109,13 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
                 getSolutionStacks();
             }
         };
-
         LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
             @Override
             public void onLoginCanceled() {
                 view.close();
             }
         };
-
-        JsonArray<SolutionStack> solutions = JsonCollections.createArray();
-        SolutionStackListUnmarshaller unmarshaller = new SolutionStackListUnmarshaller(solutions);
+        SolutionStackListUnmarshaller unmarshaller = new SolutionStackListUnmarshaller();
 
         try {
             service.getAvailableSolutionStacks(

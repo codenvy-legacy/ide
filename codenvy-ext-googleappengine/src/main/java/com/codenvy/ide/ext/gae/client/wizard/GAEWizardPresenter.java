@@ -30,12 +30,12 @@ import com.codenvy.ide.ext.gae.client.*;
 import com.codenvy.ide.ext.gae.client.actions.LoginAction;
 import com.codenvy.ide.ext.gae.client.create.CreateApplicationPresenter;
 import com.codenvy.ide.ext.gae.client.marshaller.GaeUserUnmarshaller;
-import com.codenvy.ide.ext.gae.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.gae.shared.GaeUser;
 import com.codenvy.ide.ext.java.client.JavaExtension;
-import com.codenvy.ide.resources.model.*;
+import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.resources.model.Folder;
+import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.MimeType;
-import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.http.client.RequestException;
@@ -67,9 +67,7 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
     private CreateProjectProvider      createProjectProvider;
     private boolean                    isLoggedIn;
 
-    /**
-     * Constructor for Google App Engine Wizard page.
-     */
+    /** Constructor for Google App Engine Wizard page. */
     @Inject
     public GAEWizardPresenter(EventBus eventBus, GAEWizardView view, ConsolePart console,
                               GAELocalization constant, LoginAction loginAction,
@@ -247,12 +245,9 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
                view.getAppIdRequired() && view.getApplicationId() != null && !view.getApplicationId().isEmpty();
     }
 
-    /**
-     * Checks if user is logged in on Google Services. If user isn't logged in IDE ask user to login.
-     */
+    /** Checks if user is logged in on Google Services. If user isn't logged in IDE ask user to login. */
     private void isLoggedIn() {
-        DtoClientImpls.GaeUserImpl user = DtoClientImpls.GaeUserImpl.make();
-        GaeUserUnmarshaller unmarshaller = new GaeUserUnmarshaller(user);
+        GaeUserUnmarshaller unmarshaller = new GaeUserUnmarshaller();
         try {
             service.getLoggedUser(
                     new GAEAsyncRequestCallback<GaeUser>(unmarshaller, console, eventBus, constant, loginAction) {
@@ -278,9 +273,7 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
         }
     }
 
-    /**
-     * Ask user to login on Google Services, and when user agree, IDE open native popup window to start authorize user.
-     */
+    /** Ask user to login on Google Services, and when user agree, IDE open native popup window to start authorize user. */
     private void askUserToLogin() {
         boolean startAuthorize = Window.confirm(
                 "You aren't authorize to complete creating application.\nDo you want to login on Google App Engine?");
@@ -291,9 +284,7 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
         }
     }
 
-    /**
-     * Handler that checks if user is logged in and sets login status.
-     */
+    /** Handler that checks if user is logged in and sets login status. */
     private AsyncCallback<Boolean> userLoggedInCallback = new AsyncCallback<Boolean>() {
         @Override
         public void onFailure(Throwable throwable) {
@@ -329,9 +320,7 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
         }
     }
 
-    /**
-     * Clear fields.
-     */
+    /** Clear fields. */
     private void clearFields() {
         view.setAppIdRequired(false);
         view.setApplicationId("");

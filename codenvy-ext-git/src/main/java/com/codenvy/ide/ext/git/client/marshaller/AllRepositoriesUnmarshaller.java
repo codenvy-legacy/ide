@@ -41,10 +41,6 @@ public class AllRepositoriesUnmarshaller implements Unmarshallable<JsonStringMap
     /** Repositories list. */
     private JsonStringMap<JsonArray<GitHubRepository>> repositories;
 
-    public AllRepositoriesUnmarshaller() {
-        this.repositories = JsonCollections.createStringMap();
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -55,6 +51,7 @@ public class AllRepositoriesUnmarshaller implements Unmarshallable<JsonStringMap
         }
 
         Set<String> keys = jsonObj.keySet();
+        repositories = JsonCollections.createStringMap();
 
         for (String key : keys) {
             JsonArray<GitHubRepository> repos = JsonCollections.createArray();

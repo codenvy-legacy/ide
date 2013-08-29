@@ -27,7 +27,6 @@ import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
 import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
 import com.codenvy.ide.ext.appfog.client.marshaller.AppfogServicesUnmarshaller;
-import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.ext.appfog.shared.AppfogProvisionedService;
 import com.codenvy.ide.ext.appfog.shared.AppfogServices;
@@ -279,8 +278,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
     /** Gets the list of services and put them to field. */
     private void getApplicationInfo() {
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             service.getApplicationInfo(null, null, application.getName(), AppFogExtension.DEFAULT_SERVER,

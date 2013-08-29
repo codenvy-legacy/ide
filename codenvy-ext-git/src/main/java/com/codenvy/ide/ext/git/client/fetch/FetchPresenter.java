@@ -88,7 +88,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
      * local).
      */
     private void getRemotes() {
-        RemoteListUnmarshaller unmarshaller = new RemoteListUnmarshaller(JsonCollections.<Remote>createArray());
+        RemoteListUnmarshaller unmarshaller = new RemoteListUnmarshaller();
         final String projectId = project.getId();
 
         try {

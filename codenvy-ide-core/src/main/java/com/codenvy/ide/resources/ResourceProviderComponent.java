@@ -92,7 +92,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     @Override
     public void start(final Callback<Component, ComponentException> callback) {
         AsyncRequestCallback<VirtualFileSystemInfo> internalCallback =
-                new AsyncRequestCallback<VirtualFileSystemInfo>(new VFSInfoUnmarshaller(new VirtualFileSystemInfo())) {
+                new AsyncRequestCallback<VirtualFileSystemInfo>(new VFSInfoUnmarshaller()) {
                     @Override
                     protected void onSuccess(VirtualFileSystemInfo result) {
                         vfsInfo = result;
@@ -123,14 +123,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     /** {@inheritDoc} */
     @Override
     public void getProject(final String name, final AsyncCallback<Project> callback) {
-
-        // initialize empty project object
-        //Project newProject = new Project(name, parentProject, properties);
-        ProjectModelProviderAdapter adapter = new ProjectModelProviderAdapter(this);
-
         // create internal wrapping Request Callback with proper Unmarshaller
         AsyncRequestCallback<ProjectModelProviderAdapter> internalCallback =
-                new AsyncRequestCallback<ProjectModelProviderAdapter>(new ProjectModelUnmarshaller(adapter)) {
+                new AsyncRequestCallback<ProjectModelProviderAdapter>(new ProjectModelUnmarshaller(this)) {
                     @Override
                     protected void onSuccess(ProjectModelProviderAdapter result) {
                         Folder rootFolder = vfsInfo.getRoot();
@@ -209,12 +204,10 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     @Override
     public void createProject(String name, JsonArray<Property> properties, final AsyncCallback<Project> callback) {
         final Folder rootFolder = vfsInfo.getRoot();
-        // initialize empty project object
-        ProjectModelProviderAdapter adapter = new ProjectModelProviderAdapter(this);
 
         // create internal wrapping Request Callback with proper Unmarshaller
         AsyncRequestCallback<ProjectModelProviderAdapter> internalCallback =
-                new AsyncRequestCallback<ProjectModelProviderAdapter>(new ProjectModelUnmarshaller(adapter)) {
+                new AsyncRequestCallback<ProjectModelProviderAdapter>(new ProjectModelUnmarshaller(this)) {
                     @Override
                     protected void onSuccess(ProjectModelProviderAdapter result) {
                         Project project = result.getProject();

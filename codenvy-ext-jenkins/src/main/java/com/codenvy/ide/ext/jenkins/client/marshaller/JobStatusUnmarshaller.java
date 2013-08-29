@@ -31,15 +31,6 @@ import com.google.gwt.http.client.Response;
 public class JobStatusUnmarshaller implements Unmarshallable<JobStatus> {
     private DtoClientImpls.JobStatusImpl jobStatus;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param jobStatus
-     */
-    public JobStatusUnmarshaller(DtoClientImpls.JobStatusImpl jobStatus) {
-        this.jobStatus = jobStatus;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -49,12 +40,7 @@ public class JobStatusUnmarshaller implements Unmarshallable<JobStatus> {
             return;
         }
 
-        DtoClientImpls.JobStatusImpl jobStatus = DtoClientImpls.JobStatusImpl.deserialize(text);
-
-        this.jobStatus.setName(jobStatus.getName());
-        this.jobStatus.setStatus(jobStatus.getStatus());
-        this.jobStatus.setLastBuildResult(jobStatus.getLastBuildResult());
-        this.jobStatus.setArtifactUrl(jobStatus.getArtifactUrl());
+        jobStatus = DtoClientImpls.JobStatusImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */

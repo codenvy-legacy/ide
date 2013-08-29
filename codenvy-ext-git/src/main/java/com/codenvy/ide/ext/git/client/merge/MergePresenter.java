@@ -176,8 +176,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onMergeClicked() {
-        DtoClientImpls.MergeResultImpl mergeResult = DtoClientImpls.MergeResultImpl.make();
-        MergeUnmarshaller unmarshaller = new MergeUnmarshaller(mergeResult);
+        MergeUnmarshaller unmarshaller = new MergeUnmarshaller();
 
         try {
             service.merge(resourceProvider.getVfsId(), projectId, selectedReference.getDisplayName(),

@@ -215,8 +215,7 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
         createApplicationRequest.setS3Key("");
         createApplicationRequest.setWar(warUrl);
 
-        DtoClientImpls.ApplicationInfoImpl dtoApplicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(dtoApplicationInfo);
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
         try {
             service.createApplication(resourceProvider.getVfsId(), project.getId(), createApplicationRequest,
@@ -363,7 +362,6 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
                 getSolutionStack();
             }
         };
-
         LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
             @Override
             public void onLoginCanceled() {
@@ -371,9 +369,7 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
                 delegate.updateControls();
             }
         };
-
-        JsonArray<SolutionStack> solutionStack = JsonCollections.createArray();
-        SolutionStackListUnmarshaller unmarshaller = new SolutionStackListUnmarshaller(solutionStack);
+        SolutionStackListUnmarshaller unmarshaller = new SolutionStackListUnmarshaller();
 
         try {
             service.getAvailableSolutionStacks(
