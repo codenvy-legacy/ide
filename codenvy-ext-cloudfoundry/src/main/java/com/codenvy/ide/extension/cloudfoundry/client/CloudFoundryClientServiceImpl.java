@@ -501,8 +501,7 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
 
     /** {@inheritDoc} */
     @Override
-    public void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback)
-            throws RequestException {
+    public void getLogs(String vfsId, String projectId, AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + LOGS + "?projectid=" + projectId + "&vfsid=" + vfsId;
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }

@@ -224,7 +224,7 @@ public class LoginPresenter implements LoginView.ActionDelegate {
 
     /** Get the list of server and put them to field. */
     private void getServers() {
-        TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
+        TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller();
         try {
             service.getTargets(paasProvider, new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
                 @Override

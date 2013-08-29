@@ -438,7 +438,7 @@ public interface CloudFoundryClientService {
      *         callback, that client has to implement to handle response from server
      * @throws RequestException
      */
-    void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    void getLogs(String vfsId, String projectId, AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Get the list of services available and provisioned.

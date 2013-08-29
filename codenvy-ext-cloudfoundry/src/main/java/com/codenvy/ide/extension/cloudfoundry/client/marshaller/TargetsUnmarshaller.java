@@ -19,6 +19,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -34,19 +35,11 @@ import com.google.gwt.json.client.JSONValue;
 public class TargetsUnmarshaller implements Unmarshallable<JsonArray<String>> {
     private JsonArray<String> targets;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param targets
-     */
-    public TargetsUnmarshaller(JsonArray<String> targets) {
-        this.targets = targets;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+        targets = JsonCollections.createArray();
 
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONValue value = jsonArray.get(i);

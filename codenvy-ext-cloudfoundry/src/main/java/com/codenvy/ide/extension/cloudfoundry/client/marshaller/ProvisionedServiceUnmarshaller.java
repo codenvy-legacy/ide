@@ -31,15 +31,6 @@ import com.google.gwt.http.client.Response;
 public class ProvisionedServiceUnmarshaller implements Unmarshallable<ProvisionedService> {
     private DtoClientImpls.ProvisionedServiceImpl service;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param service
-     */
-    public ProvisionedServiceUnmarshaller(DtoClientImpls.ProvisionedServiceImpl service) {
-        this.service = service;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -49,12 +40,7 @@ public class ProvisionedServiceUnmarshaller implements Unmarshallable<Provisione
             return;
         }
 
-        DtoClientImpls.ProvisionedServiceImpl service = DtoClientImpls.ProvisionedServiceImpl.deserialize(text);
-
-        this.service.setName(service.getName());
-        this.service.setType(service.getType());
-        this.service.setVendor(service.getVendor());
-        this.service.setVendor(service.getVersion());
+        service = DtoClientImpls.ProvisionedServiceImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */
