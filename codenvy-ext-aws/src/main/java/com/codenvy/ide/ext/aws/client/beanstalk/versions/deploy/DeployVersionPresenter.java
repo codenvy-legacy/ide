@@ -146,9 +146,7 @@ public class DeployVersionPresenter implements DeployVersionView.ActionDelegate 
                 getEnvironments();
             }
         };
-
-        JsonArray<EnvironmentInfo> environmentInfo = JsonCollections.createArray();
-        EnvironmentsInfoListUnmarshaller unmarshaller = new EnvironmentsInfoListUnmarshaller(environmentInfo);
+        EnvironmentsInfoListUnmarshaller unmarshaller = new EnvironmentsInfoListUnmarshaller();
 
         try {
             service.getEnvironments(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
@@ -193,8 +191,7 @@ public class DeployVersionPresenter implements DeployVersionView.ActionDelegate 
         DtoClientImpls.UpdateEnvironmentRequestImpl updateEnvironmentRequest = DtoClientImpls.UpdateEnvironmentRequestImpl.make();
         updateEnvironmentRequest.setVersionLabel(versionLabel);
 
-        DtoClientImpls.EnvironmentInfoImpl environmentInfo = DtoClientImpls.EnvironmentInfoImpl.make();
-        EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller(environmentInfo);
+        EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller();
 
         try {
             service.updateEnvironment(environmentId, updateEnvironmentRequest,

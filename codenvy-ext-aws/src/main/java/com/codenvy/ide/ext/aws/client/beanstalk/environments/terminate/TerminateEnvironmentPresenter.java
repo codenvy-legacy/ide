@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.aws.client.beanstalk.BeanstalkClientService;
 import com.codenvy.ide.ext.aws.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.aws.client.login.LoginPresenter;
 import com.codenvy.ide.ext.aws.client.marshaller.EnvironmentInfoUnmarshaller;
-import com.codenvy.ide.ext.aws.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.aws.shared.beanstalk.EnvironmentInfo;
 import com.codenvy.ide.ext.aws.shared.beanstalk.EnvironmentStatus;
 import com.google.gwt.http.client.RequestException;
@@ -103,9 +102,7 @@ public class TerminateEnvironmentPresenter implements TerminateEnvironmentView.A
                 onTerminateButtonClicked();
             }
         };
-
-        DtoClientImpls.EnvironmentInfoImpl dtoEnvironmentInfo = DtoClientImpls.EnvironmentInfoImpl.make();
-        EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller(dtoEnvironmentInfo);
+        EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller();
 
         try {
             service.stopEnvironment(environmentInfo.getId(),

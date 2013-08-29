@@ -152,9 +152,7 @@ public class EnvironmentStatusChecker {
                 checkEnvironmentStatus(callback);
             }
         };
-
-        DtoClientImpls.EnvironmentInfoImpl environmentInfo = DtoClientImpls.EnvironmentInfoImpl.make();
-        EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller(environmentInfo);
+        EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller();
 
         try {
             service.getEnvironmentInfo(environmentToCheck.getId(),

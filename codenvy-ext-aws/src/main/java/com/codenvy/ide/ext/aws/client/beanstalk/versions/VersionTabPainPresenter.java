@@ -32,7 +32,6 @@ import com.codenvy.ide.ext.aws.client.marshaller.ApplicationVersionListUnmarshal
 import com.codenvy.ide.ext.aws.shared.beanstalk.ApplicationVersionInfo;
 import com.codenvy.ide.ext.aws.shared.beanstalk.EnvironmentInfo;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -136,9 +135,7 @@ public class VersionTabPainPresenter implements Presenter, VersionTabPainView.Ac
                 getVersions();
             }
         };
-
-        JsonArray<ApplicationVersionInfo> versionList = JsonCollections.createArray();
-        ApplicationVersionListUnmarshaller unmarshaller = new ApplicationVersionListUnmarshaller(versionList);
+        ApplicationVersionListUnmarshaller unmarshaller = new ApplicationVersionListUnmarshaller();
 
         try {
             service.getVersions(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),

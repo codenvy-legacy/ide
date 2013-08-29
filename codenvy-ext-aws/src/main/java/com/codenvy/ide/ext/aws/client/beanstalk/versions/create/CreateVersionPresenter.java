@@ -160,8 +160,7 @@ public class CreateVersionPresenter implements CreateVersionView.ActionDelegate,
         createApplicationVersionRequest.setS3Key(view.getS3Key());
         createApplicationVersionRequest.setWar(warUrl);
 
-        DtoClientImpls.ApplicationVersionInfoImpl applicationVersionInfo = DtoClientImpls.ApplicationVersionInfoImpl.make();
-        ApplicationVersionInfoUnmarshaller unmarshaller = new ApplicationVersionInfoUnmarshaller(applicationVersionInfo);
+        ApplicationVersionInfoUnmarshaller unmarshaller = new ApplicationVersionInfoUnmarshaller();
 
         try {
             service.createVersion(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(), createApplicationVersionRequest,

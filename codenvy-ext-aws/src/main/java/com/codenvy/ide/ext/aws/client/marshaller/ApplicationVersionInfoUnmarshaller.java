@@ -34,16 +34,6 @@ import com.google.gwt.json.client.JSONParser;
 public class ApplicationVersionInfoUnmarshaller implements Unmarshallable<ApplicationVersionInfo> {
     private DtoClientImpls.ApplicationVersionInfoImpl applicationVersionInfo;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param applicationVersionInfo
-     */
-    public ApplicationVersionInfoUnmarshaller(
-            DtoClientImpls.ApplicationVersionInfoImpl applicationVersionInfo) {
-        this.applicationVersionInfo = applicationVersionInfo;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -58,13 +48,7 @@ public class ApplicationVersionInfoUnmarshaller implements Unmarshallable<Applic
             return;
         }
 
-        DtoClientImpls.ApplicationVersionInfoImpl dtoAppInfoObject = DtoClientImpls.ApplicationVersionInfoImpl.deserialize(text);
-        applicationVersionInfo.setApplicationName(dtoAppInfoObject.getApplicationName());
-        applicationVersionInfo.setCreated(dtoAppInfoObject.getCreated());
-        applicationVersionInfo.setDescription(dtoAppInfoObject.getDescription());
-        applicationVersionInfo.setS3Location(dtoAppInfoObject.getS3Location());
-        applicationVersionInfo.setUpdated(dtoAppInfoObject.getUpdated());
-        applicationVersionInfo.setVersionLabel(dtoAppInfoObject.getVersionLabel());
+        applicationVersionInfo = DtoClientImpls.ApplicationVersionInfoImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */

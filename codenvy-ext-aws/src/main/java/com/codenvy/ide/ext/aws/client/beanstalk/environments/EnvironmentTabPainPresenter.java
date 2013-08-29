@@ -33,7 +33,6 @@ import com.codenvy.ide.ext.aws.client.marshaller.EnvironmentsLogListUnmarshaller
 import com.codenvy.ide.ext.aws.shared.beanstalk.EnvironmentInfo;
 import com.codenvy.ide.ext.aws.shared.beanstalk.InstanceLog;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -205,8 +204,7 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
 
     /** Get environments list. */
     public void getEnvironments() {
-        JsonArray<EnvironmentInfo> environmentInfoJsonArray = JsonCollections.createArray();
-        EnvironmentsInfoListUnmarshaller unmarshaller = new EnvironmentsInfoListUnmarshaller(environmentInfoJsonArray);
+        EnvironmentsInfoListUnmarshaller unmarshaller = new EnvironmentsInfoListUnmarshaller();
         try {
             service.getEnvironments(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
                                     new AsyncRequestCallback<JsonArray<EnvironmentInfo>>(unmarshaller) {

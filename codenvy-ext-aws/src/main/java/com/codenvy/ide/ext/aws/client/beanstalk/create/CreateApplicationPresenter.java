@@ -302,8 +302,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         createEnvironmentRequest.setVersionLabel(AWSExtension.INIT_VER_LABEL);
         createEnvironmentRequest.setSolutionStackName(view.getSolutionStack());
 
-        DtoClientImpls.EnvironmentInfoImpl environmentInfo = DtoClientImpls.EnvironmentInfoImpl.make();
-        EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller(environmentInfo);
+        EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller();
 
         try {
             service.createEnvironment(resourceProvider.getVfsId(), openedProject.getId(), createEnvironmentRequest,
