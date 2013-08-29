@@ -131,8 +131,7 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
         this.resources = resources;
         this.messageBus = messageBus;
 
-        DtoClientImpls.BuildStatusImpl buildStatus = DtoClientImpls.BuildStatusImpl.make();
-        BuildStatusUnmarshallerWS unmarshaller = new BuildStatusUnmarshallerWS(buildStatus);
+        BuildStatusUnmarshallerWS unmarshaller = new BuildStatusUnmarshallerWS();
 
         buildStatusHandler = new SubscriptionHandler<BuildStatus>(unmarshaller) {
             @Override
