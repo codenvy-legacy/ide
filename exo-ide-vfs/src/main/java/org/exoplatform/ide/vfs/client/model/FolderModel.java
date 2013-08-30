@@ -24,10 +24,6 @@ import org.exoplatform.ide.vfs.shared.*;
 
 import java.util.*;
 
-/**
- * @version $Id: $
- */
-
 public class FolderModel extends FolderImpl implements ItemContext {
 
     protected ItemList<Item> children = new ItemListImpl<Item>();

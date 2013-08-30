@@ -25,9 +25,6 @@ import org.exoplatform.ide.vfs.shared.*;
 
 import java.util.*;
 
-/**
- * @version $Id: $
- */
 public class FileModel extends FileImpl implements ItemContext {
     private boolean persisted;
 
