@@ -263,7 +263,7 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <!-- Unzip Tomcat pakage -->
+                                <!-- Unzip Tomcat package -->
                                 <unzip src="${project.build.directory}/classes/tomcat/tomcat.zip"
                                        dest="${project.build.directory}/classes/tomcat/unzip">
                                     <patternset>

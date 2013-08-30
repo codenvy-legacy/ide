@@ -35,7 +35,7 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
 import static com.codenvy.ide.json.JsonCollections.createArray;
 
 /**
- * Entry point for an extension that adds support for running Codenvy-extensions from Codenvy.
+ * Entry point for an extension that adds support for running Codenvy-extensions in Codenvy.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtRuntimeExtension.java Jul 2, 2013 4:14:56 PM azatsarynnyy $
@@ -69,7 +69,7 @@ public class ExtRuntimeExtension {
         runMenuActionGroup.add(stopAction);
 
         // register template
-        templateAgent.registerTemplate("Codenvy extension project. Illustrates simple example that uses Codenvy SDK.",
+        templateAgent.registerTemplate("Codenvy extension project. Illustrates simple example that uses Codenvy API.",
                                        resources.codenvyExtensionProject(),
                                        createArray(CODENVY_EXTENSION_PROJECT_TYPE),
                                        createCodenvyExtensionProjectPresenter, wizardPage);

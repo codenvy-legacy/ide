@@ -129,7 +129,7 @@ public class DtoTemplate {
 
     /**
      * Returns the source code for a class that contains all the DTO impls for any
-     * intefaces that were added via the {@link #addInterface(Class)} method.
+     * interfaces that were added via the {@link #addInterface(Class)} method.
      */
     @Override
     public String toString() {
@@ -202,7 +202,7 @@ public class DtoTemplate {
         builder.append(packageName);
         builder.append(";\n\n");
         if (isServerType) {
-            builder.append("import JsonSerializable;\n");
+            builder.append("import com.codenvy.ide.dto.server.JsonSerializable;\n");
             builder.append("\n");
             builder.append("import com.google.gson.Gson;\n");
             builder.append("import com.google.gson.GsonBuilder;\n");
