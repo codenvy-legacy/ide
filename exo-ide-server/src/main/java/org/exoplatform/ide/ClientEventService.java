@@ -30,7 +30,7 @@ import javax.ws.rs.core.Response;
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 30.08.13 vlad $
  */
-@Path("{ws-name}/event")
+@Path("{ws-name}/client-event")
 public class ClientEventService {
     private static final Log LOG = ExoLogger.getLogger(ClientEventService.class);
 

@@ -120,7 +120,7 @@ public class Autocompleter implements ContentAssistant {
         ProjectModel project = exoEditor.getFile().getProject();
 
         String url = Utils.getWorkspaceName() +
-                     "/event/autocomplete?project=" +
+                     "/client-event/autocomplete?project=" +
                      project.getName() +
                      "&type=" +
                      project.getProjectType();
