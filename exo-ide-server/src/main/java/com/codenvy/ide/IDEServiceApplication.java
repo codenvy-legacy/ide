@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide;
 
+import org.exoplatform.ide.ClientEventService;
 import org.exoplatform.ide.IDESessionService;
 import org.exoplatform.ide.googlecontacts.GoogleContactsRestService;
 import org.exoplatform.ide.project.ProjectPrepareExceptionMapper;
@@ -53,6 +54,7 @@ public class IDEServiceApplication extends Application {
         classes.add(GoogleContactsRestService.class);
         classes.add(ProjectPrepareService.class);
         classes.add(IDESessionService.class);
+        classes.add(ClientEventService.class);
     }
 
     /** @see javax.ws.rs.core.Application#getClasses() */

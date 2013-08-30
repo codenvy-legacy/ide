@@ -128,6 +128,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
 
     private FrameElement frameElement;
+    private FileModel file;
 
 
     /**
@@ -867,6 +868,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
     @Override
     public void setFile(FileModel file) {
+        this.file = file;
         FileContentLoader.getFileContent(file, new FileContentLoader.ContentCallback() {
             @Override
             public void onContentReceived(String content) {
@@ -875,6 +877,10 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         });
     }
 
+    @Override
+    public FileModel getFile() {
+        return file;
+    }
 
     public void setText(String text) {
         if (editorObject == null) {

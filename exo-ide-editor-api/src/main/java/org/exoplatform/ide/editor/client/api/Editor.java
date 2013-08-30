@@ -62,6 +62,8 @@ public interface Editor extends IsWidget {
 
     void setFile(FileModel file);
 
+    FileModel getFile();
+
     /** @return content of editor */
     IDocument getDocument();
 
