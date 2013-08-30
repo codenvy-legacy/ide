@@ -757,7 +757,6 @@
       <module>exo-ide-commons</module>
       <module>exo-ide-vfs</module>
       <module>exo-ide-vfs-fs</module>
-      <!--module>exo-ide-vfs-jcr</module-->
 
       <module>exo-ide-security</module>
 
