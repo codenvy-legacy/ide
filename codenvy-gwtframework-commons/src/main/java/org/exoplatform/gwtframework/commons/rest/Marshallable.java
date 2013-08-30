@@ -19,8 +19,6 @@
 package org.exoplatform.gwtframework.commons.rest;
 
 /**
- * .
- *
  * @version $Id: $
  *          <p/>
  *          Marshaller of a request body to be passed to server
