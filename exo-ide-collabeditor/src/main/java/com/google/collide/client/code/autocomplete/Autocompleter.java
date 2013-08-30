@@ -111,6 +111,11 @@ public class Autocompleter implements ContentAssistant {
         });
     }
 
+    /**
+     * When user select element from autocomplete proposal popup rest method
+     * calls through websocket to print on console event with format:
+     * EVENT#user-code-complete# PROJECT#<project_name># TYPE#<project_type>#
+     */
     public void sendAutocompletionUsedEvent() {
         ProjectModel project = exoEditor.getFile().getProject();
 
