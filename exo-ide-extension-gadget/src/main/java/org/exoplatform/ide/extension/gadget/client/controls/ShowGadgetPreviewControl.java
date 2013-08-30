@@ -28,8 +28,6 @@ import org.exoplatform.ide.extension.gadget.client.GadgetClientBundle;
 import org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetEvent;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

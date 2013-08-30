@@ -22,8 +22,6 @@ import com.google.gwt.core.client.EntryPoint;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */

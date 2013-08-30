@@ -22,7 +22,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
- * Open new dialog window for asking new file name. Save new file with new name. Created by The eXo Platform SAS .
+ * Open new dialog window for asking new file name. Save new file with new name.
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $

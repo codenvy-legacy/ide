@@ -24,7 +24,6 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 /**
  * This event generates after any View was opened.
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $

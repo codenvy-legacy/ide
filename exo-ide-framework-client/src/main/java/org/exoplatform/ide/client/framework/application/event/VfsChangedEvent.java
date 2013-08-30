@@ -24,7 +24,6 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 /**
  * Called when entry point was changed.
  * <p/>
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $

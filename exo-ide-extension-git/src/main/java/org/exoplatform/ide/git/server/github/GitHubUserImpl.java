@@ -21,8 +21,6 @@ import org.exoplatform.ide.git.shared.GitHubUser;
 
 
 /**
- * Created by The eXo Platform SAS.
- * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: GitHubUser.java Aug 6, 2012
  */
@@ -33,7 +31,7 @@ public class GitHubUserImpl implements GitHubUser {
 
     private String company;
 
-    private int    followers;
+    private int followers;
 
     private String avatarUrl;
 
@@ -41,11 +39,11 @@ public class GitHubUserImpl implements GitHubUser {
 
     private String bio;
 
-    private int    publicRepos;
+    private int publicRepos;
 
-    private int    publicGists;
+    private int publicGists;
 
-    private int    following;
+    private int following;
 
     private String location;
 

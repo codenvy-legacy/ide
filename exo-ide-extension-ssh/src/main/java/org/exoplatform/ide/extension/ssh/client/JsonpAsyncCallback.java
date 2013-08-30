@@ -23,8 +23,6 @@ import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @param <T>
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $

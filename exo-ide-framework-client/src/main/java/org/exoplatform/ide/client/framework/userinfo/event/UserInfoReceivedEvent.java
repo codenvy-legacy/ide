@@ -23,8 +23,6 @@ import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

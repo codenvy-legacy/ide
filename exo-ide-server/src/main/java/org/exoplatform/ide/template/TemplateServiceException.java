@@ -20,7 +20,6 @@ package org.exoplatform.ide.template;
 /**
  * Checked exception that gives possibility to set response status that may be passed to client if this type of exception occurs.
  * <p/>
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Jan 13, 2011 10:36:39 AM evgen $

@@ -37,7 +37,6 @@ import java.util.Set;
 /**
  * Test for UploadService class.
  * <p/>
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $

@@ -24,8 +24,6 @@ import org.exoplatform.ide.client.framework.job.RequestStatusHandlerBase;
 import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
@@ -36,8 +34,10 @@ public class RunningAppStatusHandler extends RequestStatusHandlerBase {
         super(projectName);
     }
 
-    /** @see org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestStatusHandler.RequestStatusHandler#requestInProgress
-     * (java.lang.String) */
+    /**
+     * @see org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestStatusHandler.RequestStatusHandler#requestInProgress
+     *      (java.lang.String)
+     */
     @Override
     public void requestInProgress(String id) {
         Job job = new Job(id, JobStatus.STARTED);
@@ -45,8 +45,10 @@ public class RunningAppStatusHandler extends RequestStatusHandlerBase {
         IDE.fireEvent(new JobChangeEvent(job));
     }
 
-    /** @see org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestStatusHandler.RequestStatusHandler#requestFinished(java
-     * .lang.String) */
+    /**
+     * @see org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestStatusHandler.RequestStatusHandler#requestFinished(java
+     *      .lang.String)
+     */
     @Override
     public void requestFinished(String id) {
         Job job = new Job(id, JobStatus.FINISHED);

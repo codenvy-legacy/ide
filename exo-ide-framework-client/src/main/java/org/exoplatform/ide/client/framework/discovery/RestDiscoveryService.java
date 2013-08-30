@@ -28,7 +28,6 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 /**
  * Discovery service for REST services.
  * <p/>
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $

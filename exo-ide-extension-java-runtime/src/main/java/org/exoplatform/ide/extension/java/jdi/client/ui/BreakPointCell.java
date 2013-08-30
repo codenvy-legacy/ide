@@ -37,8 +37,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */

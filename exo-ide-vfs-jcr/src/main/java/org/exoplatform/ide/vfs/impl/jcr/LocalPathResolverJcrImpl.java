@@ -29,8 +29,6 @@ import org.exoplatform.services.jcr.core.ManageableRepository;
 import javax.jcr.RepositoryException;
 
 /**
- * Created by The eXo Platform SAS.
- * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */

@@ -35,7 +35,7 @@
 //   public void classJavaDocTest() throws CodeAssistantException, VirtualFileSystemException
 //   {
 //      String javaDoc = javaCa.getClassJavaDocFromProject("org.exoplatform.ide.client.IDE", project.getId(), VFS_ID);
-//      Assert.assertTrue(javaDoc.contains("Created by The eXo Platform SAS"));
+//      Assert.assertTrue(javaDoc.contains(""));
 //      Assert.assertTrue(javaDoc.contains("<a href=\"mailto:dmitry.ndp@exoplatform.com.ua\">Dmytro Nochevnov</a>"));
 //   }
 //

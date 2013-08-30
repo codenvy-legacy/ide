@@ -20,8 +20,6 @@ package org.exoplatform.ide.client.framework.outline;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  */

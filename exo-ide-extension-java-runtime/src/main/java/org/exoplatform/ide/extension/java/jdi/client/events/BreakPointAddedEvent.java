@@ -22,8 +22,6 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */

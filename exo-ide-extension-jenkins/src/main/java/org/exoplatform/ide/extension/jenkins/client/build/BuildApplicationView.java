@@ -33,8 +33,6 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

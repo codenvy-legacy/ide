@@ -22,8 +22,6 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
@@ -89,7 +87,7 @@ public interface DebuggerClientBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/extension/java/jdi/images/runApp_Disabled.png")
     ImageResource runAppDisabled();
-    
+
     @Source("org/exoplatform/ide/extension/java/jdi/images/updateApp.png")
     ImageResource updateApp();
 

@@ -23,8 +23,6 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Jan 13, 2011 10:40:56 AM evgen $
  */

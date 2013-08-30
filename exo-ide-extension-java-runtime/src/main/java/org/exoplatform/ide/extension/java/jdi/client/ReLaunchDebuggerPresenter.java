@@ -36,8 +36,6 @@ import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
@@ -75,8 +73,10 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
         tryConnectDebuger.scheduleRepeating(3000);
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {

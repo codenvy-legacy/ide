@@ -23,8 +23,6 @@ import org.exoplatform.ide.client.framework.event.CursorPosition;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */

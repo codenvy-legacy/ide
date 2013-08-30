@@ -25,8 +25,6 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
@@ -43,13 +41,13 @@ public abstract class TemplateService {
         instance = this;
     }
 
-  
+
     public abstract void getProjectTemplateList(AsyncRequestCallback<List<ProjectTemplate>> callback)
             throws RequestException;
 
-    
+
     public abstract void createProjectFromTemplate(String vfsId, String parentId, String name, String templateName,
                                                    AsyncRequestCallback<ProjectModel> callback) throws RequestException;
 
-    
+
 }

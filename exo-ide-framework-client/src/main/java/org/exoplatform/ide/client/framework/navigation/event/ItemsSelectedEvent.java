@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
@@ -48,7 +46,7 @@ public class ItemsSelectedEvent extends GwtEvent<ItemsSelectedHandler> {
     public ItemsSelectedEvent(Item item, View view) {
         selectedItems = new ArrayList<Item>();
         if (item != null) {
-            selectedItems.add(item);            
+            selectedItems.add(item);
         }
         this.view = view;
     }

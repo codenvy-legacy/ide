@@ -31,8 +31,6 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.gadget.shared.GadgetMetadata;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */

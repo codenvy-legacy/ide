@@ -29,7 +29,6 @@ import java.lang.reflect.Modifier;
  * @see FieldInfo
  * @see MethodInfo
  *      <p/>
- *      Created by The eXo Platform SAS.
  */
 public abstract class Member implements IMember {
 

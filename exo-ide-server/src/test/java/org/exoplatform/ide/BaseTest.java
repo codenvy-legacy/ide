@@ -22,8 +22,6 @@ import org.everrest.core.tools.ResourceLauncher;
 import org.exoplatform.container.StandaloneContainer;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */

@@ -24,7 +24,6 @@ import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 
 /**
  * The interface for the AutoBean generator.
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $

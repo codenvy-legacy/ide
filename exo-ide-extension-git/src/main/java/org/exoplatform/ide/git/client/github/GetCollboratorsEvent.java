@@ -20,17 +20,15 @@ package org.exoplatform.ide.git.client.github;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Created by The eXo Platform SAS.
- * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: GetCollboratorsEvent.java Aug 6, 2012
  */
 public class GetCollboratorsEvent extends GwtEvent<GetCollaboratorsHandler> {
     public static final GwtEvent.Type<GetCollaboratorsHandler> TYPE = new GwtEvent.Type<GetCollaboratorsHandler>();
 
-    private String                                             user;
+    private String user;
 
-    private String                                             repository;
+    private String repository;
 
     public GetCollboratorsEvent() {
         user = "exoplatform";

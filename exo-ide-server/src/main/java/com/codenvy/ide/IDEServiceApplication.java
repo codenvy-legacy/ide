@@ -33,8 +33,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Jan 12, 2011 5:24:37 PM evgen $
  */

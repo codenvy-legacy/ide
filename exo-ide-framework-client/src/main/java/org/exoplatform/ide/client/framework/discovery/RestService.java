@@ -22,7 +22,6 @@ import java.util.Map;
 
 /**
  * This class represent REST Service <br>
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 21, 2010 5:15:05 PM evgen $

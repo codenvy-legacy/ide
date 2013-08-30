@@ -43,8 +43,6 @@ import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -98,13 +96,6 @@ public class PreviewApplicationPresenter extends GitPresenter implements Preview
                                                                                                                                 .getHeader(
 
 
-
-
-
-
-
-
-
                                                                                                                                         HTTPHeader.JAXRS_BODY_PROVIDED))) {
                                                                                     addLoggedInHandler();
                                                                                     IDE.fireEvent(new LoginEvent());
@@ -127,8 +118,10 @@ public class PreviewApplicationPresenter extends GitPresenter implements Preview
         IDE.addHandler(LoggedInEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift
-     * .client.login.LoggedInEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift
+     *      .client.login.LoggedInEvent)
+     */
     @Override
     public void onLoggedIn(LoggedInEvent event) {
         IDE.removeHandler(LoggedInEvent.TYPE, this);
@@ -154,8 +147,10 @@ public class PreviewApplicationPresenter extends GitPresenter implements Preview
         previewOpened = true;
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (previewForm == null)
@@ -166,8 +161,10 @@ public class PreviewApplicationPresenter extends GitPresenter implements Preview
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
-     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+     */
     @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         if (previewOpened) {

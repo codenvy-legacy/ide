@@ -25,7 +25,6 @@ import java.util.List;
 /**
  * This HandlerRegistration points on event which stores in the List of handlers.
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $

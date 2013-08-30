@@ -35,8 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -79,8 +77,10 @@ public abstract class AbstractCloudFoundryControl extends SimpleControl implemen
         setEnabled(vfsInfo != null && selectedItems.size() > 0 && isProjectExplorerVisible);
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
-     * .client.framework.ui.api.event.ViewVisibilityChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
+     *      .client.framework.ui.api.event.ViewVisibilityChangedEvent)
+     */
     @Override
     public void onViewVisibilityChanged(ViewVisibilityChangedEvent event) {
         if (event.getView() instanceof ProjectExplorerDisplay) {

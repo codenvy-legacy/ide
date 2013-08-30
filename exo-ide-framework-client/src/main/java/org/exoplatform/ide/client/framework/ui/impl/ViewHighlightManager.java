@@ -23,8 +23,6 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.*;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 3, 2010 $
  */
@@ -96,7 +94,7 @@ public class ViewHighlightManager implements ViewClosedHandler {
      * View Closed Handler
      *
      * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent)
+     *      .event.ViewClosedEvent)
      */
     @Override
     public void onViewClosed(ViewClosedEvent event) {

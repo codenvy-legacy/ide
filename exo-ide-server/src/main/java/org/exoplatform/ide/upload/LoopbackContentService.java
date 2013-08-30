@@ -36,7 +36,6 @@ import java.util.Iterator;
 /**
  * Uses for receiving the content of local file through server.
  * <p/>
- * Created by The eXo Platform SAS
  *
  * @author <a href="work.visor.ck@gmail.com">Dmytro Katayev</a> ${date}
  */

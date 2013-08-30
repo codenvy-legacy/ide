@@ -20,8 +20,6 @@ package org.exoplatform.ide.client.framework.template;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */

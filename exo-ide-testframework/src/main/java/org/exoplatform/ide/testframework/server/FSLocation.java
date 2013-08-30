@@ -20,8 +20,6 @@ package org.exoplatform.ide.testframework.server;
 import javax.ws.rs.core.UriInfo;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

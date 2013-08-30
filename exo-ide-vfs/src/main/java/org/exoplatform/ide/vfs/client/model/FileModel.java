@@ -26,8 +26,6 @@ import org.exoplatform.ide.vfs.shared.*;
 import java.util.*;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author eXo
  * @version $Id: $
  */

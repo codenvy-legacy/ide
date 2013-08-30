@@ -22,8 +22,6 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */

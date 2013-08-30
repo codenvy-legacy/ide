@@ -20,8 +20,6 @@ package org.exoplatform.ide.client.framework.application;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

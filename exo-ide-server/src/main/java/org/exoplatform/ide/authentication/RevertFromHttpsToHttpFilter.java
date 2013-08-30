@@ -34,7 +34,6 @@ import java.io.IOException;
  * In initparams need set ports for HHTP & HTTPS and servlet path for SSL (encrypted connections) by default it "/rest/ssl"
  * <p/>
  * <p/>
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $

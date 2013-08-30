@@ -32,8 +32,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */

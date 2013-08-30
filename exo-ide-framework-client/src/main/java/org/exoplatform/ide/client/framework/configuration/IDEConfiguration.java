@@ -20,8 +20,6 @@ package org.exoplatform.ide.client.framework.configuration;
 import com.google.gwt.core.client.GWT;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
@@ -68,7 +66,7 @@ public class IDEConfiguration {
         this.gadgetURL = gadgetURL;
     }
 
-       public String getVfsBaseUrl() {
+    public String getVfsBaseUrl() {
         return vfsBaseUrl;
     }
 

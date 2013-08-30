@@ -36,8 +36,6 @@ import org.exoplatform.ide.extension.java.jdi.shared.StepEvent;
 import java.util.ArrayList;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */

@@ -20,8 +20,6 @@ package org.exoplatform.ide.client.framework.ui;
 import com.google.gwt.user.client.Window;
 
 /**
- * Created by The eXo Platform SAS.
- * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: JsPopUpWindow.java Sep 4, 2012
  */
@@ -31,20 +29,20 @@ public class JsPopUpOAuthWindow {
         public void oAuthFinished(int authenticationStatus);
     }
 
-    private String                     authUrl;
+    private String authUrl;
 
-    private String                     errorPageUrl;
+    private String errorPageUrl;
 
     // 0 means that auth not performed, 1 means that auth failed, 2 means that auth successful
-    private int                        authenticationStatus = 0;
+    private int authenticationStatus = 0;
 
-    private int                        popupWindowWidth;
+    private int popupWindowWidth;
 
-    private int                        popupWindowHeight;
+    private int popupWindowHeight;
 
-    private int                        clientWidth;
+    private int clientWidth;
 
-    private int                        clientHeight;
+    private int clientHeight;
 
     private JsPopUpOAuthWindowCallback callback;
 
@@ -90,18 +88,18 @@ public class JsPopUpOAuthWindow {
     // @formatter:off
     private native void loginWithOAuth(String authUrl, String errorPageUrl, int popupWindowWidth,
                                        int popupWindowHeight, int clientWidth, int clientHeight) /*-{
-                                       
+
         var instance = this;
-                                       
+
         function Popup(authUrl, errorPageUrl, popupWindowWidth, popupWindowHeight) {
             this.authUrl = authUrl;
             this.errorPageUrl = errorPageUrl;
             this.popupWindowWidth = popupWindowWidth;
             this.popupWindowHeight = popupWindowHeight;
-            
+
             var popup_close_handler = function () {
                 if (!popupWindow || popupWindow.closed) {
-                    instance.@org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow::setAuthenticationStatus(I)(1); 
+                    instance.@org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow::setAuthenticationStatus(I)(1);
                     console.log("closed popup")
                     popupWindow = null;
                     if (popupCloseHandlerIntervalId) {
@@ -132,7 +130,7 @@ public class JsPopUpOAuthWindow {
                                 errorFlag = true;
                                 popupWindow.location.replace(errorPageUrl);
                             }
-                            
+
                         }
                     }
                 }
@@ -156,5 +154,5 @@ public class JsPopUpOAuthWindow {
             popupWindowHeight);
         popup.open_window();
     }-*/;
-   // @formatter:on
+    // @formatter:on
 }

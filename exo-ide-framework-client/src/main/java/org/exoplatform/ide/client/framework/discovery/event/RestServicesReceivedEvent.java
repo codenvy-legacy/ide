@@ -25,7 +25,6 @@ import java.util.List;
 
 /**
  * Calls from {@link DiscoveryService} when list of REST Services received <br>
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 21, 2010 4:54:55 PM evgen $

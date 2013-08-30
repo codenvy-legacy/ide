@@ -30,8 +30,6 @@ import javax.ws.rs.core.UriInfo;
 import java.io.File;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */

@@ -23,8 +23,6 @@ import org.exoplatform.ide.shell.client.cli.*;
 import org.junit.Test;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */

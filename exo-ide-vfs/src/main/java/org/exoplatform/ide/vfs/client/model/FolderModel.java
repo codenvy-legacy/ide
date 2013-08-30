@@ -20,14 +20,11 @@ package org.exoplatform.ide.vfs.client.model;
 import com.google.gwt.json.client.JSONObject;
 
 import org.exoplatform.ide.vfs.client.JSONDeserializer;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.shared.*;
 
 import java.util.*;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author eXo
  * @version $Id: $
  */
@@ -64,11 +61,13 @@ public class FolderModel extends FolderImpl implements ItemContext {
     }
 
     public FolderModel(Folder folder) {
-        this(folder.getVfsId(), folder.getId(), folder.getName(), ItemType.FOLDER, FOLDER_MIME_TYPE, folder.getPath(), folder.getParentId(), folder
-                .getCreationDate(), folder.getProperties(), folder.getLinks());
+        this(folder.getVfsId(), folder.getId(), folder.getName(), ItemType.FOLDER, FOLDER_MIME_TYPE, folder.getPath(), folder.getParentId(),
+             folder
+                     .getCreationDate(), folder.getProperties(), folder.getLinks());
     }
 
-    public FolderModel(String vfsId, String id, String name, ItemType itemType, String mimeType, String path, String parentId, long creationDate,
+    public FolderModel(String vfsId, String id, String name, ItemType itemType, String mimeType, String path, String parentId,
+                       long creationDate,
                        List<Property> properties, Map<String, Link> links) {
         super(vfsId, id, name, itemType, mimeType, path, parentId, creationDate, properties, links);
         this.persisted = true;

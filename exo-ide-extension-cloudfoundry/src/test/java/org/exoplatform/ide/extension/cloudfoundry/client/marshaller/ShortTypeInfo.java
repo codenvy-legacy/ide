@@ -24,7 +24,6 @@ package org.exoplatform.ide.extension.cloudfoundry.client.marshaller;
  * "modifiers": 0, "type": "CLASS" }
  * <p/>
  * <p/>
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $

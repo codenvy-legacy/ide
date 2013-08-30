@@ -23,8 +23,6 @@ import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 import org.exoplatform.ide.git.shared.*;
 
 /**
- * Created by The eXo Platform SAS.
- * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: GitAutoBeanFactory.java Aug 3, 2012
  */
@@ -33,14 +31,14 @@ public interface GitAutoBeanFactory extends AutoBeanFactory {
 
     /**
      * A factory method for a log entry bean.
-     * 
+     *
      * @return an {@link AutoBean} of type {@link GitHubRepository}
      */
     AutoBean<GitHubRepository> repositoryExt();
 
     /**
      * Factory method for GitHub credentials bean.
-     * 
+     *
      * @return {@link AutoBean} of type {@link Credentials}
      */
     AutoBean<Credentials> githubCredentials();

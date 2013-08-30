@@ -23,8 +23,6 @@ import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @version $Id: $
  *          <p/>
  *          Fired when changed active file in editor

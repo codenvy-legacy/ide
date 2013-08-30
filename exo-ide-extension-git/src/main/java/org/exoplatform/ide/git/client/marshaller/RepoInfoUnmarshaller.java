@@ -27,8 +27,6 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.git.shared.RepoInfo;
 
 /**
- * Created by The eXo Platform SAS.
- * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: RepoInfoUnmarshaller.java Aug 13, 2012
  */

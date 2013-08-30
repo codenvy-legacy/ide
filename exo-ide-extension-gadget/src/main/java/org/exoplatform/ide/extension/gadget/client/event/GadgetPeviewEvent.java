@@ -20,8 +20,6 @@ package org.exoplatform.ide.extension.gadget.client.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */

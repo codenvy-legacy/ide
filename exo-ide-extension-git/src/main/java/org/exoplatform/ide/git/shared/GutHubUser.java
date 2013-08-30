@@ -18,8 +18,6 @@
 package org.exoplatform.ide.git.shared;
 
 /**
- * Created by The eXo Platform SAS.
- * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: GutHubUser.java Aug 6, 2012
  */

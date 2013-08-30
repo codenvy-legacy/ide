@@ -32,8 +32,6 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
@@ -50,9 +48,10 @@ public class TemplateServiceImpl extends TemplateService {
     }
 
 
-
-    /** @see org.exoplatform.ide.client.framework.template.TemplateService#getProjectTemplateList(org.exoplatform.gwtframework.commons
-     * .rest.AsyncRequestCallback) */
+    /**
+     * @see org.exoplatform.ide.client.framework.template.TemplateService#getProjectTemplateList(org.exoplatform.gwtframework.commons
+     *      .rest.AsyncRequestCallback)
+     */
     @Override
     public void getProjectTemplateList(AsyncRequestCallback<List<ProjectTemplate>> callback) throws RequestException {
         String url = restContext + Utils.getWorkspaceName() + "/templates/project/list";

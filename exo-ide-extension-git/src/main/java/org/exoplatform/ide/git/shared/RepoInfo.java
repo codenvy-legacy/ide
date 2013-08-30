@@ -19,8 +19,6 @@ package org.exoplatform.ide.git.shared;
 
 
 /**
- * Created by The eXo Platform SAS.
- * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: RepoInfo.java Aug 10, 2012
  */

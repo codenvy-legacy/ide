@@ -25,7 +25,6 @@ import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 /**
  * Called after success configuration loading (IDEConficuration, UserInfo, ApplicationSettings)
  * <p/>
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $

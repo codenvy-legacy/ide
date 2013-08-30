@@ -24,8 +24,6 @@ import java.io.IOException;
 import java.security.Principal;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

@@ -25,8 +25,6 @@ import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.extension.java.shared.DataSourceOptions;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -40,16 +38,16 @@ public class DatasourceListGrid extends ListGrid<DataSourceOptions> {
                 if (datasource.getName() == null) {
                     return "";
                 } else {
-                    return datasource.getName();                    
+                    return datasource.getName();
                 }
             }
         };
 
         nameColumn.setCellStyleNames("default-cursor");
-        getCellTable().addColumn(nameColumn);        
+        getCellTable().addColumn(nameColumn);
         getCellTable().setColumnWidth(0, "100%");
     }
-    
+
     public void redraw() {
         getCellTable().redraw();
     }

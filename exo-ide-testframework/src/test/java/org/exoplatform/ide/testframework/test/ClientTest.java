@@ -20,8 +20,6 @@ package org.exoplatform.ide.testframework.test;
 import com.google.gwt.junit.client.GWTTestCase;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

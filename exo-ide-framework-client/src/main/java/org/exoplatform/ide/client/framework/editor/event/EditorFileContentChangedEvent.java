@@ -21,11 +21,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-/**
- * Changed by The eXo Platform SAS .
- *
- * @version $Id: $
- */
+/** @version $Id: $ */
 
 public class EditorFileContentChangedEvent extends GwtEvent<EditorFileContentChangedHandler> {
 

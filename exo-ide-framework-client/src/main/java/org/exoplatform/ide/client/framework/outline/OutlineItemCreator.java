@@ -22,7 +22,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 
 /**
- * Created by The eXo Platform SAS . This interface is used to create code outline item widget from OutlineTreeGrid class of
+ * This interface is used to create code outline item widget from OutlineTreeGrid class of
  * exo.ide.client library. Function getOutlineItemWidget(Token token) is realized in the OutlineItemCreatorImpl class and specific
  * {FileType}OutlineItemCreator classes of exo-ide-editor-{FileType} libraries. Each {FileType}OutlineItemCreator classes are
  * loaded like editors in the IDE at the start by using method org.exoplatform.ide.client.IDE->addOutlineItemCreator().
