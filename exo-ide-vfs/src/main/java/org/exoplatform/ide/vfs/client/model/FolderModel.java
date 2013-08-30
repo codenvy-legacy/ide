@@ -25,7 +25,6 @@ import org.exoplatform.ide.vfs.shared.*;
 import java.util.*;
 
 /**
- * @author eXo
  * @version $Id: $
  */
 

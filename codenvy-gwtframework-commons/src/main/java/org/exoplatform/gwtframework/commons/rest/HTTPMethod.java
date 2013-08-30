@@ -18,7 +18,6 @@
 package org.exoplatform.gwtframework.commons.rest;
 
 /**
- * Created by The eXo Platform SARL        .<br/>
  * HTTP methods
  *
  * @author Gennady Azarenkov

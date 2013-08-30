@@ -19,8 +19,7 @@ package org.exoplatform.ide.editor.codeassistant;
 
 /**
  * The Modifier class provides <code>static</code> methods and constants to decode class and member access modifiers. The sets of
- * modifiers are represented as integers with distinct bit positions representing different modifiers. Created by The eXo Platform
- * SAS.
+ * modifiers are represented as integers with distinct bit positions representing different modifiers.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 24, 2010 3:39:17 PM evgen $
