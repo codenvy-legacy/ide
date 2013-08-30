@@ -23,8 +23,8 @@ import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.ui.list.SimpleList;
@@ -70,8 +70,6 @@ public class BranchViewImpl extends DialogBox implements BranchView {
     final   GitResources            res;
     @UiField(provided = true)
     final   GitLocalizationConstant locale;
-    @UiField(provided = true)
-    final   Resources               coreRes;
     private SimpleList<Branch>      branches;
     private ActionDelegate          delegate;
 
@@ -85,7 +83,6 @@ public class BranchViewImpl extends DialogBox implements BranchView {
     protected BranchViewImpl(GitResources resources, GitLocalizationConstant locale, Resources coreRes) {
         this.res = resources;
         this.locale = locale;
-        this.coreRes = coreRes;
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
@@ -131,9 +128,8 @@ public class BranchViewImpl extends DialogBox implements BranchView {
                 return Elements.createTRElement();
             }
         };
-        branches = SimpleList.create((SimpleList.View)breakPointsElement, coreRes.defaultSimpleListCss(),
-                                     listBranchesRenderer,
-                                     listBranchesDelegate);
+        branches = SimpleList
+                .create((SimpleList.View)breakPointsElement, coreRes.defaultSimpleListCss(), listBranchesRenderer, listBranchesDelegate);
         this.branchesPanel.add(branches);
     }
 

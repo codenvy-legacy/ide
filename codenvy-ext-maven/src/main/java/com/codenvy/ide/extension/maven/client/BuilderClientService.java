@@ -39,7 +39,7 @@ public interface BuilderClientService {
      *         callback
      * @throws RequestException
      */
-    public void build(String projectId, String vfsId, String projectName, String projectType, AsyncRequestCallback<StringBuilder> callback)
+    public void build(String projectId, String vfsId, String projectName, String projectType, AsyncRequestCallback<String> callback)
             throws RequestException;
 
     /**
@@ -54,7 +54,7 @@ public interface BuilderClientService {
      * @throws RequestException
      */
     public void buildAndPublish(String projectId, String vfsId, String projectName, String projectType,
-                                AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+                                AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Cancel previously launched build.
@@ -98,7 +98,7 @@ public interface BuilderClientService {
      *         callback
      * @throws RequestException
      */
-    public void result(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    public void result(String buildid, AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Check is URL for download artifact is valid.

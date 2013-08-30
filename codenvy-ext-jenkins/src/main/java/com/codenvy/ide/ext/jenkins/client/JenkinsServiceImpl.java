@@ -80,7 +80,7 @@ public class JenkinsServiceImpl implements JenkinsService {
 
     /** {@inheritDoc} */
     @Override
-    public void getJenkinsOutput(String vfsId, String projectId, String jobName, AsyncRequestCallback<StringBuilder> callback)
+    public void getJenkinsOutput(String vfsId, String projectId, String jobName, AsyncRequestCallback<String> callback)
             throws RequestException {
         String url = restContext + JENKINS + "/job/console-output?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
         AsyncRequest.build(RequestBuilder.GET, url).send(callback);

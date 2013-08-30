@@ -18,9 +18,9 @@
 
 package com.codenvy.ide.ext.gae.client.project.general.logs;
 
+import com.codenvy.ide.api.parts.PartStackUIResources;
+import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.ext.gae.client.GAELocalization;
-import com.codenvy.ide.part.PartStackUIResources;
-import com.codenvy.ide.part.base.BaseView;
 import com.codenvy.ide.ui.Button;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -61,9 +61,7 @@ public class LogsViewImpl extends BaseView<LogsView.ActionDelegate> implements L
     @UiField(provided = true)
     GAELocalization constant;
 
-    /**
-     * Constructor for View.
-     */
+    /** Constructor for View. */
     @Inject
     public LogsViewImpl(PartStackUIResources partStackUIResources, GAELocalization constant) {
         super(partStackUIResources);
@@ -79,9 +77,7 @@ public class LogsViewImpl extends BaseView<LogsView.ActionDelegate> implements L
         initSeverityListBox();
     }
 
-    /**
-     * Initialize severity list box with default values.
-     */
+    /** Initialize severity list box with default values. */
     private void initSeverityListBox() {
         severity.addItem("All");
         severity.addItem("Error");
@@ -111,9 +107,7 @@ public class LogsViewImpl extends BaseView<LogsView.ActionDelegate> implements L
         return severity.getItemText(severity.getSelectedIndex());
     }
 
-    /**
-     * Handler that checks input text to prevent input text chars.
-     */
+    /** Handler that checks input text to prevent input text chars. */
     KeyPressHandler numbersOnlyHandler = new KeyPressHandler() {
         @Override
         public void onKeyPress(KeyPressEvent event) {

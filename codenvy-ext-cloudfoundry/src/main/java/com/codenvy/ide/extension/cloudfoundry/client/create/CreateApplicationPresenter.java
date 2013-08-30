@@ -28,7 +28,6 @@ import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryAppl
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryApplicationUnmarshallerWS;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.FrameworksUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
@@ -283,8 +282,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
             }
         };
         final Project project = resourceProvider.getActiveProject();
-        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
-        CloudFoundryApplicationUnmarshallerWS unmarshaller = new CloudFoundryApplicationUnmarshallerWS(cloudFoundryApplication);
+        CloudFoundryApplicationUnmarshallerWS unmarshaller = new CloudFoundryApplicationUnmarshallerWS();
 
         try {
             service.createWS(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,
@@ -330,8 +328,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
      *         handler that should be called after success login
      */
     private void createApplicationREST(final AppData appData, final Project project, LoggedInHandler loggedInHandler) {
-        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
-        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
             service.create(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,
@@ -470,7 +467,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                 getFrameworks(server);
             }
         };
-        FrameworksUnmarshaller unmarshaller = new FrameworksUnmarshaller(JsonCollections.<Framework>createArray());
+        FrameworksUnmarshaller unmarshaller = new FrameworksUnmarshaller();
 
         try {
             service.getFrameworks(server, paasProvider,
@@ -581,7 +578,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
     /** Get the list of server and put them to select field. */
     private void getServers() {
-        TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
+        TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller();
 
         try {
             service.getTargets(paasProvider,

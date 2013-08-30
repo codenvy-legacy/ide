@@ -21,6 +21,7 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.aws.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.aws.shared.beanstalk.EnvironmentInfo;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -36,16 +37,6 @@ import com.google.gwt.json.client.JSONParser;
 public class EnvironmentsInfoListUnmarshaller implements Unmarshallable<JsonArray<EnvironmentInfo>> {
     private JsonArray<EnvironmentInfo> environmentInfos;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param environmentInfos
-     */
-    public EnvironmentsInfoListUnmarshaller(
-            JsonArray<EnvironmentInfo> environmentInfos) {
-        this.environmentInfos = environmentInfos;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -59,6 +50,8 @@ public class EnvironmentsInfoListUnmarshaller implements Unmarshallable<JsonArra
         if (environmentsArray == null) {
             return;
         }
+
+        environmentInfos = JsonCollections.createArray();
 
         for (int i = 0; i < environmentsArray.size(); i++) {
             JSONObject env = environmentsArray.get(i).isObject();

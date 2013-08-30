@@ -25,3 +25,7 @@
         font-style: normal;
         font-weight: normal;
     }
+
+    .simpleListContainer {
+        border: 1px solid rgba(0, 0, 0, 0.2);
+    }

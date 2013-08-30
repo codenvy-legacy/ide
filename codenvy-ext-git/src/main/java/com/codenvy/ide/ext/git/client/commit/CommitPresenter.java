@@ -99,7 +99,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
         DtoClientImpls.RevisionImpl revision = DtoClientImpls.RevisionImpl.make();
         revision.setMessage(message);
         revision.setCommitTime(0);
-        RevisionUnmarshallerWS unmarshaller = new RevisionUnmarshallerWS(revision);
+        RevisionUnmarshallerWS unmarshaller = new RevisionUnmarshallerWS();
 
         try {
             service.commitWS(resourceProvider.getVfsId(), project, message, all, amend, new RequestCallback<Revision>(unmarshaller) {
@@ -128,7 +128,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
         DtoClientImpls.RevisionImpl revision = DtoClientImpls.RevisionImpl.make();
         revision.setMessage(message);
         revision.setCommitTime(0);
-        RevisionUnmarshaller unmarshaller = new RevisionUnmarshaller(revision);
+        RevisionUnmarshaller unmarshaller = new RevisionUnmarshaller();
 
         try {
             service.commit(resourceProvider.getVfsId(), project, message, all, amend,

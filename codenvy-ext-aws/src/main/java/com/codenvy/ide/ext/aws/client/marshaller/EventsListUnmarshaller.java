@@ -34,15 +34,6 @@ import com.google.gwt.json.client.JSONParser;
 public class EventsListUnmarshaller implements Unmarshallable<EventsList> {
     private DtoClientImpls.EventsListImpl eventsList;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param eventsList
-     */
-    public EventsListUnmarshaller(DtoClientImpls.EventsListImpl eventsList) {
-        this.eventsList = eventsList;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -56,9 +47,7 @@ public class EventsListUnmarshaller implements Unmarshallable<EventsList> {
             return;
         }
 
-        DtoClientImpls.EventsListImpl dtoEvents = DtoClientImpls.EventsListImpl.deserialize(text);
-        eventsList.setEvents(dtoEvents.getEvents());
-        eventsList.setNextToken(dtoEvents.getNextToken());
+        eventsList = DtoClientImpls.EventsListImpl.deserialize(text).cast();
     }
 
     /** {@inheritDoc} */

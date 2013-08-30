@@ -32,12 +32,10 @@ import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshaller;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshallerWS;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.DomainsUnmarshaller;
-import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.ext.jenkins.client.build.BuildApplicationPresenter;
 import com.codenvy.ide.ext.jenkins.shared.JobStatus;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -174,23 +172,22 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
 
     /** Gets domains. */
     private void getDomains() {
+        DomainsUnmarshaller unmarshaller = new DomainsUnmarshaller();
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                isLogined = true;
+                getDomains();
+            }
+        };
+        LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
+            @Override
+            public void onLoginCanceled() {
+                isLogined = false;
+                delegate.updateControls();
+            }
+        };
         try {
-            DomainsUnmarshaller unmarshaller = new DomainsUnmarshaller(JsonCollections.<String>createArray());
-            LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                @Override
-                public void onLoggedIn() {
-                    isLogined = true;
-                    getDomains();
-                }
-            };
-            LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
-                @Override
-                public void onLoginCanceled() {
-                    isLogined = false;
-                    delegate.updateControls();
-                }
-            };
-
             service.getDomains(
                     new CloudBeesAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, loginCanceledHandler, eventBus,
                                                                          console, loginPresenter) {
@@ -239,8 +236,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
         // TODO Need to create some special service after this class
         // This class still doesn't have analog.
         //        JobManager.get().showJobSeparated();
-        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-        ApplicationInfoUnmarshallerWS unmarshaller = new ApplicationInfoUnmarshallerWS(applicationInfo);
+        ApplicationInfoUnmarshallerWS unmarshaller = new ApplicationInfoUnmarshallerWS();
 
         try {
             service.initializeApplicationWS(domain + "/" + name, resourcesProvider.getVfsId(), project.getId(), warUrl, null,
@@ -275,8 +271,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
 
     /** Create application on Cloud Bees by sending request over HTTP. */
     private void createApplicationREST(LoggedInHandler loggedInHandler) {
-        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
         try {
             service.initializeApplication(domain + "/" + name, resourcesProvider.getVfsId(), project.getId(), warUrl, null,
@@ -334,24 +329,23 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
 
     /** Gets deploy domains. */
     private void getFirstDeployDomains() {
+        DomainsUnmarshaller unmarshaller = new DomainsUnmarshaller();
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                isLogined = true;
+                getFirstDeployDomains();
+            }
+        };
+        LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
+            @Override
+            public void onLoginCanceled() {
+                isLogined = false;
+                delegate.updateControls();
+            }
+        };
+
         try {
-            DomainsUnmarshaller unmarshaller = new DomainsUnmarshaller(JsonCollections.<String>createArray());
-            LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                @Override
-                public void onLoggedIn() {
-                    isLogined = true;
-                    getFirstDeployDomains();
-                }
-            };
-
-            LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
-                @Override
-                public void onLoginCanceled() {
-                    isLogined = false;
-                    delegate.updateControls();
-                }
-            };
-
             service.getDomains(
                     new CloudBeesAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, loginCanceledHandler, eventBus,
                                                                          console, loginPresenter) {

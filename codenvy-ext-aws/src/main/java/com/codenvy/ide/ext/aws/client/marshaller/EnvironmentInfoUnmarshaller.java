@@ -34,15 +34,6 @@ import com.google.gwt.json.client.JSONParser;
 public class EnvironmentInfoUnmarshaller implements Unmarshallable<EnvironmentInfo> {
     private DtoClientImpls.EnvironmentInfoImpl environmentInfo;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param environmentInfo
-     */
-    public EnvironmentInfoUnmarshaller(DtoClientImpls.EnvironmentInfoImpl environmentInfo) {
-        this.environmentInfo = environmentInfo;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -56,20 +47,7 @@ public class EnvironmentInfoUnmarshaller implements Unmarshallable<EnvironmentIn
             return;
         }
 
-        DtoClientImpls.EnvironmentInfoImpl dtoEnvironmentInfo = DtoClientImpls.EnvironmentInfoImpl.deserialize(text);
-        environmentInfo.setSolutionStackName(dtoEnvironmentInfo.getSolutionStackName());
-        environmentInfo.setVersionLabel(dtoEnvironmentInfo.getVersionLabel());
-        environmentInfo.setApplicationName(dtoEnvironmentInfo.getApplicationName());
-        environmentInfo.setDescription(dtoEnvironmentInfo.getDescription());
-        environmentInfo.setCname(dtoEnvironmentInfo.getCname());
-        environmentInfo.setCreated(dtoEnvironmentInfo.getCreated());
-        environmentInfo.setEndpointUrl(dtoEnvironmentInfo.getEndpointUrl());
-        environmentInfo.setHealth(dtoEnvironmentInfo.getHealth());
-        environmentInfo.setStatus(dtoEnvironmentInfo.getStatus());
-        environmentInfo.setTemplateName(dtoEnvironmentInfo.getTemplateName());
-        environmentInfo.setUpdated(dtoEnvironmentInfo.getUpdated());
-        environmentInfo.setId(dtoEnvironmentInfo.getId());
-        environmentInfo.setName(dtoEnvironmentInfo.getName());
+        environmentInfo = DtoClientImpls.EnvironmentInfoImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */

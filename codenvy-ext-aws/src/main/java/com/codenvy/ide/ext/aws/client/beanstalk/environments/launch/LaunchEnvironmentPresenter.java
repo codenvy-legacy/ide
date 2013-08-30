@@ -109,16 +109,13 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
                 getSolutionStacks();
             }
         };
-
         LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
             @Override
             public void onLoginCanceled() {
                 view.close();
             }
         };
-
-        JsonArray<SolutionStack> solutions = JsonCollections.createArray();
-        SolutionStackListUnmarshaller unmarshaller = new SolutionStackListUnmarshaller(solutions);
+        SolutionStackListUnmarshaller unmarshaller = new SolutionStackListUnmarshaller();
 
         try {
             service.getAvailableSolutionStacks(
@@ -162,9 +159,7 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
                 getVersions(versionLabel);
             }
         };
-
-        JsonArray<ApplicationVersionInfo> versionList = JsonCollections.createArray();
-        ApplicationVersionListUnmarshaller unmarshaller = new ApplicationVersionListUnmarshaller(versionList);
+        ApplicationVersionListUnmarshaller unmarshaller = new ApplicationVersionListUnmarshaller();
 
         try {
             service.getVersions(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
@@ -211,8 +206,7 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
         createEnvironmentRequest.setEnvironmentName(envName);
         createEnvironmentRequest.setSolutionStackName(view.getSolutionStack());
 
-        DtoClientImpls.EnvironmentInfoImpl environmentInfo = DtoClientImpls.EnvironmentInfoImpl.make();
-        EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller(environmentInfo);
+        EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller();
 
         try {
             service.createEnvironment(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(), createEnvironmentRequest,

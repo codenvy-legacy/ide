@@ -15,13 +15,12 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.client.marshaller;
+package com.codenvy.ide.resources.marshal;
 
-import com.codenvy.ide.client.DtoClientImpls;
-import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.json.js.Jso;
-import com.codenvy.ide.rest.Unmarshallable;
+import com.codenvy.ide.resources.DtoClientImpls;
 import com.codenvy.ide.api.user.User;
+import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 
 /**
@@ -30,25 +29,12 @@ import com.google.gwt.http.client.Response;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class UserUnmarshaller implements Unmarshallable<User> {
-
     private DtoClientImpls.UserImpl user;
-
-    /**
-     * Create unmarshaller.
-     *
-     * @param user
-     */
-    public UserUnmarshaller(DtoClientImpls.UserImpl user) {
-        this.user = user;
-    }
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
-        DtoClientImpls.UserImpl user = Jso.deserialize(response.getText()).cast();
-
-        this.user.setUserId(user.getUserId());
-        this.user.setProfileAttributes(user.getProfileAttributes());
+        user = DtoClientImpls.UserImpl.deserialize(response.getText());
     }
 
     /** {@inheritDoc} */

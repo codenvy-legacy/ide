@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.marshaller;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.ApplicationInstance;
@@ -32,15 +31,6 @@ import com.codenvy.ide.websocket.rest.Unmarshallable;
 public class ApplicationInstanceUnmarshallerWS implements Unmarshallable<ApplicationInstance> {
     private DtoClientImpls.ApplicationInstanceImpl applicationInstance;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param applicationInstance
-     */
-    public ApplicationInstanceUnmarshallerWS(@NotNull DtoClientImpls.ApplicationInstanceImpl applicationInstance) {
-        this.applicationInstance = applicationInstance;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Message response) throws UnmarshallerException {
@@ -50,15 +40,7 @@ public class ApplicationInstanceUnmarshallerWS implements Unmarshallable<Applica
             return;
         }
 
-        DtoClientImpls.ApplicationInstanceImpl applicationInstance = DtoClientImpls.ApplicationInstanceImpl.deserialize(text);
-
-        this.applicationInstance.setName(applicationInstance.getName());
-        this.applicationInstance.setHost(applicationInstance.getHost());
-        this.applicationInstance.setPort(applicationInstance.getPort());
-        this.applicationInstance.setStopURL(applicationInstance.getStopURL());
-        this.applicationInstance.setLifetime(applicationInstance.getLifetime());
-        this.applicationInstance.setDebugHost(applicationInstance.getDebugHost());
-        this.applicationInstance.setDebugPort(applicationInstance.getDebugPort());
+        applicationInstance = DtoClientImpls.ApplicationInstanceImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */

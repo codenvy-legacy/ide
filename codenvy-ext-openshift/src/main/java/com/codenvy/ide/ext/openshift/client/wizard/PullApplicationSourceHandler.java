@@ -24,7 +24,6 @@ import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.BranchListRequest;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -187,26 +186,23 @@ public class PullApplicationSourceHandler {
      */
     public void getBranches(String projectId, final String remoteMode) {
         try {
-            gitService.branchList(vfsId, projectId, remoteMode,
-                                  new AsyncRequestCallback<JsonArray<Branch>>(
-                                          new BranchListUnmarshaller(JsoArray.<Branch>create())) {
+            gitService.branchList(vfsId, projectId, remoteMode, new AsyncRequestCallback<JsonArray<Branch>>(new BranchListUnmarshaller()) {
+                @Override
+                protected void onSuccess(JsonArray<Branch> result) {
+                    if (remoteMode.equals(BranchListRequest.LIST_REMOTE)) {
+                        remoteBranches = result;
+                        setRemoteBranches(remoteBranches);
+                        return;
+                    }
 
-                                      @Override
-                                      protected void onSuccess(JsonArray<Branch> result) {
-                                          if (remoteMode.equals(BranchListRequest.LIST_REMOTE)) {
-                                              remoteBranches = result;
-                                              setRemoteBranches(remoteBranches);
-                                              return;
-                                          }
+                    setLocalBranches(result);
+                }
 
-                                          setLocalBranches(result);
-                                      }
-
-                                      @Override
-                                      protected void onFailure(Throwable exception) {
-                                          handleError(exception);
-                                      }
-                                  });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    handleError(exception);
+                }
+            });
         } catch (RequestException e) {
             handleError(e);
         }
@@ -220,26 +216,23 @@ public class PullApplicationSourceHandler {
      */
     public void getRemotes(String projectId) {
         try {
-            gitService.remoteList(vfsId, projectId, null, true,
-                                  new AsyncRequestCallback<JsonArray<Remote>>(
-                                          new RemoteListUnmarshaller(JsoArray.<Remote>create())) {
-                                      @Override
-                                      protected void onSuccess(JsonArray<Remote> result) {
-                                          if (result.size() == 0) {
-                                              return;
-                                          }
+            gitService.remoteList(vfsId, projectId, null, true, new AsyncRequestCallback<JsonArray<Remote>>(new RemoteListUnmarshaller()) {
+                @Override
+                protected void onSuccess(JsonArray<Remote> result) {
+                    if (result.size() == 0) {
+                        return;
+                    }
 
-                                          onRemotesReceived(result);
-                                      }
+                    onRemotesReceived(result);
+                }
 
-                                      @Override
-                                      protected void onFailure(Throwable exception) {
-                                          handleError(exception);
-                                      }
-                                  });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    handleError(exception);
+                }
+            });
         } catch (RequestException e) {
             handleError(e);
         }
     }
-
 }

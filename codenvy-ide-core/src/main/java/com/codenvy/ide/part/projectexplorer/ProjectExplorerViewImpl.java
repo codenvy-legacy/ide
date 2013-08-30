@@ -20,7 +20,7 @@ package com.codenvy.ide.part.projectexplorer;
 import elemental.html.DragEvent;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.part.base.BaseView;
+import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.tree.FileTreeNodeRenderer;
 import com.codenvy.ide.tree.ResourceTreeNodeDataAdapter;

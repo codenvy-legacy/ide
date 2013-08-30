@@ -19,7 +19,7 @@
 package com.codenvy.ide.ext.gae.client.project.general.logs;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.part.base.BaseActionDelegate;
+import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 
 /**
  * The view of {@link LogsPresenter}.
@@ -30,9 +30,7 @@ import com.codenvy.ide.part.base.BaseActionDelegate;
 public interface LogsView extends View<LogsView.ActionDelegate> {
     /** Needs for delegate some function into Applications view. */
     interface ActionDelegate extends BaseActionDelegate {
-        /**
-         * Perform action when get logs button clicked.
-         */
+        /** Perform action when get logs button clicked. */
         void onGetLogsButtonClicked();
     }
 

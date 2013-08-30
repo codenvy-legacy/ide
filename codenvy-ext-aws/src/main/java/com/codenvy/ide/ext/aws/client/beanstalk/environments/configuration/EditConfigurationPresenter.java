@@ -32,7 +32,6 @@ import com.codenvy.ide.ext.aws.shared.beanstalk.ConfigurationOption;
 import com.codenvy.ide.ext.aws.shared.beanstalk.ConfigurationOptionInfo;
 import com.codenvy.ide.ext.aws.shared.beanstalk.EnvironmentInfo;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -117,11 +116,9 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
     private void getConfigurationOptions() {
         DtoClientImpls.SolutionStackConfigurationOptionsRequestImpl solutionStackConfigurationOptionsRequest =
                 DtoClientImpls.SolutionStackConfigurationOptionsRequestImpl.make();
-
         solutionStackConfigurationOptionsRequest.setSolutionStackName(environmentInfo.getSolutionStackName());
 
-        JsonArray<ConfigurationOptionInfo> configurationJsonArray = JsonCollections.createArray();
-        ConfigurationOptionInfoListUnmarshaller unmarshaller = new ConfigurationOptionInfoListUnmarshaller(configurationJsonArray);
+        ConfigurationOptionInfoListUnmarshaller unmarshaller = new ConfigurationOptionInfoListUnmarshaller();
 
         try {
             service.getSolutionStackConfigurationOptions(solutionStackConfigurationOptionsRequest,
@@ -148,8 +145,7 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
         DtoClientImpls.ConfigurationRequestImpl configurationRequest = DtoClientImpls.ConfigurationRequestImpl.make();
         configurationRequest.setEnvironmentName(environmentInfo.getName());
 
-        JsonArray<Configuration> configurationJsonArray = JsonCollections.createArray();
-        ConfigurationListUnmarshaller unmarshaller = new ConfigurationListUnmarshaller(configurationJsonArray);
+        ConfigurationListUnmarshaller unmarshaller = new ConfigurationListUnmarshaller();
 
         try {
             service.getEnvironmentConfigurations(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
@@ -204,8 +200,7 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
         DtoClientImpls.UpdateEnvironmentRequestImpl updateEnvironmentRequest = DtoClientImpls.UpdateEnvironmentRequestImpl.make();
         updateEnvironmentRequest.setOptions(options);
 
-        DtoClientImpls.EnvironmentInfoImpl dtoEnvironmentInfo = DtoClientImpls.EnvironmentInfoImpl.make();
-        EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller(dtoEnvironmentInfo);
+        EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller();
 
         try {
             service.updateEnvironment(environmentInfo.getId(), updateEnvironmentRequest,

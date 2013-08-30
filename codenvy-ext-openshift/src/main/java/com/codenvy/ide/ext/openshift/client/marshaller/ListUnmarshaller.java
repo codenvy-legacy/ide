@@ -17,12 +17,12 @@
  */
 package com.codenvy.ide.ext.openshift.client.marshaller;
 
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
-
-import java.util.List;
 
 /**
  * Unmarshaller for Lists.
@@ -30,18 +30,8 @@ import java.util.List;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class ListUnmarshaller implements Unmarshallable<List<String>> {
-
-    protected List<String> list;
-
-    /**
-     * Create unmarshaller.
-     *
-     * @param list
-     */
-    public ListUnmarshaller(List<String> list) {
-        this.list = list;
-    }
+public class ListUnmarshaller implements Unmarshallable<JsonArray<String>> {
+    protected JsonArray<String> list;
 
     /** {@inheritDoc} */
     @Override
@@ -49,6 +39,9 @@ public class ListUnmarshaller implements Unmarshallable<List<String>> {
         if (response.getText().length() == 0) {
             return;
         }
+
+        list = JsonCollections.createArray();
+
         JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
         for (int i = 0; i < jsonArray.size(); i++) {
             list.add(jsonArray.get(i).isString().stringValue());
@@ -57,7 +50,7 @@ public class ListUnmarshaller implements Unmarshallable<List<String>> {
 
     /** {@inheritDoc} */
     @Override
-    public List<String> getPayload() {
+    public JsonArray<String> getPayload() {
         return list;
     }
 }

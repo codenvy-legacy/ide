@@ -21,6 +21,7 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -36,15 +37,6 @@ import com.google.gwt.json.client.JSONParser;
 public class ApplicationListUnmarshaller implements Unmarshallable<JsonArray<CloudFoundryApplication>> {
     private JsonArray<CloudFoundryApplication> apps;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param apps
-     */
-    public ApplicationListUnmarshaller(JsonArray<CloudFoundryApplication> apps) {
-        this.apps = apps;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -57,6 +49,8 @@ public class ApplicationListUnmarshaller implements Unmarshallable<JsonArray<Clo
         if (array == null) {
             return;
         }
+
+        apps = JsonCollections.createArray();
 
         for (int i = 0; i < array.size(); i++) {
             JSONObject jsonObject = array.get(i).isObject();

@@ -28,7 +28,6 @@ import com.codenvy.ide.ext.gae.client.GAELocalization;
 import com.codenvy.ide.ext.gae.client.marshaller.ResourceLimitsUnmarshaller;
 import com.codenvy.ide.ext.gae.shared.ResourceLimit;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -51,9 +50,7 @@ public class LimitTabPanePresenter implements Presenter, LimitTabPaneView.Action
     private ResourceProvider resourceProvider;
     private GAELocalization  constant;
 
-    /**
-     * Constructor for limits presenter.
-     */
+    /** Constructor for limits presenter. */
     @Inject
     public LimitTabPanePresenter(LimitTabPaneView view, GAEClientService service, EventBus eventBus,
                                  ConsolePart console, ResourceProvider resourceProvider, GAELocalization constant) {
@@ -75,9 +72,7 @@ public class LimitTabPanePresenter implements Presenter, LimitTabPaneView.Action
      */
     public void init(Project project) {
         final String vfsId = resourceProvider.getVfsId();
-
-        ResourceLimitsUnmarshaller unmarshaller =
-                new ResourceLimitsUnmarshaller(JsonCollections.<ResourceLimit>createArray());
+        ResourceLimitsUnmarshaller unmarshaller = new ResourceLimitsUnmarshaller();
 
         try {
             service.getResourceLimits(vfsId, project.getId(),

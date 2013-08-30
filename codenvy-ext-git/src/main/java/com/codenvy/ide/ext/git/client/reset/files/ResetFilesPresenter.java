@@ -80,8 +80,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
     /** Show dialog. */
     public void showDialog() {
         project = resourceProvider.getActiveProject();
-        DtoClientImpls.StatusImpl status = DtoClientImpls.StatusImpl.make();
-        StatusUnmarshaller unmarshaller = new StatusUnmarshaller(status);
+        StatusUnmarshaller unmarshaller = new StatusUnmarshaller();
 
         try {
             service.status(resourceProvider.getVfsId(), project.getId(), new AsyncRequestCallback<Status>(unmarshaller) {

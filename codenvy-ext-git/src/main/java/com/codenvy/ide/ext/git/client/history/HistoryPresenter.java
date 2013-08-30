@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.git.client.history;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -31,12 +32,10 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.marshaller.DiffResponseUnmarshaller;
 import com.codenvy.ide.ext.git.client.marshaller.LogResponseUnmarshaller;
-import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.LogResponse;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.js.JsoArray;
-import com.codenvy.ide.part.base.BasePresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -136,8 +135,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
 
     /** Get the log of the commits. If successfully received, then display in revision grid, otherwise - show error in output panel. */
     private void getCommitsLog(@NotNull String projectId) {
-        DtoClientImpls.LogResponseImpl logResponse = DtoClientImpls.LogResponseImpl.make();
-        LogResponseUnmarshaller unmarshaller = new LogResponseUnmarshaller(logResponse);
+        LogResponseUnmarshaller unmarshaller = new LogResponseUnmarshaller();
 
         try {
             service.log(resourceProvider.getVfsId(), projectId, false, new AsyncRequestCallback<LogResponse>(unmarshaller) {
@@ -343,14 +341,14 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         }
 
         String projectId = resourceProvider.getActiveProject().getId();
-        DiffResponseUnmarshaller unmarshaller = new DiffResponseUnmarshaller(new StringBuilder());
+        DiffResponseUnmarshaller unmarshaller = new DiffResponseUnmarshaller();
 
         try {
             service.diff(resourceProvider.getVfsId(), projectId, filePatterns, RAW, false, 0, revision.getId(), isCached,
-                         new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                         new AsyncRequestCallback<String>(unmarshaller) {
                              @Override
-                             protected void onSuccess(StringBuilder result) {
-                                 view.setDiffContext(result.toString());
+                             protected void onSuccess(String result) {
+                                 view.setDiffContext(result);
                                  String text = isCached ? constant.historyDiffIndexState() : constant.historyDiffTreeState();
                                  displayCommitA(revision);
                                  view.setCompareType(text);
@@ -387,14 +385,14 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         if (index + 1 < revisions.size()) {
             final Revision revisionA = revisions.get(index + 1);
             String projectId = resourceProvider.getActiveProject().getId();
-            DiffResponseUnmarshaller unmarshaller = new DiffResponseUnmarshaller(new StringBuilder());
+            DiffResponseUnmarshaller unmarshaller = new DiffResponseUnmarshaller();
 
             try {
                 service.diff(resourceProvider.getVfsId(), projectId, filePatterns, RAW, false, 0, revisionA.getId(), revisionB.getId(),
-                             new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                             new AsyncRequestCallback<String>(unmarshaller) {
                                  @Override
-                                 protected void onSuccess(StringBuilder result) {
-                                     view.setDiffContext(result.toString());
+                                 protected void onSuccess(String result) {
+                                     view.setDiffContext(result);
                                      displayCommitA(revisionA);
                                      displayCommitB(revisionB);
                                  }

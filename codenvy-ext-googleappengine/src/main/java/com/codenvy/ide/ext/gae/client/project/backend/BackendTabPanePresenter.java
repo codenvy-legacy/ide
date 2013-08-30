@@ -29,7 +29,6 @@ import com.codenvy.ide.ext.gae.client.actions.LoginAction;
 import com.codenvy.ide.ext.gae.client.marshaller.BackendsUnmarshaller;
 import com.codenvy.ide.ext.gae.shared.Backend;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
@@ -55,9 +54,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
     private LoginAction        loginAction;
     private Project            project;
 
-    /**
-     * Constructor for backends presenter.
-     */
+    /** Constructor for backends presenter. */
     @Inject
     public BackendTabPanePresenter(BackendTabPaneView view, GAEClientService service,
                                    EventBus eventBus, ConsolePart console,
@@ -84,7 +81,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
         this.project = project;
 
         final String vfsId = resourceProvider.getVfsId();
-        BackendsUnmarshaller unmarshaller = new BackendsUnmarshaller(JsonCollections.<Backend>createArray());
+        BackendsUnmarshaller unmarshaller = new BackendsUnmarshaller();
 
         try {
             service.listBackends(vfsId, project.getId(),

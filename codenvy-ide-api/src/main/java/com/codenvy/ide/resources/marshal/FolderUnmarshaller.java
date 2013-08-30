@@ -30,30 +30,22 @@ import com.google.gwt.json.client.JSONParser;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class FolderUnmarshaller implements Unmarshallable<Folder> {
+    private Folder item;
 
-    private final Folder item;
-
-    public FolderUnmarshaller(Folder item) {
-
-        this.item = item;
-
-    }
-
-    /** @see com.codenvy.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         try {
-            item.init(JSONParser.parseLenient(response.getText()).isObject());
+            item = new Folder(JSONParser.parseLenient(response.getText()).isObject());
         } catch (Exception exc) {
             String message = "Can't parse item " + response.getText();
             throw new UnmarshallerException(message, exc);
         }
-
     }
 
+    /** {@inheritDoc} */
     @Override
     public Folder getPayload() {
         return this.item;
     }
-
 }

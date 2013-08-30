@@ -384,7 +384,7 @@ public class AppfogClientServiceImpl implements AppfogClientService {
     /** {@inheritDoc} */
     @Override
     public void updateInstances(String vfsId, String projectId, String name, String server, String expression,
-                                AppfogAsyncRequestCallback<StringBuilder> callback) throws RequestException {
+                                AppfogAsyncRequestCallback<String> callback) throws RequestException {
         final String url = restServiceContext + UPDATE_INSTANCES;
 
         server = checkServerUrl(server);
@@ -469,7 +469,7 @@ public class AppfogClientServiceImpl implements AppfogClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+    public void getLogs(String vfsId, String projectId, AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + LOGS + "?projectid=" + projectId + "&vfsid=" + vfsId;
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }

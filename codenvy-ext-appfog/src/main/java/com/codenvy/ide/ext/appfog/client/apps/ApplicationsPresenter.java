@@ -106,8 +106,8 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
 
     /** Gets target from AppFog server. If this works well then we will know we have connect to AppFog server. */
     private void checkLogginedToServer() {
+        TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller();
         try {
-            TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
             service.getTargets(new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
                 @Override
                 protected void onSuccess(JsonArray<String> result) {
@@ -143,7 +143,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     /** Gets list of available application for current user. */
     private void getApplicationList() {
         try {
-            ApplicationListUnmarshaller unmarshaller = new ApplicationListUnmarshaller(JsonCollections.<AppfogApplication>createArray());
+            ApplicationListUnmarshaller unmarshaller = new ApplicationListUnmarshaller();
             LoggedInHandler loggedInHandler = new LoggedInHandler() {
                 @Override
                 public void onLoggedIn() {

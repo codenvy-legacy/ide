@@ -118,7 +118,7 @@ public class GitHubClientServiceImpl implements GitHubClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void getUserToken(@NotNull String user, @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+    public void getUserToken(@NotNull String user, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + TOKEN + "/" + user;
         AsyncRequest.build(GET, url).loader(loader).send(callback);
     }

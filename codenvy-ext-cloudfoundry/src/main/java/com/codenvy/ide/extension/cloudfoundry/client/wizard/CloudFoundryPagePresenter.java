@@ -33,7 +33,6 @@ import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryAppl
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryApplicationUnmarshallerWS;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.SystemInfoUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
@@ -157,9 +156,7 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
         // TODO Need to create some special service after this class
         // This class still doesn't have analog.
         //      JobManager.get().showJobSeparated();
-
-        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
-        CloudFoundryApplicationUnmarshallerWS unmarshaller = new CloudFoundryApplicationUnmarshallerWS(cloudFoundryApplication);
+        CloudFoundryApplicationUnmarshallerWS unmarshaller = new CloudFoundryApplicationUnmarshallerWS();
         boolean noStart = false;
 
         try {
@@ -202,8 +199,7 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
      *         handler that should be called after success login
      */
     private void createApplicationREST(LoggedInHandler loggedInHandler) {
-        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
-        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
         boolean noStart = false;
 
         try {
@@ -287,38 +283,37 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
 
     /** Get the list of server and put them to select field. */
     private void getServers() {
+        TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller();
         try {
-            TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
-            service.getTargets(paasProvider,
-                               new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
-                                   @Override
-                                   protected void onSuccess(JsonArray<String> result) {
-                                       if (result.isEmpty()) {
-                                           JsonArray<String> servers = JsonCollections.createArray(CloudFoundryExtension.DEFAULT_CF_SERVER);
-                                           view.setServerValues(servers);
-                                           view.setServer(CloudFoundryExtension.DEFAULT_CF_SERVER);
-                                       } else {
-                                           view.setServerValues(result);
-                                           view.setServer(result.get(0));
-                                       }
-                                       view.setName(projectName);
-                                       // don't forget to init values, that are stored, when
-                                       // values in form fields are changed.
-                                       name = projectName;
-                                       server = view.getServer();
-                                       String urlSufix = server.substring(server.indexOf("."));
-                                       view.setUrl(name + urlSufix);
-                                       url = view.getUrl();
+            service.getTargets(paasProvider, new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
+                @Override
+                protected void onSuccess(JsonArray<String> result) {
+                    if (result.isEmpty()) {
+                        JsonArray<String> servers = JsonCollections.createArray(CloudFoundryExtension.DEFAULT_CF_SERVER);
+                        view.setServerValues(servers);
+                        view.setServer(CloudFoundryExtension.DEFAULT_CF_SERVER);
+                    } else {
+                        view.setServerValues(result);
+                        view.setServer(result.get(0));
+                    }
+                    view.setName(projectName);
+                    // don't forget to init values, that are stored, when
+                    // values in form fields are changed.
+                    name = projectName;
+                    server = view.getServer();
+                    String urlSufix = server.substring(server.indexOf("."));
+                    view.setUrl(name + urlSufix);
+                    url = view.getUrl();
 
-                                       delegate.updateControls();
-                                   }
+                    delegate.updateControls();
+                }
 
-                                   @Override
-                                   protected void onFailure(Throwable exception) {
-                                       eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                       console.print(exception.getMessage());
-                                   }
-                               });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                    console.print(exception.getMessage());
+                }
+            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -464,8 +459,7 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
                 delegate.updateControls();
             }
         };
-        DtoClientImpls.SystemInfoImpl systemInfo = DtoClientImpls.SystemInfoImpl.make();
-        SystemInfoUnmarshaller unmarshaller = new SystemInfoUnmarshaller(systemInfo);
+        SystemInfoUnmarshaller unmarshaller = new SystemInfoUnmarshaller();
 
         try {
             service.getSystemInfo(server, paasProvider,

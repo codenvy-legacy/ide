@@ -21,7 +21,6 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
 import com.codenvy.ide.ext.java.jdi.client.marshaller.DebuggerInfoUnmarshaller;
-import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.ApplicationInstance;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -44,7 +43,7 @@ public class ReLaunchDebuggerPresenter implements ReLaunchDebuggerView.ActionDel
     private ConsolePart                 console;
     private AsyncCallback<DebuggerInfo> callback;
     /** A timer for checking events. */
-    private Timer tryConnectDebuger = new Timer() {
+    private Timer tryConnectDebugger = new Timer() {
         @Override
         public void run() {
             connectDebugger();
@@ -69,7 +68,7 @@ public class ReLaunchDebuggerPresenter implements ReLaunchDebuggerView.ActionDel
     /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {
-        tryConnectDebuger.cancel();
+        tryConnectDebugger.cancel();
         view.close();
         callback.onSuccess(null);
     }
@@ -81,16 +80,15 @@ public class ReLaunchDebuggerPresenter implements ReLaunchDebuggerView.ActionDel
         this.view.showDialog();
     }
 
-    /** Connect to debbuger. */
+    /** Connect to debugger. */
     protected void connectDebugger() {
-        DtoClientImpls.DebuggerInfoImpl debuggerInfo = DtoClientImpls.DebuggerInfoImpl.make();
-        DebuggerInfoUnmarshaller unmarshaller = new DebuggerInfoUnmarshaller(debuggerInfo);
+        DebuggerInfoUnmarshaller unmarshaller = new DebuggerInfoUnmarshaller();
 
         try {
             service.connect(instance.getDebugHost(), instance.getDebugPort(), new AsyncRequestCallback<DebuggerInfo>(unmarshaller) {
                 @Override
                 public void onSuccess(DebuggerInfo result) {
-                    tryConnectDebuger.cancel();
+                    tryConnectDebugger.cancel();
                     view.close();
                     callback.onSuccess(result);
                 }

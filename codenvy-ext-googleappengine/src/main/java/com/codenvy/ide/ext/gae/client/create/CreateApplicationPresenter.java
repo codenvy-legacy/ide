@@ -27,7 +27,6 @@ import com.codenvy.ide.ext.gae.client.GAEExtension;
 import com.codenvy.ide.ext.gae.client.GAELocalization;
 import com.codenvy.ide.ext.gae.client.actions.LoginAction;
 import com.codenvy.ide.ext.gae.client.marshaller.ApplicationInfoUnmarshaller;
-import com.codenvy.ide.ext.gae.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.gae.shared.ApplicationInfo;
 import com.codenvy.ide.ext.java.client.JavaExtension;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
@@ -65,9 +64,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     private Project               project;
     private String                warUrl;
 
-    /**
-     * Constructor for Create Application Presenter.
-     */
+    /** Constructor for Create Application Presenter. */
     @Inject
     public CreateApplicationPresenter(CreateApplicationView view, EventBus eventBus, ConsolePart console,
                                       GAEClientService service, GAELocalization constant,
@@ -109,9 +106,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         loginAction.isUserLoggedIn(onIfUserLoggedIn);
     }
 
-    /**
-     * Handler to programmaticaly click on create application button when user logged in on Google Services.
-     */
+    /** Handler to programmaticaly click on create application button when user logged in on Google Services. */
     private final AsyncCallback<Boolean> onLoggedIn = new AsyncCallback<Boolean>() {
         @Override
         public void onFailure(Throwable caught) {
@@ -217,9 +212,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         deploy();
     }
 
-    /**
-     * Start deploying opened project in current moment.
-     */
+    /** Start deploying opened project in current moment. */
     public void deploy() {
         String projectType = (String)project.getPropertyValue("vfs:projectType");
         if (projectType.equals(JavaExtension.JAVA_WEB_APPLICATION_PROJECT_TYPE)) {
@@ -229,21 +222,15 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         }
     }
 
-    /**
-     * Starts building project.
-     */
+    /** Starts building project. */
     private void startBuildingApplication() {
         projectBuildHandler = eventBus.addHandler(ProjectBuiltEvent.TYPE, this);
         eventBus.fireEvent(new BuildProjectEvent(project));
     }
 
-    /**
-     * Starts upload application to Google App Engine.
-     */
+    /** Starts upload application to Google App Engine. */
     private void uploadApplication() {
-        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
-
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
         final String vfsId = resourceProvider.getVfsId();
 
         try {

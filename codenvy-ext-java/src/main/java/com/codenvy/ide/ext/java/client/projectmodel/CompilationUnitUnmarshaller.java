@@ -30,19 +30,13 @@ import com.google.gwt.json.client.JSONParser;
  * @version $Id:
  */
 public class CompilationUnitUnmarshaller implements Unmarshallable<CompilationUnit> {
-
-    private final CompilationUnit compilationUnit;
-
-    /** @param compilationUnit */
-    public CompilationUnitUnmarshaller(CompilationUnit compilationUnit) {
-        this.compilationUnit = compilationUnit;
-    }
+    private CompilationUnit compilationUnit;
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         try {
-            compilationUnit.init(JSONParser.parseLenient(response.getText()).isObject());
+            compilationUnit = new CompilationUnit(JSONParser.parseLenient(response.getText()).isObject());
         } catch (Exception e) {
             throw new UnmarshallerException("Can't parse compilation unit.", e);
         }
@@ -53,5 +47,4 @@ public class CompilationUnitUnmarshaller implements Unmarshallable<CompilationUn
     public CompilationUnit getPayload() {
         return compilationUnit;
     }
-
 }

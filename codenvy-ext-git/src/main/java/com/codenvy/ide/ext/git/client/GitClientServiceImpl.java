@@ -576,9 +576,8 @@ public class GitClientServiceImpl implements GitClientService {
     /** {@inheritDoc} */
     @Override
     public void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull JsonArray<String> fileFilter,
-                     @NotNull DiffRequest.DiffType type,
-                     boolean noRenames, int renameLimit, @NotNull String commitA, @NotNull String commitB,
-                     @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+                     @NotNull DiffRequest.DiffType type, boolean noRenames, int renameLimit, @NotNull String commitA,
+                     @NotNull String commitB, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         DtoClientImpls.DiffRequestImpl diffRequest = DtoClientImpls.DiffRequestImpl.make();
         diffRequest.setFileFilter(fileFilter);
         diffRequest.setType(type);
@@ -594,7 +593,7 @@ public class GitClientServiceImpl implements GitClientService {
     @Override
     public void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull JsonArray<String> fileFilter,
                      @NotNull DiffRequest.DiffType type, boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached,
-                     @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+                     @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         DtoClientImpls.DiffRequestImpl diffRequest = DtoClientImpls.DiffRequestImpl.make();
         diffRequest.setFileFilter(fileFilter);
         diffRequest.setType(type);
@@ -619,8 +618,7 @@ public class GitClientServiceImpl implements GitClientService {
      *         callback
      * @throws RequestException
      */
-    private void diff(DtoClientImpls.DiffRequestImpl diffRequest, String vfsId, String projectid,
-                      AsyncRequestCallback<StringBuilder> callback)
+    private void diff(DtoClientImpls.DiffRequestImpl diffRequest, String vfsId, String projectid, AsyncRequestCallback<String> callback)
             throws RequestException {
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
         String url = restServiceContext + DIFF + params;
@@ -646,7 +644,7 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void getGitReadOnlyUrl(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<StringBuilder> callback)
+    public void getGitReadOnlyUrl(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<String> callback)
             throws RequestException {
         String url = restServiceContext + RO_URL;
         url += "?vfsid=" + vfsId + "&projectid=" + projectid;

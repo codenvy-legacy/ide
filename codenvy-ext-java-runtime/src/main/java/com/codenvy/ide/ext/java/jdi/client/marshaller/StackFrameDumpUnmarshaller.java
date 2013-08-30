@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.marshaller;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.StackFrameDump;
@@ -32,15 +31,6 @@ import com.google.gwt.http.client.Response;
 public class StackFrameDumpUnmarshaller implements Unmarshallable<StackFrameDump> {
     private DtoClientImpls.StackFrameDumpImpl stackFrameDump;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param stackFrameDump
-     */
-    public StackFrameDumpUnmarshaller(@NotNull DtoClientImpls.StackFrameDumpImpl stackFrameDump) {
-        this.stackFrameDump = stackFrameDump;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -49,9 +39,7 @@ public class StackFrameDumpUnmarshaller implements Unmarshallable<StackFrameDump
             return;
         }
 
-        DtoClientImpls.StackFrameDumpImpl stackFrameDump = DtoClientImpls.StackFrameDumpImpl.deserialize(text);
-        this.stackFrameDump.setFields(stackFrameDump.getFields());
-        this.stackFrameDump.setLocalVariables(stackFrameDump.getLocalVariables());
+        stackFrameDump = DtoClientImpls.StackFrameDumpImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */

@@ -28,7 +28,6 @@ import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
 import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
 import com.codenvy.ide.ext.appfog.client.marshaller.StringUnmarshaller;
-import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.http.client.RequestException;
@@ -99,8 +98,7 @@ public class UpdatePropertiesPresenter {
     /** Gets old memory value. */
     private void getOldMemoryValue() {
         String projectId = resourceProvider.getActiveProject().getId();
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
@@ -197,8 +195,7 @@ public class UpdatePropertiesPresenter {
     /** Gets old instances value. */
     private void getOldInstancesValue() {
         String projectId = resourceProvider.getActiveProject().getId();
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
@@ -264,16 +261,13 @@ public class UpdatePropertiesPresenter {
         String encodedExp = URL.encodePathSegment(instancesExpression);
 
         try {
-            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+            StringUnmarshaller unmarshaller = new StringUnmarshaller();
             service.updateInstances(resourceProvider.getVfsId(), projectId, appName, server, encodedExp,
-                                    new AppfogAsyncRequestCallback<StringBuilder>(unmarshaller, updateInstancesLoggedInHandler, null,
-                                                                                  eventBus, constant, console, loginPresenter) {
+                                    new AppfogAsyncRequestCallback<String>(unmarshaller, updateInstancesLoggedInHandler, null,
+                                                                           eventBus, constant, console, loginPresenter) {
                                         @Override
-                                        protected void onSuccess(StringBuilder result) {
-                                            DtoClientImpls.AppfogApplicationImpl appfogApplication =
-                                                    DtoClientImpls.AppfogApplicationImpl.make();
-                                            AppFogApplicationUnmarshaller unmarshaller =
-                                                    new AppFogApplicationUnmarshaller(appfogApplication);
+                                        protected void onSuccess(String result) {
+                                            AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
                                             try {
                                                 service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null,

@@ -19,7 +19,6 @@ package com.codenvy.ide.resources.marshal;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
@@ -29,23 +28,18 @@ import com.google.gwt.json.client.JSONParser;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 public class PropertyUnmarshaller implements Unmarshallable<JsonArray<Property>> {
-    protected JsonArray<Property> properties = JsonCollections.createArray();
-
-    public PropertyUnmarshaller() {
-    }
+    protected JsonArray<Property> properties;
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         try {
             JSONObject itemObject = JSONParser.parseLenient(response.getText()).isObject();
-            JsonArray<Property> properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
-            this.properties.addAll(properties);
+            properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
         } catch (Exception exc) {
             String message = "Can't parse item's properties " + response.getText();
             throw new UnmarshallerException(message, exc);
         }
-
     }
 
     /** {@inheritDoc} */

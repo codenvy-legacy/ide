@@ -21,6 +21,7 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -35,15 +36,6 @@ import com.google.gwt.json.client.JSONParser;
 public class ApplicationListUnmarshaller implements Unmarshallable<JsonArray<ApplicationInfo>> {
     private JsonArray<ApplicationInfo> apps;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param apps
-     */
-    public ApplicationListUnmarshaller(JsonArray<ApplicationInfo> apps) {
-        this.apps = apps;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -56,6 +48,8 @@ public class ApplicationListUnmarshaller implements Unmarshallable<JsonArray<App
         if (value == null) {
             return;
         }
+
+        apps = JsonCollections.createArray();
 
         for (int i = 0; i < value.size(); i++) {
             String payload = value.get(i).isObject().toString();

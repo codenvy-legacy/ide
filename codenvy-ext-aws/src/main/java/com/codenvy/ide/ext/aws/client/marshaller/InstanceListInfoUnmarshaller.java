@@ -21,6 +21,7 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.aws.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.aws.shared.ec2.InstanceInfo;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -36,15 +37,6 @@ import com.google.gwt.json.client.JSONParser;
 public class InstanceListInfoUnmarshaller implements Unmarshallable<JsonArray<InstanceInfo>> {
     private JsonArray<InstanceInfo> instances;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param instances
-     */
-    public InstanceListInfoUnmarshaller(JsonArray<InstanceInfo> instances) {
-        this.instances = instances;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -58,6 +50,8 @@ public class InstanceListInfoUnmarshaller implements Unmarshallable<JsonArray<In
         if (array == null) {
             return;
         }
+
+        instances = JsonCollections.createArray();
 
         for (int i = 0; i < array.size(); i++) {
             JSONObject jsonObject = array.get(i).isObject();

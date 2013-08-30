@@ -31,15 +31,6 @@ import com.google.gwt.http.client.Response;
 public class CloudFoundryApplicationUnmarshaller implements Unmarshallable<CloudFoundryApplication> {
     private DtoClientImpls.CloudFoundryApplicationImpl application;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param application
-     */
-    public CloudFoundryApplicationUnmarshaller(DtoClientImpls.CloudFoundryApplicationImpl application) {
-        this.application = application;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -49,20 +40,7 @@ public class CloudFoundryApplicationUnmarshaller implements Unmarshallable<Cloud
             return;
         }
 
-        DtoClientImpls.CloudFoundryApplicationImpl application = DtoClientImpls.CloudFoundryApplicationImpl.deserialize(text);
-
-        this.application.setName(application.getName());
-        this.application.setUris(application.getUris());
-        this.application.setInstances(application.getInstances());
-        this.application.setRunningInstances(application.getRunningInstances());
-        this.application.setState(application.getState());
-        this.application.setServices(application.getServices());
-        this.application.setVersion(application.getVersion());
-        this.application.setEnv(application.getEnv());
-        this.application.setResources(application.getResources());
-        this.application.setStaging(application.getStaging());
-        this.application.setDebug(application.getDebug());
-        this.application.setMeta(application.getMeta());
+        application = DtoClientImpls.CloudFoundryApplicationImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */

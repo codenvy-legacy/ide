@@ -26,22 +26,18 @@ import com.google.gwt.http.client.Response;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: FileContentUnmarshaller Feb 3, 2011 9:42:13 AM evgen $
  */
-public class StringUnmarshaller implements Unmarshallable<StringBuilder> {
+public class StringUnmarshaller implements Unmarshallable<String> {
+    private String payload;
 
-    private final StringBuilder string;
-
-    public StringUnmarshaller() {
-        this.string = new StringBuilder();
-    }
-
-    @Override
-    public StringBuilder getPayload() {
-        return string;
-    }
-
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
-        string.append(response.getText());
+        payload = response.getText();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String getPayload() {
+        return payload;
+    }
 }

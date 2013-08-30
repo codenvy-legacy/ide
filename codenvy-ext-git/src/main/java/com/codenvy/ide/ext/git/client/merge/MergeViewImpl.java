@@ -19,10 +19,9 @@ package com.codenvy.ide.ext.git.client.merge;
 
 import elemental.html.DragEvent;
 
-import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Reference;
 import com.codenvy.ide.json.JsonArray;
@@ -67,8 +66,6 @@ public class MergeViewImpl extends DialogBox implements MergeView {
     final         GitResources                 res;
     @UiField(provided = true)
     final         GitLocalizationConstant      locale;
-    @UiField(provided = true)
-    final         Resources                    coreRes;
     private       Tree<Reference>              references;
     private       ActionDelegate               delegate;
     private final DtoClientImpls.ReferenceImpl localBranches;
@@ -79,15 +76,12 @@ public class MergeViewImpl extends DialogBox implements MergeView {
      *
      * @param resources
      * @param locale
-     * @param coreRes
      * @param rendererResources
      */
     @Inject
-    protected MergeViewImpl(GitResources resources, GitLocalizationConstant locale, Resources coreRes,
-                            ReferenceTreeNodeRenderer.Resources rendererResources) {
+    protected MergeViewImpl(GitResources resources, GitLocalizationConstant locale, ReferenceTreeNodeRenderer.Resources rendererResources) {
         this.res = resources;
         this.locale = locale;
-        this.coreRes = coreRes;
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 

@@ -28,6 +28,8 @@ import com.google.gwt.resources.client.ImageResource;
 public interface GitResources extends ClientBundle {
     public interface GitCSS extends CssResource {
         String textFont();
+
+        String simpleListContainer();
     }
 
     @Source({"git.css", "com/codenvy/ide/api/ui/style.css"})

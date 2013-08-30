@@ -88,7 +88,7 @@ public class PullPresenter implements PullView.ActionDelegate {
      * local).
      */
     private void getRemotes() {
-        RemoteListUnmarshaller unmarshaller = new RemoteListUnmarshaller(JsonCollections.<Remote>createArray());
+        RemoteListUnmarshaller unmarshaller = new RemoteListUnmarshaller();
         final String projectId = project.getId();
         view.setEnablePullButton(true);
 
@@ -128,7 +128,7 @@ public class PullPresenter implements PullView.ActionDelegate {
      *         is a remote mode
      */
     private void getBranches(@NotNull String projectId, @NotNull final String remoteMode) {
-        BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller(JsonCollections.<Branch>createArray());
+        BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller();
         try {
             service.branchList(resourceProvider.getVfsId(), projectId, remoteMode,
                                new AsyncRequestCallback<JsonArray<Branch>>(unmarshaller) {

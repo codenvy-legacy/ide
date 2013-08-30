@@ -35,7 +35,6 @@ import com.codenvy.ide.ext.appfog.client.start.StartApplicationPresenter;
 import com.codenvy.ide.ext.appfog.client.update.UpdateApplicationPresenter;
 import com.codenvy.ide.ext.appfog.client.update.UpdatePropertiesPresenter;
 import com.codenvy.ide.ext.appfog.client.url.UnmapUrlPresenter;
-import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -152,12 +151,12 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
     /** Getting logs for AppFog Application. */
     protected void getLogs() {
         try {
-            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+            StringUnmarshaller unmarshaller = new StringUnmarshaller();
             service.getLogs(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
-                            new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                            new AsyncRequestCallback<String>(unmarshaller) {
                                 @Override
-                                protected void onSuccess(StringBuilder result) {
-                                    console.print("<pre>" + result.toString() + "</pre>");
+                                protected void onSuccess(String result) {
+                                    console.print("<pre>" + result + "</pre>");
                                 }
 
                                 @Override
@@ -250,8 +249,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
      * @param project
      */
     protected void getApplicationInfo(final Project project) {
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
             public void onLoggedIn() {

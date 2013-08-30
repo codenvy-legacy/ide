@@ -30,12 +30,10 @@ import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshaller;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshallerWS;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.DomainsUnmarshaller;
-import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.ext.jenkins.client.build.BuildApplicationPresenter;
 import com.codenvy.ide.ext.jenkins.shared.JobStatus;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -105,15 +103,15 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
     /** Gets domains. */
     private void getDomains() {
-        try {
-            DomainsUnmarshaller unmarshaller = new DomainsUnmarshaller(JsonCollections.<String>createArray());
-            LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                @Override
-                public void onLoggedIn() {
-                    getDomains();
-                }
-            };
+        DomainsUnmarshaller unmarshaller = new DomainsUnmarshaller();
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                getDomains();
+            }
+        };
 
+        try {
             service.getDomains(
                     new CloudBeesAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, null, eventBus, console,
                                                                          loginPresenter) {
@@ -170,8 +168,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
     /** Deploy application to Cloud Bees by sending request over WebSocket or HTTP. */
     private void doDeployApplication() {
-        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-        ApplicationInfoUnmarshallerWS unmarshaller = new ApplicationInfoUnmarshallerWS(applicationInfo);
+        ApplicationInfoUnmarshallerWS unmarshaller = new ApplicationInfoUnmarshallerWS();
 
         try {
             service.initializeApplicationWS(view.getUrl(), resourcesProvider.getVfsId(), project.getId(), warUrl, null,
@@ -207,8 +204,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
     /** Deploy application to Cloud Bees by sending request over HTTP. */
     private void doDeployApplicationREST() {
-        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
         try {
             service.initializeApplication(view.getUrl(), resourcesProvider.getVfsId(), project.getId(), warUrl, null,

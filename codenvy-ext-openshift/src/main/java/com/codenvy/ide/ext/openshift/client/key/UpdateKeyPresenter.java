@@ -25,7 +25,6 @@ import com.codenvy.ide.ext.openshift.client.OpenShiftLocalizationConstant;
 import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.openshift.client.login.LoginPresenter;
 import com.codenvy.ide.ext.openshift.client.marshaller.UserInfoUnmarshaller;
-import com.codenvy.ide.ext.openshift.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.openshift.shared.RHUserInfo;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
@@ -84,11 +83,9 @@ public class UpdateKeyPresenter {
      */
     public void updatePublicKey(AsyncCallback<Boolean> callback) {
         this.publicKeyUpdateCallback = callback;
+        UserInfoUnmarshaller unmarshaller = new UserInfoUnmarshaller();
 
         try {
-            DtoClientImpls.RHUserInfoImpl userInfo = DtoClientImpls.RHUserInfoImpl.make();
-            UserInfoUnmarshaller unmarshaller = new UserInfoUnmarshaller(userInfo);
-
             service.getUserInfo(false,
                                 new OpenShiftAsyncRequestCallback<RHUserInfo>(unmarshaller, updatePublicKeyLoginHandler, null, eventBus,
                                                                               console, constant, loginPresenter) {

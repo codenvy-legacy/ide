@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.cloudbees.client.CloudBeesLocalizationConstant;
 import com.codenvy.ide.ext.cloudbees.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshaller;
-import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.http.client.RequestException;
@@ -99,9 +98,7 @@ public class DeleteApplicationPresenter {
         Project project = resourceProvider.getActiveProject();
         if (project != null) {
             String projectId = project.getId();
-
-            DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-            ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
+            ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
             LoggedInHandler loggedInHandler = new LoggedInHandler() {
                 @Override
                 public void onLoggedIn() {

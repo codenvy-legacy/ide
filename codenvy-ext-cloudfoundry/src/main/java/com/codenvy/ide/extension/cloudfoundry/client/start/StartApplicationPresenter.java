@@ -27,7 +27,6 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationCon
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryApplicationUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
@@ -137,8 +136,7 @@ public class StartApplicationPresenter {
     /** Gets information about active project and check its state. */
     private void checkIsStarted() {
         Project project = resourceProvider.getActiveProject();
-        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
-        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
@@ -171,10 +169,8 @@ public class StartApplicationPresenter {
      * @param callback
      */
     private void startApplication(String name, String server, final AsyncCallback<String> callback) {
-        final String projectId =
-                resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
-        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
-        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
+        final String projectId = resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
             service.startApplication(resourceProvider.getVfsId(), projectId, name, server, paasProvider,
@@ -250,8 +246,7 @@ public class StartApplicationPresenter {
     /** Gets information about active project and check its state. */
     private void checkIsStopped() {
         Project project = resourceProvider.getActiveProject();
-        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
-        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
@@ -291,10 +286,7 @@ public class StartApplicationPresenter {
                                                                                  constant, loginPresenter, paasProvider) {
                                         @Override
                                         protected void onSuccess(String result) {
-                                            DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication =
-                                                    DtoClientImpls.CloudFoundryApplicationImpl.make();
-                                            CloudFoundryApplicationUnmarshaller unmarshaller =
-                                                    new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
+                                            CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
                                             try {
                                                 service.getApplicationInfo(resourceProvider.getVfsId(), projectId, name, null,
@@ -342,10 +334,8 @@ public class StartApplicationPresenter {
      * @param callback
      */
     private void restartApplication(String name, String server, final AsyncCallback<String> callback) {
-        final String projectId =
-                resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
-        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
-        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
+        final String projectId = resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
 
         try {
             service.restartApplication(resourceProvider.getVfsId(), projectId, name, server, paasProvider,

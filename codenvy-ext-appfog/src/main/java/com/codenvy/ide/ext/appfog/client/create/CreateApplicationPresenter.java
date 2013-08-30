@@ -28,7 +28,6 @@ import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshalle
 import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshallerWS;
 import com.codenvy.ide.ext.appfog.client.marshaller.FrameworksUnmarshaller;
 import com.codenvy.ide.ext.appfog.client.marshaller.InfrasUnmarshaller;
-import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.ext.appfog.shared.Framework;
 import com.codenvy.ide.ext.appfog.shared.InfraDetail;
@@ -272,8 +271,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
             }
         };
         final Project project = resourceProvider.getActiveProject();
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshallerWS unmarshaller = new AppFogApplicationUnmarshallerWS(appfogApplication);
+        AppFogApplicationUnmarshallerWS unmarshaller = new AppFogApplicationUnmarshallerWS();
 
         try {
             service.createWS(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,
@@ -318,8 +316,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
      *         handler that should be called after success login
      */
     private void createApplicationREST(final AppData appData, final Project project, LoggedInHandler loggedInHandler) {
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             service.create(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,
@@ -474,7 +471,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                 getFrameworks(server);
             }
         };
-        FrameworksUnmarshaller unmarshaller = new FrameworksUnmarshaller(JsonCollections.<Framework>createArray());
+        FrameworksUnmarshaller unmarshaller = new FrameworksUnmarshaller();
 
         try {
             service.getFrameworks(server,
@@ -616,7 +613,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                 getInfras(server);
             }
         };
-        InfrasUnmarshaller unmarshaller = new InfrasUnmarshaller(JsonCollections.<InfraDetail>createArray());
+        InfrasUnmarshaller unmarshaller = new InfrasUnmarshaller();
 
         try {
             service.infras(server, null, null,

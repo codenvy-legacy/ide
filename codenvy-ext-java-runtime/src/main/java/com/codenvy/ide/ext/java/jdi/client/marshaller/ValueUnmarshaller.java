@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.marshaller;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.Value;
@@ -32,15 +31,6 @@ import com.google.gwt.http.client.Response;
 public class ValueUnmarshaller implements Unmarshallable<Value> {
     private DtoClientImpls.ValueImpl value;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param value
-     */
-    public ValueUnmarshaller(@NotNull DtoClientImpls.ValueImpl value) {
-        this.value = value;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -50,10 +40,7 @@ public class ValueUnmarshaller implements Unmarshallable<Value> {
             return;
         }
 
-        DtoClientImpls.ValueImpl value = DtoClientImpls.ValueImpl.deserialize(text);
-
-        this.value.setValue(value.getValue());
-        this.value.setVariables(value.getVariables());
+        value = DtoClientImpls.ValueImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */

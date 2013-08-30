@@ -75,9 +75,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     private       GAELocalization constant;
     private final String          wsName;
 
-    /**
-     * Create client service.
-     */
+    /** Create client service. */
     @Inject
     protected GAEClientServiceImpl(@Named("restContext") String restContext, Loader loader, EventBus eventBus,
                                    GAELocalization constant) {
@@ -157,7 +155,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     /** {@inheritDoc} */
     @Override
     public void requestLogs(String vfsId, String projectId, int numDays, String logSeverity,
-                            GAEAsyncRequestCallback<StringBuilder> callback) throws RequestException {
+                            GAEAsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + '/' + wsName + LOGS;
 
         StringBuilder params = new StringBuilder("?");

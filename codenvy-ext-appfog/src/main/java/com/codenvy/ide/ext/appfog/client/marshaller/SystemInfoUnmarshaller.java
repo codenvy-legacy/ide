@@ -31,15 +31,6 @@ import com.google.gwt.http.client.Response;
 public class SystemInfoUnmarshaller implements Unmarshallable<SystemInfo> {
     private DtoClientImpls.SystemInfoImpl systemInfo;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param systemInfo
-     */
-    public SystemInfoUnmarshaller(DtoClientImpls.SystemInfoImpl systemInfo) {
-        this.systemInfo = systemInfo;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -49,16 +40,7 @@ public class SystemInfoUnmarshaller implements Unmarshallable<SystemInfo> {
             return;
         }
 
-        DtoClientImpls.SystemInfoImpl systemInfo = DtoClientImpls.SystemInfoImpl.deserialize(text);
-
-        this.systemInfo.setUsage(systemInfo.getUsage());
-        this.systemInfo.setLimits(systemInfo.getLimits());
-        this.systemInfo.setDescription(systemInfo.getDescription());
-        this.systemInfo.setUser(systemInfo.getUser());
-        this.systemInfo.setVersion(systemInfo.getVersion());
-        this.systemInfo.setName(systemInfo.getName());
-        this.systemInfo.setSupport(systemInfo.getSupport());
-        this.systemInfo.setFrameworks(systemInfo.getFrameworks());
+        systemInfo = DtoClientImpls.SystemInfoImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */

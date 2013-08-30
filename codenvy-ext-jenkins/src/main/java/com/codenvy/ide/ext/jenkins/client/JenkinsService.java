@@ -79,6 +79,5 @@ public interface JenkinsService {
      * @param callback
      * @throws RequestException
      */
-    void getJenkinsOutput(String vfsId, String projectId, String jobName, AsyncRequestCallback<StringBuilder> callback)
-            throws RequestException;
+    void getJenkinsOutput(String vfsId, String projectId, String jobName, AsyncRequestCallback<String> callback) throws RequestException;
 }

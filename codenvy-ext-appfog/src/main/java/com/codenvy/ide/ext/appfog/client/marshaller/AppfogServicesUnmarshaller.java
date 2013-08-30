@@ -44,11 +44,6 @@ public class AppfogServicesUnmarshaller implements Unmarshallable<AppfogServices
     /** Appfog services (system and provisioned). */
     private DtoClientImpls.AppfogServicesImpl appfogServices;
 
-    /** Create unmarshaller. */
-    public AppfogServicesUnmarshaller() {
-        appfogServices = DtoClientImpls.AppfogServicesImpl.make();
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -57,6 +52,7 @@ public class AppfogServicesUnmarshaller implements Unmarshallable<AppfogServices
         }
 
         JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
+        appfogServices = DtoClientImpls.AppfogServicesImpl.make();
 
         if (jsonObject.containsKey(Keys.SYSTEM)) {
             JSONArray systemServices = jsonObject.get(Keys.SYSTEM).isArray();

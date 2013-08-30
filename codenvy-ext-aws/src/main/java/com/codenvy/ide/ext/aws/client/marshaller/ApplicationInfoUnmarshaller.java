@@ -34,15 +34,6 @@ import com.google.gwt.json.client.JSONParser;
 public class ApplicationInfoUnmarshaller implements Unmarshallable<ApplicationInfo> {
     private DtoClientImpls.ApplicationInfoImpl applicationInfo;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param applicationInfo
-     */
-    public ApplicationInfoUnmarshaller(DtoClientImpls.ApplicationInfoImpl applicationInfo) {
-        this.applicationInfo = applicationInfo;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -57,13 +48,7 @@ public class ApplicationInfoUnmarshaller implements Unmarshallable<ApplicationIn
             return;
         }
 
-        DtoClientImpls.ApplicationInfoImpl dtoAppInfo = DtoClientImpls.ApplicationInfoImpl.deserialize(text);
-        applicationInfo.setName(dtoAppInfo.getName());
-        applicationInfo.setDescription(dtoAppInfo.getDescription());
-        applicationInfo.setUpdated(dtoAppInfo.getUpdated());
-        applicationInfo.setCreated(dtoAppInfo.getCreated());
-        applicationInfo.setVersions(dtoAppInfo.getVersions());
-        applicationInfo.setConfigurationTemplates(dtoAppInfo.getConfigurationTemplates());
+        applicationInfo = DtoClientImpls.ApplicationInfoImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */

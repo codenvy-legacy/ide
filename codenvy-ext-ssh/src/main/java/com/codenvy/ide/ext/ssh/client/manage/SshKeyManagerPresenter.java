@@ -22,7 +22,7 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.ui.preferences.AbstractPreferencesPagePresenter;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
-import com.codenvy.ide.client.marshaller.UserUnmarshaller;
+import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.github.GitHubClientService;
 import com.codenvy.ide.ext.git.client.marshaller.AllRepositoriesUnmarshaller;
@@ -195,8 +195,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                     if (needToCreate) {
                         loader.show();
                         try {
-                            com.codenvy.ide.client.DtoClientImpls.UserImpl user = com.codenvy.ide.client.DtoClientImpls.UserImpl.make();
-                            UserUnmarshaller unmarshaller = new UserUnmarshaller(user);
+                            UserUnmarshaller unmarshaller = new UserUnmarshaller();
 
                             userService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
                                 @Override
@@ -237,10 +236,10 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
-            gitHubClientService.getUserToken(user, new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+            gitHubClientService.getUserToken(user, new AsyncRequestCallback<String>(unmarshaller) {
                 @Override
-                protected void onSuccess(StringBuilder result) {
-                    if (result == null || result.toString().isEmpty()) {
+                protected void onSuccess(String result) {
+                    if (result == null || result.isEmpty()) {
                         loader.hide();
                         oAuthLoginStart(user);
                     } else {

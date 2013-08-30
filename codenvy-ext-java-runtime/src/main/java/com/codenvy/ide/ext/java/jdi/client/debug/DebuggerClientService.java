@@ -179,6 +179,6 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void evaluateExpression(@NotNull String id, @NotNull String expression, @NotNull AsyncRequestCallback<StringBuilder> callback)
+    void evaluateExpression(@NotNull String id, @NotNull String expression, @NotNull AsyncRequestCallback<String> callback)
             throws RequestException;
 }

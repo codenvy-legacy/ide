@@ -19,10 +19,10 @@ package com.codenvy.ide.ext.java.jdi.client.debug;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.part.base.BaseActionDelegate;
 
 /**
  * The view of {@link DebuggerPresenter}.

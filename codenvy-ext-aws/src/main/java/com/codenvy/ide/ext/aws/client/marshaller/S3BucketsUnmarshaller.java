@@ -21,6 +21,7 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.aws.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.aws.shared.s3.S3Bucket;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -36,15 +37,6 @@ import com.google.gwt.json.client.JSONParser;
 public class S3BucketsUnmarshaller implements Unmarshallable<JsonArray<S3Bucket>> {
     private JsonArray<S3Bucket> s3Buckets;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param s3Buckets
-     */
-    public S3BucketsUnmarshaller(JsonArray<S3Bucket> s3Buckets) {
-        this.s3Buckets = s3Buckets;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -59,6 +51,8 @@ public class S3BucketsUnmarshaller implements Unmarshallable<JsonArray<S3Bucket>
         if (jsonArray == null) {
             return;
         }
+
+        s3Buckets = JsonCollections.createArray();
 
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = jsonArray.get(i).isObject();

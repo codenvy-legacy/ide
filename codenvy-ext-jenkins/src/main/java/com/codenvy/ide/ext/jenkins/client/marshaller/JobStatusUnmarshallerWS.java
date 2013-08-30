@@ -31,15 +31,6 @@ import com.codenvy.ide.websocket.rest.Unmarshallable;
 public class JobStatusUnmarshallerWS implements Unmarshallable<JobStatus> {
     private DtoClientImpls.JobStatusImpl jobStatus;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param jobStatus
-     */
-    public JobStatusUnmarshallerWS(DtoClientImpls.JobStatusImpl jobStatus) {
-        this.jobStatus = jobStatus;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Message response) throws UnmarshallerException {
@@ -49,12 +40,7 @@ public class JobStatusUnmarshallerWS implements Unmarshallable<JobStatus> {
             return;
         }
 
-        DtoClientImpls.JobStatusImpl jobStatus = DtoClientImpls.JobStatusImpl.deserialize(text);
-
-        this.jobStatus.setName(jobStatus.getName());
-        this.jobStatus.setStatus(jobStatus.getStatus());
-        this.jobStatus.setLastBuildResult(jobStatus.getLastBuildResult());
-        this.jobStatus.setArtifactUrl(jobStatus.getArtifactUrl());
+        jobStatus = DtoClientImpls.JobStatusImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */

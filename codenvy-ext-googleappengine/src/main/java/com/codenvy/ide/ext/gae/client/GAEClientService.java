@@ -17,16 +17,11 @@
  */
 package com.codenvy.ide.ext.gae.client;
 
-import com.codenvy.ide.ext.gae.shared.ApplicationInfo;
-import com.codenvy.ide.ext.gae.shared.GaeUser;
+import com.codenvy.ide.ext.gae.shared.*;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
-
-import com.codenvy.ide.ext.gae.shared.Backend;
-import com.codenvy.ide.ext.gae.shared.CronEntry;
-import com.codenvy.ide.ext.gae.shared.ResourceLimit;
 
 /**
  * Client service for managing Google App Engine.
@@ -124,8 +119,8 @@ public interface GAEClientService {
      *         callback function.
      * @throws RequestException
      */
-    void requestLogs(String vfsId, String projectId, int numDays, String logSeverity,
-                     GAEAsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    void requestLogs(String vfsId, String projectId, int numDays, String logSeverity, GAEAsyncRequestCallback<String> callback)
+            throws RequestException;
 
     /**
      * Rollback deployed Google App Engine application.

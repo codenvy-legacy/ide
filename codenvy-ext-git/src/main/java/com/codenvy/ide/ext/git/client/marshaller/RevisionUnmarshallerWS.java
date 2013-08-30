@@ -34,14 +34,6 @@ public class RevisionUnmarshallerWS implements Unmarshallable<Revision> {
     /** Represents revision info. */
     private DtoClientImpls.RevisionImpl revision;
 
-    /**
-     * @param revision
-     *         revision information
-     */
-    public RevisionUnmarshallerWS(DtoClientImpls.RevisionImpl revision) {
-        this.revision = revision;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Message response) throws UnmarshallerException {
@@ -58,13 +50,7 @@ public class RevisionUnmarshallerWS implements Unmarshallable<Revision> {
             return;
 
         String value = revisionObject.toString();
-        DtoClientImpls.RevisionImpl revision = DtoClientImpls.RevisionImpl.deserialize(value);
-        this.revision.setId(revision.getId());
-        this.revision.setCommitTime(revision.getCommitTime());
-        this.revision.setMessage(revision.getMessage());
-        this.revision.setBranch(revision.getBranch());
-        this.revision.setCommitter(revision.getCommitter());
-        this.revision.setFake(revision.fake());
+        revision = DtoClientImpls.RevisionImpl.deserialize(value);
     }
 
     /** {@inheritDoc} */

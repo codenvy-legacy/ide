@@ -117,17 +117,15 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
 
     /** Gets list of available application for current user. */
     private void getApplicationList() {
+        ApplicationListUnmarshaller unmarshaller = new ApplicationListUnmarshaller();
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void
+            onLoggedIn() {
+                getApplicationList();
+            }
+        };
         try {
-            ApplicationListUnmarshaller unmarshaller =
-                    new ApplicationListUnmarshaller(JsonCollections.<CloudFoundryApplication>createArray());
-            LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                @Override
-                public void
-                onLoggedIn() {
-                    getApplicationList();
-                }
-            };
-
             service.getApplicationList(currentServer, paasProvider,
                                        new CloudFoundryAsyncRequestCallback<JsonArray<CloudFoundryApplication>>(unmarshaller,
                                                                                                                 loggedInHandler, null,
@@ -158,8 +156,8 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
 
     /** Gets servers. */
     private void getServers() {
+        TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller();
         try {
-            TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
             service.getTargets(paasProvider, new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
                 @Override
                 protected void onSuccess(JsonArray<String> result) {
@@ -188,8 +186,8 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
 
     /** Gets target from CloudFoundry server. If this works well then we will know we have connect to CloudFoundry server. */
     private void checkLogginedToServer() {
+        TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller();
         try {
-            TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
             service.getTargets(paasProvider, new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
                 @Override
                 protected void onSuccess(JsonArray<String> result) {

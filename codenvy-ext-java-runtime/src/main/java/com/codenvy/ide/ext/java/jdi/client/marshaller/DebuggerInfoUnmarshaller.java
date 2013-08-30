@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.marshaller;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
@@ -32,15 +31,6 @@ import com.google.gwt.http.client.Response;
 public class DebuggerInfoUnmarshaller implements Unmarshallable<DebuggerInfo> {
     private DtoClientImpls.DebuggerInfoImpl debuggerInfo;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param debuggerInfo
-     */
-    public DebuggerInfoUnmarshaller(@NotNull DtoClientImpls.DebuggerInfoImpl debuggerInfo) {
-        this.debuggerInfo = debuggerInfo;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -49,14 +39,7 @@ public class DebuggerInfoUnmarshaller implements Unmarshallable<DebuggerInfo> {
             return;
         }
 
-        DtoClientImpls.DebuggerInfoImpl debuggerInfo = DtoClientImpls.DebuggerInfoImpl.deserialize(text);
-        this.debuggerInfo.setId(debuggerInfo.getId());
-        this.debuggerInfo.setHost(debuggerInfo.getHost());
-        if (debuggerInfo.hasPort()) {
-            this.debuggerInfo.setPort(debuggerInfo.getPort());
-        }
-        this.debuggerInfo.setVmName(debuggerInfo.getVmName());
-        this.debuggerInfo.setVmVersion(debuggerInfo.getVmVersion());
+        debuggerInfo = DtoClientImpls.DebuggerInfoImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */

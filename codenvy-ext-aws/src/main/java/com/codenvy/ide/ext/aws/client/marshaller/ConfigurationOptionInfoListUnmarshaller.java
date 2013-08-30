@@ -21,6 +21,7 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.aws.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.aws.shared.beanstalk.ConfigurationOptionInfo;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -36,16 +37,6 @@ import com.google.gwt.json.client.JSONParser;
 public class ConfigurationOptionInfoListUnmarshaller implements Unmarshallable<JsonArray<ConfigurationOptionInfo>> {
     JsonArray<ConfigurationOptionInfo> configurationOptionInfoJsonArray;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param configurationOptionInfoJsonArray
-     */
-    public ConfigurationOptionInfoListUnmarshaller(
-            JsonArray<ConfigurationOptionInfo> configurationOptionInfoJsonArray) {
-        this.configurationOptionInfoJsonArray = configurationOptionInfoJsonArray;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -58,6 +49,8 @@ public class ConfigurationOptionInfoListUnmarshaller implements Unmarshallable<J
         if (jsonArray == null) {
             return;
         }
+
+        configurationOptionInfoJsonArray = JsonCollections.createArray();
 
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject object = jsonArray.get(i).isObject();

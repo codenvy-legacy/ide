@@ -27,7 +27,6 @@ import com.codenvy.ide.ext.openshift.client.info.ApplicationInfoPresenter;
 import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.openshift.client.login.LoginPresenter;
 import com.codenvy.ide.ext.openshift.client.marshaller.ApplicationInfoUnmarshaller;
-import com.codenvy.ide.ext.openshift.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
 import com.codenvy.ide.resources.marshal.StringUnmarshaller;
 import com.google.gwt.http.client.RequestException;
@@ -98,8 +97,7 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
         final String projectId = resourceProvider.getActiveProject().getId();
         final String vfsId = resourceProvider.getVfsId();
 
-        DtoClientImpls.AppInfoImpl appInfo = DtoClientImpls.AppInfoImpl.make();
-        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(appInfo);
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
         try {
             service.getApplicationInfo(null, vfsId, projectId,
@@ -126,16 +124,15 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
                 getApplicationHealth();
             }
         };
-
         final StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
             service.getApplicationHealth(application.getName(),
-                                         new OpenShiftAsyncRequestCallback<StringBuilder>(unmarshaller, loggedInHandler, null, eventBus,
-                                                                                          console, constant, loginPresenter) {
+                                         new OpenShiftAsyncRequestCallback<String>(unmarshaller, loggedInHandler, null, eventBus,
+                                                                                   console, constant, loginPresenter) {
                                              @Override
-                                             protected void onSuccess(StringBuilder result) {
-                                                 view.setApplicationHealth(result.toString());
+                                             protected void onSuccess(String result) {
+                                                 view.setApplicationHealth(result);
                                              }
                                          });
         } catch (RequestException e) {

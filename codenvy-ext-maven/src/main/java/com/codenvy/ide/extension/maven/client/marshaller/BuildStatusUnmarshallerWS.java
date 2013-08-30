@@ -31,15 +31,6 @@ import com.codenvy.ide.websocket.rest.Unmarshallable;
 public class BuildStatusUnmarshallerWS implements Unmarshallable<BuildStatus> {
     private DtoClientImpls.BuildStatusImpl buildStatus;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param buildStatus
-     */
-    public BuildStatusUnmarshallerWS(DtoClientImpls.BuildStatusImpl buildStatus) {
-        this.buildStatus = buildStatus;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Message response) throws UnmarshallerException {
@@ -49,15 +40,7 @@ public class BuildStatusUnmarshallerWS implements Unmarshallable<BuildStatus> {
             return;
         }
 
-        DtoClientImpls.BuildStatusImpl buildStatus = DtoClientImpls.BuildStatusImpl.deserialize(text);
-
-        this.buildStatus.setStatus(buildStatus.getStatus());
-        if (this.buildStatus.hasExitCode()) {
-            this.buildStatus.setExitCode(buildStatus.getExitCode());
-        }
-        this.buildStatus.setError(buildStatus.getError());
-        this.buildStatus.setDownloadUrl(buildStatus.getDownloadUrl());
-        this.buildStatus.setTime(buildStatus.getTime());
+        buildStatus = DtoClientImpls.BuildStatusImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */

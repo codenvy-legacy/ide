@@ -97,7 +97,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
         view.setEnableMergeButton(false);
 
         try {
-            BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller(JsonCollections.<Branch>createArray());
+            BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller();
             service.branchList(resourceProvider.getVfsId(), projectId, LIST_LOCAL,
                                new AsyncRequestCallback<JsonArray<Branch>>(unmarshaller) {
                                    @Override
@@ -131,7 +131,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
         }
 
         try {
-            BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller(JsonCollections.<Branch>createArray());
+            BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller();
             service.branchList(resourceProvider.getVfsId(), projectId, LIST_REMOTE,
                                new AsyncRequestCallback<JsonArray<Branch>>(unmarshaller) {
                                    @Override
@@ -176,8 +176,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onMergeClicked() {
-        DtoClientImpls.MergeResultImpl mergeResult = DtoClientImpls.MergeResultImpl.make();
-        MergeUnmarshaller unmarshaller = new MergeUnmarshaller(mergeResult);
+        MergeUnmarshaller unmarshaller = new MergeUnmarshaller();
 
         try {
             service.merge(resourceProvider.getVfsId(), projectId, selectedReference.getDisplayName(),

@@ -18,7 +18,7 @@
 package com.codenvy.ide.search;
 
 import com.codenvy.ide.api.parts.SearchPart;
-import com.codenvy.ide.part.base.BasePresenter;
+import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;

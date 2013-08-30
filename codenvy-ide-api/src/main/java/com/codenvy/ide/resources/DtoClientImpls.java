@@ -18,8 +18,7 @@
 
 
 // GENERATED SOURCE. DO NOT EDIT.
-package com.codenvy.ide.client;
-
+package com.codenvy.ide.resources;
 
 import com.codenvy.ide.api.user.UpdateUserAttributes;
 import com.codenvy.ide.api.user.User;

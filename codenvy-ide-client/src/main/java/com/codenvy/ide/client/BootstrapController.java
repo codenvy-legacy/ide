@@ -22,7 +22,7 @@ import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.client.extensionsPart.ExtensionsPage;
-import com.codenvy.ide.client.marshaller.UserUnmarshaller;
+import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
 import com.codenvy.ide.json.JsonStringMap;
@@ -50,7 +50,6 @@ public class BootstrapController {
      * Create controller.
      *
      * @param componentRegistry
-     * @param workspacePeresenter
      * @param styleInjector
      * @param extensionInitializer
      * @param extensionsPage
@@ -68,8 +67,7 @@ public class BootstrapController {
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_parsers.js").setWindow(ScriptInjector.TOP_WINDOW).inject();
 
         try {
-            DtoClientImpls.UserImpl user = DtoClientImpls.UserImpl.make();
-            UserUnmarshaller unmarshaller = new UserUnmarshaller(user);
+            UserUnmarshaller unmarshaller = new UserUnmarshaller();
             userService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
                 @Override
                 protected void onSuccess(User user) {

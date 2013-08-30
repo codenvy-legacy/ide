@@ -27,7 +27,6 @@ import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryServicesUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.ProvisionedServiceUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -95,8 +94,7 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
     private void doCreate() {
         String name = view.getName();
         String type = view.getSystemServices();
-        DtoClientImpls.ProvisionedServiceImpl provisionedService = DtoClientImpls.ProvisionedServiceImpl.make();
-        ProvisionedServiceUnmarshaller unmarshaller = new ProvisionedServiceUnmarshaller(provisionedService);
+        ProvisionedServiceUnmarshaller unmarshaller = new ProvisionedServiceUnmarshaller();
 
         try {
             service.createService(null, type, name, null, null, null,

@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
 import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
-import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
@@ -89,16 +88,14 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
      * @param projectId
      */
     private void showApplicationInfo(final String projectId) {
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                showApplicationInfo(projectId);
+            }
+        };
         try {
-            DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-            AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
-            LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                @Override
-                public void onLoggedIn() {
-                    showApplicationInfo(projectId);
-                }
-            };
-
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                          constant, console, loginPresenter) {

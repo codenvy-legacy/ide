@@ -18,6 +18,7 @@
 package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
@@ -37,7 +38,6 @@ import com.codenvy.ide.extension.maven.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.maven.shared.BuildStatus;
 import com.codenvy.ide.extension.maven.shared.BuildStatus.Status;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.part.base.BasePresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.Property;
@@ -131,8 +131,7 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
         this.resources = resources;
         this.messageBus = messageBus;
 
-        DtoClientImpls.BuildStatusImpl buildStatus = DtoClientImpls.BuildStatusImpl.make();
-        BuildStatusUnmarshallerWS unmarshaller = new BuildStatusUnmarshallerWS(buildStatus);
+        BuildStatusUnmarshallerWS unmarshaller = new BuildStatusUnmarshallerWS();
 
         buildStatusHandler = new SubscriptionHandler<BuildStatus>(unmarshaller) {
             @Override
@@ -184,14 +183,14 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
     private void doBuild() {
         projectId = project.getId();
         statusHandler.requestInProgress(projectId);
-        StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
             service.build(projectId, resourceProvider.getVfsId(), project.getName(),
                           (String)project.getPropertyValue(ProjectDescription.PROPERTY_PRIMARY_NATURE),
-                          new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                          new AsyncRequestCallback<String>(unmarshaller) {
                               @Override
-                              protected void onSuccess(StringBuilder result) {
+                              protected void onSuccess(String result) {
                                   buildID = result.substring(result.lastIndexOf("/") + 1);
                                   setBuildInProgress(true);
                                   showBuildMessage("Building project <b>" + project.getPath().substring(1) + "</b>");
@@ -240,14 +239,14 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
     private void doBuildAndPublish() {
         projectId = project.getId();
         statusHandler.requestInProgress(projectId);
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
-            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
             service.buildAndPublish(projectId, resourceProvider.getVfsId(), project.getName(),
                                     (String)project.getPropertyValue(ProjectDescription.PROPERTY_PRIMARY_NATURE),
-                                    new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                                    new AsyncRequestCallback<String>(unmarshaller) {
                                         @Override
-                                        protected void onSuccess(StringBuilder result) {
+                                        protected void onSuccess(String result) {
                                             buildID = result.substring(result.lastIndexOf("/") + 1);
                                             setBuildInProgress(true);
                                             showBuildMessage(
@@ -385,8 +384,7 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
     private Timer refreshBuildStatusTimer = new Timer() {
         @Override
         public void run() {
-            DtoClientImpls.BuildStatusImpl buildStatus = DtoClientImpls.BuildStatusImpl.make();
-            BuildStatusUnmarshaller unmarshaller = new BuildStatusUnmarshaller(buildStatus);
+            BuildStatusUnmarshaller unmarshaller = new BuildStatusUnmarshaller();
 
             try {
                 service.status(buildID, new AsyncRequestCallback<BuildStatus>(unmarshaller) {
@@ -489,12 +487,12 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
 
     /** Getting information about publish artifact process for its only suggest dependency */
     private void getPublishArtifactResult() {
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
         try {
-            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
-            service.result(buildID, new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+            service.result(buildID, new AsyncRequestCallback<String>(unmarshaller) {
                 @Override
-                protected void onSuccess(StringBuilder result) {
-                    JSONObject json = JSONParser.parseStrict((result.toString())).isObject();
+                protected void onSuccess(String result) {
+                    JSONObject json = JSONParser.parseStrict((result)).isObject();
                     if (json.containsKey("artifactDownloadUrl")) {
                         String artifactUrl = json.get("artifactDownloadUrl").isString().stringValue();
                         console.print(
@@ -647,22 +645,18 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
     }
 
     /** Deserializer for responses body. */
-    private class StringUnmarshaller implements Unmarshallable<StringBuilder> {
-        protected StringBuilder builder;
-
-        public StringUnmarshaller(StringBuilder builder) {
-            this.builder = builder;
-        }
+    private class StringUnmarshaller implements Unmarshallable<String> {
+        protected String builder;
 
         /** {@inheritDoc} */
         @Override
         public void unmarshal(Response response) {
-            builder.append(response.getText());
+            builder = response.getText();
         }
 
         /** {@inheritDoc} */
         @Override
-        public StringBuilder getPayload() {
+        public String getPayload() {
             return builder;
         }
     }

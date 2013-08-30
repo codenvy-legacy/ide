@@ -18,7 +18,7 @@
 package com.codenvy.ide.outline;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.part.base.BaseActionDelegate;
+import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 /**

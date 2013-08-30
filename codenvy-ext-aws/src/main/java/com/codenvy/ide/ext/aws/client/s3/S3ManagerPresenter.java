@@ -29,14 +29,11 @@ import com.codenvy.ide.ext.aws.client.marshaller.S3BucketsUnmarshaller;
 import com.codenvy.ide.ext.aws.client.marshaller.S3ObjectListUnmarshaller;
 import com.codenvy.ide.ext.aws.client.s3.create.S3CreateBucketPresenter;
 import com.codenvy.ide.ext.aws.client.s3.upload.S3UploadObjectPresenter;
-import com.codenvy.ide.ext.aws.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.aws.shared.s3.NewS3Object;
 import com.codenvy.ide.ext.aws.shared.s3.S3Bucket;
 import com.codenvy.ide.ext.aws.shared.s3.S3ObjectsList;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -121,9 +118,7 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
                 getBuckets();
             }
         };
-
-        JsonArray<S3Bucket> s3Buckets = JsonCollections.createArray();
-        S3BucketsUnmarshaller unmarshaller = new S3BucketsUnmarshaller(s3Buckets);
+        S3BucketsUnmarshaller unmarshaller = new S3BucketsUnmarshaller();
 
         try {
             service.getBuckets(new AwsAsyncRequestCallback<JsonArray<S3Bucket>>(unmarshaller, loggedInHandler, null, loginPresenter) {
@@ -209,10 +204,9 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
                 onUploadProjectClicked();
             }
         };
+        NewS3ObjectUnmarshaller unmarshaller = new NewS3ObjectUnmarshaller();
 
         try {
-            DtoClientImpls.NewS3ObjectImpl newS3Object = DtoClientImpls.NewS3ObjectImpl.make();
-            NewS3ObjectUnmarshaller unmarshaller = new NewS3ObjectUnmarshaller(newS3Object);
             service.uploadProject(new AwsAsyncRequestCallback<NewS3Object>(unmarshaller, loggedInHandler, null, loginPresenter) {
                 @Override
                 protected void processFail(Throwable exception) {
@@ -240,9 +234,7 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
                 onRefreshObjectsClicked(bucketId);
             }
         };
-
-        DtoClientImpls.S3ObjectsListImpl s3ObjectsList = DtoClientImpls.S3ObjectsListImpl.make();
-        S3ObjectListUnmarshaller unmarshaller = new S3ObjectListUnmarshaller(s3ObjectsList);
+        S3ObjectListUnmarshaller unmarshaller = new S3ObjectListUnmarshaller();
 
         try {
             service.getS3ObjectsList(new AwsAsyncRequestCallback<S3ObjectsList>(unmarshaller, loggedInHandler, null, loginPresenter) {

@@ -145,8 +145,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
      *         location of .war file
      */
     private void runApplication(@NotNull String warUrl) {
-        DtoClientImpls.ApplicationInstanceImpl applicationInstance = DtoClientImpls.ApplicationInstanceImpl.make();
-        ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS(applicationInstance);
+        ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS();
 
         try {
             service.runApplicationWS(project.getName(), warUrl, isUseJRebel(), new RequestCallback<ApplicationInstance>(unmarshaller) {
@@ -183,8 +182,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
      *         location of .war file
      */
     private void runApplicationREST(@NotNull String warUrl) {
-        DtoClientImpls.ApplicationInstanceImpl applicationInstance = DtoClientImpls.ApplicationInstanceImpl.make();
-        ApplicationInstanceUnmarshaller unmarshaller = new ApplicationInstanceUnmarshaller(applicationInstance);
+        ApplicationInstanceUnmarshaller unmarshaller = new ApplicationInstanceUnmarshaller();
 
         try {
             service.runApplication(project.getName(), warUrl, isUseJRebel(), new AsyncRequestCallback<ApplicationInstance>(unmarshaller) {

@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
 import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
-import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
@@ -101,10 +100,7 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler {
                                                                              loginPresenter) {
                                           @Override
                                           protected void onSuccess(String result) {
-                                              DtoClientImpls.AppfogApplicationImpl appfogApplication =
-                                                      DtoClientImpls.AppfogApplicationImpl.make();
-                                              AppFogApplicationUnmarshaller unmarshaller =
-                                                      new AppFogApplicationUnmarshaller(appfogApplication);
+                                              AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
                                               try {
                                                   service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,

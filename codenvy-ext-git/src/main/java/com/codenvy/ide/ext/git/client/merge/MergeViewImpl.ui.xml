@@ -22,7 +22,6 @@
              xmlns:c='urn:import:com.codenvy.ide.ui'>
     <ui:with field='locale' type='com.codenvy.ide.ext.git.client.GitLocalizationConstant'/>
     <ui:with field='res' type='com.codenvy.ide.ext.git.client.GitResources'/>
-    <ui:with field='coreRes' type='com.codenvy.ide.Resources'/>
     <ui:style>
         .alignBtn {
             float: right;
@@ -50,7 +49,7 @@
             </g:FlowPanel>
         </g:south>
         <g:center>
-            <g:ScrollPanel ui:field="referencesPanel" addStyleNames="{coreRes.coreCss.simpleListContainer}"/>
+            <g:ScrollPanel ui:field="referencesPanel" addStyleNames="{res.gitCSS.simpleListContainer}"/>
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder>

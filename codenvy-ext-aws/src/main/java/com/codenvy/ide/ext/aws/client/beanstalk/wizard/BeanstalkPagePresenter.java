@@ -215,8 +215,7 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
         createApplicationRequest.setS3Key("");
         createApplicationRequest.setWar(warUrl);
 
-        DtoClientImpls.ApplicationInfoImpl dtoApplicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(dtoApplicationInfo);
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
         try {
             service.createApplication(resourceProvider.getVfsId(), project.getId(), createApplicationRequest,
@@ -268,8 +267,7 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
         createEnvironmentRequest.setVersionLabel(AWSExtension.INIT_VER_LABEL);
         createEnvironmentRequest.setSolutionStackName(view.getSolutionStack());
 
-        DtoClientImpls.EnvironmentInfoImpl environmentInfo = DtoClientImpls.EnvironmentInfoImpl.make();
-        EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller(environmentInfo);
+        EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller();
 
         try {
             service.createEnvironment(resourceProvider.getVfsId(), project.getId(), createEnvironmentRequest,
@@ -363,7 +361,6 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
                 getSolutionStack();
             }
         };
-
         LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
             @Override
             public void onLoginCanceled() {
@@ -371,9 +368,7 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
                 delegate.updateControls();
             }
         };
-
-        JsonArray<SolutionStack> solutionStack = JsonCollections.createArray();
-        SolutionStackListUnmarshaller unmarshaller = new SolutionStackListUnmarshaller(solutionStack);
+        SolutionStackListUnmarshaller unmarshaller = new SolutionStackListUnmarshaller();
 
         try {
             service.getAvailableSolutionStacks(

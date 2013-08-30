@@ -26,28 +26,18 @@ import com.google.gwt.http.client.Response;
  *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  */
-public class StringUnmarshaller implements Unmarshallable<StringBuilder> {
-    protected StringBuilder builder;
-
-    /**
-     * Create unmarshaller.
-     *
-     * @param builder
-     */
-    public StringUnmarshaller(StringBuilder builder) {
-        super();
-        this.builder = builder;
-    }
+public class StringUnmarshaller implements Unmarshallable<String> {
+    protected String payload;
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
-        builder.append(response.getText());
+        payload = response.getText();
     }
 
     /** {@inheritDoc} */
     @Override
-    public StringBuilder getPayload() {
-        return builder;
+    public String getPayload() {
+        return payload;
     }
 }

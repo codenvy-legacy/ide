@@ -34,7 +34,7 @@ public abstract class SubscriptionHandler<T> implements MessageHandler {
     private final Unmarshallable<T> unmarshaller;
 
     /** An object deserialized from the response. */
-    private final T payload;
+    private T payload;
 
     public SubscriptionHandler() {
         this(null);
@@ -49,11 +49,6 @@ public abstract class SubscriptionHandler<T> implements MessageHandler {
      *         {@link Unmarshallable}
      */
     public SubscriptionHandler(Unmarshallable<T> unmarshaller) {
-        if (unmarshaller == null) {
-            this.payload = null;
-        } else {
-            this.payload = unmarshaller.getPayload();
-        }
         this.unmarshaller = unmarshaller;
     }
 
@@ -69,6 +64,7 @@ public abstract class SubscriptionHandler<T> implements MessageHandler {
             try {
                 if (unmarshaller != null) {
                     unmarshaller.unmarshal(message);
+                    payload = unmarshaller.getPayload();
                 }
                 onMessageReceived(payload);
             } catch (UnmarshallerException e) {
@@ -78,7 +74,6 @@ public abstract class SubscriptionHandler<T> implements MessageHandler {
             onErrorReceived(new ServerException(message));
         }
     }
-
 
     @Override
     public void onMessage(String message) {

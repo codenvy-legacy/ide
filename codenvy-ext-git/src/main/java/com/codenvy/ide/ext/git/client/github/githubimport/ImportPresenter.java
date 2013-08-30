@@ -30,7 +30,6 @@ import com.codenvy.ide.ext.git.client.marshaller.AllRepositoriesUnmarshaller;
 import com.codenvy.ide.ext.git.client.marshaller.RepoInfoUnmarshaller;
 import com.codenvy.ide.ext.git.client.marshaller.RepoInfoUnmarshallerWS;
 import com.codenvy.ide.ext.git.client.marshaller.StringUnmarshaller;
-import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.GitHubRepository;
 import com.codenvy.ide.ext.git.shared.RepoInfo;
 import com.codenvy.ide.json.JsonArray;
@@ -181,12 +180,12 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
      *         user which need token
      */
     private void getToken(final String user) {
-        StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
         try {
-            service.getUserToken(user, new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+            service.getUserToken(user, new AsyncRequestCallback<String>(unmarshaller) {
                 @Override
-                protected void onSuccess(StringBuilder result) {
-                    if (result == null || result.toString().isEmpty()) {
+                protected void onSuccess(String result) {
+                    if (result == null || result.isEmpty()) {
                         oAuthLoginStart(user);
                     } else {
                         getUserRepos();
@@ -281,8 +280,7 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
      *         folder (root of GIT repository)
      */
     private void cloneRepository(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
-        DtoClientImpls.RepoInfoImpl repoInfo = DtoClientImpls.RepoInfoImpl.make();
-        RepoInfoUnmarshallerWS unmarshallerWS = new RepoInfoUnmarshallerWS(repoInfo);
+        RepoInfoUnmarshallerWS unmarshallerWS = new RepoInfoUnmarshallerWS();
         try {
             gitService.cloneRepositoryWS(resourceProvider.getVfsId(), project, remoteUri, remoteName,
                                          new RequestCallback<RepoInfo>(unmarshallerWS) {
@@ -295,7 +293,6 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
                                              protected void onFailure(Throwable exception) {
                                                  deleteFolder(project);
                                                  handleError(exception, remoteUri);
-
                                              }
                                          });
             view.close();
@@ -315,8 +312,7 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
      *         folder (root of GIT repository)
      */
     private void cloneRepositoryREST(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
-        DtoClientImpls.RepoInfoImpl repoInfo = DtoClientImpls.RepoInfoImpl.make();
-        RepoInfoUnmarshaller unmarshaller = new RepoInfoUnmarshaller(repoInfo);
+        RepoInfoUnmarshaller unmarshaller = new RepoInfoUnmarshaller();
         try {
             gitService.cloneRepository(resourceProvider.getVfsId(), project, remoteUri, remoteName,
                                        new AsyncRequestCallback<RepoInfo>(unmarshaller) {

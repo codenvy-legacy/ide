@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.git.client.marshaller;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.MergeResult;
@@ -36,14 +35,6 @@ public class MergeUnmarshaller implements Unmarshallable<MergeResult> {
     /** Result of merge operation. */
     private DtoClientImpls.MergeResultImpl merge;
 
-    /**
-     * @param merge
-     *         result of merge operation
-     */
-    public MergeUnmarshaller(@NotNull DtoClientImpls.MergeResultImpl merge) {
-        this.merge = merge;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -59,16 +50,7 @@ public class MergeUnmarshaller implements Unmarshallable<MergeResult> {
         }
 
         String s = jsonObject.toString();
-        DtoClientImpls.MergeResultImpl mergeResult = DtoClientImpls.MergeResultImpl.deserialize(s);
-        if (mergeResult.hasConflicts()) {
-            merge.setConflicts(mergeResult.getConflicts());
-        }
-        if (mergeResult.hasFailed()) {
-            merge.setFailed(mergeResult.getFailed());
-        }
-        merge.setMergedCommits(mergeResult.getMergedCommits());
-        merge.setMergeStatus(mergeResult.getMergeStatus());
-        merge.setNewHead(mergeResult.getNewHead());
+        merge = DtoClientImpls.MergeResultImpl.deserialize(s);
     }
 
     /** {@inheritDoc} */

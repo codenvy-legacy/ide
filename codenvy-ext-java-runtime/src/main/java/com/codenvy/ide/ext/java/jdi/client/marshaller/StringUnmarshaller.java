@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.marshaller;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 
@@ -27,27 +26,18 @@ import com.google.gwt.http.client.Response;
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: EvaluateExpressionPresenter.java May 7, 2012 13:29:01 PM azatsarynnyy $
  */
-public class StringUnmarshaller implements Unmarshallable<StringBuilder> {
-    private StringBuilder builder;
-
-    /**
-     * Create unmarshaller.
-     *
-     * @param builder
-     */
-    public StringUnmarshaller(@NotNull StringBuilder builder) {
-        this.builder = builder;
-    }
+public class StringUnmarshaller implements Unmarshallable<String> {
+    private String payload;
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) {
-        builder.append(response.getText());
+        payload = response.getText();
     }
 
     /** {@inheritDoc} */
     @Override
-    public StringBuilder getPayload() {
-        return builder;
+    public String getPayload() {
+        return payload;
     }
 }

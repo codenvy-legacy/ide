@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.jenkins.client.build;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.part.base.BaseActionDelegate;
+import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 
 /**
  * The view of {@link BuildApplicationView}.

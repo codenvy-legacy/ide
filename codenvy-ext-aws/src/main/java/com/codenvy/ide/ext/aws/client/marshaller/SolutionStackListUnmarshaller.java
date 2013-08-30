@@ -21,6 +21,7 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.aws.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.aws.shared.beanstalk.SolutionStack;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -36,16 +37,6 @@ import com.google.gwt.json.client.JSONParser;
 public class SolutionStackListUnmarshaller implements Unmarshallable<JsonArray<SolutionStack>> {
     private JsonArray<SolutionStack> stackJsonArray;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param stackJsonArray
-     */
-    public SolutionStackListUnmarshaller(
-            JsonArray<SolutionStack> stackJsonArray) {
-        this.stackJsonArray = stackJsonArray;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -59,6 +50,8 @@ public class SolutionStackListUnmarshaller implements Unmarshallable<JsonArray<S
         if (logsArray == null) {
             return;
         }
+
+        stackJsonArray = JsonCollections.createArray();
 
         for (int i = 0; i < logsArray.size(); i++) {
             JSONObject env = logsArray.get(i).isObject();

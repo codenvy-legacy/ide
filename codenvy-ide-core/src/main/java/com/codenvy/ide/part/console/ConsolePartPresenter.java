@@ -19,7 +19,7 @@ package com.codenvy.ide.part.console;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
-import com.codenvy.ide.part.base.BasePresenter;
+import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;

@@ -19,12 +19,11 @@ package com.codenvy.ide.ext.openshift.client;
 
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
 import com.codenvy.ide.ext.openshift.shared.RHUserInfo;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
-
-import java.util.List;
 
 /**
  * OpenShift client service.
@@ -138,7 +137,7 @@ public interface OpenShiftClientService {
      * @param callback
      *         callback
      */
-    public void getApplicationTypes(AsyncRequestCallback<List<String>> callback) throws RequestException;
+    public void getApplicationTypes(AsyncRequestCallback<JsonArray<String>> callback) throws RequestException;
 
     /**
      * Start application.
@@ -182,7 +181,7 @@ public interface OpenShiftClientService {
      *         callback
      * @throws RequestException
      */
-    public void getApplicationHealth(String appName, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    public void getApplicationHealth(String appName, AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Get available embedded cartridges
@@ -191,7 +190,7 @@ public interface OpenShiftClientService {
      *         callback
      * @throws RequestException
      */
-    public void getCartridges(AsyncRequestCallback<List<String>> callback) throws RequestException;
+    public void getCartridges(AsyncRequestCallback<JsonArray<String>> callback) throws RequestException;
 
     /**
      * Add cartridge to application

@@ -18,7 +18,7 @@
 package com.codenvy.ide.part.projectexplorer;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.part.base.BaseActionDelegate;
+import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 import com.codenvy.ide.resources.model.Resource;
 
 /**

@@ -27,7 +27,7 @@ import com.codenvy.ide.api.ui.workspace.PartStackView.TabItem;
 import com.codenvy.ide.api.ui.workspace.PropertyListener;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.part.base.BasePresenter;
+import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.workspace.WorkBenchPartController;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

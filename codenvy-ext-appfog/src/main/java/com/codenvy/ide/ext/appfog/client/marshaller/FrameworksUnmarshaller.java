@@ -21,6 +21,7 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.Framework;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -35,15 +36,6 @@ import com.google.gwt.json.client.JSONParser;
 public class FrameworksUnmarshaller implements Unmarshallable<JsonArray<Framework>> {
     private JsonArray<Framework> frameworks;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param frameworks
-     */
-    public FrameworksUnmarshaller(JsonArray<Framework> frameworks) {
-        this.frameworks = frameworks;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -57,6 +49,8 @@ public class FrameworksUnmarshaller implements Unmarshallable<JsonArray<Framewor
             if (array == null) {
                 return;
             }
+
+            frameworks = JsonCollections.createArray();
 
             for (int i = 0; i < array.size(); i++) {
                 JSONObject jsonObject = array.get(i).isObject();

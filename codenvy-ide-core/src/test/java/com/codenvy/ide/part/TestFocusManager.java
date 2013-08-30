@@ -18,6 +18,7 @@
 package com.codenvy.ide.part;
 
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
+import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStack;
 import com.codenvy.ide.api.ui.workspace.PartStackView;

@@ -25,7 +25,6 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.marshaller.BranchListUnmarshaller;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
@@ -194,7 +193,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
      *         project id
      */
     public void getBranches(@NotNull String projectId) {
-        BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller(JsonCollections.<Branch>createArray());
+        BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller();
 
         try {
             service.branchList(resourceProvider.getVfsId(), projectId, LIST_ALL, new AsyncRequestCallback<JsonArray<Branch>>(unmarshaller) {

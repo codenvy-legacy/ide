@@ -28,7 +28,6 @@ import com.codenvy.ide.ext.cloudbees.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshaller;
 import com.codenvy.ide.ext.cloudbees.client.update.UpdateApplicationPresenter;
-import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.util.loging.Log;
@@ -85,8 +84,7 @@ public class CloudBeesProjectPresenter implements CloudBeesProjectView.ActionDel
      *         project deployed to CloudBees
      */
     private void getApplicationInfo(final Project project) {
-        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
             public void onLoggedIn() {

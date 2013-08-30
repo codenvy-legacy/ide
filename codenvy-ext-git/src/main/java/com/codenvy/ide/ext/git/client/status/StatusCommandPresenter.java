@@ -65,14 +65,13 @@ public class StatusCommandPresenter {
             return;
         }
 
-        StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
-            service.statusText(resourceProvider.getVfsId(), project.getId(), false, new AsyncRequestCallback(unmarshaller) {
+            service.statusText(resourceProvider.getVfsId(), project.getId(), false, new AsyncRequestCallback<String>(unmarshaller) {
                 @Override
-                protected void onSuccess(Object result) {
-                    String output = result.toString();
-                    console.print(output);
+                protected void onSuccess(String result) {
+                    console.print(result);
                 }
 
                 @Override

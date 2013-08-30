@@ -152,9 +152,7 @@ public class EnvironmentStatusChecker {
                 checkEnvironmentStatus(callback);
             }
         };
-
-        DtoClientImpls.EnvironmentInfoImpl environmentInfo = DtoClientImpls.EnvironmentInfoImpl.make();
-        EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller(environmentInfo);
+        EnvironmentInfoUnmarshaller unmarshaller = new EnvironmentInfoUnmarshaller();
 
         try {
             service.getEnvironmentInfo(environmentToCheck.getId(),
@@ -188,9 +186,7 @@ public class EnvironmentStatusChecker {
         }
     }
 
-    /**
-     * Show environment events when timer scheduled.
-     */
+    /** Show environment events when timer scheduled. */
     private void outputEvents() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -203,8 +199,7 @@ public class EnvironmentStatusChecker {
         listEventsRequest.setEnvironmentId(environmentToCheck.getId());
         listEventsRequest.setStartTime(lastReceivedEventTime);
 
-        DtoClientImpls.EventsListImpl eventsList = DtoClientImpls.EventsListImpl.make();
-        EventsListUnmarshaller unmarshaller = new EventsListUnmarshaller(eventsList);
+        EventsListUnmarshaller unmarshaller = new EventsListUnmarshaller();
 
         try {
             service.getApplicationEvents(resourceProvider.getVfsId(), project.getId(), listEventsRequest,

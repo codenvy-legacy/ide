@@ -40,7 +40,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * The action for showing log information.
- * 
+ *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
@@ -104,16 +104,17 @@ public class LogsAction extends Action {
 
     /**
      * Return logs for application with current name.
-     * 
-     * @param appName application name
+     *
+     * @param appName
+     *         application name
      */
     private void getLogs(@NotNull String appName) {
-        StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
         try {
-            service.getLogs(appName, new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+            service.getLogs(appName, new AsyncRequestCallback<String>(unmarshaller) {
                 @Override
-                protected void onSuccess(StringBuilder result) {
-                    console.print("<pre>" + result.toString() + "</pre>");
+                protected void onSuccess(String result) {
+                    console.print("<pre>" + result + "</pre>");
                 }
 
                 @Override

@@ -118,41 +118,39 @@ public class JavaProject extends Project {
             final Folder packageParent = folderParent;
             final String path = packagePartName.replaceAll("\\.", "/");
             // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<Package> internalCallback =
-                    new AsyncRequestCallback<Package>(new PackageUnmarshaller(new Package())) {
-                        @Override
-                        protected void onSuccess(final Package pack) {
-
-                            if (path.contains("/")) {
-                                // refresh tree, cause additional hierarchy folders my have been created
-                                refreshTree(parent, new AsyncCallback<Folder>() {
-                                    @Override
-                                    public void onSuccess(Folder result) {
-                                        Package newPackage = (Package)parent.findResourceById(pack.getId());
-                                        eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newPackage));
-                                        callback.onSuccess(newPackage);
-                                    }
-
-                                    @Override
-                                    public void onFailure(Throwable exception) {
-                                        callback.onFailure(exception);
-                                    }
-                                });
-                            } else {
-                                // add to the list of items
-                                parent.addChild(pack);
-                                // set proper parent project
-                                pack.setProject(JavaProject.this);
-                                eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(pack));
-                                callback.onSuccess(pack);
+            AsyncRequestCallback<Package> internalCallback = new AsyncRequestCallback<Package>(new PackageUnmarshaller()) {
+                @Override
+                protected void onSuccess(final Package pack) {
+                    if (path.contains("/")) {
+                        // refresh tree, cause additional hierarchy folders my have been created
+                        refreshTree(parent, new AsyncCallback<Folder>() {
+                            @Override
+                            public void onSuccess(Folder result) {
+                                Package newPackage = (Package)parent.findResourceById(pack.getId());
+                                eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newPackage));
+                                callback.onSuccess(newPackage);
                             }
-                        }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            callback.onFailure(exception);
-                        }
-                    };
+                            @Override
+                            public void onFailure(Throwable exception) {
+                                callback.onFailure(exception);
+                            }
+                        });
+                    } else {
+                        // add to the list of items
+                        parent.addChild(pack);
+                        // set proper parent project
+                        pack.setProject(JavaProject.this);
+                        eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(pack));
+                        callback.onSuccess(pack);
+                    }
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            };
 
             String url = folderParent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref();
             String urlString = URL.decode(url).replace("[name]", path);
@@ -185,7 +183,7 @@ public class JavaProject extends Project {
             checkCompilationUnitName(name);
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<CompilationUnit> internalCallback =
-                    new AsyncRequestCallback<CompilationUnit>(new CompilationUnitUnmarshaller(new CompilationUnit())) {
+                    new AsyncRequestCallback<CompilationUnit>(new CompilationUnitUnmarshaller()) {
                         @Override
                         protected void onSuccess(CompilationUnit newCU) {
                             // add to the list of items
