@@ -71,6 +71,7 @@ public class CKEditor extends AbsolutePanel implements Editor {
     private String prefix = "";
 
     private String suffix = "";
+    private FileModel file;
 
     public CKEditor(String mimeType) {
         this(mimeType, new CKEditorConfiguration());
@@ -295,12 +296,18 @@ public class CKEditor extends AbsolutePanel implements Editor {
     /** {@inheritDoc} */
     @Override
     public void setFile(FileModel file) {
+        this.file = file;
         FileContentLoader.getFileContent(file, new FileContentLoader.ContentCallback() {
             @Override
             public void onContentReceived(String content) {
                 setText(content);
             }
         });
+    }
+
+    @Override
+    public FileModel getFile() {
+        return file;
     }
 
     public native String getTextNative()

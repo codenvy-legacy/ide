@@ -113,6 +113,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
     private         ContentAssistant                        contentAssistant;
     private         String                                  searchQuery;
     private         boolean                                 caseSensitive;
+    private         FileModel                               file;
 
     public CollabEditor(String mimeType) {
         this.mimeType = mimeType;
@@ -226,6 +227,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
 
     @Override
     public void setFile(final FileModel file) {
+        this.file = file;
         if (CollaborationPropertiesUtil.isCollaborationEnabled(file.getProject()) && !file.getMimeType().equals(MimeType.TEXT_HTML)) {
 
             PathUtil pathUtil = new PathUtil(file.getPath());
@@ -256,6 +258,11 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
             });
 
         }
+    }
+
+    @Override
+    public FileModel getFile() {
+        return file;
     }
 
     private void checkPermission(FileModel file) {
