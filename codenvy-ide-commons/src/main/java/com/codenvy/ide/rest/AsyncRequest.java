@@ -174,15 +174,14 @@ public class AsyncRequest {
         return callback;
     }
 
-    private AsyncRequestCallback<StringBuilder> initCallback = new AsyncRequestCallback<StringBuilder>(
-            new LocationUnmarshaller(new StringBuilder())) {
+    private AsyncRequestCallback<String> initCallback = new AsyncRequestCallback<String>(new LocationUnmarshaller()) {
         {
             setSuccessCodes(new int[]{Response.SC_ACCEPTED});
         }
 
         @Override
-        protected void onSuccess(StringBuilder result) {
-            requestStatusUrl = result.toString();
+        protected void onSuccess(String result) {
+            requestStatusUrl = result;
             if (handler != null)
                 handler.requestInProgress(requestStatusUrl);
 

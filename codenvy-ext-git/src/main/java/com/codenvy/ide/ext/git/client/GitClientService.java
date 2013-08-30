@@ -528,7 +528,7 @@ public interface GitClientService {
      */
     void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull JsonArray<String> fileFilter, @NotNull DiffRequest.DiffType type,
               boolean noRenames, int renameLimit, @NotNull String commitA, @NotNull String commitB,
-              @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+              @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Compare commit with index or working tree (depends on {@link #cached}), get the diff for pointed file(s) or for the whole project in
@@ -554,8 +554,8 @@ public interface GitClientService {
      *         callback
      */
     void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull JsonArray<String> fileFilter, @NotNull DiffRequest.DiffType type,
-              boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached,
-              @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+              boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached, @NotNull AsyncRequestCallback<String> callback)
+            throws RequestException;
 
     /**
      * Get log of commits. The result is the list of {@link Revision}, which is returned by callback in

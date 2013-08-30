@@ -30,17 +30,13 @@ import com.google.gwt.json.client.JSONParser;
  * @version $Id:
  */
 public class PackageUnmarshaller implements Unmarshallable<Package> {
-
-    private final Package pack;
-
-    public PackageUnmarshaller(Package pack) {
-        this.pack = pack;
-    }
+    private Package pack;
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         try {
+            pack = new Package();
             pack.init(JSONParser.parseLenient(response.getText()).isObject());
         } catch (Exception e) {
             throw new UnmarshallerException("Can't parse package", e);
@@ -52,5 +48,4 @@ public class PackageUnmarshaller implements Unmarshallable<Package> {
     public Package getPayload() {
         return pack;
     }
-
 }

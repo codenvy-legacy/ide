@@ -21,6 +21,7 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.extruntime.client.marshaller.ApplicationInstanceUnmarshallerWS;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
+import com.codenvy.ide.resources.marshal.StringUnmarshaller;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.Utils;
@@ -114,18 +115,17 @@ public class LaunchExtensionController {
         }
 
         try {
-            service.getLogs(launchedApp.getId(),
-                            new AsyncRequestCallback<StringBuilder>(new com.codenvy.ide.resources.marshal.StringUnmarshaller()) {
-                                @Override
-                                protected void onSuccess(StringBuilder result) {
-                                    console.print("<pre>" + result.toString() + "</pre>");
-                                }
+            service.getLogs(launchedApp.getId(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                @Override
+                protected void onSuccess(String result) {
+                    console.print("<pre>" + result + "</pre>");
+                }
 
-                                @Override
-                                protected void onFailure(Throwable exception) {
-                                    onFail(constant.getApplicationLogsFailed(), exception);
-                                }
-                            });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    onFail(constant.getApplicationLogsFailed(), exception);
+                }
+            });
         } catch (RequestException e) {
             console.print(e.getMessage());
         }

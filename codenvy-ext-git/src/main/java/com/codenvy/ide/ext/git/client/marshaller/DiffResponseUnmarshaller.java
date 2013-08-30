@@ -27,27 +27,19 @@ import com.google.gwt.http.client.Response;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 4, 2011 11:11:03 AM anya $
  */
-public class DiffResponseUnmarshaller implements Unmarshallable<StringBuilder> {
+public class DiffResponseUnmarshaller implements Unmarshallable<String> {
     /** Diff response. */
-    private StringBuilder diffResponse;
-
-    /**
-     * @param diffResponse
-     *         diff response
-     */
-    public DiffResponseUnmarshaller(StringBuilder diffResponse) {
-        this.diffResponse = diffResponse;
-    }
+    private String diffResponse;
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
-        diffResponse.append(response.getText());
+        diffResponse = response.getText();
     }
 
     /** {@inheritDoc} */
     @Override
-    public StringBuilder getPayload() {
+    public String getPayload() {
         return diffResponse;
     }
 }

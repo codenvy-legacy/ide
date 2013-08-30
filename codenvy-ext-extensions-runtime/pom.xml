@@ -71,6 +71,10 @@
         <!-- Client side -->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-java</artifactId>
         </dependency>
         <dependency>

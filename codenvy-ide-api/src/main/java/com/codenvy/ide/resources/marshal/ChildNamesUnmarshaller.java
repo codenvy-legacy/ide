@@ -32,16 +32,9 @@ import com.google.gwt.json.client.JSONValue;
  *
  */
 public class ChildNamesUnmarshaller implements Unmarshallable<JsonArray<String>> {
-    private final JsonArray<String> items;
+    private JsonArray<String> items;
 
-    /** @param items */
-    public ChildNamesUnmarshaller() {
-        super();
-        this.items = JsonCollections.createArray();
-        this.items.clear();
-    }
-
-    /** @see com.codenvy.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         try {
@@ -53,6 +46,7 @@ public class ChildNamesUnmarshaller implements Unmarshallable<JsonArray<String>>
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public JsonArray<String> getPayload() {
         return this.items;
@@ -66,6 +60,8 @@ public class ChildNamesUnmarshaller implements Unmarshallable<JsonArray<String>>
      * @return list of children items
      */
     private void parseItems(JSONArray itemsArray) {
+        items = JsonCollections.createArray();
+
         for (int i = 0; i < itemsArray.size(); i++) {
             // get Json Object
             JSONObject object = itemsArray.get(i).isObject();

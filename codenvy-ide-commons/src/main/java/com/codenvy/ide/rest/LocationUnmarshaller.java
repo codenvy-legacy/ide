@@ -27,24 +27,16 @@ import com.google.gwt.http.client.Response;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Sep 16, 2011 evgen $
  */
-public class LocationUnmarshaller implements Unmarshallable<StringBuilder> {
+public class LocationUnmarshaller implements Unmarshallable<String> {
+    private String result;
 
-    private StringBuilder result;
-
-    /** @param result */
-    public LocationUnmarshaller(StringBuilder result) {
-        super();
-        this.result = result;
-    }
-
-    /** @see com.codenvy.ide.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    /** {@inheritDoc} */
     public void unmarshal(Response response) throws UnmarshallerException {
-        result.append(response.getHeader("Location"));
+        result = response.getHeader("Location");
     }
 
-    /** @see com.codenvy.ide.rest.Unmarshallable#getPayload() */
-    public StringBuilder getPayload() {
+    /** {@inheritDoc} */
+    public String getPayload() {
         return result;
     }
-
 }

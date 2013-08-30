@@ -341,14 +341,14 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         }
 
         String projectId = resourceProvider.getActiveProject().getId();
-        DiffResponseUnmarshaller unmarshaller = new DiffResponseUnmarshaller(new StringBuilder());
+        DiffResponseUnmarshaller unmarshaller = new DiffResponseUnmarshaller();
 
         try {
             service.diff(resourceProvider.getVfsId(), projectId, filePatterns, RAW, false, 0, revision.getId(), isCached,
-                         new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                         new AsyncRequestCallback<String>(unmarshaller) {
                              @Override
-                             protected void onSuccess(StringBuilder result) {
-                                 view.setDiffContext(result.toString());
+                             protected void onSuccess(String result) {
+                                 view.setDiffContext(result);
                                  String text = isCached ? constant.historyDiffIndexState() : constant.historyDiffTreeState();
                                  displayCommitA(revision);
                                  view.setCompareType(text);
@@ -385,14 +385,14 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         if (index + 1 < revisions.size()) {
             final Revision revisionA = revisions.get(index + 1);
             String projectId = resourceProvider.getActiveProject().getId();
-            DiffResponseUnmarshaller unmarshaller = new DiffResponseUnmarshaller(new StringBuilder());
+            DiffResponseUnmarshaller unmarshaller = new DiffResponseUnmarshaller();
 
             try {
                 service.diff(resourceProvider.getVfsId(), projectId, filePatterns, RAW, false, 0, revisionA.getId(), revisionB.getId(),
-                             new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                             new AsyncRequestCallback<String>(unmarshaller) {
                                  @Override
-                                 protected void onSuccess(StringBuilder result) {
-                                     view.setDiffContext(result.toString());
+                                 protected void onSuccess(String result) {
+                                     view.setDiffContext(result);
                                      displayCommitA(revisionA);
                                      displayCommitB(revisionB);
                                  }

@@ -27,14 +27,14 @@ import com.google.gwt.http.client.RequestException;
 
 /**
  * Client service to work with Codenvy extensions (creating/launching/getting logs/stopping).
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtRuntimeClientService.java Jul 3, 2013 12:48:08 PM azatsarynnyy $
  */
 public interface ExtRuntimeClientService {
     /**
      * Create Codenvy extension project.
-     * 
+     *
      * @param projectName name of the project to create
      * @param properties properties to set to a newly created project
      * @param groupId group id to set to the projects pom.xml
@@ -52,7 +52,7 @@ public interface ExtRuntimeClientService {
 
     /**
      * Launch Codenvy application with custom extension.
-     * 
+     *
      * @param vfsId identifier of the virtual file system
      * @param projectId identifier of the custom's extension project we want to launch
      * @param callback callback
@@ -62,16 +62,16 @@ public interface ExtRuntimeClientService {
 
     /**
      * Get logs of launched Codenvy application.
-     * 
+     *
      * @param appId identifier of launched Codenvy application to get its logs
      * @param callback callback
      * @throws RequestException
      */
-    public void getLogs(String appId, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    public void getLogs(String appId, AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Stop Codenvy application.
-     * 
+     *
      * @param appId identifier of Codenvy application to stop
      * @param callback callback
      * @throws RequestException
