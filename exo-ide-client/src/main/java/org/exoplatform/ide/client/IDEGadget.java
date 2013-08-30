@@ -30,8 +30,6 @@ import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.client.framework.util.Utils;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
  */

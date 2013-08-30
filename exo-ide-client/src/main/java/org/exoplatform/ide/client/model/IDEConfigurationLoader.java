@@ -29,11 +29,7 @@ import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.configuration.IDEInitialConfiguration;
 import org.exoplatform.ide.client.framework.util.Utils;
 
-/**
- * Created by The eXo Platform SAS .
- *
- * @version $Id: $
- */
+/** @version $Id: $ */
 
 public class IDEConfigurationLoader {
 
@@ -59,7 +55,7 @@ public class IDEConfigurationLoader {
 
     public void loadConfiguration(AsyncRequestCallback<IDEInitialConfiguration> callback) {
         try {
-            
+
             String url = Utils.getRestContext() + Utils.getWorkspaceName() + "/configuration/init";
             AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
         } catch (Exception e) {

@@ -39,8 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -103,8 +101,10 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
         setEnabled(true);
     }
 
-    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
-     * .framework.navigation.event.ItemsSelectedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     *      .framework.navigation.event.ItemsSelectedEvent)
+     */
     @Override
     public void onItemsSelected(ItemsSelectedEvent event) {
         selectedItems = event.getSelectedItems();
@@ -122,8 +122,10 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
         updateState();
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
-     * .application.event.VfsChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     *      .application.event.VfsChangedEvent)
+     */
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
         vfsInfo = event.getVfsInfo();

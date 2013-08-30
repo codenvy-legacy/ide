@@ -39,8 +39,6 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
@@ -81,16 +79,20 @@ public class CutItemsCommand extends SimpleControl implements IDEControl, VfsCha
         IDE.addHandler(ViewActivatedEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
-     * .framework.navigation.event.ItemsSelectedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     *      .framework.navigation.event.ItemsSelectedEvent)
+     */
     @Override
     public void onItemsSelected(ItemsSelectedEvent event) {
         this.selectedItems = event.getSelectedItems();
         updateState();
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
-     * .ui.api.event.ViewActivatedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
+     *      .ui.api.event.ViewActivatedEvent)
+     */
     @Override
     public void onViewActivated(ViewActivatedEvent event) {
         browserPanelSelected = event.getView() instanceof NavigatorDisplay ||

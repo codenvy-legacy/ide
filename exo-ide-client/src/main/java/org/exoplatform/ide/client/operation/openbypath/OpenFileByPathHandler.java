@@ -20,8 +20,6 @@ package org.exoplatform.ide.client.operation.openbypath;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmitry Nochevnov</a>
  * @version $
  */

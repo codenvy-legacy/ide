@@ -50,8 +50,6 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import java.util.*;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -286,7 +284,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
         return null;
     }
-    
+
     private FileModel getFileById(String id) {
         Iterator<FileModel> fileIter = openedFiles.values().iterator();
         while (fileIter.hasNext()) {
@@ -333,7 +331,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
     private void loadComplete(FileModel file) {
         if (file != null)
-           IDE.fireEvent(new GoToItemEvent(file, new CursorPosition(1, 1)));
+            IDE.fireEvent(new GoToItemEvent(file, new CursorPosition(1, 1)));
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {

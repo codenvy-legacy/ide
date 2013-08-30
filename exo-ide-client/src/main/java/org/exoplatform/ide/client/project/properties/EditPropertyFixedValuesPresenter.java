@@ -37,8 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -61,13 +59,13 @@ public class EditPropertyFixedValuesPresenter implements ViewClosedHandler {
 
     }
 
-    private Display             display;
+    private Display display;
 
-    private Property            property;
+    private Property property;
 
-    private List<Property>      propertyList;
+    private List<Property> propertyList;
 
-    private List<String>        values;
+    private List<String> values;
 
     private EditCompleteHandler editCompleteHandler;
 

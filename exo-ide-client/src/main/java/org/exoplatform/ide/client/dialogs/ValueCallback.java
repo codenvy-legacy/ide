@@ -22,7 +22,6 @@ package org.exoplatform.ide.client.dialogs;
  * <p/>
  * Used for two simple actions: take value and execute some action or cancel (when value is null).
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $

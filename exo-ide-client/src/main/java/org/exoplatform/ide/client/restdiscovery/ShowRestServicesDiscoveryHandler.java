@@ -20,8 +20,6 @@ package org.exoplatform.ide.client.restdiscovery;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 21, 2010 5:54:05 PM evgen $
  */

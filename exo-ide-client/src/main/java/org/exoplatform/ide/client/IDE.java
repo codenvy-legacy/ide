@@ -80,8 +80,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
  */
@@ -251,8 +249,10 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE {
         return controlsRegistration.getRegisteredControls();
     }
 
-    /** @see org.exoplatform.ide.client.framework.module.IDE#addControlsFormatter(org.exoplatform.ide.client.framework.control
-     * .ControlsFormatter) */
+    /**
+     * @see org.exoplatform.ide.client.framework.module.IDE#addControlsFormatter(org.exoplatform.ide.client.framework.control
+     *      .ControlsFormatter)
+     */
     @Override
     public void addControlsFormatter(ControlsFormatter controlsFormatter) {
         controlsRegistration.addControlsFormatter(controlsFormatter);

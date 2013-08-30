@@ -41,8 +41,6 @@ import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import java.util.LinkedHashMap;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

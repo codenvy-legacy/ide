@@ -20,8 +20,6 @@ package org.exoplatform.ide.client;
 import com.google.gwt.core.client.EntryPoint;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: ${date} ${time}
  */

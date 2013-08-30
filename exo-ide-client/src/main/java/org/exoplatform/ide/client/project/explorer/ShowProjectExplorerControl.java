@@ -30,8 +30,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -66,8 +64,10 @@ public class ShowProjectExplorerControl extends SimpleControl implements IDECont
         setVisible(true);
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof ProjectExplorerDisplay) {
@@ -75,8 +75,10 @@ public class ShowProjectExplorerControl extends SimpleControl implements IDECont
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewOpenedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewOpenedEvent)
+     */
     @Override
     public void onViewOpened(ViewOpenedEvent event) {
         if (event.getView() instanceof ProjectExplorerDisplay) {

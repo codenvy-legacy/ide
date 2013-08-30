@@ -43,8 +43,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -101,24 +99,30 @@ public class SaveFileAsControl extends SimpleControl implements IDEControl, Edit
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
-     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+     */
     @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         activeFile = event.getFile();
         updateState();
     }
 
-    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
-     * .framework.navigation.event.ItemsSelectedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     *      .framework.navigation.event.ItemsSelectedEvent)
+     */
     @Override
     public void onItemsSelected(ItemsSelectedEvent event) {
         selectedItems = event.getSelectedItems();
         updateState();
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
-     * .application.event.VfsChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     *      .application.event.VfsChangedEvent)
+     */
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
         vfsInfo = event.getVfsInfo();
@@ -126,8 +130,10 @@ public class SaveFileAsControl extends SimpleControl implements IDEControl, Edit
         setEnabled(false);
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
-     * .client.framework.ui.api.event.ViewVisibilityChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
+     *      .client.framework.ui.api.event.ViewVisibilityChangedEvent)
+     */
     @Override
     public void onViewVisibilityChanged(ViewVisibilityChangedEvent event) {
         if (event.getView() instanceof NavigatorDisplay ||

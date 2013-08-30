@@ -34,21 +34,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class ControlsRegistration {
 
-    private List<Control>           registeredControls     = new ArrayList<Control>();
+    private List<Control> registeredControls = new ArrayList<Control>();
 
-    private List<String>            toolbarDefaultControls = new ArrayList<String>();
+    private List<String> toolbarDefaultControls = new ArrayList<String>();
 
-    private List<String>            statusBarControls      = new ArrayList<String>();
+    private List<String> statusBarControls = new ArrayList<String>();
 
-    private List<ControlsFormatter> controlsFormatters     = new ArrayList<ControlsFormatter>();
+    private List<ControlsFormatter> controlsFormatters = new ArrayList<ControlsFormatter>();
 
     /**
      *
@@ -58,17 +56,17 @@ public class ControlsRegistration {
         statusBarControls.add("");
     }
 
-    /** @return */
+    /** @return  */
     public List<Control> getRegisteredControls() {
         return registeredControls;
     }
 
-    /** @return */
+    /** @return  */
     public List<String> getToolbarDefaultControls() {
         return toolbarDefaultControls;
     }
 
-    /** @return */
+    /** @return  */
     public List<String> getStatusBarControls() {
         return statusBarControls;
     }
@@ -77,7 +75,7 @@ public class ControlsRegistration {
      * @param control
      * @param docking
      */
-    public void addControl(Control< ? > control, Docking docking) {
+    public void addControl(Control<?> control, Docking docking) {
         if (!(control instanceof IDEControl)) {
             Dialogs.getInstance().showError(IDE.ERRORS_CONSTANT.controlsRegistration() + " " + control.getClass());
             return;
@@ -130,8 +128,10 @@ public class ControlsRegistration {
         }
     }
 
-    /** @param userRoles 
-     * @param currentWorkspaceInfo */
+    /**
+     * @param userRoles
+     * @param currentWorkspaceInfo
+     */
     public void initControls(List<String> userRoles, CurrentWorkspaceInfo currentWorkspaceInfo) {
         ClassAnnotationMap annotationMap = GWT.create(ClassAnnotationMap.class);
         if (annotationMap.getClassAnnotations() != null && annotationMap.getClassAnnotations().size() > 0) {
@@ -151,7 +151,7 @@ public class ControlsRegistration {
      * @param controls
      * @param userRoles
      * @param annotationMap
-     * @param currentWorkspaceInfo 
+     * @param currentWorkspaceInfo
      * @return
      */
     private List<Control> getAllowedControlsForUser(List<Control> controls, List<String> userRoles,
@@ -164,8 +164,8 @@ public class ControlsRegistration {
                 if (isControlEnableForCurrentWorkspace(rolesAllowed, currentWorkspaceInfo))
                     allowedControls.add(control);
                 else {
-                     control.disablePermanently();
-                     allowedControls.add(control);
+                    control.disablePermanently();
+                    allowedControls.add(control);
                 }
             }
         }
@@ -187,10 +187,10 @@ public class ControlsRegistration {
         }
         return false;
     }
-    
-    
+
+
     /**
-     * @param currentWorkspaceInfo 
+     * @param currentWorkspaceInfo
      * @param userRoles
      * @param rolesAllowed
      * @return

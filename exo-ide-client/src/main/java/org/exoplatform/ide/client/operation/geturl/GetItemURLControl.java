@@ -34,8 +34,6 @@ import org.exoplatform.ide.vfs.shared.Item;
 
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -67,8 +65,10 @@ public class GetItemURLControl extends SimpleControl implements IDEControl, Item
         IDE.addHandler(VfsChangedEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
-     * .framework.navigation.event.ItemsSelectedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     *      .framework.navigation.event.ItemsSelectedEvent)
+     */
     @Override
     public void onItemsSelected(ItemsSelectedEvent event) {
         if (event.getSelectedItems().size() != 1) {
@@ -87,8 +87,10 @@ public class GetItemURLControl extends SimpleControl implements IDEControl, Item
         setEnabled(isEnabled);
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
-     * .application.event.VfsChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     *      .application.event.VfsChangedEvent)
+     */
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
         if (event.getVfsInfo() != null) {
@@ -98,8 +100,10 @@ public class GetItemURLControl extends SimpleControl implements IDEControl, Item
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
-     * .client.framework.ui.api.event.ViewVisibilityChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
+     *      .client.framework.ui.api.event.ViewVisibilityChangedEvent)
+     */
     @Override
     public void onViewVisibilityChanged(ViewVisibilityChangedEvent event) {
         if (event.getView() instanceof NavigatorDisplay) {

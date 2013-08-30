@@ -19,11 +19,7 @@ package org.exoplatform.ide.client.preview;
 
 import com.google.gwt.event.shared.EventHandler;
 
-/**
- * Created by The eXo Platform SAS .
- *
- * @version $Id: $
- */
+/** @version $Id: $ */
 
 public interface PreviewHTMLHandler extends EventHandler {
 

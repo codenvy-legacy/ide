@@ -25,7 +25,6 @@ package org.exoplatform.ide.client;
  * Call init() function at the start of application to remember browser's alert function and then use alert(...) like
  * Window.alert(...)
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $

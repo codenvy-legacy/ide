@@ -47,8 +47,6 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystemFactory;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */

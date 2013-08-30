@@ -46,14 +46,12 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHandler,
-        ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler {
+                                              ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler {
 
     public interface Display extends IsView {
 
@@ -93,7 +91,7 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
      * Handles {@link ShowProjectsEvent} and opens {@link ShowProjectsView}.
      *
      * @see org.exoplatform.ide.client.project.list.ShowProjectsHandler#onShowProjects(org.exoplatform.ide.client.project.list
-     * .ShowProjectsEvent)
+     *      .ShowProjectsEvent)
      */
     @Override
     public void onShowProjects(ShowProjectsEvent event) {
@@ -204,7 +202,7 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
      * Handle {@link ViewClosedEvent} and reset instance of {@link Display}.
      *
      * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent)
+     *      .event.ViewClosedEvent)
      */
     @Override
     public void onViewClosed(ViewClosedEvent event) {

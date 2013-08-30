@@ -47,16 +47,14 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
-public class DeleteItemControl extends SimpleControl implements 
-    IDEControl, ItemsSelectedHandler, VfsChangedHandler, ViewActivatedHandler, 
-    ProjectSelectedHandler, ItemDeletedHandler,
-    ProjectOpenedHandler, ProjectClosedHandler {
+public class DeleteItemControl extends SimpleControl implements
+                                                     IDEControl, ItemsSelectedHandler, VfsChangedHandler, ViewActivatedHandler,
+                                                     ProjectSelectedHandler, ItemDeletedHandler,
+                                                     ProjectOpenedHandler, ProjectClosedHandler {
 
     private static final String ID = "File/Delete...";
 
@@ -75,7 +73,7 @@ public class DeleteItemControl extends SimpleControl implements
     private List<Item> selectedItems;
 
     private ProjectModel selectedProject;
-    
+
     private ProjectModel openedProject;
 
     /**
@@ -97,7 +95,7 @@ public class DeleteItemControl extends SimpleControl implements
         IDE.addHandler(ItemsSelectedEvent.TYPE, this);
         IDE.addHandler(ProjectSelectedEvent.TYPE, this);
         IDE.addHandler(ItemDeletedEvent.TYPE, this);
-        
+
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
     }
@@ -117,8 +115,10 @@ public class DeleteItemControl extends SimpleControl implements
         updateState();
     }
 
-    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
-     * .framework.navigation.event.ItemsSelectedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     *      .framework.navigation.event.ItemsSelectedEvent)
+     */
     @Override
     public void onItemsSelected(ItemsSelectedEvent event) {
         this.selectedItems = event.getSelectedItems();
@@ -138,11 +138,11 @@ public class DeleteItemControl extends SimpleControl implements
         if (openedProject != null) {
             if (selectedItems != null && !selectedItems.isEmpty() &&
                 !selectedItems.get(0).getId().equals(vfsInfo.getRoot().getId())) {
-                
+
                 setEnabled(navigatorSelected);
             } else {
                 setEnabled(false);
-            }            
+            }
         } else {
             if (selectedProject != null) {
                 setEnabled(navigatorSelected);
@@ -150,8 +150,8 @@ public class DeleteItemControl extends SimpleControl implements
                 setEnabled(false);
             }
         }
-        
-        
+
+
 //        if (selectedProject != null && (selectedItems == null || selectedItems.isEmpty())) {
 //            setEnabled(navigatorSelected);
 //            return;
@@ -169,8 +169,10 @@ public class DeleteItemControl extends SimpleControl implements
 //        setEnabled(navigatorSelected);
     }
 
-    /** @see org.exoplatform.ide.client.project.explorer.ProjectSelectedHandler#onProjectSelected(org.exoplatform.ide.client.project
-     * .explorer.ProjectSelectedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.project.explorer.ProjectSelectedHandler#onProjectSelected(org.exoplatform.ide.client.project
+     *      .explorer.ProjectSelectedEvent)
+     */
     @Override
     public void onProjectSelected(ProjectSelectedEvent event) {
         this.selectedProject = event.getProject();

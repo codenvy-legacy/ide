@@ -53,8 +53,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
@@ -261,36 +259,26 @@ public class CutCopyPasteItemsCommandHandler extends ItemsOperationPresenter
                                                                                                             new
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                                                                                                     AsyncRequestCallback<FileModel>() {
-                                                                                                                @Override
-                                                                                                                protected void onSuccess(
-                                                                                                                        FileModel result) {
-                                                                                                                    cutNextItem();
-                                                                                                                }
+                                                                                                                        @Override
+                                                                                                                        protected void
+                                                                                                                        onSuccess(
+                                                                                                                                FileModel
+                                                                                                                                        result) {
+                                                                                                                            cutNextItem();
+                                                                                                                        }
 
-                                                                                                                @Override
-                                                                                                                protected void onFailure(
-                                                                                                                        Throwable exception) {
-                                                                                                                    IDE.fireEvent(
-                                                                                                                            new ExceptionThrownEvent(
-                                                                                                                                    exception));
-                                                                                                                }
-                                                                                                            });
+                                                                                                                        @Override
+                                                                                                                        protected void
+                                                                                                                        onFailure(
+                                                                                                                                Throwable
+                                                                                                                                        exception) {
+                                                                                                                            IDE.fireEvent(
+                                                                                                                                    new
+                                                                                                                                            ExceptionThrownEvent(
+                                                                                                                                            exception));
+                                                                                                                        }
+                                                                                                                    });
                                                           } catch (RequestException e) {
                                                               IDE.fireEvent(new ExceptionThrownEvent(e));
                                                           }
@@ -315,7 +303,8 @@ public class CutCopyPasteItemsCommandHandler extends ItemsOperationPresenter
                                                      protected void onSuccess(ItemWrapper result) {
                                                          // TODO
                                                          moveComplete(result.getItem().getId(), item);
-                                                         // eventBus.fireEvent(new MoveCompleteEvent(result.getItem(), result.getOldHref()));
+                                                         // eventBus.fireEvent(new MoveCompleteEvent(result.getItem(),
+                                                         // result.getOldHref()));
                                                      }
 
                                                      @Override

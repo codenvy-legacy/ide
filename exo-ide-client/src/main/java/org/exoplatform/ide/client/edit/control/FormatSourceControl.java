@@ -30,8 +30,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFormatTextEvent;
 import org.exoplatform.ide.editor.client.api.EditorCapability;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -61,8 +59,10 @@ public class FormatSourceControl extends SimpleControl implements IDEControl, Ed
         IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
-     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+     */
     @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         // TODO versions

@@ -24,8 +24,6 @@ import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import org.exoplatform.gwtframework.commons.util.Log;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */

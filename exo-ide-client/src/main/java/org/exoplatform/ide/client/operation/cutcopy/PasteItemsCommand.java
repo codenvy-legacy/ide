@@ -37,8 +37,6 @@ import org.exoplatform.ide.vfs.shared.Item;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
@@ -80,24 +78,30 @@ public class PasteItemsCommand extends SimpleControl implements IDEControl, Item
         IDE.addHandler(ViewActivatedEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.navigation.event.ItemsToPasteSelectedHandler#onItemsToPasteSelected(org.exoplatform.ide.client
-     * .navigation.event.ItemsToPasteSelectedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.navigation.event.ItemsToPasteSelectedHandler#onItemsToPasteSelected(org.exoplatform.ide.client
+     *      .navigation.event.ItemsToPasteSelectedEvent)
+     */
     @Override
     public void onItemsToPasteSelected(ItemsToPasteSelectedEvent event) {
         itemsToPasteSelected = true;
         updateState();
     }
 
-    /** @see org.exoplatform.ide.client.navigation.event.PasteItemsCompleteHandler#onPasteItemsComlete(org.exoplatform.ide.client
-     * .navigation.event.PasteItemsCompleteEvent) */
+    /**
+     * @see org.exoplatform.ide.client.navigation.event.PasteItemsCompleteHandler#onPasteItemsComlete(org.exoplatform.ide.client
+     *      .navigation.event.PasteItemsCompleteEvent)
+     */
     @Override
     public void onPasteItemsComlete(PasteItemsCompleteEvent event) {
         itemsToPasteSelected = false;
         updateState();
     }
 
-    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
-     * .framework.navigation.event.ItemsSelectedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     *      .framework.navigation.event.ItemsSelectedEvent)
+     */
     @Override
     public void onItemsSelected(ItemsSelectedEvent event) {
         selectedItems = event.getSelectedItems();

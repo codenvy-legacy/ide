@@ -29,7 +29,6 @@ import java.util.Set;
 /**
  * A widget that implements this interface is untyped(or typed by {@link Object}) tree<br>
  * Used for REST Service Discovery<br>
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 23, 2010 3:48:02 PM evgen $

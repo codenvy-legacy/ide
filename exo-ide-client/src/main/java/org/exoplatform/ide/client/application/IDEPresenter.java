@@ -49,8 +49,6 @@ import org.exoplatform.ide.client.menu.RefreshMenuEvent;
 import org.exoplatform.ide.client.menu.RefreshMenuHandler;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -103,7 +101,7 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                
+
                 new Timer() {
                     @Override
                     public void run() {
@@ -152,15 +150,19 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
         IDE.fireEvent(event);
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
-     * .ui.api.event.ViewActivatedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
+     *      .ui.api.event.ViewActivatedEvent)
+     */
     @Override
     public void onViewActivated(ViewActivatedEvent event) {
         this.activeView = event.getView();
     }
 
-    /** @see org.exoplatform.ide.client.framework.event.ShowContextMenuHandler#onShowContextMenu(org.exoplatform.ide.client.framework
-     * .event.ShowContextMenuEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.event.ShowContextMenuHandler#onShowContextMenu(org.exoplatform.ide.client.framework
+     *      .event.ShowContextMenuEvent)
+     */
     @Override
     public void onShowContextMenu(ShowContextMenuEvent event) {
         final int x = event.getX();

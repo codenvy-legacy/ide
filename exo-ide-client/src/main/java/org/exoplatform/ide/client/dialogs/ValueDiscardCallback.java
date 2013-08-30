@@ -24,7 +24,6 @@ package org.exoplatform.ide.client.dialogs;
  * <p/>
  * E.g. you need to handle not only "Yes" and "Cancel" buttons click, but also "No" button click
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $

@@ -21,8 +21,6 @@ package org.exoplatform.ide.client.operation.gotofolder;
 import org.exoplatform.ide.client.IDE;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

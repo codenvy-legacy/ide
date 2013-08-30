@@ -26,8 +26,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -40,8 +38,10 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler {
         IDE.addHandler(ExceptionThrownEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception
-     * .ExceptionThrownEvent) */
+    /**
+     * @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception
+     *      .ExceptionThrownEvent)
+     */
     public void onError(ExceptionThrownEvent event) {
         Throwable error = event.getException();
         Log.error(getClass(), error);

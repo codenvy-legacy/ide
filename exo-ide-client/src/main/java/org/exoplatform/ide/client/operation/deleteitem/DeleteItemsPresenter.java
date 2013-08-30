@@ -66,8 +66,6 @@ import org.exoplatform.ide.vfs.shared.Item;
 import java.util.*;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
@@ -185,8 +183,8 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
         //check if deleted file in collaboration mode
         for (Item i : itemsToDelete) {
-            if(i instanceof ProjectModel){
-                if(ChatExtension.get().getCurrentProjectParticipants().size() > 1){
+            if (i instanceof ProjectModel) {
+                if (ChatExtension.get().getCurrentProjectParticipants().size() > 1) {
                     new ProjectLockedPresenter((ProjectModel)i, Operation.DELETE);
                     return false;
                 }

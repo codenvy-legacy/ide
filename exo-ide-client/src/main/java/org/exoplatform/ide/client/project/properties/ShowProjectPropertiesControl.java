@@ -31,8 +31,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -77,16 +75,20 @@ public class ShowProjectPropertiesControl extends SimpleControl implements IDECo
         setEnabled(false);
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
-     * .ui.api.event.ViewActivatedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
+     *      .ui.api.event.ViewActivatedEvent)
+     */
     @Override
     public void onViewActivated(ViewActivatedEvent event) {
         isNavigatorSelected =
                 event.getView() instanceof ProjectExplorerDisplay || event.getView() instanceof NavigatorDisplay;
     }
 
-    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
-     * .framework.navigation.event.ItemsSelectedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     *      .framework.navigation.event.ItemsSelectedEvent)
+     */
     @Override
     public void onItemsSelected(ItemsSelectedEvent event) {
 

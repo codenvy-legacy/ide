@@ -24,7 +24,6 @@ import com.google.gwt.event.shared.GwtEvent;
  * <p/>
  * Listening this event, IDE locks or unlocks active file.
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:

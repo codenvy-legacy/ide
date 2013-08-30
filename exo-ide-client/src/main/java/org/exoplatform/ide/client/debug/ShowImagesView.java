@@ -34,8 +34,6 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

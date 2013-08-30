@@ -30,8 +30,6 @@ import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -63,8 +61,10 @@ public class PreviewHTMLControl extends SimpleControl implements IDEControl, Edi
         IDE.addHandler(FileSavedEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
-     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+     */
     @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         currentlyActiveFile = event.getFile();
@@ -95,8 +95,10 @@ public class PreviewHTMLControl extends SimpleControl implements IDEControl, Edi
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event
-     * .FileSavedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event
+     *      .FileSavedEvent)
+     */
     @Override
     public void onFileSaved(FileSavedEvent event) {
         if (currentlyActiveFile != null && event.getFile().getId().equals(currentlyActiveFile.getId())) {

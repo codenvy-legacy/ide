@@ -53,8 +53,6 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -157,27 +155,27 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
         if (project == null || display != null) {
             return;
         }
-        
+
         allFiles.clear();
         addItem(project);
-        
+
         display = GWT.create(Display.class);
         bindDisplay();
         IDE.getInstance().openView(display.asView());
     }
-    
+
     private void addItem(Item item) {
         if (item instanceof FileModel) {
-            allFiles.add((FileModel)item);            
+            allFiles.add((FileModel)item);
         } else if (item instanceof FolderModel) {
-            FolderModel folder = (FolderModel)item;            
+            FolderModel folder = (FolderModel)item;
 
             for (Item child : folder.getChildren().getItems()) {
                 addItem(child);
             }
         }
     }
-    
+
 //    @Override
 //    public void onOpenResource(OpenResourceEvent event) {
 //        if (project == null || display != null) {

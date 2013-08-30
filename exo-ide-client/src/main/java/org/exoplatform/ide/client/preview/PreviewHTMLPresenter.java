@@ -32,8 +32,6 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Link;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -80,7 +78,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
      * Do preview HTML file
      *
      * @see org.exoplatform.ide.client.preview.event.PreviewHTMLHandler#onPreviewHTMLFile(org.exoplatform.ide.client.preview.event
-     * .PreviewHTMLEvent)
+     *      .PreviewHTMLEvent)
      */
     @Override
     public void onPreviewHTMLFile(PreviewHTMLEvent event) {
@@ -115,7 +113,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
      * Handler of ViewClosed event. Clear display instance if closed view is Preview.
      *
      * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent)
+     *      .event.ViewClosedEvent)
      */
     @Override
     public void onViewClosed(ViewClosedEvent event) {

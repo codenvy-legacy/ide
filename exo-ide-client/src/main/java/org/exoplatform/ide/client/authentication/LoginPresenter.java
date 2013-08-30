@@ -47,8 +47,6 @@ import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandl
 import org.exoplatform.ide.client.framework.util.Utils;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -58,7 +56,7 @@ import org.exoplatform.ide.client.framework.util.Utils;
  * @version $Id: exo-jboss-codetemplates.xml 34360 2009-07-22 23:58:59Z aheritier $
  */
 public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler, InitializeServicesHandler,
-                           UserInfoReceivedHandler {
+                                       UserInfoReceivedHandler {
 
     /** LoginDialog's display. */
     public interface Display extends IsView {
@@ -83,10 +81,10 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
     private Display display;
 
     /** Login. */
-    private String  login;
+    private String login;
 
     /** Password. */
-    private String  password;
+    private String password;
 
     /** Creates a new instance of LoginDialog. */
     public LoginPresenter() {
@@ -122,16 +120,16 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
     /**
      * Creates and shows new Login View.
-     * 
+     *
      * @param asyncRequest
      */
     private void showLoginDialog(final AsyncRequest asyncRequest, final Response response) {
-          Window window = new Window("Login");
-          window.add(new Frame(Utils.getRestContext() + Utils.getWorkspaceName() + "/configuration/init"));
-          window.setHeight(435);
-          window.setWidth(580);
-          window.showCentered();
-          
+        Window window = new Window("Login");
+        window.add(new Frame(Utils.getRestContext() + Utils.getWorkspaceName() + "/configuration/init"));
+        window.setHeight(435);
+        window.setWidth(580);
+        window.showCentered();
+
 //        if (display != null) {
 //            return;
 //        }
@@ -223,11 +221,11 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
     /** Handle changing of the text in text fields. */
     ValueChangeHandler<String> valueChangeHandler = new ValueChangeHandler<String>() {
-                                                      @Override
-                                                      public void onValueChange(ValueChangeEvent<String> event) {
-                                                          checkForLoginButtonEnabled();
-                                                      }
-                                                  };
+        @Override
+        public void onValueChange(ValueChangeEvent<String> event) {
+            checkForLoginButtonEnabled();
+        }
+    };
 
     /** Checks for text in the text fields and enables or disables Login button. */
     private void checkForLoginButtonEnabled() {

@@ -32,8 +32,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
@@ -125,8 +123,10 @@ public class PropertiesPresenter implements EditorActiveFileChangedHandler, Show
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event
-     * .FileSavedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event
+     *      .FileSavedEvent)
+     */
     @Override
     public void onFileSaved(FileSavedEvent event) {
         refreshProperties(event.getFile());

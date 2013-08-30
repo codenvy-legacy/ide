@@ -31,8 +31,6 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -108,8 +106,10 @@ public class CustomizeToolbarView extends ViewImpl implements
         return toolbarItemsListGrid;
     }
 
-    /** @see org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter.Display#selectToolbarItem(org.exoplatform.ide.client.toolbar
-     * .ToolbarItem) */
+    /**
+     * @see org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter.Display#selectToolbarItem(org.exoplatform.ide.client.toolbar
+     *      .ToolbarItem)
+     */
     @Override
     public void selectToolbarItem(ToolbarItem item) {
         toolbarItemsListGrid.selectItem(item);

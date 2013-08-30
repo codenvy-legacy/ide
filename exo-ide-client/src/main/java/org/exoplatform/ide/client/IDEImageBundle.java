@@ -22,8 +22,6 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -681,11 +679,11 @@ public interface IDEImageBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/public/images/question.png")
     ImageResource question();
-    
+
     @Source("org/exoplatform/ide/public/images/readonly.png")
     ImageResource readOnly();
 
     @Source("org/exoplatform/ide/public/images/readonly-hover.png")
     ImageResource readOnlyHover();
-    
+
 }

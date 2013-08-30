@@ -35,23 +35,21 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class EditPropertyFixedValuesView extends ViewImpl implements EditPropertyFixedValuesPresenter.Display {
 
-    public static final String                         ID       = "ideEditProjectPropertyView";
+    public static final String ID = "ideEditProjectPropertyView";
 
-    public static final String                         TITLE    = "Edit Property";
+    public static final String TITLE = "Edit Property";
 
     /** Initial width of this view */
-    private static final int                           WIDTH    = 290;
+    private static final int WIDTH = 290;
 
     /** Initial height of this view */
-    private static final int                           HEIGHT   = 100;
+    private static final int HEIGHT = 100;
 
     private static EditPropertyFixedValuesViewUiBinder uiBinder = GWT.create(EditPropertyFixedValuesViewUiBinder.class);
 
@@ -59,16 +57,16 @@ public class EditPropertyFixedValuesView extends ViewImpl implements EditPropert
     }
 
     @UiField
-    TextBox       nameField;
+    TextBox nameField;
 
     @UiField
     ComboBoxField valueField;
 
     @UiField
-    ImageButton   okButton;
+    ImageButton okButton;
 
     @UiField
-    ImageButton   cancelButton;
+    ImageButton cancelButton;
 
     public EditPropertyFixedValuesView() {
         super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.projectProperties()), WIDTH, HEIGHT, false);

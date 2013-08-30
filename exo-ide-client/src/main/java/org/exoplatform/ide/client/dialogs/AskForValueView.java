@@ -35,8 +35,6 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -109,7 +107,7 @@ public class AskForValueView extends ViewImpl implements org.exoplatform.ide.cli
     @Override
     protected void onAttach() {
         super.onAttach();
-        
+
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {

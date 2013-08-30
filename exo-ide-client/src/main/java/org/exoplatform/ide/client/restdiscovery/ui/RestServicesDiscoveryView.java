@@ -38,7 +38,6 @@ import org.exoplatform.ide.client.restdiscovery.UntypedTreeGrid;
 /**
  * View implementation for org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $

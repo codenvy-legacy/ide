@@ -29,7 +29,6 @@ import org.exoplatform.ide.client.framework.util.Utils;
 /**
  * This class updates link to working directory which uses by Shell.
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $

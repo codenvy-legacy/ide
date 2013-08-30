@@ -35,8 +35,6 @@ import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.api.event.SearchCompleteCallback;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: ${date} ${time}
  */
@@ -86,8 +84,10 @@ public class FindTextPresenter implements EditorActiveFileChangedHandler, ViewCl
         IDE.addHandler(FindTextEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client
-     * .editor.event.EditorActiveFileChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client
+     *      .editor.event.EditorActiveFileChangedEvent)
+     */
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         editor = event.getEditor();
 

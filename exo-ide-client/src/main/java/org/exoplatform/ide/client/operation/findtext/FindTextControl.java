@@ -31,8 +31,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.editor.client.api.EditorCapability;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: ${date} ${time}
  */
@@ -66,8 +64,10 @@ public class FindTextControl extends SimpleControl implements IDEControl, Editor
         IDE.addHandler(ViewClosedEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client
-     * .editor.event.EditorActiveFileChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client
+     *      .editor.event.EditorActiveFileChangedEvent)
+     */
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         if (event.getFile() == null || event.getEditor() == null
             || !event.getEditor().isCapable(EditorCapability.FIND_AND_REPLACE)) {

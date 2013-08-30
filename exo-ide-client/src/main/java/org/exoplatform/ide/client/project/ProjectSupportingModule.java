@@ -38,15 +38,12 @@ import org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter;
 import org.exoplatform.ide.client.project.resource.OpenResourcePresenter;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ProjectSupportingModule implements ConfigurationReceivedSuccessfullyHandler{
+public class ProjectSupportingModule implements ConfigurationReceivedSuccessfullyHandler {
 
-    
 
     public ProjectSupportingModule() {
         IDE.getInstance().addControl(new NewProjectMenuGroup());
@@ -70,14 +67,16 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
         IDE.getInstance().addControlsFormatter(new ProjectMenuItemFormatter());
 
         IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-    
+
 
         new ProjectProcessor();
     }
 
-    /** @see org.exoplatform.ide.client.framework.configuration.event
-     * .ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration
-     * .event.ConfigurationReceivedSuccessfullyEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.configuration.event
+     *      .ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration
+     *      .event.ConfigurationReceivedSuccessfullyEvent)
+     */
     public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event) {
         if (TemplateService.getInstance() == null) {
             new TemplateServiceImpl(IDELoader.get());
@@ -85,6 +84,4 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
     }
 
 
-
-   
 }

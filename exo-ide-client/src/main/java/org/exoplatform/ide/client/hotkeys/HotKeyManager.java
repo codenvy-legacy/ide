@@ -35,8 +35,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  */

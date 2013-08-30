@@ -27,8 +27,6 @@ import com.google.gwt.user.client.ui.HTML;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -40,7 +38,7 @@ public class OutputRecord extends HTML implements MouseOutHandler, MouseOverHand
     private static final String INFO_COLOR = "#007700";
 
     private static final String GIT_COLOR = "#000000";
-    
+
     private static final String JREBEL_COLOR = "#000000";
 
     private static final String WARNING_COLOR = "#AA0077";

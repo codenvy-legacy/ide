@@ -54,14 +54,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler, ProjectOpenedHandler,
-                                       ProjectClosedHandler, ViewClosedHandler {
+                                                   ProjectClosedHandler, ViewClosedHandler {
 
     public interface Display extends IsView {
 
@@ -85,13 +83,13 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
 
     }
 
-    private Display                          display;
+    private Display display;
 
-    private ProjectModel                     currentProject;
+    private ProjectModel currentProject;
 
-    private Property                         selectedProperty;
+    private Property selectedProperty;
 
-    private EditPropertyPresenter            editPropertyPresenter           = new EditPropertyPresenter();
+    private EditPropertyPresenter editPropertyPresenter = new EditPropertyPresenter();
 
     private EditPropertyFixedValuesPresenter editPropertyFixedValuePresenter = new EditPropertyFixedValuesPresenter();
 
@@ -120,7 +118,7 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
             VirtualFileSystem.getInstance()
                              .getItemById(projectId,
                                           new AsyncRequestCallback<ItemWrapper>(
-                                                                                new ItemUnmarshaller(new ItemWrapper(new FileModel()))) {
+                                                  new ItemUnmarshaller(new ItemWrapper(new FileModel()))) {
                                               @Override
                                               protected void onSuccess(ItemWrapper result) {
                                                   if (!(result.getItem() instanceof ProjectModel)) {
@@ -232,12 +230,12 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
     }
 
     private EditCompleteHandler propertyEditCompleteHandler = new EditCompleteHandler() {
-                                                                @Override
-                                                                public void onEditComplete() {
-                                                                    display.setOkButtonEnabled(true);
-                                                                    refreshProperties();
-                                                                }
-                                                            };
+        @Override
+        public void onEditComplete() {
+            display.setOkButtonEnabled(true);
+            refreshProperties();
+        }
+    };
 
     private void deleteSelectedProperty() {
         if (selectedProperty.getName().equals(ProjectProperties.TYPE.value())
@@ -264,8 +262,7 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
 
     private void onPropertySelected(Property property) {
         selectedProperty = property;
-        if (!IDE.user.getRoles().contains("developer") && !IDE.user.getRoles().contains("admin"))
-        {
+        if (!IDE.user.getRoles().contains("developer") && !IDE.user.getRoles().contains("admin")) {
             display.setEditButtonEnabled(false);
             display.setDeleteButtonEnabled(false);
             return;

@@ -20,8 +20,6 @@ package org.exoplatform.ide.client;
 import org.exoplatform.gwtframework.ui.client.util.ImageFactory;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

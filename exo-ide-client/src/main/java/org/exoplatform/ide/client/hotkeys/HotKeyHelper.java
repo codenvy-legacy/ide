@@ -25,8 +25,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  */

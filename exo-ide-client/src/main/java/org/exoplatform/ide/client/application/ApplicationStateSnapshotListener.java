@@ -64,8 +64,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
@@ -156,16 +154,20 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
-     * .application.event.VfsChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     *      .application.event.VfsChangedEvent)
+     */
     public void onVfsChanged(VfsChangedEvent event) {
         String workspace = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
         applicationSettings.setValue(Settings.ENTRY_POINT, workspace, Store.COOKIES);
         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
     }
 
-    /** @see org.exoplatform.ide.client.editor.event.EditorReplaceFileHandler#onEditorReplaceFile(org.exoplatform.ide.client.editor.event
-     * .EditorReplaceFileEvent) */
+    /**
+     * @see org.exoplatform.ide.client.editor.event.EditorReplaceFileHandler#onEditorReplaceFile(org.exoplatform.ide.client.editor.event
+     *      .EditorReplaceFileEvent)
+     */
     public void onEditorReplaceFile(EditorReplaceFileEvent event) {
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
@@ -192,8 +194,10 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
         }
     }
 
-    /** @see org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.vfs.client.event
-     * .ItemUnlockedEvent) */
+    /**
+     * @see org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.vfs.client.event
+     *      .ItemUnlockedEvent)
+     */
     @Override
     public void onItemUnlocked(ItemUnlockedEvent event) {
         lockTokens.remove(event.getItem().getId());
@@ -220,16 +224,20 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
     }
 
-    /** @see org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler#onShowHideHiddenFiles(org.exoplatform.ide.client
-     * .navigation.event.ShowHideHiddenFilesEvent) */
+    /**
+     * @see org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler#onShowHideHiddenFiles(org.exoplatform.ide.client
+     *      .navigation.event.ShowHideHiddenFilesEvent)
+     */
     @Override
     public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event) {
         applicationSettings.setValue(Settings.SHOW_HIDDEN_FILES, new Boolean(event.isFilesShown()), Store.COOKIES);
         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
     }
 
-    /** @see org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsHandler#onSaveApplicationSettings(org.exoplatform
-     * .ide.client.framework.settings.event.SaveApplicationSettingsEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsHandler#onSaveApplicationSettings(org.exoplatform
+     *      .ide.client.framework.settings.event.SaveApplicationSettingsEvent)
+     */
     @Override
     public void onSaveApplicationSettings(SaveApplicationSettingsEvent event) {
         switch (event.getSaveType()) {

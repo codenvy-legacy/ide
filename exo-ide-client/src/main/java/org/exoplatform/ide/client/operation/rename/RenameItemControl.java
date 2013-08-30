@@ -46,8 +46,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -67,7 +65,7 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
     private VirtualFileSystemInfo vfsInfo = null;
 
     private boolean navigationViewSelected = false;
-    
+
     private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
     /**
@@ -113,13 +111,13 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
             setEnabled(false);
             return;
         }
-        
+
         Item selectedItem = selectedItems.get(0);
         if (selectedItem instanceof FileModel && !openedFiles.containsKey(selectedItem.getId())) {
             setEnabled(true);
             return;
         }
-        
+
         if (selectedItem instanceof FolderModel) {
             String folderPath = selectedItem.getPath();
             for (FileModel file : openedFiles.values()) {
@@ -128,16 +126,18 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
                     return;
                 }
             }
-            
+
             setEnabled(true);
-        } else {            
+        } else {
             setEnabled(false);
         }
 
     }
 
-    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
-     * .framework.navigation.event.ItemsSelectedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     *      .framework.navigation.event.ItemsSelectedEvent)
+     */
     @Override
     public void onItemsSelected(ItemsSelectedEvent event) {
         navigationViewSelected = event.getView() instanceof NavigatorDisplay ||
@@ -148,16 +148,20 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
         updateState();
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
-     * .application.event.VfsChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     *      .application.event.VfsChangedEvent)
+     */
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
         vfsInfo = event.getVfsInfo();
         updateState();
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
-     * .ui.api.event.ViewActivatedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
+     *      .ui.api.event.ViewActivatedEvent)
+     */
     @Override
     public void onViewActivated(ViewActivatedEvent event) {
         navigationViewSelected = event.getView() instanceof NavigatorDisplay ||

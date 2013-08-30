@@ -34,8 +34,6 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -100,8 +98,10 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
-     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+     */
     @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         activeEditor = event.getEditor();
@@ -109,8 +109,10 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
         updateState();
     }
 
-    /** @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler#onApplicationSettingsSaved(org
-     * .exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler#onApplicationSettingsSaved(org
+     *      .exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent)
+     */
     @Override
     public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event) {
         if (event.getApplicationSettings().getValueAsBoolean("line-numbers") != null) {
@@ -122,8 +124,10 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
         updateState();
     }
 
-    /** @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org
-     * .exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org
+     *      .exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
+     */
     @Override
     public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
         if (event.getApplicationSettings().getValueAsBoolean("line-numbers") != null) {

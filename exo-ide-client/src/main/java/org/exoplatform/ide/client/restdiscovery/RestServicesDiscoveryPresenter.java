@@ -53,8 +53,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import java.util.*;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 22, 2010 9:39:28 AM evgen $
  */
@@ -105,8 +103,10 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
         IDE.getInstance().addControl(new RestServicesDiscoveryControl());
     }
 
-    /** @see org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryHandler#onShowRestServicesDiscovery(org.exoplatform
-     * .ide.client.restdiscovery.event.ShowRestServicesDiscoveryEvent) */
+    /**
+     * @see org.exoplatform.ide.client.restdiscovery.event.ShowRestServicesDiscoveryHandler#onShowRestServicesDiscovery(org.exoplatform
+     *      .ide.client.restdiscovery.event.ShowRestServicesDiscoveryEvent)
+     */
     public void onShowRestServicesDiscovery(ShowRestServicesDiscoveryEvent event) {
         if (display == null) {
             display = GWT.create(Display.class);
@@ -330,33 +330,6 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
                     IDE.fireEvent(new ExceptionThrownEvent(exception, org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                                                                                     .restServicesDiscoveryGetRestServicesFailure()));
                 }
             });
@@ -365,8 +338,10 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedHandler#onRestServicesReceived(org.exoplatform.ide
-     * .client.framework.discovery.event.RestServicesReceivedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.discovery.event.RestServicesReceivedHandler#onRestServicesReceived(org.exoplatform.ide
+     *      .client.framework.discovery.event.RestServicesReceivedEvent)
+     */
     private void refreshRestServices(RestServicesList restServices) {
         services.clear();
         for (IRestService rs : restServices.getRootResources()) {
@@ -431,8 +406,10 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
         return ser;
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
-     * .client.framework.application.event.InitializeServicesEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     *      .client.framework.application.event.InitializeServicesEvent)
+     */
     public void onInitializeServices(InitializeServicesEvent event) {
         restContext = event.getApplicationConfiguration().getContext();
         if (restContext.endsWith("/")) {

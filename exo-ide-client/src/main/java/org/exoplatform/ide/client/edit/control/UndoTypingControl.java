@@ -32,8 +32,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.editor.client.api.Editor;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -70,8 +68,10 @@ public class UndoTypingControl extends SimpleControl implements IDEControl, Edit
         IDE.addHandler(ViewActivatedEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
-     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+     */
     @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         // TODO Version
@@ -89,23 +89,29 @@ public class UndoTypingControl extends SimpleControl implements IDEControl, Edit
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform
-     * .ide.client.framework.editor.event.EditorFileContentChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorFileContentChangedEvent)
+     */
     @Override
     public void onEditorFileContentChanged(EditorFileContentChangedEvent event) {
         setEnabled(event.hasUndoChanges());
     }
 
-    /** @see org.exoplatform.ide.client.framework.event.ShowContextMenuHandler#onShowContextMenu(org.exoplatform.ide.client.framework
-     * .event.ShowContextMenuEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.event.ShowContextMenuHandler#onShowContextMenu(org.exoplatform.ide.client.framework
+     *      .event.ShowContextMenuEvent)
+     */
     @Override
     public void onShowContextMenu(ShowContextMenuEvent event) {
         boolean showInContextMenu = (event.getObject() instanceof Editor);
         setShowInContextMenu(showInContextMenu && isEditorPanelActive);
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
-     * .ui.api.event.ViewActivatedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
+     *      .ui.api.event.ViewActivatedEvent)
+     */
     @Override
     public void onViewActivated(ViewActivatedEvent event) {
         isEditorPanelActive = event.getView() instanceof EditorView;

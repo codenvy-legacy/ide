@@ -29,7 +29,6 @@ import org.exoplatform.ide.client.framework.event.CreateProjectEvent;
 /**
  * Control for creating new project.
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
@@ -58,8 +57,10 @@ public class CreateProjectControl extends SimpleControl implements IDEControl, V
         IDE.addHandler(VfsChangedEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
-     * .application.event.VfsChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     *      .application.event.VfsChangedEvent)
+     */
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
         setEnabled(event.getVfsInfo() != null);

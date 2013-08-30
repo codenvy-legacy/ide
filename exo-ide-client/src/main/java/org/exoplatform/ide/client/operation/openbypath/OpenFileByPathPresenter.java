@@ -43,8 +43,6 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
@@ -207,8 +205,10 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
-     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+     */
     @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         this.activeFile = event.getFile();
@@ -220,8 +220,10 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -229,8 +231,10 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
         }
     }
 
-    /** @see org.exoplatform.ide.client.navigation.event.OpenFileByPathHandler#onOpenFileByPath(org.exoplatform.ide.client.navigation
-     * .event.OpenFileByPathEvent) */
+    /**
+     * @see org.exoplatform.ide.client.navigation.event.OpenFileByPathHandler#onOpenFileByPath(org.exoplatform.ide.client.navigation
+     *      .event.OpenFileByPathEvent)
+     */
     @Override
     public void onOpenFileByPath(OpenFileByPathEvent event) {
         if (display == null) {
