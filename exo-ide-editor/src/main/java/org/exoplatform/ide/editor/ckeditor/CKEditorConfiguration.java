@@ -20,8 +20,6 @@ package org.exoplatform.ide.editor.ckeditor;
 import com.google.gwt.core.client.GWT;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $
  */

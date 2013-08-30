@@ -27,8 +27,6 @@ import org.exoplatform.gwtframework.ui.client.component.TextButton;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

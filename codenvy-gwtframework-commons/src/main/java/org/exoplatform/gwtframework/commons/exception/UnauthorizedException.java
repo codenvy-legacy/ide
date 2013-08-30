@@ -22,8 +22,6 @@ import com.google.gwt.http.client.Response;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

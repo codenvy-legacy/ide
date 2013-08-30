@@ -27,7 +27,6 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 /**
  * Base class for UI representation of token.<br>
  * <p/>
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 19, 2010 4:13:18 PM evgen $
@@ -76,8 +75,10 @@ public abstract class TokenWidget extends Composite implements HasClickHandlers,
         return addDomHandler(handler, MouseOverEvent.getType());
     }
 
-    /** @see com.google.gwt.event.dom.client.HasDoubleClickHandlers#addDoubleClickHandler(com.google.gwt.event.dom.client
-     * .DoubleClickHandler) */
+    /**
+     * @see com.google.gwt.event.dom.client.HasDoubleClickHandlers#addDoubleClickHandler(com.google.gwt.event.dom.client
+     *      .DoubleClickHandler)
+     */
     public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler) {
         return addDomHandler(handler, DoubleClickEvent.getType());
     }

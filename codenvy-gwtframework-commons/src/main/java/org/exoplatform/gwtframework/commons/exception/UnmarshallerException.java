@@ -18,8 +18,6 @@
 package org.exoplatform.gwtframework.commons.exception;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */

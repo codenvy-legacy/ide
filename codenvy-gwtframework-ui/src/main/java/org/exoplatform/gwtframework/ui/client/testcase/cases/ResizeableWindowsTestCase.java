@@ -31,8 +31,6 @@ import org.exoplatform.gwtframework.ui.client.testcase.TestCase;
 import org.exoplatform.gwtframework.ui.client.window.ResizeableWindow;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

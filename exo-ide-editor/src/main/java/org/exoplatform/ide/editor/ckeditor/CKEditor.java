@@ -43,8 +43,6 @@ import org.exoplatform.ide.editor.shared.text.IDocumentListener;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmitry Nochevnov</a>
  * @version $
  */
@@ -144,10 +142,15 @@ public class CKEditor extends AbsolutePanel implements Editor {
 
        if (basePath !== undefined) {
            $wnd.CKEDITOR.basePath = basePath;
-           $wnd.CKEDITOR.config.contentsCss = basePath + "contents.css"; // reflects the CSS used in the final pages where the contents are to be used.
-           $wnd.CKEDITOR.plugins.basePath = basePath + "plugins/"; // set base path to the plugins folder
+           $wnd.CKEDITOR.config.contentsCss = basePath + "contents.css"; // reflects the CSS used in the final pages where the contents 
+           are
+           to
+           be
+           used.
+               $wnd.CKEDITOR.plugins.basePath = basePath + "plugins/"; // set base path to the plugins folder
            $wnd.CKEDITOR.config.templates_files[0] = basePath + "plugins/templates/templates/default.js"; // set default template path
-           $wnd.CKEDITOR.config.smiley_path = basePath + "plugins/smiley/images/"; // The base path used to build the URL for the smiley images.
+           $wnd.CKEDITOR.config.smiley_path = basePath + "plugins/smiley/images/"; // The base path used to build the URL for the smiley 
+           images.
        }
 
        if (skin !== undefined) {
@@ -356,7 +359,10 @@ public class CKEditor extends AbsolutePanel implements Editor {
        var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
        if (editor != null) {
            editor.setData(data, function () {
-               editor.checkDirty(); // reset ckeditor content changed indicator (http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.editor.html#setData)
+               editor.checkDirty(); // reset ckeditor content changed indicator (http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR
+               .
+               editor.html#setData
+               )
            });
 
            editor.exoSavedContent = data;
@@ -472,7 +478,9 @@ public class CKEditor extends AbsolutePanel implements Editor {
            $wnd.alert = function (message) {
                // test if this is a in context of ckeditor
                if (typeof $wnd.CKEDITOR !== "undefined") {
-                   @org.exoplatform.ide.editor.ckeditor.CKEditor::showErrorDialog(Ljava/lang/String;Ljava/lang/String;)("WYSIWYG Editor Error", message);
+                   @org.exoplatform.ide.editor.ckeditor.CKEditor::showErrorDialog(Ljava/lang/String;Ljava/lang/String;)("WYSIWYG Editor 
+                   Error
+                   ", message);
                }
                else {
                    return proxied(message);
@@ -683,43 +691,55 @@ public class CKEditor extends AbsolutePanel implements Editor {
         return "Design";
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#addContentChangedHandler(org.exoplatform.ide.editor.client.api.event
-     * .EditorContentChangedHandler) */
+    /**
+     * @see org.exoplatform.ide.editor.client.api.Editor#addContentChangedHandler(org.exoplatform.ide.editor.client.api.event
+     *      .EditorContentChangedHandler)
+     */
     @Override
     public HandlerRegistration addContentChangedHandler(EditorContentChangedHandler handler) {
         return addHandler(handler, EditorContentChangedEvent.TYPE);
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#addContextMenuHandler(org.exoplatform.ide.editor.client.api.event
-     * .EditorContextMenuHandler) */
+    /**
+     * @see org.exoplatform.ide.editor.client.api.Editor#addContextMenuHandler(org.exoplatform.ide.editor.client.api.event
+     *      .EditorContextMenuHandler)
+     */
     @Override
     public HandlerRegistration addContextMenuHandler(EditorContextMenuHandler handler) {
         return addHandler(handler, EditorContextMenuEvent.TYPE);
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#addCursorActivityHandler(org.exoplatform.ide.editor.client.api.event
-     * .EditorCursorActivityHandler) */
+    /**
+     * @see org.exoplatform.ide.editor.client.api.Editor#addCursorActivityHandler(org.exoplatform.ide.editor.client.api.event
+     *      .EditorCursorActivityHandler)
+     */
     @Override
     public HandlerRegistration addCursorActivityHandler(EditorCursorActivityHandler handler) {
         return addHandler(handler, EditorCursorActivityEvent.TYPE);
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#addFocusReceivedHandler(org.exoplatform.ide.editor.client.api.event
-     * .EditorFocusReceivedHandler) */
+    /**
+     * @see org.exoplatform.ide.editor.client.api.Editor#addFocusReceivedHandler(org.exoplatform.ide.editor.client.api.event
+     *      .EditorFocusReceivedHandler)
+     */
     @Override
     public HandlerRegistration addFocusReceivedHandler(EditorFocusReceivedHandler handler) {
         return addHandler(handler, EditorFocusReceivedEvent.TYPE);
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#addHotKeyPressedHandler(org.exoplatform.ide.editor.client.api.event
-     * .EditorHotKeyPressedHandler) */
+    /**
+     * @see org.exoplatform.ide.editor.client.api.Editor#addHotKeyPressedHandler(org.exoplatform.ide.editor.client.api.event
+     *      .EditorHotKeyPressedHandler)
+     */
     @Override
     public HandlerRegistration addHotKeyPressedHandler(EditorHotKeyPressedHandler handler) {
         return addHandler(handler, EditorHotKeyPressedEvent.TYPE);
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#addInitializedHandler(org.exoplatform.ide.editor.client.api.event
-     * .EditorInitializedHandler) */
+    /**
+     * @see org.exoplatform.ide.editor.client.api.Editor#addInitializedHandler(org.exoplatform.ide.editor.client.api.event
+     *      .EditorInitializedHandler)
+     */
     @Override
     public HandlerRegistration addInitializedHandler(EditorInitializedHandler handler) {
         return addHandler(handler, EditorInitializedEvent.TYPE);
@@ -797,8 +817,10 @@ public class CKEditor extends AbsolutePanel implements Editor {
         return 0;
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.client.api.event
-     * .SearchCompleteCallback) */
+    /**
+     * @see org.exoplatform.ide.editor.client.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.client.api.event
+     *      .SearchCompleteCallback)
+     */
     @Override
     public void search(String query, boolean caseSensitive, SearchCompleteCallback searchCompleteCallback) {
     }

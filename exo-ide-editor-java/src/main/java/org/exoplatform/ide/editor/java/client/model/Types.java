@@ -18,8 +18,6 @@
 package org.exoplatform.ide.editor.java.client.model;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 15, 2010 5:05:08 PM evgen $
  */

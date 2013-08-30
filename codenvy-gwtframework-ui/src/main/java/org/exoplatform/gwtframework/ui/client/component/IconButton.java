@@ -41,8 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -76,44 +74,42 @@ public class IconButton extends Composite implements HasClickHandlers {
         ImageResource buttonBackground();
     }
 
-    private static final Resorces RESORCES         = GWT.create(Resorces.class);
+    private static final Resorces RESORCES = GWT.create(Resorces.class);
 
     static {
         RESORCES.css().ensureInjected();
     }
 
     /** Button's panel. */
-    private ButtonPanel           buttonPanel;
+    private ButtonPanel buttonPanel;
 
-    /**
-     * Icon for enabled state. Icon must be represented as HTML string. e.g. <img src="..." />
-     */
-    protected String              icon;
+    /** Icon for enabled state. Icon must be represented as HTML string. e.g. <img src="..." /> */
+    protected String icon;
 
-    /**
-     * Icon for disabled state. Icon must be represented as HTML string. e.g. <img src="..." />
-     */
-    protected String              disabledIcon;
+    /** Icon for disabled state. Icon must be represented as HTML string. e.g. <img src="..." /> */
+    protected String disabledIcon;
 
     /** Command which will be executed when button was pressed. */
-    protected Command             command;
+    protected Command command;
 
     /** Is enabled. */
-    private boolean               enabled          = true;
+    private boolean enabled = true;
 
     /** Is button selected. */
-    private boolean               selected         = false;
+    private boolean selected = false;
 
-    private boolean               handleMouseEvent = true;
+    private boolean handleMouseEvent = true;
 
-    private List<ClickHandler>    clickHandlers    = new ArrayList<ClickHandler>();
+    private List<ClickHandler> clickHandlers = new ArrayList<ClickHandler>();
 
     /**
      * Create IconButton with icons. Icons is an HTML image and must be prepared like "<img ... />" tag Use
      * org.exoplatform.gwtframework.ui.client.util.ImageHelper to create Image from some sources.
-     * 
-     * @param icon icon for enabled state
-     * @param disabledIcon icon for disabled state
+     *
+     * @param icon
+     *         icon for enabled state
+     * @param disabledIcon
+     *         icon for disabled state
      */
     public IconButton(String icon, String disabledIcon) {
         this(icon, disabledIcon, null);
@@ -129,9 +125,11 @@ public class IconButton extends Composite implements HasClickHandlers {
 
     /**
      * Creates a new instance of this {@link IconButton}
-     * 
-     * @param icon html image for enabled state
-     * @param disabledIcon html image for disabled state
+     *
+     * @param icon
+     *         html image for enabled state
+     * @param disabledIcon
+     *         html image for disabled state
      */
     public IconButton(Image icon, Image disabledIcon) {
         this(ImageHelper.getImageHTML(icon), ImageHelper.getImageHTML(disabledIcon), null);
@@ -140,10 +138,13 @@ public class IconButton extends Composite implements HasClickHandlers {
     /**
      * Create IconButton with icons and command. Icons is an HTML image and must be prepared like "<img ... />" tag Use
      * org.exoplatform.gwtframework.ui.client.util.ImageHelper to create Image from some sources.
-     * 
-     * @param icon icon for enabled state
-     * @param disabledIcon icon for disabled state
-     * @param command command which will be executed when button was pressed.
+     *
+     * @param icon
+     *         icon for enabled state
+     * @param disabledIcon
+     *         icon for disabled state
+     * @param command
+     *         command which will be executed when button was pressed.
      */
     public IconButton(String icon, String disabledIcon, Command command) {
         this();
@@ -157,7 +158,7 @@ public class IconButton extends Composite implements HasClickHandlers {
 
     /**
      * Get command which will be executed when button was pressed.
-     * 
+     *
      * @return command which will be executed when button was pressed
      */
     public Command getCommand() {
@@ -166,8 +167,9 @@ public class IconButton extends Composite implements HasClickHandlers {
 
     /**
      * Set command which will be executed when button was pressed.
-     * 
-     * @param command command which will be executed when button was pressed
+     *
+     * @param command
+     *         command which will be executed when button was pressed
      */
     public void setCommand(Command command) {
         this.command = command;
@@ -175,7 +177,7 @@ public class IconButton extends Composite implements HasClickHandlers {
 
     /**
      * Get is enabled.
-     * 
+     *
      * @return is enabled
      */
     public boolean isEnabled() {
@@ -184,8 +186,9 @@ public class IconButton extends Composite implements HasClickHandlers {
 
     /**
      * Set is enabled.
-     * 
-     * @param enabled is enabled
+     *
+     * @param enabled
+     *         is enabled
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -196,7 +199,7 @@ public class IconButton extends Composite implements HasClickHandlers {
 
     /**
      * Get icon for enabled state.
-     * 
+     *
      * @return icon which is uses for enabled state
      */
     public String getIcon() {
@@ -206,8 +209,9 @@ public class IconButton extends Composite implements HasClickHandlers {
     /**
      * Set icon as HTML image for enabled state. Image must be prepared like "<img ... />" tag Use
      * org.exoplatform.gwtframework.ui.client.util.ImageHelper for creation Image from some sources.
-     * 
-     * @param icon icon
+     *
+     * @param icon
+     *         icon
      */
     public void setIcon(String icon) {
         this.icon = icon;
@@ -218,7 +222,7 @@ public class IconButton extends Composite implements HasClickHandlers {
 
     /**
      * Get icon for disabled state.
-     * 
+     *
      * @return icon which is uses for disabled state
      */
     public String getDisabledIcon() {
@@ -228,8 +232,9 @@ public class IconButton extends Composite implements HasClickHandlers {
     /**
      * Set icon as HTML image for disabled state. Image must be prepared like "<img ... />" tag Use
      * org.exoplatform.gwtframework.ui.client.util.ImageHelper for creation Image from some sources.
-     * 
-     * @param disabledIcon icon which is uses for disabled state
+     *
+     * @param disabledIcon
+     *         icon which is uses for disabled state
      */
     public void setDisabledIcon(String disabledIcon) {
         this.disabledIcon = disabledIcon;
@@ -242,7 +247,7 @@ public class IconButton extends Composite implements HasClickHandlers {
 
     /**
      * Get is button selected.
-     * 
+     *
      * @return <code>true</code> if button selected, <code>false</code> otherwise.
      */
     public boolean isSelected() {
@@ -251,8 +256,9 @@ public class IconButton extends Composite implements HasClickHandlers {
 
     /**
      * Set button is selected.
-     * 
-     * @param selected is button selected
+     *
+     * @param selected
+     *         is button selected
      */
     public void setSelected(boolean selected) {
         this.selected = selected;
@@ -291,8 +297,9 @@ public class IconButton extends Composite implements HasClickHandlers {
 
     /**
      * Set name of the image which will be received from {@link ImageFactory}
-     * 
-     * @param imageName name of the image
+     *
+     * @param imageName
+     *         name of the image
      */
     public void setImageName(String imageName) {
         icon = ImageHelper.getImageHTML(ImageFactory.getImage(imageName));
@@ -302,8 +309,7 @@ public class IconButton extends Composite implements HasClickHandlers {
 
     /** Mouse Over handler. */
     private void onMouseOver() {
-        if (handleMouseEvent)
-        {
+        if (handleMouseEvent) {
             if (selected) {
                 buttonPanel.setStyleName(RESORCES.css().exoIconButtonPanelSelectedOver());
             } else {
@@ -314,8 +320,7 @@ public class IconButton extends Composite implements HasClickHandlers {
 
     /** Mouse Out handler. */
     private void onMouseOut() {
-        if (handleMouseEvent)
-        {
+        if (handleMouseEvent) {
             if (selected) {
                 buttonPanel.setStyleName(RESORCES.css().exoIconButtonPanelSelected());
             } else {
@@ -326,8 +331,7 @@ public class IconButton extends Composite implements HasClickHandlers {
 
     /** Mouse Down handler. */
     private void onMouseDown() {
-        if (handleMouseEvent)
-        {
+        if (handleMouseEvent) {
             if (selected) {
                 buttonPanel.setStyleName(RESORCES.css().exoIconButtonPanelSelectedDown());
             } else {
@@ -338,8 +342,7 @@ public class IconButton extends Composite implements HasClickHandlers {
 
     /** Mouse Up handler. */
     private void onMouseUp() {
-        if (handleMouseEvent)
-        {
+        if (handleMouseEvent) {
             if (selected) {
                 buttonPanel.setStyleName(RESORCES.css().exoIconButtonPanelSelectedOver());
             } else {
@@ -406,8 +409,9 @@ public class IconButton extends Composite implements HasClickHandlers {
 
     /**
      * Sets the title associated with this button. The title is the 'tool-tip' displayed to users when they hover over the object.
-     * 
-     * @param title the object's new title
+     *
+     * @param title
+     *         the object's new title
      */
     public void setTitle(String title) {
         buttonPanel.setTitle(title);

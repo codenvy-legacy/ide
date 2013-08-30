@@ -23,8 +23,6 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 16, 2010 11:33:46 AM evgen $
  */
@@ -64,8 +62,10 @@ public class JavaKeyWordWidget extends JavaTokenWidgetBase {
         return token.getName();
     }
 
-    /** @see org.exoplatform.ide.editor.java.client.codeassistant.ui.JavaTokenWidgetBase.module.groovy.codeassistant.ui
-     * .GroovyTokenWidgetBase#getTokenDecription() */
+    /**
+     * @see org.exoplatform.ide.editor.java.client.codeassistant.ui.JavaTokenWidgetBase.module.groovy.codeassistant.ui
+     *      .GroovyTokenWidgetBase#getTokenDecription()
+     */
     @Override
     public Widget getTokenDecription() {
         return null;

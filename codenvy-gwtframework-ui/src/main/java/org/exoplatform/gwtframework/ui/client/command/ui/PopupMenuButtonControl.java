@@ -29,8 +29,6 @@ import org.exoplatform.gwtframework.ui.client.menu.MenuItem;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

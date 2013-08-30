@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
- * Created by The eXo Platform SAS .
  * <p/>
  * This Lock Layer for Popup Menu uses as root for for Popup Menus and uses for closing all visible popups when user clicked outside one of
  * them.

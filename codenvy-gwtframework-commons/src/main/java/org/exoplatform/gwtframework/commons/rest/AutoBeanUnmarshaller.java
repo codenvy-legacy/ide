@@ -27,8 +27,6 @@ import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @param <T>
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $

@@ -29,8 +29,6 @@ import org.exoplatform.ide.editor.api.codeassitant.*;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 17, 2010 4:51:03 PM evgen $
  */

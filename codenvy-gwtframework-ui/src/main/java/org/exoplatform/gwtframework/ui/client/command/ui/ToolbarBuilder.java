@@ -30,8 +30,6 @@ import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -103,7 +101,7 @@ public class ToolbarBuilder implements SetToolbarItemsHandler, AddToolbarItemsHa
         addItems(toolbar, leftItems, event.getCommands(), false);
         addItems(toolbar, rightItems, event.getCommands(), true);
         toolbar.hideDuplicatedDelimiters();
-        
+
     }
 
     private void addItems(Toolbar toolbar, List<String> items, List<Control> controls, boolean right) {

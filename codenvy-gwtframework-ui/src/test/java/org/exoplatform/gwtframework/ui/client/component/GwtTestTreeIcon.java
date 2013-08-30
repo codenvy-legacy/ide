@@ -27,8 +27,6 @@ import org.exoplatform.gwtframework.ui.client.testcase.ShowCaseImageBundle;
 import org.exoplatform.gwtframework.ui.client.tree.TreeRecord;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
  * @version $Id: $
  */

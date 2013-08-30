@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by The eXo Platform SAS .
  * <p/>
  * PopupMenu is visual component represents all known Popup Menu.
  *

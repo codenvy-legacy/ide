@@ -27,8 +27,6 @@ import org.exoplatform.gwtframework.ui.client.menu.MenuItem;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -98,7 +96,7 @@ public class MenuItemControl implements Command, SimpleControlStateListener {
     public void execute() {
         if (command.getEvent() != null) {
             try {
-                eventBus.fireEvent(command.getEvent());                
+                eventBus.fireEvent(command.getEvent());
             } catch (Throwable e) {
                 e.printStackTrace();
             }

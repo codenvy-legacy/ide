@@ -40,7 +40,6 @@ import java.util.List;
  * This class is UI component that represent autocompletion form. This form works with any bean, but also required implementation
  * of {@link TokenWidgetFactory} to build {@link TokenWidget}
  * <p/>
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 25, 2010 4:18:55 PM evgen $
@@ -361,8 +360,10 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
 
     protected class AutoCompleteFormKeyboardManager implements Event.NativePreviewHandler {
 
-        /** @see com.google.gwt.user.client.Event.NativePreviewHandler#onPreviewNativeEvent(com.google.gwt.user.client.Event
-         * .NativePreviewEvent) */
+        /**
+         * @see com.google.gwt.user.client.Event.NativePreviewHandler#onPreviewNativeEvent(com.google.gwt.user.client.Event
+         *      .NativePreviewEvent)
+         */
         public void onPreviewNativeEvent(NativePreviewEvent event) {
             NativeEvent nativeEvent = event.getNativeEvent();
 

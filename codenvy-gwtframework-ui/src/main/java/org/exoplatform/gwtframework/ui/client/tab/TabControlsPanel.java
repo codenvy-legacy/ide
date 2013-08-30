@@ -28,7 +28,6 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * This panel is a container for user defined buttons which are shows in the right upper corner.
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $

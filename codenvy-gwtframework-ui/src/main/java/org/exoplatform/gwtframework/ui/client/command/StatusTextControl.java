@@ -22,8 +22,6 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.exoplatform.gwtframework.ui.client.component.TextButton.TextAlignment;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

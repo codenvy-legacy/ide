@@ -32,7 +32,6 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * This component combines two buttons for scrolling TabBar at the left and at the right.
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $

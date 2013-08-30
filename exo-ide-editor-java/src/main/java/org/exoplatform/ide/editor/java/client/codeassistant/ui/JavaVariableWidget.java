@@ -24,8 +24,6 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 13, 2010 4:06:10 PM evgen $
  */
@@ -65,8 +63,10 @@ public class JavaVariableWidget extends JavaTokenWidgetBase {
         return token.getName();
     }
 
-    /** @see org.exoplatform.ide.editor.java.client.codeassistant.ui.JavaTokenWidgetBase.module.groovy.codeassistant.ui
-     * .GroovyTokenWidgetBase#getTokenDecription() */
+    /**
+     * @see org.exoplatform.ide.editor.java.client.codeassistant.ui.JavaTokenWidgetBase.module.groovy.codeassistant.ui
+     *      .GroovyTokenWidgetBase#getTokenDecription()
+     */
     @Override
     public Widget getTokenDecription() {
         if (token.hasProperty(TokenProperties.FULL_TEXT)) {

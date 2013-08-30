@@ -23,8 +23,6 @@ import com.google.gwt.http.client.Response;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 
 /**
- * Created by The eXo Platform SAS        .
- *
  * @version $Id: $
  *          <p/>
  *          deserializer for response's body.

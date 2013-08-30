@@ -20,8 +20,6 @@ package com.codenvy.ide.commons;
 import java.util.Collection;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
@@ -29,11 +27,11 @@ public class IdeUser {
     private String userId;
 
     private Collection<String> roles;
-    
+
     private Collection<IDEWorkspace> workspaces;
-    
+
     private String clientId;
-    
+
     private boolean temporary;
 
     public IdeUser() {
@@ -94,36 +92,37 @@ public class IdeUser {
     public void setClientId(String clientId) {
         this.clientId = clientId;
     }
-    
+
     public Collection<IDEWorkspace> getWorkspaces() {
         return workspaces;
     }
-    
+
     public void setWorkspaces(Collection<IDEWorkspace> workspaces) {
         this.workspaces = workspaces;
     }
-    
-    
+
+
     public boolean isTemporary() {
         return temporary;
     }
-    
+
     public void setTemporary(boolean temporary) {
         this.temporary = temporary;
     }
-    
+
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("\"user\":{\"userId\":\"").append(userId).append("\",\"clientId\":\"").append(clientId).append("\",\"temporary\":\"").append(temporary).append("\",\"roles\":[");
+        builder.append("\"user\":{\"userId\":\"").append(userId).append("\",\"clientId\":\"").append(clientId).append("\",\"temporary\":\"")
+               .append(temporary).append("\",\"roles\":[");
         int i = 0;
         int rMax = roles.size();
         for (String r : roles) {
             i++;
             builder.append(r);
             if (i != rMax)
-              builder.append(", ");
+                builder.append(", ");
         }
         return builder.append("]}").toString();
     }

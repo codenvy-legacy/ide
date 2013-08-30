@@ -38,8 +38,7 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 /**
  * Implementation of {@link CodeAssistantService} <br>
- * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 17, 2010 4:44:53 PM evgen $
  */
@@ -47,9 +46,9 @@ public class JavaCodeAssistantService extends CodeAssistantService {
 
     private static JavaCodeAssistantService instance;
 
-    private static String                   FIND_BY_PROJECT;
+    private static String FIND_BY_PROJECT;
 
-    private static String                   TYPES_BY_FQNS;
+    private static String TYPES_BY_FQNS;
 
     public JavaCodeAssistantService(String restContext, String ws, Loader loader) {
         super(restContext, loader, ws + "/code-assistant/java/class-description?fqn=", // GET_CLASS_URL
@@ -68,16 +67,18 @@ public class JavaCodeAssistantService extends CodeAssistantService {
 
     /**
      * Find all classes from project with file.
-     * 
-     * @param fileRelPath for who autocompletion called (Need for find classpath)
-     * @param callback - the callback which client has to implement
+     *
+     * @param fileRelPath
+     *         for who autocompletion called (Need for find classpath)
+     * @param callback
+     *         - the callback which client has to implement
      */
     public void findClassesByProject(String fileId, String projectId, AsyncRequestCallback<TypesList> callback) {
         if (fileId != null) {
             String url = restServiceContext + FIND_BY_PROJECT;
             url +=
-                   "?fileid=" + fileId + "&projectid=" + projectId + "&vfsid="
-                       + VirtualFileSystem.getInstance().getInfo().getId();
+                    "?fileid=" + fileId + "&projectid=" + projectId + "&vfsid="
+                    + VirtualFileSystem.getInstance().getInfo().getId();
             try {
                 AsyncRequest.build(RequestBuilder.GET, url).send(callback);
             } catch (RequestException e) {

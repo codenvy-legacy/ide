@@ -37,7 +37,7 @@ import java.util.*;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 17, 2010 5:00:56 PM evgen $
- * @see Unmarshallable Created by The eXo Platform SAS.
+ * @see Unmarshallable
  */
 public class ClassDescriptionUnmarshaller implements Unmarshallable<JavaClass> {
 

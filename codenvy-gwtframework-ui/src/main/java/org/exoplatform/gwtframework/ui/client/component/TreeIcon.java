@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
  * @version $Id: $
  */

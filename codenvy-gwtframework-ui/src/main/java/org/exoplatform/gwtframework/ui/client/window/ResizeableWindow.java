@@ -28,7 +28,6 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Window component with ability to resize.
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $

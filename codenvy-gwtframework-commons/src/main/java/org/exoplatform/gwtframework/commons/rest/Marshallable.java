@@ -19,7 +19,7 @@
 package org.exoplatform.gwtframework.commons.rest;
 
 /**
- * Created by The eXo Platform SAS        .
+ * .
  *
  * @version $Id: $
  *          <p/>

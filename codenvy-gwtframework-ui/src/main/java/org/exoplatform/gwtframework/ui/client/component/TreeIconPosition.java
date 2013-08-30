@@ -20,7 +20,6 @@ package org.exoplatform.gwtframework.ui.client.component;
 
 /**
  * use to indicate where in the  display icons
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
  * @version $Id: $

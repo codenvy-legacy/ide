@@ -23,7 +23,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.exoplatform.ide.editor.client.api.Editor;
 
 /**
- * Fires just after some key or mouse event have been happened in editor. Created by The eXo Platform SAS .
+ * Fires just after some key or mouse event have been happened in editor.
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $

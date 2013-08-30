@@ -22,7 +22,6 @@ import java.util.List;
 /**
  * Array implentation of {@link TokenProperty} Contains {@link List} of {@link Token}
  * <p/>
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $

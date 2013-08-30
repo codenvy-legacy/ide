@@ -27,11 +27,7 @@ import org.exoplatform.gwtframework.commons.exception.ServerDisconnectedExceptio
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
 
-/**
- * Created by The eXo Platform SAS        .
- *
- * @version $Id: $
- */
+/** @version $Id: $ */
 
 public abstract class AsyncRequestCallback<T> implements RequestCallback {
 

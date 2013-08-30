@@ -26,7 +26,6 @@ import org.exoplatform.gwtframework.commons.exception.JobNotFoundException;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 
 /**
- * Created by The eXo Platform SAS .
  * <p/>
  * Wrapper under RequestBuilder to simplify the stuffs
  *

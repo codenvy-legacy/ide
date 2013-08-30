@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Basic implementation of {@link Token} interface Created by The eXo Platform SAS.
+ * Basic implementation of {@link Token} interface
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 17, 2010 5:22:15 PM evgen $

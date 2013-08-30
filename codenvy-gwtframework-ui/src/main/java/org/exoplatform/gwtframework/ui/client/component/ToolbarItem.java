@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * This class wraps the elements before placing them on {@link Toolbar}.
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $

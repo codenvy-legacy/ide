@@ -18,11 +18,7 @@
 
 package org.exoplatform.gwtframework.commons.xml;
 
-/**
- * Created by The eXo Platform SAS        .
- *
- * @version $Id: $
- */
+/** @version $Id: $ */
 
 public class QName {
 

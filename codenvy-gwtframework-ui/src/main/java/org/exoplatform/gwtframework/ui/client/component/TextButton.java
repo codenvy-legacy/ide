@@ -32,8 +32,6 @@ import com.google.gwt.user.client.ui.Grid;
 import org.exoplatform.gwtframework.ui.client.util.ExoStyle;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

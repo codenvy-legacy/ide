@@ -25,8 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  *          <p/>
@@ -184,8 +182,10 @@ public class MenuBarItem extends MenuItem implements ItemSelectedHandler, Update
         return visible;
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.ItemSelectedHandler.menu.nn.impl.ItemSelectedCallback#onMenuItemSelected(org
-     * .exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem) */
+    /**
+     * @see org.exoplatform.gwtframework.ui.client.ItemSelectedHandler.menu.nn.impl.ItemSelectedCallback#onMenuItemSelected(org
+     *      .exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem)
+     */
     public void onMenuItemSelected(MenuItem menuItem) {
         setNormalState();
         itemSelectedHandler.onMenuItemSelected(menuItem);

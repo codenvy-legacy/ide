@@ -25,7 +25,7 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 import java.util.List;
 
 /**
- * Fires just after opened in editor content had been changed. Created by The eXo Platform SAS .
+ * Fires just after opened in editor content had been changed.
  *
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version @version $Id: $

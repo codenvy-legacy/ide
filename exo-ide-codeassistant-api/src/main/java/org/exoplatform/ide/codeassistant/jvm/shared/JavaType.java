@@ -18,7 +18,6 @@
 package org.exoplatform.ide.codeassistant.jvm.shared;
 
 
-/** Created by The eXo Platform SAS. */
 public enum JavaType {
     CLASS, INTERFACE, ANNOTATION, ENUM;
 

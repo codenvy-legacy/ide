@@ -18,8 +18,6 @@
 package org.exoplatform.ide.editor.api.codeassitant;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 17, 2010 5:45:20 PM evgen $
  */

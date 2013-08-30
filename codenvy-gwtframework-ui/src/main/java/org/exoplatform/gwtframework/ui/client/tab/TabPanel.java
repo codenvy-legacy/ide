@@ -41,7 +41,6 @@ import java.util.Map;
 /**
  * Decorated TabPanel with styled TabBar
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
@@ -327,7 +326,7 @@ public class TabPanel extends DecoratedTabPanel implements Scrollable, CloseTabH
      * Adds CloseTabHandler.
      *
      * @see org.exoplatform.gwtframework.ui.client.tab.event.HasCloseTabHandler#addCloseTabHandler(org.exoplatform.gwtframework.ui.client
-     * .tab.event.CloseTabHandler)
+     *      .tab.event.CloseTabHandler)
      */
     @Override
     public HandlerRegistration addCloseTabHandler(CloseTabHandler closeTabHandler) {
@@ -397,8 +396,10 @@ public class TabPanel extends DecoratedTabPanel implements Scrollable, CloseTabH
         }
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.tab.event.HasTabClosedHandler#addTabClosedHandler(org.exoplatform.gwtframework.ui
-     * .client.tab.event.TabClosedHandler) */
+    /**
+     * @see org.exoplatform.gwtframework.ui.client.tab.event.HasTabClosedHandler#addTabClosedHandler(org.exoplatform.gwtframework.ui
+     *      .client.tab.event.TabClosedHandler)
+     */
     @Override
     public HandlerRegistration addTabClosedHandler(TabClosedHandler tabClosedHandler) {
         tabClosedHandlers.add(tabClosedHandler);
@@ -465,8 +466,10 @@ public class TabPanel extends DecoratedTabPanel implements Scrollable, CloseTabH
         return tabsWidth;
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.tab.event.CloseTabHandler#onCloseTab(org.exoplatform.gwtframework.ui.client.tab.event
-     * .CloseTabEvent) */
+    /**
+     * @see org.exoplatform.gwtframework.ui.client.tab.event.CloseTabHandler#onCloseTab(org.exoplatform.gwtframework.ui.client.tab.event
+     *      .CloseTabEvent)
+     */
     @Override
     public void onCloseTab(CloseTabEvent event) {
         for (CloseTabHandler handler : closeTabHandlers) {

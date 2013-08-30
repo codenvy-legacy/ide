@@ -17,7 +17,6 @@
  */
 package org.exoplatform.ide.codeassistant.asm.test;
 
-/** Created by The eXo Platform SAS. */
 public class Address {
     public String address;
 

@@ -29,7 +29,6 @@ import com.google.gwt.user.client.ui.FlexTable;
 import java.util.*;
 
 /**
- * Created by The eXo Platform SAS .
  * <p/>
  * MenuBar is visual component, represents top menu.
  *
@@ -212,7 +211,7 @@ public class MenuBar extends Composite implements ItemSelectedHandler, CloseMenu
      * Handle selection of Menu Item.
      *
      * @see org.exoplatform.gwtframework.ui.client.ItemSelectedHandler.menu.nn.impl.ItemSelectedCallback#onMenuItemSelected(org
-     * .exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem)
+     *      .exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem)
      */
     public void onMenuItemSelected(MenuItem menuItem) {
         if (menuItem instanceof MenuBarItem) {

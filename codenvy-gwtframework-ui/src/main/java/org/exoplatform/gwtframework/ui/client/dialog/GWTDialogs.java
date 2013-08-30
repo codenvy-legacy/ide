@@ -36,8 +36,6 @@ import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 
 /**
- * Created by The eXo Platform SAS .
- * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -62,38 +60,41 @@ public class GWTDialogs extends Dialogs {
     }
 
     private BooleanCallback booleanCallback = new BooleanCallback() {
-                                                public void execute(Boolean value) {
-                                                    if (currentDialog.getBooleanValueReceivedHandler() != null) {
-                                                        try {
-                                                            currentDialog.getBooleanValueReceivedHandler().booleanValueReceived(value);
-                                                        } catch (Throwable exc) {
-                                                            exc.printStackTrace();
-                                                        }
-                                                    }
+        public void execute(Boolean value) {
+            if (currentDialog.getBooleanValueReceivedHandler() != null) {
+                try {
+                    currentDialog.getBooleanValueReceivedHandler().booleanValueReceived(value);
+                } catch (Throwable exc) {
+                    exc.printStackTrace();
+                }
+            }
 
-                                                    showQueueDialog();
-                                                }
-                                            };
+            showQueueDialog();
+        }
+    };
 
-    private ValueCallback   valueCallback   = new ValueCallback() {
-                                                public void execute(String value) {
-                                                    if (currentDialog.getStringValueReceivedHandler() != null) {
-                                                        try {
-                                                            currentDialog.getStringValueReceivedHandler().stringValueReceived(value);
-                                                        } catch (Throwable exc) {
-                                                            exc.printStackTrace();
-                                                        }
-                                                    }
+    private ValueCallback valueCallback = new ValueCallback() {
+        public void execute(String value) {
+            if (currentDialog.getStringValueReceivedHandler() != null) {
+                try {
+                    currentDialog.getStringValueReceivedHandler().stringValueReceived(value);
+                } catch (Throwable exc) {
+                    exc.printStackTrace();
+                }
+            }
 
-                                                    showQueueDialog();
-                                                }
-                                            };
+            showQueueDialog();
+        }
+    };
 
     /**
      * @param name
-     * @param title title near input field
-     * @param width width
-     * @param value value by default
+     * @param title
+     *         title near input field
+     * @param width
+     *         width
+     * @param value
+     *         value by default
      * @return {@link TextField}
      */
     public static TextField createTextField(String name, String title, int width, String value) {
@@ -259,9 +260,11 @@ public class GWTDialogs extends Dialogs {
 
     /**
      * Create button.
-     * 
-     * @param title button's title
-     * @param icon button's image
+     *
+     * @param title
+     *         button's title
+     * @param icon
+     *         button's image
      * @return {@link IButton}
      */
     public ImageButton createButton(String title, ImageResource icon) {
@@ -288,9 +291,11 @@ public class GWTDialogs extends Dialogs {
 
     /**
      * Creates layout with pointed image and text near it.
-     * 
-     * @param icon image to display
-     * @param text text to display
+     *
+     * @param icon
+     *         image to display
+     * @param text
+     *         text to display
      * @return {@link HorizontalPanel}
      */
     public static HorizontalPanel createImageWithTextLayout(ImageResource icon, String text) {

@@ -22,19 +22,17 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Created by The eXo Platform SAS .
- * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public abstract class Dialogs {
 
-    private static Dialogs  instance;
+    private static Dialogs instance;
 
     protected Queue<Dialog> dialogs = new LinkedList<Dialog>();
 
-    protected Dialog        currentDialog;
+    protected Dialog currentDialog;
 
     protected Dialogs() {
         instance = this;

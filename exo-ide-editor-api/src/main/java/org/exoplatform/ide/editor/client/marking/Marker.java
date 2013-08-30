@@ -19,7 +19,6 @@
 package org.exoplatform.ide.editor.client.marking;
 
 /**
- * Created by The eXo Platform SAS .
  * <p/>
  * Description of a Java problem, as detected by the compiler or some of the underlying
  * technology reusing the compiler.

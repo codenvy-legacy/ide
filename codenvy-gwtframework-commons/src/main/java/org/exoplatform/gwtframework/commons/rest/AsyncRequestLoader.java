@@ -18,7 +18,6 @@
 package org.exoplatform.gwtframework.commons.rest;
 
 /**
- * Created by The eXo Platform SAS .
  * <p/>
  * Something to show while request is calling
  */

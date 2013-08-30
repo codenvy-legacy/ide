@@ -18,22 +18,20 @@
 package com.codenvy.ide.commons;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vsvydenko@codenvy.com">Valeriy Svydenko</a>
  * @version $Id: $
  */
 public class IDEWorkspace {
-    private String url;
+    private String  url;
     private boolean temporary;
-    private String name;
-    private String id;
-    
-    public IDEWorkspace(){
-        
+    private String  name;
+    private String  id;
+
+    public IDEWorkspace() {
+
     }
-    
-    public IDEWorkspace(String url, String name, String id, boolean temporary){
+
+    public IDEWorkspace(String url, String name, String id, boolean temporary) {
         this.url = url;
         this.name = name;
         this.id = id;
@@ -71,11 +69,12 @@ public class IDEWorkspace {
     public void setId(String id) {
         this.id = id;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("{\"url\":\"").append(url).append("\",\"name\":\"").append(name).append("\",\"id\":\"").append(id).append("\",\"temporary\":\"").append(temporary).append("\"}");
+        builder.append("{\"url\":\"").append(url).append("\",\"name\":\"").append(name).append("\",\"id\":\"").append(id)
+               .append("\",\"temporary\":\"").append(temporary).append("\"}");
         return builder.toString();
     }
 

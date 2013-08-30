@@ -22,7 +22,6 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 /**
  * Callback for AssistImportDeclarationForm.
  * <p/>
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 22, 2010 9:43:03 AM evgen $

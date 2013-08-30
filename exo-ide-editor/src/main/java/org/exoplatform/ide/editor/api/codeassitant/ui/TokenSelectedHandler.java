@@ -20,8 +20,6 @@ package org.exoplatform.ide.editor.api.codeassitant.ui;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 25, 2010 5:01:51 PM evgen $
  */

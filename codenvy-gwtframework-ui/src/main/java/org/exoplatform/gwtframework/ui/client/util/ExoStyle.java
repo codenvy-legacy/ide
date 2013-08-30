@@ -20,8 +20,6 @@ package org.exoplatform.gwtframework.ui.client.util;
 import com.google.gwt.core.client.GWT;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */

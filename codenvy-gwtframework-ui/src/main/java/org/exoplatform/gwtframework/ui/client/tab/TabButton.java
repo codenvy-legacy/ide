@@ -44,7 +44,6 @@ import java.util.List;
 /**
  * Button which can be added to the TabPanel and can be displayed at the upper right corner of the TabPanel.
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $

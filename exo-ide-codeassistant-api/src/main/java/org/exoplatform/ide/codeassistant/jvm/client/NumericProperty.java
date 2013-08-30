@@ -18,7 +18,7 @@
 package org.exoplatform.ide.codeassistant.jvm.client;
 
 /**
- * Numeric implementation of {@link TokenProperty} Created by The eXo Platform SAS.
+ * Numeric implementation of {@link TokenProperty}
  *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $

@@ -21,8 +21,6 @@ package org.exoplatform.gwtframework.commons.client;
 import com.google.gwt.core.client.EntryPoint;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */

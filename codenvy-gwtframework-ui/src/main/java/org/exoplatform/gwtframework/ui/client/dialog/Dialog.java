@@ -19,8 +19,6 @@ package org.exoplatform.gwtframework.ui.client.dialog;
 
 
 /**
- * Created by The eXo Platform SAS .
- * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -42,8 +40,8 @@ public class Dialog {
     private String                      title;
     private String                      confirmButton;
     private String                      cancelButton;
-    private Type type;
-    private boolean modal;
+    private Type                        type;
+    private boolean                     modal;
 
     public Dialog(String title, String message, Type type) {
         this.title = title;

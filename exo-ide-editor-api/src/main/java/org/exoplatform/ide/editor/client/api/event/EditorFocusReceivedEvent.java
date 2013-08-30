@@ -23,8 +23,6 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.exoplatform.ide.editor.client.api.Editor;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version @version $Id: $
  */

@@ -36,8 +36,6 @@ import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 19, 2010 4:12:46 PM evgen $
  */
@@ -254,8 +252,10 @@ public class AssistImportDeclarationForm extends Composite implements ResizeHand
 
     }
 
-    /** @see com.google.gwt.user.client.Event.NativePreviewHandler#onPreviewNativeEvent(com.google.gwt.user.client.Event
-     * .NativePreviewEvent) */
+    /**
+     * @see com.google.gwt.user.client.Event.NativePreviewHandler#onPreviewNativeEvent(com.google.gwt.user.client.Event
+     *      .NativePreviewEvent)
+     */
     public void onPreviewNativeEvent(NativePreviewEvent event) {
         NativeEvent nativeEvent = event.getNativeEvent();
 

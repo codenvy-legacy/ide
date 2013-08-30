@@ -23,7 +23,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 /**
  * This interface determines that its implementor (usually editor) can mark problems.
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>

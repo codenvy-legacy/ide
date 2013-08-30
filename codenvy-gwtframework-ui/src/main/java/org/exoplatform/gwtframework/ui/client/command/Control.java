@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -57,11 +55,10 @@ public abstract class Control<T extends Control<?>> {
      */
     private List<ControlStateListener> stateListeners = new ArrayList<ControlStateListener>();
 
-    
-    
+
     /**
-     * Use this carefully if it set true you cannot change control state using only setEnable(true) 
-     * need call resetPermanentDisable() firstly 
+     * Use this carefully if it set true you cannot change control state using only setEnable(true)
+     * need call resetPermanentDisable() firstly
      */
     private boolean disablePermanently;
 
@@ -149,7 +146,7 @@ public abstract class Control<T extends Control<?>> {
     public T setEnabled(boolean enabled) {
         if (disablePermanently)
             return (T)this;
-        
+
         if (this.enabled == enabled) {
             return (T)this;
         }
@@ -175,17 +172,17 @@ public abstract class Control<T extends Control<?>> {
         setEnabled(false);
         return (T)this;
     }
-    
-    
+
+
     /**
-     * Use this carefully if it set true you cannot change control state using only setEnable(true) 
-     * need call resetPermanentDisable() firstly 
+     * Use this carefully if it set true you cannot change control state using only setEnable(true)
+     * need call resetPermanentDisable() firstly
      */
     public void disablePermanently() {
         disablePermanently = true;
         setEnabled(false);
     }
-    
+
     public void resetPermanentDisable() {
         disablePermanently = false;
     }

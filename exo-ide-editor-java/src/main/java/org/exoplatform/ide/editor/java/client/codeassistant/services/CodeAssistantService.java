@@ -34,7 +34,6 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 /**
  * This service for auto-complete feature. Service need for retrieve information about Groovy classes. <br>
- * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 17, 2010 2:44:13 PM evgen $

@@ -34,7 +34,6 @@ import org.exoplatform.gwtframework.ui.client.tab.event.CloseTabHandler;
 /**
  * Tab's title with icon, text and close button.
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $

@@ -18,7 +18,7 @@
 package org.exoplatform.ide.editor.api.codeassitant;
 
 /**
- * Object implementation of {@link TokenProperty} Created by The eXo Platform SAS.
+ * Object implementation of {@link TokenProperty}
  *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $

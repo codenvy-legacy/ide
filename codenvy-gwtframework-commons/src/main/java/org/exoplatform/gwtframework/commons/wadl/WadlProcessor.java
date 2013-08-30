@@ -24,8 +24,6 @@ import org.exoplatform.gwtframework.commons.xml.QName;
 import java.util.Arrays;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */

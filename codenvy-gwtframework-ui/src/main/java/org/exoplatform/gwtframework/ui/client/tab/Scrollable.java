@@ -21,7 +21,6 @@ package org.exoplatform.gwtframework.ui.client.tab;
 /**
  * This interface designates that its implementor can scroll its content.
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
