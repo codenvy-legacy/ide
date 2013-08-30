@@ -24,7 +24,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
@@ -50,7 +49,7 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
 
     private static final String           TITLE                       = LOCALIZATION_CONSTANTS.factoryURLViewTitle();
 
-    private static final int              HEIGHT                      = 400;
+    private static final int              HEIGHT                      = 410;
 
     private static final int              WIDTH                       = 750;
 
@@ -105,6 +104,17 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
 
     @UiField
     ImageButton   okButton;
+    
+    @UiField
+    //@Ignore
+    RadioButton dark;
+ 
+    @UiField
+    //@Ignore
+    RadioButton white;
+    
+//    boolean darkStyle = true;
+    
 
     public GetCodeNowButtonView() {
         super(ID, ViewType.MODAL, TITLE, null, WIDTH, HEIGHT, false);
@@ -134,6 +144,29 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
                 directSharingURLField.selectAll();
             }
         });
+        
+//        dark.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+//            @Override
+//            public void onValueChange(ValueChangeEvent<Boolean> event) {
+//                if (dark.getValue().booleanValue()) {
+//                    darkStyle = true;
+//                } else {
+//                    darkStyle = false;
+//                }
+//            }
+//        });
+//        
+//        white.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+//            @Override
+//            public void onValueChange(ValueChangeEvent<Boolean> event) {
+//                if (white.getValue().booleanValue()) {
+//                    darkStyle = false;
+//                } else {
+//                    darkStyle = true;
+//                }
+//            }
+//        });
+        
     }
 
 //    /**
@@ -230,6 +263,16 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
     @Override
     public HasClickHandlers getOkButton() {
         return okButton;
+    }
+
+    @Override
+    public HasValue<Boolean> getDarkStyleField() {
+        return dark;
+    }
+
+    @Override
+    public HasValue<Boolean> getWhiteStyleField() {
+        return white;
     }
 
 }

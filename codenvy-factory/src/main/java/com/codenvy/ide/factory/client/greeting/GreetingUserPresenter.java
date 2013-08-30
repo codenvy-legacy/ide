@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.factory.client.greeting;
 
-import com.codenvy.ide.factory.client.FactoryClientBundle;
 import com.codenvy.ide.factory.client.copy.CopyProjectEvent;
 import com.codenvy.ide.factory.client.copy.CopySpec10;
 import com.google.gwt.dom.client.Element;
@@ -41,7 +40,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.AddToolbarItemsEvent;
-import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarShadowButton;
 import org.exoplatform.gwtframework.ui.client.command.ui.UniButton;
 import org.exoplatform.gwtframework.ui.client.command.ui.UniButton.Size;
 import org.exoplatform.gwtframework.ui.client.command.ui.UniButton.Type;
@@ -128,7 +126,7 @@ public class GreetingUserPresenter implements
      * Adds "Create account" and "Login" buttons on toolbar.
      */
     private void addButtonsForNoneAuthenticatedUser() {
-        UniButton createAccountButton = new UniButton("Create account", Type.SUCCESS, Size.SMALL);
+        UniButton createAccountButton = new UniButton("Create free account", Type.SUCCESS, Size.SMALL);
         IDE.fireEvent(new AddToolbarItemsEvent(createAccountButton, true));
         createAccountButton.addClickHandler(new ClickHandler() {
             @Override
@@ -292,26 +290,30 @@ public class GreetingUserPresenter implements
             }
 
             this.@com.codenvy.ide.factory.client.greeting.GreetingUserPresenter::showGreeting(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)(title, icon, greetingContentURL, notification);
-
         } catch (e) {
             this.@com.codenvy.ide.factory.client.greeting.GreetingUserPresenter::loadGreetingError(Ljava/lang/String;)(e.message);
         }        
     }-*/;    
     
     private void showGreeting(final String title, final String iconURL, final String greetingContentURL, final String notification) {
-        Image icon = new Image(iconURL);
-        icon.setWidth("16px");
-        icon.setHeight("16px");
+        Image icon = null;
+        if (iconURL != null) {
+            icon = new Image(iconURL);
+            icon.setWidth("16px");
+            icon.setHeight("16px");            
+        }
         
         GreetingDisplay display = new GreetingView(title, icon, greetingContentURL);
         IDE.getInstance().openView(display.asView());
         
-        new Timer() {
-            @Override
-            public void run() {
-                new TooltipHint(notification);
-            }
-        }.schedule(1000);
+        if (notification != null) {
+            new Timer() {
+                @Override
+                public void run() {
+                    new TooltipHint(notification);
+                }
+            }.schedule(1000);            
+        }
     }
     
     private void loadGreetingError(String message) {
