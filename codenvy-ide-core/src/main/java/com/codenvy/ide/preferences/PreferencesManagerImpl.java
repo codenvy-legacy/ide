@@ -18,7 +18,7 @@
 package com.codenvy.ide.preferences;
 
 import com.codenvy.ide.api.preferences.PreferencesManager;
-import com.codenvy.ide.client.DtoClientImpls;
+import com.codenvy.ide.resources.DtoClientImpls;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.json.js.JsoStringMap;

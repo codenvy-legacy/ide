@@ -21,7 +21,7 @@ import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.parts.OutlinePart;
-import com.codenvy.ide.part.base.BasePresenter;
+import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;

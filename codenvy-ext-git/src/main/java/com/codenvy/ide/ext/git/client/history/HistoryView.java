@@ -19,9 +19,9 @@ package com.codenvy.ide.ext.git.client.history;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.part.base.BaseActionDelegate;
 
 /**
  * The view of {@link HistoryPresenter}.

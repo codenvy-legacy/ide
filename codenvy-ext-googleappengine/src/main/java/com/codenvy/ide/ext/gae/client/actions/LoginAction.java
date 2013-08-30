@@ -22,7 +22,7 @@ import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
-import com.codenvy.ide.client.marshaller.UserUnmarshaller;
+import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.gae.client.*;
 import com.codenvy.ide.ext.gae.client.marshaller.GaeUserUnmarshaller;

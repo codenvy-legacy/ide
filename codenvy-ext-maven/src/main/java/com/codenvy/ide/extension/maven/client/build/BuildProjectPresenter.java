@@ -18,6 +18,7 @@
 package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
@@ -37,7 +38,6 @@ import com.codenvy.ide.extension.maven.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.maven.shared.BuildStatus;
 import com.codenvy.ide.extension.maven.shared.BuildStatus.Status;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.part.base.BasePresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.Property;

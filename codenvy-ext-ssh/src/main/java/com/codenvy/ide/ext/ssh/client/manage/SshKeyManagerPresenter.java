@@ -22,7 +22,7 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.ui.preferences.AbstractPreferencesPagePresenter;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
-import com.codenvy.ide.client.marshaller.UserUnmarshaller;
+import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.github.GitHubClientService;
 import com.codenvy.ide.ext.git.client.marshaller.AllRepositoriesUnmarshaller;

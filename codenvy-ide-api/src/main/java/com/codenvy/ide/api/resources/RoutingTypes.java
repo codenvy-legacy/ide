@@ -15,16 +15,18 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.part.base;
+package com.codenvy.ide.api.resources;
 
 /**
- * Base interface for action delegates, provide method for minimizing part
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * Stable routing types for all DTOs.
+ * <p/>
+ * NOTE: If you add a new DTO, ONLY add to the bottom of the list.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface BaseActionDelegate {
-    /**
-     * Hide Part from UI
-     */
-    void minimize();
+public class RoutingTypes {
+
+    public static final int IDE_USER = 1;
+
+    public static final int UPDATE_USER_ATTRIBUTES = 2;
 }

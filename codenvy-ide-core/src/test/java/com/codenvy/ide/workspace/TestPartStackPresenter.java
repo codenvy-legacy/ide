@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.workspace;
 
+import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
 import com.codenvy.ide.part.PartStackPresenter;
-import com.codenvy.ide.part.PartStackUIResources;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -37,10 +37,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing {@link PartStackPresenter} functionality.

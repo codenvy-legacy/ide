@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.part.base;
+package com.codenvy.ide.api.parts.base;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;

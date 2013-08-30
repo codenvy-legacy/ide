@@ -15,11 +15,11 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.part.base;
+package com.codenvy.ide.api.parts.base;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.part.PartStackUIResources;
+import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.Label;
 /**
  * Base view for part that mast contains toolbar, this class provide one default button: "minimize" or hide part view and
  * label for view title
+ *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
@@ -57,9 +58,7 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
         toolBar.addEast(toolButton, 20);
     }
 
-    /**
-     * Call minimize on delegate.
-     */
+    /** Call minimize on delegate. */
     protected void minimize() {
         if (delegate != null)
             delegate.minimize();
@@ -67,6 +66,7 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
 
     /**
      * Set title for this part view.
+     *
      * @param title
      */
     public void setTitle(@NotNull String title) {

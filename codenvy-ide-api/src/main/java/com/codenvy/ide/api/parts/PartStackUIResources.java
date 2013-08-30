@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.part;
+package com.codenvy.ide.api.parts;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
@@ -77,12 +77,11 @@ public interface PartStackUIResources extends ClientBundle {
         String ideButtonMicro();
     }
 
-    @Source({"PartStack.css", "com/codenvy/ide/api/ui/style.css"})
+    @Source({"partstack.css", "com/codenvy/ide/api/ui/style.css"})
     PartStackCss partStackCss();
 
     ImageResource close();
 
     @Source("thin_min_view.png")
     ImageResource minimize();
-
 }

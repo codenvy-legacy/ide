@@ -15,7 +15,7 @@
 package com.codenvy.ide;
 
 import com.codenvy.ide.menu.MenuResources;
-import com.codenvy.ide.part.PartStackUIResources;
+import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.texteditor.EditableContentArea;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.renderer.LineNumberRenderer;

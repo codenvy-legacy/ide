@@ -17,9 +17,9 @@
  */
 package com.codenvy.ide.extension.maven.client.build;
 
+import com.codenvy.ide.api.parts.PartStackUIResources;
+import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.extension.maven.client.BuilderResources;
-import com.codenvy.ide.part.PartStackUIResources;
-import com.codenvy.ide.part.base.BaseView;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;

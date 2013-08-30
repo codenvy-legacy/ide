@@ -22,7 +22,7 @@ import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.client.extensionsPart.ExtensionsPage;
-import com.codenvy.ide.client.marshaller.UserUnmarshaller;
+import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
 import com.codenvy.ide.json.JsonStringMap;

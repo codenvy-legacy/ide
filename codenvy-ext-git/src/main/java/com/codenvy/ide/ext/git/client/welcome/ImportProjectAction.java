@@ -20,10 +20,10 @@ package com.codenvy.ide.ext.git.client.welcome;
 import com.codenvy.ide.api.parts.WelcomeItemAction;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
-import com.codenvy.ide.client.marshaller.UserUnmarshaller;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.client.github.githubimport.ImportPresenter;
+import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
@@ -42,7 +42,6 @@ public class ImportProjectAction implements WelcomeItemAction {
     private GitResources            resources;
     private ImportPresenter         importPresenter;
     private UserClientService       service;
-
 
     /**
      * Create action.

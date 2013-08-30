@@ -18,12 +18,12 @@
 package com.codenvy.ide.ext.git.client.history;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.git.client.GitResources;
+import com.codenvy.ide.api.parts.PartStackUIResources;
+import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
+import com.codenvy.ide.ext.git.client.GitResources;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.part.PartStackUIResources;
-import com.codenvy.ide.part.base.BaseView;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;

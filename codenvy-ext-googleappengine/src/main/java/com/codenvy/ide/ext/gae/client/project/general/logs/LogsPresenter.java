@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.gae.client.project.general.logs;
 
 import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
@@ -32,7 +33,6 @@ import com.codenvy.ide.ext.gae.client.actions.LoginAction;
 import com.codenvy.ide.ext.gae.client.marshaller.StringUnmarshaller;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.part.base.BasePresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.resources.client.ImageResource;

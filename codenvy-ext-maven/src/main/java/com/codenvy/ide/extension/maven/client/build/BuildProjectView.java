@@ -18,7 +18,7 @@
 package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.part.base.BaseActionDelegate;
+import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 
 /**
  * The view of {@link BuildProjectPresenter}.

@@ -24,14 +24,14 @@ import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.parts.PartStackUIResources;
+import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.part.PartStackUIResources;
-import com.codenvy.ide.part.base.BaseView;
 import com.codenvy.ide.ui.Button;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.tree.Tree;
