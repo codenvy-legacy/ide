@@ -52,6 +52,7 @@
         <version.enforcer.plugin>1.0.1</version.enforcer.plugin>
         <appengine.version>1.7.7</appengine.version>
         <ch.qos.logback.version>0.9.29</ch.qos.logback.version>
+        <com.codenvy.platform-api.version>1.0-SNAPSHOT</com.codenvy.platform-api.version>
         <com.codenvy.organization.version>0.6.0</com.codenvy.organization.version>
         <com.codenvy.commons.version>0.7.0</com.codenvy.commons.version>
         <maven.build.timestamp.format>dd.MM.yy HH:mm</maven.build.timestamp.format>
@@ -77,6 +78,9 @@
                 <artifactId>exo.core.component.security.core</artifactId>
                 <version>${org.exoplatform.core.version}</version>
             </dependency>
+
+            <!-- codenvy stuff -->
+
             <dependency>
                 <groupId>com.codenvy.organization</groupId>
                 <artifactId>codenvy-organization-api-java-client</artifactId>
@@ -96,6 +100,21 @@
                 <groupId>com.codenvy.commons</groupId>
                 <artifactId>codenvy-commons-servlet</artifactId>
                 <version>${com.codenvy.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.commons</groupId>
+                <artifactId>codenvy-commons-lang</artifactId>
+                <version>${com.codenvy.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.commons</groupId>
+                <artifactId>codenvy-commons-env</artifactId>
+                <version>${com.codenvy.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.platform-api</groupId>
+                <artifactId>codenvy-api-vfs</artifactId>
+                <version>${com.codenvy.platform-api.version}</version>
             </dependency>
 
             <!-- IDE -->
@@ -444,6 +463,12 @@
                 <groupId>com.google.appengine</groupId>
                 <artifactId>appengine-tools-sdk</artifactId>
                 <version>${appengine.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.6</version>
             </dependency>
 
         </dependencies>
