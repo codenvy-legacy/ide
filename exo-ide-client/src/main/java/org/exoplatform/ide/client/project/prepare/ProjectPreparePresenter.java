@@ -40,7 +40,6 @@ import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectHandler;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.JSONSerializer;
@@ -51,6 +50,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import com.codenvy.ide.commons.shared.ProjectType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +79,9 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
         properties = event.getProperties();
         try {
 
-            if (event.getProjectType() != null) {
+            //Skip maven multi-module project type, cause method setUserProjectType() will set project type property only for
+            //parent project, children projects will be not affected. For multi-module project we need to parse every children pom.
+            if (event.getProjectType() != null && ProjectType.fromValue(event.getProjectType()) != ProjectType.MULTI_MODULE) {
                 setUserProjectType(event.getProjectType());
                 return;
             }
@@ -258,27 +260,6 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
             if (display != null) {
                 IDE.getInstance().closeView(display.asView().getId());
             }
-        }
-    }
-
-    private void openPreparedProject(String folderId) {
-        try {
-            ProjectModel project = new ProjectModel();
-            ItemWrapper item = new ItemWrapper(project);
-            ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
-            VirtualFileSystem.getInstance().getItemById(folderId, new AsyncRequestCallback<ItemWrapper>(unmarshaller) {
-                @Override
-                protected void onSuccess(ItemWrapper result) {
-                    IDE.fireEvent(new ProjectCreatedEvent((ProjectModel)result.getItem()));
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    IDE.fireEvent(new ExceptionThrownEvent("Failed to opened prepared project."));
-                }
-            });
-        } catch (RequestException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
 
