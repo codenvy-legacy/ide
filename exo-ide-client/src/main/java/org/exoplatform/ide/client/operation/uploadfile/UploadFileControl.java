@@ -62,7 +62,7 @@ public class UploadFileControl extends SimpleControl implements IDEControl, Item
         setPrompt(TITLE);
         setDelimiterBefore(true);
         setImages(IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
-        setEvent(new UploadFileEvent(true));
+        setEvent(new UploadFileEvent(false));
         setGroupName(GroupNames.UPLOAD);
     }
 
