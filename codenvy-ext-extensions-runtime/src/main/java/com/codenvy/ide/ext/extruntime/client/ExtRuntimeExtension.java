@@ -24,7 +24,8 @@ import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.ext.extruntime.client.actions.GetLogsAction;
 import com.codenvy.ide.ext.extruntime.client.actions.LaunchAction;
 import com.codenvy.ide.ext.extruntime.client.actions.StopAction;
-import com.codenvy.ide.ext.extruntime.client.template.CreateCodenvyExtensionProjectPresenter;
+import com.codenvy.ide.ext.extruntime.client.template.CreateSampleCodenvyExtensionProjectPresenter;
+import com.codenvy.ide.ext.extruntime.client.template.CreateEmptyCodenvyExtensionProjectPresenter;
 import com.codenvy.ide.ext.extruntime.client.wizard.ExtensionPagePresenter;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
@@ -36,7 +37,7 @@ import static com.codenvy.ide.json.JsonCollections.createArray;
 
 /**
  * Entry point for an extension that adds support for running Codenvy-extensions in Codenvy.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtRuntimeExtension.java Jul 2, 2013 4:14:56 PM azatsarynnyy $
  */
@@ -47,7 +48,8 @@ public class ExtRuntimeExtension {
 
     @Inject
     public ExtRuntimeExtension(TemplateAgent templateAgent,
-                               CreateCodenvyExtensionProjectPresenter createCodenvyExtensionProjectPresenter,
+                               CreateEmptyCodenvyExtensionProjectPresenter createEmptyCodenvyExtensionProjectPresenter,
+                               CreateSampleCodenvyExtensionProjectPresenter createSampleCodenvyExtensionProjectPresenter,
                                Provider<ExtensionPagePresenter> wizardPage,
                                ProjectTypeAgent projectTypeAgent,
                                ExtRuntimeLocalizationConstant localizationConstants,
@@ -57,7 +59,7 @@ public class ExtRuntimeExtension {
                                GetLogsAction getLogsAction,
                                StopAction stopAction) {
         // register actions
-        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
+        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup) actionManager.getAction(GROUP_RUN_MAIN_MENU);
 
         actionManager.registerAction(localizationConstants.launchExtensionActionlId(), launchAction);
         runMenuActionGroup.add(launchAction);
@@ -68,14 +70,19 @@ public class ExtRuntimeExtension {
         actionManager.registerAction(localizationConstants.stopExtensionActionId(), stopAction);
         runMenuActionGroup.add(stopAction);
 
-        // register template
-        templateAgent.registerTemplate("Codenvy extension project. Illustrates simple example that uses Codenvy API.",
-                                       resources.codenvyExtensionProject(),
-                                       createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                                       createCodenvyExtensionProjectPresenter, wizardPage);
-
         // register project type
         projectTypeAgent.registerProjectType(CODENVY_EXTENSION_PROJECT_TYPE, "Codenvy extension",
-                                             resources.newCodenvyExtensionProject());
+                resources.newCodenvyExtensionProject());
+
+        // register templates
+        templateAgent.registerTemplate("Empty Codenvy extension project.",
+                resources.codenvyExtensionProject(),
+                createArray(CODENVY_EXTENSION_PROJECT_TYPE),
+                createEmptyCodenvyExtensionProjectPresenter, wizardPage);
+
+        templateAgent.registerTemplate("Sample Codenvy extension project. Illustrates simple example that uses Codenvy API.",
+                resources.codenvyExtensionProject(),
+                createArray(CODENVY_EXTENSION_PROJECT_TYPE),
+                createSampleCodenvyExtensionProjectPresenter, wizardPage);
     }
 }

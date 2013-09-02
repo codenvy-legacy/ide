@@ -39,55 +39,61 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMAR
 
 /**
  * The implementation of {@link CreateProjectProvider} for creating Codenvy extension project.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: CreateCodenvyExtensionProjectPresenter.java Jul 4, 2013 10:54:05 AM azatsarynnyy $
+ * @version $Id: CreateSampleCodenvyExtensionProjectPresenter.java Jul 4, 2013 10:54:05 AM azatsarynnyy $
  */
 @Singleton
-public class CreateCodenvyExtensionProjectPresenter implements CreateProjectProvider {
-    private String                  projectName;
+public class CreateSampleCodenvyExtensionProjectPresenter implements CreateProjectProvider {
+    private String projectName;
     private ExtRuntimeClientService service;
-    private ResourceProvider        resourceProvider;
-    private ExtensionPageView       view;
+    private ResourceProvider resourceProvider;
+    private ExtensionPageView view;
 
     /**
      * Create controller.
-     * 
+     *
      * @param service
      * @param resourceProvider
      */
     @Inject
-    protected CreateCodenvyExtensionProjectPresenter(ExtRuntimeClientService service,
-                                                     ResourceProvider resourceProvider,
-                                                     ExtensionPageView view) {
+    protected CreateSampleCodenvyExtensionProjectPresenter(ExtRuntimeClientService service,
+                                                           ResourceProvider resourceProvider,
+                                                           ExtensionPageView view) {
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.view = view;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getProjectName() {
         return projectName;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setProjectName(String projectName) {
         this.projectName = projectName;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void create(final AsyncCallback<Project> callback) {
         JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
-                                                     new Property(PROPERTY_MIXIN_NATURES, CODENVY_EXTENSION_PROJECT_TYPE),
-                                                     new Property(PROPERTY_SOURCE_FOLDERS, createArray("src/main/java")));
+                new Property(PROPERTY_MIXIN_NATURES, CODENVY_EXTENSION_PROJECT_TYPE),
+                new Property(PROPERTY_SOURCE_FOLDERS, createArray("src/main/java")));
         final String groupId = view.getGroupId() == null ? "" : view.getGroupId();
         final String artifactId = view.getArtifactId() == null ? "" : view.getArtifactId();
         final String version = view.getVersion() == null ? "" : view.getVersion();
         try {
-            service.createCodenvyExtensionProject(projectName, properties, groupId, artifactId, version, new AsyncRequestCallback<Void>() {
+            service.createSampleCodenvyExtensionProject(projectName, properties, groupId, artifactId, version, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {

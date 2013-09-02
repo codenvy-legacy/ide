@@ -32,8 +32,9 @@ import com.google.gwt.http.client.RequestException;
  * @version $Id: ExtRuntimeClientService.java Jul 3, 2013 12:48:08 PM azatsarynnyy $
  */
 public interface ExtRuntimeClientService {
+
     /**
-     * Create Codenvy extension project.
+     * Create empty Codenvy extension project.
      *
      * @param projectName name of the project to create
      * @param properties properties to set to a newly created project
@@ -43,7 +44,25 @@ public interface ExtRuntimeClientService {
      * @param callback callback
      * @throws RequestException
      */
-    void createCodenvyExtensionProject(String projectName,
+    void createEmptyCodenvyExtensionProject(String projectName,
+                                       JsonArray<Property> properties,
+                                       String groupId,
+                                       String artifactId,
+                                       String version,
+                                       AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Create sample Codenvy extension project.
+     *
+     * @param projectName name of the project to create
+     * @param properties properties to set to a newly created project
+     * @param groupId group id to set to the projects pom.xml
+     * @param artifactId artifact id to set to the projects pom.xml
+     * @param version version to set to the projects pom.xml
+     * @param callback callback
+     * @throws RequestException
+     */
+    void createSampleCodenvyExtensionProject(String projectName,
                                        JsonArray<Property> properties,
                                        String groupId,
                                        String artifactId,
