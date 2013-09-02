@@ -20,6 +20,7 @@ package org.exoplatform.ide;
 
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -46,6 +47,8 @@ public class ClientEventService {
                             .build());
         }
 
-        LOG.info("EVENT#user-code-complete# PROJECT#" + project + "# TYPE#" + type + "#");
+        String userId = ConversationState.getCurrent().getIdentity().getUserId();
+
+        LOG.info("EVENT#user-code-complete# PROJECT#" + project + "# TYPE#" + type + "#" + " WS#" + wsName + "# USER#" + userId + "#");
     }
 }
