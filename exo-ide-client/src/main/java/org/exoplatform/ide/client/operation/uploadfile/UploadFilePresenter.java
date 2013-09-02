@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.IDELoader;
@@ -230,10 +231,10 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
             if (proposalMimeTypes != null && proposalMimeTypes.size() > 0) {
                 String mimeType = proposalMimeTypes.get(0);
                 display.setSelectedMimeType(mimeType);
-                display.setOpenButtonEnabled(true);
             } else {
-                display.setOpenButtonEnabled(false);
+                display.setSelectedMimeType(MimeType.APPLICATION_OCTET_STREAM);
             }
+            display.setOpenButtonEnabled(true);
         }
     };
 
