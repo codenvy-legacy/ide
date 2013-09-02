@@ -240,7 +240,7 @@
                                     <outputDirectory>${project.build.directory}/classes/tomcat/lib</outputDirectory>
                                     <destFileName>logback-classic.jar</destFileName>
                                 </artifactItem>
-                                <!-- <artifactItem>
+                                <artifactItem>
                                     <groupId>com.codenvy.ide</groupId>
                                     <artifactId>codenvy-ide-client</artifactId>
                                     <version>${project.version}</version>
@@ -248,7 +248,7 @@
                                     <classifier>sources</classifier>
                                     <outputDirectory>${project.build.directory}/classes</outputDirectory>
                                     <destFileName>codenvy-ide-client.jar</destFileName>
-                                </artifactItem> -->
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -301,10 +301,31 @@
                                 <move file="${project.build.directory}/classes/tomcat/userdb.war"
                                       tofile="${project.build.directory}/classes/tomcat/unzip/webapps/userdb.war"/>
 
-                                <!-- Zip prepared Tomcat pakage and remove temporary directory -->
+                                <!-- Zip prepared Tomcat package and remove temporary directory -->
                                 <zip basedir="${project.build.directory}/classes/tomcat/unzip"
                                      destfile="${project.build.directory}/classes/tomcat/tomcat.zip"/>
                                 <delete dir="${project.build.directory}/classes/tomcat/unzip"/>
+
+                                <!-- Prepare codenvy-ide-client sources -->
+                                <unzip src="${project.build.directory}/classes/codenvy-ide-client.jar"
+                                       dest="${project.build.directory}/classes/codenvy-ide-client-sources">
+                                    <patternset>
+                                        <exclude name="**/META-INF/**"/>
+                                        <exclude name="**/IDEInjector.java"/>
+                                        <exclude name="**/ExtensionManager.java"/>
+                                    </patternset>
+                                </unzip>
+                                <unzip src="${project.build.directory}/classes/CodenvyClient.zip"
+                                       dest="${project.build.directory}/classes/CodenvyClient">
+                                </unzip>
+                                <copy todir="${project.build.directory}/classes/CodenvyClient/codenvy-ide-client/src/main/java">
+                                    <fileset dir="${project.build.directory}/classes/codenvy-ide-client-sources"/>
+                                </copy>
+                                <zip basedir="${project.build.directory}/classes/CodenvyClient"
+                                     destfile="${project.build.directory}/classes/CodenvyClient.zip"/>
+                                <delete file="${project.build.directory}/classes/codenvy-ide-client.jar"/>
+                                <delete dir="${project.build.directory}/classes/codenvy-ide-client-sources"/>
+                                <delete dir="${project.build.directory}/classes/CodenvyClient"/>
                             </tasks>
                         </configuration>
                     </execution>
