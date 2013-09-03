@@ -21,6 +21,7 @@ import org.exoplatform.ide.git.server.CommitersBean;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
+import org.exoplatform.ide.git.server.StatusImpl;
 import org.exoplatform.ide.git.server.InfoPage;
 import org.exoplatform.ide.git.server.LogPage;
 import org.exoplatform.ide.git.shared.AddRequest;
@@ -83,6 +84,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -230,10 +232,19 @@ public class GitService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Revision commit(CommitRequest request) throws GitException, LocalPathResolveException,
-                                                 VirtualFileSystemException {
+                                                         VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
-            return gitConnection.commit(request);
+            Revision revision = gitConnection.commit(request);
+            if (revision.isFake()) {
+                StatusImpl status = (StatusImpl)status(false);
+                try {
+                    revision.setMessage(status.createString(false));
+                } catch (IOException e) {
+                    throw new GitException(e);
+                }
+            }
+            return revision;
         } finally {
             gitConnection.close();
         }
