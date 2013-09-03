@@ -61,21 +61,25 @@ public final class CommitMessageWriter implements MessageBodyWriter<Revision> {
      */
     @Override
     public void writeTo(Revision revision,
-                        Class< ? > type,
+                        Class<?> type,
                         Type genericType,
                         Annotation[] annotations,
                         MediaType mediaType,
                         MultivaluedMap<String, Object> httpHeaders,
                         OutputStream entityStream) throws IOException, WebApplicationException {
         Writer writer = new OutputStreamWriter(entityStream);
-        writer.write('[');
-        writer.write(revision.getBranch());
-        writer.write(' ');
-        writer.write(revision.getId());
-        writer.write(']');
-        writer.write(' ');
-        writer.write(revision.getMessage());
-        writer.write('\n');
+        if (!revision.isFake()) {
+            writer.write('[');
+            writer.write(revision.getBranch());
+            writer.write(' ');
+            writer.write(revision.getId());
+            writer.write(']');
+            writer.write(' ');
+            writer.write(revision.getMessage());
+            writer.write('\n');
+        } else {
+            writer.write(revision.getMessage());
+        }
         writer.flush();
     }
 }
