@@ -49,7 +49,7 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
 
     private static final String           TITLE                       = LOCALIZATION_CONSTANTS.factoryURLViewTitle();
 
-    private static final int              HEIGHT                      = 410;
+    private static final int              HEIGHT                      = 450;
 
     private static final int              WIDTH                       = 750;
 
@@ -65,17 +65,6 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
 
     interface FactoryURLViewUiBinder extends UiBinder<Widget, GetCodeNowButtonView> {
     }
-
-//    @UiField
-//    CheckBox      showCounter;
-
-//    /** Vertical style radio button. */
-//    @UiField
-//    RadioButton   verticalStyleField;
-
-//    /** Horizontal style radio button. */
-//    @UiField
-//    RadioButton   horizontalStyleField;
 
     /** Preview area is displayed to let the user see the style of configured CodeNow button. */
     @UiField
@@ -106,16 +95,11 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
     ImageButton   okButton;
     
     @UiField
-    //@Ignore
     RadioButton dark;
  
     @UiField
-    //@Ignore
     RadioButton white;
     
-//    boolean darkStyle = true;
-    
-
     public GetCodeNowButtonView() {
         super(ID, ViewType.MODAL, TITLE, null, WIDTH, HEIGHT, false);
         setCloseOnEscape(true);
@@ -145,53 +129,7 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
             }
         });
         
-//        dark.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-//            @Override
-//            public void onValueChange(ValueChangeEvent<Boolean> event) {
-//                if (dark.getValue().booleanValue()) {
-//                    darkStyle = true;
-//                } else {
-//                    darkStyle = false;
-//                }
-//            }
-//        });
-//        
-//        white.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-//            @Override
-//            public void onValueChange(ValueChangeEvent<Boolean> event) {
-//                if (white.getValue().booleanValue()) {
-//                    darkStyle = false;
-//                } else {
-//                    darkStyle = true;
-//                }
-//            }
-//        });
-        
     }
-
-//    /**
-//     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getShowCounterField()
-//     */
-//    @Override
-//    public HasValue<Boolean> getShowCounterField() {
-//        return showCounter;
-//    }
-
-//    /**
-//     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getVerticalStyleField()
-//     */
-//    @Override
-//    public HasValue<Boolean> getVerticalStyleField() {
-//        return verticalStyleField;
-//    }
-
-//    /**
-//     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getHorizontalStyleField()
-//     */
-//    @Override
-//    public HasValue<Boolean> getHorizontalStyleField() {
-//        return horizontalStyleField;
-//    }
 
     /**
      * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getPreviewFrame()
