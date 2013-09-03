@@ -81,9 +81,6 @@ public class ExtensionRuntimeService {
      * @param name       name of the newly created project
      * @param rootId     identifier of parent folder for new project
      * @param properties properties to set to project
-     * @param groupId    project's groupID
-     * @param artifactId project's artifactId
-     * @param version    project's version
      * @throws VirtualFileSystemException if any error occurred in VFS
      * @throws IOException                if any error occurred while input-output operations
      */
@@ -92,13 +89,11 @@ public class ExtensionRuntimeService {
     public void createEmptyCodenvyExtensionProject(@QueryParam("vfsid") String vfsId,
                                                    @QueryParam("name") String name,
                                                    @QueryParam("rootid") String rootId,
-                                                   List<Property> properties,
-                                                   @QueryParam("groupid") String groupId,
-                                                   @QueryParam("artifactid") String artifactId,
-                                                   @QueryParam("version") String version) throws VirtualFileSystemException,
+                                                   List<Property> properties) throws VirtualFileSystemException,
             IOException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("EmptyExtension.zip");
-        createProject(vfsId, name, rootId, templateStream, properties, groupId, artifactId, version);
+        createProject(vfs, name, rootId, templateStream, properties);
     }
 
     /**
@@ -124,8 +119,28 @@ public class ExtensionRuntimeService {
                                                     @QueryParam("artifactid") String artifactId,
                                                     @QueryParam("version") String version) throws VirtualFileSystemException,
             IOException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("GistExtensionSample.zip");
-        createProject(vfsId, name, rootId, templateStream, properties, groupId, artifactId, version);
+        createProject(vfs, name, rootId, templateStream, properties);
+
+        MavenXpp3Reader pomReader = new MavenXpp3Reader();
+        MavenXpp3Writer pomWriter = new MavenXpp3Writer();
+
+        File pomFile = (File) vfs.getItemByPath(name + "/pom.xml", null, false, PropertyFilter.NONE_FILTER);
+        InputStream pomContent = vfs.getContent(pomFile.getId()).getStream();
+        try {
+            Model pom = pomReader.read(pomContent, false);
+            pom.setGroupId(groupId);
+            pom.setArtifactId(artifactId);
+            pom.setVersion(version);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            pomWriter.write(stream, pom);
+            vfs.updateContent(pomFile.getId(), MediaType.valueOf(pomFile.getMimeType()), new ByteArrayInputStream(stream.toByteArray()),
+                    null);
+        } catch (XmlPullParserException e) {
+            LOG.warn("Error occurred while setting maven project coordinates.", e);
+            throw new IllegalStateException(e.getMessage(), e);
+        }
     }
 
     /**
@@ -173,35 +188,15 @@ public class ExtensionRuntimeService {
         launcher.stopApp(appId);
     }
 
-    private void createProject(String vfsId, String name, String rootId, InputStream template, List<Property> properties, String groupId, String artifactId, String version) throws VirtualFileSystemException, IOException {
+    private void createProject(VirtualFileSystem vfs, String name, String rootId, InputStream template, List<Property> properties) throws VirtualFileSystemException, IOException {
         if (template == null) {
             throw new InvalidArgumentException("Can't find project template.");
         }
 
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         Folder projectFolder = vfs.createFolder(rootId, name);
 
         vfs.importZip(projectFolder.getId(), template, true);
         updateProperties(name, properties, vfs, projectFolder);
-
-        MavenXpp3Reader pomReader = new MavenXpp3Reader();
-        MavenXpp3Writer pomWriter = new MavenXpp3Writer();
-
-        File pomFile = (File) vfs.getItemByPath(name + "/pom.xml", null, false, PropertyFilter.NONE_FILTER);
-        InputStream pomContent = vfs.getContent(pomFile.getId()).getStream();
-        try {
-            Model pom = pomReader.read(pomContent, false);
-            pom.setGroupId(groupId);
-            pom.setArtifactId(artifactId);
-            pom.setVersion(version);
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            pomWriter.write(stream, pom);
-            vfs.updateContent(pomFile.getId(), MediaType.valueOf(pomFile.getMimeType()), new ByteArrayInputStream(stream.toByteArray()),
-                    null);
-        } catch (XmlPullParserException e) {
-            LOG.warn("Error occurred while setting maven project coordinates.", e);
-            throw new IllegalStateException(e.getMessage(), e);
-        }
     }
 
     private void updateProperties(String name, List<Property> properties, VirtualFileSystem vfs, Folder projectFolder) throws VirtualFileSystemException {

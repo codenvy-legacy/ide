@@ -125,13 +125,9 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     @Override
     public void createEmptyCodenvyExtensionProject(String projectName,
                                                    JsonArray<Property> properties,
-                                                   String groupId,
-                                                   String artifactId,
-                                                   String version,
                                                    AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = restContext + BASE_URL + CREATE_EMPTY;
-        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" + resourceProvider.getRootId()
-                + "&groupid=" + groupId + "&artifactid=" + artifactId + "&version=" + version;
+        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" + resourceProvider.getRootId();
         loader.setMessage("Creating new project...");
         AsyncRequest.build(POST, requestUrl + param)
                 .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())

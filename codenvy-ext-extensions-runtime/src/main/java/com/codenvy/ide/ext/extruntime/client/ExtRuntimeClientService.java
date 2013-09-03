@@ -38,17 +38,11 @@ public interface ExtRuntimeClientService {
      *
      * @param projectName name of the project to create
      * @param properties properties to set to a newly created project
-     * @param groupId group id to set to the projects pom.xml
-     * @param artifactId artifact id to set to the projects pom.xml
-     * @param version version to set to the projects pom.xml
      * @param callback callback
      * @throws RequestException
      */
     void createEmptyCodenvyExtensionProject(String projectName,
                                        JsonArray<Property> properties,
-                                       String groupId,
-                                       String artifactId,
-                                       String version,
                                        AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**

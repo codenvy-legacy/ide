@@ -78,7 +78,7 @@ public class ExtRuntimeExtension {
         templateAgent.registerTemplate("Empty Codenvy extension project.",
                 resources.codenvyExtensionProject(),
                 createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                createEmptyCodenvyExtensionProjectPresenter, wizardPage);
+                createEmptyCodenvyExtensionProjectPresenter, null);
 
         templateAgent.registerTemplate("Sample Codenvy extension project. Illustrates simple example that uses Codenvy API.",
                 resources.codenvyExtensionProject(),

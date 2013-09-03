@@ -48,7 +48,6 @@ public class CreateEmptyCodenvyExtensionProjectPresenter implements CreateProjec
     private String projectName;
     private ExtRuntimeClientService service;
     private ResourceProvider resourceProvider;
-    private ExtensionPageView view;
 
     /**
      * Create controller.
@@ -58,11 +57,9 @@ public class CreateEmptyCodenvyExtensionProjectPresenter implements CreateProjec
      */
     @Inject
     protected CreateEmptyCodenvyExtensionProjectPresenter(ExtRuntimeClientService service,
-                                                          ResourceProvider resourceProvider,
-                                                          ExtensionPageView view) {
+                                                          ResourceProvider resourceProvider) {
         this.service = service;
         this.resourceProvider = resourceProvider;
-        this.view = view;
     }
 
     /**
@@ -89,11 +86,8 @@ public class CreateEmptyCodenvyExtensionProjectPresenter implements CreateProjec
         JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
                 new Property(PROPERTY_MIXIN_NATURES, CODENVY_EXTENSION_PROJECT_TYPE),
                 new Property(PROPERTY_SOURCE_FOLDERS, createArray("src/main/java")));
-        final String groupId = view.getGroupId() == null ? "" : view.getGroupId();
-        final String artifactId = view.getArtifactId() == null ? "" : view.getArtifactId();
-        final String version = view.getVersion() == null ? "" : view.getVersion();
         try {
-            service.createEmptyCodenvyExtensionProject(projectName, properties, groupId, artifactId, version, new AsyncRequestCallback<Void>() {
+            service.createEmptyCodenvyExtensionProject(projectName, properties, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
