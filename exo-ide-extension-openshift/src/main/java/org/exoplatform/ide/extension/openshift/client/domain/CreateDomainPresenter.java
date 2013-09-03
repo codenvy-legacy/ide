@@ -35,6 +35,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -74,7 +75,7 @@ public class CreateDomainPresenter extends GitPresenter implements ViewClosedHan
         /**
          * Get domain name field.
          *
-         * @return {@link HasValue}
+         * @return {@link HasValue} click handler
          */
         HasValue<String> getDomainNameField();
 
@@ -128,10 +129,6 @@ public class CreateDomainPresenter extends GitPresenter implements ViewClosedHan
         });
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     *      .event.ViewClosedEvent)
-     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -139,10 +136,6 @@ public class CreateDomainPresenter extends GitPresenter implements ViewClosedHan
         }
     }
 
-    /**
-     * @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainHandler#onCreateDomain(org.exoplatform.ide.extension
-     *      .openshift.client.domain.CreateDomainEvent)
-     */
     @Override
     public void onCreateDomain(CreateDomainEvent event) {
         if (display == null) {
@@ -206,7 +199,6 @@ public class CreateDomainPresenter extends GitPresenter implements ViewClosedHan
             @Override
             public void booleanValueReceived(Boolean value) {
                 if (value != null && value) {
-                    GWT.log("dialog ok clicked");
                     deleteAllApplicationsAndNamespace();
                 }
             }
@@ -223,6 +215,7 @@ public class CreateDomainPresenter extends GitPresenter implements ViewClosedHan
 
                                                                             @Override
                                                                             protected void onSuccess(Void result) {
+                                                                                IDE.fireEvent(new RefreshBrowserEvent());
                                                                                 createDomain();
                                                                             }
 
@@ -288,10 +281,6 @@ public class CreateDomainPresenter extends GitPresenter implements ViewClosedHan
         IDE.addHandler(LoggedInEvent.TYPE, this);
     }
 
-    /**
-     * @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift
-     *      .client.login.LoggedInEvent)
-     */
     @Override
     public void onLoggedIn(LoggedInEvent event) {
         IDE.removeHandler(LoggedInEvent.TYPE, this);

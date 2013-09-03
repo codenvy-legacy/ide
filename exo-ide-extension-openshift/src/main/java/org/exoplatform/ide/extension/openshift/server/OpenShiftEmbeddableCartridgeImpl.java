@@ -8,13 +8,11 @@ import java.util.Map;
 public class OpenShiftEmbeddableCartridgeImpl implements OpenShiftEmbeddableCartridge {
     private String              name;
     private String              url;
-    private String              creationLog;
     private Map<String, String> properties;
 
-    public OpenShiftEmbeddableCartridgeImpl(String name, String url, String creationLog) {
+    public OpenShiftEmbeddableCartridgeImpl(String name, String url) {
         this.name = name;
         this.url = url;
-        this.creationLog = creationLog;
     }
 
     public OpenShiftEmbeddableCartridgeImpl() {
@@ -41,16 +39,6 @@ public class OpenShiftEmbeddableCartridgeImpl implements OpenShiftEmbeddableCart
     }
 
     @Override
-    public String getCreationLog() {
-        return creationLog;
-    }
-
-    @Override
-    public void setCreationLog(String creationLog) {
-        this.creationLog = creationLog;
-    }
-
-    @Override
     public Map<String, String> getProperties() {
         if (properties == null) {
             properties = new LinkedHashMap<String, String>(4);
@@ -68,7 +56,6 @@ public class OpenShiftEmbeddableCartridgeImpl implements OpenShiftEmbeddableCart
         return "OpenShiftEmbeddableCartridgeImpl{" +
                "name='" + name + '\'' +
                ", url='" + url + '\'' +
-               ", creationLog='" + creationLog + '\'' +
                ", properties=" + properties +
                '}';
     }
