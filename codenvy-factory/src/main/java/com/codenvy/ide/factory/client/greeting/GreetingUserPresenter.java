@@ -267,6 +267,9 @@ public class GreetingUserPresenter implements
      */
     private void loadGreeting() {
         final String greetingPageURL = getGreetingPageURL();
+        if (greetingPageURL == null) {
+            return;
+        }
         
         final Frame frame = new Frame(greetingPageURL);
         Style style = frame.getElement().getStyle();
