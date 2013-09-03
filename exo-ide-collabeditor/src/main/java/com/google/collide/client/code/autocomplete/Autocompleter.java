@@ -195,27 +195,33 @@ public class Autocompleter implements ContentAssistant {
             return true;
         }
 
-        ExplicitAction action = autocompleters.getExplicitAction(editor.getSelection(), trigger, popup.isShowing());
-
-        switch (action.getType()) {
-            case EXPLICIT_COMPLETE:
-                boxTrigger = null;
-                performExplicitCompletion(action.getExplicitAutocompletion());
-                return true;
-
-            case DEFERRED_COMPLETE:
-                boxTrigger = trigger;
-                defferedAction = true;
-                scheduleRequestAutocomplete();
-                return false;
-
-            case CLOSE_POPUP:
-                dismissAutocompleteBox();
-                return false;
-
-            default:
-                return false;
+        try {
+            ExplicitAction action = autocompleters.getExplicitAction(editor.getSelection(), trigger, popup.isShowing());
+    
+            switch (action.getType()) {
+                case EXPLICIT_COMPLETE:
+                    boxTrigger = null;
+                    performExplicitCompletion(action.getExplicitAutocompletion());
+                    return true;
+    
+                case DEFERRED_COMPLETE:
+                    boxTrigger = trigger;
+                    defferedAction = true;
+                    scheduleRequestAutocomplete();
+                    return false;
+    
+                case CLOSE_POPUP:
+                    dismissAutocompleteBox();
+                    return false;
+    
+                default:
+                    return false;
+            }
+        } catch (Exception e) {
+            Log.error(getClass(), e);
+            return false;
         }
+        
     }
 
     /**
