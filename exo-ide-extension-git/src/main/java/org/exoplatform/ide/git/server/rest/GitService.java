@@ -232,13 +232,17 @@ public class GitService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Revision commit(CommitRequest request) throws GitException, LocalPathResolveException,
-                                                         VirtualFileSystemException, IOException {
+                                                         VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             Revision revision = gitConnection.commit(request);
             if (revision.isFake()) {
                 StatusImpl status = (StatusImpl)status(false);
-                revision.setMessage(status.createString(false));
+                try {
+                    revision.setMessage(status.createString(false));
+                } catch (IOException e) {
+                    throw new GitException(e);
+                }
             }
             return revision;
         } finally {
