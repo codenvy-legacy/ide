@@ -47,8 +47,6 @@ public class RemoteListUnmarshaller implements Unmarshallable<JsonArray<Remote>>
         }
 
         JSONArray array = JSONParser.parseStrict(response.getText()).isArray();
-        if (array == null || array.size() <= 0)
-            return;
 
         remotes = JsonCollections.createArray();
 
