@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.application;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
@@ -26,6 +27,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.api.Panel;
 import org.exoplatform.ide.client.framework.ui.api.Perspective;
 import org.exoplatform.ide.client.menu.Menu;
@@ -98,6 +100,11 @@ public class IDEForm extends DockLayoutPanel implements IDEPresenter.Display {
 
         Panel editorPanel = perspective.addPanel("editor", Direction.CENTER, 0);
         editorPanel.acceptType("editor");
+
+        Style editorStyle = editorPanel.asWidget().getElement().getStyle();
+        editorStyle.setBackgroundImage("url("+ IDEImageBundle.INSTANCE.noFileOpened().getURL()+")");
+        editorStyle.setProperty("backgroundRepeat", "no-repeat");
+        editorStyle.setProperty("backgroundPosition", "center center");
     }
 
     /** @see org.exoplatform.ide.client.application.IDEPresenter.Display#getMenu() */

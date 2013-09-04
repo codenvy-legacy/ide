@@ -688,5 +688,8 @@ public interface IDEImageBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/public/images/readonly-hover.png")
     ImageResource readOnlyHover();
-    
+
+    @Source("bundled-images/welcome/placeholder-NoFileOpened.png")
+    ImageResource noFileOpened();
+
 }
