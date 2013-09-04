@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.factory.client.greeting;
 
+import com.codenvy.ide.factory.client.FactoryClientBundle;
 import com.codenvy.ide.factory.client.copy.CopyProjectEvent;
 import com.codenvy.ide.factory.client.copy.CopySpec10;
 import com.google.gwt.dom.client.Element;
@@ -200,7 +201,8 @@ public class GreetingUserPresenter implements
      * Adds "Copy to my workspace" button on toolbar.
      */
     private void addCopyToMyWorkspaceButton() {        
-        UniButton copyToMyWorkspaceButton = new UniButton("Copy to my workspace", Type.PRIMARY, Size.SMALL);
+        UniButton copyToMyWorkspaceButton = new UniButton("Copy to my workspace", 
+                    new Image(FactoryClientBundle.INSTANCE.copyToWorkspaceIcon()), Type.PRIMARY, Size.SMALL);
         IDE.fireEvent(new AddToolbarItemsEvent(copyToMyWorkspaceButton, true));
         copyToMyWorkspaceButton.addClickHandler(new ClickHandler() {
             @Override
@@ -267,6 +269,9 @@ public class GreetingUserPresenter implements
      */
     private void loadGreeting() {
         final String greetingPageURL = getGreetingPageURL();
+        if (greetingPageURL == null) {
+            return;
+        }
         
         final Frame frame = new Frame(greetingPageURL);
         Style style = frame.getElement().getStyle();
