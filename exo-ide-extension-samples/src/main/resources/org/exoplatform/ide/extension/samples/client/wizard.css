@@ -78,6 +78,7 @@
         gwt-image: "welcomePageBgTopContainer";
         background-repeat: no-repeat;
         background-position: center top;
+        background-color: #FFFFFF;
     }
 
     .table {

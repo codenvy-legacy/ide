@@ -69,7 +69,9 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
         new GitHubClientServiceImpl(event.getLoader());
-        IDE.fireEvent(new OpenStartPageEvent());
+        if (!IDE.currentWorkspace.isTemporary()) {
+            IDE.fireEvent(new OpenStartPageEvent());
+        }
 
         new InviteClientService(Utils.getRestContext(), Utils.getWorkspaceName());
     }
