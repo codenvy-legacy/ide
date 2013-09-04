@@ -109,7 +109,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         display.getInvitationsLink().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                if (IDE.isRoUser()) {
+                if (IDE.isRoUser() || IDE.currentWorkspace.isTemporary()) {
                     return;
                 } else {
                     IDE.fireEvent(new InviteGoogleDevelopersEvent());
