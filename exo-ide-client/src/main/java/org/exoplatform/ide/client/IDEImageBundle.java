@@ -688,5 +688,8 @@ public interface IDEImageBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/public/images/icon-read-only.png")
     ImageResource readOnlyIcon();
+
+    @Source("bundled-images/welcome/placeholder-NoFileOpened.png")
+    ImageResource noFileOpened();
     
 }
