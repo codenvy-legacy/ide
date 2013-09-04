@@ -43,7 +43,6 @@ public class HtmlEditor extends CollabEditor {
      */
     public HtmlEditor(String mimeType) {
         super(mimeType);
-        /*
         CssAutocompleter cssAutocompleter = CssAutocompleter.create();
         HtmlAutocompleter htmlAutocompleter = HtmlAutocompleter.create(cssAutocompleter, new JavaScriptAutocompleter());
         editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(htmlAutocompleter);
@@ -51,7 +50,6 @@ public class HtmlEditor extends CollabEditor {
                 IDocument.DEFAULT_CONTENT_TYPE,
                 new HtmlContentAssistProcessor(new CssContentAssistProcessor(cssAutocompleter),
                                                new JavaScriptContentAssistProcessor()));
-                                               */
     }
 
     /** @see com.google.collide.client.CollabEditor#isCapable(org.exoplatform.ide.editor.client.api.EditorCapability) */
