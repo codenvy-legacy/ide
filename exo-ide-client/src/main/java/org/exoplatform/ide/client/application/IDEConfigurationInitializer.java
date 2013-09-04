@@ -362,9 +362,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
         IDE.fireEvent(new SetToolbarItemsEvent("exoIDEStatusbar", controls.getStatusBarControls(), controls.getRegisteredControls()));
 
         if (IDE.isRoUser()) {
-            
-            UniButton readOnlyButton = new UniButton("Read-only", new Image(IDEImageBundle.INSTANCE.readOnlyIcon()),
-                                                     Type.PRIMARY, Size.SMALL);
+            UniButton readOnlyButton = new UniButton("Read-only", new Image(IDEImageBundle.INSTANCE.readOnlyIcon()), Type.PRIMARY, Size.SMALL);
             IDE.fireEvent(new AddToolbarItemsEvent(readOnlyButton, true));
             readOnlyButton.addClickHandler(new ClickHandler() {
                 @Override

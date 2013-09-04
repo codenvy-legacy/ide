@@ -201,8 +201,7 @@ public class GreetingUserPresenter implements
      * Adds "Copy to my workspace" button on toolbar.
      */
     private void addCopyToMyWorkspaceButton() {        
-        UniButton copyToMyWorkspaceButton = new UniButton("Copy to my workspace", 
-                    new Image(FactoryClientBundle.INSTANCE.copyToWorkspaceIcon()), Type.PRIMARY, Size.SMALL);
+        UniButton copyToMyWorkspaceButton = new UniButton("Copy to my workspace", new Image(FactoryClientBundle.INSTANCE.copyToWorkspaceIcon()), Type.PRIMARY, Size.SMALL);
         IDE.fireEvent(new AddToolbarItemsEvent(copyToMyWorkspaceButton, true));
         copyToMyWorkspaceButton.addClickHandler(new ClickHandler() {
             @Override
