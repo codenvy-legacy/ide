@@ -274,9 +274,24 @@ public class StandartPerspective extends FlowPanel implements Perspective {
         @Override
         public void onShowPanel(ShowPanelEvent event) {
             Panel p = panels.get(event.getPanelId());
-            if (layoutPanel.getWidgetDirection(p.asWidget()) != Direction.CENTER) {
-                layoutPanel.setWidgetSize(p.asWidget(), 225);
-                layoutPanel.animate(ANIMATION_PERIOD);
+            switch (layoutPanel.getWidgetDirection(p.asWidget())) {
+                case WEST:
+                    layoutPanel.setWidgetSize(p.asWidget(), 225);
+                    layoutPanel.animate(ANIMATION_PERIOD);
+                    break;
+                case SOUTH:
+                    layoutPanel.setWidgetSize(p.asWidget(), 140);
+                    layoutPanel.animate(ANIMATION_PERIOD);
+                    break;
+                case EAST:
+                    layoutPanel.setWidgetSize(p.asWidget(), 245);
+                    layoutPanel.animate(ANIMATION_PERIOD);
+                    break;
+                case CENTER:
+                    break;
+                default:
+                    layoutPanel.setWidgetSize(p.asWidget(), 225);
+                    layoutPanel.animate(ANIMATION_PERIOD);
             }
         }
     };
