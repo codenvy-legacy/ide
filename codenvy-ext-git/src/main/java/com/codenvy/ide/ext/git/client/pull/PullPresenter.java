@@ -135,7 +135,7 @@ public class PullPresenter implements PullView.ActionDelegate {
                                    @Override
                                    protected void onSuccess(JsonArray<Branch> result) {
                                        if (LIST_REMOTE.equals(remoteMode)) {
-                                           view.setRemoteBranches(getRemoteBranchesToDisplay(remoteMode, result));
+                                           view.setRemoteBranches(getRemoteBranchesToDisplay(view.getRepositoryName(), result));
                                        } else {
                                            view.setLocalBranches(getLocalBranchesToDisplay(result));
                                        }
@@ -176,8 +176,9 @@ public class PullPresenter implements PullView.ActionDelegate {
         String compareString = "refs/remotes/" + remoteName + "/";
         for (int i = 0; i < remoteBranches.size(); i++) {
             Branch branch = remoteBranches.get(i);
-            if (branch.getName().startsWith(compareString)) {
-                branches.add(branch.getName().replaceFirst(compareString, "refs/heads/"));
+            String branchName = branch.getName();
+            if (branchName.startsWith(compareString)) {
+                branches.add(branchName.replaceFirst(compareString, ""));
             }
         }
 
@@ -201,10 +202,11 @@ public class PullPresenter implements PullView.ActionDelegate {
             branches.add("master");
             return branches;
         }
-
+        String compareString = "refs/heads/";
         for (int i = 0; i < localBranches.size(); i++) {
             Branch branch = localBranches.get(i);
-            branches.add(branch.getName());
+            String branchName = branch.getName().replaceFirst(compareString, "");
+            branches.add(branchName);
         }
 
         return branches;
@@ -284,7 +286,7 @@ public class PullPresenter implements PullView.ActionDelegate {
         String remoteBranch = view.getRemoteBranch();
 
         return localBranch.isEmpty() ? remoteBranch
-                                     : "refs/heads/" + remoteBranch + ":" + "refs/remotes/" + remoteName + "/" + remoteBranch;
+                                     : "refs/heads/" + localBranch + ":" + "refs/remotes/" + remoteName + "/" + remoteBranch;
     }
 
     /**

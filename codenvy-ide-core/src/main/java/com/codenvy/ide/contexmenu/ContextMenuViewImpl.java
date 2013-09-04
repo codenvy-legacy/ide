@@ -78,8 +78,8 @@ public class ContextMenuViewImpl extends Composite implements ContextMenuView, C
                 new PopupMenu(secondaryActions, actionManager, place, presentationFactory, lockLayer, this, keyBindingAgent, "contextMenu");
         lockLayer.add(popupMenu);
 
-        popupMenu.getElement().getStyle().setTop(x, com.google.gwt.dom.client.Style.Unit.PX);
-        popupMenu.getElement().getStyle().setLeft(y, com.google.gwt.dom.client.Style.Unit.PX);
+        popupMenu.getElement().getStyle().setTop(y, com.google.gwt.dom.client.Style.Unit.PX);
+        popupMenu.getElement().getStyle().setLeft(x, com.google.gwt.dom.client.Style.Unit.PX);
     }
 
     /** {@inheritDoc} */
