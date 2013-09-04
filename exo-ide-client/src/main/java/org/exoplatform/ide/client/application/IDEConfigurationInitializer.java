@@ -28,6 +28,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -37,6 +38,7 @@ import org.exoplatform.gwtframework.ui.client.command.ui.UniButton;
 import org.exoplatform.gwtframework.ui.client.command.ui.UniButton.Size;
 import org.exoplatform.gwtframework.ui.client.command.ui.UniButton.Type;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
@@ -361,7 +363,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
         if (IDE.isRoUser()) {
             
-            UniButton readOnlyButton = new UniButton("Read-only", Type.PRIMARY, Size.SMALL);
+            UniButton readOnlyButton = new UniButton("Read-only", new Image(IDEImageBundle.INSTANCE.readOnlyIcon()),
+                                                     Type.PRIMARY, Size.SMALL);
             IDE.fireEvent(new AddToolbarItemsEvent(readOnlyButton, true));
             readOnlyButton.addClickHandler(new ClickHandler() {
                 @Override
