@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel.Direction;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
 import org.exoplatform.ide.client.framework.ui.api.HasViews;
 import org.exoplatform.ide.client.framework.ui.api.Panel;
@@ -276,21 +277,21 @@ public class StandartPerspective extends FlowPanel implements Perspective {
             Panel p = panels.get(event.getPanelId());
             switch (layoutPanel.getWidgetDirection(p.asWidget())) {
                 case WEST:
-                    layoutPanel.setWidgetSize(p.asWidget(), 225);
+                    layoutPanel.setWidgetSize(p.asWidget(), IDE.currentWorkspace.isTemporary() ? 225 : 300);
                     layoutPanel.animate(ANIMATION_PERIOD);
                     break;
                 case SOUTH:
-                    layoutPanel.setWidgetSize(p.asWidget(), 140);
+                    layoutPanel.setWidgetSize(p.asWidget(), IDE.currentWorkspace.isTemporary() ? 140 : 300);
                     layoutPanel.animate(ANIMATION_PERIOD);
                     break;
                 case EAST:
-                    layoutPanel.setWidgetSize(p.asWidget(), 245);
+                    layoutPanel.setWidgetSize(p.asWidget(), IDE.currentWorkspace.isTemporary() ? 245 : 300);
                     layoutPanel.animate(ANIMATION_PERIOD);
                     break;
                 case CENTER:
                     break;
                 default:
-                    layoutPanel.setWidgetSize(p.asWidget(), 225);
+                    layoutPanel.setWidgetSize(p.asWidget(), 300);
                     layoutPanel.animate(ANIMATION_PERIOD);
             }
         }
