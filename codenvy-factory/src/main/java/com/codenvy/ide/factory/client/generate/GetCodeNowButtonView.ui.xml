@@ -196,6 +196,7 @@
 			margin-right: 0px;
     		margin-top: 0px;
     		margin-left: 0px;
+    		cursor: pointer;
 		}
 		
 		.radio_webkit tbody tr td span input {
