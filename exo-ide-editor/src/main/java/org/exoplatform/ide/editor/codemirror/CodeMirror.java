@@ -181,6 +181,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         frame.setSize("100%", "100%");
         frame.getElement().setAttribute("frameborder", "0");
         frame.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
+        frame.getElement().getStyle().setBackgroundColor("white");
 
         frame.addLoadHandler(new LoadHandler() {
             @Override
