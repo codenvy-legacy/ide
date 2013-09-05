@@ -22,14 +22,18 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.gwtframework.commons.util.BrowserResolver;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -65,6 +69,18 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
 
     interface FactoryURLViewUiBinder extends UiBinder<Widget, GetCodeNowButtonView> {
     }
+    
+    interface Style extends CssResource {
+        
+        String radio_webkit();
+        
+    }
+
+    @UiField
+    Style style;    
+    
+    @UiField
+    HorizontalPanel radioPanel;
 
     /** Preview area is displayed to let the user see the style of configured CodeNow button. */
     @UiField
@@ -109,7 +125,12 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
         gitHubURLField.setName(GITHUB_URL_FIELD_ID);
         directSharingURLField.setName(DIRECT_SHARING_URL_FIELD_ID);
         okButton.setId(OK_BUTTON_ID);
-
+        
+        
+        if (BrowserResolver.CURRENT_BROWSER == Browser.CHROME || BrowserResolver.CURRENT_BROWSER == Browser.SAFARI) {
+            radioPanel.getElement().addClassName(style.radio_webkit());
+        }
+        
         websitesURLField.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
