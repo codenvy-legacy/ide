@@ -92,4 +92,7 @@ public interface FactoryClientBundle extends ClientBundle {
     @Source("com/codenvy/ide/factory/images/copy-to-my-workspace-hover.png")
     ImageResource copyToMyWorkspaceHover();
     
+    @Source("com/codenvy/ide/factory/images/icon-copy-to-workspace.png")
+    ImageResource copyToWorkspaceIcon();
+    
 }
