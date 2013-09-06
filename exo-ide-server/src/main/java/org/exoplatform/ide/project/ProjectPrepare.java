@@ -89,13 +89,13 @@ public class ProjectPrepare {
         LinkedList<ItemNode> q = new LinkedList<ItemNode>();
         q.add(sourceFolderNode);
 
+        ProjectType type = null;
+
         while (!q.isEmpty()) {
             ItemNode node = q.pop();
             if (node.getItem() instanceof FolderImpl) {
                 q.addAll(node.getChildren());
             } else if (node.getItem() instanceof FileImpl) {
-                ProjectType type = null;
-
                 if (node.getItem().getName().endsWith(".php")) {
                     type = ProjectType.PHP;
                 } else if (node.getItem().getName().endsWith(".py")) {
@@ -107,16 +107,20 @@ public class ProjectPrepare {
                     type = ProjectType.NODE_JS;
                 }
 
-                if (type == null) {
-                    throw new ProjectPrepareException(400, "autodetection:failed");
+                if (type != null) {
+                    List<Property> props = new ArrayList<Property>();
+                    props.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+                    props.add(new PropertyImpl("vfs:projectType", type.toString()));
+
+                    vfs.updateItem(node.getItem().getParentId(), props, null);
+                    return;
                 }
-
-                List<Property> props = new ArrayList<Property>();
-                props.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-                props.add(new PropertyImpl("vfs:projectType", type.toString()));
-
-                vfs.updateItem(node.getItem().getParentId(), props, null);
             }
+        }
+
+        if (type == null)
+        {
+            throw new ProjectPrepareException(400, "autodetection:failed");
         }
     }
 
