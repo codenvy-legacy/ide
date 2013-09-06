@@ -23,6 +23,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -35,7 +37,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 
 /**
  * Presenter to share Factory URL by e-mail.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: SendMailPresenter.java Jun 11, 2013 12:17:04 PM azatsarynnyy $
  */
@@ -45,38 +47,46 @@ public class SendMailPresenter implements SendMailHandler, ViewClosedHandler {
 
         /**
          * Returns 'To' field.
-         * 
+         *
          * @return 'To' field
          */
         HasValue<String> getRecipientField();
 
         /**
          * Returns 'Message' field.
-         * 
+         *
          * @return 'Message' field
          */
         HasValue<String> getMessageField();
 
         /**
          * Returns the 'Send' button.
-         * 
+         *
          * @return 'Send' button
          */
         HasClickHandlers getSendButton();
 
         /**
          * Returns the 'Cancel' button.
-         * 
+         *
          * @return 'Cancel' button
          */
         HasClickHandlers getCancelButton();
 
         /** Give focus to the 'To' field. */
         void focusRecipientField();
+
+        /**
+         * Enable send button.
+         *
+         * @param enable
+         *         true if enable, otherwise false.
+         */
+        void enableSendButton(boolean enable);
     }
 
     /** Display. */
-    private Display             display;
+    private Display display;
 
     public SendMailPresenter() {
         IDE.addHandler(SendMailEvent.TYPE, this);
@@ -97,11 +107,23 @@ public class SendMailPresenter implements SendMailHandler, ViewClosedHandler {
                 IDE.getInstance().closeView(display.asView().getId());
             }
         });
+
+        display.getRecipientField().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> stringValueChangeEvent) {
+                display.enableSendButton(isCorrectFilled());
+            }
+        });
+
+        display.getMessageField().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> stringValueChangeEvent) {
+                display.enableSendButton(isCorrectFilled());
+            }
+        });
     }
 
-    /**
-     * @see com.codenvy.ide.factory.client.generate.SendMailHandler#onSendMail(com.codenvy.ide.factory.client.generate.SendMailEvent)
-     */
+    /** @see com.codenvy.ide.factory.client.generate.SendMailHandler#onSendMail(com.codenvy.ide.factory.client.generate.SendMailEvent) */
     @Override
     public void onSendMail(SendMailEvent event) {
         if (display == null) {
@@ -144,5 +166,16 @@ public class SendMailPresenter implements SendMailHandler, ViewClosedHandler {
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
+    }
+
+    /**
+     * Checks if recipient and message fields are filled correctly.
+     *
+     * @return true if email is valid and message field isn't empty otherwise false.
+     */
+    private boolean isCorrectFilled() {
+        return !display.getRecipientField().getValue().isEmpty() && !display.getMessageField().getValue().isEmpty() &&
+               display.getRecipientField().getValue().matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                                                              + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
     }
 }
