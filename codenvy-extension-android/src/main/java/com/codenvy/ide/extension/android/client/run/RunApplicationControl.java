@@ -18,15 +18,19 @@
  */
 package com.codenvy.ide.extension.android.client.run;
 
+import com.codenvy.ide.commons.shared.ProjectType;
 import com.codenvy.ide.extension.android.client.AndroidExtension;
 import com.codenvy.ide.extension.android.client.AndroidExtensionClientBundle;
-import com.codenvy.ide.extension.android.client.event.*;
+import com.codenvy.ide.extension.android.client.event.RunApplicationEvent;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectHandler;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
@@ -71,7 +75,7 @@ public class RunApplicationControl extends SimpleControl implements IDEControl, 
     public void onProjectOpened(ProjectOpenedEvent event) {
         String projectType = event.getProject().getProjectType();
 
-        boolean isAndroidProject = ProjectType.ANDROID.value().equals(projectType);
+        boolean isAndroidProject = ProjectType.ANDROID.toString().equals(projectType) || ProjectType.GOOGLE_MBS_ANDROID.toString().equals(projectType);
 
         setVisible(isAndroidProject);
         setEnabled(isAndroidProject);

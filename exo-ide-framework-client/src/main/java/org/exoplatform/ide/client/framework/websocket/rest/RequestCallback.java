@@ -69,8 +69,7 @@ public abstract class RequestCallback<T> implements ReplyHandler {
      * When response comes then callback calls <code>Unmarshallable.unmarshal()</code>
      * which populates the object.
      *
-     * @param unmarshaller
-     *         {@link Unmarshallable}
+     * @param unmarshaller  {@link Unmarshallable}
      */
     public RequestCallback(Unmarshallable<T> unmarshaller) {
         this.successCodes = DEFAULT_SUCCESS_CODES;

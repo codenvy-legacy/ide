@@ -18,8 +18,8 @@
  */
 package com.codenvy.ide.extension.android.client.run;
 
+import com.codenvy.ide.commons.shared.ProjectType;
 import com.codenvy.ide.extension.android.client.event.RunApplicationEvent;
-import com.google.gwt.user.client.Window;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
@@ -29,7 +29,6 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectHandler;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
@@ -74,7 +73,7 @@ public class PaaSManyMoAndroid extends SimpleControl implements IDEControl, Proj
     public void onProjectOpened(ProjectOpenedEvent event) {
         String projectType = event.getProject().getProjectType();
 
-        boolean isAndroidProject = ProjectType.ANDROID.value().equals(projectType);
+        boolean isAndroidProject = ProjectType.ANDROID.toString().equals(projectType) || ProjectType.GOOGLE_MBS_ANDROID.toString().equals(projectType);
         setVisible(isAndroidProject);
         setEnabled(isAndroidProject);
         setShowInContextMenu(isAndroidProject);
