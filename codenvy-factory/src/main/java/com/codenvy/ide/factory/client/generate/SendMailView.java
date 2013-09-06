@@ -84,6 +84,8 @@ public class SendMailView extends ViewImpl implements Display {
         messageField.getElement().setId(MESSAGE_FIELD_ID);
         sendButton.setId(SEND_BUTTON_ID);
         cancelButton.setId(CANCEL_BUTTON_ID);
+
+        sendButton.setEnabled(false);
     }
 
     /**
@@ -126,4 +128,8 @@ public class SendMailView extends ViewImpl implements Display {
         recipientField.focus();
     }
 
+    @Override
+    public void enableSendButton(boolean enable) {
+        sendButton.setEnabled(enable);
+    }
 }
