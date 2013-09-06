@@ -51,10 +51,10 @@ public class SpinnetGenerator {
             Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
 
             jsURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("ide/_app/factory/factory.js").buildString();
+                .setPath("ide/_app/factory/resources/factory.js").buildString();
         } else {
             jsURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("factory/factory.js").buildString();            
+                .setPath("factory/resources/factory.js").buildString();            
         }
         
         //jsURL = jsURL.substring(jsURL.indexOf("//"));
@@ -71,10 +71,10 @@ public class SpinnetGenerator {
         
         if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
             return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("ide/" + Utils.getWorkspaceName() + "/_app/images/factory/" + fileName).buildString();
+                .setPath("ide/" + Utils.getWorkspaceName() + "/_app/factory/resources/" + fileName).buildString();
         } else {
             return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("images/factory/" + fileName).buildString();
+                .setPath("factory/resources/" + fileName).buildString();
         }
     }
     
