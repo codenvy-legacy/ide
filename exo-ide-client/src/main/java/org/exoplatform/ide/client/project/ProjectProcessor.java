@@ -262,11 +262,19 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
 
     @Override
     public void onFolderChanged(final FolderModel folder) {
-        IDE.fireEvent(new TreeRefreshedEvent(folder, itemToBeSelectedAfterRefreshing));
+        if (folder != null) {
+            IDE.fireEvent(new TreeRefreshedEvent(folder, itemToBeSelectedAfterRefreshing));
+        } else {
+            IDE.fireEvent(new TreeRefreshedEvent(openedProject, itemToBeSelectedAfterRefreshing));
+        }
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {
-                IDE.fireEvent(new FolderRefreshedEvent(folder));
+                if (folder != null) {
+                    IDE.fireEvent(new FolderRefreshedEvent(folder));
+                } else {
+                    IDE.fireEvent(new FolderRefreshedEvent(openedProject));
+                }
             }
         });
     }
