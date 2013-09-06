@@ -67,13 +67,15 @@ public class SpinnetGenerator {
      * 
      * @return
      */
-    public static String getCodeNowGitHubImageURL() {
+    public static String getCodeNowGitHubImageURL(boolean darkStyle) {
+        String fileName = darkStyle ? "factory.png" : "factory-white.png";
+        
         if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
             return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("ide/" + Utils.getWorkspaceName() + "/_app/images/factory/factory.png").buildString();
+                .setPath("ide/" + Utils.getWorkspaceName() + "/_app/images/factory/" + fileName).buildString();
         } else {
             return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("images/factory/factory.png").buildString();
+                .setPath("images/factory/" + fileName).buildString();
         }
     }
     
