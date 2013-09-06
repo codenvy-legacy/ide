@@ -22,8 +22,6 @@ import com.google.gwt.user.client.Window.Location;
 
 import org.exoplatform.ide.client.framework.util.Utils;
 
-import java.util.List;
-
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
@@ -46,10 +44,7 @@ public class SpinnetGenerator {
     public static String getCodeNowButtonJavascriptURL() {
         String jsURL;
         
-        if (Location.getHost().indexOf("localhost:8080") >= 0 ||
-            Location.getHost().indexOf("127.0.0.1:8080") >= 0 ||
-            Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
-
+        if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
             jsURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
                 .setPath("ide/_app/factory/resources/factory.js").buildString();
         } else {
@@ -60,7 +55,7 @@ public class SpinnetGenerator {
         //jsURL = jsURL.substring(jsURL.indexOf("//"));
         return jsURL;
     }
-    
+
     /**
      * Returns URL of image which will be used as link for CodeNow button for GitHub Pages.
      * 
