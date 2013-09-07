@@ -252,8 +252,8 @@ public class MergePresenter implements MergeView.ActionDelegate {
     @Override
     public void onReferenceSelected(@NotNull Reference reference) {
         selectedReference = reference;
-        boolean isEnabled = !selectedReference.getDisplayName().equals(LOCAL_BRANCHES_TITLE) &
-                            !selectedReference.getDisplayName().equals(REMOTE_BRANCHES_TITLE);
+        String displayName = selectedReference.getDisplayName();
+        boolean isEnabled = !displayName.equals(LOCAL_BRANCHES_TITLE) && !displayName.equals(REMOTE_BRANCHES_TITLE);
         view.setEnableMergeButton(isEnabled);
     }
 }

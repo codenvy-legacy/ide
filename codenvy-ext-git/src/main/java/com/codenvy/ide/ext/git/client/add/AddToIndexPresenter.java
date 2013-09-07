@@ -25,7 +25,7 @@ import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
@@ -199,7 +199,7 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
         String pattern = element.getPath().replaceFirst(projectPath, "");
         pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
 
-        JsoArray<String> patterns = JsoArray.create();
+        JsonArray<String> patterns = JsonCollections.createArray();
         if (pattern.isEmpty() || "/".equals(pattern)) {
             patterns.add(".");
         } else {

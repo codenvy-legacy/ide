@@ -47,7 +47,7 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDelegate {
-    private static final String DEFAULT_REPO_NAME = "origin";
+    public static final String DEFAULT_REPO_NAME = "origin";
     private CloneRepositoryView     view;
     private GitClientService        service;
     private ResourceProvider        resourceProvider;

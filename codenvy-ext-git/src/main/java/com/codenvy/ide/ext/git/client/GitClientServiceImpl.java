@@ -29,6 +29,7 @@ import com.codenvy.ide.ext.git.client.push.PushRequestHandler;
 import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.*;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -207,11 +208,14 @@ public class GitClientServiceImpl implements GitClientService {
                     @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         DtoClientImpls.AddRequestImpl addRequest = DtoClientImpls.AddRequestImpl.make();
         addRequest.setUpdate(update);
+
+        JsoArray<String> patterns = JsoArray.create();
         if (filePattern == null) {
-            addRequest.setFilepattern(AddRequest.DEFAULT_PATTERN);
+            patterns.addAll(AddRequest.DEFAULT_PATTERN);
         } else {
-            addRequest.setFilepattern(filePattern);
+            patterns.addAll(filePattern);
         }
+        addRequest.setFilepattern(patterns);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         String url = restServiceContext + ADD + params;
@@ -227,11 +231,14 @@ public class GitClientServiceImpl implements GitClientService {
                       @NotNull RequestCallback<String> callback) throws WebSocketException {
         DtoClientImpls.AddRequestImpl addRequest = DtoClientImpls.AddRequestImpl.make();
         addRequest.setUpdate(update);
+
+        JsoArray<String> patterns = JsoArray.create();
         if (filePattern == null) {
-            addRequest.setFilepattern(AddRequest.DEFAULT_PATTERN);
+            patterns.addAll(AddRequest.DEFAULT_PATTERN);
         } else {
-            addRequest.setFilepattern(filePattern);
+            patterns.addAll(filePattern);
         }
+        addRequest.setFilepattern(patterns);
 
         callback.setStatusHandler(new AddRequestHandler(project.getName(), eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -289,7 +296,9 @@ public class GitClientServiceImpl implements GitClientService {
                      boolean force, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         DtoClientImpls.PushRequestImpl pushRequest = DtoClientImpls.PushRequestImpl.make();
         pushRequest.setRemote(remote);
-        pushRequest.setRefSpec(refSpec);
+        JsoArray<String> array = JsoArray.create();
+        array.addAll(refSpec);
+        pushRequest.setRefSpec(array);
         pushRequest.setForce(force);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -306,7 +315,9 @@ public class GitClientServiceImpl implements GitClientService {
                        boolean force, @NotNull RequestCallback<String> callback) throws WebSocketException {
         DtoClientImpls.PushRequestImpl pushRequest = DtoClientImpls.PushRequestImpl.make();
         pushRequest.setRemote(remote);
-        pushRequest.setRefSpec(refSpec);
+        JsoArray<String> array = JsoArray.create();
+        array.addAll(refSpec);
+        pushRequest.setRefSpec(array);
         pushRequest.setForce(force);
 
         callback.setStatusHandler(new PushRequestHandler(project.getName(), refSpec, eventBus, constant));
@@ -428,7 +439,9 @@ public class GitClientServiceImpl implements GitClientService {
     public void remove(@NotNull String vfsId, @NotNull String projectid, JsonArray<String> files, boolean cached,
                        @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         DtoClientImpls.RmRequestImpl rmRequest = DtoClientImpls.RmRequestImpl.make();
-        rmRequest.setFiles(files);
+        JsoArray<String> filesArray = JsoArray.create();
+        filesArray.addAll(files);
+        rmRequest.setFiles(filesArray);
         rmRequest.setCached(cached);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
@@ -506,6 +519,8 @@ public class GitClientServiceImpl implements GitClientService {
         DtoClientImpls.FetchRequestImpl fetchRequest = DtoClientImpls.FetchRequestImpl.make();
         fetchRequest.setRemote(remote);
         // TODO This is workaround for getting remote branches
+        // JsoArray<String> array = JsoArray.create();
+        // array.addAll(refspec);
         // fetchRequest.setRefSpec(refspec);
         fetchRequest.setRemoveDeletedRefs(removeDeletedRefs);
 
@@ -524,6 +539,8 @@ public class GitClientServiceImpl implements GitClientService {
         DtoClientImpls.FetchRequestImpl fetchRequest = DtoClientImpls.FetchRequestImpl.make();
         fetchRequest.setRemote(remote);
         // TODO This is workaround for getting remote branches
+        // JsoArray<String> array = JsoArray.create();
+        // array.addAll(refspec);
         // fetchRequest.setRefSpec(refspec);
         fetchRequest.setRemoveDeletedRefs(removeDeletedRefs);
 
@@ -580,8 +597,11 @@ public class GitClientServiceImpl implements GitClientService {
     public void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull JsonArray<String> fileFilter,
                      @NotNull DiffRequest.DiffType type, boolean noRenames, int renameLimit, @NotNull String commitA,
                      @NotNull String commitB, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        JsonArray<String> filePatterns = JsoArray.create();
+        filePatterns.addAll(fileFilter);
+
         DtoClientImpls.DiffRequestImpl diffRequest = DtoClientImpls.DiffRequestImpl.make();
-        diffRequest.setFileFilter(fileFilter);
+        diffRequest.setFileFilter(filePatterns);
         diffRequest.setType(type);
         diffRequest.setNoRenames(noRenames);
         diffRequest.setRenameLimit(renameLimit);
@@ -596,8 +616,11 @@ public class GitClientServiceImpl implements GitClientService {
     public void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull JsonArray<String> fileFilter,
                      @NotNull DiffRequest.DiffType type, boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached,
                      @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        JsonArray<String> filePatterns = JsoArray.create();
+        filePatterns.addAll(fileFilter);
+
         DtoClientImpls.DiffRequestImpl diffRequest = DtoClientImpls.DiffRequestImpl.make();
-        diffRequest.setFileFilter(fileFilter);
+        diffRequest.setFileFilter(filePatterns);
         diffRequest.setType(type);
         diffRequest.setNoRenames(noRenames);
         diffRequest.setRenameLimit(renameLimit);

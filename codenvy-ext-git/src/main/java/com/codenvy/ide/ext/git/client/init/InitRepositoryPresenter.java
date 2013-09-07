@@ -86,10 +86,12 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
     @Override
     public void onOkClicked() {
         boolean bare = view.isBare();
+        String projectName = project.getName();
+        String projectId = project.getId();
         view.close();
 
         try {
-            service.initWS(resourceProvider.getVfsId(), project.getId(), project.getName(), bare, new RequestCallback<String>() {
+            service.initWS(resourceProvider.getVfsId(), projectId, projectName, bare, new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     onInitSuccess();
@@ -101,7 +103,7 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
                 }
             });
         } catch (WebSocketException e) {
-            initRepositoryREST(project.getId(), project.getName(), bare);
+            initRepositoryREST(projectId, projectName, bare);
         }
     }
 

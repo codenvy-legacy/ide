@@ -241,7 +241,7 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
     public void onFinishClicked() {
         final String projectName = view.getProjectName();
         boolean hasProjectNameIncorrectSymbol = !ResourceNameValidator.isProjectNameValid(projectName) || projectName.isEmpty();
-        if (selectedRepository != null && !projectName.isEmpty()) {
+        if (selectedRepository != null) {
             if (hasProjectNameIncorrectSymbol) {
                 Window.alert(constant.noIncorrectProjectNameMessage());
             } else {

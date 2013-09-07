@@ -35,7 +35,7 @@ import com.codenvy.ide.ext.git.client.marshaller.LogResponseUnmarshaller;
 import com.codenvy.ide.ext.git.shared.LogResponse;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -58,7 +58,7 @@ import static com.codenvy.ide.ext.git.shared.DiffRequest.DiffType.RAW;
  */
 @Singleton
 public class HistoryPresenter extends BasePresenter implements HistoryView.ActionDelegate {
-    private enum DiffWith {
+    protected enum DiffWith {
         DIFF_WITH_INDEX,
         DIFF_WITH_WORK_TREE,
         DIFF_WITH_PREV_VERSION
@@ -297,7 +297,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
 
     /** Get the changes between revisions. On success - display diff in text format, otherwise - show the error message in output panel. */
     private void getDiff() {
-        JsonArray<String> filePatterns = JsoArray.create();
+        JsonArray<String> filePatterns = JsonCollections.createArray();
 
         Project project = resourceProvider.getActiveProject();
         if (!showChangesInProject && project != null) {

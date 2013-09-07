@@ -28,7 +28,6 @@ import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -261,7 +260,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
     private JsonArray<String> getRefs() {
         String localBranch = "refs/heads/" + view.getLocalBranch();
         String remoteBranch = "refs/heads/" + view.getRemoteBranch();
-        JsoArray<String> array = JsoArray.create();
+        JsonArray<String> array = JsonCollections.createArray();
         array.add(localBranch + ":" + remoteBranch);
         return array;
     }

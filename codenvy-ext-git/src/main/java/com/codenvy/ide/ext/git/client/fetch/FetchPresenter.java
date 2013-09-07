@@ -28,7 +28,6 @@ import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -265,10 +264,8 @@ public class FetchPresenter implements FetchView.ActionDelegate {
         String remoteName = view.getRepositoryName();
         String refs = localBranch.isEmpty() ? remoteBranch
                                             : "refs/heads/" + localBranch + ":" + "refs/remotes/" + remoteName + "/" + remoteBranch;
-        JsoArray<String> array = JsoArray.create();
-        array.add(refs);
 
-        return array;
+        return JsonCollections.createArray(refs);
     }
 
     /**

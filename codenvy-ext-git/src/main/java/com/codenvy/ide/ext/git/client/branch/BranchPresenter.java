@@ -192,7 +192,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
      * @param projectId
      *         project id
      */
-    public void getBranches(@NotNull String projectId) {
+    private void getBranches(@NotNull String projectId) {
         BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller();
 
         try {
