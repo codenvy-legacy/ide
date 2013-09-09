@@ -203,6 +203,9 @@ public interface SamplesClientBundle extends ClientBundle {
     @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/spring36x36.png")
     ImageResource springTechnology();
 
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/android36x36.png")
+    ImageResource androidTechnology();
+
     /**
      * PaaSes image
      */
@@ -257,6 +260,12 @@ public interface SamplesClientBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/openshift_36_Disabled.png")
     ImageResource openShiftPaaSDisabled();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/manymo_36.png")
+    ImageResource manymoPaaS();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/manymo_36_Disabled.png")
+    ImageResource mnymoPaaSDisabled();
 
     public interface Style extends CssResource {
         String inviteHeader();

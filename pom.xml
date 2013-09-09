@@ -394,6 +394,12 @@
          </dependency>
 
          <dependency>
+             <groupId>org.exoplatform.ide</groupId>
+             <artifactId>codenvy-extension-android</artifactId>
+             <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-aws</artifactId>
             <version>${project.version}</version>
@@ -810,6 +816,7 @@
       <module>exo-ide-extension-samples</module>
       <module>exo-ide-extension-logreader</module>
       <module>exo-ide-extension-googleappengine</module>
+      <module>codenvy-extension-android</module>
 
       <module>exo-ide-client</module>
       <module>exo-ide-shell</module>

@@ -31,7 +31,9 @@ public enum ProjectType {
     SPRING("Spring"),
     MULTI_MODULE("Maven Multi-module"),
     DEFAULT("default"),
-    NODE_JS("nodejs");
+    NODE_JS("nodejs"),
+    ANDROID("Android"),
+    GOOGLE_MBS_ANDROID("google-mbs-client-android");
 
     private final String value;
 

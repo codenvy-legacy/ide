@@ -65,4 +65,5 @@
     <inherits name='org.exoplatform.ide.extension.aws.AWSExtension'/>
     <inherits name="com.codenvy.ide.collaboration.watcher.VfsWatcher"/>
     <inherits name="com.codenvy.ide.collaboration.chat.ChatExtension"/>
+    <inherits name='com.codenvy.ide.extension.android.AndroidExtension' />
 </module>

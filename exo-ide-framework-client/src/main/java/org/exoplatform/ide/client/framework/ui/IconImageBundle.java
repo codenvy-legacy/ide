@@ -124,4 +124,10 @@ public interface IconImageBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/client/bundled-images/projects/php_type.png")
     ImageResource phpType();
+
+    @Source("org/exoplatform/ide/client/bundled-images/projects/android.png")
+    ImageResource androidType();
+
+    @Source("org/exoplatform/ide/client/bundled-images/projects/android48x48.png")
+    ImageResource androidProject48();
 }
