@@ -42,9 +42,7 @@
             position: absolute;
             left: 0px;
             top: 26px;
-            width: 20px;
-            height: 20px;
-            overflow: hidden;
+			overflow: hidden;
         }
 
         .check {
@@ -54,7 +52,7 @@
 
         .userAvatarImage {
             position: absolute;
-            left: 22px;
+            left: 25px;
             top: 8px;
             width: 48px;
             height: 48px;

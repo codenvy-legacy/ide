@@ -197,7 +197,8 @@ public class GitHub {
     }
 
     public Collaborators getCollaborators(String user, String repository) throws IOException, ParsingResponseException, GitHubException {
-        final String url = "https://api.github.com/repos/" + user + '/' + repository + "/collaborators";
+        final String oauthToken = getToken(getUserId());
+        final String url = "https://api.github.com/repos/" + user + '/' + repository + "/collaborators?access_token=" + oauthToken;
         final String method = "GET";
         String response = doJsonRequest(url, method, 200);
         // It seems that collaborators response does not contains all required fields.
@@ -206,7 +207,7 @@ public class GitHub {
         final String userId = getUserId();
         final Collaborators myCollaborators = new CollaboratorsImpl();
         for (GitHubUserImpl collaborator : collaborators) {
-            response = doJsonRequest(collaborator.getUrl(), method, 200);
+            response = doJsonRequest(collaborator.getUrl() + "?access_token=" + oauthToken, method, 200);
             GitHubUserImpl gitHubUser = parseJsonResponse(response, GitHubUserImpl.class, null);
             String email = gitHubUser.getEmail();
             if (!(email == null || email.isEmpty() || email.equals(userId) || isAlreadyInvited(email))) {

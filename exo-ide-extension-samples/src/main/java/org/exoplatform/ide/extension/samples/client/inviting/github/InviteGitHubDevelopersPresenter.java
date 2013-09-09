@@ -254,7 +254,7 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
 
                                                                    @Override
                                                                    protected void onFailure(Throwable exception) {
-                                                                       // TODO Exception handling
+                                                                       IDE.fireEvent(new ExceptionThrownEvent(exception));
                                                                        /**
                                                                         * if (exception.getMessage().equals("Not Found")) { //This exception
                                                                         * must be ignored. } else { IDE.fireEvent(new
