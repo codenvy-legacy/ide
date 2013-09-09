@@ -239,6 +239,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
                 darkStyle = true;
                 generateSnippetForWebsites();
                 updateEmbedCodenowButton();
+                updateGitHubCodenowButton();
             }
         });
         
@@ -248,6 +249,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
                 darkStyle = false;
                 generateSnippetForWebsites();
                 updateEmbedCodenowButton();
+                updateGitHubCodenowButton();
             }
         });
     }
@@ -266,8 +268,8 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
             bindDisplay();
         }
         
-        updateEmbedCodenowButton();        
-        display.getGitHubURLField().setValue(gitHubPagesSnippet);
+        updateEmbedCodenowButton();
+        updateGitHubCodenowButton();
         display.getDirectSharingURLField().setValue(factoryURL);
     }
     
@@ -284,6 +286,10 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
             "");
         
         display.getWebsitesURLField().setValue(websitesSnippet);
+    }
+    
+    private void updateGitHubCodenowButton() {
+        display.getGitHubURLField().setValue(gitHubPagesSnippet);        
     }
 
     /** {@inheritDoc} */
@@ -387,7 +393,6 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         logFactoryCreated(UriUtils.fromString(factoryURL).asString());
         darkStyle = true;
         generateSnippetForWebsites();
-        gitHubPagesSnippet = "[![alt](" + SpinnetGenerator.getCodeNowGitHubImageURL() + ")](" + factoryURL + ")";
         openView();
     }
 
@@ -426,6 +431,8 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
             "src=\"" + jsURL + "\"" +
             "style=\"" + (darkStyle ? "dark" : "white") + "\" " +
             		" ></script>";
+        
+        gitHubPagesSnippet = "[![alt](" + SpinnetGenerator.getCodeNowGitHubImageURL(darkStyle) + ")](" + factoryURL + ")";
     }
 
 }

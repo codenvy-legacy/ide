@@ -83,6 +83,8 @@ public class SendMailView extends ViewImpl implements Display {
         messageField.getElement().setId(MESSAGE_FIELD_ID);
         sendButton.setId(SEND_BUTTON_ID);
         cancelButton.setId(CANCEL_BUTTON_ID);
+
+        sendButton.setEnabled(false);
     }
 
     /**
@@ -125,4 +127,11 @@ public class SendMailView extends ViewImpl implements Display {
         recipientField.focus();
     }
 
+    /**
+     * @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#enableSendButton(boolean)
+     */
+    @Override
+    public void enableSendButton(boolean enable) {
+        sendButton.setEnabled(enable);
+    }
 }

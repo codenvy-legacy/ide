@@ -22,8 +22,6 @@ import com.google.gwt.user.client.Window.Location;
 
 import org.exoplatform.ide.client.framework.util.Utils;
 
-import java.util.List;
-
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
@@ -46,33 +44,32 @@ public class SpinnetGenerator {
     public static String getCodeNowButtonJavascriptURL() {
         String jsURL;
         
-        if (Location.getHost().indexOf("localhost:8080") >= 0 ||
-            Location.getHost().indexOf("127.0.0.1:8080") >= 0 ||
-            Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
-
+        if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
             jsURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("ide/_app/factory/factory.js").buildString();
+                .setPath("ide/_app/factory/resources/factory.js").buildString();
         } else {
             jsURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("factory/factory.js").buildString();            
+                .setPath("factory/resources/factory.js").buildString();            
         }
         
         //jsURL = jsURL.substring(jsURL.indexOf("//"));
         return jsURL;
     }
-    
+
     /**
      * Returns URL of image which will be used as link for CodeNow button for GitHub Pages.
      * 
      * @return
      */
-    public static String getCodeNowGitHubImageURL() {
+    public static String getCodeNowGitHubImageURL(boolean darkStyle) {
+        String fileName = darkStyle ? "factory.png" : "factory-white.png";
+        
         if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
             return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("ide/" + Utils.getWorkspaceName() + "/_app/images/factory/factory.png").buildString();
+                .setPath("ide/" + Utils.getWorkspaceName() + "/_app/factory/resources/" + fileName).buildString();
         } else {
             return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("images/factory/factory.png").buildString();
+                .setPath("factory/resources/" + fileName).buildString();
         }
     }
     
