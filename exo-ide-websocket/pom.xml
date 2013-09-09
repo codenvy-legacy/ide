@@ -27,13 +27,13 @@
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-catalina</artifactId>
-            <version>7.0.32</version>
+            <version>${tomcat.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-coyote</artifactId>
-            <version>7.0.32</version>
+            <version>${tomcat.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

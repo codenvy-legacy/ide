@@ -32,6 +32,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -165,11 +166,17 @@ public class FactoryService {
             throws VirtualFileSystemException, IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         Item itemToUpdate = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
+        try {
+            Item item = vfs.getItemByPath(itemToUpdate.getPath() + "/.project", null , false, null);
+            vfs.delete(item.getId(), null);
+        }catch (ItemNotFoundException ignore){
+            // ignore
+        }
         if (projectType != null && !projectType.isEmpty()) {
             List<Property> props = new ArrayList<Property>();
             props.addAll(itemToUpdate.getProperties());
             props.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-            props.add(new PropertyImpl("vfs:projectType", projectType.toString()));
+            props.add(new PropertyImpl("vfs:projectType", projectType));
             props.add(new PropertyImpl("codenow", remoteUri));
             itemToUpdate = vfs.updateItem(itemToUpdate.getId(), props, null);
             if (ProjectType.GOOGLE_MBS_ANDROID.toString().equals(projectType)) {

@@ -24,6 +24,7 @@ import elemental.html.TableElement;
 import com.codenvy.ide.client.util.CssUtils;
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.client.util.SignalEvent;
+import com.codenvy.ide.client.util.UserAgent;
 import com.codenvy.ide.json.client.JsoArray;
 import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.code.autocomplete.AutocompleteBox;
@@ -277,7 +278,8 @@ public class AutocompleteUiController implements AutocompleteBox {
             return true;
         }
 
-        if (signal.type != SignalEvent.KeySignalType.NAVIGATION) {
+        //In Chrome OS KeySignalType == NOEFFECT
+        if (signal.type != SignalEvent.KeySignalType.NAVIGATION && !UserAgent.isCrOS()) {
             return false;
         }
 
