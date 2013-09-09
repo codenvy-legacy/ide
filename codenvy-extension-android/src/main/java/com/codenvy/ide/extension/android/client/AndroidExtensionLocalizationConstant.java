@@ -46,4 +46,8 @@ public interface AndroidExtensionLocalizationConstant extends com.google.gwt.i18
 
     @Key("not.android.project")
     String notAndroidProject();
+
+    @Key("tmp.ws.token")
+    String tokenForTmpWs();
+
 }

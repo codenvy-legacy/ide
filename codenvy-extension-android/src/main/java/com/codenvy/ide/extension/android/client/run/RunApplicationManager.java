@@ -91,50 +91,56 @@ public class RunApplicationManager implements RunApplicationHandler, ProjectOpen
     public void onProjectBuilt(ProjectBuiltEvent event) {
         IDE.removeHandler(ProjectBuiltEvent.TYPE, this);
         if (BuildStatus.Status.SUCCESSFUL == event.getBuildStatus().getStatus()) {
-            runApplication(event.getBuildStatus().getDownloadUrl());
+            final String apkUrl = event.getBuildStatus().getDownloadUrl();
+            IDE.fireEvent(new OutputEvent(AndroidExtension.LOCALIZATION.startingProjectMessage(currentProject.getName()), OutputMessage.Type.INFO));
+
+            if (IDE.currentWorkspace.isTemporary()){
+                runApplication(AndroidExtension.LOCALIZATION.tokenForTmpWs(), apkUrl);
+            } else {
+                Dialogs.getInstance().askForValue("Authentication", "ManyMo Oauth token:", "", new StringValueReceivedHandler() {
+                    @Override
+                    public void stringValueReceived(String token) {
+
+                        runApplication(token, apkUrl);
+                    }
+                }, true);
+            }
         } else {
             IDE.fireEvent(new OutputEvent(AndroidExtension.LOCALIZATION.buildApplicationFailed(), OutputMessage.Type.ERROR));
         }
     }
 
-    private void runApplication(final String apkUrl) {
-        IDE.fireEvent(
-                new OutputEvent(AndroidExtension.LOCALIZATION.startingProjectMessage(currentProject.getName()), OutputMessage.Type.INFO));
+    private void runApplication(final String token, final String apkUrl) {
+        StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
 
-        Dialogs.getInstance().askForValue("Authentication", "ManyMo Oauth token:", "", new StringValueReceivedHandler() {
-            @Override
-            public void stringValueReceived(String value) {
-                StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+        try {
+            AndroidExtensionService.getInstance()
+                                   .start(apkUrl, token, currentProject, new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                                       @Override
+                                       protected void onSuccess(StringBuilder result) {
+                                           JSONObject response = JSONParser.parseStrict(result.toString()).isObject();
+                                           String applicationUrl = response.get("applicationUrl").isString().stringValue();
 
-                try {
-                    AndroidExtensionService.getInstance()
-                                           .start(apkUrl, value, currentProject, new AsyncRequestCallback<StringBuilder>(unmarshaller) {
-                                               @Override
-                                               protected void onSuccess(StringBuilder result) {
-                                                   JSONObject response = JSONParser.parseStrict(result.toString()).isObject();
-                                                   String applicationUrl = response.get("applicationUrl").isString().stringValue();
+                                           IDE.fireEvent(new OutputEvent(
+                                                   AndroidExtension.LOCALIZATION.applicationStartedUrl(
+                                                           currentProject.getName(), applicationUrl), OutputMessage.Type.INFO));
+                                       }
 
-                                                   IDE.fireEvent(new OutputEvent(
-                                                           AndroidExtension.LOCALIZATION.applicationStartedUrl(
-                                                                   currentProject.getName(), applicationUrl), OutputMessage.Type.INFO));
-                                               }
-
-                                               @Override
-                                               protected void onFailure(Throwable exception) {
-                                                   String message =
-                                                           (exception.getMessage() != null && !exception.getMessage().isEmpty()) ?
-                                                           " : "
-                                                           + exception.getMessage() : "";
-                                                   IDE.fireEvent(new OutputEvent(
-                                                           AndroidExtension.LOCALIZATION.startApplicationFailed()
-                                                           + message, OutputMessage.Type.ERROR));
-                                               }
-                                           });
-                } catch (RequestException e) {
-                    IDE.fireEvent(new ExceptionThrownEvent(e));
-                }
-            }
-        }, true);
-
+                                       @Override
+                                       protected void onFailure(Throwable exception) {
+                                           String message =
+                                                   (exception.getMessage() != null && !exception.getMessage().isEmpty()) ?
+                                                   " : "
+                                                   + exception.getMessage() : "";
+                                           IDE.fireEvent(new OutputEvent(
+                                                   AndroidExtension.LOCALIZATION.startApplicationFailed()
+                                                   + message, OutputMessage.Type.ERROR));
+                                       }
+                                   });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
     }
+
+
 }
