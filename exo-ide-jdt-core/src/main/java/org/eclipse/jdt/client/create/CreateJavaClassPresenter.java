@@ -491,7 +491,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
                                     IDE.getInstance().closeView(display.asView().getId());
                                     //IDE.addHandler(EditorActiveFileChangedEvent.TYPE, CreateJavaClassPresenter.this);
                                     IDE.addHandler(TreeRefreshedEvent.TYPE, CreateJavaClassPresenter.this);
-                                    IDE.fireEvent(new RefreshBrowserEvent(_package, result));
+                                    IDE.fireEvent(new RefreshBrowserEvent(_package.getProject(), result));
 //                           result.setProject(project);
 //                           fileOpenedHandler = IDE.addHandler(EditorActiveFileChangedEvent.TYPE, CreateJavaClassPresenter.this);
 //                           IDE.fireEvent(new OpenFileEvent(result));

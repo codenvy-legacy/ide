@@ -210,7 +210,7 @@ public class CreateFilePresenter implements CreateNewFileHandler, ItemsSelectedH
                                                            protected void onSuccess(FileModel result) {
                                                                IDE.getInstance().closeView(display.asView().getId());
                                                                IDE.fireEvent(new EditorOpenFileEvent(result));
-                                                               IDE.fireEvent(new RefreshBrowserEvent(result.getParent(), result));
+                                                               IDE.fireEvent(new RefreshBrowserEvent(result.getProject(), result));
                                                            }
 
                                                            @Override
