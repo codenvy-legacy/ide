@@ -77,7 +77,7 @@ public class BuilderService {
                           @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException {
         VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
         final String buildID = builder.build(vfs, projectId, projectName, projectType);
-        final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(wsName, buildID);
+        final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(wsName, buildID);
         return Response.status(202).location(location).entity(location.toString()).build();
     }
 
@@ -108,7 +108,7 @@ public class BuilderService {
         // ContentStream pom = vfs.getContent(project.getPath() + "/pom.xml",null);
 
         final String buildID = builder.deploy(vfs, projectId, projectName, projectType);
-        final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(wsName, buildID);
+        final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(wsName, buildID);
         return Response.status(202).location(location).entity(location.toString()).build();
     }
 
@@ -133,7 +133,7 @@ public class BuilderService {
                                      @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException {
         VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
         final String buildID = builder.dependenciesList(vfs, projectId);
-        final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(wsName, buildID);
+        final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(wsName, buildID);
         return Response.status(202).location(location).entity(location.toString()).build();
     }
 
@@ -160,7 +160,7 @@ public class BuilderService {
                                      @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException {
         VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
         final String buildID = builder.dependenciesCopy(vfs, projectId, classifier);
-        final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(wsName, buildID);
+        final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(wsName, buildID);
         return Response.status(202).location(location).entity(location.toString()).build();
     }
 

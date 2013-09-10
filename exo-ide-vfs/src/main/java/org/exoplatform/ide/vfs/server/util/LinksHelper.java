@@ -45,7 +45,8 @@ public class LinksHelper {
         // This method is used extremely actively so it is imported to set size of map directly
         // and prevent unnecessary growth of map.
         final Map<String, Link> links = new HashMap<String, Link>(16, 1.0f);
-        final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class, "getFileSystem");
+        final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class).path(
+                VirtualFileSystemFactory.class, "getFileSystem");
 
         links.put(Link.REL_SELF, //
                   new LinkImpl(createURI(baseUriBuilder.clone(), wsName, "item", itemId), Link.REL_SELF, MediaType.APPLICATION_JSON));
@@ -116,7 +117,8 @@ public class LinksHelper {
                                                       String itemId,
                                                       boolean isRoot,
                                                       String parentId) {
-        final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class, "getFileSystem");
+        final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class).path(
+                VirtualFileSystemFactory.class, "getFileSystem");
         // This method is used extremely actively so it is imported to set size of map directly
         // and prevent unnecessary growth of map.
         final Map<String, Link> links = new HashMap<String, Link>(32, 1.0f);
@@ -131,7 +133,8 @@ public class LinksHelper {
                                                        String wsName,
                                                        String itemId,
                                                        String parentId) {
-        final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class, "getFileSystem");
+        final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class).path(
+                VirtualFileSystemFactory.class, "getFileSystem");
         // This method is used extremely actively so it is imported to set size of map directly
         // and prevent unnecessary growth of map.
         final Map<String, Link> links = new HashMap<String, Link>(16, 1.0f);
@@ -169,8 +172,9 @@ public class LinksHelper {
 
             links.put(
                     Link.REL_RENAME, //
-                    new LinkImpl(createURI(baseUriBuilder.clone(), wsName, "rename", id, "newname", "[newname]", "mediaType", "[mediaType]"),
-                                 Link.REL_RENAME, MediaType.APPLICATION_JSON));
+                    new LinkImpl(
+                            createURI(baseUriBuilder.clone(), wsName, "rename", id, "newname", "[newname]", "mediaType", "[mediaType]"),
+                            Link.REL_RENAME, MediaType.APPLICATION_JSON));
         }
 
         links.put(Link.REL_CHILDREN, //
@@ -205,7 +209,8 @@ public class LinksHelper {
 
     public static Map<String, Link> createUrlTemplates(URI baseUri, String wsName) {
         final Map<String, Link> templates = new HashMap<String, Link>(16, 1.0f);
-        final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class, "getFileSystem");
+        final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class).path(
+                VirtualFileSystemFactory.class, "getFileSystem");
 
         templates.put(Link.REL_ITEM,
                       new LinkImpl(createURI(baseUriBuilder.clone(), wsName, "item", "[id]"), Link.REL_ITEM, MediaType.APPLICATION_JSON));
