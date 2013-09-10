@@ -17,10 +17,13 @@
  */
 package com.codenvy.ide.ext.aws.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@DTO
 public interface Credentials {
     /** @return the access_key */
     public String getAccess_key();

@@ -191,7 +191,7 @@ public class DtoTemplate {
         builder.append(" * NOTICE:  All information contained herein is, and remains\n");
         builder.append(" * the property of Codenvy S.A. and its suppliers,\n");
         builder.append(" * if any.  The intellectual and technical concepts contained\n");
-        builder.append(" * herein are proprietary to Codenvy S.A.\n\n");
+        builder.append(" * herein are proprietary to Codenvy S.A.\n");
         builder.append(" * and its suppliers and may be covered by U.S. and Foreign Patents,\n");
         builder.append(" * patents in process, and are protected by trade secret or copyright law.\n");
         builder.append(" * Dissemination of this information or reproduction of this material\n");

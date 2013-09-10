@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Request to delete named tag.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: TagDeleteRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
+@DTO
 public interface TagDeleteRequest extends GitRequest {
     /** @return name of tag to delete */
     String getName();

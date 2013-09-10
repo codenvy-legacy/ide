@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Request to commit current state of index in new commit.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: CommitRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
+@DTO
 public interface CommitRequest extends GitRequest {
     /** @return commit message */
     String getMessage();

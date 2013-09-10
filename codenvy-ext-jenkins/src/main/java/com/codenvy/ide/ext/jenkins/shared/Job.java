@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.jenkins.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Build job info.
  *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Job.java Mar 15, 2012 3:14:27 PM azatsarynnyy $
  */
+@DTO
 public interface Job {
     /**
      * Get name of the job.

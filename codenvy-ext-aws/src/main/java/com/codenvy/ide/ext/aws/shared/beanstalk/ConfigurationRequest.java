@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.aws.shared.beanstalk;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Request for getting configuration of template or environment. Typically only <code>templateName</code> or
  * <code>environment</code> should be set but not both.
@@ -24,6 +26,7 @@ package com.codenvy.ide.ext.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@DTO
 public interface ConfigurationRequest {
     /**
      * Get name of application.

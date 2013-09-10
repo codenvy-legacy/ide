@@ -2,8 +2,8 @@
  * CODENVY CONFIDENTIAL
  * __________________
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
+ *  [2012] - [2013] Codenvy, S.A.
+ *  All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
@@ -15,18 +15,13 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.api.resources;
+package com.codenvy.ide.dto;
 
 /**
- * Stable routing types for all DTOs.
- * <p/>
- * NOTE: If you add a new DTO, ONLY add to the bottom of the list.
+ * Marker annotation, used to inform DTO generator, that particular interface should be used for generate DTO.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @version $Id: DTO.java Sep 10, 2013 5:13:18 PM azatsarynnyy $
  */
-public class RoutingTypes {
-
-    public static final int IDE_USER = 1;
-
-    public static final int UPDATE_USER_ATTRIBUTES = 2;
+public @interface DTO {
 }

@@ -27,11 +27,443 @@ public class DtoClientImpls {
 
   private  DtoClientImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "bb7277d9975e8bd4db7e8f077379a6290871270f";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "269a7fcf840c4acfe20a1b6c21462f306f9c800d";
+
+
+  public static class CloudfoundryApplicationStatisticsImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics {
+    protected CloudfoundryApplicationStatisticsImpl() {}
+
+    @Override
+    public final native java.lang.String getUptime() /*-{
+      return this["uptime"];
+    }-*/;
+
+    public final native CloudfoundryApplicationStatisticsImpl setUptime(java.lang.String uptime) /*-{
+      this["uptime"] = uptime;
+      return this;
+    }-*/;
+
+    public final native boolean hasUptime() /*-{
+      return this.hasOwnProperty("uptime");
+    }-*/;
+
+    @Override
+    public final native int getCpuCores() /*-{
+      return this["cpuCores"];
+    }-*/;
+
+    public final native CloudfoundryApplicationStatisticsImpl setCpuCores(int cpuCores) /*-{
+      this["cpuCores"] = cpuCores;
+      return this;
+    }-*/;
+
+    public final native boolean hasCpuCores() /*-{
+      return this.hasOwnProperty("cpuCores");
+    }-*/;
+
+    @Override
+    public final native double getCpu() /*-{
+      return this["cpu"];
+    }-*/;
+
+    public final native CloudfoundryApplicationStatisticsImpl setCpu(double cpu) /*-{
+      this["cpu"] = cpu;
+      return this;
+    }-*/;
+
+    public final native boolean hasCpu() /*-{
+      return this.hasOwnProperty("cpu");
+    }-*/;
+
+    @Override
+    public final native com.codenvy.ide.json.JsonArray<java.lang.String> getUris() /*-{
+      return this["uris"];
+    }-*/;
+
+    public final native CloudfoundryApplicationStatisticsImpl setUris(com.codenvy.ide.json.JsonArray<java.lang.String> uris) /*-{
+      this["uris"] = uris;
+      return this;
+    }-*/;
+
+    public final native boolean hasUris() /*-{
+      return this.hasOwnProperty("uris");
+    }-*/;
+
+    @Override
+    public final native int getMem() /*-{
+      return this["mem"];
+    }-*/;
+
+    public final native CloudfoundryApplicationStatisticsImpl setMem(int mem) /*-{
+      this["mem"] = mem;
+      return this;
+    }-*/;
+
+    public final native boolean hasMem() /*-{
+      return this.hasOwnProperty("mem");
+    }-*/;
+
+    @Override
+    public final native int getDisk() /*-{
+      return this["disk"];
+    }-*/;
+
+    public final native CloudfoundryApplicationStatisticsImpl setDisk(int disk) /*-{
+      this["disk"] = disk;
+      return this;
+    }-*/;
+
+    public final native boolean hasDisk() /*-{
+      return this.hasOwnProperty("disk");
+    }-*/;
+
+    @Override
+    public final native int getMemLimit() /*-{
+      return this["memLimit"];
+    }-*/;
+
+    public final native CloudfoundryApplicationStatisticsImpl setMemLimit(int memLimit) /*-{
+      this["memLimit"] = memLimit;
+      return this;
+    }-*/;
+
+    public final native boolean hasMemLimit() /*-{
+      return this.hasOwnProperty("memLimit");
+    }-*/;
+
+    @Override
+    public final native int getDiskLimit() /*-{
+      return this["diskLimit"];
+    }-*/;
+
+    public final native CloudfoundryApplicationStatisticsImpl setDiskLimit(int diskLimit) /*-{
+      this["diskLimit"] = diskLimit;
+      return this;
+    }-*/;
+
+    public final native boolean hasDiskLimit() /*-{
+      return this.hasOwnProperty("diskLimit");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getName() /*-{
+      return this["name"];
+    }-*/;
+
+    public final native CloudfoundryApplicationStatisticsImpl setName(java.lang.String name) /*-{
+      this["name"] = name;
+      return this;
+    }-*/;
+
+    public final native boolean hasName() /*-{
+      return this.hasOwnProperty("name");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getState() /*-{
+      return this["state"];
+    }-*/;
+
+    public final native CloudfoundryApplicationStatisticsImpl setState(java.lang.String state) /*-{
+      this["state"] = state;
+      return this;
+    }-*/;
+
+    public final native boolean hasState() /*-{
+      return this.hasOwnProperty("state");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getHost() /*-{
+      return this["host"];
+    }-*/;
+
+    public final native CloudfoundryApplicationStatisticsImpl setHost(java.lang.String host) /*-{
+      this["host"] = host;
+      return this;
+    }-*/;
+
+    public final native boolean hasHost() /*-{
+      return this.hasOwnProperty("host");
+    }-*/;
+
+    @Override
+    public final native int getPort() /*-{
+      return this["port"];
+    }-*/;
+
+    public final native CloudfoundryApplicationStatisticsImpl setPort(int port) /*-{
+      this["port"] = port;
+      return this;
+    }-*/;
+
+    public final native boolean hasPort() /*-{
+      return this.hasOwnProperty("port");
+    }-*/;
+
+    public static native CloudfoundryApplicationStatisticsImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class SystemInfoImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo {
+    protected SystemInfoImpl() {}
+
+    @Override
+    public final native com.codenvy.ide.extension.cloudfoundry.shared.SystemResources getUsage() /*-{
+      return this["usage"];
+    }-*/;
+
+    public final native SystemInfoImpl setUsage(com.codenvy.ide.extension.cloudfoundry.shared.SystemResources usage) /*-{
+      this["usage"] = usage;
+      return this;
+    }-*/;
+
+    public final native boolean hasUsage() /*-{
+      return this.hasOwnProperty("usage");
+    }-*/;
+
+    @Override
+    public final native com.codenvy.ide.json.JsonStringMap<com.codenvy.ide.extension.cloudfoundry.shared.Framework> getFrameworks() /*-{
+      return this["frameworks"];
+    }-*/;
+
+    public final native SystemInfoImpl setFrameworks(com.codenvy.ide.json.JsonStringMap<com.codenvy.ide.extension.cloudfoundry.shared.Framework> frameworks) /*-{
+      this["frameworks"] = frameworks;
+      return this;
+    }-*/;
+
+    public final native boolean hasFrameworks() /*-{
+      return this.hasOwnProperty("frameworks");
+    }-*/;
+
+    @Override
+    public final native com.codenvy.ide.extension.cloudfoundry.shared.SystemResources getLimits() /*-{
+      return this["limits"];
+    }-*/;
+
+    public final native SystemInfoImpl setLimits(com.codenvy.ide.extension.cloudfoundry.shared.SystemResources limits) /*-{
+      this["limits"] = limits;
+      return this;
+    }-*/;
+
+    public final native boolean hasLimits() /*-{
+      return this.hasOwnProperty("limits");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getSupport() /*-{
+      return this["support"];
+    }-*/;
+
+    public final native SystemInfoImpl setSupport(java.lang.String support) /*-{
+      this["support"] = support;
+      return this;
+    }-*/;
+
+    public final native boolean hasSupport() /*-{
+      return this.hasOwnProperty("support");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getName() /*-{
+      return this["name"];
+    }-*/;
+
+    public final native SystemInfoImpl setName(java.lang.String name) /*-{
+      this["name"] = name;
+      return this;
+    }-*/;
+
+    public final native boolean hasName() /*-{
+      return this.hasOwnProperty("name");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getDescription() /*-{
+      return this["description"];
+    }-*/;
+
+    public final native SystemInfoImpl setDescription(java.lang.String description) /*-{
+      this["description"] = description;
+      return this;
+    }-*/;
+
+    public final native boolean hasDescription() /*-{
+      return this.hasOwnProperty("description");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getVersion() /*-{
+      return this["version"];
+    }-*/;
+
+    public final native SystemInfoImpl setVersion(java.lang.String version) /*-{
+      this["version"] = version;
+      return this;
+    }-*/;
+
+    public final native boolean hasVersion() /*-{
+      return this.hasOwnProperty("version");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getUser() /*-{
+      return this["user"];
+    }-*/;
+
+    public final native SystemInfoImpl setUser(java.lang.String user) /*-{
+      this["user"] = user;
+      return this;
+    }-*/;
+
+    public final native boolean hasUser() /*-{
+      return this.hasOwnProperty("user");
+    }-*/;
+
+    public static native SystemInfoImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class SystemServiceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.SystemService {
+    protected SystemServiceImpl() {}
+
+    @Override
+    public final native java.lang.String getVendor() /*-{
+      return this["vendor"];
+    }-*/;
+
+    public final native SystemServiceImpl setVendor(java.lang.String vendor) /*-{
+      this["vendor"] = vendor;
+      return this;
+    }-*/;
+
+    public final native boolean hasVendor() /*-{
+      return this.hasOwnProperty("vendor");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getType() /*-{
+      return this["type"];
+    }-*/;
+
+    public final native SystemServiceImpl setType(java.lang.String type) /*-{
+      this["type"] = type;
+      return this;
+    }-*/;
+
+    public final native boolean hasType() /*-{
+      return this.hasOwnProperty("type");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getDescription() /*-{
+      return this["description"];
+    }-*/;
+
+    public final native SystemServiceImpl setDescription(java.lang.String description) /*-{
+      this["description"] = description;
+      return this;
+    }-*/;
+
+    public final native boolean hasDescription() /*-{
+      return this.hasOwnProperty("description");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getVersion() /*-{
+      return this["version"];
+    }-*/;
+
+    public final native SystemServiceImpl setVersion(java.lang.String version) /*-{
+      this["version"] = version;
+      return this;
+    }-*/;
+
+    public final native boolean hasVersion() /*-{
+      return this.hasOwnProperty("version");
+    }-*/;
+
+    public static native SystemServiceImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class CloudFoundryServicesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices {
+    protected CloudFoundryServicesImpl() {}
+
+    @Override
+    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService> getProvisioned() /*-{
+      return this["provisioned"];
+    }-*/;
+
+    public final native CloudFoundryServicesImpl setProvisioned(com.codenvy.ide.json.JsonArray<com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService> provisioned) /*-{
+      this["provisioned"] = provisioned;
+      return this;
+    }-*/;
+
+    public final native boolean hasProvisioned() /*-{
+      return this.hasOwnProperty("provisioned");
+    }-*/;
+
+    @Override
+    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.extension.cloudfoundry.shared.SystemService> getSystem() /*-{
+      return this["system"];
+    }-*/;
+
+    public final native CloudFoundryServicesImpl setSystem(com.codenvy.ide.json.JsonArray<com.codenvy.ide.extension.cloudfoundry.shared.SystemService> system) /*-{
+      this["system"] = system;
+      return this;
+    }-*/;
+
+    public final native boolean hasSystem() /*-{
+      return this.hasOwnProperty("system");
+    }-*/;
+
+    public static native CloudFoundryServicesImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
 
 
   public static class ApplicationMetaInfoImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.ApplicationMetaInfo {
     protected ApplicationMetaInfoImpl() {}
+
+    @Override
+    public final native double getCreated() /*-{
+      return this["created"];
+    }-*/;
+
+    public final native ApplicationMetaInfoImpl setCreated(double created) /*-{
+      this["created"] = created;
+      return this;
+    }-*/;
+
+    public final native boolean hasCreated() /*-{
+      return this.hasOwnProperty("created");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getConsole() /*-{
+      return this["console"];
+    }-*/;
+
+    public final native ApplicationMetaInfoImpl setConsole(java.lang.String console) /*-{
+      this["console"] = console;
+      return this;
+    }-*/;
+
+    public final native boolean hasConsole() /*-{
+      return this.hasOwnProperty("console");
+    }-*/;
 
     @Override
     public final native java.lang.String getDebug() /*-{
@@ -61,34 +493,6 @@ public class DtoClientImpls {
       return this.hasOwnProperty("version");
     }-*/;
 
-    @Override
-    public final native java.lang.String getConsole() /*-{
-      return this["console"];
-    }-*/;
-
-    public final native ApplicationMetaInfoImpl setConsole(java.lang.String console) /*-{
-      this["console"] = console;
-      return this;
-    }-*/;
-
-    public final native boolean hasConsole() /*-{
-      return this.hasOwnProperty("console");
-    }-*/;
-
-    @Override
-    public final native double getCreated() /*-{
-      return this["created"];
-    }-*/;
-
-    public final native ApplicationMetaInfoImpl setCreated(double created) /*-{
-      this["created"] = created;
-      return this;
-    }-*/;
-
-    public final native boolean hasCreated() /*-{
-      return this.hasOwnProperty("created");
-    }-*/;
-
     public static native ApplicationMetaInfoImpl make() /*-{
       return {
 
@@ -98,6 +502,76 @@ public class DtoClientImpls {
 
   public static class CloudFoundryApplicationImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication {
     protected CloudFoundryApplicationImpl() {}
+
+    @Override
+    public final native int getInstances() /*-{
+      return this["instances"];
+    }-*/;
+
+    public final native CloudFoundryApplicationImpl setInstances(int instances) /*-{
+      this["instances"] = instances;
+      return this;
+    }-*/;
+
+    public final native boolean hasInstances() /*-{
+      return this.hasOwnProperty("instances");
+    }-*/;
+
+    @Override
+    public final native com.codenvy.ide.json.JsonArray<java.lang.String> getUris() /*-{
+      return this["uris"];
+    }-*/;
+
+    public final native CloudFoundryApplicationImpl setUris(com.codenvy.ide.json.JsonArray<java.lang.String> uris) /*-{
+      this["uris"] = uris;
+      return this;
+    }-*/;
+
+    public final native boolean hasUris() /*-{
+      return this.hasOwnProperty("uris");
+    }-*/;
+
+    @Override
+    public final native int getRunningInstances() /*-{
+      return this["runningInstances"];
+    }-*/;
+
+    public final native CloudFoundryApplicationImpl setRunningInstances(int runningInstances) /*-{
+      this["runningInstances"] = runningInstances;
+      return this;
+    }-*/;
+
+    public final native boolean hasRunningInstances() /*-{
+      return this.hasOwnProperty("runningInstances");
+    }-*/;
+
+    @Override
+    public final native com.codenvy.ide.extension.cloudfoundry.shared.Staging getStaging() /*-{
+      return this["staging"];
+    }-*/;
+
+    public final native CloudFoundryApplicationImpl setStaging(com.codenvy.ide.extension.cloudfoundry.shared.Staging staging) /*-{
+      this["staging"] = staging;
+      return this;
+    }-*/;
+
+    public final native boolean hasStaging() /*-{
+      return this.hasOwnProperty("staging");
+    }-*/;
+
+    @Override
+    public final native com.codenvy.ide.extension.cloudfoundry.shared.ApplicationMetaInfo getMeta() /*-{
+      return this["meta"];
+    }-*/;
+
+    public final native CloudFoundryApplicationImpl setMeta(com.codenvy.ide.extension.cloudfoundry.shared.ApplicationMetaInfo meta) /*-{
+      this["meta"] = meta;
+      return this;
+    }-*/;
+
+    public final native boolean hasMeta() /*-{
+      return this.hasOwnProperty("meta");
+    }-*/;
 
     @Override
     public final native java.lang.String getName() /*-{
@@ -197,76 +671,6 @@ public class DtoClientImpls {
       return this.hasOwnProperty("env");
     }-*/;
 
-    @Override
-    public final native com.codenvy.ide.json.JsonArray<java.lang.String> getUris() /*-{
-      return this["uris"];
-    }-*/;
-
-    public final native CloudFoundryApplicationImpl setUris(com.codenvy.ide.json.JsonArray<java.lang.String> uris) /*-{
-      this["uris"] = uris;
-      return this;
-    }-*/;
-
-    public final native boolean hasUris() /*-{
-      return this.hasOwnProperty("uris");
-    }-*/;
-
-    @Override
-    public final native int getInstances() /*-{
-      return this["instances"];
-    }-*/;
-
-    public final native CloudFoundryApplicationImpl setInstances(int instances) /*-{
-      this["instances"] = instances;
-      return this;
-    }-*/;
-
-    public final native boolean hasInstances() /*-{
-      return this.hasOwnProperty("instances");
-    }-*/;
-
-    @Override
-    public final native int getRunningInstances() /*-{
-      return this["runningInstances"];
-    }-*/;
-
-    public final native CloudFoundryApplicationImpl setRunningInstances(int runningInstances) /*-{
-      this["runningInstances"] = runningInstances;
-      return this;
-    }-*/;
-
-    public final native boolean hasRunningInstances() /*-{
-      return this.hasOwnProperty("runningInstances");
-    }-*/;
-
-    @Override
-    public final native com.codenvy.ide.extension.cloudfoundry.shared.Staging getStaging() /*-{
-      return this["staging"];
-    }-*/;
-
-    public final native CloudFoundryApplicationImpl setStaging(com.codenvy.ide.extension.cloudfoundry.shared.Staging staging) /*-{
-      this["staging"] = staging;
-      return this;
-    }-*/;
-
-    public final native boolean hasStaging() /*-{
-      return this.hasOwnProperty("staging");
-    }-*/;
-
-    @Override
-    public final native com.codenvy.ide.extension.cloudfoundry.shared.ApplicationMetaInfo getMeta() /*-{
-      return this["meta"];
-    }-*/;
-
-    public final native CloudFoundryApplicationImpl setMeta(com.codenvy.ide.extension.cloudfoundry.shared.ApplicationMetaInfo meta) /*-{
-      this["meta"] = meta;
-      return this;
-    }-*/;
-
-    public final native boolean hasMeta() /*-{
-      return this.hasOwnProperty("meta");
-    }-*/;
-
     public static native CloudFoundryApplicationImpl make() /*-{
       return {
 
@@ -274,91 +678,119 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CloudFoundryApplicationResourcesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplicationResources {
-    protected CloudFoundryApplicationResourcesImpl() {}
+  public static class StagingImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.Staging {
+    protected StagingImpl() {}
 
     @Override
-    public final native int getMemory() /*-{
-      return this["memory"];
+    public final native java.lang.String getStack() /*-{
+      return this["stack"];
     }-*/;
 
-    public final native CloudFoundryApplicationResourcesImpl setMemory(int memory) /*-{
-      this["memory"] = memory;
+    public final native StagingImpl setStack(java.lang.String stack) /*-{
+      this["stack"] = stack;
       return this;
     }-*/;
 
-    public final native boolean hasMemory() /*-{
-      return this.hasOwnProperty("memory");
+    public final native boolean hasStack() /*-{
+      return this.hasOwnProperty("stack");
     }-*/;
 
     @Override
-    public final native int getDisk() /*-{
-      return this["disk"];
+    public final native java.lang.String getModel() /*-{
+      return this["model"];
     }-*/;
 
-    public final native CloudFoundryApplicationResourcesImpl setDisk(int disk) /*-{
-      this["disk"] = disk;
+    public final native StagingImpl setModel(java.lang.String model) /*-{
+      this["model"] = model;
       return this;
     }-*/;
 
-    public final native boolean hasDisk() /*-{
-      return this.hasOwnProperty("disk");
+    public final native boolean hasModel() /*-{
+      return this.hasOwnProperty("model");
     }-*/;
 
-    public static native CloudFoundryApplicationResourcesImpl make() /*-{
+    public static native StagingImpl make() /*-{
       return {
 
       };
     }-*/;  }
 
 
-  public static class CloudFoundryServicesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices {
-    protected CloudFoundryServicesImpl() {}
+  public static class InstanceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.Instance {
+    protected InstanceImpl() {}
 
     @Override
-    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.extension.cloudfoundry.shared.SystemService> getSystem() /*-{
-      return this["system"];
+    public final native int getDebugPort() /*-{
+      return this["debugPort"];
     }-*/;
 
-    public final native CloudFoundryServicesImpl setSystem(com.codenvy.ide.json.JsonArray<com.codenvy.ide.extension.cloudfoundry.shared.SystemService> system) /*-{
-      this["system"] = system;
+    public final native InstanceImpl setDebugPort(int debugPort) /*-{
+      this["debugPort"] = debugPort;
       return this;
     }-*/;
 
-    public final native boolean hasSystem() /*-{
-      return this.hasOwnProperty("system");
+    public final native boolean hasDebugPort() /*-{
+      return this.hasOwnProperty("debugPort");
     }-*/;
 
     @Override
-    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService> getProvisioned() /*-{
-      return this["provisioned"];
+    public final native java.lang.String getDebugHost() /*-{
+      return this["debugHost"];
     }-*/;
 
-    public final native CloudFoundryServicesImpl setProvisioned(com.codenvy.ide.json.JsonArray<com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService> provisioned) /*-{
-      this["provisioned"] = provisioned;
+    public final native InstanceImpl setDebugHost(java.lang.String debugHost) /*-{
+      this["debugHost"] = debugHost;
       return this;
     }-*/;
 
-    public final native boolean hasProvisioned() /*-{
-      return this.hasOwnProperty("provisioned");
+    public final native boolean hasDebugHost() /*-{
+      return this.hasOwnProperty("debugHost");
     }-*/;
 
-    public static native CloudFoundryServicesImpl make() /*-{
+    @Override
+    public final native java.lang.String getConsoleHost() /*-{
+      return this["consoleHost"];
+    }-*/;
+
+    public final native InstanceImpl setConsoleHost(java.lang.String consoleHost) /*-{
+      this["consoleHost"] = consoleHost;
+      return this;
+    }-*/;
+
+    public final native boolean hasConsoleHost() /*-{
+      return this.hasOwnProperty("consoleHost");
+    }-*/;
+
+    @Override
+    public final native int getConsolePort() /*-{
+      return this["consolePort"];
+    }-*/;
+
+    public final native InstanceImpl setConsolePort(int consolePort) /*-{
+      this["consolePort"] = consolePort;
+      return this;
+    }-*/;
+
+    public final native boolean hasConsolePort() /*-{
+      return this.hasOwnProperty("consolePort");
+    }-*/;
+
+    public static native InstanceImpl make() /*-{
       return {
 
       };
     }-*/;  }
 
 
-  public static class CloudfoundryApplicationStatisticsImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics {
-    protected CloudfoundryApplicationStatisticsImpl() {}
+  public static class RuntimeImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.Runtime {
+    protected RuntimeImpl() {}
 
     @Override
     public final native java.lang.String getName() /*-{
       return this["name"];
     }-*/;
 
-    public final native CloudfoundryApplicationStatisticsImpl setName(java.lang.String name) /*-{
+    public final native RuntimeImpl setName(java.lang.String name) /*-{
       this["name"] = name;
       return this;
     }-*/;
@@ -368,160 +800,34 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String getState() /*-{
-      return this["state"];
+    public final native java.lang.String getDescription() /*-{
+      return this["description"];
     }-*/;
 
-    public final native CloudfoundryApplicationStatisticsImpl setState(java.lang.String state) /*-{
-      this["state"] = state;
+    public final native RuntimeImpl setDescription(java.lang.String description) /*-{
+      this["description"] = description;
       return this;
     }-*/;
 
-    public final native boolean hasState() /*-{
-      return this.hasOwnProperty("state");
+    public final native boolean hasDescription() /*-{
+      return this.hasOwnProperty("description");
     }-*/;
 
     @Override
-    public final native java.lang.String getHost() /*-{
-      return this["host"];
+    public final native java.lang.String getVersion() /*-{
+      return this["version"];
     }-*/;
 
-    public final native CloudfoundryApplicationStatisticsImpl setHost(java.lang.String host) /*-{
-      this["host"] = host;
+    public final native RuntimeImpl setVersion(java.lang.String version) /*-{
+      this["version"] = version;
       return this;
     }-*/;
 
-    public final native boolean hasHost() /*-{
-      return this.hasOwnProperty("host");
+    public final native boolean hasVersion() /*-{
+      return this.hasOwnProperty("version");
     }-*/;
 
-    @Override
-    public final native int getPort() /*-{
-      return this["port"];
-    }-*/;
-
-    public final native CloudfoundryApplicationStatisticsImpl setPort(int port) /*-{
-      this["port"] = port;
-      return this;
-    }-*/;
-
-    public final native boolean hasPort() /*-{
-      return this.hasOwnProperty("port");
-    }-*/;
-
-    @Override
-    public final native com.codenvy.ide.json.JsonArray<java.lang.String> getUris() /*-{
-      return this["uris"];
-    }-*/;
-
-    public final native CloudfoundryApplicationStatisticsImpl setUris(com.codenvy.ide.json.JsonArray<java.lang.String> uris) /*-{
-      this["uris"] = uris;
-      return this;
-    }-*/;
-
-    public final native boolean hasUris() /*-{
-      return this.hasOwnProperty("uris");
-    }-*/;
-
-    @Override
-    public final native int getDisk() /*-{
-      return this["disk"];
-    }-*/;
-
-    public final native CloudfoundryApplicationStatisticsImpl setDisk(int disk) /*-{
-      this["disk"] = disk;
-      return this;
-    }-*/;
-
-    public final native boolean hasDisk() /*-{
-      return this.hasOwnProperty("disk");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getUptime() /*-{
-      return this["uptime"];
-    }-*/;
-
-    public final native CloudfoundryApplicationStatisticsImpl setUptime(java.lang.String uptime) /*-{
-      this["uptime"] = uptime;
-      return this;
-    }-*/;
-
-    public final native boolean hasUptime() /*-{
-      return this.hasOwnProperty("uptime");
-    }-*/;
-
-    @Override
-    public final native int getCpuCores() /*-{
-      return this["cpuCores"];
-    }-*/;
-
-    public final native CloudfoundryApplicationStatisticsImpl setCpuCores(int cpuCores) /*-{
-      this["cpuCores"] = cpuCores;
-      return this;
-    }-*/;
-
-    public final native boolean hasCpuCores() /*-{
-      return this.hasOwnProperty("cpuCores");
-    }-*/;
-
-    @Override
-    public final native double getCpu() /*-{
-      return this["cpu"];
-    }-*/;
-
-    public final native CloudfoundryApplicationStatisticsImpl setCpu(double cpu) /*-{
-      this["cpu"] = cpu;
-      return this;
-    }-*/;
-
-    public final native boolean hasCpu() /*-{
-      return this.hasOwnProperty("cpu");
-    }-*/;
-
-    @Override
-    public final native int getMem() /*-{
-      return this["mem"];
-    }-*/;
-
-    public final native CloudfoundryApplicationStatisticsImpl setMem(int mem) /*-{
-      this["mem"] = mem;
-      return this;
-    }-*/;
-
-    public final native boolean hasMem() /*-{
-      return this.hasOwnProperty("mem");
-    }-*/;
-
-    @Override
-    public final native int getMemLimit() /*-{
-      return this["memLimit"];
-    }-*/;
-
-    public final native CloudfoundryApplicationStatisticsImpl setMemLimit(int memLimit) /*-{
-      this["memLimit"] = memLimit;
-      return this;
-    }-*/;
-
-    public final native boolean hasMemLimit() /*-{
-      return this.hasOwnProperty("memLimit");
-    }-*/;
-
-    @Override
-    public final native int getDiskLimit() /*-{
-      return this["diskLimit"];
-    }-*/;
-
-    public final native CloudfoundryApplicationStatisticsImpl setDiskLimit(int diskLimit) /*-{
-      this["diskLimit"] = diskLimit;
-      return this;
-    }-*/;
-
-    public final native boolean hasDiskLimit() /*-{
-      return this.hasOwnProperty("diskLimit");
-    }-*/;
-
-    public static native CloudfoundryApplicationStatisticsImpl make() /*-{
+    public static native RuntimeImpl make() /*-{
       return {
 
       };
@@ -530,62 +836,6 @@ public class DtoClientImpls {
 
   public static class CreateApplicationRequestImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CreateApplicationRequest {
     protected CreateApplicationRequestImpl() {}
-
-    @Override
-    public final native java.lang.String getName() /*-{
-      return this["name"];
-    }-*/;
-
-    public final native CreateApplicationRequestImpl setName(java.lang.String name) /*-{
-      this["name"] = name;
-      return this;
-    }-*/;
-
-    public final native boolean hasName() /*-{
-      return this.hasOwnProperty("name");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getType() /*-{
-      return this["type"];
-    }-*/;
-
-    public final native CreateApplicationRequestImpl setType(java.lang.String type) /*-{
-      this["type"] = type;
-      return this;
-    }-*/;
-
-    public final native boolean hasType() /*-{
-      return this.hasOwnProperty("type");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getUrl() /*-{
-      return this["url"];
-    }-*/;
-
-    public final native CreateApplicationRequestImpl setUrl(java.lang.String url) /*-{
-      this["url"] = url;
-      return this;
-    }-*/;
-
-    public final native boolean hasUrl() /*-{
-      return this.hasOwnProperty("url");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getServer() /*-{
-      return this["server"];
-    }-*/;
-
-    public final native CreateApplicationRequestImpl setServer(java.lang.String server) /*-{
-      this["server"] = server;
-      return this;
-    }-*/;
-
-    public final native boolean hasServer() /*-{
-      return this.hasOwnProperty("server");
-    }-*/;
 
     @Override
     public final native int getInstances() /*-{
@@ -599,20 +849,6 @@ public class DtoClientImpls {
 
     public final native boolean hasInstances() /*-{
       return this.hasOwnProperty("instances");
-    }-*/;
-
-    @Override
-    public final native int getMemory() /*-{
-      return this["memory"];
-    }-*/;
-
-    public final native CreateApplicationRequestImpl setMemory(int memory) /*-{
-      this["memory"] = memory;
-      return this;
-    }-*/;
-
-    public final native boolean hasMemory() /*-{
-      return this.hasOwnProperty("memory");
     }-*/;
 
     @Override
@@ -685,6 +921,76 @@ public class DtoClientImpls {
       return this.hasOwnProperty("paasprovider");
     }-*/;
 
+    @Override
+    public final native int getMemory() /*-{
+      return this["memory"];
+    }-*/;
+
+    public final native CreateApplicationRequestImpl setMemory(int memory) /*-{
+      this["memory"] = memory;
+      return this;
+    }-*/;
+
+    public final native boolean hasMemory() /*-{
+      return this.hasOwnProperty("memory");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getName() /*-{
+      return this["name"];
+    }-*/;
+
+    public final native CreateApplicationRequestImpl setName(java.lang.String name) /*-{
+      this["name"] = name;
+      return this;
+    }-*/;
+
+    public final native boolean hasName() /*-{
+      return this.hasOwnProperty("name");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getType() /*-{
+      return this["type"];
+    }-*/;
+
+    public final native CreateApplicationRequestImpl setType(java.lang.String type) /*-{
+      this["type"] = type;
+      return this;
+    }-*/;
+
+    public final native boolean hasType() /*-{
+      return this.hasOwnProperty("type");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getUrl() /*-{
+      return this["url"];
+    }-*/;
+
+    public final native CreateApplicationRequestImpl setUrl(java.lang.String url) /*-{
+      this["url"] = url;
+      return this;
+    }-*/;
+
+    public final native boolean hasUrl() /*-{
+      return this.hasOwnProperty("url");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getServer() /*-{
+      return this["server"];
+    }-*/;
+
+    public final native CreateApplicationRequestImpl setServer(java.lang.String server) /*-{
+      this["server"] = server;
+      return this;
+    }-*/;
+
+    public final native boolean hasServer() /*-{
+      return this.hasOwnProperty("server");
+    }-*/;
+
     public static native CreateApplicationRequestImpl make() /*-{
       return {
 
@@ -748,6 +1054,34 @@ public class DtoClientImpls {
     protected FrameworkImpl() {}
 
     @Override
+    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.extension.cloudfoundry.shared.Runtime> getRuntimes() /*-{
+      return this["runtimes"];
+    }-*/;
+
+    public final native FrameworkImpl setRuntimes(com.codenvy.ide.json.JsonArray<com.codenvy.ide.extension.cloudfoundry.shared.Runtime> runtimes) /*-{
+      this["runtimes"] = runtimes;
+      return this;
+    }-*/;
+
+    public final native boolean hasRuntimes() /*-{
+      return this.hasOwnProperty("runtimes");
+    }-*/;
+
+    @Override
+    public final native int getMemory() /*-{
+      return this["memory"];
+    }-*/;
+
+    public final native FrameworkImpl setMemory(int memory) /*-{
+      this["memory"] = memory;
+      return this;
+    }-*/;
+
+    public final native boolean hasMemory() /*-{
+      return this.hasOwnProperty("memory");
+    }-*/;
+
+    @Override
     public final native java.lang.String getName() /*-{
       return this["name"];
     }-*/;
@@ -789,12 +1123,36 @@ public class DtoClientImpls {
       return this.hasOwnProperty("description");
     }-*/;
 
+    public static native FrameworkImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class SystemResourcesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.SystemResources {
+    protected SystemResourcesImpl() {}
+
+    @Override
+    public final native int getApps() /*-{
+      return this["apps"];
+    }-*/;
+
+    public final native SystemResourcesImpl setApps(int apps) /*-{
+      this["apps"] = apps;
+      return this;
+    }-*/;
+
+    public final native boolean hasApps() /*-{
+      return this.hasOwnProperty("apps");
+    }-*/;
+
     @Override
     public final native int getMemory() /*-{
       return this["memory"];
     }-*/;
 
-    public final native FrameworkImpl setMemory(int memory) /*-{
+    public final native SystemResourcesImpl setMemory(int memory) /*-{
       this["memory"] = memory;
       return this;
     }-*/;
@@ -804,86 +1162,58 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.extension.cloudfoundry.shared.Runtime> getRuntimes() /*-{
-      return this["runtimes"];
+    public final native int getServices() /*-{
+      return this["services"];
     }-*/;
 
-    public final native FrameworkImpl setRuntimes(com.codenvy.ide.json.JsonArray<com.codenvy.ide.extension.cloudfoundry.shared.Runtime> runtimes) /*-{
-      this["runtimes"] = runtimes;
+    public final native SystemResourcesImpl setServices(int services) /*-{
+      this["services"] = services;
       return this;
     }-*/;
 
-    public final native boolean hasRuntimes() /*-{
-      return this.hasOwnProperty("runtimes");
+    public final native boolean hasServices() /*-{
+      return this.hasOwnProperty("services");
     }-*/;
 
-    public static native FrameworkImpl make() /*-{
+    public static native SystemResourcesImpl make() /*-{
       return {
 
       };
     }-*/;  }
 
 
-  public static class InstanceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.Instance {
-    protected InstanceImpl() {}
+  public static class CloudFoundryApplicationResourcesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplicationResources {
+    protected CloudFoundryApplicationResourcesImpl() {}
 
     @Override
-    public final native java.lang.String getConsoleHost() /*-{
-      return this["consoleHost"];
+    public final native int getDisk() /*-{
+      return this["disk"];
     }-*/;
 
-    public final native InstanceImpl setConsoleHost(java.lang.String consoleHost) /*-{
-      this["consoleHost"] = consoleHost;
+    public final native CloudFoundryApplicationResourcesImpl setDisk(int disk) /*-{
+      this["disk"] = disk;
       return this;
     }-*/;
 
-    public final native boolean hasConsoleHost() /*-{
-      return this.hasOwnProperty("consoleHost");
+    public final native boolean hasDisk() /*-{
+      return this.hasOwnProperty("disk");
     }-*/;
 
     @Override
-    public final native int getConsolePort() /*-{
-      return this["consolePort"];
+    public final native int getMemory() /*-{
+      return this["memory"];
     }-*/;
 
-    public final native InstanceImpl setConsolePort(int consolePort) /*-{
-      this["consolePort"] = consolePort;
+    public final native CloudFoundryApplicationResourcesImpl setMemory(int memory) /*-{
+      this["memory"] = memory;
       return this;
     }-*/;
 
-    public final native boolean hasConsolePort() /*-{
-      return this.hasOwnProperty("consolePort");
+    public final native boolean hasMemory() /*-{
+      return this.hasOwnProperty("memory");
     }-*/;
 
-    @Override
-    public final native java.lang.String getDebugHost() /*-{
-      return this["debugHost"];
-    }-*/;
-
-    public final native InstanceImpl setDebugHost(java.lang.String debugHost) /*-{
-      this["debugHost"] = debugHost;
-      return this;
-    }-*/;
-
-    public final native boolean hasDebugHost() /*-{
-      return this.hasOwnProperty("debugHost");
-    }-*/;
-
-    @Override
-    public final native int getDebugPort() /*-{
-      return this["debugPort"];
-    }-*/;
-
-    public final native InstanceImpl setDebugPort(int debugPort) /*-{
-      this["debugPort"] = debugPort;
-      return this;
-    }-*/;
-
-    public final native boolean hasDebugPort() /*-{
-      return this.hasOwnProperty("debugPort");
-    }-*/;
-
-    public static native InstanceImpl make() /*-{
+    public static native CloudFoundryApplicationResourcesImpl make() /*-{
       return {
 
       };
@@ -892,6 +1222,20 @@ public class DtoClientImpls {
 
   public static class ProvisionedServiceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService {
     protected ProvisionedServiceImpl() {}
+
+    @Override
+    public final native java.lang.String getVendor() /*-{
+      return this["vendor"];
+    }-*/;
+
+    public final native ProvisionedServiceImpl setVendor(java.lang.String vendor) /*-{
+      this["vendor"] = vendor;
+      return this;
+    }-*/;
+
+    public final native boolean hasVendor() /*-{
+      return this.hasOwnProperty("vendor");
+    }-*/;
 
     @Override
     public final native java.lang.String getName() /*-{
@@ -935,351 +1279,7 @@ public class DtoClientImpls {
       return this.hasOwnProperty("version");
     }-*/;
 
-    @Override
-    public final native java.lang.String getVendor() /*-{
-      return this["vendor"];
-    }-*/;
-
-    public final native ProvisionedServiceImpl setVendor(java.lang.String vendor) /*-{
-      this["vendor"] = vendor;
-      return this;
-    }-*/;
-
-    public final native boolean hasVendor() /*-{
-      return this.hasOwnProperty("vendor");
-    }-*/;
-
     public static native ProvisionedServiceImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
-  public static class RuntimeImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.Runtime {
-    protected RuntimeImpl() {}
-
-    @Override
-    public final native java.lang.String getName() /*-{
-      return this["name"];
-    }-*/;
-
-    public final native RuntimeImpl setName(java.lang.String name) /*-{
-      this["name"] = name;
-      return this;
-    }-*/;
-
-    public final native boolean hasName() /*-{
-      return this.hasOwnProperty("name");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getDescription() /*-{
-      return this["description"];
-    }-*/;
-
-    public final native RuntimeImpl setDescription(java.lang.String description) /*-{
-      this["description"] = description;
-      return this;
-    }-*/;
-
-    public final native boolean hasDescription() /*-{
-      return this.hasOwnProperty("description");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getVersion() /*-{
-      return this["version"];
-    }-*/;
-
-    public final native RuntimeImpl setVersion(java.lang.String version) /*-{
-      this["version"] = version;
-      return this;
-    }-*/;
-
-    public final native boolean hasVersion() /*-{
-      return this.hasOwnProperty("version");
-    }-*/;
-
-    public static native RuntimeImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
-  public static class StagingImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.Staging {
-    protected StagingImpl() {}
-
-    @Override
-    public final native java.lang.String getStack() /*-{
-      return this["stack"];
-    }-*/;
-
-    public final native StagingImpl setStack(java.lang.String stack) /*-{
-      this["stack"] = stack;
-      return this;
-    }-*/;
-
-    public final native boolean hasStack() /*-{
-      return this.hasOwnProperty("stack");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getModel() /*-{
-      return this["model"];
-    }-*/;
-
-    public final native StagingImpl setModel(java.lang.String model) /*-{
-      this["model"] = model;
-      return this;
-    }-*/;
-
-    public final native boolean hasModel() /*-{
-      return this.hasOwnProperty("model");
-    }-*/;
-
-    public static native StagingImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
-  public static class SystemInfoImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo {
-    protected SystemInfoImpl() {}
-
-    @Override
-    public final native java.lang.String getName() /*-{
-      return this["name"];
-    }-*/;
-
-    public final native SystemInfoImpl setName(java.lang.String name) /*-{
-      this["name"] = name;
-      return this;
-    }-*/;
-
-    public final native boolean hasName() /*-{
-      return this.hasOwnProperty("name");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getDescription() /*-{
-      return this["description"];
-    }-*/;
-
-    public final native SystemInfoImpl setDescription(java.lang.String description) /*-{
-      this["description"] = description;
-      return this;
-    }-*/;
-
-    public final native boolean hasDescription() /*-{
-      return this.hasOwnProperty("description");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getVersion() /*-{
-      return this["version"];
-    }-*/;
-
-    public final native SystemInfoImpl setVersion(java.lang.String version) /*-{
-      this["version"] = version;
-      return this;
-    }-*/;
-
-    public final native boolean hasVersion() /*-{
-      return this.hasOwnProperty("version");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getUser() /*-{
-      return this["user"];
-    }-*/;
-
-    public final native SystemInfoImpl setUser(java.lang.String user) /*-{
-      this["user"] = user;
-      return this;
-    }-*/;
-
-    public final native boolean hasUser() /*-{
-      return this.hasOwnProperty("user");
-    }-*/;
-
-    @Override
-    public final native com.codenvy.ide.extension.cloudfoundry.shared.SystemResources getUsage() /*-{
-      return this["usage"];
-    }-*/;
-
-    public final native SystemInfoImpl setUsage(com.codenvy.ide.extension.cloudfoundry.shared.SystemResources usage) /*-{
-      this["usage"] = usage;
-      return this;
-    }-*/;
-
-    public final native boolean hasUsage() /*-{
-      return this.hasOwnProperty("usage");
-    }-*/;
-
-    @Override
-    public final native com.codenvy.ide.extension.cloudfoundry.shared.SystemResources getLimits() /*-{
-      return this["limits"];
-    }-*/;
-
-    public final native SystemInfoImpl setLimits(com.codenvy.ide.extension.cloudfoundry.shared.SystemResources limits) /*-{
-      this["limits"] = limits;
-      return this;
-    }-*/;
-
-    public final native boolean hasLimits() /*-{
-      return this.hasOwnProperty("limits");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getSupport() /*-{
-      return this["support"];
-    }-*/;
-
-    public final native SystemInfoImpl setSupport(java.lang.String support) /*-{
-      this["support"] = support;
-      return this;
-    }-*/;
-
-    public final native boolean hasSupport() /*-{
-      return this.hasOwnProperty("support");
-    }-*/;
-
-    @Override
-    public final native com.codenvy.ide.json.JsonStringMap<com.codenvy.ide.extension.cloudfoundry.shared.Framework> getFrameworks() /*-{
-      return this["frameworks"];
-    }-*/;
-
-    public final native SystemInfoImpl setFrameworks(com.codenvy.ide.json.JsonStringMap<com.codenvy.ide.extension.cloudfoundry.shared.Framework> frameworks) /*-{
-      this["frameworks"] = frameworks;
-      return this;
-    }-*/;
-
-    public final native boolean hasFrameworks() /*-{
-      return this.hasOwnProperty("frameworks");
-    }-*/;
-
-    public static native SystemInfoImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
-  public static class SystemResourcesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.SystemResources {
-    protected SystemResourcesImpl() {}
-
-    @Override
-    public final native int getServices() /*-{
-      return this["services"];
-    }-*/;
-
-    public final native SystemResourcesImpl setServices(int services) /*-{
-      this["services"] = services;
-      return this;
-    }-*/;
-
-    public final native boolean hasServices() /*-{
-      return this.hasOwnProperty("services");
-    }-*/;
-
-    @Override
-    public final native int getMemory() /*-{
-      return this["memory"];
-    }-*/;
-
-    public final native SystemResourcesImpl setMemory(int memory) /*-{
-      this["memory"] = memory;
-      return this;
-    }-*/;
-
-    public final native boolean hasMemory() /*-{
-      return this.hasOwnProperty("memory");
-    }-*/;
-
-    @Override
-    public final native int getApps() /*-{
-      return this["apps"];
-    }-*/;
-
-    public final native SystemResourcesImpl setApps(int apps) /*-{
-      this["apps"] = apps;
-      return this;
-    }-*/;
-
-    public final native boolean hasApps() /*-{
-      return this.hasOwnProperty("apps");
-    }-*/;
-
-    public static native SystemResourcesImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
-  public static class SystemServiceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.SystemService {
-    protected SystemServiceImpl() {}
-
-    @Override
-    public final native java.lang.String getType() /*-{
-      return this["type"];
-    }-*/;
-
-    public final native SystemServiceImpl setType(java.lang.String type) /*-{
-      this["type"] = type;
-      return this;
-    }-*/;
-
-    public final native boolean hasType() /*-{
-      return this.hasOwnProperty("type");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getDescription() /*-{
-      return this["description"];
-    }-*/;
-
-    public final native SystemServiceImpl setDescription(java.lang.String description) /*-{
-      this["description"] = description;
-      return this;
-    }-*/;
-
-    public final native boolean hasDescription() /*-{
-      return this.hasOwnProperty("description");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getVersion() /*-{
-      return this["version"];
-    }-*/;
-
-    public final native SystemServiceImpl setVersion(java.lang.String version) /*-{
-      this["version"] = version;
-      return this;
-    }-*/;
-
-    public final native boolean hasVersion() /*-{
-      return this.hasOwnProperty("version");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getVendor() /*-{
-      return this["vendor"];
-    }-*/;
-
-    public final native SystemServiceImpl setVendor(java.lang.String vendor) /*-{
-      this["vendor"] = vendor;
-      return this;
-    }-*/;
-
-    public final native boolean hasVendor() /*-{
-      return this.hasOwnProperty("vendor");
-    }-*/;
-
-    public static native SystemServiceImpl make() /*-{
       return {
 
       };

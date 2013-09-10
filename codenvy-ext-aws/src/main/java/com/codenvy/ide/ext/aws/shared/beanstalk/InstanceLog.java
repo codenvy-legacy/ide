@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.aws.shared.beanstalk;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Information about instance log in specified environment
  *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@DTO
 public interface InstanceLog {
     /**
      * Get ID of the instance

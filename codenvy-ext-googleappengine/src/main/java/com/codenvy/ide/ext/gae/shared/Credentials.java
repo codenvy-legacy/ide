@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.gae.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Represents user's credentials.
  *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 16, 2012 11:13:17 AM anya $
  */
+@DTO
 public interface Credentials {
     /**
      * Returns user's email.

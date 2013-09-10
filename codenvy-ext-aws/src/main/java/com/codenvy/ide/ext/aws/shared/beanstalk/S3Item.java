@@ -17,10 +17,13 @@
  */
 package com.codenvy.ide.ext.aws.shared.beanstalk;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@DTO
 public interface S3Item {
     /**
      * The Amazon S3 bucket where the data is located.

@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.aws.shared.beanstalk;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * A regular expression representing a restriction on a string configuration option value.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@DTO
 public interface ConfigurationOptionRestriction {
     /**
      * A unique name representing this regular expression.

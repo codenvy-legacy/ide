@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.aws.shared.ec2;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * EC2 region description.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@DTO
 public interface RegionInfo {
     /**
      * Get region name.

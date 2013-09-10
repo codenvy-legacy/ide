@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Request to create new git repository.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: InitRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
+@DTO
 public interface InitRequest extends GitRequest {
     /** @return working directory for new git repository */
     String getWorkingDir();

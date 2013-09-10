@@ -17,12 +17,14 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
 import com.codenvy.ide.json.JsonArray;
 
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: Commiters.java Aug 3, 2012
  */
+@DTO
 public interface Commiters {
     JsonArray<GitUser> getCommiters();
 }

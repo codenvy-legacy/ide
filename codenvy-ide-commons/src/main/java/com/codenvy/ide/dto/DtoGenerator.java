@@ -16,7 +16,12 @@ package com.codenvy.ide.dto;
 
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
-import com.google.common.io.Files;
+
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,13 +29,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.nio.file.Files;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Simple source generator that takes in a jar of interface definitions and
@@ -44,8 +45,8 @@ public class DtoGenerator {
 
     private static final String CLIENT = "client";
 
-    /** Flag: location of the input source dto jar. */
-    static String dto_jar = null;
+    /** Flag: location of the packages that contains dto interfaces. */
+    static String dto_packages = null;
 
     /** Flag: Name of the generated java class file that contains the DTOs. */
     static String gen_file_name = "DataObjects.java";
@@ -62,8 +63,8 @@ public class DtoGenerator {
     /** @param args */
     public static void main(String[] args) {
         for (String arg : args) {
-            if (arg.startsWith("--dto_jar=")) {
-                dto_jar = arg.substring("--dto_jar=".length());
+            if (arg.startsWith("--dto_packages=")) {
+                dto_packages = arg.substring("--dto_packages=".length());
             } else if (arg.startsWith("--gen_file_name=")) {
                 gen_file_name = arg.substring("--gen_file_name=".length());
             } else if (arg.startsWith("--impl=")) {
@@ -76,10 +77,10 @@ public class DtoGenerator {
             }
         }
 
+        Set<URL> urls = parsePackagesParam(dto_packages);
         String outputFilePath = gen_file_name;
 
-        // Extract the name of the output file that will contain all the DTOs and
-        // its package.
+        // Extract the name of the output file that will contain all the DTOs and its package.
         int packageStart = outputFilePath.lastIndexOf(package_base) + package_base.length();
         int packageEnd = outputFilePath.lastIndexOf('/');
         String fileName = outputFilePath.substring(packageEnd + 1);
@@ -87,60 +88,43 @@ public class DtoGenerator {
         String packageName = outputFilePath.substring(packageStart, packageEnd).replace('/', '.');
 
         File outFile = new File(outputFilePath);
-        File interfaceJar = new File(dto_jar);
 
         try {
-            DtoTemplate dtoTemplate = new DtoTemplate(packageName, className, getApiHash(interfaceJar),
-                                                      impl.equals(SERVER));
-
-            // Crack open the JAR that contains the class files for the DTO
-            // interfaces. Collect class files to load.
-            List<String> classFilePaths = new ArrayList<String>();
-
-            JarFile jarFile = new JarFile(interfaceJar);
-            Enumeration<JarEntry> entries = jarFile.entries();
-            while (entries.hasMoreElements()) {
-                String entryFilePath = entries.nextElement().getName();
-                if (entryFilePath.endsWith(".class")) {
-                    classFilePaths.add(entryFilePath);
-                }
+            DtoTemplate dtoTemplate = new DtoTemplate(packageName, className, getApiHash(dto_packages), impl.equals(SERVER));
+            Reflections reflection =
+                    new Reflections(new ConfigurationBuilder().setUrls(urls).setScanners(new TypeAnnotationsScanner()));
+            Set<Class<?>> classes = reflection.getTypesAnnotatedWith(DTO.class);
+            for (Class clazz : classes) {
+                dtoTemplate.addInterface(clazz);
             }
-
-            // Load the classes that we found above.
-            URL[] urls = {interfaceJar.toURI().toURL()};
-            URLClassLoader loader = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
 
             // We sort alphabetically to ensure deterministic order of routing types.
-            Collections.sort(classFilePaths);
-
-            for (String classFilePath : classFilePaths) {
-                URL resource = loader.findResource(classFilePath);
-                if (resource != null) {
-                    String javaName = classFilePath.replace('/', '.').substring(0, classFilePath.lastIndexOf(".class"));
-                    Class<?> dtoInterface = Class.forName(javaName, false, loader);
-                    if (dtoInterface.isInterface()) {
-                        // Add interfaces to the DtoTemplate.
-                        dtoTemplate.addInterface(dtoInterface);
-                    }
-                }
-            }
+//            Collections.sort(classFilePaths);
 
             // Emit the generated file.
+            Files.createDirectories(outFile.toPath().getParent());
             BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
             writer.write(dtoTemplate.toString());
             writer.close();
-        } catch (MalformedURLException e1) {
-            e1.printStackTrace();
-        } catch (IOException e) {
+        } catch (MalformedURLException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static String getApiHash(File interfaceJar) throws IOException {
-        byte[] fileBytes = Files.toByteArray(interfaceJar);
+    private static String getApiHash(String packageName) throws IOException {
+        byte[] fileBytes = packageName.getBytes();
         HashCode hashCode = Hashing.sha1().hashBytes(fileBytes);
         return hashCode.toString();
+    }
+
+    private static Set<URL> parsePackagesParam(String packagesParam) {
+        Set<URL> urls = new HashSet<>();
+        String[] packages = packagesParam.split(",");
+        for (String pack : packages) {
+            urls.addAll(ClasspathHelper.forPackage(pack));
+        }
+        return urls;
     }
 }

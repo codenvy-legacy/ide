@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
 import com.codenvy.ide.json.JsonArray;
 
 /**
@@ -25,6 +26,7 @@ import com.codenvy.ide.json.JsonArray;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 2:41:39 PM anya $
  */
+@DTO
 public interface Reference {
     public enum RefType {
         LOCAL_BRANCH,

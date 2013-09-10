@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.gae.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Information about cron entry.
  *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 23, 2012 4:40:20 PM anya $
  */
+@DTO
 public interface CronEntry {
     /**
      * Get cron entry description.

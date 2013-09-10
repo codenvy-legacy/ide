@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.shared;
 
+import com.codenvy.ide.dto.DTO;
 import com.codenvy.ide.json.JsonArray;
 
 /**
@@ -25,6 +26,7 @@ import com.codenvy.ide.json.JsonArray;
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Framework.java Mar 16, 2012 5:14:15 PM azatsarynnyy $
  */
+@DTO
 public interface Framework {
     /**
      * Get the framework name.

@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.aws.shared.s3;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Represent information about user identify type and permission given for it.
  *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@DTO
 public interface S3AccessControl {
     /**
      * Get type of identity e.g. uri, email or canonical name.

@@ -17,11 +17,14 @@
  */
 package com.codenvy.ide.ext.java.jdi.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Summary of debugger information.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  */
+@DTO
 public interface DebuggerInfo {
     String getHost();
 

@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.aws.shared.beanstalk;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Info about version of AWS Beanstalk application.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@DTO
 public interface ApplicationVersionInfo {
     /**
      * The name of the application associated with this release.

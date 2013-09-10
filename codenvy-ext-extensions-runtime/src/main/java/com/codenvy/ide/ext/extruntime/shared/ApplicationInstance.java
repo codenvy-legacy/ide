@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.extruntime.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Interface represents an launched Codenvy application with custom extension.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationInstance.java Jul 31, 2013 4:21:09 PM azatsarynnyy $
  */
+@DTO
 public interface ApplicationInstance {
     /** Returns application id. */
     String getId();

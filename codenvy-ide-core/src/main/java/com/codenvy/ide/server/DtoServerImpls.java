@@ -20,19 +20,18 @@
 // GENERATED SOURCE. DO NOT EDIT.
 package com.codenvy.ide.server;
 
-import com.codenvy.ide.api.user.UpdateUserAttributes;
-import com.codenvy.ide.api.user.User;
-import com.codenvy.ide.dto.server.RoutableDtoServerImpl;
 import com.codenvy.ide.dto.server.JsonSerializable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -43,16 +42,12 @@ public class DtoServerImpls {
 
   private  DtoServerImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "648f8d86f27105b66b0eb5f90b185c9f029001e1";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "89fa4319e484f2fd1f6ddf74028df2fe86085c6f";
 
-  public static class UpdateUserAttributesImpl extends RoutableDtoServerImpl implements UpdateUserAttributes, JsonSerializable {
+  public static class UpdateUserAttributesImpl implements com.codenvy.ide.api.user.UpdateUserAttributes, JsonSerializable {
 
-    private UpdateUserAttributesImpl() {
-      super(2);
-    }
-
-    protected UpdateUserAttributesImpl(int type) {
-      super(type);
+    public static UpdateUserAttributesImpl make() {
+      return new UpdateUserAttributesImpl();
     }
 
     protected java.util.Map<String, java.lang.String> attributes;
@@ -92,9 +87,6 @@ public class DtoServerImpls {
 
     @Override
     public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
       if (!(o instanceof UpdateUserAttributesImpl)) {
         return false;
       }
@@ -112,7 +104,7 @@ public class DtoServerImpls {
 
     @Override
     public int hashCode() {
-      int hash = super.hashCode();
+      int hash = 1;
       hash = hash * 31 + (_hasAttributes ? attributes.hashCode() : 0);
       return hash;
     }
@@ -129,7 +121,6 @@ public class DtoServerImpls {
         attributesOut.add(entry0.getKey(), attributesOut_);
       }
       result.add("attributes", attributesOut);
-      result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
 
@@ -177,39 +168,16 @@ public class DtoServerImpls {
     }
   }
 
-  public static class UserImpl extends RoutableDtoServerImpl implements User, JsonSerializable {
-
-    private UserImpl() {
-      super(1);
-    }
-
-    protected UserImpl(int type) {
-      super(type);
-    }
+  public static class UserImpl implements com.codenvy.ide.api.user.User, JsonSerializable {
 
     public static UserImpl make() {
       return new UserImpl();
     }
 
-    protected java.lang.String userId;
-    private boolean _hasUserId;
     protected java.util.Map<String, java.lang.String> profileAttributes;
     private boolean _hasProfileAttributes;
-
-    public boolean hasUserId() {
-      return _hasUserId;
-    }
-
-    @Override
-    public java.lang.String getUserId() {
-      return userId;
-    }
-
-    public UserImpl setUserId(java.lang.String v) {
-      _hasUserId = true;
-      userId = v;
-      return this;
-    }
+    protected java.lang.String userId;
+    private boolean _hasUserId;
 
     public boolean hasProfileAttributes() {
       return _hasProfileAttributes;
@@ -243,23 +211,27 @@ public class DtoServerImpls {
       }
     }
 
+    public boolean hasUserId() {
+      return _hasUserId;
+    }
+
+    @Override
+    public java.lang.String getUserId() {
+      return userId;
+    }
+
+    public UserImpl setUserId(java.lang.String v) {
+      _hasUserId = true;
+      userId = v;
+      return this;
+    }
+
     @Override
     public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
       if (!(o instanceof UserImpl)) {
         return false;
       }
       UserImpl other = (UserImpl) o;
-      if (this._hasUserId != other._hasUserId) {
-        return false;
-      }
-      if (this._hasUserId) {
-        if (!this.userId.equals(other.userId)) {
-          return false;
-        }
-      }
       if (this._hasProfileAttributes != other._hasProfileAttributes) {
         return false;
       }
@@ -268,23 +240,28 @@ public class DtoServerImpls {
           return false;
         }
       }
+      if (this._hasUserId != other._hasUserId) {
+        return false;
+      }
+      if (this._hasUserId) {
+        if (!this.userId.equals(other.userId)) {
+          return false;
+        }
+      }
       return true;
     }
 
     @Override
     public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
+      int hash = 1;
       hash = hash * 31 + (_hasProfileAttributes ? profileAttributes.hashCode() : 0);
+      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
       return hash;
     }
 
     @Override
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
-
-      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
-      result.add("userId", userIdOut);
 
       JsonObject profileAttributesOut = new JsonObject();
       ensureProfileAttributes();
@@ -294,7 +271,9 @@ public class DtoServerImpls {
         profileAttributesOut.add(entry0.getKey(), profileAttributesOut_);
       }
       result.add("profileAttributes", profileAttributesOut);
-      result.add("_type", new JsonPrimitive(getType()));
+
+      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
+      result.add("userId", userIdOut);
       return result;
     }
 
@@ -316,12 +295,6 @@ public class DtoServerImpls {
       UserImpl dto = new UserImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
-      if (json.has("userId")) {
-        JsonElement userIdIn = json.get("userId");
-        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
-        dto.setUserId(userIdOut);
-      }
-
       if (json.has("profileAttributes")) {
         JsonElement profileAttributesIn = json.get("profileAttributes");
         java.util.HashMap<String, java.lang.String> profileAttributesOut = null;
@@ -335,6 +308,12 @@ public class DtoServerImpls {
           }
         }
         dto.setProfileAttributes(profileAttributesOut);
+      }
+
+      if (json.has("userId")) {
+        JsonElement userIdIn = json.get("userId");
+        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
+        dto.setUserId(userIdOut);
       }
 
       return dto;

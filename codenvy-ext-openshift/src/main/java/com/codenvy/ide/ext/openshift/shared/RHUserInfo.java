@@ -17,12 +17,14 @@
  */
 package com.codenvy.ide.ext.openshift.shared;
 
+import com.codenvy.ide.dto.DTO;
 import com.codenvy.ide.json.JsonArray;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@DTO
 public interface RHUserInfo {
     /**
      * Get the domain name of RedHat cloud.

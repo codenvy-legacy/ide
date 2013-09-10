@@ -17,12 +17,14 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
 import com.codenvy.ide.json.JsonArray;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: Log.java 68139 2011-04-08 15:06:00Z andrew00x $
  */
+@DTO
 public interface Log {
     JsonArray<Revision> getCommits();
 }

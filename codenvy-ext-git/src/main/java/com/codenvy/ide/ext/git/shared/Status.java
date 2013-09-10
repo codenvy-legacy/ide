@@ -17,12 +17,14 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
 import com.codenvy.ide.json.JsonArray;
 
 /**
  * @author <a href="mailto:dvishinskiy@codenvy.com">Dmitriy Vyshinskiy</a>
  * @version $Id: Status.java 68135 2011-04-08 14:23:36Z andrew00x $
  */
+@DTO
 public interface Status {
     boolean clean();
 

@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.aws.shared.s3;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Information about Amazon S3 bucket
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@DTO
 public interface S3Bucket {
     /**
      * Get S3 bucket name

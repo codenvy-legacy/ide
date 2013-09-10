@@ -23,6 +23,7 @@ package com.codenvy.ide.dto;
  *
  * @see DocOp
  */
+@DTO
 public interface DocOpComponent {
 
     /**
@@ -30,6 +31,7 @@ public interface DocOpComponent {
      * deleted. The deletion must not span multiple lines (can only contain a
      * maximum of one newline character, which must be the last character.)
      */
+    @DTO
     public interface Delete extends DocOpComponent {
         String getText();
     }
@@ -39,6 +41,7 @@ public interface DocOpComponent {
      * be inserted. The insertion must not span multiple lines (can only contain a
      * maximum of one newline character, which must be the last character.)
      */
+    @DTO
     public interface Insert extends DocOpComponent {
         String getText();
     }
@@ -78,6 +81,7 @@ public interface DocOpComponent {
      * being retained is a newline character. This retain must not span multiple
      * lines (the characters being retained can only have one newline character.)
      */
+    @DTO
     public interface Retain extends DocOpComponent {
         int getCount();
 
@@ -93,6 +97,7 @@ public interface DocOpComponent {
      * <p/>
      * The {@link #getLineCount()} must always be greater than 0.
      */
+    @DTO
     public interface RetainLine extends DocOpComponent {
         int getLineCount();
     }

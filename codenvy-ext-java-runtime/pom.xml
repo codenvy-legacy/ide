@@ -103,35 +103,18 @@
         </dependency>
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>generate-dto</id>
-            <properties>
-                <server.dto>${project.build.sourceDirectory}/com/codenvy/ide/ext/java/jdi/dto/server/DtoServerImpls.java</server.dto>
-                <client.dto>${project.build.sourceDirectory}/com/codenvy/ide/ext/java/jdi/dto/client/DtoClientImpls.java</client.dto>
-            </properties>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.google.code.gson</groupId>
-                    <artifactId>gson</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>com.codenvy.ide</groupId>
-                    <artifactId>codenvy-ide-commons</artifactId>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>compile-dto-interfaces</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
                         <configuration>
                             <source>${maven.compiler.source}</source>
                             <target>${maven.compiler.target}</target>
@@ -139,54 +122,34 @@
                                 <include>**/shared/*</include>
                             </includes>
                         </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                                <configuration>
-                                    <classifier>dto</classifier>
-                                    <includes>
-                                        <include>**/shared/*</include>
-                                    </includes>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>1.2.1</version>
-                        <executions>
-                            <execution>
-                                <id>dto-client</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>java</goal>
-                                </goals>
-                                <configuration>
-                                    <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
-                                    <arguments>
-                                        <argument>--dto_jar=${project.build.directory}/${project.build.finalName}-dto.jar</argument>
-                                        <argument>--gen_file_name=${client.dto}</argument>
-                                        <argument>--impl=client</argument>
-                                        <argument>--package_base=${project.build.sourceDirectory}/</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <id>dto-client</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
+                            <arguments>
+                                <argument>--dto_packages=com.codenvy.ide.ext.java.jdi</argument>
+                                <argument>--gen_file_name=${project.build.sourceDirectory}/com/codenvy/ide/ext/java/jdi/dto/client/DtoClientImpls.java</argument>
+                                <argument>--impl=client</argument>
+                                <argument>--package_base=${project.build.sourceDirectory}/</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
 
-    <build>
         <resources>
             <resource>
                 <directory>src/main/java</directory>

@@ -17,10 +17,13 @@
  */
 package com.codenvy.ide.ext.openshift.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@DTO
 public interface Credentials {
     /**
      * Returns the RedHat login.

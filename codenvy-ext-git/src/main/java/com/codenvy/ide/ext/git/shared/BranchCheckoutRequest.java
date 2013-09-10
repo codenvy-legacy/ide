@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Request to checkout a branch to the working tree.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: BranchCheckoutRequest.java 21623 2011-03-17 12:14:42Z andrew00x $
  */
+@DTO
 public interface BranchCheckoutRequest extends GitRequest {
     /** @return name of branch to checkout */
     String getName();

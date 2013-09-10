@@ -17,10 +17,13 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 7, 2012 11:49:20 AM anya $
  */
+@DTO
 public interface CreateApplicationRequest {
     /** @return the server */
     String getServer();

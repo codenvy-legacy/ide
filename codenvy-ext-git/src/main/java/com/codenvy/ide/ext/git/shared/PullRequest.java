@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Request to pull (fetch and merge) changes from remote repository to local branch.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: PullRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
+@DTO
 public interface PullRequest extends GitRequest {
     /** @return refspec to fetch */
     String getRefSpec();

@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.appfog.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Cloud Foundry application resources info.
  *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: CloudFoundryApplicationResources.java Mar 16, 2012 2:14:15 PM azatsarynnyy $
  */
+@DTO
 public interface AppfogApplicationResources {
     /**
      * Get amount of memory available for application (in MB).

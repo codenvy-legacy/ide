@@ -17,7 +17,10 @@
  */
 package com.codenvy.ide.ext.cloudbees.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+@DTO
 public interface CloudBeesSshKey {
     String getName();
 

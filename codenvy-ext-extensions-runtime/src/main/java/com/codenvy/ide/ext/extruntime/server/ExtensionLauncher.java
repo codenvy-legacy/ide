@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.extruntime.server;
 
 import com.codenvy.ide.commons.JsonHelper;
+import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls;
 import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls.ApplicationInstanceImpl;
 import com.codenvy.ide.ext.extruntime.server.codeserver.GWTCodeServerConfiguration;
 import com.codenvy.ide.ext.extruntime.server.codeserver.GWTCodeServerException;
@@ -248,11 +249,12 @@ public class ExtensionLauncher implements Startable {
             File zippedExtensionProjectFile = tempDir.toPath().resolve("extension-project.zip").toFile();
             zipDir(customModulePath.toString(), customModulePath.toFile(), zippedExtensionProjectFile, ANY_FILTER);
             String deployId = deploy(zippedExtensionProjectFile);
-            final String deployStatus = startCheckingBuildStatus(deployId);
-            BuildStatusBean deployStatusBean = JsonHelper.fromJson(deployStatus, BuildStatusBean.class, null);
-            if (deployStatusBean.getStatus() != Status.SUCCESSFUL) {
-                LOG.error("Unable to deploy maven artifact: " + deployStatusBean.getError());
-                throw new Exception(deployStatusBean.getError());
+            final String deployStatusJson = startCheckingBuildStatus(deployId);
+            DtoServerImpls.BuildStatusImpl deployStatus = DtoServerImpls.BuildStatusImpl.fromJsonString(deployStatusJson);
+
+            if (deployStatus.getStatus() != Status.SUCCESSFUL) {
+                LOG.error("Unable to deploy maven artifact: " + deployStatus.getError());
+                throw new Exception(deployStatus.getError());
             }
 
             // Build Codenvy platform + custom project.
@@ -264,15 +266,15 @@ public class ExtensionLauncher implements Startable {
             GWTCodeServerLauncher codeServer = new GWTMavenCodeServerLauncher();
             codeServer.start(new GWTCodeServerConfiguration(codeServerBindAddress, codeServerPort, clientModuleDirPath));
 
-            final String buildStatus = startCheckingBuildStatus(buildId);
-            BuildStatusBean buildStatusBean = JsonHelper.fromJson(buildStatus, BuildStatusBean.class, null);
-            if (buildStatusBean.getStatus() != Status.SUCCESSFUL) {
-                LOG.error("Unable to build project: " + buildStatusBean.getError());
-                throw new Exception(buildStatusBean.getError());
+            final String buildStatusJson = startCheckingBuildStatus(buildId);
+            DtoServerImpls.BuildStatusImpl buildStatus = DtoServerImpls.BuildStatusImpl.fromJsonString(buildStatusJson);
+            if (buildStatus.getStatus() != Status.SUCCESSFUL) {
+                LOG.error("Unable to build project: " + buildStatus.getError());
+                throw new Exception(buildStatus.getError());
             }
 
             File tomcatDir = createTempDirectory(tempDir, "tomcat-");
-            Process tomcatProcess = runTomcat(tomcatDir.toPath(), new URL(buildStatusBean.getDownloadUrl()),
+            Process tomcatProcess = runTomcat(tomcatDir.toPath(), new URL(buildStatus.getDownloadUrl()),
                                               shutdownPort, httpPort, ajpPort);
             final long expirationTime = System.currentTimeMillis() + applicationLifetime;
             applications.put(appId, new Application(appId, expirationTime, codeServer, tomcatProcess,

@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.api.user;
 
-import com.codenvy.ide.dto.shared.ClientToServerDto;
+import com.codenvy.ide.dto.DTO;
 import com.codenvy.ide.json.JsonStringMap;
 
 /**
@@ -25,9 +25,8 @@ import com.codenvy.ide.json.JsonStringMap;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-// TODO IDEX-94
-//@RoutingType(type = RoutingTypes.UPDATE_USER_ATTRIBUTES)
-public interface UpdateUserAttributes extends ClientToServerDto {
+@DTO
+public interface UpdateUserAttributes {
     /**
      * Returns user's attributes with new value what need to update.
      *

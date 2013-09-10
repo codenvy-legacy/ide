@@ -17,11 +17,14 @@
  */
 package com.codenvy.ide.ext.gae.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Information about Google App Engine user.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  */
+@DTO
 public interface GaeUser {
     /**
      * Get authorization token.

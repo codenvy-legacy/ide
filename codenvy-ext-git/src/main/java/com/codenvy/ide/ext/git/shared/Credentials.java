@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Represents user's credentials.
  *
@@ -24,6 +26,7 @@ package com.codenvy.ide.ext.git.shared;
  * @version $Id: Mar 28, 2012 12:44:37 PM anya $
  * @deprecated not need it any more, we use oauth for GItHub
  */
+@DTO
 public interface Credentials {
     /**
      * Get login.

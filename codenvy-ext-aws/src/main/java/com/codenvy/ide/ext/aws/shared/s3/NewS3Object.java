@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.aws.shared.s3;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Information about newly created object in S3 bucket
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@DTO
 public interface NewS3Object {
     /**
      * Get name of S3 bucket where object stored

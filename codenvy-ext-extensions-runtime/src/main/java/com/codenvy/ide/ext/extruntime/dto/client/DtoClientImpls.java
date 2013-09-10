@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- * 
- *  [2012] - [2013] Codenvy, S.A. 
- *  All Rights Reserved.
- * 
+ *
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
+ *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -16,32 +16,22 @@
  * from Codenvy S.A..
  */
 
+
 // GENERATED SOURCE. DO NOT EDIT.
 package com.codenvy.ide.ext.extruntime.dto.client;
 
-@SuppressWarnings({"cast"})
+
+
+@SuppressWarnings({"unchecked", "cast"})
 public class DtoClientImpls {
 
   private  DtoClientImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "cb6e6cff55105511d79cf75bbea2b5560e30514a";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "b2aa8d2bdc7a6f71c21df71de9d36d06086171c2";
+
 
   public static class ApplicationInstanceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.extruntime.shared.ApplicationInstance {
     protected ApplicationInstanceImpl() {}
-
-    @Override
-    public final native java.lang.String getCodeServerHost() /*-{
-      return this["codeServerHost"];
-    }-*/;
-
-    public final native ApplicationInstanceImpl setCodeServerHost(java.lang.String codeServerHost) /*-{
-      this["codeServerHost"] = codeServerHost;
-      return this;
-    }-*/;
-
-    public final native boolean hasCodeServerHost() /*-{
-      return this.hasOwnProperty("codeServerHost");
-    }-*/;
 
     @Override
     public final native int getCodeServerPort() /*-{
@@ -55,6 +45,20 @@ public class DtoClientImpls {
 
     public final native boolean hasCodeServerPort() /*-{
       return this.hasOwnProperty("codeServerPort");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getCodeServerHost() /*-{
+      return this["codeServerHost"];
+    }-*/;
+
+    public final native ApplicationInstanceImpl setCodeServerHost(java.lang.String codeServerHost) /*-{
+      this["codeServerHost"] = codeServerHost;
+      return this;
+    }-*/;
+
+    public final native boolean hasCodeServerHost() /*-{
+      return this.hasOwnProperty("codeServerHost");
     }-*/;
 
     @Override

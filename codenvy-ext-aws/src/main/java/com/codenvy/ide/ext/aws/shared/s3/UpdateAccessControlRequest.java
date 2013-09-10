@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.aws.shared.s3;
 
+import com.codenvy.ide.dto.DTO;
 import com.codenvy.ide.json.JsonArray;
 
 /**
@@ -26,6 +27,7 @@ import com.codenvy.ide.json.JsonArray;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@DTO
 public interface UpdateAccessControlRequest {
     /**
      * Get list of permissions to add to current ACL.
