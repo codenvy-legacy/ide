@@ -323,9 +323,7 @@ public class JavaProject extends IDEProject {
 
         if (resource instanceof FileModel) {
             FileModel file = (FileModel)resource;
-            if ("pom.xml".equals(resource.getName())) {
-                folderChangedHandler.onFolderChanged(file.getParent());
-            }
+            folderChangedHandler.onFolderChanged(file.getProject());
         }
     }
 
