@@ -21,14 +21,12 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.resources.model.Project;
-import com.google.gwt.junit.GWTMockUtilities;
 import com.google.web.bindery.event.shared.EventBus;
+import com.googlecode.gwt.test.GwtModule;
+import com.googlecode.gwt.test.GwtTestWithMockito;
 
-import org.junit.After;
 import org.junit.Before;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.when;
 
@@ -37,8 +35,9 @@ import static org.mockito.Mockito.when;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@RunWith(MockitoJUnitRunner.class)
-public abstract class BaseTest {
+//@RunWith(MockitoJUnitRunner.class)
+@GwtModule("com.codenvy.ide.ext.git.Git")
+public abstract class BaseTest extends GwtTestWithMockito {
     public static final String  PROJECT_ID      = "projectID";
     public static final String  PROJECT_PATH    = "/";
     public static final String  VFS_ID          = "vfsid";
@@ -72,17 +71,9 @@ public abstract class BaseTest {
 
     @Before
     public void disarm() {
-        // don't throw an exception if GWT.create() invoked
-        GWTMockUtilities.disarm();
-
         when(resourceProvider.getVfsId()).thenReturn(VFS_ID);
         when(resourceProvider.getActiveProject()).thenReturn(project);
         when(project.getId()).thenReturn(PROJECT_ID);
         when(project.getPath()).thenReturn(PROJECT_PATH);
-    }
-
-    @After
-    public void restore() {
-        GWTMockUtilities.restore();
     }
 }

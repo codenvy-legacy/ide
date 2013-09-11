@@ -20,15 +20,21 @@ package com.codenvy.ide.ext.git.client.fetch;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import java.lang.reflect.Method;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -51,6 +57,24 @@ public class FetchPresenterTest extends BaseTest {
 
     @Test
     public void testShowDialog() throws Exception {
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<JsonArray<Remote>> callback = (AsyncRequestCallback<JsonArray<Remote>>)arguments[4];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                GwtReflectionUtils.makeAccessible(onSuccess);
+
+
+                JsonArray<Remote> array = JsonCollections.createArray();
+                onSuccess.invoke(callback, array);
+
+                return null;
+            }
+        }).when(service)
+                .remoteList(anyString(), anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
+
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
@@ -58,6 +82,7 @@ public class FetchPresenterTest extends BaseTest {
 
         verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
                                    (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
+        verify(view).showDialog();
     }
 
     @Test
