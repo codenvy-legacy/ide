@@ -30,48 +30,48 @@ public class DtoClientImpls {
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "7ad4068e7941e9d7bf87807856f452203f8353a1";
 
 
-  public static class RetainLineImpl extends DocOpComponentImpl implements com.codenvy.ide.dto.DocOpComponent.RetainLine {
-    protected RetainLineImpl() {}
+  public static class DocOpImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.dto.DocOp {
+    protected DocOpImpl() {}
 
     @Override
-    public final native int getLineCount() /*-{
-      return this["lineCount"];
+    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.dto.DocOpComponent> getComponents() /*-{
+      return this["components"];
     }-*/;
 
-    public final native RetainLineImpl setLineCount(int lineCount) /*-{
-      this["lineCount"] = lineCount;
+    public final native DocOpImpl setComponents(com.codenvy.ide.json.JsonArray<com.codenvy.ide.dto.DocOpComponent> components) /*-{
+      this["components"] = components;
       return this;
     }-*/;
 
-    public final native boolean hasLineCount() /*-{
-      return this.hasOwnProperty("lineCount");
+    public final native boolean hasComponents() /*-{
+      return this.hasOwnProperty("components");
     }-*/;
 
-    public static native RetainLineImpl make() /*-{
+    public static native DocOpImpl make() /*-{
       return {
 
       };
     }-*/;  }
 
 
-  public static class InsertImpl extends DocOpComponentImpl implements com.codenvy.ide.dto.DocOpComponent.Insert {
-    protected InsertImpl() {}
+  public static class DocOpComponentImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.dto.DocOpComponent {
+    protected DocOpComponentImpl() {}
 
     @Override
-    public final native java.lang.String getText() /*-{
-      return this["text"];
+    public final native int getType() /*-{
+      return this["type"];
     }-*/;
 
-    public final native InsertImpl setText(java.lang.String text) /*-{
-      this["text"] = text;
+    public final native DocOpComponentImpl setType(int type) /*-{
+      this["type"] = type;
       return this;
     }-*/;
 
-    public final native boolean hasText() /*-{
-      return this.hasOwnProperty("text");
+    public final native boolean hasType() /*-{
+      return this.hasOwnProperty("type");
     }-*/;
 
-    public static native InsertImpl make() /*-{
+    public static native DocOpComponentImpl make() /*-{
       return {
 
       };
@@ -102,24 +102,24 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class DocOpComponentImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.dto.DocOpComponent {
-    protected DocOpComponentImpl() {}
+  public static class InsertImpl extends DocOpComponentImpl implements com.codenvy.ide.dto.DocOpComponent.Insert {
+    protected InsertImpl() {}
 
     @Override
-    public final native int getType() /*-{
-      return this["type"];
+    public final native java.lang.String getText() /*-{
+      return this["text"];
     }-*/;
 
-    public final native DocOpComponentImpl setType(int type) /*-{
-      this["type"] = type;
+    public final native InsertImpl setText(java.lang.String text) /*-{
+      this["text"] = text;
       return this;
     }-*/;
 
-    public final native boolean hasType() /*-{
-      return this.hasOwnProperty("type");
+    public final native boolean hasText() /*-{
+      return this.hasOwnProperty("text");
     }-*/;
 
-    public static native DocOpComponentImpl make() /*-{
+    public static native InsertImpl make() /*-{
       return {
 
       };
@@ -164,24 +164,24 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class DocOpImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.dto.DocOp {
-    protected DocOpImpl() {}
+  public static class RetainLineImpl extends DocOpComponentImpl implements com.codenvy.ide.dto.DocOpComponent.RetainLine {
+    protected RetainLineImpl() {}
 
     @Override
-    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.dto.DocOpComponent> getComponents() /*-{
-      return this["components"];
+    public final native int getLineCount() /*-{
+      return this["lineCount"];
     }-*/;
 
-    public final native DocOpImpl setComponents(com.codenvy.ide.json.JsonArray<com.codenvy.ide.dto.DocOpComponent> components) /*-{
-      this["components"] = components;
+    public final native RetainLineImpl setLineCount(int lineCount) /*-{
+      this["lineCount"] = lineCount;
       return this;
     }-*/;
 
-    public final native boolean hasComponents() /*-{
-      return this.hasOwnProperty("components");
+    public final native boolean hasLineCount() /*-{
+      return this.hasOwnProperty("lineCount");
     }-*/;
 
-    public static native DocOpImpl make() /*-{
+    public static native RetainLineImpl make() /*-{
       return {
 
       };

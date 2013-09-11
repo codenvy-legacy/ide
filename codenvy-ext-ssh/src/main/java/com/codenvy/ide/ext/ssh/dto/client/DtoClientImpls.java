@@ -82,44 +82,6 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class PublicKeyImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.ssh.shared.PublicKey {
-    protected PublicKeyImpl() {}
-
-    @Override
-    public final native java.lang.String getKey() /*-{
-      return this["key"];
-    }-*/;
-
-    public final native PublicKeyImpl setKey(java.lang.String key) /*-{
-      this["key"] = key;
-      return this;
-    }-*/;
-
-    public final native boolean hasKey() /*-{
-      return this.hasOwnProperty("key");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getHost() /*-{
-      return this["host"];
-    }-*/;
-
-    public final native PublicKeyImpl setHost(java.lang.String host) /*-{
-      this["host"] = host;
-      return this;
-    }-*/;
-
-    public final native boolean hasHost() /*-{
-      return this.hasOwnProperty("host");
-    }-*/;
-
-    public static native PublicKeyImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
   public static class KeyItemImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.ssh.shared.KeyItem {
     protected KeyItemImpl() {}
 
@@ -166,6 +128,44 @@ public class DtoClientImpls {
     }-*/;
 
     public static native KeyItemImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class PublicKeyImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.ssh.shared.PublicKey {
+    protected PublicKeyImpl() {}
+
+    @Override
+    public final native java.lang.String getKey() /*-{
+      return this["key"];
+    }-*/;
+
+    public final native PublicKeyImpl setKey(java.lang.String key) /*-{
+      this["key"] = key;
+      return this;
+    }-*/;
+
+    public final native boolean hasKey() /*-{
+      return this.hasOwnProperty("key");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getHost() /*-{
+      return this["host"];
+    }-*/;
+
+    public final native PublicKeyImpl setHost(java.lang.String host) /*-{
+      this["host"] = host;
+      return this;
+    }-*/;
+
+    public final native boolean hasHost() /*-{
+      return this.hasOwnProperty("host");
+    }-*/;
+
+    public static native PublicKeyImpl make() /*-{
       return {
 
       };

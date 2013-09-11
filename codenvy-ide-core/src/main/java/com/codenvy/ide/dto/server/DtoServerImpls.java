@@ -44,282 +44,6 @@ public class DtoServerImpls {
 
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "7ad4068e7941e9d7bf87807856f452203f8353a1";
 
-  public static class DeleteImpl extends DocOpComponentImpl implements com.codenvy.ide.dto.DocOpComponent.Delete, JsonSerializable {
-
-    public static DeleteImpl make() {
-      return new DeleteImpl();
-    }
-
-    protected java.lang.String text;
-    private boolean _hasText;
-
-    public boolean hasText() {
-      return _hasText;
-    }
-
-    @Override
-    public java.lang.String getText() {
-      return text;
-    }
-
-    public DeleteImpl setText(java.lang.String v) {
-      _hasText = true;
-      text = v;
-      return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof DeleteImpl)) {
-        return false;
-      }
-      DeleteImpl other = (DeleteImpl) o;
-      if (this._hasText != other._hasText) {
-        return false;
-      }
-      if (this._hasText) {
-        if (!this.text.equals(other.text)) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasText ? text.hashCode() : 0);
-      return hash;
-    }
-
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
-
-      JsonElement textOut = (text == null) ? JsonNull.INSTANCE : new JsonPrimitive(text);
-      result.add("text", textOut);
-      result.add("type", new JsonPrimitive(getType()));
-      return result;
-    }
-
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
-
-    @Override
-    public String toString() {
-      return toJson();
-    }
-
-    public static DeleteImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      DeleteImpl dto = new DeleteImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("text")) {
-        JsonElement textIn = json.get("text");
-        java.lang.String textOut = gson.fromJson(textIn, java.lang.String.class);
-        dto.setText(textOut);
-      }
-
-      return dto;
-    }
-    public static DeleteImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
-
-  public static class RetainLineImpl extends DocOpComponentImpl implements com.codenvy.ide.dto.DocOpComponent.RetainLine, JsonSerializable {
-
-    public static RetainLineImpl make() {
-      return new RetainLineImpl();
-    }
-
-    protected int lineCount;
-    private boolean _hasLineCount;
-
-    public boolean hasLineCount() {
-      return _hasLineCount;
-    }
-
-    @Override
-    public int getLineCount() {
-      return lineCount;
-    }
-
-    public RetainLineImpl setLineCount(int v) {
-      _hasLineCount = true;
-      lineCount = v;
-      return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof RetainLineImpl)) {
-        return false;
-      }
-      RetainLineImpl other = (RetainLineImpl) o;
-      if (this._hasLineCount != other._hasLineCount) {
-        return false;
-      }
-      if (this._hasLineCount) {
-        if (this.lineCount != other.lineCount) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasLineCount ? java.lang.Integer.valueOf(lineCount).hashCode() : 0);
-      return hash;
-    }
-
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
-
-      JsonPrimitive lineCountOut = new JsonPrimitive(lineCount);
-      result.add("lineCount", lineCountOut);
-      result.add("type", new JsonPrimitive(getType()));
-      return result;
-    }
-
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
-
-    @Override
-    public String toString() {
-      return toJson();
-    }
-
-    public static RetainLineImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      RetainLineImpl dto = new RetainLineImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("lineCount")) {
-        JsonElement lineCountIn = json.get("lineCount");
-        int lineCountOut = lineCountIn.getAsInt();
-        dto.setLineCount(lineCountOut);
-      }
-
-      return dto;
-    }
-    public static RetainLineImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
-
-  public static class DocOpComponentImpl implements com.codenvy.ide.dto.DocOpComponent, JsonSerializable {
-
-    public static DocOpComponentImpl make() {
-      return new DocOpComponentImpl();
-    }
-
-    protected int type;
-    private boolean _hasType;
-
-    public boolean hasType() {
-      return _hasType;
-    }
-
-    @Override
-    public int getType() {
-      return type;
-    }
-
-    public DocOpComponentImpl setType(int v) {
-      _hasType = true;
-      type = v;
-      return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (!(o instanceof DocOpComponentImpl)) {
-        return false;
-      }
-      DocOpComponentImpl other = (DocOpComponentImpl) o;
-      if (this._hasType != other._hasType) {
-        return false;
-      }
-      if (this._hasType) {
-        if (this.type != other.type) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hash = 1;
-      hash = hash * 31 + (_hasType ? java.lang.Integer.valueOf(type).hashCode() : 0);
-      return hash;
-    }
-
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
-      result.add("type", new JsonPrimitive(getType()));
-      return result;
-    }
-
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
-
-    @Override
-    public String toString() {
-      return toJson();
-    }
-
-    public static DocOpComponentImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      DocOpComponentImpl dto = new DocOpComponentImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      return dto;
-    }
-    public static DocOpComponentImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
-
   public static class DocOpImpl implements com.codenvy.ide.dto.DocOp, JsonSerializable {
 
     public static DocOpImpl make() {
@@ -435,6 +159,282 @@ public class DtoServerImpls {
       return dto;
     }
     public static DocOpImpl fromJsonString(String jsonString) {
+      if (jsonString == null) {
+        return null;
+      }
+
+      return fromJsonElement(new JsonParser().parse(jsonString));
+    }
+  }
+
+  public static class DocOpComponentImpl implements com.codenvy.ide.dto.DocOpComponent, JsonSerializable {
+
+    public static DocOpComponentImpl make() {
+      return new DocOpComponentImpl();
+    }
+
+    protected int type;
+    private boolean _hasType;
+
+    public boolean hasType() {
+      return _hasType;
+    }
+
+    @Override
+    public int getType() {
+      return type;
+    }
+
+    public DocOpComponentImpl setType(int v) {
+      _hasType = true;
+      type = v;
+      return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (!(o instanceof DocOpComponentImpl)) {
+        return false;
+      }
+      DocOpComponentImpl other = (DocOpComponentImpl) o;
+      if (this._hasType != other._hasType) {
+        return false;
+      }
+      if (this._hasType) {
+        if (this.type != other.type) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hash = 1;
+      hash = hash * 31 + (_hasType ? java.lang.Integer.valueOf(type).hashCode() : 0);
+      return hash;
+    }
+
+    @Override
+    public JsonElement toJsonElement() {
+      JsonObject result = new JsonObject();
+      result.add("type", new JsonPrimitive(getType()));
+      return result;
+    }
+
+    @Override
+    public String toJson() {
+      return gson.toJson(toJsonElement());
+    }
+
+    @Override
+    public String toString() {
+      return toJson();
+    }
+
+    public static DocOpComponentImpl fromJsonElement(JsonElement jsonElem) {
+      if (jsonElem == null || jsonElem.isJsonNull()) {
+        return null;
+      }
+
+      DocOpComponentImpl dto = new DocOpComponentImpl();
+      JsonObject json = jsonElem.getAsJsonObject();
+
+      return dto;
+    }
+    public static DocOpComponentImpl fromJsonString(String jsonString) {
+      if (jsonString == null) {
+        return null;
+      }
+
+      return fromJsonElement(new JsonParser().parse(jsonString));
+    }
+  }
+
+  public static class DeleteImpl extends DocOpComponentImpl implements com.codenvy.ide.dto.DocOpComponent.Delete, JsonSerializable {
+
+    public static DeleteImpl make() {
+      return new DeleteImpl();
+    }
+
+    protected java.lang.String text;
+    private boolean _hasText;
+
+    public boolean hasText() {
+      return _hasText;
+    }
+
+    @Override
+    public java.lang.String getText() {
+      return text;
+    }
+
+    public DeleteImpl setText(java.lang.String v) {
+      _hasText = true;
+      text = v;
+      return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (!super.equals(o)) {
+        return false;
+      }
+      if (!(o instanceof DeleteImpl)) {
+        return false;
+      }
+      DeleteImpl other = (DeleteImpl) o;
+      if (this._hasText != other._hasText) {
+        return false;
+      }
+      if (this._hasText) {
+        if (!this.text.equals(other.text)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hash = super.hashCode();
+      hash = hash * 31 + (_hasText ? text.hashCode() : 0);
+      return hash;
+    }
+
+    @Override
+    public JsonElement toJsonElement() {
+      JsonObject result = new JsonObject();
+
+      JsonElement textOut = (text == null) ? JsonNull.INSTANCE : new JsonPrimitive(text);
+      result.add("text", textOut);
+      result.add("type", new JsonPrimitive(getType()));
+      return result;
+    }
+
+    @Override
+    public String toJson() {
+      return gson.toJson(toJsonElement());
+    }
+
+    @Override
+    public String toString() {
+      return toJson();
+    }
+
+    public static DeleteImpl fromJsonElement(JsonElement jsonElem) {
+      if (jsonElem == null || jsonElem.isJsonNull()) {
+        return null;
+      }
+
+      DeleteImpl dto = new DeleteImpl();
+      JsonObject json = jsonElem.getAsJsonObject();
+
+      if (json.has("text")) {
+        JsonElement textIn = json.get("text");
+        java.lang.String textOut = gson.fromJson(textIn, java.lang.String.class);
+        dto.setText(textOut);
+      }
+
+      return dto;
+    }
+    public static DeleteImpl fromJsonString(String jsonString) {
+      if (jsonString == null) {
+        return null;
+      }
+
+      return fromJsonElement(new JsonParser().parse(jsonString));
+    }
+  }
+
+  public static class InsertImpl extends DocOpComponentImpl implements com.codenvy.ide.dto.DocOpComponent.Insert, JsonSerializable {
+
+    public static InsertImpl make() {
+      return new InsertImpl();
+    }
+
+    protected java.lang.String text;
+    private boolean _hasText;
+
+    public boolean hasText() {
+      return _hasText;
+    }
+
+    @Override
+    public java.lang.String getText() {
+      return text;
+    }
+
+    public InsertImpl setText(java.lang.String v) {
+      _hasText = true;
+      text = v;
+      return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (!super.equals(o)) {
+        return false;
+      }
+      if (!(o instanceof InsertImpl)) {
+        return false;
+      }
+      InsertImpl other = (InsertImpl) o;
+      if (this._hasText != other._hasText) {
+        return false;
+      }
+      if (this._hasText) {
+        if (!this.text.equals(other.text)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hash = super.hashCode();
+      hash = hash * 31 + (_hasText ? text.hashCode() : 0);
+      return hash;
+    }
+
+    @Override
+    public JsonElement toJsonElement() {
+      JsonObject result = new JsonObject();
+
+      JsonElement textOut = (text == null) ? JsonNull.INSTANCE : new JsonPrimitive(text);
+      result.add("text", textOut);
+      result.add("type", new JsonPrimitive(getType()));
+      return result;
+    }
+
+    @Override
+    public String toJson() {
+      return gson.toJson(toJsonElement());
+    }
+
+    @Override
+    public String toString() {
+      return toJson();
+    }
+
+    public static InsertImpl fromJsonElement(JsonElement jsonElem) {
+      if (jsonElem == null || jsonElem.isJsonNull()) {
+        return null;
+      }
+
+      InsertImpl dto = new InsertImpl();
+      JsonObject json = jsonElem.getAsJsonObject();
+
+      if (json.has("text")) {
+        JsonElement textIn = json.get("text");
+        java.lang.String textOut = gson.fromJson(textIn, java.lang.String.class);
+        dto.setText(textOut);
+      }
+
+      return dto;
+    }
+    public static InsertImpl fromJsonString(String jsonString) {
       if (jsonString == null) {
         return null;
       }
@@ -574,27 +574,27 @@ public class DtoServerImpls {
     }
   }
 
-  public static class InsertImpl extends DocOpComponentImpl implements com.codenvy.ide.dto.DocOpComponent.Insert, JsonSerializable {
+  public static class RetainLineImpl extends DocOpComponentImpl implements com.codenvy.ide.dto.DocOpComponent.RetainLine, JsonSerializable {
 
-    public static InsertImpl make() {
-      return new InsertImpl();
+    public static RetainLineImpl make() {
+      return new RetainLineImpl();
     }
 
-    protected java.lang.String text;
-    private boolean _hasText;
+    protected int lineCount;
+    private boolean _hasLineCount;
 
-    public boolean hasText() {
-      return _hasText;
+    public boolean hasLineCount() {
+      return _hasLineCount;
     }
 
     @Override
-    public java.lang.String getText() {
-      return text;
+    public int getLineCount() {
+      return lineCount;
     }
 
-    public InsertImpl setText(java.lang.String v) {
-      _hasText = true;
-      text = v;
+    public RetainLineImpl setLineCount(int v) {
+      _hasLineCount = true;
+      lineCount = v;
       return this;
     }
 
@@ -603,15 +603,15 @@ public class DtoServerImpls {
       if (!super.equals(o)) {
         return false;
       }
-      if (!(o instanceof InsertImpl)) {
+      if (!(o instanceof RetainLineImpl)) {
         return false;
       }
-      InsertImpl other = (InsertImpl) o;
-      if (this._hasText != other._hasText) {
+      RetainLineImpl other = (RetainLineImpl) o;
+      if (this._hasLineCount != other._hasLineCount) {
         return false;
       }
-      if (this._hasText) {
-        if (!this.text.equals(other.text)) {
+      if (this._hasLineCount) {
+        if (this.lineCount != other.lineCount) {
           return false;
         }
       }
@@ -621,7 +621,7 @@ public class DtoServerImpls {
     @Override
     public int hashCode() {
       int hash = super.hashCode();
-      hash = hash * 31 + (_hasText ? text.hashCode() : 0);
+      hash = hash * 31 + (_hasLineCount ? java.lang.Integer.valueOf(lineCount).hashCode() : 0);
       return hash;
     }
 
@@ -629,8 +629,8 @@ public class DtoServerImpls {
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
 
-      JsonElement textOut = (text == null) ? JsonNull.INSTANCE : new JsonPrimitive(text);
-      result.add("text", textOut);
+      JsonPrimitive lineCountOut = new JsonPrimitive(lineCount);
+      result.add("lineCount", lineCountOut);
       result.add("type", new JsonPrimitive(getType()));
       return result;
     }
@@ -645,23 +645,23 @@ public class DtoServerImpls {
       return toJson();
     }
 
-    public static InsertImpl fromJsonElement(JsonElement jsonElem) {
+    public static RetainLineImpl fromJsonElement(JsonElement jsonElem) {
       if (jsonElem == null || jsonElem.isJsonNull()) {
         return null;
       }
 
-      InsertImpl dto = new InsertImpl();
+      RetainLineImpl dto = new RetainLineImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
-      if (json.has("text")) {
-        JsonElement textIn = json.get("text");
-        java.lang.String textOut = gson.fromJson(textIn, java.lang.String.class);
-        dto.setText(textOut);
+      if (json.has("lineCount")) {
+        JsonElement lineCountIn = json.get("lineCount");
+        int lineCountOut = lineCountIn.getAsInt();
+        dto.setLineCount(lineCountOut);
       }
 
       return dto;
     }
-    public static InsertImpl fromJsonString(String jsonString) {
+    public static RetainLineImpl fromJsonString(String jsonString) {
       if (jsonString == null) {
         return null;
       }

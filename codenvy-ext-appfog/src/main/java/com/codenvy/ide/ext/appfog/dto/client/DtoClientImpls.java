@@ -30,140 +30,22 @@ public class DtoClientImpls {
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "e6f0804aeac5c92f25a8fc2e0255b110d093ac1f";
 
 
-  public static class AppfogSystemServiceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogSystemService {
-    protected AppfogSystemServiceImpl() {}
-
-    @Override
-    public final native java.lang.String getVendor() /*-{
-      return this["vendor"];
-    }-*/;
-
-    public final native AppfogSystemServiceImpl setVendor(java.lang.String vendor) /*-{
-      this["vendor"] = vendor;
-      return this;
-    }-*/;
-
-    public final native boolean hasVendor() /*-{
-      return this.hasOwnProperty("vendor");
-    }-*/;
-
-    @Override
-    public final native com.codenvy.ide.ext.appfog.shared.Infra getInfra() /*-{
-      return this["infra"];
-    }-*/;
-
-    public final native AppfogSystemServiceImpl setInfra(com.codenvy.ide.ext.appfog.shared.Infra infra) /*-{
-      this["infra"] = infra;
-      return this;
-    }-*/;
-
-    public final native boolean hasInfra() /*-{
-      return this.hasOwnProperty("infra");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getType() /*-{
-      return this["type"];
-    }-*/;
-
-    public final native AppfogSystemServiceImpl setType(java.lang.String type) /*-{
-      this["type"] = type;
-      return this;
-    }-*/;
-
-    public final native boolean hasType() /*-{
-      return this.hasOwnProperty("type");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getDescription() /*-{
-      return this["description"];
-    }-*/;
-
-    public final native AppfogSystemServiceImpl setDescription(java.lang.String description) /*-{
-      this["description"] = description;
-      return this;
-    }-*/;
-
-    public final native boolean hasDescription() /*-{
-      return this.hasOwnProperty("description");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getVersion() /*-{
-      return this["version"];
-    }-*/;
-
-    public final native AppfogSystemServiceImpl setVersion(java.lang.String version) /*-{
-      this["version"] = version;
-      return this;
-    }-*/;
-
-    public final native boolean hasVersion() /*-{
-      return this.hasOwnProperty("version");
-    }-*/;
-
-    public static native AppfogSystemServiceImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
-  public static class RuntimeImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.Runtime {
-    protected RuntimeImpl() {}
-
-    @Override
-    public final native java.lang.String getName() /*-{
-      return this["name"];
-    }-*/;
-
-    public final native RuntimeImpl setName(java.lang.String name) /*-{
-      this["name"] = name;
-      return this;
-    }-*/;
-
-    public final native boolean hasName() /*-{
-      return this.hasOwnProperty("name");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getDescription() /*-{
-      return this["description"];
-    }-*/;
-
-    public final native RuntimeImpl setDescription(java.lang.String description) /*-{
-      this["description"] = description;
-      return this;
-    }-*/;
-
-    public final native boolean hasDescription() /*-{
-      return this.hasOwnProperty("description");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getVersion() /*-{
-      return this["version"];
-    }-*/;
-
-    public final native RuntimeImpl setVersion(java.lang.String version) /*-{
-      this["version"] = version;
-      return this;
-    }-*/;
-
-    public final native boolean hasVersion() /*-{
-      return this.hasOwnProperty("version");
-    }-*/;
-
-    public static native RuntimeImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
   public static class AppfogApplicationImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogApplication {
     protected AppfogApplicationImpl() {}
+
+    @Override
+    public final native int getInstances() /*-{
+      return this["instances"];
+    }-*/;
+
+    public final native AppfogApplicationImpl setInstances(int instances) /*-{
+      this["instances"] = instances;
+      return this;
+    }-*/;
+
+    public final native boolean hasInstances() /*-{
+      return this.hasOwnProperty("instances");
+    }-*/;
 
     @Override
     public final native int getRunningInstances() /*-{
@@ -219,20 +101,6 @@ public class DtoClientImpls {
 
     public final native boolean hasUris() /*-{
       return this.hasOwnProperty("uris");
-    }-*/;
-
-    @Override
-    public final native int getInstances() /*-{
-      return this["instances"];
-    }-*/;
-
-    public final native AppfogApplicationImpl setInstances(int instances) /*-{
-      this["instances"] = instances;
-      return this;
-    }-*/;
-
-    public final native boolean hasInstances() /*-{
-      return this.hasOwnProperty("instances");
     }-*/;
 
     @Override
@@ -354,15 +222,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class FrameworkImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.Framework {
-    protected FrameworkImpl() {}
+  public static class AppfogApplicationResourcesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogApplicationResources {
+    protected AppfogApplicationResourcesImpl() {}
 
     @Override
     public final native int getMemory() /*-{
       return this["memory"];
     }-*/;
 
-    public final native FrameworkImpl setMemory(int memory) /*-{
+    public final native AppfogApplicationResourcesImpl setMemory(int memory) /*-{
       this["memory"] = memory;
       return this;
     }-*/;
@@ -372,62 +240,20 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.appfog.shared.Runtime> getRuntimes() /*-{
-      return this["runtimes"];
+    public final native int getDisk() /*-{
+      return this["disk"];
     }-*/;
 
-    public final native FrameworkImpl setRuntimes(com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.appfog.shared.Runtime> runtimes) /*-{
-      this["runtimes"] = runtimes;
+    public final native AppfogApplicationResourcesImpl setDisk(int disk) /*-{
+      this["disk"] = disk;
       return this;
     }-*/;
 
-    public final native boolean hasRuntimes() /*-{
-      return this.hasOwnProperty("runtimes");
+    public final native boolean hasDisk() /*-{
+      return this.hasOwnProperty("disk");
     }-*/;
 
-    @Override
-    public final native java.lang.String getName() /*-{
-      return this["name"];
-    }-*/;
-
-    public final native FrameworkImpl setName(java.lang.String name) /*-{
-      this["name"] = name;
-      return this;
-    }-*/;
-
-    public final native boolean hasName() /*-{
-      return this.hasOwnProperty("name");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getDisplayName() /*-{
-      return this["displayName"];
-    }-*/;
-
-    public final native FrameworkImpl setDisplayName(java.lang.String displayName) /*-{
-      this["displayName"] = displayName;
-      return this;
-    }-*/;
-
-    public final native boolean hasDisplayName() /*-{
-      return this.hasOwnProperty("displayName");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getDescription() /*-{
-      return this["description"];
-    }-*/;
-
-    public final native FrameworkImpl setDescription(java.lang.String description) /*-{
-      this["description"] = description;
-      return this;
-    }-*/;
-
-    public final native boolean hasDescription() /*-{
-      return this.hasOwnProperty("description");
-    }-*/;
-
-    public static native FrameworkImpl make() /*-{
+    public static native AppfogApplicationResourcesImpl make() /*-{
       return {
 
       };
@@ -466,45 +292,17 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native int getDiskLimit() /*-{
-      return this["diskLimit"];
+    public final native com.codenvy.ide.json.JsonArray<java.lang.String> getUris() /*-{
+      return this["uris"];
     }-*/;
 
-    public final native AppfogApplicationStatisticsImpl setDiskLimit(int diskLimit) /*-{
-      this["diskLimit"] = diskLimit;
+    public final native AppfogApplicationStatisticsImpl setUris(com.codenvy.ide.json.JsonArray<java.lang.String> uris) /*-{
+      this["uris"] = uris;
       return this;
     }-*/;
 
-    public final native boolean hasDiskLimit() /*-{
-      return this.hasOwnProperty("diskLimit");
-    }-*/;
-
-    @Override
-    public final native int getDisk() /*-{
-      return this["disk"];
-    }-*/;
-
-    public final native AppfogApplicationStatisticsImpl setDisk(int disk) /*-{
-      this["disk"] = disk;
-      return this;
-    }-*/;
-
-    public final native boolean hasDisk() /*-{
-      return this.hasOwnProperty("disk");
-    }-*/;
-
-    @Override
-    public final native int getMemLimit() /*-{
-      return this["memLimit"];
-    }-*/;
-
-    public final native AppfogApplicationStatisticsImpl setMemLimit(int memLimit) /*-{
-      this["memLimit"] = memLimit;
-      return this;
-    }-*/;
-
-    public final native boolean hasMemLimit() /*-{
-      return this.hasOwnProperty("memLimit");
+    public final native boolean hasUris() /*-{
+      return this.hasOwnProperty("uris");
     }-*/;
 
     @Override
@@ -536,17 +334,45 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.codenvy.ide.json.JsonArray<java.lang.String> getUris() /*-{
-      return this["uris"];
+    public final native int getDisk() /*-{
+      return this["disk"];
     }-*/;
 
-    public final native AppfogApplicationStatisticsImpl setUris(com.codenvy.ide.json.JsonArray<java.lang.String> uris) /*-{
-      this["uris"] = uris;
+    public final native AppfogApplicationStatisticsImpl setDisk(int disk) /*-{
+      this["disk"] = disk;
       return this;
     }-*/;
 
-    public final native boolean hasUris() /*-{
-      return this.hasOwnProperty("uris");
+    public final native boolean hasDisk() /*-{
+      return this.hasOwnProperty("disk");
+    }-*/;
+
+    @Override
+    public final native int getMemLimit() /*-{
+      return this["memLimit"];
+    }-*/;
+
+    public final native AppfogApplicationStatisticsImpl setMemLimit(int memLimit) /*-{
+      this["memLimit"] = memLimit;
+      return this;
+    }-*/;
+
+    public final native boolean hasMemLimit() /*-{
+      return this.hasOwnProperty("memLimit");
+    }-*/;
+
+    @Override
+    public final native int getDiskLimit() /*-{
+      return this["diskLimit"];
+    }-*/;
+
+    public final native AppfogApplicationStatisticsImpl setDiskLimit(int diskLimit) /*-{
+      this["diskLimit"] = diskLimit;
+      return this;
+    }-*/;
+
+    public final native boolean hasDiskLimit() /*-{
+      return this.hasOwnProperty("diskLimit");
     }-*/;
 
     @Override
@@ -606,228 +432,6 @@ public class DtoClientImpls {
     }-*/;
 
     public static native AppfogApplicationStatisticsImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
-  public static class SystemResourcesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.SystemResources {
-    protected SystemResourcesImpl() {}
-
-    @Override
-    public final native int getMemory() /*-{
-      return this["memory"];
-    }-*/;
-
-    public final native SystemResourcesImpl setMemory(int memory) /*-{
-      this["memory"] = memory;
-      return this;
-    }-*/;
-
-    public final native boolean hasMemory() /*-{
-      return this.hasOwnProperty("memory");
-    }-*/;
-
-    @Override
-    public final native int getApps() /*-{
-      return this["apps"];
-    }-*/;
-
-    public final native SystemResourcesImpl setApps(int apps) /*-{
-      this["apps"] = apps;
-      return this;
-    }-*/;
-
-    public final native boolean hasApps() /*-{
-      return this.hasOwnProperty("apps");
-    }-*/;
-
-    @Override
-    public final native int getServices() /*-{
-      return this["services"];
-    }-*/;
-
-    public final native SystemResourcesImpl setServices(int services) /*-{
-      this["services"] = services;
-      return this;
-    }-*/;
-
-    public final native boolean hasServices() /*-{
-      return this.hasOwnProperty("services");
-    }-*/;
-
-    public static native SystemResourcesImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
-  public static class InfraDetailImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.InfraDetail {
-    protected InfraDetailImpl() {}
-
-    @Override
-    public final native java.lang.String getVendor() /*-{
-      return this["vendor"];
-    }-*/;
-
-    public final native InfraDetailImpl setVendor(java.lang.String vendor) /*-{
-      this["vendor"] = vendor;
-      return this;
-    }-*/;
-
-    public final native boolean hasVendor() /*-{
-      return this.hasOwnProperty("vendor");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getLocality() /*-{
-      return this["locality"];
-    }-*/;
-
-    public final native InfraDetailImpl setLocality(java.lang.String locality) /*-{
-      this["locality"] = locality;
-      return this;
-    }-*/;
-
-    public final native boolean hasLocality() /*-{
-      return this.hasOwnProperty("locality");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getInfra() /*-{
-      return this["infra"];
-    }-*/;
-
-    public final native InfraDetailImpl setInfra(java.lang.String infra) /*-{
-      this["infra"] = infra;
-      return this;
-    }-*/;
-
-    public final native boolean hasInfra() /*-{
-      return this.hasOwnProperty("infra");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getBase() /*-{
-      return this["base"];
-    }-*/;
-
-    public final native InfraDetailImpl setBase(java.lang.String base) /*-{
-      this["base"] = base;
-      return this;
-    }-*/;
-
-    public final native boolean hasBase() /*-{
-      return this.hasOwnProperty("base");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getName() /*-{
-      return this["name"];
-    }-*/;
-
-    public final native InfraDetailImpl setName(java.lang.String name) /*-{
-      this["name"] = name;
-      return this;
-    }-*/;
-
-    public final native boolean hasName() /*-{
-      return this.hasOwnProperty("name");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getDescription() /*-{
-      return this["description"];
-    }-*/;
-
-    public final native InfraDetailImpl setDescription(java.lang.String description) /*-{
-      this["description"] = description;
-      return this;
-    }-*/;
-
-    public final native boolean hasDescription() /*-{
-      return this.hasOwnProperty("description");
-    }-*/;
-
-    public static native InfraDetailImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
-  public static class AppfogApplicationResourcesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogApplicationResources {
-    protected AppfogApplicationResourcesImpl() {}
-
-    @Override
-    public final native int getMemory() /*-{
-      return this["memory"];
-    }-*/;
-
-    public final native AppfogApplicationResourcesImpl setMemory(int memory) /*-{
-      this["memory"] = memory;
-      return this;
-    }-*/;
-
-    public final native boolean hasMemory() /*-{
-      return this.hasOwnProperty("memory");
-    }-*/;
-
-    @Override
-    public final native int getDisk() /*-{
-      return this["disk"];
-    }-*/;
-
-    public final native AppfogApplicationResourcesImpl setDisk(int disk) /*-{
-      this["disk"] = disk;
-      return this;
-    }-*/;
-
-    public final native boolean hasDisk() /*-{
-      return this.hasOwnProperty("disk");
-    }-*/;
-
-    public static native AppfogApplicationResourcesImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
-  public static class InfraImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.Infra {
-    protected InfraImpl() {}
-
-    @Override
-    public final native java.lang.String getName() /*-{
-      return this["name"];
-    }-*/;
-
-    public final native InfraImpl setName(java.lang.String name) /*-{
-      this["name"] = name;
-      return this;
-    }-*/;
-
-    public final native boolean hasName() /*-{
-      return this.hasOwnProperty("name");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getProvider() /*-{
-      return this["provider"];
-    }-*/;
-
-    public final native InfraImpl setProvider(java.lang.String provider) /*-{
-      this["provider"] = provider;
-      return this;
-    }-*/;
-
-    public final native boolean hasProvider() /*-{
-      return this.hasOwnProperty("provider");
-    }-*/;
-
-    public static native InfraImpl make() /*-{
       return {
 
       };
@@ -914,88 +518,8 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class InstanceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.Instance {
-    protected InstanceImpl() {}
-
-    @Override
-    public final native int getConsolePort() /*-{
-      return this["consolePort"];
-    }-*/;
-
-    public final native InstanceImpl setConsolePort(int consolePort) /*-{
-      this["consolePort"] = consolePort;
-      return this;
-    }-*/;
-
-    public final native boolean hasConsolePort() /*-{
-      return this.hasOwnProperty("consolePort");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getConsoleHost() /*-{
-      return this["consoleHost"];
-    }-*/;
-
-    public final native InstanceImpl setConsoleHost(java.lang.String consoleHost) /*-{
-      this["consoleHost"] = consoleHost;
-      return this;
-    }-*/;
-
-    public final native boolean hasConsoleHost() /*-{
-      return this.hasOwnProperty("consoleHost");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getDebugHost() /*-{
-      return this["debugHost"];
-    }-*/;
-
-    public final native InstanceImpl setDebugHost(java.lang.String debugHost) /*-{
-      this["debugHost"] = debugHost;
-      return this;
-    }-*/;
-
-    public final native boolean hasDebugHost() /*-{
-      return this.hasOwnProperty("debugHost");
-    }-*/;
-
-    @Override
-    public final native int getDebugPort() /*-{
-      return this["debugPort"];
-    }-*/;
-
-    public final native InstanceImpl setDebugPort(int debugPort) /*-{
-      this["debugPort"] = debugPort;
-      return this;
-    }-*/;
-
-    public final native boolean hasDebugPort() /*-{
-      return this.hasOwnProperty("debugPort");
-    }-*/;
-
-    public static native InstanceImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
   public static class AppfogServicesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogServices {
     protected AppfogServicesImpl() {}
-
-    @Override
-    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.appfog.shared.AppfogProvisionedService> getAppfogProvisionedService() /*-{
-      return this["appfogProvisionedService"];
-    }-*/;
-
-    public final native AppfogServicesImpl setAppfogProvisionedService(com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.appfog.shared.AppfogProvisionedService> appfogProvisionedService) /*-{
-      this["appfogProvisionedService"] = appfogProvisionedService;
-      return this;
-    }-*/;
-
-    public final native boolean hasAppfogProvisionedService() /*-{
-      return this.hasOwnProperty("appfogProvisionedService");
-    }-*/;
 
     @Override
     public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.appfog.shared.AppfogSystemService> getAppfogSystemService() /*-{
@@ -1011,6 +535,20 @@ public class DtoClientImpls {
       return this.hasOwnProperty("appfogSystemService");
     }-*/;
 
+    @Override
+    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.appfog.shared.AppfogProvisionedService> getAppfogProvisionedService() /*-{
+      return this["appfogProvisionedService"];
+    }-*/;
+
+    public final native AppfogServicesImpl setAppfogProvisionedService(com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.appfog.shared.AppfogProvisionedService> appfogProvisionedService) /*-{
+      this["appfogProvisionedService"] = appfogProvisionedService;
+      return this;
+    }-*/;
+
+    public final native boolean hasAppfogProvisionedService() /*-{
+      return this.hasOwnProperty("appfogProvisionedService");
+    }-*/;
+
     public static native AppfogServicesImpl make() /*-{
       return {
 
@@ -1018,77 +556,49 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SystemInfoImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.SystemInfo {
-    protected SystemInfoImpl() {}
+  public static class AppfogSystemServiceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogSystemService {
+    protected AppfogSystemServiceImpl() {}
 
     @Override
-    public final native com.codenvy.ide.ext.appfog.shared.SystemResources getUsage() /*-{
-      return this["usage"];
+    public final native java.lang.String getVendor() /*-{
+      return this["vendor"];
     }-*/;
 
-    public final native SystemInfoImpl setUsage(com.codenvy.ide.ext.appfog.shared.SystemResources usage) /*-{
-      this["usage"] = usage;
+    public final native AppfogSystemServiceImpl setVendor(java.lang.String vendor) /*-{
+      this["vendor"] = vendor;
       return this;
     }-*/;
 
-    public final native boolean hasUsage() /*-{
-      return this.hasOwnProperty("usage");
+    public final native boolean hasVendor() /*-{
+      return this.hasOwnProperty("vendor");
     }-*/;
 
     @Override
-    public final native com.codenvy.ide.json.JsonStringMap<com.codenvy.ide.ext.appfog.shared.Framework> getFrameworks() /*-{
-      return this["frameworks"];
+    public final native com.codenvy.ide.ext.appfog.shared.Infra getInfra() /*-{
+      return this["infra"];
     }-*/;
 
-    public final native SystemInfoImpl setFrameworks(com.codenvy.ide.json.JsonStringMap<com.codenvy.ide.ext.appfog.shared.Framework> frameworks) /*-{
-      this["frameworks"] = frameworks;
+    public final native AppfogSystemServiceImpl setInfra(com.codenvy.ide.ext.appfog.shared.Infra infra) /*-{
+      this["infra"] = infra;
       return this;
     }-*/;
 
-    public final native boolean hasFrameworks() /*-{
-      return this.hasOwnProperty("frameworks");
+    public final native boolean hasInfra() /*-{
+      return this.hasOwnProperty("infra");
     }-*/;
 
     @Override
-    public final native com.codenvy.ide.ext.appfog.shared.SystemResources getLimits() /*-{
-      return this["limits"];
+    public final native java.lang.String getType() /*-{
+      return this["type"];
     }-*/;
 
-    public final native SystemInfoImpl setLimits(com.codenvy.ide.ext.appfog.shared.SystemResources limits) /*-{
-      this["limits"] = limits;
+    public final native AppfogSystemServiceImpl setType(java.lang.String type) /*-{
+      this["type"] = type;
       return this;
     }-*/;
 
-    public final native boolean hasLimits() /*-{
-      return this.hasOwnProperty("limits");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getSupport() /*-{
-      return this["support"];
-    }-*/;
-
-    public final native SystemInfoImpl setSupport(java.lang.String support) /*-{
-      this["support"] = support;
-      return this;
-    }-*/;
-
-    public final native boolean hasSupport() /*-{
-      return this.hasOwnProperty("support");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getName() /*-{
-      return this["name"];
-    }-*/;
-
-    public final native SystemInfoImpl setName(java.lang.String name) /*-{
-      this["name"] = name;
-      return this;
-    }-*/;
-
-    public final native boolean hasName() /*-{
-      return this.hasOwnProperty("name");
+    public final native boolean hasType() /*-{
+      return this.hasOwnProperty("type");
     }-*/;
 
     @Override
@@ -1096,7 +606,7 @@ public class DtoClientImpls {
       return this["description"];
     }-*/;
 
-    public final native SystemInfoImpl setDescription(java.lang.String description) /*-{
+    public final native AppfogSystemServiceImpl setDescription(java.lang.String description) /*-{
       this["description"] = description;
       return this;
     }-*/;
@@ -1110,7 +620,7 @@ public class DtoClientImpls {
       return this["version"];
     }-*/;
 
-    public final native SystemInfoImpl setVersion(java.lang.String version) /*-{
+    public final native AppfogSystemServiceImpl setVersion(java.lang.String version) /*-{
       this["version"] = version;
       return this;
     }-*/;
@@ -1119,59 +629,7 @@ public class DtoClientImpls {
       return this.hasOwnProperty("version");
     }-*/;
 
-    @Override
-    public final native java.lang.String getUser() /*-{
-      return this["user"];
-    }-*/;
-
-    public final native SystemInfoImpl setUser(java.lang.String user) /*-{
-      this["user"] = user;
-      return this;
-    }-*/;
-
-    public final native boolean hasUser() /*-{
-      return this.hasOwnProperty("user");
-    }-*/;
-
-    public static native SystemInfoImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
-  public static class StagingImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.Staging {
-    protected StagingImpl() {}
-
-    @Override
-    public final native java.lang.String getStack() /*-{
-      return this["stack"];
-    }-*/;
-
-    public final native StagingImpl setStack(java.lang.String stack) /*-{
-      this["stack"] = stack;
-      return this;
-    }-*/;
-
-    public final native boolean hasStack() /*-{
-      return this.hasOwnProperty("stack");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getModel() /*-{
-      return this["model"];
-    }-*/;
-
-    public final native StagingImpl setModel(java.lang.String model) /*-{
-      this["model"] = model;
-      return this;
-    }-*/;
-
-    public final native boolean hasModel() /*-{
-      return this.hasOwnProperty("model");
-    }-*/;
-
-    public static native StagingImpl make() /*-{
+    public static native AppfogSystemServiceImpl make() /*-{
       return {
 
       };
@@ -1180,20 +638,6 @@ public class DtoClientImpls {
 
   public static class ApplicationMetaInfoImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.ApplicationMetaInfo {
     protected ApplicationMetaInfoImpl() {}
-
-    @Override
-    public final native double getCreated() /*-{
-      return this["created"];
-    }-*/;
-
-    public final native ApplicationMetaInfoImpl setCreated(double created) /*-{
-      this["created"] = created;
-      return this;
-    }-*/;
-
-    public final native boolean hasCreated() /*-{
-      return this.hasOwnProperty("created");
-    }-*/;
 
     @Override
     public final native java.lang.String getConsole() /*-{
@@ -1207,6 +651,20 @@ public class DtoClientImpls {
 
     public final native boolean hasConsole() /*-{
       return this.hasOwnProperty("console");
+    }-*/;
+
+    @Override
+    public final native double getCreated() /*-{
+      return this["created"];
+    }-*/;
+
+    public final native ApplicationMetaInfoImpl setCreated(double created) /*-{
+      this["created"] = created;
+      return this;
+    }-*/;
+
+    public final native boolean hasCreated() /*-{
+      return this.hasOwnProperty("created");
     }-*/;
 
     @Override
@@ -1248,45 +706,17 @@ public class DtoClientImpls {
     protected CreateAppfogApplicationRequestImpl() {}
 
     @Override
-    public final native java.lang.String getVfsid() /*-{
-      return this["vfsid"];
+    public final native int getInstances() /*-{
+      return this["instances"];
     }-*/;
 
-    public final native CreateAppfogApplicationRequestImpl setVfsid(java.lang.String vfsid) /*-{
-      this["vfsid"] = vfsid;
+    public final native CreateAppfogApplicationRequestImpl setInstances(int instances) /*-{
+      this["instances"] = instances;
       return this;
     }-*/;
 
-    public final native boolean hasVfsid() /*-{
-      return this.hasOwnProperty("vfsid");
-    }-*/;
-
-    @Override
-    public final native boolean isNostart() /*-{
-      return this["isNostart"];
-    }-*/;
-
-    public final native CreateAppfogApplicationRequestImpl setIsNostart(boolean isNostart) /*-{
-      this["isNostart"] = isNostart;
-      return this;
-    }-*/;
-
-    public final native boolean hasIsNostart() /*-{
-      return this.hasOwnProperty("isNostart");
-    }-*/;
-
-    @Override
-    public final native int getMemory() /*-{
-      return this["memory"];
-    }-*/;
-
-    public final native CreateAppfogApplicationRequestImpl setMemory(int memory) /*-{
-      this["memory"] = memory;
-      return this;
-    }-*/;
-
-    public final native boolean hasMemory() /*-{
-      return this.hasOwnProperty("memory");
+    public final native boolean hasInstances() /*-{
+      return this.hasOwnProperty("instances");
     }-*/;
 
     @Override
@@ -1318,17 +748,45 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native int getInstances() /*-{
-      return this["instances"];
+    public final native int getMemory() /*-{
+      return this["memory"];
     }-*/;
 
-    public final native CreateAppfogApplicationRequestImpl setInstances(int instances) /*-{
-      this["instances"] = instances;
+    public final native CreateAppfogApplicationRequestImpl setMemory(int memory) /*-{
+      this["memory"] = memory;
       return this;
     }-*/;
 
-    public final native boolean hasInstances() /*-{
-      return this.hasOwnProperty("instances");
+    public final native boolean hasMemory() /*-{
+      return this.hasOwnProperty("memory");
+    }-*/;
+
+    @Override
+    public final native boolean isNostart() /*-{
+      return this["isNostart"];
+    }-*/;
+
+    public final native CreateAppfogApplicationRequestImpl setIsNostart(boolean isNostart) /*-{
+      this["isNostart"] = isNostart;
+      return this;
+    }-*/;
+
+    public final native boolean hasIsNostart() /*-{
+      return this.hasOwnProperty("isNostart");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getVfsid() /*-{
+      return this["vfsid"];
+    }-*/;
+
+    public final native CreateAppfogApplicationRequestImpl setVfsid(java.lang.String vfsid) /*-{
+      this["vfsid"] = vfsid;
+      return this;
+    }-*/;
+
+    public final native boolean hasVfsid() /*-{
+      return this.hasOwnProperty("vfsid");
     }-*/;
 
     @Override
@@ -1402,6 +860,548 @@ public class DtoClientImpls {
     }-*/;
 
     public static native CreateAppfogApplicationRequestImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class FrameworkImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.Framework {
+    protected FrameworkImpl() {}
+
+    @Override
+    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.appfog.shared.Runtime> getRuntimes() /*-{
+      return this["runtimes"];
+    }-*/;
+
+    public final native FrameworkImpl setRuntimes(com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.appfog.shared.Runtime> runtimes) /*-{
+      this["runtimes"] = runtimes;
+      return this;
+    }-*/;
+
+    public final native boolean hasRuntimes() /*-{
+      return this.hasOwnProperty("runtimes");
+    }-*/;
+
+    @Override
+    public final native int getMemory() /*-{
+      return this["memory"];
+    }-*/;
+
+    public final native FrameworkImpl setMemory(int memory) /*-{
+      this["memory"] = memory;
+      return this;
+    }-*/;
+
+    public final native boolean hasMemory() /*-{
+      return this.hasOwnProperty("memory");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getName() /*-{
+      return this["name"];
+    }-*/;
+
+    public final native FrameworkImpl setName(java.lang.String name) /*-{
+      this["name"] = name;
+      return this;
+    }-*/;
+
+    public final native boolean hasName() /*-{
+      return this.hasOwnProperty("name");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getDisplayName() /*-{
+      return this["displayName"];
+    }-*/;
+
+    public final native FrameworkImpl setDisplayName(java.lang.String displayName) /*-{
+      this["displayName"] = displayName;
+      return this;
+    }-*/;
+
+    public final native boolean hasDisplayName() /*-{
+      return this.hasOwnProperty("displayName");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getDescription() /*-{
+      return this["description"];
+    }-*/;
+
+    public final native FrameworkImpl setDescription(java.lang.String description) /*-{
+      this["description"] = description;
+      return this;
+    }-*/;
+
+    public final native boolean hasDescription() /*-{
+      return this.hasOwnProperty("description");
+    }-*/;
+
+    public static native FrameworkImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class InfraImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.Infra {
+    protected InfraImpl() {}
+
+    @Override
+    public final native java.lang.String getName() /*-{
+      return this["name"];
+    }-*/;
+
+    public final native InfraImpl setName(java.lang.String name) /*-{
+      this["name"] = name;
+      return this;
+    }-*/;
+
+    public final native boolean hasName() /*-{
+      return this.hasOwnProperty("name");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getProvider() /*-{
+      return this["provider"];
+    }-*/;
+
+    public final native InfraImpl setProvider(java.lang.String provider) /*-{
+      this["provider"] = provider;
+      return this;
+    }-*/;
+
+    public final native boolean hasProvider() /*-{
+      return this.hasOwnProperty("provider");
+    }-*/;
+
+    public static native InfraImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class InfraDetailImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.InfraDetail {
+    protected InfraDetailImpl() {}
+
+    @Override
+    public final native java.lang.String getVendor() /*-{
+      return this["vendor"];
+    }-*/;
+
+    public final native InfraDetailImpl setVendor(java.lang.String vendor) /*-{
+      this["vendor"] = vendor;
+      return this;
+    }-*/;
+
+    public final native boolean hasVendor() /*-{
+      return this.hasOwnProperty("vendor");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getBase() /*-{
+      return this["base"];
+    }-*/;
+
+    public final native InfraDetailImpl setBase(java.lang.String base) /*-{
+      this["base"] = base;
+      return this;
+    }-*/;
+
+    public final native boolean hasBase() /*-{
+      return this.hasOwnProperty("base");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getLocality() /*-{
+      return this["locality"];
+    }-*/;
+
+    public final native InfraDetailImpl setLocality(java.lang.String locality) /*-{
+      this["locality"] = locality;
+      return this;
+    }-*/;
+
+    public final native boolean hasLocality() /*-{
+      return this.hasOwnProperty("locality");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getInfra() /*-{
+      return this["infra"];
+    }-*/;
+
+    public final native InfraDetailImpl setInfra(java.lang.String infra) /*-{
+      this["infra"] = infra;
+      return this;
+    }-*/;
+
+    public final native boolean hasInfra() /*-{
+      return this.hasOwnProperty("infra");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getName() /*-{
+      return this["name"];
+    }-*/;
+
+    public final native InfraDetailImpl setName(java.lang.String name) /*-{
+      this["name"] = name;
+      return this;
+    }-*/;
+
+    public final native boolean hasName() /*-{
+      return this.hasOwnProperty("name");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getDescription() /*-{
+      return this["description"];
+    }-*/;
+
+    public final native InfraDetailImpl setDescription(java.lang.String description) /*-{
+      this["description"] = description;
+      return this;
+    }-*/;
+
+    public final native boolean hasDescription() /*-{
+      return this.hasOwnProperty("description");
+    }-*/;
+
+    public static native InfraDetailImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class InstanceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.Instance {
+    protected InstanceImpl() {}
+
+    @Override
+    public final native java.lang.String getDebugHost() /*-{
+      return this["debugHost"];
+    }-*/;
+
+    public final native InstanceImpl setDebugHost(java.lang.String debugHost) /*-{
+      this["debugHost"] = debugHost;
+      return this;
+    }-*/;
+
+    public final native boolean hasDebugHost() /*-{
+      return this.hasOwnProperty("debugHost");
+    }-*/;
+
+    @Override
+    public final native int getDebugPort() /*-{
+      return this["debugPort"];
+    }-*/;
+
+    public final native InstanceImpl setDebugPort(int debugPort) /*-{
+      this["debugPort"] = debugPort;
+      return this;
+    }-*/;
+
+    public final native boolean hasDebugPort() /*-{
+      return this.hasOwnProperty("debugPort");
+    }-*/;
+
+    @Override
+    public final native int getConsolePort() /*-{
+      return this["consolePort"];
+    }-*/;
+
+    public final native InstanceImpl setConsolePort(int consolePort) /*-{
+      this["consolePort"] = consolePort;
+      return this;
+    }-*/;
+
+    public final native boolean hasConsolePort() /*-{
+      return this.hasOwnProperty("consolePort");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getConsoleHost() /*-{
+      return this["consoleHost"];
+    }-*/;
+
+    public final native InstanceImpl setConsoleHost(java.lang.String consoleHost) /*-{
+      this["consoleHost"] = consoleHost;
+      return this;
+    }-*/;
+
+    public final native boolean hasConsoleHost() /*-{
+      return this.hasOwnProperty("consoleHost");
+    }-*/;
+
+    public static native InstanceImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class RuntimeImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.Runtime {
+    protected RuntimeImpl() {}
+
+    @Override
+    public final native java.lang.String getName() /*-{
+      return this["name"];
+    }-*/;
+
+    public final native RuntimeImpl setName(java.lang.String name) /*-{
+      this["name"] = name;
+      return this;
+    }-*/;
+
+    public final native boolean hasName() /*-{
+      return this.hasOwnProperty("name");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getDescription() /*-{
+      return this["description"];
+    }-*/;
+
+    public final native RuntimeImpl setDescription(java.lang.String description) /*-{
+      this["description"] = description;
+      return this;
+    }-*/;
+
+    public final native boolean hasDescription() /*-{
+      return this.hasOwnProperty("description");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getVersion() /*-{
+      return this["version"];
+    }-*/;
+
+    public final native RuntimeImpl setVersion(java.lang.String version) /*-{
+      this["version"] = version;
+      return this;
+    }-*/;
+
+    public final native boolean hasVersion() /*-{
+      return this.hasOwnProperty("version");
+    }-*/;
+
+    public static native RuntimeImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class StagingImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.Staging {
+    protected StagingImpl() {}
+
+    @Override
+    public final native java.lang.String getStack() /*-{
+      return this["stack"];
+    }-*/;
+
+    public final native StagingImpl setStack(java.lang.String stack) /*-{
+      this["stack"] = stack;
+      return this;
+    }-*/;
+
+    public final native boolean hasStack() /*-{
+      return this.hasOwnProperty("stack");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getModel() /*-{
+      return this["model"];
+    }-*/;
+
+    public final native StagingImpl setModel(java.lang.String model) /*-{
+      this["model"] = model;
+      return this;
+    }-*/;
+
+    public final native boolean hasModel() /*-{
+      return this.hasOwnProperty("model");
+    }-*/;
+
+    public static native StagingImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class SystemInfoImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.SystemInfo {
+    protected SystemInfoImpl() {}
+
+    @Override
+    public final native com.codenvy.ide.ext.appfog.shared.SystemResources getUsage() /*-{
+      return this["usage"];
+    }-*/;
+
+    public final native SystemInfoImpl setUsage(com.codenvy.ide.ext.appfog.shared.SystemResources usage) /*-{
+      this["usage"] = usage;
+      return this;
+    }-*/;
+
+    public final native boolean hasUsage() /*-{
+      return this.hasOwnProperty("usage");
+    }-*/;
+
+    @Override
+    public final native com.codenvy.ide.ext.appfog.shared.SystemResources getLimits() /*-{
+      return this["limits"];
+    }-*/;
+
+    public final native SystemInfoImpl setLimits(com.codenvy.ide.ext.appfog.shared.SystemResources limits) /*-{
+      this["limits"] = limits;
+      return this;
+    }-*/;
+
+    public final native boolean hasLimits() /*-{
+      return this.hasOwnProperty("limits");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getSupport() /*-{
+      return this["support"];
+    }-*/;
+
+    public final native SystemInfoImpl setSupport(java.lang.String support) /*-{
+      this["support"] = support;
+      return this;
+    }-*/;
+
+    public final native boolean hasSupport() /*-{
+      return this.hasOwnProperty("support");
+    }-*/;
+
+    @Override
+    public final native com.codenvy.ide.json.JsonStringMap<com.codenvy.ide.ext.appfog.shared.Framework> getFrameworks() /*-{
+      return this["frameworks"];
+    }-*/;
+
+    public final native SystemInfoImpl setFrameworks(com.codenvy.ide.json.JsonStringMap<com.codenvy.ide.ext.appfog.shared.Framework> frameworks) /*-{
+      this["frameworks"] = frameworks;
+      return this;
+    }-*/;
+
+    public final native boolean hasFrameworks() /*-{
+      return this.hasOwnProperty("frameworks");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getName() /*-{
+      return this["name"];
+    }-*/;
+
+    public final native SystemInfoImpl setName(java.lang.String name) /*-{
+      this["name"] = name;
+      return this;
+    }-*/;
+
+    public final native boolean hasName() /*-{
+      return this.hasOwnProperty("name");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getDescription() /*-{
+      return this["description"];
+    }-*/;
+
+    public final native SystemInfoImpl setDescription(java.lang.String description) /*-{
+      this["description"] = description;
+      return this;
+    }-*/;
+
+    public final native boolean hasDescription() /*-{
+      return this.hasOwnProperty("description");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getVersion() /*-{
+      return this["version"];
+    }-*/;
+
+    public final native SystemInfoImpl setVersion(java.lang.String version) /*-{
+      this["version"] = version;
+      return this;
+    }-*/;
+
+    public final native boolean hasVersion() /*-{
+      return this.hasOwnProperty("version");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getUser() /*-{
+      return this["user"];
+    }-*/;
+
+    public final native SystemInfoImpl setUser(java.lang.String user) /*-{
+      this["user"] = user;
+      return this;
+    }-*/;
+
+    public final native boolean hasUser() /*-{
+      return this.hasOwnProperty("user");
+    }-*/;
+
+    public static native SystemInfoImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class SystemResourcesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.SystemResources {
+    protected SystemResourcesImpl() {}
+
+    @Override
+    public final native int getMemory() /*-{
+      return this["memory"];
+    }-*/;
+
+    public final native SystemResourcesImpl setMemory(int memory) /*-{
+      this["memory"] = memory;
+      return this;
+    }-*/;
+
+    public final native boolean hasMemory() /*-{
+      return this.hasOwnProperty("memory");
+    }-*/;
+
+    @Override
+    public final native int getApps() /*-{
+      return this["apps"];
+    }-*/;
+
+    public final native SystemResourcesImpl setApps(int apps) /*-{
+      this["apps"] = apps;
+      return this;
+    }-*/;
+
+    public final native boolean hasApps() /*-{
+      return this.hasOwnProperty("apps");
+    }-*/;
+
+    @Override
+    public final native int getServices() /*-{
+      return this["services"];
+    }-*/;
+
+    public final native SystemResourcesImpl setServices(int services) /*-{
+      this["services"] = services;
+      return this;
+    }-*/;
+
+    public final native boolean hasServices() /*-{
+      return this.hasOwnProperty("services");
+    }-*/;
+
+    public static native SystemResourcesImpl make() /*-{
       return {
 
       };

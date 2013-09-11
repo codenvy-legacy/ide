@@ -18,7 +18,6 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
@@ -30,8 +29,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Simple source generator that takes in a jar of interface definitions and
@@ -93,13 +91,14 @@ public class DtoGenerator {
             DtoTemplate dtoTemplate = new DtoTemplate(packageName, className, getApiHash(dto_packages), impl.equals(SERVER));
             Reflections reflection =
                     new Reflections(new ConfigurationBuilder().setUrls(urls).setScanners(new TypeAnnotationsScanner()));
-            Set<Class<?>> classes = reflection.getTypesAnnotatedWith(DTO.class);
+            List<Class<?>> classes = new ArrayList<>(reflection.getTypesAnnotatedWith(DTO.class));
+
+            // We sort alphabetically to ensure deterministic order of routing types.
+            Collections.sort(classes, new ClassesComparator());
+
             for (Class clazz : classes) {
                 dtoTemplate.addInterface(clazz);
             }
-
-            // We sort alphabetically to ensure deterministic order of routing types.
-//            Collections.sort(classFilePaths);
 
             // Emit the generated file.
             Files.createDirectories(outFile.toPath().getParent());
@@ -126,5 +125,12 @@ public class DtoGenerator {
             urls.addAll(ClasspathHelper.forPackage(pack));
         }
         return urls;
+    }
+
+    private static class ClassesComparator implements Comparator<Class> {
+        @Override
+        public int compare(Class o1, Class o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
     }
 }
