@@ -394,10 +394,12 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                     @Override
                     protected void onFailure(Throwable exception) {
                         IDE.fireEvent(new OutputEvent("File \"" + fileFullPath + "\" doesn't exist.", Type.WARNING));
+                        removeProjectOpenedHandler();
                     }
                 });
             } catch (RequestException e) {
                 IDE.fireEvent(new ExceptionThrownEvent(e));
+                removeProjectOpenedHandler();
             }
         }
     }
