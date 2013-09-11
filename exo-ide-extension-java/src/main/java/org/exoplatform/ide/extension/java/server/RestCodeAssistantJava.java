@@ -430,12 +430,16 @@ public class RestCodeAssistantJava {
             LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
             throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text/plain");
         }
-        statusUrl = storageClient.updateDockIndex(dependencies, buildStatus.getDownloadUrl());
-        try {
-            waitStorageTaskFinish(statusUrl);
-        } catch (Exception e)//Ignore exception in case add javadoc
+        
+        if (buildStatus.getDownloadUrl() != null && !buildStatus.getDownloadUrl().isEmpty())
         {
-            LOG.debug("Adding sources artifact fail : " + statusUrl, e);
+            statusUrl = storageClient.updateDockIndex(dependencies, buildStatus.getDownloadUrl());
+            try {
+                waitStorageTaskFinish(statusUrl);
+            } catch (Exception e)// Ignore exception in case add javadoc
+            {
+                LOG.debug("Adding sources artifact fail : " + statusUrl, e);
+            }
         }
 
         return codeAssistant.getAllPackages(project, vfs);
