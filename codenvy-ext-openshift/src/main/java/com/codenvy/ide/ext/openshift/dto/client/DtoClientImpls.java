@@ -48,20 +48,6 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String getPublicUrl() /*-{
-      return this["publicUrl"];
-    }-*/;
-
-    public final native AppInfoImpl setPublicUrl(java.lang.String publicUrl) /*-{
-      this["publicUrl"] = publicUrl;
-      return this;
-    }-*/;
-
-    public final native boolean hasPublicUrl() /*-{
-      return this.hasOwnProperty("publicUrl");
-    }-*/;
-
-    @Override
     public final native double getCreationTime() /*-{
       return this["creationTime"];
     }-*/;
@@ -87,6 +73,20 @@ public class DtoClientImpls {
 
     public final native boolean hasEmbeddedCartridges() /*-{
       return this.hasOwnProperty("embeddedCartridges");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getPublicUrl() /*-{
+      return this["publicUrl"];
+    }-*/;
+
+    public final native AppInfoImpl setPublicUrl(java.lang.String publicUrl) /*-{
+      this["publicUrl"] = publicUrl;
+      return this;
+    }-*/;
+
+    public final native boolean hasPublicUrl() /*-{
+      return this.hasOwnProperty("publicUrl");
     }-*/;
 
     @Override
@@ -118,86 +118,6 @@ public class DtoClientImpls {
     }-*/;
 
     public static native AppInfoImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
-  public static class RHUserInfoImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.openshift.shared.RHUserInfo {
-    protected RHUserInfoImpl() {}
-
-    @Override
-    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.openshift.shared.AppInfo> getApps() /*-{
-      return this["apps"];
-    }-*/;
-
-    public final native RHUserInfoImpl setApps(com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.openshift.shared.AppInfo> apps) /*-{
-      this["apps"] = apps;
-      return this;
-    }-*/;
-
-    public final native boolean hasApps() /*-{
-      return this.hasOwnProperty("apps");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getRhcDomain() /*-{
-      return this["rhcDomain"];
-    }-*/;
-
-    public final native RHUserInfoImpl setRhcDomain(java.lang.String rhcDomain) /*-{
-      this["rhcDomain"] = rhcDomain;
-      return this;
-    }-*/;
-
-    public final native boolean hasRhcDomain() /*-{
-      return this.hasOwnProperty("rhcDomain");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getRhlogin() /*-{
-      return this["rhlogin"];
-    }-*/;
-
-    public final native RHUserInfoImpl setRhlogin(java.lang.String rhlogin) /*-{
-      this["rhlogin"] = rhlogin;
-      return this;
-    }-*/;
-
-    public final native boolean hasRhlogin() /*-{
-      return this.hasOwnProperty("rhlogin");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getUuid() /*-{
-      return this["uuid"];
-    }-*/;
-
-    public final native RHUserInfoImpl setUuid(java.lang.String uuid) /*-{
-      this["uuid"] = uuid;
-      return this;
-    }-*/;
-
-    public final native boolean hasUuid() /*-{
-      return this.hasOwnProperty("uuid");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getNamespace() /*-{
-      return this["namespace"];
-    }-*/;
-
-    public final native RHUserInfoImpl setNamespace(java.lang.String namespace) /*-{
-      this["namespace"] = namespace;
-      return this;
-    }-*/;
-
-    public final native boolean hasNamespace() /*-{
-      return this.hasOwnProperty("namespace");
-    }-*/;
-
-    public static native RHUserInfoImpl make() /*-{
       return {
 
       };
@@ -236,6 +156,86 @@ public class DtoClientImpls {
     }-*/;
 
     public static native CredentialsImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class RHUserInfoImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.openshift.shared.RHUserInfo {
+    protected RHUserInfoImpl() {}
+
+    @Override
+    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.openshift.shared.AppInfo> getApps() /*-{
+      return this["apps"];
+    }-*/;
+
+    public final native RHUserInfoImpl setApps(com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.openshift.shared.AppInfo> apps) /*-{
+      this["apps"] = apps;
+      return this;
+    }-*/;
+
+    public final native boolean hasApps() /*-{
+      return this.hasOwnProperty("apps");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getRhcDomain() /*-{
+      return this["rhcDomain"];
+    }-*/;
+
+    public final native RHUserInfoImpl setRhcDomain(java.lang.String rhcDomain) /*-{
+      this["rhcDomain"] = rhcDomain;
+      return this;
+    }-*/;
+
+    public final native boolean hasRhcDomain() /*-{
+      return this.hasOwnProperty("rhcDomain");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getUuid() /*-{
+      return this["uuid"];
+    }-*/;
+
+    public final native RHUserInfoImpl setUuid(java.lang.String uuid) /*-{
+      this["uuid"] = uuid;
+      return this;
+    }-*/;
+
+    public final native boolean hasUuid() /*-{
+      return this.hasOwnProperty("uuid");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getRhlogin() /*-{
+      return this["rhlogin"];
+    }-*/;
+
+    public final native RHUserInfoImpl setRhlogin(java.lang.String rhlogin) /*-{
+      this["rhlogin"] = rhlogin;
+      return this;
+    }-*/;
+
+    public final native boolean hasRhlogin() /*-{
+      return this.hasOwnProperty("rhlogin");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getNamespace() /*-{
+      return this["namespace"];
+    }-*/;
+
+    public final native RHUserInfoImpl setNamespace(java.lang.String namespace) /*-{
+      this["namespace"] = namespace;
+      return this;
+    }-*/;
+
+    public final native boolean hasNamespace() /*-{
+      return this.hasOwnProperty("namespace");
+    }-*/;
+
+    public static native RHUserInfoImpl make() /*-{
       return {
 
       };

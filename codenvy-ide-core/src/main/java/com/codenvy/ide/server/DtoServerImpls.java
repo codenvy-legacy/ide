@@ -44,130 +44,6 @@ public class DtoServerImpls {
 
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "89fa4319e484f2fd1f6ddf74028df2fe86085c6f";
 
-  public static class UpdateUserAttributesImpl implements com.codenvy.ide.api.user.UpdateUserAttributes, JsonSerializable {
-
-    public static UpdateUserAttributesImpl make() {
-      return new UpdateUserAttributesImpl();
-    }
-
-    protected java.util.Map<String, java.lang.String> attributes;
-    private boolean _hasAttributes;
-
-    public boolean hasAttributes() {
-      return _hasAttributes;
-    }
-
-    @Override
-    public com.codenvy.ide.json.JsonStringMap<java.lang.String> getAttributes() {
-      ensureAttributes();
-      return (com.codenvy.ide.json.JsonStringMap) new com.codenvy.ide.json.java.JsonStringMapAdapter(attributes);
-    }
-
-    public UpdateUserAttributesImpl setAttributes(java.util.Map<String, java.lang.String> v) {
-      _hasAttributes = true;
-      attributes = v;
-      return this;
-    }
-
-    public void putAttributes(String k, java.lang.String v) {
-      ensureAttributes();
-      attributes.put(k, v);
-    }
-
-    public void clearAttributes() {
-      ensureAttributes();
-      attributes.clear();
-    }
-
-    private void ensureAttributes() {
-      if (!_hasAttributes) {
-        setAttributes(attributes != null ? attributes : new java.util.HashMap<String, java.lang.String>());
-      }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (!(o instanceof UpdateUserAttributesImpl)) {
-        return false;
-      }
-      UpdateUserAttributesImpl other = (UpdateUserAttributesImpl) o;
-      if (this._hasAttributes != other._hasAttributes) {
-        return false;
-      }
-      if (this._hasAttributes) {
-        if (!this.attributes.equals(other.attributes)) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hash = 1;
-      hash = hash * 31 + (_hasAttributes ? attributes.hashCode() : 0);
-      return hash;
-    }
-
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
-
-      JsonObject attributesOut = new JsonObject();
-      ensureAttributes();
-      for (Map.Entry<String, java.lang.String> entry0 : attributes.entrySet()) {
-        java.lang.String attributes_ = entry0.getValue();
-        JsonElement attributesOut_ = (attributes_ == null) ? JsonNull.INSTANCE : new JsonPrimitive(attributes_);
-        attributesOut.add(entry0.getKey(), attributesOut_);
-      }
-      result.add("attributes", attributesOut);
-      return result;
-    }
-
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
-
-    @Override
-    public String toString() {
-      return toJson();
-    }
-
-    public static UpdateUserAttributesImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      UpdateUserAttributesImpl dto = new UpdateUserAttributesImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("attributes")) {
-        JsonElement attributesIn = json.get("attributes");
-        java.util.HashMap<String, java.lang.String> attributesOut = null;
-        if (attributesIn != null && !attributesIn.isJsonNull()) {
-          attributesOut = new java.util.HashMap<String, java.lang.String>();
-          java.util.Set<Map.Entry<String, JsonElement>> entries0 = attributesIn.getAsJsonObject().entrySet();
-          for (Map.Entry<String, JsonElement> entry0 : entries0) {
-            JsonElement attributesIn_ = entry0.getValue();
-            java.lang.String attributesOut_ = gson.fromJson(attributesIn_, java.lang.String.class);
-            attributesOut.put(entry0.getKey(), attributesOut_);
-          }
-        }
-        dto.setAttributes(attributesOut);
-      }
-
-      return dto;
-    }
-    public static UpdateUserAttributesImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
-
   public static class UserImpl implements com.codenvy.ide.api.user.User, JsonSerializable {
 
     public static UserImpl make() {
@@ -319,6 +195,130 @@ public class DtoServerImpls {
       return dto;
     }
     public static UserImpl fromJsonString(String jsonString) {
+      if (jsonString == null) {
+        return null;
+      }
+
+      return fromJsonElement(new JsonParser().parse(jsonString));
+    }
+  }
+
+  public static class UpdateUserAttributesImpl implements com.codenvy.ide.api.user.UpdateUserAttributes, JsonSerializable {
+
+    public static UpdateUserAttributesImpl make() {
+      return new UpdateUserAttributesImpl();
+    }
+
+    protected java.util.Map<String, java.lang.String> attributes;
+    private boolean _hasAttributes;
+
+    public boolean hasAttributes() {
+      return _hasAttributes;
+    }
+
+    @Override
+    public com.codenvy.ide.json.JsonStringMap<java.lang.String> getAttributes() {
+      ensureAttributes();
+      return (com.codenvy.ide.json.JsonStringMap) new com.codenvy.ide.json.java.JsonStringMapAdapter(attributes);
+    }
+
+    public UpdateUserAttributesImpl setAttributes(java.util.Map<String, java.lang.String> v) {
+      _hasAttributes = true;
+      attributes = v;
+      return this;
+    }
+
+    public void putAttributes(String k, java.lang.String v) {
+      ensureAttributes();
+      attributes.put(k, v);
+    }
+
+    public void clearAttributes() {
+      ensureAttributes();
+      attributes.clear();
+    }
+
+    private void ensureAttributes() {
+      if (!_hasAttributes) {
+        setAttributes(attributes != null ? attributes : new java.util.HashMap<String, java.lang.String>());
+      }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (!(o instanceof UpdateUserAttributesImpl)) {
+        return false;
+      }
+      UpdateUserAttributesImpl other = (UpdateUserAttributesImpl) o;
+      if (this._hasAttributes != other._hasAttributes) {
+        return false;
+      }
+      if (this._hasAttributes) {
+        if (!this.attributes.equals(other.attributes)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hash = 1;
+      hash = hash * 31 + (_hasAttributes ? attributes.hashCode() : 0);
+      return hash;
+    }
+
+    @Override
+    public JsonElement toJsonElement() {
+      JsonObject result = new JsonObject();
+
+      JsonObject attributesOut = new JsonObject();
+      ensureAttributes();
+      for (Map.Entry<String, java.lang.String> entry0 : attributes.entrySet()) {
+        java.lang.String attributes_ = entry0.getValue();
+        JsonElement attributesOut_ = (attributes_ == null) ? JsonNull.INSTANCE : new JsonPrimitive(attributes_);
+        attributesOut.add(entry0.getKey(), attributesOut_);
+      }
+      result.add("attributes", attributesOut);
+      return result;
+    }
+
+    @Override
+    public String toJson() {
+      return gson.toJson(toJsonElement());
+    }
+
+    @Override
+    public String toString() {
+      return toJson();
+    }
+
+    public static UpdateUserAttributesImpl fromJsonElement(JsonElement jsonElem) {
+      if (jsonElem == null || jsonElem.isJsonNull()) {
+        return null;
+      }
+
+      UpdateUserAttributesImpl dto = new UpdateUserAttributesImpl();
+      JsonObject json = jsonElem.getAsJsonObject();
+
+      if (json.has("attributes")) {
+        JsonElement attributesIn = json.get("attributes");
+        java.util.HashMap<String, java.lang.String> attributesOut = null;
+        if (attributesIn != null && !attributesIn.isJsonNull()) {
+          attributesOut = new java.util.HashMap<String, java.lang.String>();
+          java.util.Set<Map.Entry<String, JsonElement>> entries0 = attributesIn.getAsJsonObject().entrySet();
+          for (Map.Entry<String, JsonElement> entry0 : entries0) {
+            JsonElement attributesIn_ = entry0.getValue();
+            java.lang.String attributesOut_ = gson.fromJson(attributesIn_, java.lang.String.class);
+            attributesOut.put(entry0.getKey(), attributesOut_);
+          }
+        }
+        dto.setAttributes(attributesOut);
+      }
+
+      return dto;
+    }
+    public static UpdateUserAttributesImpl fromJsonString(String jsonString) {
       if (jsonString == null) {
         return null;
       }

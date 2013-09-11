@@ -68,15 +68,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class DeleteImpl extends DocOpComponentImpl implements com.codenvy.ide.dto.DocOpComponent.Delete {
-    protected DeleteImpl() {}
+  public static class InsertImpl extends DocOpComponentImpl implements com.codenvy.ide.dto.DocOpComponent.Insert {
+    protected InsertImpl() {}
 
     @Override
     public final native java.lang.String getText() /*-{
       return this["text"];
     }-*/;
 
-    public final native DeleteImpl setText(java.lang.String text) /*-{
+    public final native InsertImpl setText(java.lang.String text) /*-{
       this["text"] = text;
       return this;
     }-*/;
@@ -85,7 +85,7 @@ public class DtoClientImpls {
       return this.hasOwnProperty("text");
     }-*/;
 
-    public static native DeleteImpl make() /*-{
+    public static native InsertImpl make() /*-{
       return {
 
       };
@@ -116,30 +116,6 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class InsertImpl extends DocOpComponentImpl implements com.codenvy.ide.dto.DocOpComponent.Insert {
-    protected InsertImpl() {}
-
-    @Override
-    public final native java.lang.String getText() /*-{
-      return this["text"];
-    }-*/;
-
-    public final native InsertImpl setText(java.lang.String text) /*-{
-      this["text"] = text;
-      return this;
-    }-*/;
-
-    public final native boolean hasText() /*-{
-      return this.hasOwnProperty("text");
-    }-*/;
-
-    public static native InsertImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
   public static class DocOpImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.dto.DocOp {
     protected DocOpImpl() {}
 
@@ -158,6 +134,30 @@ public class DtoClientImpls {
     }-*/;
 
     public static native DocOpImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class DeleteImpl extends DocOpComponentImpl implements com.codenvy.ide.dto.DocOpComponent.Delete {
+    protected DeleteImpl() {}
+
+    @Override
+    public final native java.lang.String getText() /*-{
+      return this["text"];
+    }-*/;
+
+    public final native DeleteImpl setText(java.lang.String text) /*-{
+      this["text"] = text;
+      return this;
+    }-*/;
+
+    public final native boolean hasText() /*-{
+      return this.hasOwnProperty("text");
+    }-*/;
+
+    public static native DeleteImpl make() /*-{
       return {
 
       };

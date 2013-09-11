@@ -34,20 +34,6 @@ public class DtoClientImpls {
     protected JobImpl() {}
 
     @Override
-    public final native java.lang.String getBuildUrl() /*-{
-      return this["buildUrl"];
-    }-*/;
-
-    public final native JobImpl setBuildUrl(java.lang.String buildUrl) /*-{
-      this["buildUrl"] = buildUrl;
-      return this;
-    }-*/;
-
-    public final native boolean hasBuildUrl() /*-{
-      return this.hasOwnProperty("buildUrl");
-    }-*/;
-
-    @Override
     public final native java.lang.String getStatusUrl() /*-{
       return this["statusUrl"];
     }-*/;
@@ -59,6 +45,20 @@ public class DtoClientImpls {
 
     public final native boolean hasStatusUrl() /*-{
       return this.hasOwnProperty("statusUrl");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getBuildUrl() /*-{
+      return this["buildUrl"];
+    }-*/;
+
+    public final native JobImpl setBuildUrl(java.lang.String buildUrl) /*-{
+      this["buildUrl"] = buildUrl;
+      return this;
+    }-*/;
+
+    public final native boolean hasBuildUrl() /*-{
+      return this.hasOwnProperty("buildUrl");
     }-*/;
 
     @Override

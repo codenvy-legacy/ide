@@ -28,6 +28,7 @@ import com.codenvy.ide.ext.java.client.internal.compiler.env.AccessRestriction;
 import com.codenvy.ide.ext.java.client.internal.compiler.env.IBinaryMethod;
 import com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.ext.java.client.internal.compiler.env.NameEnvironmentAnswer;
+import com.codenvy.ide.ext.java.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.shared.*;
 import com.codenvy.ide.json.JsonStringSet;
 import com.codenvy.ide.json.JsonStringSet.IterationCallback;
@@ -45,10 +46,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.Splittable;
-import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import java.util.HashSet;
 import java.util.List;
@@ -79,8 +76,6 @@ public class NameEnvironment implements INameEnvironment {
 
     private static Set<String> packages = new HashSet<String>();
 
-    private final JavaAutoBeanFactory autoBeanFactory;
-
     public static void clearFQNBlackList() {
         blackSet.clear();
     }
@@ -88,9 +83,9 @@ public class NameEnvironment implements INameEnvironment {
     /**
      *
      */
-    public NameEnvironment(String projectId, JavaAutoBeanFactory autoBeanFactory, String restContenxt) {
+    public NameEnvironment(String projectId, String restContenxt) {
         this.projectId = projectId;
-        this.autoBeanFactory = autoBeanFactory;
+        //this.autoBeanFactory = autoBeanFactory;
         restServiceContext = restContenxt;
         wsName = '/' + Utils.getWorkspaceName();
     }
@@ -397,7 +392,6 @@ public class NameEnvironment implements INameEnvironment {
         if (qualifiedName.length == 0) {
             return;
         }
-        AutoBean<TypesList> autoBean = autoBeanFactory.types();
         String searchType = convertSearchFilterToModelFilter(searchFor);
         String url = null;
         if (searchType == null) {
@@ -420,10 +414,9 @@ public class NameEnvironment implements INameEnvironment {
         try {
 
             String typesJson = runSyncReques(url);
-            Splittable data = StringQuoter.split(typesJson);
-            AutoBeanCodex.decodeInto(data, autoBean);
+            DtoClientImpls.TypesListImpl autoBean = DtoClientImpls.TypesListImpl.deserialize(typesJson);
 
-            for (ShortTypeInfo info : autoBean.as().getTypes()) {
+            for (ShortTypeInfo info : autoBean.getTypes().asIterable()) {
                 requestor.acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(),
                                      info.getName().substring(info.getName().lastIndexOf(".") + 1).toCharArray(),
                                      null,

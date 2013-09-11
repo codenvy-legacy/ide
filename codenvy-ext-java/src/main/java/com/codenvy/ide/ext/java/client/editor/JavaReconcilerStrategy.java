@@ -18,7 +18,6 @@
 package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
-import com.codenvy.ide.ext.java.client.JavaAutoBeanFactory;
 import com.codenvy.ide.ext.java.client.NameEnvironment;
 import com.codenvy.ide.ext.java.client.TypeInfoStorage;
 import com.codenvy.ide.ext.java.client.core.IProblemRequestor;
@@ -41,7 +40,6 @@ import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.core.shared.GWT;
 
 
 /**
@@ -79,8 +77,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider 
         this.document = document;
         file = editor.getEditorInput().getFile();
         nameEnvironment =
-                new NameEnvironment(file.getProject().getId(), GWT.<JavaAutoBeanFactory>create(JavaAutoBeanFactory.class),
-                                    "/ide/rest");
+                new NameEnvironment(file.getProject().getId(), "/ide/rest");
         TypeInfoStorage.get().setPackages(file.getProject().getId(), JsonCollections.createStringSet());
     }
 
