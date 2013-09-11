@@ -19,7 +19,7 @@ package com.codenvy.ide.factory.client;
 
 /**
  * Describe parameters for Codenvy Factory feature. Version of specification Codenvy Factory 1.0
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: CodenvyFactorySpec10.java Nov 30, 2012 vetal $
  */
@@ -59,5 +59,8 @@ public class FactorySpec10 {
 
     /** Optional parameter for project type, if not set we try detect it. */
     public final static String PROJECT_TYPE      = "ptype";
+
+    /** Optional parameter for opening specified file after cloning.  */
+    public final static String FILE_TO_OPEN      = "openfile";
 
 }

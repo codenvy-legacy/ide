@@ -569,7 +569,9 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
             registerHandlers();
             display.removeDisabledMessage();
         } else {
-            display.showChatDisabled();
+            if(display != null){
+              display.showChatDisabled();
+            }
             removeHandlers();
         }
     }

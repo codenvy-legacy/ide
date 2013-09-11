@@ -426,7 +426,7 @@ public class CollaborationManager implements DisableEnableCollaborationHandler, 
     /** {@inheritDoc} */
     @Override
     public void onEditorFileClosed(EditorFileClosedEvent event) {
-        openedFiles.remove(event.getFile());
+        openedFiles.remove(event.getFile().getId());
     }
 
     /** {@inheritDoc} */
