@@ -71,6 +71,7 @@ public class FactoryService {
     private       LocalPathResolver         localPathResolver;
 
     private static final Pattern PATTERN = Pattern.compile("public static final String PROJECT_ID = .*");
+    private static final Pattern PATTERN_NUMBER = Pattern.compile("public static final String PROJECT_NUMBER = .*");
 
     /**
      * Constructs a new {@link FactoryService}.
@@ -184,11 +185,22 @@ public class FactoryService {
                         .getItemByPath(itemToUpdate.getPath() + "/src/com/google/cloud/backend/android/Consts.java", null, false,
                                        PropertyFilter.NONE_FILTER);
                 String content = IOUtils.toString(vfs.getContent(constJava.getId()).getStream());
-                if (action.contains("'projectID=")) {
-                    action = action.substring("'projectID=".length());
-                    action = action.substring(0, action.length() - 1);
+
+                String[] actionParams = action.replaceAll("'", "").split(";");
+                String prjNum = null;
+                String prjID = null;
+
+                for (String param : actionParams) {
+                    if (param.startsWith("projectNumber")) {
+                        prjNum = param.split("=")[1];
+                    }
+                    if (param.startsWith("projectID")) {
+                        prjID = param.split("=")[1];
+                    }
                 }
-                String newContent = PATTERN.matcher(content).replaceFirst("public static final String PROJECT_ID = \"" + action + "\";");
+
+                String newContent = PATTERN.matcher(content).replaceFirst("public static final String PROJECT_ID = \"" + prjID + "\";");
+                newContent = PATTERN_NUMBER.matcher(newContent).replaceFirst("public static final String PROJECT_NUMBER = \"" + prjNum + "\";");
                 vfs.updateContent(constJava.getId(), MediaType.valueOf(constJava.getMimeType()),
                                   new ByteArrayInputStream(newContent.getBytes()), null);
             }
