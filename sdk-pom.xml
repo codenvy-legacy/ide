@@ -435,13 +435,6 @@
 
             <dependency>
                 <groupId>com.google.appengine</groupId>
-                <artifactId>appengine-python-sdk</artifactId>
-                <version>${appengine.version}</version>
-                <type>zip</type>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.appengine</groupId>
                 <artifactId>appengine-tools-sdk</artifactId>
                 <version>${appengine.version}</version>
             </dependency>
