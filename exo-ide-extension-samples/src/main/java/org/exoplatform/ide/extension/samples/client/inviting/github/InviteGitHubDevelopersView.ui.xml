@@ -37,21 +37,21 @@
 		.inviteToolbar {
 			position: absolute;
 			left: 30px;
-			top: 90px;
+			top: 85px;
 			right: 30px;
-			height: 16px;
+			height: 24px;
 			text-align: right;
 			font-family: Verdana, Bitstream Vera Sans, sans-serif;
 			font-size: 12px;
 			font-weight: normal;
 			font-style: normal;
-			line-height: 12px;
+			line-height: 20px;
 			vertical-align: middle;
 		}
 		
 		.check {
-			margin-top: 0px;
-			margin-bottom: 0px;
+			
+			float: right;
 		}
 		
 		.right {
@@ -121,8 +121,8 @@
 			Codenvy</div>
 		<div class="{style.inviteToolbar}">
 			<div class="{style.right}">Invite all</div>
-			<div class="{style.right}">
-				<g:CheckBox ui:field="checkAll" styleName="{style.check}"></g:CheckBox>
+			<div class="{style.check}">
+				<g:CheckBox ui:field="checkAll"></g:CheckBox>
 			</div>
 		</div>
 		<div ui:field="inviteUserListDiv" class="{style.inviteUserList}">

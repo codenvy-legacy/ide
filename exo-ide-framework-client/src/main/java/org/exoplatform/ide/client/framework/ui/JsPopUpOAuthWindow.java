@@ -1,28 +1,25 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.client.framework.ui;
 
 import com.google.gwt.user.client.Window;
 
 /**
- * Created by The eXo Platform SAS.
- * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: JsPopUpWindow.java Sep 4, 2012
  */
@@ -32,20 +29,20 @@ public class JsPopUpOAuthWindow {
         public void oAuthFinished(int authenticationStatus);
     }
 
-    private String                     authUrl;
+    private String authUrl;
 
-    private String                     errorPageUrl;
+    private String errorPageUrl;
 
     // 0 means that auth not performed, 1 means that auth failed, 2 means that auth successful
-    private int                        authenticationStatus = 0;
+    private int authenticationStatus = 0;
 
-    private int                        popupWindowWidth;
+    private int popupWindowWidth;
 
-    private int                        popupWindowHeight;
+    private int popupWindowHeight;
 
-    private int                        clientWidth;
+    private int clientWidth;
 
-    private int                        clientHeight;
+    private int clientHeight;
 
     private JsPopUpOAuthWindowCallback callback;
 
@@ -91,18 +88,18 @@ public class JsPopUpOAuthWindow {
     // @formatter:off
     private native void loginWithOAuth(String authUrl, String errorPageUrl, int popupWindowWidth,
                                        int popupWindowHeight, int clientWidth, int clientHeight) /*-{
-                                       
+
         var instance = this;
-                                       
+
         function Popup(authUrl, errorPageUrl, popupWindowWidth, popupWindowHeight) {
             this.authUrl = authUrl;
             this.errorPageUrl = errorPageUrl;
             this.popupWindowWidth = popupWindowWidth;
             this.popupWindowHeight = popupWindowHeight;
-            
+
             var popup_close_handler = function () {
                 if (!popupWindow || popupWindow.closed) {
-                    instance.@org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow::setAuthenticationStatus(I)(1); 
+                    instance.@org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow::setAuthenticationStatus(I)(1);
                     console.log("closed popup")
                     popupWindow = null;
                     if (popupCloseHandlerIntervalId) {
@@ -133,7 +130,7 @@ public class JsPopUpOAuthWindow {
                                 errorFlag = true;
                                 popupWindow.location.replace(errorPageUrl);
                             }
-                            
+
                         }
                     }
                 }
@@ -157,5 +154,5 @@ public class JsPopUpOAuthWindow {
             popupWindowHeight);
         popup.open_window();
     }-*/;
-   // @formatter:on
+    // @formatter:on
 }

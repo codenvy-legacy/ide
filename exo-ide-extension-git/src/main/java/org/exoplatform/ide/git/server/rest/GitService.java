@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.git.server.rest;
 
@@ -22,6 +21,7 @@ import org.exoplatform.ide.git.server.CommitersBean;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
+import org.exoplatform.ide.git.server.StatusImpl;
 import org.exoplatform.ide.git.server.InfoPage;
 import org.exoplatform.ide.git.server.LogPage;
 import org.exoplatform.ide.git.shared.AddRequest;
@@ -84,6 +84,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -231,10 +232,19 @@ public class GitService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Revision commit(CommitRequest request) throws GitException, LocalPathResolveException,
-                                                 VirtualFileSystemException {
+                                                         VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
-            return gitConnection.commit(request);
+            Revision revision = gitConnection.commit(request);
+            if (revision.isFake()) {
+                StatusImpl status = (StatusImpl)status(false);
+                try {
+                    revision.setMessage(status.createString(false));
+                } catch (IOException e) {
+                    throw new GitException(e);
+                }
+            }
+            return revision;
         } finally {
             gitConnection.close();
         }

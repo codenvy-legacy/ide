@@ -27,13 +27,21 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.http.client.RequestBuilder;
 
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant;
 import org.exoplatform.ide.editor.client.api.contentassist.Point;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Class to implement all the autocompletion support that is not specific to a
@@ -92,6 +100,7 @@ public class Autocompleter implements ContentAssistant {
         popup.setDelegate(new AutocompleteBox.Events() {
             @Override
             public void onSelect(CompletionProposal proposal) {
+                sendAutocompletionUsedEvent();
                 onSelectCommand.scheduleAutocompletion(proposal);
             }
 
@@ -100,6 +109,38 @@ public class Autocompleter implements ContentAssistant {
                 dismissAutocompleteBox();
             }
         });
+    }
+
+    /**
+     * When user select element from autocomplete proposal popup rest method
+     * calls through websocket to print on console event with format:
+     * EVENT#user-code-complete# PROJECT#<project_name># TYPE#<project_type>#
+     */
+    public void sendAutocompletionUsedEvent() {
+        ProjectModel project = exoEditor.getFile().getProject();
+
+        String url = Utils.getWorkspaceName() +
+                     "/client-event/autocomplete?project=" +
+                     project.getName() +
+                     "&type=" +
+                     project.getProjectType();
+
+        MessageBus messageBus = IDE.messageBus();
+        RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, url).getRequestMessage();
+
+        RequestCallback callback = new RequestCallback() {
+            @Override
+            protected void onSuccess(Object result) {
+                //ignore
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                //ignore
+            }
+        };
+
+        messageBus.send(message, callback);
     }
 
     /**
@@ -133,7 +174,7 @@ public class Autocompleter implements ContentAssistant {
      * @return {@code true} if event shouldn't be further processed / bubbled
      */
     public boolean processKeyPress(SignalEventEssence trigger) {
-        if(editor.isReadOnly()){
+        if (editor.isReadOnly()) {
             return false;
         }
         if (popup.isShowing() && popup.consumeKeySignal(trigger)) {
@@ -154,33 +195,45 @@ public class Autocompleter implements ContentAssistant {
             return true;
         }
 
-        ExplicitAction action = autocompleters.getExplicitAction(editor.getSelection(), trigger, popup.isShowing());
-
-        switch (action.getType()) {
-            case EXPLICIT_COMPLETE:
-                boxTrigger = null;
-                performExplicitCompletion(action.getExplicitAutocompletion());
-                return true;
-
-            case DEFERRED_COMPLETE:
-                boxTrigger = trigger;
-                defferedAction = true;
-                scheduleRequestAutocomplete();
-                return false;
-
-            case CLOSE_POPUP:
-                dismissAutocompleteBox();
-                return false;
-
-            default:
-                return false;
+        try {
+            ExplicitAction action = autocompleters.getExplicitAction(editor.getSelection(), trigger, popup.isShowing());
+    
+            switch (action.getType()) {
+                case EXPLICIT_COMPLETE:
+                    boxTrigger = null;
+                    performExplicitCompletion(action.getExplicitAutocompletion());
+                    return true;
+    
+                case DEFERRED_COMPLETE:
+                    boxTrigger = trigger;
+                    defferedAction = true;
+                    scheduleRequestAutocomplete();
+                    return false;
+    
+                case CLOSE_POPUP:
+                    dismissAutocompleteBox();
+                    return false;
+    
+                default:
+                    return false;
+            }
+        } catch (Exception e) {
+            Log.error(getClass(), e);
+            return false;
         }
+        
     }
 
+    /**
+     * Perform checking if user type Ctrl + Space to show proposal popup.
+     * <p/>
+     * FYI: For Chrome OS Ctrl + Space binding is reserved for changing system language.
+     * That's why proposal popup is invoking via pressing Alt + Space in Chrome OS.
+     */
     private static boolean isActionSpace(SignalEventEssence trigger) {
-        if (UserAgent.isMac()) {
-            return (trigger.metaKey) && (trigger.keyCode == ' ') && (!trigger.altKey) && (!trigger.metaKey) && (!trigger.shiftKey) &&
-                   (trigger.type == KeySignalType.INPUT);
+        if (UserAgent.isCrOS()) {
+            return (!trigger.ctrlKey) && (trigger.keyCode == ' ') && (trigger.altKey) && (!trigger.metaKey) && (!trigger.shiftKey) &&
+                   (trigger.type == KeySignalType.NOEFFECT);
         } else {
             return (trigger.ctrlKey) && (trigger.keyCode == ' ') && (!trigger.altKey) && (!trigger.metaKey) && (!trigger.shiftKey) &&
                    (trigger.type == KeySignalType.INPUT);
@@ -306,9 +359,7 @@ public class Autocompleter implements ContentAssistant {
         stop();
     }
 
-    /**
-     * @param autocompleter
-     */
+    /** @param autocompleter */
     public void addAutocompleter(LanguageSpecificAutocompleter autocompleter) {
         this.autocompleters = autocompleter;
     }

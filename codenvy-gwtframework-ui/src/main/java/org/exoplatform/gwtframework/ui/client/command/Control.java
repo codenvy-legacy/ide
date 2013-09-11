@@ -1,21 +1,19 @@
-/**
- * Copyright (C) 2009 eXo Platform SAS.
+/*
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.gwtframework.ui.client.command;
 
@@ -25,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -59,11 +55,10 @@ public abstract class Control<T extends Control<?>> {
      */
     private List<ControlStateListener> stateListeners = new ArrayList<ControlStateListener>();
 
-    
-    
+
     /**
-     * Use this carefully if it set true you cannot change control state using only setEnable(true) 
-     * need call resetPermanentDisable() firstly 
+     * Use this carefully if it set true you cannot change control state using only setEnable(true)
+     * need call resetPermanentDisable() firstly
      */
     private boolean disablePermanently;
 
@@ -151,7 +146,7 @@ public abstract class Control<T extends Control<?>> {
     public T setEnabled(boolean enabled) {
         if (disablePermanently)
             return (T)this;
-        
+
         if (this.enabled == enabled) {
             return (T)this;
         }
@@ -177,17 +172,17 @@ public abstract class Control<T extends Control<?>> {
         setEnabled(false);
         return (T)this;
     }
-    
-    
+
+
     /**
-     * Use this carefully if it set true you cannot change control state using only setEnable(true) 
-     * need call resetPermanentDisable() firstly 
+     * Use this carefully if it set true you cannot change control state using only setEnable(true)
+     * need call resetPermanentDisable() firstly
      */
     public void disablePermanently() {
         disablePermanently = true;
         setEnabled(false);
     }
-    
+
     public void resetPermanentDisable() {
         disablePermanently = false;
     }

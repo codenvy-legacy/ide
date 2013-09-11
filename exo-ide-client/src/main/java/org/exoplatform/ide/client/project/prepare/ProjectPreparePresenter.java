@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.client.project.prepare;
 
@@ -41,7 +40,6 @@ import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectHandler;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.JSONSerializer;
@@ -52,6 +50,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import com.codenvy.ide.commons.shared.ProjectType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +79,9 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
         properties = event.getProperties();
         try {
 
-            if (event.getProjectType() != null) {
+            //Skip maven multi-module project type, cause method setUserProjectType() will set project type property only for
+            //parent project, children projects will be not affected. For multi-module project we need to parse every children pom.
+            if (event.getProjectType() != null && ProjectType.fromValue(event.getProjectType()) != ProjectType.MULTI_MODULE) {
                 setUserProjectType(event.getProjectType());
                 return;
             }
@@ -259,27 +260,6 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
             if (display != null) {
                 IDE.getInstance().closeView(display.asView().getId());
             }
-        }
-    }
-
-    private void openPreparedProject(String folderId) {
-        try {
-            ProjectModel project = new ProjectModel();
-            ItemWrapper item = new ItemWrapper(project);
-            ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
-            VirtualFileSystem.getInstance().getItemById(folderId, new AsyncRequestCallback<ItemWrapper>(unmarshaller) {
-                @Override
-                protected void onSuccess(ItemWrapper result) {
-                    IDE.fireEvent(new ProjectCreatedEvent((ProjectModel)result.getItem()));
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    IDE.fireEvent(new ExceptionThrownEvent("Failed to opened prepared project."));
-                }
-            });
-        } catch (RequestException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
 

@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.extension.openshift.client.domain;
 
@@ -35,6 +34,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -74,7 +74,7 @@ public class CreateDomainPresenter extends GitPresenter implements ViewClosedHan
         /**
          * Get domain name field.
          *
-         * @return {@link HasValue}
+         * @return {@link HasValue} click handler
          */
         HasValue<String> getDomainNameField();
 
@@ -128,10 +128,6 @@ public class CreateDomainPresenter extends GitPresenter implements ViewClosedHan
         });
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     *      .event.ViewClosedEvent)
-     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -139,10 +135,6 @@ public class CreateDomainPresenter extends GitPresenter implements ViewClosedHan
         }
     }
 
-    /**
-     * @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainHandler#onCreateDomain(org.exoplatform.ide.extension
-     *      .openshift.client.domain.CreateDomainEvent)
-     */
     @Override
     public void onCreateDomain(CreateDomainEvent event) {
         if (display == null) {
@@ -206,7 +198,6 @@ public class CreateDomainPresenter extends GitPresenter implements ViewClosedHan
             @Override
             public void booleanValueReceived(Boolean value) {
                 if (value != null && value) {
-                    GWT.log("dialog ok clicked");
                     deleteAllApplicationsAndNamespace();
                 }
             }
@@ -223,6 +214,7 @@ public class CreateDomainPresenter extends GitPresenter implements ViewClosedHan
 
                                                                             @Override
                                                                             protected void onSuccess(Void result) {
+                                                                                IDE.fireEvent(new RefreshBrowserEvent());
                                                                                 createDomain();
                                                                             }
 
@@ -288,10 +280,6 @@ public class CreateDomainPresenter extends GitPresenter implements ViewClosedHan
         IDE.addHandler(LoggedInEvent.TYPE, this);
     }
 
-    /**
-     * @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift
-     *      .client.login.LoggedInEvent)
-     */
     @Override
     public void onLoggedIn(LoggedInEvent event) {
         IDE.removeHandler(LoggedInEvent.TYPE, this);
