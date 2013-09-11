@@ -30,24 +30,38 @@ public class DtoClientImpls {
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "f1028d86edd4b084c8f48b3194086e7227cf1a05";
 
 
-  public static class TypesListImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.java.shared.TypesList {
-    protected TypesListImpl() {}
+  public static class MemberImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.java.shared.Member {
+    protected MemberImpl() {}
 
     @Override
-    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.shared.ShortTypeInfo> getTypes() /*-{
-      return this["types"];
+    public final native int getModifiers() /*-{
+      return this["modifiers"];
     }-*/;
 
-    public final native TypesListImpl setTypes(com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.shared.ShortTypeInfo> types) /*-{
-      this["types"] = types;
+    public final native MemberImpl setModifiers(int modifiers) /*-{
+      this["modifiers"] = modifiers;
       return this;
     }-*/;
 
-    public final native boolean hasTypes() /*-{
-      return this.hasOwnProperty("types");
+    public final native boolean hasModifiers() /*-{
+      return this.hasOwnProperty("modifiers");
     }-*/;
 
-    public static native TypesListImpl make() /*-{
+    @Override
+    public final native java.lang.String getName() /*-{
+      return this["name"];
+    }-*/;
+
+    public final native MemberImpl setName(java.lang.String name) /*-{
+      this["name"] = name;
+      return this;
+    }-*/;
+
+    public final native boolean hasName() /*-{
+      return this.hasOwnProperty("name");
+    }-*/;
+
+    public static native MemberImpl make() /*-{
       return {
 
       };
@@ -92,38 +106,24 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class MemberImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.java.shared.Member {
-    protected MemberImpl() {}
+  public static class TypesListImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.java.shared.TypesList {
+    protected TypesListImpl() {}
 
     @Override
-    public final native int getModifiers() /*-{
-      return this["modifiers"];
+    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.shared.ShortTypeInfo> getTypes() /*-{
+      return this["types"];
     }-*/;
 
-    public final native MemberImpl setModifiers(int modifiers) /*-{
-      this["modifiers"] = modifiers;
+    public final native TypesListImpl setTypes(com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.shared.ShortTypeInfo> types) /*-{
+      this["types"] = types;
       return this;
     }-*/;
 
-    public final native boolean hasModifiers() /*-{
-      return this.hasOwnProperty("modifiers");
+    public final native boolean hasTypes() /*-{
+      return this.hasOwnProperty("types");
     }-*/;
 
-    @Override
-    public final native java.lang.String getName() /*-{
-      return this["name"];
-    }-*/;
-
-    public final native MemberImpl setName(java.lang.String name) /*-{
-      this["name"] = name;
-      return this;
-    }-*/;
-
-    public final native boolean hasName() /*-{
-      return this.hasOwnProperty("name");
-    }-*/;
-
-    public static native MemberImpl make() /*-{
+    public static native TypesListImpl make() /*-{
       return {
 
       };

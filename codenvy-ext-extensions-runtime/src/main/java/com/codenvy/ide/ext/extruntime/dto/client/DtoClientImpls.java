@@ -34,20 +34,6 @@ public class DtoClientImpls {
     protected ApplicationInstanceImpl() {}
 
     @Override
-    public final native int getCodeServerPort() /*-{
-      return this["codeServerPort"];
-    }-*/;
-
-    public final native ApplicationInstanceImpl setCodeServerPort(int codeServerPort) /*-{
-      this["codeServerPort"] = codeServerPort;
-      return this;
-    }-*/;
-
-    public final native boolean hasCodeServerPort() /*-{
-      return this.hasOwnProperty("codeServerPort");
-    }-*/;
-
-    @Override
     public final native java.lang.String getCodeServerHost() /*-{
       return this["codeServerHost"];
     }-*/;
@@ -59,6 +45,20 @@ public class DtoClientImpls {
 
     public final native boolean hasCodeServerHost() /*-{
       return this.hasOwnProperty("codeServerHost");
+    }-*/;
+
+    @Override
+    public final native int getCodeServerPort() /*-{
+      return this["codeServerPort"];
+    }-*/;
+
+    public final native ApplicationInstanceImpl setCodeServerPort(int codeServerPort) /*-{
+      this["codeServerPort"] = codeServerPort;
+      return this;
+    }-*/;
+
+    public final native boolean hasCodeServerPort() /*-{
+      return this.hasOwnProperty("codeServerPort");
     }-*/;
 
     @Override

@@ -30,82 +30,6 @@ public class DtoClientImpls {
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "388d6d9f9e2568039bd134ec14bfeec5239adde1";
 
 
-  public static class ResourceLimitImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.gae.shared.ResourceLimit {
-    protected ResourceLimitImpl() {}
-
-    @Override
-    public final native java.lang.String getName() /*-{
-      return this["name"];
-    }-*/;
-
-    public final native ResourceLimitImpl setName(java.lang.String name) /*-{
-      this["name"] = name;
-      return this;
-    }-*/;
-
-    public final native boolean hasName() /*-{
-      return this.hasOwnProperty("name");
-    }-*/;
-
-    @Override
-    public final native double getValue() /*-{
-      return this["value"];
-    }-*/;
-
-    public final native ResourceLimitImpl setValue(double value) /*-{
-      this["value"] = value;
-      return this;
-    }-*/;
-
-    public final native boolean hasValue() /*-{
-      return this.hasOwnProperty("value");
-    }-*/;
-
-    public static native ResourceLimitImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
-  public static class TokenImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.gae.shared.Token {
-    protected TokenImpl() {}
-
-    @Override
-    public final native java.lang.String getScope() /*-{
-      return this["scope"];
-    }-*/;
-
-    public final native TokenImpl setScope(java.lang.String scope) /*-{
-      this["scope"] = scope;
-      return this;
-    }-*/;
-
-    public final native boolean hasScope() /*-{
-      return this.hasOwnProperty("scope");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getToken() /*-{
-      return this["token"];
-    }-*/;
-
-    public final native TokenImpl setToken(java.lang.String token) /*-{
-      this["token"] = token;
-      return this;
-    }-*/;
-
-    public final native boolean hasToken() /*-{
-      return this.hasOwnProperty("token");
-    }-*/;
-
-    public static native TokenImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
   public static class CronEntryImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.gae.shared.CronEntry {
     protected CronEntryImpl() {}
 
@@ -186,43 +110,29 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GaeUserImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.gae.shared.GaeUser {
-    protected GaeUserImpl() {}
+  public static class TokenImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.gae.shared.Token {
+    protected TokenImpl() {}
 
     @Override
-    public final native java.lang.String getId() /*-{
-      return this["id"];
+    public final native java.lang.String getScope() /*-{
+      return this["scope"];
     }-*/;
 
-    public final native GaeUserImpl setId(java.lang.String id) /*-{
-      this["id"] = id;
+    public final native TokenImpl setScope(java.lang.String scope) /*-{
+      this["scope"] = scope;
       return this;
     }-*/;
 
-    public final native boolean hasId() /*-{
-      return this.hasOwnProperty("id");
+    public final native boolean hasScope() /*-{
+      return this.hasOwnProperty("scope");
     }-*/;
 
     @Override
-    public final native java.lang.String getEmail() /*-{
-      return this["email"];
-    }-*/;
-
-    public final native GaeUserImpl setEmail(java.lang.String email) /*-{
-      this["email"] = email;
-      return this;
-    }-*/;
-
-    public final native boolean hasEmail() /*-{
-      return this.hasOwnProperty("email");
-    }-*/;
-
-    @Override
-    public final native com.codenvy.ide.ext.gae.shared.Token getToken() /*-{
+    public final native java.lang.String getToken() /*-{
       return this["token"];
     }-*/;
 
-    public final native GaeUserImpl setToken(com.codenvy.ide.ext.gae.shared.Token token) /*-{
+    public final native TokenImpl setToken(java.lang.String token) /*-{
       this["token"] = token;
       return this;
     }-*/;
@@ -231,7 +141,83 @@ public class DtoClientImpls {
       return this.hasOwnProperty("token");
     }-*/;
 
-    public static native GaeUserImpl make() /*-{
+    public static native TokenImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class ResourceLimitImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.gae.shared.ResourceLimit {
+    protected ResourceLimitImpl() {}
+
+    @Override
+    public final native java.lang.String getName() /*-{
+      return this["name"];
+    }-*/;
+
+    public final native ResourceLimitImpl setName(java.lang.String name) /*-{
+      this["name"] = name;
+      return this;
+    }-*/;
+
+    public final native boolean hasName() /*-{
+      return this.hasOwnProperty("name");
+    }-*/;
+
+    @Override
+    public final native double getValue() /*-{
+      return this["value"];
+    }-*/;
+
+    public final native ResourceLimitImpl setValue(double value) /*-{
+      this["value"] = value;
+      return this;
+    }-*/;
+
+    public final native boolean hasValue() /*-{
+      return this.hasOwnProperty("value");
+    }-*/;
+
+    public static native ResourceLimitImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class ApplicationInfoImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.gae.shared.ApplicationInfo {
+    protected ApplicationInfoImpl() {}
+
+    @Override
+    public final native java.lang.String getApplicationId() /*-{
+      return this["applicationId"];
+    }-*/;
+
+    public final native ApplicationInfoImpl setApplicationId(java.lang.String applicationId) /*-{
+      this["applicationId"] = applicationId;
+      return this;
+    }-*/;
+
+    public final native boolean hasApplicationId() /*-{
+      return this.hasOwnProperty("applicationId");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getWebURL() /*-{
+      return this["webURL"];
+    }-*/;
+
+    public final native ApplicationInfoImpl setWebURL(java.lang.String webURL) /*-{
+      this["webURL"] = webURL;
+      return this;
+    }-*/;
+
+    public final native boolean hasWebURL() /*-{
+      return this.hasOwnProperty("webURL");
+    }-*/;
+
+    public static native ApplicationInfoImpl make() /*-{
       return {
 
       };
@@ -387,38 +373,52 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ApplicationInfoImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.gae.shared.ApplicationInfo {
-    protected ApplicationInfoImpl() {}
+  public static class GaeUserImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.gae.shared.GaeUser {
+    protected GaeUserImpl() {}
 
     @Override
-    public final native java.lang.String getWebURL() /*-{
-      return this["webURL"];
+    public final native java.lang.String getId() /*-{
+      return this["id"];
     }-*/;
 
-    public final native ApplicationInfoImpl setWebURL(java.lang.String webURL) /*-{
-      this["webURL"] = webURL;
+    public final native GaeUserImpl setId(java.lang.String id) /*-{
+      this["id"] = id;
       return this;
     }-*/;
 
-    public final native boolean hasWebURL() /*-{
-      return this.hasOwnProperty("webURL");
+    public final native boolean hasId() /*-{
+      return this.hasOwnProperty("id");
     }-*/;
 
     @Override
-    public final native java.lang.String getApplicationId() /*-{
-      return this["applicationId"];
+    public final native java.lang.String getEmail() /*-{
+      return this["email"];
     }-*/;
 
-    public final native ApplicationInfoImpl setApplicationId(java.lang.String applicationId) /*-{
-      this["applicationId"] = applicationId;
+    public final native GaeUserImpl setEmail(java.lang.String email) /*-{
+      this["email"] = email;
       return this;
     }-*/;
 
-    public final native boolean hasApplicationId() /*-{
-      return this.hasOwnProperty("applicationId");
+    public final native boolean hasEmail() /*-{
+      return this.hasOwnProperty("email");
     }-*/;
 
-    public static native ApplicationInfoImpl make() /*-{
+    @Override
+    public final native com.codenvy.ide.ext.gae.shared.Token getToken() /*-{
+      return this["token"];
+    }-*/;
+
+    public final native GaeUserImpl setToken(com.codenvy.ide.ext.gae.shared.Token token) /*-{
+      this["token"] = token;
+      return this;
+    }-*/;
+
+    public final native boolean hasToken() /*-{
+      return this.hasOwnProperty("token");
+    }-*/;
+
+    public static native GaeUserImpl make() /*-{
       return {
 
       };

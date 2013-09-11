@@ -30,74 +30,8 @@ public class DtoClientImpls {
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "bb20f756eceb2c658af24800395de75fe9d9ce09";
 
 
-  public static class JobImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.jenkins.shared.Job {
-    protected JobImpl() {}
-
-    @Override
-    public final native java.lang.String getStatusUrl() /*-{
-      return this["statusUrl"];
-    }-*/;
-
-    public final native JobImpl setStatusUrl(java.lang.String statusUrl) /*-{
-      this["statusUrl"] = statusUrl;
-      return this;
-    }-*/;
-
-    public final native boolean hasStatusUrl() /*-{
-      return this.hasOwnProperty("statusUrl");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getBuildUrl() /*-{
-      return this["buildUrl"];
-    }-*/;
-
-    public final native JobImpl setBuildUrl(java.lang.String buildUrl) /*-{
-      this["buildUrl"] = buildUrl;
-      return this;
-    }-*/;
-
-    public final native boolean hasBuildUrl() /*-{
-      return this.hasOwnProperty("buildUrl");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getName() /*-{
-      return this["name"];
-    }-*/;
-
-    public final native JobImpl setName(java.lang.String name) /*-{
-      this["name"] = name;
-      return this;
-    }-*/;
-
-    public final native boolean hasName() /*-{
-      return this.hasOwnProperty("name");
-    }-*/;
-
-    public static native JobImpl make() /*-{
-      return {
-
-      };
-    }-*/;  }
-
-
   public static class JobStatusImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.jenkins.shared.JobStatus {
     protected JobStatusImpl() {}
-
-    @Override
-    public final native java.lang.String getLastBuildResult() /*-{
-      return this["lastBuildResult"];
-    }-*/;
-
-    public final native JobStatusImpl setLastBuildResult(java.lang.String lastBuildResult) /*-{
-      this["lastBuildResult"] = lastBuildResult;
-      return this;
-    }-*/;
-
-    public final native boolean hasLastBuildResult() /*-{
-      return this.hasOwnProperty("lastBuildResult");
-    }-*/;
 
     @Override
     public final native java.lang.String getArtifactUrl() /*-{
@@ -111,6 +45,20 @@ public class DtoClientImpls {
 
     public final native boolean hasArtifactUrl() /*-{
       return this.hasOwnProperty("artifactUrl");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getLastBuildResult() /*-{
+      return this["lastBuildResult"];
+    }-*/;
+
+    public final native JobStatusImpl setLastBuildResult(java.lang.String lastBuildResult) /*-{
+      this["lastBuildResult"] = lastBuildResult;
+      return this;
+    }-*/;
+
+    public final native boolean hasLastBuildResult() /*-{
+      return this.hasOwnProperty("lastBuildResult");
     }-*/;
 
     @Override
@@ -143,6 +91,58 @@ public class DtoClientImpls {
     }-*/;
 
     public static native JobStatusImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
+  public static class JobImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.jenkins.shared.Job {
+    protected JobImpl() {}
+
+    @Override
+    public final native java.lang.String getBuildUrl() /*-{
+      return this["buildUrl"];
+    }-*/;
+
+    public final native JobImpl setBuildUrl(java.lang.String buildUrl) /*-{
+      this["buildUrl"] = buildUrl;
+      return this;
+    }-*/;
+
+    public final native boolean hasBuildUrl() /*-{
+      return this.hasOwnProperty("buildUrl");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getStatusUrl() /*-{
+      return this["statusUrl"];
+    }-*/;
+
+    public final native JobImpl setStatusUrl(java.lang.String statusUrl) /*-{
+      this["statusUrl"] = statusUrl;
+      return this;
+    }-*/;
+
+    public final native boolean hasStatusUrl() /*-{
+      return this.hasOwnProperty("statusUrl");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getName() /*-{
+      return this["name"];
+    }-*/;
+
+    public final native JobImpl setName(java.lang.String name) /*-{
+      this["name"] = name;
+      return this;
+    }-*/;
+
+    public final native boolean hasName() /*-{
+      return this.hasOwnProperty("name");
+    }-*/;
+
+    public static native JobImpl make() /*-{
       return {
 
       };
