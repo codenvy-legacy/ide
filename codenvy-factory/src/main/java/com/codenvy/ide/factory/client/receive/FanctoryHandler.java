@@ -18,10 +18,8 @@
 package com.codenvy.ide.factory.client.receive;
 
 import com.codenvy.ide.client.util.logging.Log;
-import com.codenvy.ide.commons.shared.ProjectType;
 import com.codenvy.ide.factory.client.FactorySpec10;
 import com.codenvy.ide.factory.client.copy.CopySpec10;
-import com.google.api.client.json.JsonParser;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.RequestBuilder;
@@ -30,7 +28,6 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Random;
-import com.google.gwt.user.client.Window;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -39,11 +36,14 @@ import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
@@ -54,13 +54,17 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.File;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,10 +74,11 @@ import java.util.Map;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: CodeNowHandler.java Dec 6, 2012 vetal $
  */
-public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHandler {
+public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHandler, ProjectOpenedHandler {
 
-    private final String          restServiceContext;
-    private VirtualFileSystemInfo vfs;
+    private final String                restServiceContext;
+    private       VirtualFileSystemInfo vfs;
+    private       String                filePathToOpen;
 
     public FanctoryHandler() {
         IDE.addHandler(VfsChangedEvent.TYPE, this);
@@ -124,6 +129,12 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
         String action = parameterMap.get(FactorySpec10.ACTION_PARAMETER).get(0);
         action = (action != null && !action.isEmpty()) ? "&action=" + action : "";
         prjType = (prjType != null && !prjType.isEmpty()) ? "&ptype=" + prjType : "";
+
+        if (parameterMap.get(FactorySpec10.FILE_TO_OPEN) != null
+            && !parameterMap.get(FactorySpec10.FILE_TO_OPEN).isEmpty()) {
+            filePathToOpen = URL.decodeQueryString(parameterMap.get(FactorySpec10.FILE_TO_OPEN).get(0));
+        }
+
         cloneProject(giturl, prjName, prjType, idCommit, action);
     }
 
@@ -188,9 +199,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
 
             VirtualFileSystem.getInstance()
                              .getChildren(vfs.getRoot(), ItemType.PROJECT,
-                                          new AsyncRequestCallback<List<Item>>(
-                                                                               new ChildrenUnmarshaller(new ArrayList<Item>())) {
-
+                                          new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>())) {
                                               @Override
                                               protected void onSuccess(List<Item> result) {
                                                   boolean itemExist = false;
@@ -198,6 +207,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                                                       if (item.getName().equals(prjName)) {
                                                           itemExist = true;
                                                       }
+
                                                       if (item.hasProperty("codenow")) {
                                                           String codenow = item.getPropertyValue("codenow");
                                                           if (codenow.equals(giturl)) {
@@ -206,6 +216,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                                                           }
                                                       }
                                                   }
+
                                                   if (itemExist) {
                                                       doClone(giturl, "origin",
                                                               prjName + "-" + Random.nextInt(Integer.MAX_VALUE), prjType, idCommit, action);
@@ -226,12 +237,16 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
 
     /**
      * Going to cloning repository. Clone process flow 3 steps: - create new folder with name workDir - clone repository to this folder -
-     * convert folder to project. This need because by default project with out file and folder not empty. It content ".project" item. Clone
+     * convert folder to project. This need because by default project with out file and folder not empty. It content ".project" item.
+     * Clone
      * is impossible to not empty folder
-     * 
-     * @param remoteUri - git url
-     * @param remoteName - remote name (by default origin)
-     * @param workDir - name of target folder
+     *
+     * @param remoteUri
+     *         - git url
+     * @param remoteName
+     *         - remote name (by default origin)
+     * @param workDir
+     *         - name of target folder
      */
     public void doClone(final String remoteUri, final String remoteName, final String workDir, final String prjType,
                         final String idCommit, final String action) {
@@ -248,33 +263,31 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                                                              @Override
                                                              protected void onFailure(Throwable exception) {
                                                                  String errorMessage =
-                                                                                       (exception.getMessage() != null &&
-                                                                                       exception.getMessage().length() > 0)
-                                                                                           ? exception.getMessage()
-                                                                                           : GitExtension.MESSAGES
-                                                                                                                  .cloneFailed(
-
-
-                                                                                                                  remoteUri);
+                                                                         (exception.getMessage() != null &&
+                                                                          exception.getMessage().length() > 0)
+                                                                         ? exception.getMessage()
+                                                                         : GitExtension.MESSAGES.cloneFailed(remoteUri);
                                                                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
                                                              }
                                                          });
         } catch (RequestException e) {
             e.printStackTrace();
             String errorMessage =
-                                  (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
-                                      : GitExtension.MESSAGES
-                                                             .cloneFailed(remoteUri);
+                    (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
+                                                                            : GitExtension.MESSAGES.cloneFailed(remoteUri);
             IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
         }
     }
 
     /**
      * Clone of the repository by sending request over WebSocket or HTTP.
-     * 
-     * @param remoteUri the location of the remote repository
-     * @param remoteName remote name instead of "origin"
-     * @param folder folder (root of GIT repository)
+     *
+     * @param remoteUri
+     *         the location of the remote repository
+     * @param remoteName
+     *         remote name instead of "origin"
+     * @param folder
+     *         folder (root of GIT repository)
      */
     private void cloneRepository(final String remoteUri, final String remoteName, final String prjType, final FolderModel folder,
                                  final String idCommit, final String action) {
@@ -283,9 +296,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
             IDELoader.getInstance().show();
             String uri = "/factory/clone?vfsid=" + vfs.getId() + "&projectid=" + folder.getId() + "&remoteuri=" + remoteUri + "&idcommit=" +
                          idCommit + prjType + action;
-            RequestMessage message =
-                                     RequestMessageBuilder.build(RequestBuilder.POST, restServiceContext + uri).
-                                                          getRequestMessage();
+            RequestMessage message = RequestMessageBuilder.build(RequestBuilder.POST, restServiceContext + uri).getRequestMessage();
 
             IDE.messageBus().send(message, new RequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
                 @Override
@@ -313,7 +324,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
 
         try {
             String uri = "/factory/clone?vfsid=" + vfs.getId() + "&projectid=" + folder.getId() + "&remoteuri=" + remoteUri + "&idcommit=" +
-                         idCommit  + prjType + action;
+                         idCommit + prjType + action;
             AsyncRequest.build(RequestBuilder.POST, uri).send(new AsyncRequestCallback<Object>() {
                 @Override
                 protected void onSuccess(Object result) {
@@ -333,18 +344,20 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
 
     /**
      * Perform actions when repository was successfully cloned.
-     * 
-     * @param folder {@link FolderModel} to clone
+     *
+     * @param folder
+     *         {@link FolderModel} to clone
      */
-    private void onCloneSuccess(JSONObject object,String prjType, String remoteUri) {
+    private void onCloneSuccess(JSONObject object, String prjType, String remoteUri) {
         IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(remoteUri), Type.GIT));
         // TODO: not good, comment temporary need found other way
         // for inviting collaborators
         // showInvitation(repoInfo.getRemoteUri());
-        try{
+        try {
             String itemType = object.get("itemType").isString().stringValue();
             Log.info(FanctoryHandler.class, itemType);
-            if (ItemType.PROJECT.toString().equalsIgnoreCase(itemType)){
+            IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+            if (ItemType.PROJECT.toString().equalsIgnoreCase(itemType)) {
                 ProjectModel projectModel = new ProjectModel(object);
                 IDE.fireEvent(new OpenProjectEvent(projectModel));
             } else {
@@ -354,16 +367,48 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                 IDE.fireEvent(new ConvertToProjectEvent(id, vfs.getId(), prjType, properties));
             }
 
-        } catch (Throwable e){
+        } catch (Throwable e) {
             Log.debug(getClass(), e);
         }
     }
 
+    @Override
+    public void onProjectOpened(final ProjectOpenedEvent event) {
+        if (filePathToOpen != null && !filePathToOpen.isEmpty()) {
+            final String fileFullPath = new StringBuilder(event.getProject().getPath()).append('/').append(filePathToOpen).toString();
+
+            ItemUnmarshaller unmarshaller = new ItemUnmarshaller(new ItemWrapper());
+
+            try {
+                VirtualFileSystem.getInstance().getItemByPath(fileFullPath, new AsyncRequestCallback<ItemWrapper>(unmarshaller) {
+                    @Override
+                    protected void onSuccess(final ItemWrapper result) {
+                        if (result.getItem() instanceof File) {
+                            FileModel file = (FileModel)result.getItem();
+                            file.setProject(event.getProject());
+                            IDE.fireEvent(new OpenFileEvent(file));
+                        }
+                        removeProjectOpenedHandler();
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        IDE.fireEvent(new OutputEvent("File \"" + fileFullPath + "\" doesn't exist.", Type.WARNING));
+                    }
+                });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        }
+    }
+
+    private void removeProjectOpenedHandler() {
+        IDE.removeHandler(ProjectOpenedEvent.TYPE, this);
+    }
+
     private void handleError(Throwable e, String remoteUri) {
-        String errorMessage =
-                              (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
-                                  : GitExtension.MESSAGES
-                                                         .cloneFailed(remoteUri);
+        String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
+                                                                                      : GitExtension.MESSAGES.cloneFailed(remoteUri);
         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
     }
 

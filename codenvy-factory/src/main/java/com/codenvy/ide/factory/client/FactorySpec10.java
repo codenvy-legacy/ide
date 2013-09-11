@@ -60,4 +60,7 @@ public class FactorySpec10 {
     /** Optional parameter for project type, if not set we try detect it. */
     public final static String PROJECT_TYPE      = "ptype";
 
+    /** Optional parameter for opening specified file after cloning.  */
+    public final static String FILE_TO_OPEN     = "filetoopen";
+
 }
