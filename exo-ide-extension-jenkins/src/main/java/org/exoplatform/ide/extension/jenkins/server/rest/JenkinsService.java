@@ -72,8 +72,8 @@ public class JenkinsService {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         String git = gitUrlResolver.resolve(uriInfo, vfs, projectId);
         jenkins.createJob(name, git, user, email, vfs, projectId);
-        String buildUrl = uriInfo.getBaseUriBuilder().path(getClass(), "build").build(name).toString();
-        String statusUrl = uriInfo.getBaseUriBuilder().path(getClass(), "jobStatus").build(name).toString();
+        String buildUrl = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "build").build(name).toString();
+        String statusUrl = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "jobStatus").build(name).toString();
         return new JobBean(name, buildUrl, statusUrl);
     }
 

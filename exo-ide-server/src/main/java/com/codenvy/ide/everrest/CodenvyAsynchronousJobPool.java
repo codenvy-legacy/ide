@@ -66,7 +66,7 @@ public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements C
     @Override
     protected void initAsynchronousJobContext(AsynchronousJob job) {
         final String internalJobUri =
-                UriBuilder.fromPath("/")
+                UriBuilder.fromPath("/").path(CodenvyAsynchronousJobService.class)
                           .path(CodenvyAsynchronousJobService.class, "get")
                           .build(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME), job.getJobId()).toString();
         job.getContext().put("internal-uri", internalJobUri);

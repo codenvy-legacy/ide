@@ -90,7 +90,7 @@ public class OpenIDAuthenticationService {
         session.setAttribute("openid.consumer", consumerManager);
         session.setAttribute("openid.discovered", discovered);
 
-        final String returnTo = uriInfo.getBaseUriBuilder().path(getClass(), "verify").build().toString();
+        final String returnTo = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "verify").build().toString();
         AuthRequest req = consumerManager.authenticate(discovered, returnTo);
         FetchRequest fetch = FetchRequest.createFetchRequest();
         fetch.addAttribute("email", "http://schema.openid.net/contact/email", true);

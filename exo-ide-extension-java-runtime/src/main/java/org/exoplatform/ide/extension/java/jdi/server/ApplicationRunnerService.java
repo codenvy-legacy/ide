@@ -52,8 +52,8 @@ public class ApplicationRunnerService {
         if (params == null)
             throw new IllegalArgumentException("Body ot this response can not be null or empty");
         ApplicationInstance app = runner.runApplication(war, params);
-        app.setStopURL(uriInfo.getBaseUriBuilder().path(ApplicationRunnerService.this.getClass(), "stopApplication")
-                              .queryParam("name", app.getName()).build(wsName).toString());
+        app.setStopURL(uriInfo.getBaseUriBuilder().path(ApplicationRunnerService.this.getClass()).path(
+                ApplicationRunnerService.this.getClass(), "stopApplication").queryParam("name", app.getName()).build(wsName).toString());
         return app;
     }
 
@@ -66,7 +66,8 @@ public class ApplicationRunnerService {
                                                 @Context UriInfo uriInfo,
                                                 Map<String, String> params) throws ApplicationRunnerException {
         ApplicationInstance app = runner.debugApplication(war, suspend, params);
-        app.setStopURL(uriInfo.getBaseUriBuilder().path(ApplicationRunnerService.this.getClass(), "stopApplication")
+        app.setStopURL(uriInfo.getBaseUriBuilder().path(ApplicationRunnerService.this.getClass()).path(
+                ApplicationRunnerService.this.getClass(), "stopApplication")
                               .queryParam("name", app.getName()).build(wsName).toString());
         return app;
     }
