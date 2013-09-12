@@ -38,6 +38,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
+        <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
     </properties>
 
     <dependencies>
@@ -174,9 +175,9 @@
                             <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                             <arguments>
                                 <argument>--dto_packages=com.codenvy.ide.api.user</argument>
-                                <argument>--gen_file_name=${project.build.sourceDirectory}/com/codenvy/ide/server/DtoServerImpls.java</argument>
+                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/server/DtoServerImpls.java</argument>
                                 <argument>--impl=server</argument>
-                                <argument>--package_base=${project.build.sourceDirectory}/</argument>
+                                <argument>--package_base=${generated.sources.directory}/</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -190,15 +191,15 @@
                             <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                             <arguments>
                                 <argument>--dto_packages=com.codenvy.ide.dto</argument>
-                                <argument>--gen_file_name=${project.build.sourceDirectory}/com/codenvy/ide/dto/server/DtoServerImpls.java</argument>
+                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/dto/server/DtoServerImpls.java</argument>
                                 <argument>--impl=server</argument>
-                                <argument>--package_base=${project.build.sourceDirectory}/</argument>
+                                <argument>--package_base=${generated.sources.directory}/</argument>
                             </arguments>
                         </configuration>
                     </execution>
                     <execution>
                         <id>editor-dto-client</id>
-                        <phase>generate-sources</phase>
+                        <phase>process-sources</phase>
                         <goals>
                             <goal>java</goal>
                         </goals>
@@ -206,10 +207,29 @@
                             <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                             <arguments>
                                 <argument>--dto_packages=com.codenvy.ide.dto</argument>
-                                <argument>--gen_file_name=${project.build.sourceDirectory}/com/codenvy/ide/dto/client/DtoClientImpls.java</argument>
+                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/dto/client/DtoClientImpls.java</argument>
                                 <argument>--impl=client</argument>
-                                <argument>--package_base=${project.build.sourceDirectory}/</argument>
+                                <argument>--package_base=${generated.sources.directory}/</argument>
                             </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>add-generated-dto-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${generated.sources.directory}</source>
+                            </sources>
                         </configuration>
                     </execution>
                 </executions>

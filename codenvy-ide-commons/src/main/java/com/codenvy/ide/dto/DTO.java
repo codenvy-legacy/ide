@@ -18,7 +18,7 @@
 package com.codenvy.ide.dto;
 
 /**
- * Marker annotation, used to inform DTO generator, that particular interface should be used for generate DTO.
+ * Marker annotation, used to inform DTO generator, that particular interface should be used for generating DTO.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: DTO.java Sep 10, 2013 5:13:18 PM azatsarynnyy $

@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.extruntime.server;
 
-import com.codenvy.ide.commons.JsonHelper;
 import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls;
 import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls.ApplicationInstanceImpl;
 import com.codenvy.ide.ext.extruntime.server.codeserver.GWTCodeServerConfiguration;
@@ -310,7 +309,7 @@ public class ExtensionLauncher implements Startable {
         try {
             final String codeServerLogs = app.codeServer.getLogs();
             if (!(codeServerLogs == null || codeServerLogs.isEmpty())) {
-                logs.append("========> GWT code server.log <========");
+                logs.append("========> GWT-code-server.log <========");
                 logs.append("\n\n");
                 logs.append(codeServerLogs);
                 logs.append("\n\n");
