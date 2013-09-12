@@ -21,8 +21,8 @@ import com.codenvy.ide.client.util.CssUtils;
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.client.util.SignalEvent;
 import com.codenvy.ide.commons.shared.ListenerManager;
-import com.codenvy.ide.commons.shared.ListenerRegistrar;
 import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
 import com.codenvy.ide.json.shared.JsonArray;
 import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.AppContext;
@@ -42,7 +42,11 @@ import com.google.collide.client.editor.renderer.RenderTimeExecutor;
 import com.google.collide.client.editor.renderer.Renderer;
 import com.google.collide.client.editor.search.SearchMatchRenderer;
 import com.google.collide.client.editor.search.SearchModel;
-import com.google.collide.client.editor.selection.*;
+import com.google.collide.client.editor.selection.CursorView;
+import com.google.collide.client.editor.selection.LocalCursorController;
+import com.google.collide.client.editor.selection.SelectionLineRenderer;
+import com.google.collide.client.editor.selection.SelectionManager;
+import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.client.util.dom.FontDimensionsCalculator;
 import com.google.collide.client.util.dom.FontDimensionsCalculator.FontDimensions;
 import com.google.collide.mvp.CompositeView;
@@ -503,7 +507,7 @@ public class Editor extends UiComponent<Editor.View> {
     }
 
     public SelectionModel getSelection() {
-        if(selectionManager == null){
+        if (selectionManager == null) {
             return null;
         }
         return selectionManager.getSelectionModel();
@@ -550,7 +554,7 @@ public class Editor extends UiComponent<Editor.View> {
         final Document oldDocument = this.document;
 
         if (oldDocument != null) {
-            // Teardown the objects depending on the old document
+            // Tear down the objects depending on the old document
             renderer.teardown();
             viewport.teardown();
             selectionManager.teardown();
@@ -617,7 +621,7 @@ public class Editor extends UiComponent<Editor.View> {
                 listener.onDocumentChanged(oldDocument, document);
             }
         });
-        if(isReadOnly){
+        if (isReadOnly) {
             dispachReadOnlyChange();
         }
     }

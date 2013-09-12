@@ -38,6 +38,7 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
 public class JavaEditor extends CollabEditor {
 
     private BreakpointGutterManager breakPointManager;
+    private Gutter                  gutter;
 
     /** @param mimeType */
     public JavaEditor(String mimeType) {
@@ -49,10 +50,12 @@ public class JavaEditor extends CollabEditor {
             @Override
             public void onDocumentChanged(com.google.collide.shared.document.Document oldDocument,
                                           com.google.collide.shared.document.Document newDocument) {
+                if (gutter != null) {
+                    editor.removeGutter(gutter);
+                }
                 if (newDocument != null) {
-                    final Gutter gutter =
-                            editor.createGutter(false, Position.LEFT, CollabEditorExtension.get().getContext().getResources()
-                                                                                           .workspaceEditorCss().leftGutterBase());
+                    gutter = editor.createGutter(false, Position.LEFT, CollabEditorExtension.get().getContext().getResources()
+                                                                                            .workspaceEditorCss().leftGutterBase());
                     breakPointManager =
                             new BreakpointGutterManager(gutter, editor.getBuffer(), editor.getViewport(), editor.getRenderer(),
                                                         JavaClientBundle.INSTANCE);

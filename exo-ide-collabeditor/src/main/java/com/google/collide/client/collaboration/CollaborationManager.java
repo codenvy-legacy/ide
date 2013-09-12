@@ -372,7 +372,7 @@ public class CollaborationManager implements DisableEnableCollaborationHandler, 
                             if (value != null && value) {
                                 saveFilesAndOpenInCollaboration();
                                 IDE.fireEvent(new CollaborationChangedEvent(event.isEnable(), project));
-                            }else{
+                            } else {
                                 CollaborationPropertiesUtil.updateCollaboration(project, false);
                             }
                         }
@@ -385,7 +385,7 @@ public class CollaborationManager implements DisableEnableCollaborationHandler, 
                 }
 
             } else {
-                for (String  fileId : openedFiles.keySet()) {
+                for (String fileId : openedFiles.keySet()) {
                     openedEditors.get(fileId).setFile(openedFiles.get(fileId));
                 }
             }
@@ -449,7 +449,7 @@ public class CollaborationManager implements DisableEnableCollaborationHandler, 
         if (editor != null) {
             editor.setFile(event.getFile());
         }
-        if (fileCount == -1) {
+        if (fileCount == 0) {
             handlerRegistration.removeHandler();
         }
     }
