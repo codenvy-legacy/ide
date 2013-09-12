@@ -45,11 +45,11 @@ import org.exoplatform.gwtframework.ui.client.command.ui.UniButton;
 import org.exoplatform.gwtframework.ui.client.command.ui.UniButton.Size;
 import org.exoplatform.gwtframework.ui.client.command.ui.UniButton.Type;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEInitialConfiguration;
 import org.exoplatform.ide.client.framework.configuration.InitialConfigurationReceivedEvent;
 import org.exoplatform.ide.client.framework.configuration.InitialConfigurationReceivedHandler;
+import org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent;
+import org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
@@ -69,8 +69,7 @@ import java.util.List;
  * @version $
  */
 public class GreetingUserPresenter implements 
-        InitialConfigurationReceivedHandler,
-        InitializeServicesHandler, ProjectOpenedHandler {
+        InitialConfigurationReceivedHandler, ProjectOpenedHandler, IDELoadCompleteHandler {
 
     public interface GreetingDisplay extends IsView {
     }
@@ -84,14 +83,16 @@ public class GreetingUserPresenter implements
      * Current opened project
      */
     private ProjectModel project;
+    
+    private boolean welcomeOnceAppeared = false;
 
     /**
      * Creates presenter instance
      */
     public GreetingUserPresenter() {
         IDE.addHandler(InitialConfigurationReceivedEvent.TYPE, this);
-        IDE.addHandler(InitializeServicesEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(IDELoadCompleteEvent.TYPE, this);
     }
 
     /**
@@ -115,16 +116,6 @@ public class GreetingUserPresenter implements
             return null;
         }
     }-*/;
-    
-    @Override
-    public void onInitializeServices(InitializeServicesEvent event) {
-        new Timer() {
-            @Override
-            public void run() {
-                loadGreeting();
-            }
-        }.schedule(1500);
-    }
     
     private void goToURL(String path) {
         UrlBuilder builder = new UrlBuilder();
@@ -267,6 +258,8 @@ public class GreetingUserPresenter implements
      * 
      */
     private void loadGreeting() {
+        welcomeOnceAppeared = true;
+        
         final String greetingPageURL = getGreetingPageURL();
         if (greetingPageURL == null) {
             return;
@@ -291,6 +284,22 @@ public class GreetingUserPresenter implements
         });
         
         RootPanel.get().add(frame);
+    }
+    
+    private Timer scheduleGreetingTimer = new Timer() {
+        @Override
+        public void run() {
+            loadGreeting();
+        }
+    };
+    
+    private void scheduleLoadGreeting() {
+        if (welcomeOnceAppeared) {
+            return;
+        }
+        
+        scheduleGreetingTimer.cancel();
+        scheduleGreetingTimer.schedule(1500);
     }
     
     private native void fetchGreetingParamsFromIFrame(Element element, String greetingContentURL)/*-{
@@ -364,6 +373,12 @@ public class GreetingUserPresenter implements
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         project = event.getProject();
+        scheduleLoadGreeting();
+    }
+
+    @Override
+    public void onIDELoadComplete(IDELoadCompleteEvent event) {
+        scheduleLoadGreeting();
     }
     
 }
