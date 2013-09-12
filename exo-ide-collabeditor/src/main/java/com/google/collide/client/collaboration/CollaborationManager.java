@@ -352,6 +352,7 @@ public class CollaborationManager implements DisableEnableCollaborationHandler, 
         CollaborationPropertiesUtil.updateCollaboration(project, event.isEnable());
         if (event.isEnable()) {
             if (openedFiles.isEmpty()) {
+                IDE.fireEvent(new CollaborationChangedEvent(event.isEnable(), project));
                 return;
             }
             if (event.isFromMenu()) {
