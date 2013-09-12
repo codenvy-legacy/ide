@@ -135,24 +135,12 @@ public class NotificationItem extends Composite {
                 title.setText(notification.getTitle());
             }
 
-            if (prevState.isFinished() != notification.isFinished()) {
+            if (!notification.isFinished()) {
                 changeImage(resources.progress());
             } else if (!prevState.getType().equals(notification.getType())) {
-                if (prevState.isError()) {
-                    mainPanel.removeStyleName(resources.notificationCss().error());
-                } else if (notification.isWarning()) {
-                    mainPanel.removeStyleName(resources.notificationCss().warning());
-                }
-
-                if (notification.isWarning()) {
-                    changeImage(resources.warning());
-                    mainPanel.addStyleName(resources.notificationCss().warning());
-                } else if (notification.isError()) {
-                    changeImage(resources.error());
-                    mainPanel.addStyleName(resources.notificationCss().error());
-                } else {
-                    changeImage(resources.info());
-                }
+                changeType();
+            } else {
+                changeType();
             }
 
             if (!prevState.getTime().equals(notification.getTime())) {
@@ -168,6 +156,25 @@ public class NotificationItem extends Composite {
             }
 
             prevState = notification.clone();
+        }
+    }
+
+    /** Change item's content in response to change notification type */
+    private void changeType() {
+        if (prevState.isError()) {
+            mainPanel.removeStyleName(resources.notificationCss().error());
+        } else if (prevState.isWarning()) {
+            mainPanel.removeStyleName(resources.notificationCss().warning());
+        }
+
+        if (notification.isWarning()) {
+            changeImage(resources.warning());
+            mainPanel.addStyleName(resources.notificationCss().warning());
+        } else if (notification.isError()) {
+            changeImage(resources.error());
+            mainPanel.addStyleName(resources.notificationCss().error());
+        } else {
+            changeImage(resources.info());
         }
     }
 }
