@@ -98,7 +98,7 @@ public class IDEInjectorGenerator {
 //        }
 
         StringBuilder builder = new StringBuilder();
-        // declare packagename
+        // declare package name
         builder.append("package " + "com.codenvy.ide.client.inject;\n\n");
 
         // declare imports

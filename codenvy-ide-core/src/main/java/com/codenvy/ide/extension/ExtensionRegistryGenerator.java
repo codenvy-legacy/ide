@@ -59,7 +59,7 @@ public class ExtensionRegistryGenerator extends Generator {
         TypeOracle typeOracle = context.getTypeOracle();
         JClassType extensionManager = typeOracle.findType(typeName);
         if (extensionManager == null) {
-            logger.log(TreeLogger.ERROR, "Can't finde interface type '" + typeName + "'", null);
+            logger.log(TreeLogger.ERROR, "Can't find interface type '" + typeName + "'", null);
             throw new UnableToCompleteException();
         }
         if (extensionManager.isInterface() == null) {
@@ -147,7 +147,7 @@ public class ExtensionRegistryGenerator extends Generator {
     }
 
     /**
-     * Generate constructor with dependcies added into field
+     * Generate constructor with dependencies added into field
      *
      * @param className
      * @param extensions
