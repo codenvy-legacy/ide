@@ -56,8 +56,8 @@ public class ApplicationRunnerService {
                                               @Context UriInfo uriInfo) throws ApplicationRunnerException, VirtualFileSystemException {
         ApplicationInstance app = runner.runApplication(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
                                                         projectId);
-        app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication").queryParam("name", app.getName()).build(wsName)
-                              .toString());
+        app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "stopApplication").queryParam("name", app.getName())
+                              .build(wsName).toString());
         return app;
     }
 

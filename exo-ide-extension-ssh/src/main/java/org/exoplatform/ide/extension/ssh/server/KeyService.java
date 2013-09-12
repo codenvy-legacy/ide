@@ -178,8 +178,8 @@ public class KeyService {
                                           uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build(wsName).toString();
                     }
                     String removeKeysUrl =
-                                           uriInfo.getBaseUriBuilder().path(getClass(), "removeKeys").queryParam("host", host).build(wsName)
-                                                  .toString();
+                            uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "removeKeys").queryParam("host", host)
+                                   .build(wsName).toString();
 
                     result.add(new KeyItem(host, getPublicKeyUrl, removeKeysUrl));
                 }

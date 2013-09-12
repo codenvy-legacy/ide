@@ -54,7 +54,7 @@ public class UpdateStorage {
         try {
             InputStream zip = doDownload(dependencys.getZipUrl());
             UpdateStorageTask task = storageService.updateTypeIndex(dependencys.getDependencies(), zip);
-            final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+            final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(task.getId());
             return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
         } catch (MalformedURLException e) {
             return Response.status(404).entity(e.getMessage()).build();
@@ -68,7 +68,7 @@ public class UpdateStorage {
         try {
             InputStream zip = doDownload(dependencys.getZipUrl());
             UpdateStorageTask task = storageService.updateDockIndex(dependencys.getDependencies(), zip);
-            final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+            final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(task.getId());
             return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
         } catch (MalformedURLException e) {
             return Response.status(404).entity(e.getMessage()).build();

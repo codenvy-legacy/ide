@@ -73,7 +73,7 @@ public class Builder {
     public Response build(@Context UriInfo uriInfo, InputStream data)
             throws IOException {
         MavenBuildTask task = tasks.build(data);
-        final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+        final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(task.getId());
         return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
     }
 
@@ -83,7 +83,7 @@ public class Builder {
     public Response deploy(@Context UriInfo uriInfo, InputStream data)
             throws IOException {
         MavenBuildTask task = tasks.deploy(data);
-        final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+        final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(task.getId());
         return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
     }
 
@@ -93,7 +93,7 @@ public class Builder {
     public Response dependenciesList(@Context UriInfo uriInfo, InputStream data)
             throws IOException {
         MavenBuildTask task = tasks.dependenciesList(data);
-        final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+        final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(task.getId());
         return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
     }
 
@@ -103,7 +103,7 @@ public class Builder {
     public Response dependenciesCopy(@Context UriInfo uriInfo, @QueryParam("classifier") String classifier,
                                      InputStream data) throws IOException {
         MavenBuildTask task = tasks.dependenciesCopy(data, classifier);
-        final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+        final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(task.getId());
         return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
     }
 
@@ -123,9 +123,8 @@ public class Builder {
                             jsonObject.addElement("status", new StringValue("SUCCESSFUL"));
                             jsonObject.addElement("downloadUrl",
                                                   new StringValue(
-                                                          uriInfo.getBaseUriBuilder().path(getClass(), "download")
-                                                                 .build(buildID)
-                                                                 .toString()));
+                                                          uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "download")
+                                                                 .build(buildID).toString()));
                             jsonObject.addElement("time", new StringValue(Long.toString(result.getResult().getTime())));
                             return Response
                                     .status(200)
@@ -163,7 +162,7 @@ public class Builder {
                                     error.append("[ERROR] Please refer to ");
                                     error.append("<a href='");
                                     error.append(
-                                            uriInfo.getBaseUriBuilder().path(getClass(), "getSurefireReports")
+                                            uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "getSurefireReports")
                                                    .build(buildID).toString());
                                     error.append("' target='_blank'>surefire reports</a>");
                                     error.append(" for the individual test results.<br/>");
@@ -218,11 +217,9 @@ public class Builder {
                     public void write(OutputStream output) throws IOException, WebApplicationException {
                         PrintWriter writer = new PrintWriter(output);
                         for (String name : files) {
-                            writer.printf("<a href='%s'>%s</a><br/>", uriInfo.getBaseUriBuilder()
-                                                                             .path(Builder.this.getClass(),
-                                                                                   "getReportFile")
-                                                                             .queryParam("name", name).build(buildID),
-                                          name);
+                            writer.printf("<a href='%s'>%s</a><br/>", uriInfo.getBaseUriBuilder().path(Builder.this.getClass())
+                                                                             .path(Builder.this.getClass(), "getReportFile").queryParam(
+                                            "name", name).build(buildID), name);
                         }
                         writer.flush();
                     }
@@ -316,7 +313,7 @@ public class Builder {
                 }
             }
             // Sent location to check status method.
-            final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
+            final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(buildID);
             return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN)
                            .build();
         }
@@ -356,7 +353,7 @@ public class Builder {
                 }
             }
             // Sent location to check status method.
-            final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
+            final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(buildID);
             return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN)
                            .build();
         }
