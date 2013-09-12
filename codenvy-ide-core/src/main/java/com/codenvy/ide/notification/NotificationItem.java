@@ -111,7 +111,7 @@ public class NotificationItem extends Composite {
         time = new Label(DATA_FORMAT.format(notification.getTime()));
         mainPanel.addWest(time, 70);
 
-        title = new Label(notification.getTitle());
+        title = new Label(notification.getMessage());
         mainPanel.add(title);
 
         initWidget(mainPanel);
@@ -131,8 +131,8 @@ public class NotificationItem extends Composite {
     /** Refresh notification element if it is needed */
     public void refresh() {
         if (!prevState.equals(notification)) {
-            if (!prevState.getTitle().equals(notification.getTitle())) {
-                title.setText(notification.getTitle());
+            if (!prevState.getMessage().equals(notification.getMessage())) {
+                title.setText(notification.getMessage());
             }
 
             if (!notification.isFinished()) {

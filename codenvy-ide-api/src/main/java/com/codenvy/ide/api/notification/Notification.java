@@ -68,7 +68,6 @@ public class Notification {
         READ, UNREAD
     }
 
-    private String                   title;
     private String                   message;
     private Type                     type;
     private Status                   status;
@@ -79,28 +78,24 @@ public class Notification {
     private CloseNotificationHandler closeHandler;
 
     /**
-     * Create notification with title, message and type. Other parameters will be added with default values. This notification has got
+     * Create notification with message and type. Other parameters will be added with default values. This notification has got
      * an unread state, a finished status. It will be a non-important message that does not delegate any actions in response to opening and
      * closing of a notification.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param type
      *         notification's type
      */
-    public Notification(@NotNull String title, @NotNull String message, @NotNull Type type) {
-        this(title, message, type, null, null);
+    public Notification(@NotNull String message, @NotNull Type type) {
+        this(message, type, null, null);
     }
 
     /**
-     * Create notification with title, message, type and action delegate on opening of a notification. Other parameters will be added with
+     * Create notification with message, type and action delegate on opening of a notification. Other parameters will be added with
      * default values. This notification has got an unread state, a finished status and makes it possible to delegate some action in
      * response to opening of a notification. It will be a non-important message.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param type
@@ -108,17 +103,15 @@ public class Notification {
      * @param openHandler
      *         delegate that provides some actions when opening notification
      */
-    public Notification(@NotNull String title, @NotNull String message, @NotNull Type type, @NotNull OpenNotificationHandler openHandler) {
-        this(title, message, type, openHandler, null);
+    public Notification(@NotNull String message, @NotNull Type type, @NotNull OpenNotificationHandler openHandler) {
+        this(message, type, openHandler, null);
     }
 
     /**
-     * Create notification with title, message, type and action delegate on closing of a notification. Other parameters will be added with
+     * Create notification with message, type and action delegate on closing of a notification. Other parameters will be added with
      * default values. This notification has got an unread state, a finished status and makes it possible to delegate some action in
      * response to closing of a notification. It will be a non-important message.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param type
@@ -126,18 +119,15 @@ public class Notification {
      * @param closeHandler
      *         delegate that provides some actions when closing notification
      */
-    public Notification(@NotNull String title, @NotNull String message, @NotNull Type type,
-                        @NotNull CloseNotificationHandler closeHandler) {
-        this(title, message, type, null, closeHandler);
+    public Notification(@NotNull String message, @NotNull Type type, @NotNull CloseNotificationHandler closeHandler) {
+        this(message, type, null, closeHandler);
     }
 
     /**
-     * Create notification with title, message, type and action delegates on opening and closing of a notification. Other parameters will
+     * Create notification with message, type and action delegates on opening and closing of a notification. Other parameters will
      * be added with default values. This notification has got an unread state, a finished status and makes it possible to delegate some
      * action in response to opening and closing of a notification. It will be a non-important message.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param type
@@ -147,18 +137,16 @@ public class Notification {
      * @param closeHandler
      *         delegate that provides some actions when closing notification
      */
-    public Notification(@NotNull String title, @NotNull String message, @NotNull Type type, @Nullable OpenNotificationHandler openHandler,
+    public Notification(@NotNull String message, @NotNull Type type, @Nullable OpenNotificationHandler openHandler,
                         @Nullable CloseNotificationHandler closeHandler) {
-        this(title, message, type, false, openHandler, closeHandler);
+        this(message, type, false, openHandler, closeHandler);
     }
 
     /**
-     * Create notification with title, message, type and note about important this one. Other parameters will be added with default
+     * Create notification with message, type and note about important this one. Other parameters will be added with default
      * values. This notification have got an unread state, a finished status. This notification does not delegate any actions in response
      * to opening and closing of a notification.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param type
@@ -166,17 +154,15 @@ public class Notification {
      * @param important
      *         note about important this notification
      */
-    public Notification(@NotNull String title, @NotNull String message, @NotNull Type type, boolean important) {
-        this(title, message, type, important, null, null);
+    public Notification(@NotNull String message, @NotNull Type type, boolean important) {
+        this(message, type, important, null, null);
     }
 
     /**
-     * Create notification with title, message, type, note about important this one and action delegate on opening of a notification. Other
+     * Create notification with message, type, note about important this one and action delegate on opening of a notification. Other
      * parameters will be added with default values. This notification have got an unread state, a finished status. This notification
      * delegates some actions in response to opening of a notification.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param type
@@ -186,18 +172,16 @@ public class Notification {
      * @param openHandler
      *         delegate that provides some actions when opening notification
      */
-    public Notification(@NotNull String title, @NotNull String message, @NotNull Type type, boolean important,
+    public Notification(@NotNull String message, @NotNull Type type, boolean important,
                         @NotNull OpenNotificationHandler openHandler) {
-        this(title, message, type, important, openHandler, null);
+        this(message, type, important, openHandler, null);
     }
 
     /**
-     * Create notification with title, message, type, note about important this one and action delegate on closing of a notification.
+     * Create notification with message, type, note about important this one and action delegate on closing of a notification.
      * Other parameters will be added with default values. This notification have got an unread state, a finished status. This notification
      * delegates some actions in response to closing of a notification.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param type
@@ -207,18 +191,16 @@ public class Notification {
      * @param closeHandler
      *         delegate that provides some actions when closing notification
      */
-    public Notification(@NotNull String title, @NotNull String message, @NotNull Type type, boolean important,
+    public Notification(@NotNull String message, @NotNull Type type, boolean important,
                         @NotNull CloseNotificationHandler closeHandler) {
-        this(title, message, type, important, null, closeHandler);
+        this(message, type, important, null, closeHandler);
     }
 
     /**
-     * Create notification with title, message, type, note about important this one and action delegates on opening and closing of a
+     * Create notification with message, type, note about important this one and action delegates on opening and closing of a
      * notification. Other parameters will be added with default values. This notification have got an unread state, a finished status.
      * This notification delegates some actions in response to opening and closing of a notification.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param type
@@ -230,34 +212,31 @@ public class Notification {
      * @param closeHandler
      *         delegate that provides some actions when closing notification
      */
-    public Notification(@NotNull String title, @NotNull String message, @NotNull Type type, boolean important,
+    public Notification(@NotNull String message, @NotNull Type type, boolean important,
                         @Nullable OpenNotificationHandler openHandler, @Nullable CloseNotificationHandler closeHandler) {
-        this(title, message, type, FINISHED, UNREAD, new Date(), important, openHandler, closeHandler);
+        this(message, type, FINISHED, UNREAD, new Date(), important, openHandler, closeHandler);
     }
 
     /**
-     * Create notification with title, message and status. Other parameters will be added with default values. This notification have
-     * got an unread state, a info type. It will be a non-important message that does not delegate any actions in response to opening and
+     * Create notification with message and status. Other parameters will be added with default values. This notification have
+     * got an unread state, a info type.jr l It will be a non-important message that does not delegate any actions in response to opening
+     * and
      * closing of a notification.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param status
      *         notification's status
      */
-    public Notification(@NotNull String title, @NotNull String message, @NotNull Status status) {
-        this(title, message, status, null, null);
+    public Notification(@NotNull String message, @NotNull Status status) {
+        this(message, status, null, null);
     }
 
     /**
-     * Create notification with title, message, status and action delegate on opening of a notification. Other parameters will be added
+     * Create notification with message, status and action delegate on opening of a notification. Other parameters will be added
      * with default values. This notification have got an unread state, a info type. It will be a non-important message. This notification
      * delegates some actions in response to opening of a notification.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param status
@@ -265,18 +244,16 @@ public class Notification {
      * @param openHandler
      *         delegate that provides some actions when opening notification
      */
-    public Notification(@NotNull String title, @NotNull String message, @NotNull Status status,
+    public Notification(@NotNull String message, @NotNull Status status,
                         @NotNull OpenNotificationHandler openHandler) {
-        this(title, message, status, openHandler, null);
+        this(message, status, openHandler, null);
     }
 
     /**
-     * Create notification with title, message, status and action delegate on closing of a notification. Other parameters will be added
+     * Create notification with message, status and action delegate on closing of a notification. Other parameters will be added
      * with default values. This notification have got an unread state, a info type. It will be a non-important message. This notification
      * delegates some actions in response to closing of a notification.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param status
@@ -284,18 +261,16 @@ public class Notification {
      * @param closeHandler
      *         delegate that provides some actions when closing notification
      */
-    public Notification(@NotNull String title, @NotNull String message, @NotNull Status status,
+    public Notification(@NotNull String message, @NotNull Status status,
                         @NotNull CloseNotificationHandler closeHandler) {
-        this(title, message, status, null, closeHandler);
+        this(message, status, null, closeHandler);
     }
 
     /**
-     * Create notification with title, message, status and action delegates on opening and closing of a notification. Other parameters will
+     * Create notification with message, status and action delegates on opening and closing of a notification. Other parameters will
      * be added with default values. This notification have got an unread state, a info type. It will be a non-important message. This
      * notification delegates some actions in response to opening and closing of a notification.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param status
@@ -305,18 +280,16 @@ public class Notification {
      * @param closeHandler
      *         delegate that provides some actions when closing notification
      */
-    public Notification(@NotNull String title, @NotNull String message, @NotNull Status status,
-                        @Nullable OpenNotificationHandler openHandler, @Nullable CloseNotificationHandler closeHandler) {
-        this(title, message, status, false, openHandler, closeHandler);
+    public Notification(@NotNull String message, @NotNull Status status, @Nullable OpenNotificationHandler openHandler,
+                        @Nullable CloseNotificationHandler closeHandler) {
+        this(message, status, false, openHandler, closeHandler);
     }
 
     /**
-     * Create notification with title, message, status and note about important this one. Other parameters will be added with default
+     * Create notification with message, status and note about important this one. Other parameters will be added with default
      * values. This notification have got an unread state, a info type. This notification does not delegate any actions in response to
      * opening and closing of a notification.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param status
@@ -324,17 +297,15 @@ public class Notification {
      * @param important
      *         note about important this notification
      */
-    public Notification(@NotNull String title, @NotNull String message, @NotNull Status status, boolean important) {
-        this(title, message, status, important, null, null);
+    public Notification(@NotNull String message, @NotNull Status status, boolean important) {
+        this(message, status, important, null, null);
     }
 
     /**
-     * Create notification with title, message, status, note about important this one and action delegate on opening of a notification.
+     * Create notification with message, status, note about important this one and action delegate on opening of a notification.
      * Other parameters will be added with default values. This notification have got an unread state, a info type. This notification
      * delegates some actions in response to opening of a notification.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param status
@@ -344,18 +315,15 @@ public class Notification {
      * @param openHandler
      *         delegate that provides some actions when opening notification
      */
-    public Notification(@NotNull String title, @NotNull String message, @NotNull Status status, boolean important,
-                        @NotNull OpenNotificationHandler openHandler) {
-        this(title, message, INFO, status, UNREAD, new Date(), important, openHandler, null);
+    public Notification(@NotNull String message, @NotNull Status status, boolean important, @NotNull OpenNotificationHandler openHandler) {
+        this(message, INFO, status, UNREAD, new Date(), important, openHandler, null);
     }
 
     /**
-     * Create notification with title, message, status, note about important this one and action delegate on closing of a notification.
+     * Create notification with message, status, note about important this one and action delegate on closing of a notification.
      * Other parameters will be added with default values. This notification have got an unread state, a info type. This notification
      * delegates some actions in response to closing of a notification.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param status
@@ -365,18 +333,16 @@ public class Notification {
      * @param closeHandler
      *         delegate that provides some actions when closing notification
      */
-    public Notification(@NotNull String title, @NotNull String message, @NotNull Status status, boolean important,
+    public Notification(@NotNull String message, @NotNull Status status, boolean important,
                         @NotNull CloseNotificationHandler closeHandler) {
-        this(title, message, INFO, status, UNREAD, new Date(), important, null, closeHandler);
+        this(message, INFO, status, UNREAD, new Date(), important, null, closeHandler);
     }
 
     /**
-     * Create notification with title, message, status, note about important this one and action delegates on opening and closing of a
+     * Create notification with message, status, note about important this one and action delegates on opening and closing of a
      * notification. Other parameters will be added with default values. This notification have got an unread state, a info type. This
      * notification delegates some actions in response to opening and closing of a notification.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param status
@@ -388,16 +354,14 @@ public class Notification {
      * @param closeHandler
      *         delegate that provides some actions when closing notification
      */
-    public Notification(@NotNull String title, @NotNull String message, @NotNull Status status, boolean important,
-                        @Nullable OpenNotificationHandler openHandler, @Nullable CloseNotificationHandler closeHandler) {
-        this(title, message, INFO, status, UNREAD, new Date(), important, openHandler, closeHandler);
+    public Notification(@NotNull String message, @NotNull Status status, boolean important, @Nullable OpenNotificationHandler openHandler,
+                        @Nullable CloseNotificationHandler closeHandler) {
+        this(message, INFO, status, UNREAD, new Date(), important, openHandler, closeHandler);
     }
 
     /**
      * Create notification with all parameters.
      *
-     * @param title
-     *         notification's title
      * @param message
      *         notification's message
      * @param type
@@ -415,10 +379,9 @@ public class Notification {
      * @param closeHandler
      *         delegate that provides some actions when closing notification
      */
-    protected Notification(@NotNull String title, @NotNull String message, @NotNull Type type, @NotNull Status status, @NotNull State state,
-                           @NotNull Date time, boolean important, @Nullable OpenNotificationHandler openHandler,
+    protected Notification(@NotNull String message, @NotNull Type type, @NotNull Status status, @NotNull State state, @NotNull Date time,
+                           boolean important, @Nullable OpenNotificationHandler openHandler,
                            @Nullable CloseNotificationHandler closeHandler) {
-        this.title = title;
         this.message = message;
         this.type = type;
         this.status = status;
@@ -507,22 +470,6 @@ public class Notification {
         this.time = new Date();
     }
 
-    /** @return notification's title */
-    @NotNull
-    public String getTitle() {
-        return title;
-    }
-
-    /**
-     * Set notification's title
-     *
-     * @param title
-     */
-    public void setTitle(@NotNull String title) {
-        this.title = title;
-        this.time = new Date();
-    }
-
     /**
      * Returns whether this notification is read.
      *
@@ -581,7 +528,7 @@ public class Notification {
     /** @return a clone of this instance */
     @NotNull
     public Notification clone() {
-        return new Notification(title, message, type, status, state, time, important, openHandler, closeHandler);
+        return new Notification(message, type, status, state, time, important, openHandler, closeHandler);
     }
 
     /** {@inheritDoc} */
@@ -597,7 +544,6 @@ public class Notification {
         if (state != that.state) return false;
         if (status != that.status) return false;
         if (!time.equals(that.time)) return false;
-        if (!title.equals(that.title)) return false;
         if (type != that.type) return false;
 
         return true;

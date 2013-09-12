@@ -109,7 +109,7 @@ public class NotificationMessage extends PopupPanel {
         });
         mainPanel.addEast(closeIcon, 16);
 
-        title = new Label(notification.getTitle());
+        title = new Label(notification.getMessage());
         mainPanel.add(title);
 
         setWidget(mainPanel);
@@ -129,8 +129,8 @@ public class NotificationMessage extends PopupPanel {
     /** Refresh notification element if it is needed */
     public void refresh() {
         if (!prevState.equals(notification)) {
-            if (!prevState.getTitle().equals(notification.getTitle())) {
-                title.setText(notification.getTitle());
+            if (!prevState.getMessage().equals(notification.getMessage())) {
+                title.setText(notification.getMessage());
             }
 
             if (!notification.isFinished()) {
