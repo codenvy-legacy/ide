@@ -37,7 +37,7 @@
             <g:SimplePanel width="100%" ui:field="toolbarPanel"/>
         </g:north>
         <g:south size="22">
-            <g:SimplePanel width="100%" ui:field="statusPanel"/>
+            <g:FlowPanel width="100%" ui:field="statusPanel"/>
         </g:south>
         <g:center>
             <g:SimplePanel ui:field="perspectivePanel" width="100%" height="100%">

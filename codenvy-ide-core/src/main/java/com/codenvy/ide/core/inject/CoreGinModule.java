@@ -50,6 +50,8 @@ import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.keybinding.KeyBindingManager;
 import com.codenvy.ide.menu.MainMenuView;
 import com.codenvy.ide.menu.MainMenuViewImpl;
+import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.notification.NotificationManagerImpl;
 import com.codenvy.ide.openproject.OpenProjectView;
 import com.codenvy.ide.openproject.OpenProjectViewImpl;
 import com.codenvy.ide.outline.OutlinePartPresenter;
@@ -129,6 +131,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(UserClientService.class).to(UserClientServiceImpl.class).in(Singleton.class);
         bind(PreferencesManager.class).to(PreferencesManagerImpl.class).in(Singleton.class);
         bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
+        bind(NotificationManager.class).to(NotificationManagerImpl.class).in(Singleton.class);
         apiBindingConfigure();
 
         resourcesAPIconfigure();

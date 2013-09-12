@@ -20,10 +20,7 @@ package com.codenvy.ide.workspace;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 
 /**
@@ -40,14 +37,12 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView {
 
     @UiField
     SimplePanel perspectivePanel;
-
     @UiField
     SimplePanel menuPanel;
-
     @UiField
     SimplePanel toolbarPanel;
     @UiField
-    SimplePanel statusPanel;
+    FlowPanel   statusPanel;
 
     /** Create view. */
     @Inject
@@ -78,5 +73,11 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView {
     @Override
     public AcceptsOneWidget getToolbarPanel() {
         return toolbarPanel;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public FlowPanel getStatusPanel() {
+        return statusPanel;
     }
 }

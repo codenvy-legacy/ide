@@ -22,6 +22,7 @@ import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.menu.MainMenuPresenter;
+import com.codenvy.ide.notification.NotificationManagerImpl;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -47,6 +48,8 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
 
     private final ToolbarPresenter toolbarPresenter;
 
+    private final NotificationManagerImpl notificationManager;
+
     /**
      * Instantiates Presenter
      *
@@ -56,12 +59,13 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
      */
     @Inject
     protected WorkspacePresenter(WorkspaceView view, MainMenuPresenter menu, ToolbarPresenter toolbarPresenter,
-                                 Provider<WorkBenchPresenter> genericPerspectiveProvider) {
+                                 Provider<WorkBenchPresenter> genericPerspectiveProvider, NotificationManagerImpl notificationManager) {
         super();
         this.view = view;
-        this.toolbarPresenter = toolbarPresenter;
         this.view.setDelegate(this);
+        this.toolbarPresenter = toolbarPresenter;
         this.menu = menu;
+        this.notificationManager = notificationManager;
 
         this.workBenchPresenter = genericPerspectiveProvider.get();
     }
@@ -73,6 +77,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
         menu.go(view.getMenuPanel());
         toolbarPresenter.go(view.getToolbarPanel());
         workBenchPresenter.go(view.getPerspectivePanel());
+        notificationManager.go(view.getStatusPanel());
         container.setWidget(view);
     }
 
