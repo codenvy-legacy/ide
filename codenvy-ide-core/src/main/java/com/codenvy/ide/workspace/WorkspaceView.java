@@ -19,6 +19,7 @@ package com.codenvy.ide.workspace;
 
 import com.codenvy.ide.api.mvp.View;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 
 /**
@@ -27,26 +28,17 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
-    /**
-     * Returns central panel.
-     *
-     * @return
-     */
+    /** @return central panel */
     AcceptsOneWidget getPerspectivePanel();
 
-    /**
-     * Returns menu panel.
-     *
-     * @return
-     */
+    /** @return menu panel */
     AcceptsOneWidget getMenuPanel();
 
-    /**
-     * Returns toolbar panel.
-     *
-     * @return
-     */
+    /** @return toolbar panel */
     AcceptsOneWidget getToolbarPanel();
+
+    /** @return status panel */
+    FlowPanel getStatusPanel();
 
     /** Needs for delegate some function into Workspace view. */
     public interface ActionDelegate {

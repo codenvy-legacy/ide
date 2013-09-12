@@ -48,9 +48,6 @@ public class BranchListUnmarshaller implements Unmarshallable<JsonArray<Branch>>
 
         JSONArray array = JSONParser.parseStrict(text).isArray();
 
-        if (array == null || array.size() <= 0)
-            return;
-
         branches = JsonCollections.createArray();
 
         for (int i = 0; i < array.size(); i++) {

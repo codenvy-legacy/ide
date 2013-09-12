@@ -131,7 +131,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
                                    @Override
                                    protected void onSuccess(JsonArray<Branch> result) {
                                        if (LIST_REMOTE.equals(remoteMode)) {
-                                           view.setRemoteBranches(getRemoteBranchesToDisplay(remoteMode, result));
+                                           view.setRemoteBranches(getRemoteBranchesToDisplay(view.getRepository(), result));
                                        } else {
                                            view.setLocalBranches(getLocalBranchesToDisplay(result));
                                        }
@@ -173,7 +173,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
         for (int i = 0; i < remoteBranches.size(); i++) {
             Branch branch = remoteBranches.get(i);
             if (branch.getName().startsWith(compareString)) {
-                branches.add(branch.getName().replaceFirst(compareString, "refs/heads/"));
+                branches.add(branch.getName().replaceFirst(compareString, ""));
             }
         }
 
@@ -198,9 +198,11 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
             return branches;
         }
 
+        String compareString = "refs/heads/";
         for (int i = 0; i < localBranches.size(); i++) {
             Branch branch = localBranches.get(i);
-            branches.add(branch.getName());
+            String branchName = branch.getName().replaceFirst(compareString, "");
+            branches.add(branchName);
         }
 
         return branches;
@@ -257,8 +259,8 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
     /** @return list of refs to push */
     @NotNull
     private JsonArray<String> getRefs() {
-        String localBranch = view.getLocalBranch();
-        String remoteBranch = view.getRemoteBranch();
+        String localBranch = "refs/heads/" + view.getLocalBranch();
+        String remoteBranch = "refs/heads/" + view.getRemoteBranch();
         JsoArray<String> array = JsoArray.create();
         array.add(localBranch + ":" + remoteBranch);
         return array;

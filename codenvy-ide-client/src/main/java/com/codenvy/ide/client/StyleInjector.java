@@ -51,5 +51,6 @@ public class StyleInjector {
         resources.dialogBox().ensureInjected();
         resources.wizardCSS().ensureInjected();
         resources.welcomeCSS().ensureInjected();
+        resources.notificationCss().ensureInjected();
     }
 }
