@@ -28,6 +28,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -166,7 +167,14 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                                IDE.fireEvent(new ApplicationSettingsReceivedEvent(
                                                                                                                                   result.getSettings()));
                                                                                IDE.fireEvent(new UserInfoReceivedEvent(result.getUserInfo()));
-                                                                               checkEntryPoint();
+                                                                               
+                                                                               new Timer() {
+                                                                                    @Override
+                                                                                    public void run() {
+                                                                                        checkEntryPoint();
+                                                                                    }
+                                                                               }.schedule(100);
+                                                                               
                                                                            } catch (Exception e) {
                                                                                IDE.fireEvent(new ExceptionThrownEvent(e));
                                                                            }
@@ -339,8 +347,13 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
             toolbarItems.addAll(controls.getToolbarDefaultControls());
             applicationSettings.setValue(Settings.TOOLBAR_ITEMS, toolbarItems, Store.SERVER);
         }
-
-        initServices();
+        
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                initServices();
+            }
+        });
     }
 
     private void initServices() {
