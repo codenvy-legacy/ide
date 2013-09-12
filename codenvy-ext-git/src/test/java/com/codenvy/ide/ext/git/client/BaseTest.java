@@ -35,7 +35,6 @@ import static org.mockito.Mockito.when;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-//@RunWith(MockitoJUnitRunner.class)
 @GwtModule("com.codenvy.ide.ext.git.Git")
 public abstract class BaseTest extends GwtTestWithMockito {
     public static final String  PROJECT_ID      = "projectID";

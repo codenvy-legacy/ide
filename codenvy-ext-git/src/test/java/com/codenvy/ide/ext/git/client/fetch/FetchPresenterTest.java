@@ -66,7 +66,6 @@ public class FetchPresenterTest extends BaseTest {
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 GwtReflectionUtils.makeAccessible(onSuccess);
 
-
                 JsonArray<Remote> array = JsonCollections.createArray();
                 onSuccess.invoke(callback, array);
 

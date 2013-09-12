@@ -15,6 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
+package com.codenvy.ide.ext.git.client.patcher;
 
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.js.JsoArray;
