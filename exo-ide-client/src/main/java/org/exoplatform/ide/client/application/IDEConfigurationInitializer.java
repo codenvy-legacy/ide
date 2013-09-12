@@ -168,13 +168,12 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                                                                                   result.getSettings()));
                                                                                IDE.fireEvent(new UserInfoReceivedEvent(result.getUserInfo()));
                                                                                
-                                                                               new Timer() {
-                                                                                    @Override
-                                                                                    public void run() {
-                                                                                        checkEntryPoint();
-                                                                                    }
-                                                                               }.schedule(100);
-                                                                               
+                                                                               Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                                                                                   @Override
+                                                                                   public void execute() {
+                                                                                       checkEntryPoint();
+                                                                                   }
+                                                                               });
                                                                            } catch (Exception e) {
                                                                                IDE.fireEvent(new ExceptionThrownEvent(e));
                                                                            }
