@@ -116,7 +116,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
             prjName = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
         }
 
-        String prjType;
+        String prjType = null;
 
         if (parameterMap.get(FactorySpec10.PROJECT_TYPE) != null
             && !parameterMap.get(FactorySpec10.PROJECT_TYPE).isEmpty()) {

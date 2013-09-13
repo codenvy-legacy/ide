@@ -40,7 +40,6 @@ import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectHandler;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.JSONSerializer;
@@ -262,16 +261,6 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
                 IDE.getInstance().closeView(display.asView().getId());
             }
         }
-    }
-
-    public interface Display extends IsView {
-        HasClickHandlers getOkButton();
-
-        HasClickHandlers getCancelButton();
-
-        HasValue<String> getProjectTypeField();
-
-        void setProjectTypeValues(String[] types);
     }
 
     public interface Display extends IsView {

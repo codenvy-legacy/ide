@@ -108,7 +108,7 @@
     </table>
 </div>
 
-<%--<script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "session.js")%>'></script>--%>
+<script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "session.js")%>'></script>
 <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "cloud_menu.js")%>'></script>
 
 
