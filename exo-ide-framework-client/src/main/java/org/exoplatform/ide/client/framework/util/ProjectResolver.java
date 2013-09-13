@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.client.framework.util;
 
@@ -37,51 +36,58 @@ import java.util.Set;
  */
 public class ProjectResolver {
 
-    private static Map<String, ImageResource>       types              = new HashMap<String, ImageResource>();
+    private static Map<String, ImageResource> types = new HashMap<String, ImageResource>();
 
-    private static Map<Language, List<ProjectType>> projectTypes       = new HashMap<Language, List<ProjectType>>();
+    private static Map<Language, List<ProjectType>> projectTypes = new HashMap<Language, List<ProjectType>>();
 
-    private static Map<ProjectType, ImageResource>  projectImages      = new HashMap<ProjectType, ImageResource>();
+    private static Map<ProjectType, ImageResource> projectImages = new HashMap<ProjectType, ImageResource>();
 
-    private static Map<ProjectType, ImageResource>  projectLargeImages = new HashMap<ProjectType, ImageResource>();
+    private static Map<ProjectType, ImageResource> projectLargeImages = new HashMap<ProjectType, ImageResource>();
 
-    private static Map<Language, ImageResource>     languageImages     = new HashMap<Language, ImageResource>();
+    private static Map<Language, ImageResource> languageImages = new HashMap<Language, ImageResource>();
 
     /** List contains sorted project types. */
-    private static List<ProjectType>                sortedTypes        = new ArrayList<ProjectType>();
+    private static List<ProjectType> sortedTypes = new ArrayList<ProjectType>();
 
     /** Ruby on Rails */
     @Deprecated
-    public static final String                      RAILS              = "Rails";
+    public static final String RAILS = "Rails";
 
     /** Java Spring Framework */
     @Deprecated
-    public static final String                      SPRING             = "Spring";
+    public static final String SPRING = "Spring";
+
+    /** eXo Development Framework : Chromattic, Groovy REST */
+    @Deprecated
+    public static final String EXO_APP = "eXo";
 
     /** Static Web Project: HTML, JS, CSS */
     @Deprecated
-    public static final String                      STATIC_WEB         = "Javascript";
+    public static final String STATIC_WEB = "Javascript";
 
     /** Servlet and JSP API based project */
     @Deprecated
-    public static final String                      SERVLET_JSP        = "Java Web";
+    public static final String SERVLET_JSP = "Java Web";
 
     /** PHP Project */
     @Deprecated
-    public static final String                      PHP                = "PHP";
+    public static final String PHP = "PHP";
 
     /** Empty Project */
     @Deprecated
-    public static final String                      UNDEFINED          = "Undefined";
+    public static final String UNDEFINED = "Undefined";
 
     @Deprecated
-    public static final String                      APP_ENGINE_JAVA    = "App Engine Java";
+    public static final String APP_ENGINE_JAVA = "App Engine Java";
 
     @Deprecated
-    public static final String                      APP_ENGINE_PYTHON  = "App Engine Python";
+    public static final String APP_ENGINE_PYTHON = "App Engine Python";
 
-    public static List<String>                      deprecatedTypes    = Arrays.asList(APP_ENGINE_JAVA, APP_ENGINE_PYTHON, PHP,
-                                                                                       RAILS, SERVLET_JSP, SPRING, STATIC_WEB);
+    @Deprecated
+    public static final String AWS = "Amazon Web Services";
+
+    public static List<String> deprecatedTypes = Arrays.asList(APP_ENGINE_JAVA, APP_ENGINE_PYTHON, EXO_APP, PHP, RAILS,
+                                                               SERVLET_JSP, SPRING, STATIC_WEB);
 
     static {
         if (IconImageBundle.INSTANCE != null) {
@@ -115,10 +121,11 @@ public class ProjectResolver {
             projectLargeImages.put(ProjectType.PHP, IconImageBundle.INSTANCE.phpProject48());
             projectLargeImages.put(ProjectType.NODE_JS, IconImageBundle.INSTANCE.nodejsProject48());
             projectLargeImages.put(ProjectType.MultiModule, IconImageBundle.INSTANCE.multiModule48());
+            projectLargeImages.put(ProjectType.ANDROID, IconImageBundle.INSTANCE.androidProject48());
         }
 
-        projectTypes.put(Language.JAVA,
-                         Arrays.asList(ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING, ProjectType.JAR, ProjectType.WAR));
+        projectTypes.put(Language.JAVA, Arrays.asList(ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING,//
+                                                     ProjectType.JAR, ProjectType.WAR));
         projectTypes.put(Language.JAVASCRIPT, Arrays.asList(ProjectType.JAVASCRIPT));
         projectTypes.put(Language.PHP, Arrays.asList(ProjectType.PHP));
         projectTypes.put(Language.NODE_JS, Arrays.asList(ProjectType.NODE_JS));
@@ -148,8 +155,9 @@ public class ProjectResolver {
 
     /**
      * Returns index of project type.
-     * 
-     * @param type {@link ProjectType}
+     *
+     * @param type
+     *         {@link ProjectType}
      * @return index of project type
      */
     public static int getIndexOfProjectType(ProjectType type) {

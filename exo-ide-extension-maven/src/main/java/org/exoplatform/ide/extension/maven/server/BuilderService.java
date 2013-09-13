@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.extension.maven.server;
 
@@ -78,7 +77,7 @@ public class BuilderService {
                           @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException {
         VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
         final String buildID = builder.build(vfs, projectId, projectName, projectType);
-        final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(wsName, buildID);
+        final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(wsName, buildID);
         return Response.status(202).location(location).entity(location.toString()).build();
     }
 
@@ -109,7 +108,7 @@ public class BuilderService {
         // ContentStream pom = vfs.getContent(project.getPath() + "/pom.xml",null);
 
         final String buildID = builder.deploy(vfs, projectId, projectName, projectType);
-        final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(wsName, buildID);
+        final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(wsName, buildID);
         return Response.status(202).location(location).entity(location.toString()).build();
     }
 
@@ -134,7 +133,7 @@ public class BuilderService {
                                      @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException {
         VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
         final String buildID = builder.dependenciesList(vfs, projectId);
-        final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(wsName, buildID);
+        final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(wsName, buildID);
         return Response.status(202).location(location).entity(location.toString()).build();
     }
 
@@ -161,7 +160,7 @@ public class BuilderService {
                                      @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException {
         VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
         final String buildID = builder.dependenciesCopy(vfs, projectId, classifier);
-        final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(wsName, buildID);
+        final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(wsName, buildID);
         return Response.status(202).location(location).entity(location.toString()).build();
     }
 

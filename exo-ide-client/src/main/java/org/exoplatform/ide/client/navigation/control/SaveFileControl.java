@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.client.navigation.control;
 
@@ -47,8 +46,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -94,15 +91,19 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
         IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
-     * .application.event.VfsChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     *      .application.event.VfsChangedEvent)
+     */
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
         setVisible(event.getVfsInfo() != null);
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
-     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+     */
     @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         activeFile = event.getFile();
@@ -132,11 +133,14 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform
-     * .ide.client.framework.editor.event.EditorFileContentChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorFileContentChangedEvent)
+     */
     @Override
     public void onEditorFileContentChanged(EditorFileContentChangedEvent event) {
-        if (CollaborationPropertiesUtil.isCollaborationEnabled(event.getFile().getProject()) && activeEditor instanceof CollabEditor && !MimeType.TEXT_HTML.equals(event.getFile().getMimeType())) {
+        if (CollaborationPropertiesUtil.isCollaborationEnabled(event.getFile().getProject()) && activeEditor instanceof CollabEditor &&
+            !MimeType.TEXT_HTML.equals(event.getFile().getMimeType())) {
             setEnabled(false);
             return;
         }
@@ -164,8 +168,10 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
         lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
     }
 
-    /** @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event
-     * .FileSavedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event
+     *      .FileSavedEvent)
+     */
     @Override
     public void onFileSaved(FileSavedEvent event) {
         if (activeFile == null || event.getFile() == null) {

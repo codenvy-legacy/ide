@@ -1,28 +1,25 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.commons;
 
 import java.util.Collection;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
@@ -30,11 +27,11 @@ public class IdeUser {
     private String userId;
 
     private Collection<String> roles;
-    
+
     private Collection<IDEWorkspace> workspaces;
-    
+
     private String clientId;
-    
+
     private boolean temporary;
 
     public IdeUser() {
@@ -95,36 +92,37 @@ public class IdeUser {
     public void setClientId(String clientId) {
         this.clientId = clientId;
     }
-    
+
     public Collection<IDEWorkspace> getWorkspaces() {
         return workspaces;
     }
-    
+
     public void setWorkspaces(Collection<IDEWorkspace> workspaces) {
         this.workspaces = workspaces;
     }
-    
-    
+
+
     public boolean isTemporary() {
         return temporary;
     }
-    
+
     public void setTemporary(boolean temporary) {
         this.temporary = temporary;
     }
-    
+
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("\"user\":{\"userId\":\"").append(userId).append("\",\"clientId\":\"").append(clientId).append("\",\"temporary\":\"").append(temporary).append("\",\"roles\":[");
+        builder.append("\"user\":{\"userId\":\"").append(userId).append("\",\"clientId\":\"").append(clientId).append("\",\"temporary\":\"")
+               .append(temporary).append("\",\"roles\":[");
         int i = 0;
         int rMax = roles.size();
         for (String r : roles) {
             i++;
             builder.append(r);
             if (i != rMax)
-              builder.append(", ");
+                builder.append(", ");
         }
         return builder.append("]}").toString();
     }

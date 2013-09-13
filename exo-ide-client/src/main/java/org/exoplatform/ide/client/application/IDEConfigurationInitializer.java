@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.client.application;
 
@@ -29,12 +28,16 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.AddToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
-import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarShadowButton;
+import org.exoplatform.gwtframework.ui.client.command.ui.UniButton;
+import org.exoplatform.gwtframework.ui.client.command.ui.UniButton.Size;
+import org.exoplatform.gwtframework.ui.client.command.ui.UniButton.Type;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.IDELoader;
@@ -164,7 +167,13 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                                IDE.fireEvent(new ApplicationSettingsReceivedEvent(
                                                                                                                                   result.getSettings()));
                                                                                IDE.fireEvent(new UserInfoReceivedEvent(result.getUserInfo()));
-                                                                               checkEntryPoint();
+                                                                               
+                                                                               Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                                                                                   @Override
+                                                                                   public void execute() {
+                                                                                       checkEntryPoint();
+                                                                                   }
+                                                                               });
                                                                            } catch (Exception e) {
                                                                                IDE.fireEvent(new ExceptionThrownEvent(e));
                                                                            }
@@ -337,8 +346,13 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
             toolbarItems.addAll(controls.getToolbarDefaultControls());
             applicationSettings.setValue(Settings.TOOLBAR_ITEMS, toolbarItems, Store.SERVER);
         }
-
-        initServices();
+        
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                initServices();
+            }
+        });
     }
 
     private void initServices() {
@@ -357,23 +371,18 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
         }
 
         IDE.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", toolbarItems, controls.getRegisteredControls()));
-        IDE.fireEvent(new SetToolbarItemsEvent("exoIDEStatusbar", controls.getStatusBarControls(), controls
-                                                                                                           .getRegisteredControls()));
-
+        IDE.fireEvent(new SetToolbarItemsEvent("exoIDEStatusbar", controls.getStatusBarControls(), controls.getRegisteredControls()));
 
         if (IDE.isRoUser()) {
-            ToolbarShadowButton readOnlyButton =
-                                                 new ToolbarShadowButton(
-                                                                         IDEImageBundle.INSTANCE.readOnly(),
-                                                                         IDEImageBundle.INSTANCE.readOnlyHover(),
-                                                                         new ClickHandler() {
-                                                                             @Override
-                                                                             public void onClick(ClickEvent event) {
-                                                                                 IDE.getInstance()
-                                                                                    .openView(new ReadOnlyUserView(IDE.user.getWorkspaces()));
-                                                                             }
-                                                                         });
+            UniButton readOnlyButton = new UniButton("Read-only", new Image(IDEImageBundle.INSTANCE.readOnlyIcon()), Type.PRIMARY, Size.SMALL);
             IDE.fireEvent(new AddToolbarItemsEvent(readOnlyButton, true));
+            readOnlyButton.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    IDE.getInstance().openView(new ReadOnlyUserView(IDE.user.getWorkspaces()));
+                }
+            });
+            
         }
     }
 

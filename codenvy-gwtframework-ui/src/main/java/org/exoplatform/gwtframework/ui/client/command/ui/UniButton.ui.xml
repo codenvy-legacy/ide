@@ -1,0 +1,236 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder
+	xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	>
+	
+	<ui:style type="org.exoplatform.gwtframework.ui.client.command.ui.UniButton.UniButtonStyles">
+	
+		.btn::-moz-focus-inner {
+			border: 0;
+			padding: 0;
+		}
+		
+		.btn {
+			/*
+			font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+			*/
+			
+			font-family: Verdana, Bitstream Vera Sans, sans-serif;
+			
+			box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			cursor: pointer;
+			display: inline-block;
+			vertical-align: middle;
+			border: 1px solid transparent;
+			border-radius: 2px;
+			
+			font-weight: normal;
+			text-align: center;
+			text-decoration: none;
+			white-space: nowrap;
+			
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+			outline: 0 !important;
+		}
+		
+		.btn:focus {
+			outline: 0 !important;
+		}
+		
+		.btn:hover,
+		.btn:focus {
+			color: #333333;
+			text-decoration: none;
+		}
+		
+		.btn:active,
+		.btn.active {
+			outline: 0;
+			-webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+			box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+		}
+		
+		.btn.disabled,
+		.btn[disabled] {
+			pointer-events: none;
+			cursor: default;
+			opacity: 0.65;
+			filter: alpha(opacity = 65);
+			-webkit-box-shadow: none;
+			box-shadow: none;
+		}
+		
+		.btnDefault {
+			color: #333333;
+			background-color: #ffffff;
+			border-color: #cccccc;
+		}
+		
+		.btnDefault:hover,
+		.btnDefault:focus,
+		.btnDefault:active,
+		.btnDefault.active {
+			color: #333333;
+			background-color: #ebebeb;
+			border-color: #adadad;
+		}
+		
+		.btnPrimary {
+			color: #ffffff;
+			background-color: #428bca;
+			border-color: #357ebd;
+		}
+		
+		.btnPrimary:hover,
+		.btnPrimary:focus,
+		.btnPrimary:active,
+		.btnPrimary.active {
+			color: #ffffff;
+			background-color: #3276b1;
+			border-color: #285e8e;
+		}
+		
+		.btnSuccess {
+			color: #ffffff;
+			background-color: #5cb85c;
+			border-color: #4cae4c;
+		}
+		
+		.btnSuccess:hover,
+		.btnSuccess:focus,
+		.btnSuccess:active,
+		.btnSuccess.active {
+			color: #ffffff;
+			background-color: #47a447;
+			border-color: #398439;
+		}
+		
+		.btnInfo {
+			color: #ffffff;
+			background-color: #5bc0de;
+			border-color: #46b8da;
+		}
+		
+		.btnInfo:hover,
+		.btnInfo:focus,
+		.btnInfo:active,
+		.btnInfo.active {
+			color: #ffffff;
+			background-color: #39b3d7;
+			border-color: #269abc;
+		}
+		
+		.btnWarning {
+			color: #ffffff;
+			background-color: #f0ad4e;
+			border-color: #eea236;
+		}
+		
+		.btnWarning:hover,
+		.btnWarning:focus,
+		.btnWarning:active,
+		.btnWarning.active {
+			color: #ffffff;
+			background-color: #ed9c28;
+			border-color: #d58512;
+		}
+		
+		.btnDanger {
+			color: #ffffff;
+			background-color: #d9534f;
+			border-color: #d43f3a;
+		}
+		
+		.btnDanger:hover,
+		.btnDanger:focus,
+		.btnDanger:active,
+		.btnDanger.active {
+			color: #ffffff;
+			background-color: #d2322d;
+			border-color: #ac2925;
+		}
+		
+		.btnLink {
+			border-color: transparent;
+			background-color: transparent;
+			-webkit-box-shadow: none;
+			box-shadow: none;
+			font-weight: normal;
+			color: #428bca;
+			cursor: pointer;
+			border-radius: 0;
+		}
+		
+		.btnLink:hover,
+		.btnLink:focus,
+		.btnLink:active {
+			color: #2a6496;
+			text-decoration: underline;
+			background-color: transparent;
+			-webkit-box-shadow: none;
+			box-shadow: none;
+		}
+		
+		.btn {
+			height: 34px;
+			padding: 8px 12px;
+			font-size: 14px;
+			line-height: 16px;	
+		}
+		
+		.btn img {
+			vertical-align: middle;
+			margin-right: 4px;
+			margin-top: -2px;
+		}
+		
+		.btnLg {
+			height: 44px;
+			font-size: 18px;
+			line-height: 18px;
+			padding: 12px 12px;
+		}
+		
+		.btnLg img {
+		}
+		
+		.btnSm {
+			height: 24px;
+			font-size: 12px;
+			line-height: 12px;
+			padding-left: 10px;
+			padding-right: 8px;
+			padding-top: 4px;
+			padding-bottom: 4px;
+			/*
+			padding: 4px 10px 4px 10px;
+			*/
+		}
+		
+		.btnSm img {
+			margin-top: -1px;
+			margin-left: -4px;
+		}
+		
+		.btnXs {
+			height: 22px;
+			font-size: 12px;
+			line-height: 16px;
+			padding: 2px 6px;
+		}
+		
+		.btnXs img {
+		}
+	
+	</ui:style>
+	
+	<g:HTMLPanel styleName="{style.btn}" ui:field="panel"></g:HTMLPanel>
+
+</ui:UiBinder>
+ 

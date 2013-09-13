@@ -352,6 +352,7 @@ public class CollaborationManager implements DisableEnableCollaborationHandler, 
         CollaborationPropertiesUtil.updateCollaboration(project, event.isEnable());
         if (event.isEnable()) {
             if (openedFiles.isEmpty()) {
+                IDE.fireEvent(new CollaborationChangedEvent(event.isEnable(), project));
                 return;
             }
             if (event.isFromMenu()) {
@@ -371,7 +372,7 @@ public class CollaborationManager implements DisableEnableCollaborationHandler, 
                             if (value != null && value) {
                                 saveFilesAndOpenInCollaboration();
                                 IDE.fireEvent(new CollaborationChangedEvent(event.isEnable(), project));
-                            }else{
+                            } else {
                                 CollaborationPropertiesUtil.updateCollaboration(project, false);
                             }
                         }
@@ -384,7 +385,7 @@ public class CollaborationManager implements DisableEnableCollaborationHandler, 
                 }
 
             } else {
-                for (String  fileId : openedFiles.keySet()) {
+                for (String fileId : openedFiles.keySet()) {
                     openedEditors.get(fileId).setFile(openedFiles.get(fileId));
                 }
             }
@@ -426,7 +427,7 @@ public class CollaborationManager implements DisableEnableCollaborationHandler, 
     /** {@inheritDoc} */
     @Override
     public void onEditorFileClosed(EditorFileClosedEvent event) {
-        openedFiles.remove(event.getFile());
+        openedFiles.remove(event.getFile().getId());
     }
 
     /** {@inheritDoc} */
@@ -448,7 +449,7 @@ public class CollaborationManager implements DisableEnableCollaborationHandler, 
         if (editor != null) {
             editor.setFile(event.getFile());
         }
-        if (fileCount == -1) {
+        if (fileCount == 0) {
             handlerRegistration.removeHandler();
         }
     }

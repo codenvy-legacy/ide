@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.vfs.server.util;
 
@@ -46,7 +45,8 @@ public class LinksHelper {
         // This method is used extremely actively so it is imported to set size of map directly
         // and prevent unnecessary growth of map.
         final Map<String, Link> links = new HashMap<String, Link>(16, 1.0f);
-        final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class, "getFileSystem");
+        final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class).path(
+                VirtualFileSystemFactory.class, "getFileSystem");
 
         links.put(Link.REL_SELF, //
                   new LinkImpl(createURI(baseUriBuilder.clone(), wsName, "item", itemId), Link.REL_SELF, MediaType.APPLICATION_JSON));
@@ -117,7 +117,8 @@ public class LinksHelper {
                                                       String itemId,
                                                       boolean isRoot,
                                                       String parentId) {
-        final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class, "getFileSystem");
+        final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class).path(
+                VirtualFileSystemFactory.class, "getFileSystem");
         // This method is used extremely actively so it is imported to set size of map directly
         // and prevent unnecessary growth of map.
         final Map<String, Link> links = new HashMap<String, Link>(32, 1.0f);
@@ -132,7 +133,8 @@ public class LinksHelper {
                                                        String wsName,
                                                        String itemId,
                                                        String parentId) {
-        final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class, "getFileSystem");
+        final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class).path(
+                VirtualFileSystemFactory.class, "getFileSystem");
         // This method is used extremely actively so it is imported to set size of map directly
         // and prevent unnecessary growth of map.
         final Map<String, Link> links = new HashMap<String, Link>(16, 1.0f);
@@ -170,8 +172,9 @@ public class LinksHelper {
 
             links.put(
                     Link.REL_RENAME, //
-                    new LinkImpl(createURI(baseUriBuilder.clone(), wsName, "rename", id, "newname", "[newname]", "mediaType", "[mediaType]"),
-                                 Link.REL_RENAME, MediaType.APPLICATION_JSON));
+                    new LinkImpl(
+                            createURI(baseUriBuilder.clone(), wsName, "rename", id, "newname", "[newname]", "mediaType", "[mediaType]"),
+                            Link.REL_RENAME, MediaType.APPLICATION_JSON));
         }
 
         links.put(Link.REL_CHILDREN, //
@@ -206,7 +209,8 @@ public class LinksHelper {
 
     public static Map<String, Link> createUrlTemplates(URI baseUri, String wsName) {
         final Map<String, Link> templates = new HashMap<String, Link>(16, 1.0f);
-        final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class, "getFileSystem");
+        final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class).path(
+                VirtualFileSystemFactory.class, "getFileSystem");
 
         templates.put(Link.REL_ITEM,
                       new LinkImpl(createURI(baseUriBuilder.clone(), wsName, "item", "[id]"), Link.REL_ITEM, MediaType.APPLICATION_JSON));
