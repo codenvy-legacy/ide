@@ -94,13 +94,13 @@ public class ReadOnlyUserView extends ViewImpl {
             public void onClick(ClickEvent event) {
                 UrlBuilder builder = new UrlBuilder();
                 if (workspaces.size() == 0)
-                    Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("/login")
+                    Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("/site/login")
                                                    .buildString());
                 else if (workspaces.size() == 1)
                     Window.Location.replace(workspaces.get(0).getUrl());
                 else
                     Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                                                   .setPath("/private/select-tenant").buildString());
+                                                   .setPath("/site/private/select-tenant").buildString());
             }
         });
 

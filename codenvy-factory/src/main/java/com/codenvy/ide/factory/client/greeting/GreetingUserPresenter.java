@@ -166,7 +166,7 @@ public class GreetingUserPresenter implements
                         for (String projectId : projectIds) {
                             projectIDS.append(projectId).append(';');
                         }
-                        goToURL("/create-account?" + CopySpec10.DOWNLOAD_URL + "=" + projectsDownloadUrl + "&" + CopySpec10.PROJECT_ID + "=" + projectIDS.toString());
+                        goToURL("/site/create-account?" + CopySpec10.DOWNLOAD_URL + "=" + projectsDownloadUrl + "&" + CopySpec10.PROJECT_ID + "=" + projectIDS.toString());
                     }
                 }
                 
