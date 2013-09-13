@@ -48,7 +48,7 @@ public class NotificationMessage extends PopupPanel {
     public static final int WIDTH        = 300;
     public static final int HEIGHT       = 30;
     private DockLayoutPanel mainPanel;
-    private Label           title;
+    private HTML            title;
     private SimplePanel     iconPanel;
     private Notification    notification;
     private Notification    prevState;
@@ -109,7 +109,7 @@ public class NotificationMessage extends PopupPanel {
         });
         mainPanel.addEast(closeIcon, 16);
 
-        title = new Label(notification.getMessage());
+        title = new HTML(notification.getMessage());
         mainPanel.add(title);
 
         setWidget(mainPanel);

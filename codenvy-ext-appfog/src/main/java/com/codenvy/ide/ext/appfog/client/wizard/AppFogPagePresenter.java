@@ -18,6 +18,8 @@
 package com.codenvy.ide.ext.appfog.client.wizard;
 
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.CreateProjectProvider;
@@ -51,6 +53,10 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter for creating application on AppFog from New project wizard.
  *
@@ -74,7 +80,9 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
     private AppfogClientService        service;
     private TemplateAgent              templateAgent;
     private CreateProjectProvider      createProjectProvider;
+    private NotificationManager        notificationManager;
     private InfraDetail                currentInfra;
+    private Notification               notification;
     private JsonArray<InfraDetail>     infras;
     private boolean                    isLogined;
 
@@ -90,11 +98,12 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
      * @param loginPresenter
      * @param service
      * @param templateAgent
+     * @param notificationManager
      */
     @Inject
     protected AppFogPagePresenter(AppFogPageView view, EventBus eventBus, ResourceProvider resourcesProvider, ConsolePart console,
                                   AppfogResources resources, AppfogLocalizationConstant constant, LoginPresenter loginPresenter,
-                                  AppfogClientService service, TemplateAgent templateAgent) {
+                                  AppfogClientService service, TemplateAgent templateAgent, NotificationManager notificationManager) {
 
         super("Deploy project to AppFog", resources.appfog48());
 
@@ -107,6 +116,7 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.templateAgent = templateAgent;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
@@ -239,6 +249,10 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
         // This class still doesn't have analog.
         // JobManager.get().showJobSeparated();
         AppFogApplicationUnmarshallerWS unmarshaller = new AppFogApplicationUnmarshallerWS();
+        String message = constant.createApplicationStarted(project.getName());
+        notification = new Notification(message, Notification.Status.PROGRESS);
+        notificationManager.showNotification(notification);
+
 
         try {
             // Application will be started after creation (IDE-1618)
@@ -246,7 +260,8 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
             service.createWS(server, projectName, null, url, 0, 0, noStart, resourcesProvider.getVfsId(), project.getId(), warUrl,
                              currentInfra.getInfra(), new AppfogRESTfulRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler,
                                                                                                           null, server, eventBus, constant,
-                                                                                                          console, loginPresenter) {
+                                                                                                          loginPresenter,
+                                                                                                          notificationManager) {
                 @Override
                 protected void onSuccess(final AppfogApplication appFogApplication) {
                     project.refreshProperties(new AsyncCallback<Project>() {
@@ -264,7 +279,9 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    console.print(constant.applicationCreationFailed());
+                    notification.setStatus(FINISHED);
+                    notification.setType(ERROR);
+                    notification.setMessage(constant.applicationCreationFailed());
                     super.onFailure(exception);
                 }
             });
@@ -287,8 +304,8 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
             boolean noStart = false;
             service.create(server, projectName, null, url, 0, 0, noStart, resourcesProvider.getVfsId(), project.getId(), warUrl,
                            currentInfra.getInfra(), new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null,
-                                                                                                      server, eventBus, constant, console,
-                                                                                                      loginPresenter) {
+                                                                                                      server, eventBus, constant,
+                                                                                                      loginPresenter, notificationManager) {
                 @Override
                 protected void onSuccess(final AppfogApplication appFogApplication) {
                     project.refreshProperties(new AsyncCallback<Project>() {
@@ -306,13 +323,17 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    console.print(constant.applicationCreationFailed());
+                    notification.setStatus(FINISHED);
+                    notification.setType(ERROR);
+                    notification.setMessage(constant.applicationCreationFailed());
                     super.onFailure(exception);
                 }
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            notification.setStatus(FINISHED);
+            notification.setType(ERROR);
+            notification.setMessage(constant.applicationCreationFailed());
         }
     }
 
@@ -332,6 +353,9 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
                 msg += "<br>" + constant.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
             }
         }
+        notification.setStatus(FINISHED);
+        notification.setType(INFO);
+        notification.setMessage(msg);
         console.print(msg);
         eventBus.fireEvent(new RefreshBrowserEvent(project));
     }
@@ -381,11 +405,14 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
         try {
             service.infras(server, null, null,
                            new AppfogAsyncRequestCallback<JsonArray<InfraDetail>>(unmarshaller, getInfrasHandler, loginCanceledHandler,
-                                                                                  server, eventBus, constant, console, loginPresenter) {
+                                                                                  server, eventBus, constant, loginPresenter,
+                                                                                  notificationManager) {
                                @Override
                                protected void onSuccess(JsonArray<InfraDetail> result) {
                                    if (result.isEmpty()) {
                                        eventBus.fireEvent(new ExceptionThrownEvent(constant.errorGettingInfras()));
+                                       Notification notification = new Notification(constant.errorGettingInfras(), ERROR);
+                                       notificationManager.showNotification(notification);
                                    } else {
                                        infras = result;
 
@@ -409,7 +436,8 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
                            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -424,8 +452,8 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
 
         try {
             service.validateAction("create", server, projectName, null, url, resourcesProvider.getVfsId(), null, 0, 0, true,
-                                   new AppfogAsyncRequestCallback<String>(null, validateHandler, null, server, eventBus, constant, console,
-                                                                          loginPresenter) {
+                                   new AppfogAsyncRequestCallback<String>(null, validateHandler, null, server, eventBus, constant,
+                                                                          loginPresenter, notificationManager) {
                                        @Override
                                        protected void onSuccess(String result) {
                                            beforeDeploy();
@@ -433,7 +461,8 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
                                    });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 

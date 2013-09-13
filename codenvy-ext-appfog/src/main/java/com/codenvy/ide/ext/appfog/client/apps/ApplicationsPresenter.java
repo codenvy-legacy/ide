@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.appfog.client.apps;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.AppFogExtension;
 import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
@@ -50,12 +51,12 @@ import com.google.web.bindery.event.shared.EventBus;
 public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     private ApplicationsView           view;
     private EventBus                   eventBus;
-    private ConsolePart                console;
     private AppfogLocalizationConstant constant;
     private LoginPresenter             loginPresenter;
     private StartApplicationPresenter  startApplicationPresenter;
     private DeleteApplicationPresenter deleteApplicationPresenter;
     private AppfogClientService        service;
+    private NotificationManager        notificationManager;
     private JsonArray<String>          servers;
     private String                     currentServer;
     /** The callback what execute when some application's information was changed. */
@@ -76,27 +77,27 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param constant
      * @param loginPresenter
      * @param service
      * @param startApplicationPresenter
      * @param deleteApplicationPresenter
+     * @param notificationManager
      */
     @Inject
-    protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, ConsolePart console, AppfogLocalizationConstant constant,
+    protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, AppfogLocalizationConstant constant,
                                     LoginPresenter loginPresenter, AppfogClientService service,
                                     StartApplicationPresenter startApplicationPresenter,
-                                    DeleteApplicationPresenter deleteApplicationPresenter) {
+                                    DeleteApplicationPresenter deleteApplicationPresenter, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.startApplicationPresenter = startApplicationPresenter;
         this.deleteApplicationPresenter = deleteApplicationPresenter;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -122,12 +123,14 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), Notification.Type.ERROR);
+                    notificationManager.showNotification(notification);
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
                 }
             });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), Notification.Type.ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -154,7 +157,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
             service.getApplicationList(view.getTarget(),
                                        new AppfogAsyncRequestCallback<JsonArray<AppfogApplication>>(unmarshaller, loggedInHandler, null,
                                                                                                     view.getTarget(), eventBus, constant,
-                                                                                                    console, loginPresenter) {
+                                                                                                    loginPresenter, notificationManager) {
                                            @Override
                                            protected void onSuccess(JsonArray<AppfogApplication> result) {
                                                view.setApplications(result);
@@ -166,7 +169,8 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
                                            }
                                        });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), Notification.Type.ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }

@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.appfog.client.login;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.ext.appfog.client.AppFogExtension;
@@ -49,27 +50,27 @@ public class LoginPresenter implements LoginView.ActionDelegate {
     private AppfogClientService        service;
     private EventBus                   eventBus;
     private AppfogLocalizationConstant constant;
-    private ConsolePart                console;
+    private NotificationManager        notificationManager;
 
     /**
      * Create presenter.
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param service
      * @param constant
+     * @param notificationManager
      */
     @Inject
-    protected LoginPresenter(LoginView view, EventBus eventBus, ConsolePart console, AppfogClientService service,
-                             AppfogLocalizationConstant constant) {
+    protected LoginPresenter(LoginView view, EventBus eventBus, AppfogClientService service, AppfogLocalizationConstant constant,
+                             NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.service = service;
         this.constant = constant;
-        this.console = console;
         this.target = AppFogExtension.DEFAULT_SERVER;
+        this.notificationManager = notificationManager;
     }
 
     /** Shows dialog. */
@@ -108,14 +109,15 @@ public class LoginPresenter implements LoginView.ActionDelegate {
         try {
             service.getSystemInfo(AppFogExtension.DEFAULT_SERVER,
                                   new AppfogAsyncRequestCallback<SystemInfo>(unmarshaller, loggedIn, loginCanceled, eventBus, constant,
-                                                                             console, this) {
+                                                                             this, notificationManager) {
                                       @Override
                                       protected void onSuccess(SystemInfo result) {
                                           view.setEmail(result.getUser());
                                       }
                                   });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), Notification.Type.ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -133,7 +135,9 @@ public class LoginPresenter implements LoginView.ActionDelegate {
                               @Override
                               protected void onSuccess(String result) {
                                   target = enteredServer;
-                                  console.print(constant.loginSuccess());
+                                  Notification notification = new Notification(constant.loginSuccess(), Notification.Type.INFO);
+                                  notificationManager.showNotification(notification);
+
                                   if (loggedIn != null) {
                                       loggedIn.onLoggedIn();
                                   }
@@ -164,7 +168,8 @@ public class LoginPresenter implements LoginView.ActionDelegate {
                                       // otherwise will be called method from superclass.
                                   }
                                   // TODO doesn't show invalid password error
-                                  console.print(exception.getMessage());
+                                  Notification notification = new Notification(exception.getMessage(), Notification.Type.ERROR);
+                                  notificationManager.showNotification(notification);
                                   eventBus.fireEvent(new ExceptionThrownEvent(exception));
                               }
                           });

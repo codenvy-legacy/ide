@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.appfog.client.info;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
@@ -42,10 +43,10 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
     private ApplicationInfoView        view;
     private EventBus                   eventBus;
     private ResourceProvider           resourceProvider;
-    private ConsolePart                console;
     private AppfogLocalizationConstant constant;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
+    private NotificationManager        notificationManager;
 
     /**
      * Create view.
@@ -53,22 +54,23 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
      * @param view
      * @param eventBus
      * @param resourceProvider
-     * @param console
      * @param constant
      * @param loginPresenter
      * @param service
+     * @param notificationManager
      */
     @Inject
-    protected ApplicationInfoPresenter(ApplicationInfoView view, EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                       AppfogLocalizationConstant constant, LoginPresenter loginPresenter, AppfogClientService service) {
+    protected ApplicationInfoPresenter(ApplicationInfoView view, EventBus eventBus, ResourceProvider resourceProvider,
+                                       AppfogLocalizationConstant constant, LoginPresenter loginPresenter, AppfogClientService service,
+                                       NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
-        this.console = console;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
@@ -98,7 +100,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, eventBus,
-                                                                                         constant, console, loginPresenter) {
+                                                                                         constant, loginPresenter, notificationManager) {
                                            @Override
                                            protected void onSuccess(AppfogApplication result) {
                                                view.setName(result.getName());
@@ -118,7 +120,8 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), Notification.Type.ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 }

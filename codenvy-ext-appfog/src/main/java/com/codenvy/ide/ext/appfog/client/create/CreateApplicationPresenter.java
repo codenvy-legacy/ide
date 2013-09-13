@@ -18,6 +18,8 @@
 package com.codenvy.ide.ext.appfog.client.create;
 
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -46,6 +48,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Presenter for creating application on AppFog.
@@ -105,7 +109,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     private AppfogLocalizationConstant constant;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
+    private NotificationManager        notificationManager;
     private InfraDetail                currentInfra;
+    private Notification               notification;
 
     /**
      * Create presenter.
@@ -117,21 +123,22 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
      * @param constant
      * @param loginPresenter
      * @param service
+     * @param notificationManager
      */
     @Inject
     protected CreateApplicationPresenter(CreateApplicationView view, ResourceProvider resourceProvider, EventBus eventBus,
                                          ConsolePart console, AppfogLocalizationConstant constant, LoginPresenter loginPresenter,
-                                         AppfogClientService service) {
+                                         AppfogClientService service, NotificationManager notificationManager) {
         this.frameworks = JsonCollections.createArray();
         this.infras = JsonCollections.createArray();
         this.resourceProvider = resourceProvider;
         this.view = view;
         this.view.setDelegate(this);
-        this.console = console;
         this.eventBus = eventBus;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
@@ -166,7 +173,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
             try {
                 memory = Integer.parseInt(view.getMemory());
             } catch (NumberFormatException e) {
-                console.print(constant.errorMemoryFormat());
+                Notification notification = new Notification(constant.errorMemoryFormat(), ERROR);
+                notificationManager.showNotification(notification);
                 eventBus.fireEvent(new ExceptionThrownEvent(constant.errorMemoryFormat()));
             }
         }
@@ -188,7 +196,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         try {
             instances = Integer.parseInt(view.getInstances());
         } catch (NumberFormatException e) {
-            console.print(constant.errorInstancesFormat());
+            Notification notification = new Notification(constant.errorInstancesFormat(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(constant.errorInstancesFormat()));
         }
         boolean nostart = !view.isStartAfterCreation();
@@ -232,7 +241,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
             service.validateAction("create", app.server, app.name, app.type, app.url, resourceProvider.getVfsId(), project.getId(),
                                    app.instances, app.memory, app.nostart,
                                    new AppfogAsyncRequestCallback<String>(null, validateHandler, null, app.server, eventBus, constant,
-                                                                          console, loginPresenter) {
+                                                                          loginPresenter, notificationManager) {
                                        @Override
                                        protected void onSuccess(String result) {
                                            if (isMavenProject) {
@@ -244,7 +253,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                                        }
                                    });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -272,12 +282,15 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         };
         final Project project = resourceProvider.getActiveProject();
         AppFogApplicationUnmarshallerWS unmarshaller = new AppFogApplicationUnmarshallerWS();
+        String message = constant.createApplicationStarted(project.getName());
+        notification = new Notification(message, Notification.Status.PROGRESS);
+        notificationManager.showNotification(notification);
 
         try {
             service.createWS(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,
                              resourceProvider.getVfsId(), project.getId(), warUrl, appData.infra,
                              new AppfogRESTfulRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, appData.server,
-                                                                                 eventBus, constant, console, loginPresenter) {
+                                                                                 eventBus, constant, loginPresenter, notificationManager) {
                                  @Override
                                  protected void onSuccess(final AppfogApplication appfogApplication) {
                                      project.refreshProperties(new AsyncCallback<Project>() {
@@ -296,7 +309,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
                                  @Override
                                  protected void onFailure(Throwable exception) {
-                                     console.print(constant.applicationCreationFailed());
+                                     notification.setStatus(Notification.Status.FINISHED);
+                                     notification.setType(ERROR);
+                                     notification.setMessage(constant.applicationCreationFailed());
                                      super.onFailure(exception);
                                  }
                              });
@@ -322,7 +337,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
             service.create(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,
                            resourceProvider.getVfsId(), project.getId(), warUrl, appData.infra,
                            new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, appData.server, eventBus,
-                                                                             constant, console, loginPresenter) {
+                                                                             constant, loginPresenter, notificationManager) {
                                @Override
                                protected void onSuccess(final AppfogApplication appfogApplication) {
                                    project.refreshProperties(new AsyncCallback<Project>() {
@@ -341,12 +356,16 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
                                @Override
                                protected void onFailure(Throwable exception) {
-                                   console.print(constant.applicationCreationFailed());
+                                   notification.setStatus(Notification.Status.FINISHED);
+                                   notification.setType(ERROR);
+                                   notification.setMessage(constant.applicationCreationFailed());
                                    super.onFailure(exception);
                                }
                            });
         } catch (RequestException e) {
-            console.print(constant.applicationCreationFailed());
+            notification.setStatus(Notification.Status.FINISHED);
+            notification.setType(ERROR);
+            notification.setMessage(constant.applicationCreationFailed());
         }
     }
 
@@ -358,22 +377,24 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
      */
     private void onAppCreatedSuccess(AppfogApplication app) {
         warUrl = null;
+        notification.setStatus(Notification.Status.FINISHED);
+        notification.setType(Notification.Type.INFO);
 
+        String msg;
         if ("STARTED".equals(app.getState()) && app.getInstances() == app.getRunningInstances()) {
-            String msg = constant.applicationCreatedSuccessfully(app.getName());
+            msg = constant.applicationCreatedSuccessfully(app.getName());
             if (app.getUris().isEmpty()) {
                 msg += "<br>" + constant.applicationStartedWithNoUrls();
             } else {
                 msg += "<br>" + constant.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
             }
-            console.print(msg);
         } else if ("STARTED".equals(app.getState()) && app.getInstances() != app.getRunningInstances()) {
-            String msg = constant.applicationWasNotStarted(app.getName());
-            console.print(msg);
+            msg = constant.applicationWasNotStarted(app.getName());
         } else {
-            String msg = constant.applicationCreatedSuccessfully(app.getName());
-            console.print(msg);
+            msg = constant.applicationCreatedSuccessfully(app.getName());
         }
+        notification.setMessage(msg);
+        console.print(msg);
     }
 
     /**
@@ -476,7 +497,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         try {
             service.getFrameworks(server,
                                   new AppfogAsyncRequestCallback<JsonArray<Framework>>(unmarshaller, getFrameworksLoggedInHandler, null,
-                                                                                       eventBus, constant, console, loginPresenter) {
+                                                                                       eventBus, constant, loginPresenter,
+                                                                                       notificationManager) {
                                       @Override
                                       protected void onSuccess(JsonArray<Framework> result) {
                                           if (!result.isEmpty()) {
@@ -491,7 +513,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                                   });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -588,7 +611,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         } else {
             String msg = constant.createApplicationNotFolder(view.getName());
             eventBus.fireEvent(new ExceptionThrownEvent(msg));
-            console.print(msg);
+            Notification notification = new Notification(msg, ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -618,11 +642,12 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         try {
             service.infras(server, null, null,
                            new AppfogAsyncRequestCallback<JsonArray<InfraDetail>>(unmarshaller, getInfrasHandler, null, server, eventBus,
-                                                                                  constant, console, loginPresenter) {
+                                                                                  constant, loginPresenter, notificationManager) {
                                @Override
                                protected void onSuccess(JsonArray<InfraDetail> result) {
                                    if (result.isEmpty()) {
-                                       console.print(constant.errorGettingInfras());
+                                       Notification notification = new Notification(constant.errorGettingInfras(), ERROR);
+                                       notificationManager.showNotification(notification);
                                        eventBus.fireEvent(new ExceptionThrownEvent(constant.errorGettingInfras()));
                                    } else {
                                        infras = result;
@@ -647,7 +672,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 }

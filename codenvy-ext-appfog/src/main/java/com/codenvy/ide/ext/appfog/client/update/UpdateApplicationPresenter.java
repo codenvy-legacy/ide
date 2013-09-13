@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.appfog.client.update;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
@@ -39,6 +40,9 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter for update application operation.
  *
@@ -50,31 +54,32 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler {
     private String                     warUrl;
     private EventBus                   eventBus;
     private ResourceProvider           resourceProvider;
-    private ConsolePart                console;
     private AppfogLocalizationConstant constant;
     private HandlerRegistration        projectBuildHandler;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
+    private NotificationManager        notificationManager;
 
     /**
      * Create presenter.
      *
      * @param eventBus
      * @param resourceProvider
-     * @param console
      * @param constant
      * @param loginPresenter
      * @param service
+     * @param notificationManager
      */
     @Inject
-    protected UpdateApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                         AppfogLocalizationConstant constant, LoginPresenter loginPresenter, AppfogClientService service) {
+    protected UpdateApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, AppfogLocalizationConstant constant,
+                                         LoginPresenter loginPresenter, AppfogClientService service,
+                                         NotificationManager notificationManager) {
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
-        this.console = console;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.notificationManager = notificationManager;
     }
 
     /** If user is not logged in to AppFog, this handler will be called, after user logged in. */
@@ -96,8 +101,8 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler {
 
         try {
             service.updateApplication(resourceProvider.getVfsId(), projectId, null, null, warUrl,
-                                      new AppfogAsyncRequestCallback<String>(null, loggedInHandler, null, eventBus, constant, console,
-                                                                             loginPresenter) {
+                                      new AppfogAsyncRequestCallback<String>(null, loggedInHandler, null, eventBus, constant,
+                                                                             loginPresenter, notificationManager) {
                                           @Override
                                           protected void onSuccess(String result) {
                                               AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
@@ -108,23 +113,28 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler {
                                                                                                                                null, null,
                                                                                                                                eventBus,
                                                                                                                                constant,
-                                                                                                                               console,
-                                                                                                                               loginPresenter) {
+                                                                                                                               loginPresenter,
+                                                                                                                               notificationManager) {
                                                                                  @Override
                                                                                  protected void onSuccess(AppfogApplication result) {
-                                                                                     console.print(constant.updateApplicationSuccess(
-                                                                                             result.getName()));
+                                                                                     String message = constant.updateApplicationSuccess(
+                                                                                             result.getName());
+                                                                                     Notification notification =
+                                                                                             new Notification(message, INFO);
+                                                                                     notificationManager.showNotification(notification);
                                                                                  }
                                                                              });
                                               } catch (RequestException e) {
                                                   eventBus.fireEvent(new ExceptionThrownEvent(e));
-                                                  console.print(e.getMessage());
+                                                  Notification notification = new Notification(e.getMessage(), ERROR);
+                                                  notificationManager.showNotification(notification);
                                               }
                                           }
                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -152,8 +162,8 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler {
 
         try {
             service.validateAction("update", null, null, null, null, resourceProvider.getVfsId(), projectId, 0, 0, false,
-                                   new AppfogAsyncRequestCallback<String>(null, validateHandler, null, eventBus, constant, console,
-                                                                          loginPresenter) {
+                                   new AppfogAsyncRequestCallback<String>(null, validateHandler, null, eventBus, constant,
+                                                                          loginPresenter, notificationManager) {
                                        @Override
                                        protected void onSuccess(String result) {
                                            isBuildApplication();
@@ -161,7 +171,8 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler {
                                    });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 

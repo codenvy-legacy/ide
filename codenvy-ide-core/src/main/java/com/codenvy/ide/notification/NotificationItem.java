@@ -46,7 +46,7 @@ public class NotificationItem extends Composite {
 
     private static final DateTimeFormat DATA_FORMAT = DateTimeFormat.getFormat("h:mm:ss a");
     private DockLayoutPanel mainPanel;
-    private Label           title;
+    private HTML            title;
     private Label           time;
     private SimplePanel     iconPanel;
     private Resources       resources;
@@ -111,7 +111,7 @@ public class NotificationItem extends Composite {
         time = new Label(DATA_FORMAT.format(notification.getTime()));
         mainPanel.addWest(time, 70);
 
-        title = new Label(notification.getMessage());
+        title = new HTML(notification.getMessage());
         mainPanel.add(title);
 
         initWidget(mainPanel);

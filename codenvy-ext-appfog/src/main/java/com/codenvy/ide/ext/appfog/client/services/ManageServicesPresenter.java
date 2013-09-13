@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.appfog.client.services;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.AppFogExtension;
 import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
@@ -41,6 +42,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter for managing Appfog services.
  *
@@ -57,10 +60,10 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
     private String                     selectedBoundedService;
     private CreateServicePresenter     createServicePresenter;
     private EventBus                   eventBus;
-    private ConsolePart                console;
     private AppfogLocalizationConstant constant;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
+    private NotificationManager        notificationManager;
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
     private LoggedInHandler deleteServiceLoggedInHandler      = new LoggedInHandler() {
 
@@ -99,24 +102,24 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param constant
      * @param loginPresenter
      * @param service
      * @param createServicePresenter
+     * @param notificationManager
      */
     @Inject
-    protected ManageServicesPresenter(ManageServicesView view, EventBus eventBus, ConsolePart console, AppfogLocalizationConstant constant,
+    protected ManageServicesPresenter(ManageServicesView view, EventBus eventBus, AppfogLocalizationConstant constant,
                                       LoginPresenter loginPresenter, AppfogClientService service,
-                                      CreateServicePresenter createServicePresenter) {
+                                      CreateServicePresenter createServicePresenter, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.createServicePresenter = createServicePresenter;
+        this.notificationManager = notificationManager;
     }
 
     /**
@@ -197,7 +200,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
         try {
             this.service.deleteService(AppFogExtension.DEFAULT_SERVER, service.getName(),
                                        new AppfogAsyncRequestCallback<Object>(null, deleteServiceLoggedInHandler, null, eventBus, constant,
-                                                                              console, loginPresenter) {
+                                                                              loginPresenter, notificationManager) {
                                            @Override
                                            protected void onSuccess(Object result) {
                                                getServices();
@@ -208,7 +211,8 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -222,7 +226,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
         try {
             this.service.bindService(AppFogExtension.DEFAULT_SERVER, service.getName(), application.getName(), null, null,
                                      new AppfogAsyncRequestCallback<Object>(null, bindServiceLoggedInHandler, null, eventBus,
-                                                                            constant, console, loginPresenter) {
+                                                                            constant, loginPresenter, notificationManager) {
                                          @Override
                                          protected void onSuccess(Object result) {
                                              getApplicationInfo();
@@ -239,7 +243,8 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
                                      });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -253,7 +258,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
             selectedBoundedService = service;
             this.service.unbindService(AppFogExtension.DEFAULT_SERVER, service, application.getName(), null, null,
                                        new AppfogAsyncRequestCallback<Object>(null, unBindServiceLoggedInHandler, null, eventBus, constant,
-                                                                              console, loginPresenter) {
+                                                                              loginPresenter, notificationManager) {
                                            @Override
                                            protected void onSuccess(Object result) {
                                                getApplicationInfo();
@@ -261,7 +266,8 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -283,8 +289,8 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
         try {
             service.getApplicationInfo(null, null, application.getName(), AppFogExtension.DEFAULT_SERVER,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, getApplicationInfoLoggedInHandler,
-                                                                                         null, eventBus, constant, console,
-                                                                                         loginPresenter) {
+                                                                                         null, eventBus, constant, loginPresenter,
+                                                                                         notificationManager) {
                                            @Override
                                            protected void onSuccess(AppfogApplication result) {
                                                application = result;
@@ -294,7 +300,8 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -326,7 +333,8 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 }

@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.appfog.client.url;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
@@ -36,6 +37,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter for unmaping (unregistering) URLs from application.
  *
@@ -49,11 +53,11 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
     private String                     urlToMap;
     private ResourceProvider           resourceProvider;
     private EventBus                   eventBus;
-    private ConsolePart                console;
     private AppfogLocalizationConstant constant;
     private AsyncCallback<String>      unmapUrlCallback;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
+    private NotificationManager        notificationManager;
     private boolean isBindingChanged = false;
 
     /**
@@ -62,22 +66,23 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
      * @param view
      * @param resourceProvider
      * @param eventBus
-     * @param console
      * @param constant
      * @param loginPresenter
      * @param service
+     * @param notificationManager
      */
     @Inject
-    protected UnmapUrlPresenter(UnmapUrlView view, ResourceProvider resourceProvider, EventBus eventBus, ConsolePart console,
-                                AppfogLocalizationConstant constant, LoginPresenter loginPresenter, AppfogClientService service) {
+    protected UnmapUrlPresenter(UnmapUrlView view, ResourceProvider resourceProvider, EventBus eventBus,
+                                AppfogLocalizationConstant constant, LoginPresenter loginPresenter, AppfogClientService service,
+                                NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.resourceProvider = resourceProvider;
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
@@ -131,8 +136,8 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
 
         try {
             service.mapUrl(null, null, appName, server, url,
-                           new AppfogAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null, eventBus, constant, console,
-                                                                  loginPresenter) {
+                           new AppfogAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null, eventBus, constant,
+                                                                  loginPresenter, notificationManager) {
                                @Override
                                protected void onSuccess(String result) {
                                    isBindingChanged = true;
@@ -142,7 +147,8 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
                                    }
                                    registeredUrl = "<a href=\"" + registeredUrl + "\" target=\"_blank\">" + registeredUrl + "</a>";
                                    String msg = constant.mapUrlRegisteredSuccess(registeredUrl);
-                                   console.print(msg);
+                                   Notification notification = new Notification(msg, ERROR);
+                                   notificationManager.showNotification(notification);
                                    registeredUrls.add(url);
                                    view.setRegisteredUrls(registeredUrls);
                                    view.setMapUrl("");
@@ -150,7 +156,8 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
                            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -188,8 +195,8 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
 
         try {
             service.unmapUrl(null, null, appName, server, url,
-                             new AppfogAsyncRequestCallback<Object>(null, unregisterUrlLoggedInHandler, null, eventBus, constant, console,
-                                                                    loginPresenter) {
+                             new AppfogAsyncRequestCallback<Object>(null, unregisterUrlLoggedInHandler, null, eventBus, constant,
+                                                                    loginPresenter, notificationManager) {
                                  @Override
                                  protected void onSuccess(Object result) {
                                      isBindingChanged = true;
@@ -200,12 +207,14 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
                                          unmappedUrl = "http://" + unmappedUrl;
                                      }
                                      String msg = constant.unmapUrlSuccess(unmappedUrl);
-                                     console.print(msg);
+                                     Notification notification = new Notification(msg, INFO);
+                                     notificationManager.showNotification(notification);
                                  }
                              });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -234,7 +243,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, null, null, eventBus, constant,
-                                                                                         console, loginPresenter) {
+                                                                                         loginPresenter, notificationManager) {
                                            @Override
                                            protected void onSuccess(AppfogApplication result) {
                                                isBindingChanged = false;
@@ -249,7 +258,8 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 }
