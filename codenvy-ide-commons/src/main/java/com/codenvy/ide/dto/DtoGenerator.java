@@ -32,7 +32,7 @@ import java.nio.file.Files;
 import java.util.*;
 
 /**
- * Simple source generator that takes in a jar of interface definitions and
+ * Simple source generator that takes in the packages list with interface definitions and
  * generates client and server DTO impls.
  */
 public class DtoGenerator {
