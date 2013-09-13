@@ -18,11 +18,14 @@
 package com.codenvy.ide.extension.maven.shared;
 
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Status of build.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  */
+@DTO
 public interface BuildStatus {
     public enum Status {
         IN_PROGRESS("In progress"), //

@@ -17,7 +17,10 @@
  */
 package com.codenvy.ide.ext.appfog.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /** @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a> */
+@DTO
 public interface Infra {
     String getProvider();
 

@@ -17,7 +17,10 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+@DTO
 public interface SystemService {
     String getVendor();
 

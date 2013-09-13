@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 
@@ -26,6 +27,7 @@ import com.codenvy.ide.json.JsonCollections;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: AddRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
+@DTO
 public interface AddRequest extends GitRequest {
     /** Default file pattern that will be used if {@link #filepattern} is not set. All content of working tree will be added in index. */
     JsonArray<String> DEFAULT_PATTERN = JsonCollections.createArray(".");

@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.aws.shared.beanstalk;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Get options possible for configuration for specified amazon solution stack.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@DTO
 public interface SolutionStackConfigurationOptionsRequest {
     /**
      * Get name of amazon solution stack, e.g. '64bit Amazon Linux running Tomcat 6'.

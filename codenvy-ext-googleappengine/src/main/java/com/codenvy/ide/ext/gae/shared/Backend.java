@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.gae.shared;
 
+import com.codenvy.ide.dto.DTO;
 import com.codenvy.ide.json.JsonArray;
 
 /**
@@ -25,6 +26,7 @@ import com.codenvy.ide.json.JsonArray;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 23, 2012 4:45:33 PM anya $
  */
+@DTO
 public interface Backend {
     public enum Option {
         DYNAMIC, FAIL_FAST, PUBLIC;

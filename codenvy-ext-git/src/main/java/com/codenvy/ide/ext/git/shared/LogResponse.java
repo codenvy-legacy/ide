@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * The response with the log of commits.
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 14, 2011 4:32:17 PM anya $
  */
+@DTO
 public interface LogResponse extends Log {
     /** @return the textLog text format of the log response */
     String getTextLog();

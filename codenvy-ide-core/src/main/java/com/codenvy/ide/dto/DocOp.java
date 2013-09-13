@@ -30,6 +30,7 @@ import com.codenvy.ide.json.JsonArray;
  * line, retains the remaining 5 characters on that second line (including the
  * newline), and then retains the last line.
  */
+@DTO
 public interface DocOp {
     JsonArray<DocOpComponent> getComponents();
 }

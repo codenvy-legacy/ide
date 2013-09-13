@@ -17,10 +17,13 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: RepoInfo.java Aug 10, 2012
  */
+@DTO
 public interface RepoInfo {
     String getRemoteUri();
 }

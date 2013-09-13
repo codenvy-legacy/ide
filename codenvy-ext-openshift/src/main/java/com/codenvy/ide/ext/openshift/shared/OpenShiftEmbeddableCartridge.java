@@ -39,7 +39,8 @@ public interface OpenShiftEmbeddableCartridge {
     String getUrl();
 
     /**
-     * Contains info which should be displayed to the user. It contains important info, e.g. url, username, password for database.
+     * Contains info which should be displayed to the user. It contains important info, e.g. url, username, password for
+     * database.
      *
      * @return information about failed creation cartridge.
      */

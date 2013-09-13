@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.cloudbees.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Application info.
  *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationInfo.java Mar 15, 2012 9:25:11 AM azatsarynnyy $
  */
+@DTO
 public interface ApplicationInfo {
     /** @return the id */
     String getId();

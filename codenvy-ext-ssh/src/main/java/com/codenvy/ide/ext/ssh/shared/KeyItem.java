@@ -17,10 +17,13 @@
  */
 package com.codenvy.ide.ext.ssh.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@DTO
 public interface KeyItem {
     String getHost();
 

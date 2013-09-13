@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.aws.shared.s3;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Describe information about specified S3 key version.
  *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@DTO
 public interface S3ObjectVersion {
     /**
      * Get S3 bucket name

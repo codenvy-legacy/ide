@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.jenkins.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Interface represents the Jenkins build job status.
  *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: JobStatus.java Mar 15, 2012 4:04:15 PM azatsarynnyy $
  */
+@DTO
 public interface JobStatus {
     public enum Status {
         QUEUE("In queue..."), //

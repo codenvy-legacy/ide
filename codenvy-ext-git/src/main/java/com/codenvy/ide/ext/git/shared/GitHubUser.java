@@ -17,10 +17,13 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: GitHubUser.java Aug 6, 2012
  */
+@DTO
 public interface GitHubUser {
     /** @return the type */
     String getType();

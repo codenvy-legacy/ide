@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Describe single commit.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: Revision.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
+@DTO
 public interface Revision {
     /**
      * Parameter which shows that this revision is a fake revision (i.e. TO for Exception)

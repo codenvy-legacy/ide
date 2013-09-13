@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Git branch description.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: Branch.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
+@DTO
 public interface Branch {
     /** @return full name of branch, e.g. 'refs/heads/master' */
     String getName();

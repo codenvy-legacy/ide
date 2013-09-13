@@ -17,11 +17,14 @@
  */
 package com.codenvy.ide.ext.gae.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Information about Google App Engine token.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
+@DTO
 public interface Token {
     /**
      * Get authorization token.

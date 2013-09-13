@@ -17,26 +17,19 @@
  */
 package com.codenvy.ide.ext.java.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Short information about class or interface. Contain fqn, short name,
  * modifiers Example : { "name": "java.lang.String", "modifiers": 0, "type":
  * "CLASS" }
  */
+@DTO
 public interface ShortTypeInfo extends Member {
 
     String getType();
 
-    void setType(String type);
-
     /** return the signature of the class. May be <tt>null</tt>. */
     String getSignature();
-
-
-    /**
-     * set signature of the class. May be <tt>null</tt>.
-     *
-     * @param signature
-     */
-    void setSignature(String signature);
 
 }

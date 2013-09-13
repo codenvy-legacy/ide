@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Info about remote configuration.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: Remote.java 67651 2011-03-25 16:15:36Z andrew00x $
  */
+@DTO
 public interface Remote {
     String getName();
 

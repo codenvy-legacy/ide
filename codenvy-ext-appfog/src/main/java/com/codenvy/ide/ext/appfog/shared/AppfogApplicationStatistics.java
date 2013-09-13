@@ -17,9 +17,11 @@
  */
 package com.codenvy.ide.ext.appfog.shared;
 
+import com.codenvy.ide.dto.DTO;
 import com.codenvy.ide.json.JsonArray;
 
 /** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+@DTO
 public interface AppfogApplicationStatistics {
     String getName();
 

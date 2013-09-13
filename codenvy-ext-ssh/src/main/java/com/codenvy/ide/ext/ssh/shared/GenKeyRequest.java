@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.ssh.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Interface describe a request for generate a SSH-key.
  *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: GenKeyRequest.java Mar 21, 2012 6:14:27 PM azatsarynnyy $
  */
+@DTO
 public interface GenKeyRequest {
     /**
      * Returns remote host name for which generate key.

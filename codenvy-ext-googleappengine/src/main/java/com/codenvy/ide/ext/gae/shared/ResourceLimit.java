@@ -17,10 +17,13 @@
  */
 package com.codenvy.ide.ext.gae.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 31, 2012 4:47:42 PM anya $
  */
+@DTO
 public interface ResourceLimit {
     /** @return the name */
     String getName();

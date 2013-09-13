@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
 import com.codenvy.ide.json.JsonArray;
 
 /**
@@ -25,6 +26,7 @@ import com.codenvy.ide.json.JsonArray;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: CloneRequest.java 22817 2011-03-22 09:17:52Z andrew00x $
  */
+@DTO
 public interface CloneRequest extends GitRequest {
     /** @return URI of repository to be cloned */
     String getRemoteUri();

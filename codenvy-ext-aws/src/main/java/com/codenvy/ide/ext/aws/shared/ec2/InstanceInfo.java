@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.aws.shared.ec2;
 
+import com.codenvy.ide.dto.DTO;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonStringMap;
 
@@ -26,6 +27,7 @@ import com.codenvy.ide.json.JsonStringMap;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@DTO
 public interface InstanceInfo {
     /**
      * Get instance ID e.g. "i-7a00642e".

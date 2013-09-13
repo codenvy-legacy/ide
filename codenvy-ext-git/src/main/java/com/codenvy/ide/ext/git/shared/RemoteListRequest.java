@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Request to get list of remotes. If {@link #remote} is specified then info about this remote only given.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: RemoteListRequest.java 68015 2011-04-06 09:21:31Z anya $
  */
+@DTO
 public interface RemoteListRequest extends GitRequest {
     /** @return if <code>true</code> show remote url and name otherwise show remote name only */
     boolean verbose();

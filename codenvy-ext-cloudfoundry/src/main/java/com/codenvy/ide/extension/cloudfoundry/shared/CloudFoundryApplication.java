@@ -17,14 +17,16 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.shared;
 
+import com.codenvy.ide.dto.DTO;
 import com.codenvy.ide.json.JsonArray;
 
 /**
- * Cloud Foundry application info.
+ * CloudFoundry application info.
  *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: ApplicationInfo.java Mar 16, 2012 12:21:15 AM azatsarynnyy $
+ * @version $Id: CloudFoundryApplication.java Mar 16, 2012 12:21:15 AM azatsarynnyy $
  */
+@DTO
 public interface CloudFoundryApplication {
     String getName();
 

@@ -18,6 +18,8 @@
 package com.codenvy.ide.ext.java.shared;
 
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Member is reflects identifying information about a single member (a field or
  * a method) or a constructor.
@@ -25,6 +27,7 @@ package com.codenvy.ide.ext.java.shared;
  * @see FieldInfo
  * @see MethodInfo
  */
+@DTO
 public interface Member {
 
     /** @return the modifiers */
@@ -32,17 +35,5 @@ public interface Member {
 
     /** @return the name */
     String getName();
-
-    /**
-     * @param modifiers
-     *         the modifiers to set
-     */
-    void setModifiers(int modifiers);
-
-    /**
-     * @param name
-     *         the name to set
-     */
-    void setName(String name);
 
 }

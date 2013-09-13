@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Request to get list of available tags.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: TagListRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
+@DTO
 public interface TagListRequest extends GitRequest {
     /** @return tag's names pattern */
     String getPattern();

@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.aws.shared.ec2;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Describes AWS security group.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@DTO
 public interface SecurityGroupInfo {
     /**
      * Get AWS Access Key ID of the owner of the security group.

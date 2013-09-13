@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.aws.shared.ec2;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Information about user's key pairs
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@DTO
 public interface KeyPairInfo {
     /**
      * Get name of the key pair

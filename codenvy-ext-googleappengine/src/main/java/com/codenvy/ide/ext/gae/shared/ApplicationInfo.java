@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.ext.gae.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Information about Google App Engine application.
  *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Jun 6, 2012 4:28:29 PM anya $
  */
+@DTO
 public interface ApplicationInfo {
     /**
      * Get public URL for the application.

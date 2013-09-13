@@ -17,12 +17,15 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.shared;
 
+import com.codenvy.ide.dto.DTO;
+
 /**
  * Authentication credentials.
  *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Credentials.java Mar 20, 2012 9:17:20 AM azatsarynnyy $
  */
+@DTO
 public interface Credentials {
     /**
      * Returns the server name.

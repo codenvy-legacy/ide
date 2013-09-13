@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.aws.shared.s3;
 
+import com.codenvy.ide.dto.DTO;
 import com.codenvy.ide.json.JsonArray;
 
 /**
@@ -25,6 +26,7 @@ import com.codenvy.ide.json.JsonArray;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@DTO
 public interface S3ObjectsList {
     /**
      * Get list of S3 objects with their properties

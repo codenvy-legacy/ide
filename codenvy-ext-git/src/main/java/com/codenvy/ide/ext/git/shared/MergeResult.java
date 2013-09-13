@@ -17,12 +17,14 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.dto.DTO;
 import com.codenvy.ide.json.JsonArray;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: MergeResult.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
+@DTO
 public interface MergeResult {
     public enum MergeStatus {
         FAST_FORWARD("Fast-forward"),
