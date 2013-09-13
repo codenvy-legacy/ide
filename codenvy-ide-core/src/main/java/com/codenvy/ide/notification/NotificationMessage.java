@@ -48,7 +48,7 @@ public class NotificationMessage extends PopupPanel {
     public static final int WIDTH        = 300;
     public static final int HEIGHT       = 30;
     private DockLayoutPanel mainPanel;
-    private Label           title;
+    private HTML            title;
     private SimplePanel     iconPanel;
     private Notification    notification;
     private Notification    prevState;
@@ -109,7 +109,7 @@ public class NotificationMessage extends PopupPanel {
         });
         mainPanel.addEast(closeIcon, 16);
 
-        title = new Label(notification.getTitle());
+        title = new HTML(notification.getMessage());
         mainPanel.add(title);
 
         setWidget(mainPanel);
@@ -129,31 +129,38 @@ public class NotificationMessage extends PopupPanel {
     /** Refresh notification element if it is needed */
     public void refresh() {
         if (!prevState.equals(notification)) {
-            if (!prevState.getTitle().equals(notification.getTitle())) {
-                title.setText(notification.getTitle());
+            if (!prevState.getMessage().equals(notification.getMessage())) {
+                title.setText(notification.getMessage());
             }
 
-            if (prevState.isFinished() != notification.isFinished()) {
+            if (!notification.isFinished()) {
                 changeImage(resources.progress());
             } else if (!prevState.getType().equals(notification.getType())) {
-                if (prevState.isError()) {
-                    mainPanel.removeStyleName(resources.notificationCss().error());
-                } else if (notification.isWarning()) {
-                    mainPanel.removeStyleName(resources.notificationCss().warning());
-                }
-
-                if (notification.isWarning()) {
-                    changeImage(resources.warning());
-                    mainPanel.addStyleName(resources.notificationCss().warning());
-                } else if (notification.isError()) {
-                    changeImage(resources.error());
-                    mainPanel.addStyleName(resources.notificationCss().error());
-                } else {
-                    changeImage(resources.info());
-                }
+                changeType();
+            } else {
+                changeType();
             }
 
             prevState = notification.clone();
+        }
+    }
+
+    /** Change item's content in response to change notification type */
+    private void changeType() {
+        if (prevState.isError()) {
+            mainPanel.removeStyleName(resources.notificationCss().error());
+        } else if (prevState.isWarning()) {
+            mainPanel.removeStyleName(resources.notificationCss().warning());
+        }
+
+        if (notification.isWarning()) {
+            changeImage(resources.warning());
+            mainPanel.addStyleName(resources.notificationCss().warning());
+        } else if (notification.isError()) {
+            changeImage(resources.error());
+            mainPanel.addStyleName(resources.notificationCss().error());
+        } else {
+            changeImage(resources.info());
         }
     }
 

@@ -18,6 +18,8 @@
 package com.codenvy.ide.ext.appfog.client.project;
 
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -45,6 +47,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter for managing project, deployed on Appfog.
  *
@@ -67,6 +71,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
     private ApplicationInfoPresenter   applicationInfoPresenter;
+    private NotificationManager        notificationManager;
     /** The callback what execute when some application's information was changed. */
     private AsyncCallback<String> appInfoChangedCallback = new AsyncCallback<String>() {
         @Override
@@ -100,6 +105,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
      * @param updateProperyPresenter
      * @param updateApplicationPresenter
      * @param unmapUrlPresenter
+     * @param notificationManager
      */
     @Inject
     protected AppFogProjectPresenter(AppFogProjectView view, EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
@@ -107,7 +113,8 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
                                      DeleteApplicationPresenter deleteAppPresenter, LoginPresenter loginPresenter,
                                      AppfogClientService service, ApplicationInfoPresenter applicationInfoPresenter,
                                      ManageServicesPresenter manageServicesPresenter, UpdatePropertiesPresenter updateProperyPresenter,
-                                     UpdateApplicationPresenter updateApplicationPresenter, UnmapUrlPresenter unmapUrlPresenter) {
+                                     UpdateApplicationPresenter updateApplicationPresenter, UnmapUrlPresenter unmapUrlPresenter,
+                                     NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
@@ -123,6 +130,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
         this.updateProperyPresenter = updateProperyPresenter;
         this.updateApplicationPresenter = updateApplicationPresenter;
         this.unmapUrlPresenter = unmapUrlPresenter;
+        this.notificationManager = notificationManager;
     }
 
     /** Shows dialog. */
@@ -162,13 +170,14 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
                                 @Override
                                 protected void onFailure(Throwable exception) {
                                     eventBus.fireEvent(new ExceptionThrownEvent(exception.getMessage()));
-                                    console.print(exception.getMessage());
+                                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                                    notificationManager.showNotification(notification);
                                 }
                             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e.getMessage()));
-            console.print(e.getMessage());
-            e.printStackTrace();
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -260,7 +269,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, eventBus,
-                                                                                         constant, console, loginPresenter) {
+                                                                                         constant, loginPresenter, notificationManager) {
                                            @Override
                                            protected void onSuccess(AppfogApplication result) {
                                                if (!view.isShown()) {
@@ -273,7 +282,8 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 

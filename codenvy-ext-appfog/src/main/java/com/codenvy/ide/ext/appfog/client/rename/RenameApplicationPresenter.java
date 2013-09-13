@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.appfog.client.rename;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
@@ -32,6 +33,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter for rename operation with application.
  *
@@ -42,12 +45,12 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
     private RenameApplicationView      view;
     private EventBus                   eventBus;
     private ResourceProvider           resourceProvider;
-    private ConsolePart                console;
     /** The name of application. */
     private String                     applicationName;
     private AppfogLocalizationConstant constant;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
+    private NotificationManager        notificationManager;
 
     /**
      * Create presenter.
@@ -55,24 +58,24 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
      * @param view
      * @param eventBus
      * @param resourceProvider
-     * @param console
      * @param applicationName
      * @param constant
      * @param loginPresenter
      * @param service
+     * @param notificationManager
      */
     @Inject
     protected RenameApplicationPresenter(RenameApplicationView view, EventBus eventBus, ResourceProvider resourceProvider,
-                                         ConsolePart console, String applicationName, AppfogLocalizationConstant constant,
-                                         LoginPresenter loginPresenter, AppfogClientService service) {
+                                         String applicationName, AppfogLocalizationConstant constant, LoginPresenter loginPresenter,
+                                         AppfogClientService service, NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
-        this.console = console;
         this.applicationName = applicationName;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
@@ -105,17 +108,19 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
         try {
             service.renameApplication(resourceProvider.getVfsId(), projectId, applicationName, null, newName,
                                       new AppfogAsyncRequestCallback<String>(null, renameAppLoggedInHandler, null, eventBus, constant,
-                                                                             console, loginPresenter) {
+                                                                             loginPresenter, notificationManager) {
                                           @Override
                                           protected void onSuccess(String result) {
                                               view.close();
-
-                                              console.print(constant.renameApplicationSuccess(applicationName, newName));
+                                              Notification notification = new Notification(constant.renameApplicationSuccess(
+                                                      applicationName, newName), ERROR);
+                                              notificationManager.showNotification(notification);
                                           }
                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -150,7 +155,8 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, appInfoLoggedInHandler, null,
-                                                                                         eventBus, constant, console, loginPresenter) {
+                                                                                         eventBus, constant, loginPresenter,
+                                                                                         notificationManager) {
                                            @Override
                                            protected void onSuccess(AppfogApplication result) {
                                                applicationName = result.getName();
@@ -159,7 +165,8 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 }

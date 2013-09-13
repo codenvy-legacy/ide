@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.appfog.client;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
@@ -45,7 +46,7 @@ public abstract class AppfogAsyncRequestCallback<T> extends AsyncRequestCallback
     private EventBus                   eventBus;
     private AppfogLocalizationConstant constant;
     private LoginPresenter             loginPresenter;
-    private ConsolePart                console;
+    private NotificationManager        notificationManager;
 
     /**
      * Create callback.
@@ -55,13 +56,13 @@ public abstract class AppfogAsyncRequestCallback<T> extends AsyncRequestCallback
      * @param loginCanceled
      * @param eventBus
      * @param constant
-     * @param console
      * @param loginPresenter
+     * @param notificationManager
      */
     public AppfogAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled,
-                                      EventBus eventBus, AppfogLocalizationConstant constant, ConsolePart console,
-                                      LoginPresenter loginPresenter) {
-        this(unmarshaller, loggedIn, loginCanceled, null, eventBus, constant, console, loginPresenter);
+                                      EventBus eventBus, AppfogLocalizationConstant constant, LoginPresenter loginPresenter,
+                                      NotificationManager notificationManager) {
+        this(unmarshaller, loggedIn, loginCanceled, null, eventBus, constant, loginPresenter, notificationManager);
     }
 
     /**
@@ -73,20 +74,20 @@ public abstract class AppfogAsyncRequestCallback<T> extends AsyncRequestCallback
      * @param loginUrl
      * @param eventBus
      * @param constant
-     * @param console
      * @param loginPresenter
+     * @param notificationManager
      */
     public AppfogAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled,
-                                      String loginUrl, EventBus eventBus, AppfogLocalizationConstant constant, ConsolePart console,
-                                      LoginPresenter loginPresenter) {
+                                      String loginUrl, EventBus eventBus, AppfogLocalizationConstant constant,
+                                      LoginPresenter loginPresenter, NotificationManager notificationManager) {
         super(unmarshaller);
         this.loggedIn = loggedIn;
         this.loginCanceled = loginCanceled;
         this.loginUrl = loginUrl;
         this.eventBus = eventBus;
         this.constant = constant;
-        this.console = console;
         this.loginPresenter = loginPresenter;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
@@ -125,7 +126,8 @@ public abstract class AppfogAsyncRequestCallback<T> extends AsyncRequestCallback
                 return;
             }
         }
-        console.print(exception.getMessage());
+        Notification notification = new Notification(exception.getMessage(), Notification.Type.ERROR);
+        notificationManager.showNotification(notification);
         eventBus.fireEvent(new ExceptionThrownEvent(exception));
     }
 }

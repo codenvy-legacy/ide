@@ -39,12 +39,6 @@ public interface BuildProjectView extends View<BuildProjectView.ActionDelegate> 
      */
     void showMessageInOutput(String text);
 
-    /** Starts animation. */
-    void startAnimation();
-
-    /** Stops animation. */
-    void stopAnimation();
-
     /** Clears output. */
     void clearOutput();
 

@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.appfog.client.services;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.AppFogExtension;
@@ -39,6 +40,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter for creating new service.
  *
@@ -48,12 +51,12 @@ import com.google.web.bindery.event.shared.EventBus;
 public class CreateServicePresenter implements CreateServiceView.ActionDelegate {
     private CreateServiceView                       view;
     private EventBus                                eventBus;
-    private ConsolePart                             console;
     private AppfogLocalizationConstant              constant;
     private AsyncCallback<AppfogProvisionedService> createServiceCallback;
     private LoginPresenter                          loginPresenter;
     private AppfogClientService                     service;
     private ResourceProvider                        resourceProvider;
+    private NotificationManager                     notificationManager;
     /** If user is not logged in to AppFog, this handler will be called, after user logged in. */
     private LoggedInHandler createServiceLoggedInHandler = new LoggedInHandler() {
         @Override
@@ -67,23 +70,24 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param constant
      * @param loginPresenter
      * @param service
      * @param resourceProvider
+     * @param notificationManager
      */
     @Inject
-    protected CreateServicePresenter(CreateServiceView view, EventBus eventBus, ConsolePart console, AppfogLocalizationConstant constant,
-                                     LoginPresenter loginPresenter, AppfogClientService service, ResourceProvider resourceProvider) {
+    protected CreateServicePresenter(CreateServiceView view, EventBus eventBus, AppfogLocalizationConstant constant,
+                                     LoginPresenter loginPresenter, AppfogClientService service, ResourceProvider resourceProvider,
+                                     NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.resourceProvider = resourceProvider;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
@@ -106,7 +110,8 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
         try {
             service.createService(AppFogExtension.DEFAULT_SERVER, type, name, null, null, null, infraName,
                                   new AppfogAsyncRequestCallback<AppfogProvisionedService>(unmarshaller, createServiceLoggedInHandler, null,
-                                                                                           eventBus, constant, console, loginPresenter) {
+                                                                                           eventBus, constant, loginPresenter,
+                                                                                           notificationManager) {
                                       @Override
                                       protected void onSuccess(AppfogProvisionedService result) {
                                           view.close();
@@ -115,7 +120,8 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
                                   });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -148,7 +154,8 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 }

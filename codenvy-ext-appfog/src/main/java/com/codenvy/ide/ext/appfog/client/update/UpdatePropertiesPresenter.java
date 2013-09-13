@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.appfog.client.update;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.AppFogExtension;
@@ -38,6 +39,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter updating memory and number of instances of application.
  *
@@ -49,31 +53,31 @@ public class UpdatePropertiesPresenter {
     private String                     instances;
     private EventBus                   eventBus;
     private ResourceProvider           resourceProvider;
-    private ConsolePart                console;
     private AppfogLocalizationConstant constant;
     private AsyncCallback<String>      updatePropertiesCallback;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
+    private NotificationManager        notificationManager;
 
     /**
      * Create presenter.
      *
      * @param eventBus
      * @param resourceProvider
-     * @param console
      * @param constant
      * @param loginPresenter
      * @param service
      */
     @Inject
-    protected UpdatePropertiesPresenter(EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                        AppfogLocalizationConstant constant, LoginPresenter loginPresenter, AppfogClientService service) {
+    protected UpdatePropertiesPresenter(EventBus eventBus, ResourceProvider resourceProvider, AppfogLocalizationConstant constant,
+                                        LoginPresenter loginPresenter, AppfogClientService service,
+                                        NotificationManager notificationManager) {
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
-        this.console = console;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.notificationManager = notificationManager;
     }
 
     /**
@@ -103,16 +107,17 @@ public class UpdatePropertiesPresenter {
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, getOldMemoryValueLoggedInHandler,
-                                                                                         null, eventBus, constant, console,
-                                                                                         loginPresenter) {
+                                                                                         null, eventBus, constant,
+                                                                                         loginPresenter, notificationManager) {
                                            @Override
                                            protected void onSuccess(AppfogApplication result) {
                                                askForNewMemoryValue(result.getResources().getMemory());
                                            }
                                        });
         } catch (RequestException e) {
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
         }
     }
 
@@ -159,17 +164,19 @@ public class UpdatePropertiesPresenter {
         try {
             service.updateMemory(null, null, appName, server, memory,
                                  new AppfogAsyncRequestCallback<String>(null, updateMemoryLoggedInHandler, null, eventBus, constant,
-                                                                        console, loginPresenter) {
+                                                                        loginPresenter, notificationManager) {
                                      @Override
                                      protected void onSuccess(String result) {
                                          String msg = constant.updateMemorySuccess(String.valueOf(memory));
-                                         console.print(msg);
+                                         Notification notification = new Notification(msg, INFO);
+                                         notificationManager.showNotification(notification);
                                          updatePropertiesCallback.onSuccess(projectId);
                                      }
                                  });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -200,8 +207,8 @@ public class UpdatePropertiesPresenter {
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, getOldInstancesValueLoggedInHandler,
-                                                                                         null, eventBus, constant, console,
-                                                                                         loginPresenter) {
+                                                                                         null, eventBus, constant, loginPresenter,
+                                                                                         notificationManager) {
                                            @Override
                                            protected void onSuccess(AppfogApplication result) {
                                                askForInstancesNumber(result.getInstances());
@@ -209,7 +216,8 @@ public class UpdatePropertiesPresenter {
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -264,7 +272,7 @@ public class UpdatePropertiesPresenter {
             StringUnmarshaller unmarshaller = new StringUnmarshaller();
             service.updateInstances(resourceProvider.getVfsId(), projectId, appName, server, encodedExp,
                                     new AppfogAsyncRequestCallback<String>(unmarshaller, updateInstancesLoggedInHandler, null,
-                                                                           eventBus, constant, console, loginPresenter) {
+                                                                           eventBus, constant, loginPresenter, notificationManager) {
                                         @Override
                                         protected void onSuccess(String result) {
                                             AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
@@ -276,25 +284,28 @@ public class UpdatePropertiesPresenter {
                                                                                                                              null,
                                                                                                                              null, eventBus,
                                                                                                                              constant,
-                                                                                                                             console,
-                                                                                                                             loginPresenter) {
+                                                                                                                             loginPresenter,
+                                                                                                                             notificationManager) {
                                                                                @Override
                                                                                protected void onSuccess(AppfogApplication result) {
                                                                                    String msg = constant.updateInstancesSuccess(
                                                                                            String.valueOf(result.getInstances()));
-                                                                                   console.print(msg);
+                                                                                   Notification notification = new Notification(msg, INFO);
+                                                                                   notificationManager.showNotification(notification);
                                                                                    updatePropertiesCallback.onSuccess(projectId);
                                                                                }
                                                                            });
                                             } catch (RequestException e) {
                                                 eventBus.fireEvent(new ExceptionThrownEvent(e));
-                                                console.print(e.getMessage());
+                                                Notification notification = new Notification(e.getMessage(), ERROR);
+                                                notificationManager.showNotification(notification);
                                             }
                                         }
                                     });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 }

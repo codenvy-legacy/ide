@@ -46,7 +46,7 @@ public class NotificationItem extends Composite {
 
     private static final DateTimeFormat DATA_FORMAT = DateTimeFormat.getFormat("h:mm:ss a");
     private DockLayoutPanel mainPanel;
-    private Label           title;
+    private HTML            title;
     private Label           time;
     private SimplePanel     iconPanel;
     private Resources       resources;
@@ -111,7 +111,7 @@ public class NotificationItem extends Composite {
         time = new Label(DATA_FORMAT.format(notification.getTime()));
         mainPanel.addWest(time, 70);
 
-        title = new Label(notification.getTitle());
+        title = new HTML(notification.getMessage());
         mainPanel.add(title);
 
         initWidget(mainPanel);
@@ -131,28 +131,16 @@ public class NotificationItem extends Composite {
     /** Refresh notification element if it is needed */
     public void refresh() {
         if (!prevState.equals(notification)) {
-            if (!prevState.getTitle().equals(notification.getTitle())) {
-                title.setText(notification.getTitle());
+            if (!prevState.getMessage().equals(notification.getMessage())) {
+                title.setText(notification.getMessage());
             }
 
-            if (prevState.isFinished() != notification.isFinished()) {
+            if (!notification.isFinished()) {
                 changeImage(resources.progress());
             } else if (!prevState.getType().equals(notification.getType())) {
-                if (prevState.isError()) {
-                    mainPanel.removeStyleName(resources.notificationCss().error());
-                } else if (notification.isWarning()) {
-                    mainPanel.removeStyleName(resources.notificationCss().warning());
-                }
-
-                if (notification.isWarning()) {
-                    changeImage(resources.warning());
-                    mainPanel.addStyleName(resources.notificationCss().warning());
-                } else if (notification.isError()) {
-                    changeImage(resources.error());
-                    mainPanel.addStyleName(resources.notificationCss().error());
-                } else {
-                    changeImage(resources.info());
-                }
+                changeType();
+            } else {
+                changeType();
             }
 
             if (!prevState.getTime().equals(notification.getTime())) {
@@ -168,6 +156,25 @@ public class NotificationItem extends Composite {
             }
 
             prevState = notification.clone();
+        }
+    }
+
+    /** Change item's content in response to change notification type */
+    private void changeType() {
+        if (prevState.isError()) {
+            mainPanel.removeStyleName(resources.notificationCss().error());
+        } else if (prevState.isWarning()) {
+            mainPanel.removeStyleName(resources.notificationCss().warning());
+        }
+
+        if (notification.isWarning()) {
+            changeImage(resources.warning());
+            mainPanel.addStyleName(resources.notificationCss().warning());
+        } else if (notification.isError()) {
+            changeImage(resources.error());
+            mainPanel.addStyleName(resources.notificationCss().error());
+        } else {
+            changeImage(resources.info());
         }
     }
 }

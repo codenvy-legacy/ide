@@ -25,7 +25,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -46,8 +45,6 @@ public class BuildProjectViewImpl extends BaseView<BuildProjectView.ActionDelega
     Button    btnClearOutput;
     @UiField
     FlowPanel output;
-    private int animationCharIndex = 1;
-    private Label progress;
 
     /**
      * Create view.
@@ -68,56 +65,6 @@ public class BuildProjectViewImpl extends BaseView<BuildProjectView.ActionDelega
     public void showMessageInOutput(String text) {
         output.add(new HTML(text));
     }
-
-    @Override
-    public void startAnimation() {
-        animationCharIndex = 1;
-
-        progress = new Label();
-        output.add(progress);
-
-        animationTimer.scheduleRepeating(150);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void stopAnimation() {
-        animationTimer.cancel();
-        output.remove(progress);
-        progress = null;
-    }
-
-    /** Animate of build progress. */
-    private Timer animationTimer = new Timer() {
-        @Override
-        public void run() {
-            String c = "";
-            switch (animationCharIndex) {
-                case 1:
-                    c = "/";
-                    break;
-
-                case 2:
-                    c = "-";
-                    break;
-
-                case 3:
-                    c = "\\";
-                    break;
-
-                case 4:
-                    c = "|";
-                    break;
-            }
-
-            progress.setText(c);
-
-            animationCharIndex++;
-            if (animationCharIndex > 4) {
-                animationCharIndex = 1;
-            }
-        }
-    };
 
     /** {@inheritDoc} */
     @Override

@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.appfog.client.delete;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
@@ -48,11 +49,12 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
     private String                     serverName;
     private ResourceProvider           resourceProvider;
     private EventBus                   eventBus;
-    private ConsolePart                console;
     private AppfogLocalizationConstant constant;
     private LoginPresenter             loginPresenter;
     private AsyncCallback<String>      appDeleteCallback;
     private AppfogClientService        service;
+    private NotificationManager        notificationManager;
+
 
     /**
      * Create presenter.
@@ -60,23 +62,23 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
      * @param view
      * @param resourceProvider
      * @param eventBus
-     * @param console
      * @param constant
      * @param loginPresenter
      * @param service
+     * @param notificationManager
      */
     @Inject
     protected DeleteApplicationPresenter(DeleteApplicationView view, ResourceProvider resourceProvider, EventBus eventBus,
-                                         ConsolePart console, AppfogLocalizationConstant constant, LoginPresenter loginPresenter,
-                                         AppfogClientService service) {
+                                         AppfogLocalizationConstant constant, LoginPresenter loginPresenter,
+                                         AppfogClientService service, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.resourceProvider = resourceProvider;
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.notificationManager = notificationManager;
     }
 
     /** If user is not logged in to AppFog, this handler will be called, after user logged in. */
@@ -124,7 +126,8 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, appInfoLoggedInHandler, null,
-                                                                                         eventBus, constant, console, loginPresenter) {
+                                                                                         eventBus, constant, loginPresenter,
+                                                                                         notificationManager) {
                                            @Override
                                            protected void onSuccess(AppfogApplication result) {
                                                appName = result.getName();
@@ -133,7 +136,8 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), Notification.Type.ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -157,7 +161,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
         try {
             service.deleteApplication(resourceProvider.getVfsId(), projectId, appName, serverName, isDeleteServices,
                                       new AppfogAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null, eventBus, constant,
-                                                                             console, loginPresenter) {
+                                                                             loginPresenter, notificationManager) {
                                           @Override
                                           protected void onSuccess(final String result) {
                                               if (project != null) {
@@ -165,7 +169,10 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
                                                       @Override
                                                       public void onSuccess(Project project) {
                                                           view.close();
-                                                          console.print(constant.applicationDeletedMsg(appName));
+                                                          Notification notification =
+                                                                  new Notification(constant.applicationDeletedMsg(appName),
+                                                                                   Notification.Type.INFO);
+                                                          notificationManager.showNotification(notification);
 
                                                           callback.onSuccess(result);
                                                       }
@@ -177,7 +184,9 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
                                                   });
                                               } else {
                                                   view.close();
-                                                  console.print(constant.applicationDeletedMsg(appName));
+                                                  Notification notification = new Notification(constant.applicationDeletedMsg(appName),
+                                                                                               Notification.Type.INFO);
+                                                  notificationManager.showNotification(notification);
 
                                                   callback.onSuccess(result);
                                               }
@@ -185,7 +194,8 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), Notification.Type.ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
