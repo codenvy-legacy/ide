@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.cloudbees.client.delete;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesAsyncRequestCallback;
@@ -35,6 +36,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter for deleting application from CloudBees. Performs following actions on delete: 1. Gets application id (application
  * info) by work dir (location on file system). 2. Asks user to confirm the deleting of the application. 3. When user confirms -
@@ -47,32 +51,32 @@ import com.google.web.bindery.event.shared.EventBus;
 public class DeleteApplicationPresenter {
     private ResourceProvider              resourceProvider;
     private EventBus                      eventBus;
-    private ConsolePart                   console;
     private CloudBeesLocalizationConstant constant;
     private LoginPresenter                loginPresenter;
     private AsyncCallback<String>         appDeleteCallback;
     private CloudBeesClientService        service;
+    private NotificationManager           notificationManager;
 
     /**
      * Create presenter.
      *
      * @param resourceProvider
      * @param eventBus
-     * @param console
      * @param constant
      * @param loginPresenter
      * @param service
+     * @param notificationManager
      */
     @Inject
-    protected DeleteApplicationPresenter(ResourceProvider resourceProvider, EventBus eventBus, ConsolePart console,
-                                         CloudBeesLocalizationConstant constant, LoginPresenter loginPresenter,
-                                         CloudBeesClientService service) {
+    protected DeleteApplicationPresenter(ResourceProvider resourceProvider, EventBus eventBus, CloudBeesLocalizationConstant constant,
+                                         LoginPresenter loginPresenter, CloudBeesClientService service,
+                                         NotificationManager notificationManager) {
         this.resourceProvider = resourceProvider;
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.notificationManager = notificationManager;
     }
 
     /**
@@ -109,7 +113,7 @@ public class DeleteApplicationPresenter {
             try {
                 service.getApplicationInfo(null, resourceProvider.getVfsId(), projectId,
                                            new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
-                                                                                              console, loginPresenter) {
+                                                                                              loginPresenter, notificationManager) {
                                                @Override
                                                protected void onSuccess(ApplicationInfo appInfo) {
                                                    askForDelete(appInfo.getId(), appInfo.getTitle());
@@ -117,7 +121,8 @@ public class DeleteApplicationPresenter {
                                            });
             } catch (RequestException e) {
                 eventBus.fireEvent(new ExceptionThrownEvent(e));
-                console.print(e.getMessage());
+                Notification notification = new Notification(e.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
             }
         }
     }
@@ -154,14 +159,17 @@ public class DeleteApplicationPresenter {
             };
 
             service.deleteApplication(appId, resourceProvider.getVfsId(), projectId,
-                                      new CloudBeesAsyncRequestCallback<String>(loggedInHandler, null, eventBus, console, loginPresenter) {
+                                      new CloudBeesAsyncRequestCallback<String>(loggedInHandler, null, eventBus, loginPresenter,
+                                                                                notificationManager) {
                                           @Override
                                           protected void onSuccess(final String result) {
                                               if (project != null) {
                                                   project.refreshProperties(new AsyncCallback<Project>() {
                                                       @Override
                                                       public void onSuccess(Project project) {
-                                                          console.print(constant.applicationDeletedMsg(appTitle));
+                                                          Notification notification =
+                                                                  new Notification(constant.applicationDeletedMsg(appTitle), INFO);
+                                                          notificationManager.showNotification(notification);
                                                           callback.onSuccess(result);
                                                       }
 
@@ -171,13 +179,16 @@ public class DeleteApplicationPresenter {
                                                       }
                                                   });
                                               } else {
-                                                  console.print(constant.applicationDeletedMsg(appTitle));
+                                                  Notification notification =
+                                                          new Notification(constant.applicationDeletedMsg(appTitle), INFO);
+                                                  notificationManager.showNotification(notification);
                                                   callback.onSuccess(result);
                                               }
                                           }
                                       });
         } catch (RequestException e) {
-            console.print(constant.applicationDeletedMsg(appTitle));
+            Notification notification = new Notification(constant.applicationDeletedMsg(appTitle), ERROR);
+            notificationManager.showNotification(notification);
             appDeleteCallback.onFailure(e);
         }
     }

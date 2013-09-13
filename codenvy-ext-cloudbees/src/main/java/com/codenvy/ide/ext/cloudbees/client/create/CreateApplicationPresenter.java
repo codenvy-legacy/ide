@@ -18,6 +18,8 @@
 package com.codenvy.ide.ext.cloudbees.client.create;
 
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -43,6 +45,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
+import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter for creating application on CloudBees.
  *
@@ -59,12 +65,14 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     private LoginPresenter                loginPresenter;
     private CloudBeesClientService        service;
     private BuildApplicationPresenter     buildApplicationPresenter;
+    private NotificationManager           notificationManager;
     /** Public url to war file of application. */
     private String                        warUrl;
     private String                        projectName;
     private String                        domain;
     private String                        name;
     private Project                       project;
+    private Notification                  notification;
 
     /**
      * Create presenter.
@@ -77,11 +85,13 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
      * @param loginPresenter
      * @param service
      * @param buildApplicationPresenter
+     * @param notificationManager
      */
     @Inject
     protected CreateApplicationPresenter(CreateApplicationView view, EventBus eventBus, ResourceProvider resourcesProvider,
                                          ConsolePart console, CloudBeesLocalizationConstant constant, LoginPresenter loginPresenter,
-                                         CloudBeesClientService service, BuildApplicationPresenter buildApplicationPresenter) {
+                                         CloudBeesClientService service, BuildApplicationPresenter buildApplicationPresenter,
+                                         NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
@@ -91,6 +101,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.buildApplicationPresenter = buildApplicationPresenter;
+        this.notificationManager = notificationManager;
     }
 
     /** Shows dialog. */
@@ -113,8 +124,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
         try {
             service.getDomains(
-                    new CloudBeesAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, null, eventBus, console,
-                                                                         loginPresenter) {
+                    new CloudBeesAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, null, eventBus,
+                                                                         loginPresenter, notificationManager) {
                         @Override
                         protected void onSuccess(JsonArray<String> result) {
                             view.setDomainValues(result);
@@ -128,7 +139,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                     });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -169,11 +181,14 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     /** Deploy application to Cloud Bees by sending request over WebSocket or HTTP. */
     private void doDeployApplication() {
         ApplicationInfoUnmarshallerWS unmarshaller = new ApplicationInfoUnmarshallerWS();
+        notification = new Notification(constant.creatingApplication(), PROGRESS);
+        notificationManager.showNotification(notification);
 
         try {
             service.initializeApplicationWS(view.getUrl(), resourcesProvider.getVfsId(), project.getId(), warUrl, null,
                                             new CloudBeesRESTfulRequestCallback<ApplicationInfo>(unmarshaller, deployWarLoggedInHandler,
-                                                                                                 null, eventBus, console, loginPresenter) {
+                                                                                                 null, eventBus, loginPresenter,
+                                                                                                 notificationManager) {
                                                 @Override
                                                 protected void onSuccess(final ApplicationInfo appInfo) {
                                                     project.refreshProperties(new AsyncCallback<Project>() {
@@ -193,7 +208,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
                                                 @Override
                                                 protected void onFailure(Throwable exception) {
-                                                    console.print(constant.deployApplicationFailureMessage());
+                                                    notification.setStatus(FINISHED);
+                                                    notification.setType(ERROR);
+                                                    notification.setMessage(constant.deployApplicationFailureMessage());
                                                     super.onFailure(exception);
                                                 }
                                             });
@@ -209,7 +226,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         try {
             service.initializeApplication(view.getUrl(), resourcesProvider.getVfsId(), project.getId(), warUrl, null,
                                           new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, deployWarLoggedInHandler, null,
-                                                                                             eventBus, console, loginPresenter) {
+                                                                                             eventBus, loginPresenter,
+                                                                                             notificationManager) {
                                               @Override
                                               protected void onSuccess(final ApplicationInfo appInfo) {
                                                   project.refreshProperties(new AsyncCallback<Project>() {
@@ -229,13 +247,17 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
                                               @Override
                                               protected void onFailure(Throwable exception) {
-                                                  console.print(constant.deployApplicationFailureMessage());
+                                                  notification.setStatus(FINISHED);
+                                                  notification.setType(ERROR);
+                                                  notification.setMessage(constant.deployApplicationFailureMessage());
                                                   super.onFailure(exception);
                                               }
                                           });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(constant.deployApplicationFailureMessage());
+            notification.setStatus(FINISHED);
+            notification.setType(ERROR);
+            notification.setMessage(constant.deployApplicationFailureMessage());
         }
     }
 
@@ -260,6 +282,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
               .append("' target='_blank'>").append(appInfo.getUrl()).append("</a>").append("<br>");
 
         console.print(output.toString());
+        notification.setStatus(FINISHED);
+        notification.setMessage(constant.deployApplicationSuccess());
     }
 
     /** {@inheritDoc} */

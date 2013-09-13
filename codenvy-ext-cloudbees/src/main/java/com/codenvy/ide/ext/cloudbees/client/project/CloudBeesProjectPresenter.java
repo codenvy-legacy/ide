@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.cloudbees.client.project;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesAsyncRequestCallback;
@@ -37,6 +38,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter for managing project, deployed on CloudBeess.
  *
@@ -50,26 +53,26 @@ public class CloudBeesProjectPresenter implements CloudBeesProjectView.ActionDel
     private UpdateApplicationPresenter updateApplicationPresenter;
     private EventBus                   eventBus;
     private ResourceProvider           resourceProvider;
-    private ConsolePart                console;
     private DeleteApplicationPresenter deleteAppPresenter;
     private LoginPresenter             loginPresenter;
     private CloudBeesClientService     service;
+    private NotificationManager        notificationManager;
 
     @Inject
     protected CloudBeesProjectPresenter(CloudBeesProjectView view, ApplicationInfoPresenter applicationInfoPresenter, EventBus eventBus,
-                                        ResourceProvider resourceProvider, ConsolePart console,
-                                        DeleteApplicationPresenter deleteAppPresenter, LoginPresenter loginPresenter,
-                                        CloudBeesClientService service, UpdateApplicationPresenter updateApplicationPresenter) {
+                                        ResourceProvider resourceProvider, DeleteApplicationPresenter deleteAppPresenter,
+                                        LoginPresenter loginPresenter, CloudBeesClientService service,
+                                        UpdateApplicationPresenter updateApplicationPresenter, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.applicationInfoPresenter = applicationInfoPresenter;
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
-        this.console = console;
         this.deleteAppPresenter = deleteAppPresenter;
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.updateApplicationPresenter = updateApplicationPresenter;
+        this.notificationManager = notificationManager;
     }
 
     /** Shows dialog. */
@@ -95,7 +98,7 @@ public class CloudBeesProjectPresenter implements CloudBeesProjectView.ActionDel
         try {
             service.getApplicationInfo(null, resourceProvider.getVfsId(), project.getId(),
                                        new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
-                                                                                          console, loginPresenter) {
+                                                                                          loginPresenter, notificationManager) {
                                            @Override
                                            protected void onSuccess(ApplicationInfo appInfo) {
                                                showAppInfo(appInfo);
@@ -105,7 +108,8 @@ public class CloudBeesProjectPresenter implements CloudBeesProjectView.ActionDel
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 

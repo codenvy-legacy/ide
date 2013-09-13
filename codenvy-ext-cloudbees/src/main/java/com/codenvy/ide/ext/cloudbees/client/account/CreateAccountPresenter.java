@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.cloudbees.client.account;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientService;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesLocalizationConstant;
@@ -32,6 +33,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter for creating user account on CloudBees.
  *
@@ -42,27 +46,27 @@ import com.google.web.bindery.event.shared.EventBus;
 public class CreateAccountPresenter implements CreateAccountView.ActionDelegate {
     private CreateAccountView             view;
     private EventBus                      eventBus;
-    private ConsolePart                   console;
     private CloudBeesClientService        service;
     private CloudBeesLocalizationConstant constant;
+    private NotificationManager           notificationManager;
 
     /**
      * Create presenter.
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param service
+     * @param notificationManager
      */
     @Inject
-    protected CreateAccountPresenter(CreateAccountView view, EventBus eventBus, ConsolePart console, CloudBeesLocalizationConstant constant,
-                                     CloudBeesClientService service) {
+    protected CreateAccountPresenter(CreateAccountView view, EventBus eventBus, CloudBeesLocalizationConstant constant,
+                                     CloudBeesClientService service, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
         this.service = service;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -138,18 +142,21 @@ public class CreateAccountPresenter implements CreateAccountView.ActionDelegate 
             service.createAccount(account, new AsyncRequestCallback<CloudBeesAccount>(unmarshaller) {
                 @Override
                 protected void onSuccess(CloudBeesAccount result) {
-                    console.print(constant.createAccountSuccess(result.getName()));
+                    Notification notification = new Notification(constant.createAccountSuccess(result.getName()), INFO);
+                    notificationManager.showNotification(notification);
                     addUserToAccount(result);
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
                 }
             });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -178,18 +185,21 @@ public class CreateAccountPresenter implements CreateAccountView.ActionDelegate 
             service.addUserToAccount(account.getName(), user, isExisting, new AsyncRequestCallback<CloudBeesUser>(unmarshaller) {
                 @Override
                 protected void onSuccess(CloudBeesUser result) {
-                    console.print(constant.addUserSuccess(result.getEmail()));
+                    Notification notification = new Notification(constant.addUserSuccess(result.getEmail()), ERROR);
+                    notificationManager.showNotification(notification);
                     view.close();
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
                 }
             });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }

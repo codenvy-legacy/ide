@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.cloudbees.client.apps;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesAsyncRequestCallback;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientService;
@@ -35,6 +36,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * The applications presenter manager CloudBees application.
  * The presenter can delete application and show information about it.
@@ -46,35 +49,35 @@ import com.google.web.bindery.event.shared.EventBus;
 public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     private ApplicationsView           view;
     private EventBus                   eventBus;
-    private ConsolePart                console;
     private LoginPresenter             loginPresenter;
     private CloudBeesClientService     service;
     private ApplicationInfoPresenter   applicationInfoPresenter;
     private DeleteApplicationPresenter deleteApplicationPresenter;
+    private NotificationManager        notificationManager;
 
     /**
      * Create presenter.
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param loginPresenter
      * @param service
      * @param applicationInfoPresenter
      * @param deleteApplicationPresenter
+     * @param notificationManager
      */
     @Inject
-    protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, ConsolePart console, LoginPresenter loginPresenter,
+    protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, LoginPresenter loginPresenter,
                                     CloudBeesClientService service, ApplicationInfoPresenter applicationInfoPresenter,
-                                    DeleteApplicationPresenter deleteApplicationPresenter) {
+                                    DeleteApplicationPresenter deleteApplicationPresenter, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
-        this.console = console;
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.applicationInfoPresenter = applicationInfoPresenter;
         this.deleteApplicationPresenter = deleteApplicationPresenter;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -95,7 +98,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
         try {
             service.applicationList(
                     new CloudBeesAsyncRequestCallback<JsonArray<ApplicationInfo>>(unmarshaller, loggedInHandler, null, eventBus,
-                                                                                  console, loginPresenter) {
+                                                                                  loginPresenter, notificationManager) {
                         @Override
                         protected void onSuccess(JsonArray<ApplicationInfo> result) {
                             view.setApplications(result);
@@ -106,7 +109,8 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
                         }
                     });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
