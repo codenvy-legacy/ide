@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.java.jdi.client.debug.changevalue;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
@@ -31,6 +32,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Presenter for change value in debug process.
@@ -47,8 +50,8 @@ public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
     private DebuggerInfo                    debuggerInfo;
     private DebuggerClientService           service;
     private EventBus                        eventBus;
-    private ConsolePart                     console;
     private JavaRuntimeLocalizationConstant constant;
+    private NotificationManager             notificationManager;
     private AsyncCallback<String>           callback;
 
     /**
@@ -57,18 +60,18 @@ public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
      * @param view
      * @param service
      * @param eventBus
-     * @param console
      * @param constant
+     * @param notificationManager
      */
     @Inject
-    protected ChangeValuePresenter(ChangeValueView view, DebuggerClientService service, EventBus eventBus, ConsolePart console,
-                                   JavaRuntimeLocalizationConstant constant) {
+    protected ChangeValuePresenter(ChangeValueView view, DebuggerClientService service, EventBus eventBus,
+                                   JavaRuntimeLocalizationConstant constant, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
+        this.notificationManager = notificationManager;
     }
 
     /**
@@ -115,13 +118,15 @@ public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
                 @Override
                 protected void onFailure(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                     callback.onFailure(exception);
                 }
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             callback.onFailure(e);
         }
 
