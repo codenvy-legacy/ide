@@ -18,20 +18,29 @@
 package com.codenvy.ide.ext.git.client.clone;
 
 import com.codenvy.ide.ext.git.client.BaseTest;
+import com.codenvy.ide.ext.git.shared.RepoInfo;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.websocket.WebSocketException;
+import com.codenvy.ide.websocket.rest.RequestCallback;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import java.lang.reflect.Method;
 
 import static com.codenvy.ide.ext.git.client.clone.CloneRepositoryPresenter.DEFAULT_REPO_NAME;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing {@link CloneRepositoryPresenter} functionality.
@@ -41,22 +50,244 @@ import static org.mockito.Mockito.when;
 public class CloneRepositoryPresenterTest extends BaseTest {
     @Mock
     private CloneRepositoryView      view;
-    @InjectMocks
+    @Mock
+    private RepoInfo                 gitRepositoryInfo;
     private CloneRepositoryPresenter presenter;
 
-    @Test
-    public void testOnCloneClicked() throws Exception {
+    @Override
+    public void disarm() {
+        super.disarm();
+
+        presenter = new CloneRepositoryPresenter(view, service, resourceProvider, eventBus, constant, console);
+
         when(view.getProjectName()).thenReturn(PROJECT_NAME);
         when(view.getRemoteName()).thenReturn(REMOTE_NAME);
         when(view.getRemoteUri()).thenReturn(REMOTE_URI);
+        when(gitRepositoryInfo.getRemoteUri()).thenReturn(REMOTE_URI);
+    }
+
+    @Test
+    public void testOnCloneClickedWhenCloneRepositoryWebsocketRequestIsSuccessful() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[2];
+                callback.onSuccess(project);
+                return callback;
+            }
+        }).when(resourceProvider).createProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
+                callback.onSuccess(project);
+                return callback;
+            }
+        }).when(resourceProvider).getProject(anyString(), (AsyncCallback<Project>)anyObject());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                RequestCallback<RepoInfo> callback = (RequestCallback<RepoInfo>)arguments[4];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, gitRepositoryInfo);
+                return callback;
+            }
+        }).when(service)
+                .cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
 
         presenter.onCloneClicked();
 
         verify(view).getProjectName();
         verify(view).getRemoteName();
         verify(view).getRemoteUri();
-
         verify(resourceProvider).createProject(eq(PROJECT_NAME), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
+        verify(service).cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
+        verify(service, never()).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME),
+                                                 (AsyncRequestCallback<RepoInfo>)anyObject());
+        verify(constant).cloneSuccess(eq(REMOTE_URI));
+        verify(console).print(anyString());
+    }
+
+    @Test
+    public void testOnCloneClickedWhenCloneRepositoryWebsocketRequestIsFailed() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[2];
+                callback.onSuccess(project);
+                return callback;
+            }
+        }).when(resourceProvider).createProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                RequestCallback<RepoInfo> callback = (RequestCallback<RepoInfo>)arguments[4];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(service)
+                .cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
+
+        presenter.onCloneClicked();
+
+        verify(view).getProjectName();
+        verify(view).getRemoteName();
+        verify(view).getRemoteUri();
+        verify(resourceProvider).createProject(eq(PROJECT_NAME), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
+        verify(resourceProvider).delete(eq(project), (AsyncCallback<String>)anyObject());
+        verify(service).cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
+        verify(service, never()).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME),
+                                                 (AsyncRequestCallback<RepoInfo>)anyObject());
+        verify(constant).cloneFailed(eq(REMOTE_URI));
+        verify(console).print(anyString());
+    }
+
+    @Test
+    public void testOnCloneClickedWhenCloneRepositoryRestRequestIsSuccessful() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[2];
+                callback.onSuccess(project);
+                return callback;
+            }
+        }).when(resourceProvider).createProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
+                callback.onSuccess(project);
+                return callback;
+            }
+        }).when(resourceProvider).getProject(anyString(), (AsyncCallback<Project>)anyObject());
+        doThrow(WebSocketException.class).when(service)
+                .cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<RepoInfo> callback = (AsyncRequestCallback<RepoInfo>)arguments[4];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, gitRepositoryInfo);
+                return callback;
+            }
+        }).when(service).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME),
+                                         (AsyncRequestCallback<RepoInfo>)anyObject());
+
+        presenter.onCloneClicked();
+
+        verify(view).getProjectName();
+        verify(view).getRemoteName();
+        verify(view).getRemoteUri();
+        verify(resourceProvider).createProject(eq(PROJECT_NAME), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
+        verify(service).cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
+        verify(service).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME),
+                                        (AsyncRequestCallback<RepoInfo>)anyObject());
+        verify(constant).cloneSuccess(eq(REMOTE_URI));
+        verify(console).print(anyString());
+    }
+
+
+    @Test
+    public void testOnCloneClickedWhenCloneRepositoryRestRequestIsFailed() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[2];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, project);
+                return callback;
+            }
+        }).when(resourceProvider).createProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
+        doThrow(WebSocketException.class).when(service)
+                .cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<RepoInfo> callback = (AsyncRequestCallback<RepoInfo>)arguments[4];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(service).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME),
+                                         (AsyncRequestCallback<RepoInfo>)anyObject());
+
+        presenter.onCloneClicked();
+
+        verify(view).getProjectName();
+        verify(view).getRemoteName();
+        verify(view).getRemoteUri();
+        verify(service).cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
+        verify(service).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME),
+                                        (AsyncRequestCallback<RepoInfo>)anyObject());
+        verify(resourceProvider).createProject(eq(PROJECT_NAME), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
+        verify(resourceProvider).delete(eq(project), (AsyncCallback<String>)anyObject());
+        verify(constant).cloneFailed(eq(REMOTE_URI));
+        verify(console).print(anyString());
+    }
+
+    @Test
+    public void testOnCloneClickedWhenRequestExceptionHappened() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[2];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, project);
+                return callback;
+            }
+        }).when(resourceProvider).createProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
+        doThrow(WebSocketException.class).when(service)
+                .cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
+        doThrow(RequestException.class).when(service).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME),
+                                                                      (AsyncRequestCallback<RepoInfo>)anyObject());
+
+        presenter.onCloneClicked();
+
+        verify(view).getProjectName();
+        verify(view).getRemoteName();
+        verify(view).getRemoteUri();
+        verify(service).cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME), (RequestCallback<RepoInfo>)anyObject());
+        verify(service).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME),
+                                        (AsyncRequestCallback<RepoInfo>)anyObject());
+        verify(resourceProvider).createProject(eq(PROJECT_NAME), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
+        verify(resourceProvider).delete(eq(project), (AsyncCallback<String>)anyObject());
+        verify(constant).cloneFailed(eq(REMOTE_URI));
+        verify(console).print(anyString());
+    }
+
+    @Test
+    public void testOnCloneClickedWhenCreateProjectRequestIsFailed() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[2];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(resourceProvider).createProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
+
+        presenter.onCloneClicked();
+
+        verify(view).getProjectName();
+        verify(view).getRemoteName();
+        verify(view).getRemoteUri();
+        verify(resourceProvider).createProject(eq(PROJECT_NAME), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
+        verify(constant).cloneFailed(eq(REMOTE_URI));
+        verify(console).print(anyString());
     }
 
     @Test

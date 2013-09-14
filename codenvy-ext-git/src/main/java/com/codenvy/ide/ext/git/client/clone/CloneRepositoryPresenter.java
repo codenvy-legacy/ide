@@ -116,10 +116,10 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
 
                                           }
                                       });
-            view.close();
         } catch (WebSocketException e) {
             cloneRepositoryREST(remoteUri, remoteName, project);
         }
+        view.close();
     }
 
     /**
@@ -149,9 +149,9 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
                                         }
                                     });
         } catch (RequestException e) {
+            deleteFolder(project);
             handleError(e, remoteUri);
         }
-        view.close();
     }
 
     /**
