@@ -21,7 +21,7 @@
                xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-    <!-- Note: a several values may be supplied for each 'ranges' parameter. -->
+    <!-- Note: a several values may be supplied for each 'port-ranges' parameter. -->
     <component>
         <type>com.codenvy.ide.ext.extruntime.server.ExtensionLauncher</type>
         <init-params>

@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- *
- *  [2012] - [2013] Codenvy, S.A.
+ * 
+ *  [2012] - [2013] Codenvy, S.A. 
  *  All Rights Reserved.
- *
+ * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -15,17 +15,22 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.extruntime.server.tools;
+package com.codenvy.ide.ext.tutorials.server;
 
-import java.io.Closeable;
-import java.io.IOException;
+import javax.ws.rs.core.Application;
+import java.util.Collections;
+import java.util.Set;
 
 /**
- * Consumes text line by line for analysing, writing, storing, etc.
+ * JAX-RS application for 'Codenvy Tutorials' extension.
  *
- * @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a>
+ * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @version $Id: TutorialsApplication.java Sep 13, 2013 3:26:32 PM azatsarynnyy $
  */
-public interface LineConsumer extends Closeable {
-    /** Consumes single line. */
-    void writeLine(String line) throws IOException;
+public class TutorialsApplication extends Application {
+    /** {@inheritDoc} */
+    @Override
+    public Set<Class<?>> getClasses() {
+        return Collections.<Class<?>>singleton(TutorialsService.class);
+    }
 }

@@ -83,7 +83,7 @@
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
         </dependency>
-        <!-- Serverside VFS -->
+        <!-- Server-side VFS -->
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs-fs</artifactId>
