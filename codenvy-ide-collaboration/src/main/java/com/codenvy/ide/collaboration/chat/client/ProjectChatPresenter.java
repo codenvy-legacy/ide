@@ -566,11 +566,15 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
     @Override
     public void onCollaborationChanged(CollaborationChangedEvent event) {
         if (event.isEnabled()) {
+            setProjectId(event.getProject());
             registerHandlers();
-            display.removeDisabledMessage();
+            if (display != null) {
+                display.removeDisabledMessage();
+            }
+
         } else {
-            if(display != null){
-              display.showChatDisabled();
+            if (display != null) {
+                display.showChatDisabled();
             }
             removeHandlers();
         }

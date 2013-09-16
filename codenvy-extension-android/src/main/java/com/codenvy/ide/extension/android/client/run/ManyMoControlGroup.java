@@ -19,6 +19,7 @@
 package com.codenvy.ide.extension.android.client.run;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
@@ -27,6 +28,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryControl.java Jul 8, 2011 3:25:33 PM vereshchaka $
  */
+@RolesAllowed({"developer"})
 public class ManyMoControlGroup extends SimpleControl implements IDEControl {
 
     private static final String ID = "PaaS/ManyMo Android";
