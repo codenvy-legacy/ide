@@ -523,12 +523,6 @@
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs-fs</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-ruby</artifactId>
             <version>${org.exoplatform.ide.version}</version>
             <exclusions>
