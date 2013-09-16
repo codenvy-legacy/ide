@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.notification;
 
-import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.json.JsonArray;
@@ -26,9 +25,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.codenvy.ide.api.notification.Notification.State.READ;
 import static com.codenvy.ide.notification.NotificationContainer.HEIGHT;
@@ -41,31 +37,32 @@ import static com.codenvy.ide.notification.NotificationManagerView.Status.*;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class NotificationManagerImpl
-        implements NotificationManager, NotificationMessage.ActionDelegate, NotificationItem.ActionDelegate,
-                   Notification.NotificationObserver, NotificationManagerView.ActionDelegate {
-    public static final int POPUP_COUNT = 3;
-    private NotificationManagerView                view;
-    private NotificationContainer                  notificationContainer;
-    private Resources                              resources;
-    private Map<Notification, NotificationMessage> notificationMessage;
-    private JsonArray<NotificationMessage>         messages;
+public class NotificationManagerImpl implements NotificationManager, NotificationItem.ActionDelegate, Notification.NotificationObserver,
+                                                NotificationManagerView.ActionDelegate, NotificationMessageStack.ActionDelegate {
+
+    private NotificationManagerView  view;
+    private NotificationContainer    notificationContainer;
+    private NotificationMessageStack notificationMessageStack;
+    private JsonArray<Notification>  notifications;
 
     /**
      * Create manager.
      *
      * @param view
-     * @param resources
+     * @param notificationContainer
+     * @param notificationMessageStack
      */
     @Inject
-    public NotificationManagerImpl(NotificationManagerView view, Resources resources) {
-        this.resources = resources;
-        this.notificationMessage = new HashMap<Notification, NotificationMessage>();
-        this.messages = JsonCollections.createArray();
+    public NotificationManagerImpl(NotificationManagerView view, NotificationContainer notificationContainer,
+                                   NotificationMessageStack notificationMessageStack) {
         this.view = view;
         this.view.setDelegate(this);
         this.view.setStatus(EMPTY);
-        this.notificationContainer = new NotificationContainer(this, resources);
+        this.notificationContainer = notificationContainer;
+        this.notificationContainer.setDelegate(this);
+        this.notificationMessageStack = notificationMessageStack;
+        this.notificationMessageStack.setDelegate(this);
+        this.notifications = JsonCollections.createArray();
     }
 
     /** {@inheritDoc} */
@@ -74,19 +71,18 @@ public class NotificationManagerImpl
         int countUnread = 0;
         boolean inProgress = false;
 
-        for (Map.Entry<Notification, NotificationMessage> notification : notificationMessage.entrySet()) {
-            Notification key = notification.getKey();
-            if (!key.isRead()) {
+        for (Notification notification : notifications.asIterable()) {
+            if (!notification.isRead()) {
                 countUnread++;
             }
 
             if (!inProgress) {
-                inProgress = !key.isFinished();
+                inProgress = !notification.isFinished();
             }
         }
 
         view.setNotificationCount(countUnread);
-        if (countUnread < 0 && !inProgress) {
+        if (countUnread == 0 && !inProgress) {
             view.setStatus(EMPTY);
         } else if (inProgress) {
             view.setStatus(IN_PROGRESS);
@@ -99,11 +95,9 @@ public class NotificationManagerImpl
     @Override
     public void showNotification(Notification notification) {
         notification.addObserver(this);
-        NotificationMessage message = new NotificationMessage(resources, notification, this);
-        notificationMessage.put(notification, message);
+        notifications.add(notification);
+        notificationMessageStack.addNotification(notification);
         notificationContainer.addNotification(notification);
-        messages.add(message);
-        showMessage();
         onValueChanged();
     }
 
@@ -115,9 +109,8 @@ public class NotificationManagerImpl
      */
     public void removeNotification(Notification notification) {
         notification.removeObserver(this);
-        NotificationMessage message = notificationMessage.remove(notification);
-        message.hide();
         notificationContainer.removeNotification(notification);
+        notificationMessageStack.removeNotification(notification);
         onValueChanged();
     }
 
@@ -154,29 +147,7 @@ public class NotificationManagerImpl
     @Override
     public void onCloseMessageClicked(Notification notification) {
         notification.setState(READ);
-        NotificationMessage message = notificationMessage.get(notification);
-        message.hide();
         onCloseClicked(notification);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onClosingDialog(NotificationMessage message) {
-        messages.remove(message);
-        showMessage();
-    }
-
-    /** Show notification message. */
-    private void showMessage() {
-        int left = Window.getClientWidth() - NotificationMessage.WIDTH - 30;
-        for (int i = 0, top = 30; i < POPUP_COUNT && i < messages.size(); i++, top += NotificationMessage.HEIGHT + 20) {
-            NotificationMessage popup = messages.get(i);
-            if (popup.isShowing()) {
-                popup.setPopupPosition(left, top);
-            } else {
-                popup.show(left, top);
-            }
-        }
     }
 
     /** {@inheritDoc} */

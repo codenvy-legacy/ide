@@ -65,6 +65,12 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-commons</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -110,11 +116,11 @@
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>com.googlecode.gwt-test-utils</groupId>-->
-        <!--<artifactId>gwt-test-utils</artifactId>-->
-        <!--<scope>test</scope>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.googlecode.gwt-test-utils</groupId>
+            <artifactId>gwt-test-utils</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -175,7 +181,8 @@
                             <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                             <arguments>
                                 <argument>--dto_packages=com.codenvy.ide.api.user</argument>
-                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/server/DtoServerImpls.java</argument>
+                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/server/DtoServerImpls.java
+                                </argument>
                                 <argument>--impl=server</argument>
                                 <argument>--package_base=${generated.sources.directory}/</argument>
                             </arguments>
@@ -191,7 +198,8 @@
                             <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                             <arguments>
                                 <argument>--dto_packages=com.codenvy.ide.dto</argument>
-                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/dto/server/DtoServerImpls.java</argument>
+                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/dto/server/DtoServerImpls.java
+                                </argument>
                                 <argument>--impl=server</argument>
                                 <argument>--package_base=${generated.sources.directory}/</argument>
                             </arguments>
@@ -207,7 +215,8 @@
                             <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                             <arguments>
                                 <argument>--dto_packages=com.codenvy.ide.dto</argument>
-                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/dto/client/DtoClientImpls.java</argument>
+                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/dto/client/DtoClientImpls.java
+                                </argument>
                                 <argument>--impl=client</argument>
                                 <argument>--package_base=${generated.sources.directory}/</argument>
                             </arguments>
