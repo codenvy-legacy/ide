@@ -27,7 +27,7 @@ public class VirtualFileSystemUser {
     private final String             userId;
     private final Collection<String> groups;
 
-    VirtualFileSystemUser(String userId, Set<String> groups) {
+    public VirtualFileSystemUser(String userId, Set<String> groups) {
         this.userId = userId;
         this.groups = Collections.unmodifiableSet(new HashSet<String>(groups));
     }
