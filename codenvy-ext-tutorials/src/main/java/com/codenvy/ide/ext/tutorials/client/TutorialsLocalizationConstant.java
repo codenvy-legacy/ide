@@ -17,23 +17,23 @@
  */
 package com.codenvy.ide.ext.tutorials.client;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.i18n.client.Messages;
 
 /**
- * Client resources.
+ * Localization constants. Interface represents the constants contained in resource bundle:
+ * 'TutorialsLocalizationConstant.properties'.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: TutorialsResources.java Sep 13, 2013 12:37:19 PM azatsarynnyy $
+ * @version $Id: TutorialsLocalizationConstant.java Sep 16, 2013 12:40:17 PM azatsarynnyy $
  */
-public interface TutorialsResources extends ClientBundle {
+public interface TutorialsLocalizationConstant extends Messages {
+    /* Actions */
+    @Key("control.showTutorialPage.id")
+    String showTutorialPageActionlId();
 
-    @Source("com/codenvy/ide/ext/tutorials/images/codenvyTutorialTemplate.png")
-    ImageResource codenvyTutorialTemplate();
+    @Key("control.showTutorialPage.text")
+    String showTutorialPageActionText();
 
-    @Source("com/codenvy/ide/ext/tutorials/images/codenvyTutorialProject.png")
-    ImageResource codenvyTutorialProject();
-
-    @Source("com/codenvy/ide/ext/tutorials/images/file.png")
-    ImageResource file();
+    @Key("control.showTutorialPage.description")
+    String showTutorialPageActionDescription();
 }
