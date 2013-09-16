@@ -31,7 +31,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * For demo purposes. Displays the list of registered extensions and their dependensies.
+ * For demo purposes. Displays the list of registered extensions and their dependencies.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
