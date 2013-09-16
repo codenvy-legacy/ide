@@ -96,15 +96,4 @@ public class NotificationContainer extends PopupPanel {
         NotificationItem item = notificationWidget.get(notification);
         panel.remove(item);
     }
-
-    /**
-     * Redraw notification in container.
-     *
-     * @param notification
-     *         notification that need to redraw
-     */
-    public void refreshNotification(Notification notification) {
-        NotificationItem item = notificationWidget.get(notification);
-        item.refresh();
-    }
 }

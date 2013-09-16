@@ -34,7 +34,7 @@ import static com.google.gwt.dom.client.Style.Unit.PX;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class NotificationMessage extends PopupPanel {
+public class NotificationMessage extends PopupPanel implements Notification.NotificationObserver {
     /** Required for delegating open and close functions in view. */
     public interface ActionDelegate {
         /** Performs some actions in response to a user's opening a notification */
@@ -42,6 +42,8 @@ public class NotificationMessage extends PopupPanel {
 
         /** Performs some actions in response to a user's closing a notification */
         void onCloseMessageClicked(Notification notification);
+
+        void onClosingDialog(NotificationMessage message);
     }
 
     public static final int DEFAULT_TIME = 5000;
@@ -52,7 +54,6 @@ public class NotificationMessage extends PopupPanel {
     private SimplePanel     iconPanel;
     private Notification    notification;
     private Notification    prevState;
-    private boolean         isKnown;
     private ActionDelegate  delegate;
     private Resources       resources;
 
@@ -68,9 +69,9 @@ public class NotificationMessage extends PopupPanel {
 
         this.notification = notification;
         this.prevState = notification.clone();
-        this.isKnown = false;
         this.delegate = delegate;
         this.resources = resources;
+        notification.addObserver(this);
 
         mainPanel = new DockLayoutPanel(PX);
         mainPanel.setWidth(String.valueOf(WIDTH) + "px");
@@ -126,8 +127,9 @@ public class NotificationMessage extends PopupPanel {
         iconPanel.setWidget(messageIcon);
     }
 
-    /** Refresh notification element if it is needed */
-    public void refresh() {
+    /** {@inheritDoc} */
+    @Override
+    public void onValueChanged() {
         if (!prevState.equals(notification)) {
             if (!prevState.getMessage().equals(notification.getMessage())) {
                 title.setText(notification.getMessage());
@@ -190,16 +192,7 @@ public class NotificationMessage extends PopupPanel {
     /** {@inheritDoc} */
     @Override
     public void hide() {
-        isKnown = true;
+        delegate.onClosingDialog(this);
         super.hide();
-    }
-
-    /**
-     * Returns whether this notification is read.
-     *
-     * @return <code>true</code> if the notification is read, and <code>false</code> if it's not
-     */
-    public boolean isKnown() {
-        return isKnown || notification.isRead();
     }
 }

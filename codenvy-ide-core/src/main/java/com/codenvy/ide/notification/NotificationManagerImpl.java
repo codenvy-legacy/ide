@@ -24,7 +24,6 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -33,7 +32,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.codenvy.ide.api.notification.Notification.State.READ;
@@ -48,7 +47,8 @@ import static com.codenvy.ide.notification.NotificationManagerImpl.Status.*;
  */
 @Singleton
 public class NotificationManagerImpl
-        implements NotificationManager, ClickHandler, NotificationMessage.ActionDelegate, NotificationItem.ActionDelegate {
+        implements NotificationManager, ClickHandler, NotificationMessage.ActionDelegate, NotificationItem.ActionDelegate,
+                   Notification.NotificationObserver {
     /**
      * Status of a notification manager. The manager has 3 statuses: manager has unread messages, manager has at least one message in
      * progress and manager has no new messages
@@ -58,20 +58,13 @@ public class NotificationManagerImpl
     }
 
     public static final int POPUP_COUNT = 3;
-    public static final int DELAY_TIME  = 300;
     private FlowPanel                              view;
     private Label                                  notificationCount;
     private SimplePanel                            iconPanel;
     private NotificationContainer                  notificationContainer;
     private Resources                              resources;
     private Map<Notification, NotificationMessage> notificationMessage;
-    private Timer timer = new Timer() {
-        @Override
-        public void run() {
-            refresh();
-            timer.schedule(DELAY_TIME);
-        }
-    };
+    private JsonArray<NotificationMessage>         messages;
 
     /**
      * Create manager.
@@ -81,8 +74,8 @@ public class NotificationManagerImpl
     @Inject
     public NotificationManagerImpl(Resources resources) {
         this.resources = resources;
-        this.notificationMessage = new LinkedHashMap<Notification, NotificationMessage>();
-        this.timer.schedule(DELAY_TIME);
+        this.notificationMessage = new HashMap<Notification, NotificationMessage>();
+        this.messages = JsonCollections.createArray();
         this.view = createNotificationButton();
         setStatus(EMPTY);
         this.notificationContainer = new NotificationContainer(this, resources);
@@ -128,11 +121,11 @@ public class NotificationManagerImpl
         return icon;
     }
 
-    /** Refresh notifications */
-    private void refresh() {
+    /** {@inheritDoc} */
+    @Override
+    public void onValueChanged() {
         int countUnread = 0;
         boolean inProgress = false;
-        JsonArray<NotificationMessage> popups = JsonCollections.createArray();
 
         for (Map.Entry<Notification, NotificationMessage> notification : notificationMessage.entrySet()) {
             Notification key = notification.getKey();
@@ -142,17 +135,6 @@ public class NotificationManagerImpl
 
             if (!inProgress) {
                 inProgress = !key.isFinished();
-            }
-
-            if (notificationContainer.isShowing()) {
-                notificationContainer.refreshNotification(key);
-            }
-
-            NotificationMessage popup = notification.getValue();
-            if (popup.isKnown()) {
-                popup.hide();
-            } else {
-                popups.add(popup);
             }
         }
 
@@ -164,27 +146,18 @@ public class NotificationManagerImpl
         } else {
             setStatus(HAS_UNREAD);
         }
-
-        int size = popups.size();
-        int left = Window.getClientWidth() - NotificationMessage.WIDTH - 30;
-        for (int i = 1, top = 30; i <= POPUP_COUNT && i <= size; i++, top += NotificationMessage.HEIGHT + 20) {
-            NotificationMessage popup = popups.get(size - i);
-            popup.refresh();
-            if (popup.isShowing()) {
-                popup.setPopupPosition(left, top);
-            } else {
-                popup.show(left, top);
-            }
-        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void showNotification(Notification notification) {
+        notification.addObserver(this);
         NotificationMessage message = new NotificationMessage(resources, notification, this);
         notificationMessage.put(notification, message);
-
         notificationContainer.addNotification(notification);
+        messages.add(message);
+        showMessage();
+        onValueChanged();
     }
 
     /**
@@ -194,10 +167,11 @@ public class NotificationManagerImpl
      *         notification that need to remove
      */
     public void removeNotification(Notification notification) {
+        notification.removeObserver(this);
         NotificationMessage message = notificationMessage.remove(notification);
         message.hide();
-
         notificationContainer.removeNotification(notification);
+        onValueChanged();
     }
 
     /** {@inheritDoc} */
@@ -233,10 +207,29 @@ public class NotificationManagerImpl
     @Override
     public void onCloseMessageClicked(Notification notification) {
         notification.setState(READ);
-        notificationContainer.refreshNotification(notification);
         NotificationMessage message = notificationMessage.get(notification);
         message.hide();
         onCloseClicked(notification);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onClosingDialog(NotificationMessage message) {
+        messages.remove(message);
+        showMessage();
+    }
+
+    /** Show notification message. */
+    private void showMessage() {
+        int left = Window.getClientWidth() - NotificationMessage.WIDTH - 30;
+        for (int i = 0, top = 30; i < POPUP_COUNT && i < messages.size(); i++, top += NotificationMessage.HEIGHT + 20) {
+            NotificationMessage popup = messages.get(i);
+            if (popup.isShowing()) {
+                popup.setPopupPosition(left, top);
+            } else {
+                popup.show(left, top);
+            }
+        }
     }
 
     /** {@inheritDoc} */
@@ -295,7 +288,5 @@ public class NotificationManagerImpl
      */
     public void go(FlowPanel container) {
         container.add(view);
-
-        timer.schedule(DELAY_TIME);
     }
 }

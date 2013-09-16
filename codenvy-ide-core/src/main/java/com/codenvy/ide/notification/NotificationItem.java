@@ -34,7 +34,7 @@ import static com.google.gwt.dom.client.Style.Unit.PX;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class NotificationItem extends Composite {
+public class NotificationItem extends Composite implements Notification.NotificationObserver {
     /** Required for delegating open and close functions in view. */
     public interface ActionDelegate {
         /** Performs some actions in response to a user's opening a notification */
@@ -66,6 +66,7 @@ public class NotificationItem extends Composite {
         this.notification = notification;
         this.prevState = notification.clone();
         this.delegate = delegate;
+        notification.addObserver(this);
 
         mainPanel = new DockLayoutPanel(PX);
         mainPanel.setHeight("25px");
@@ -128,8 +129,9 @@ public class NotificationItem extends Composite {
         iconPanel.setWidget(messageIcon);
     }
 
-    /** Refresh notification element if it is needed */
-    public void refresh() {
+    /** {@inheritDoc} */
+    @Override
+    public void onValueChanged() {
         if (!prevState.equals(notification)) {
             if (!prevState.getMessage().equals(notification.getMessage())) {
                 title.setText(notification.getMessage());

@@ -19,6 +19,8 @@ package com.codenvy.ide.api.notification;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 
 import java.util.Date;
 
@@ -53,6 +55,10 @@ public class Notification {
         void onCloseClicked();
     }
 
+    public interface NotificationObserver {
+        void onValueChanged();
+    }
+
     /** Type of notification. The notification has 3 types: information message, warning message, error message. */
     public enum Type {
         INFO, WARNING, ERROR
@@ -68,14 +74,15 @@ public class Notification {
         READ, UNREAD
     }
 
-    private String                   message;
-    private Type                     type;
-    private Status                   status;
-    private State                    state;
-    private Date                     time;
-    private boolean                  important;
-    private OpenNotificationHandler  openHandler;
-    private CloseNotificationHandler closeHandler;
+    private String                          message;
+    private Type                            type;
+    private Status                          status;
+    private State                           state;
+    private Date                            time;
+    private boolean                         important;
+    private OpenNotificationHandler         openHandler;
+    private CloseNotificationHandler        closeHandler;
+    private JsonArray<NotificationObserver> observers;
 
     /**
      * Create notification with message and type. Other parameters will be added with default values. This notification has got
@@ -390,6 +397,7 @@ public class Notification {
         this.important = important;
         this.openHandler = openHandler;
         this.closeHandler = closeHandler;
+        this.observers = JsonCollections.createArray();
     }
 
     /** @return notification's message */
@@ -406,6 +414,7 @@ public class Notification {
     public void setMessage(@NotNull String message) {
         this.message = message;
         this.time = new Date();
+        notifyObservers();
     }
 
     /**
@@ -449,6 +458,7 @@ public class Notification {
     public void setType(@NotNull Type type) {
         this.type = type;
         this.time = new Date();
+        notifyObservers();
     }
 
     /**
@@ -468,6 +478,7 @@ public class Notification {
     public void setStatus(@NotNull Status status) {
         this.status = status;
         this.time = new Date();
+        notifyObservers();
     }
 
     /**
@@ -486,6 +497,7 @@ public class Notification {
      */
     public void setState(@NotNull State state) {
         this.state = state;
+        notifyObservers();
     }
 
     /** @return time when this notification was showed */
@@ -511,6 +523,7 @@ public class Notification {
     public void setImportant(boolean important) {
         this.important = important;
         this.time = new Date();
+        notifyObservers();
     }
 
     /** @return delegate with actions in response on opening notification */
@@ -547,5 +560,32 @@ public class Notification {
         if (type != that.type) return false;
 
         return true;
+    }
+
+    /**
+     * Add a notification's observer.
+     *
+     * @param observer
+     *         observer that need to add
+     */
+    public void addObserver(NotificationObserver observer) {
+        observers.add(observer);
+    }
+
+    /**
+     * Remove a notification's observer.
+     *
+     * @param observer
+     *         observer that need to remove
+     */
+    public void removeObserver(NotificationObserver observer) {
+        observers.remove(observer);
+    }
+
+    /** Notify observes. */
+    public void notifyObservers() {
+        for (NotificationObserver observer : observers.asIterable()) {
+            observer.onValueChanged();
+        }
     }
 }
