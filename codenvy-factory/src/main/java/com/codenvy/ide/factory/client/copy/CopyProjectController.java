@@ -78,7 +78,7 @@ public class CopyProjectController implements CopyProjectHandler, EditorFileOpen
                                       }
                                       if (!projectIds.isEmpty()) {
                                           Item firstItem = result.get(0);
-                                          String projectsDownloadUrl = firstItem.getLinkByRelation(Link.REL_DOWNLOAD_ZIP).getHref();
+                                          String projectsDownloadUrl = firstItem.getLinkByRelation(Link.REL_EXPORT).getHref();
                                           projectsDownloadUrl = projectsDownloadUrl.substring(0, projectsDownloadUrl.length() - firstItem.getId().length());
                                           doCopy(projectsDownloadUrl, projectIds);
                                       }
@@ -101,7 +101,7 @@ public class CopyProjectController implements CopyProjectHandler, EditorFileOpen
             if (workspaces.size() > 1) {
                 UrlBuilder builder = new UrlBuilder();
                 url = builder.setProtocol(Window.Location.getProtocol()).setHost(Window.Location.getHost())
-                             .setPath("/private/select-tenant").buildString();
+                             .setPath("/site/private/select-tenant").buildString();
             }
             else {
                 url = workspaces.get(0).getUrl();

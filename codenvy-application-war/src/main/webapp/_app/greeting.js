@@ -40,16 +40,18 @@ var GREETING_PANE_CONTENT = {
 	// user authenticated
 	"authenticated": null,
 	
+	
 	// anonymous user in temporary workspace
 	"anonymous-workspace-temporary": ide_base_path + "greeting/temporary-workspace-rightpane-not-authenticated.html",
 	
 	// authenticated user in temporary workspace
 	"authenticated-workspace-temporary": ide_base_path + "greeting/temporary-workspace-rightpane-authenticated.html",
 	
-	// anonymous user, temporary workspace, triggerio project
-	"anonymous-workspace-temporary-triggerio": null,
 	
-	// anonymous user, temporary workspace, google-mbs-android project
-	"anonymous-workspace-temporary-google-mbs-android": null
+	// anonymous user, temporary workspace, google-mbs-client-android project
+	"anonymous-workspace-temporary-google-mbs-client-android": ide_base_path + "greeting/temporary-workspace-androidMBS-rightpane-not-authenticated.html",
+	
+	// authenticated user, temporary workspace, google-mbs-client-android project
+	"authenticated-workspace-temporary-google-mbs-client-android": ide_base_path + "greeting/temporary-workspace-androidMBS-rightpane-authenticated.html"
 	
 };

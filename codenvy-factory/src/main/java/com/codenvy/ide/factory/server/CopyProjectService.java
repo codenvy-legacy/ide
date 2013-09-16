@@ -58,6 +58,12 @@ public class CopyProjectService {
     @PathParam("ws-name")
     private String wsName;
 
+    static {
+        if (CookieHandler.getDefault() == null) {
+            CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
+        }
+    }
+
     /**
      * Copy specified projects to a current workspace.
      *
@@ -82,9 +88,6 @@ public class CopyProjectService {
 
         String tmpWorkspace = baseDownloadUrl.substring(baseDownloadUrl.indexOf("tmp")).substring(0, baseDownloadUrl
                 .substring(baseDownloadUrl.indexOf("tmp")).indexOf("/"));
-        if (CookieHandler.getDefault() == null) {
-            CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
-        }
 
         final String[] projectIdArray = projectIds.split(";");
         for (String projectInfo : projectIdArray) {
