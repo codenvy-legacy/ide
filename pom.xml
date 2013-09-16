@@ -113,6 +113,11 @@
             </dependency>
             <dependency>
                 <groupId>com.codenvy.platform-api</groupId>
+                <artifactId>codenvy-api-core</artifactId>
+                <version>${com.codenvy.platform-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.platform-api</groupId>
                 <artifactId>codenvy-api-vfs</artifactId>
                 <version>${com.codenvy.platform-api.version}</version>
             </dependency>
@@ -516,7 +521,6 @@
         <module>codenvy-ext-git</module>
         <module>codenvy-ext-maven</module>
         <module>codenvy-ext-ssh</module>
-        <module>codenvy-ext-extensions-runtime</module>
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
         <module>codenvy-application-war</module>

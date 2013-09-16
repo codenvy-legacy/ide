@@ -21,26 +21,30 @@ import java.nio.file.Path;
 
 /**
  * GWT code server configuration.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: GWTCodeServerConfiguration.java Aug 8, 2013 5:35:00 PM azatsarynnyy $
  */
 public class GWTCodeServerConfiguration {
     /** GWT code server's bind address. */
     private String bindAddress;
-
     /** GWT code server's port. */
     private int    port;
-
-    /** Code server working directory. */
+    /**
+     * GWT code server's working directory for internal use. It's the root of the directory tree where the GWT code
+     * server will write compiler output. If not supplied, a system temporary directory should be used.
+     */
     private Path   workDir;
 
     /**
      * Constructs new {@link GWTCodeServerConfiguration} with the specified parameters.
-     * 
-     * @param bindAddress code server bind address
-     * @param port code server port
-     * @param workDir code server working directory
+     *
+     * @param bindAddress
+     *         code server bind address
+     * @param port
+     *         code server port
+     * @param workDir
+     *         code server working directory
      */
     public GWTCodeServerConfiguration(String bindAddress, int port, Path workDir) {
         this.bindAddress = bindAddress;
@@ -50,7 +54,7 @@ public class GWTCodeServerConfiguration {
 
     /**
      * Returns code server's bind address.
-     * 
+     *
      * @return the code server's bind address
      */
     public String getBindAddress() {
@@ -59,8 +63,9 @@ public class GWTCodeServerConfiguration {
 
     /**
      * Set the code server's bind address.
-     * 
-     * @param port the code server's bind address to set
+     *
+     * @param port
+     *         the code server's bind address to set
      */
     public void setBindAddress(String bindAddress) {
         this.bindAddress = bindAddress;
@@ -68,7 +73,7 @@ public class GWTCodeServerConfiguration {
 
     /**
      * Returns code server's port.
-     * 
+     *
      * @return the code server's port
      */
     public int getPort() {
@@ -77,8 +82,9 @@ public class GWTCodeServerConfiguration {
 
     /**
      * Set the code server's port.
-     * 
-     * @param port the code server's port to set
+     *
+     * @param port
+     *         the code server's port to set
      */
     public void setPort(int port) {
         this.port = port;
@@ -86,7 +92,7 @@ public class GWTCodeServerConfiguration {
 
     /**
      * Returns code server working directory.
-     * 
+     *
      * @return code server working directory
      */
     public Path getWorkDir() {
@@ -95,8 +101,9 @@ public class GWTCodeServerConfiguration {
 
     /**
      * Set the code server working directory.
-     * 
-     * @param workDir the code server working directory
+     *
+     * @param workDir
+     *         the code server working directory
      */
     public void setWorkDir(Path workDir) {
         this.workDir = workDir;

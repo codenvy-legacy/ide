@@ -60,7 +60,7 @@ public class ExtensionPagePresenter extends AbstractWizardPagePresenter
     protected ExtensionPagePresenter(ExtensionPageView view,
                                      ExtRuntimeResources resources, ExtRuntimeLocalizationConstant constant,
                                      TemplateAgent templateAgent) {
-        super("Define the properties of a new Maven module", resources.codenvyExtensionProject());
+        super("Define the properties of a new Maven module", resources.codenvyExtensionTemplate());
         this.view = view;
         this.view.setDelegate(this);
         this.constant = constant;

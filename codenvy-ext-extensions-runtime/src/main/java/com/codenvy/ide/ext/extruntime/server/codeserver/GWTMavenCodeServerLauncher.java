@@ -17,9 +17,9 @@
  */
 package com.codenvy.ide.ext.extruntime.server.codeserver;
 
+import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.ide.ext.extruntime.server.ExtensionLauncherException;
 import com.codenvy.ide.ext.extruntime.server.Utils;
-import com.codenvy.ide.ext.extruntime.server.tools.ProcessUtil;
 
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
@@ -35,12 +35,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Path;
@@ -52,19 +47,16 @@ import static org.codehaus.plexus.util.xml.Xpp3DomBuilder.build;
 
 /**
  * Implementation of {@link GWTCodeServerLauncher} interface that that uses GWT Maven plug-in.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: GWTMavenCodeServerLauncher.java Jul 26, 2013 3:15:52 PM azatsarynnyy $
  */
 public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
-    private static final Log           LOG = ExoLogger.getLogger(GWTMavenCodeServerLauncher.class);
-
+    private static final Log LOG = ExoLogger.getLogger(GWTMavenCodeServerLauncher.class);
     /** Process that represents a started GWT code server. */
     private Process                    process;
-
     /** Path to code server's log file. */
     private Path                       logFilePath;
-
     private GWTCodeServerConfiguration configuration;
 
     /** {@inheritDoc} */
@@ -79,7 +71,7 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
             throw new GWTCodeServerException("Unable to launch GWT code server: " + e.getMessage(), e);
         }
 
-        // Call 'generate-sources' phase to generate 'IDEInjector.java' and 'ExtensionManager.java'.
+        // Invoke 'generate-sources' phase to generate 'IDEInjector.java' and 'ExtensionManager.java'.
         // For details, see com.codenvy.util.IDEInjectorGenerator and com.codenvy.util.ExtensionManagerGenerator.
         final String[] command = new String[]{
                 getMavenExecCommand(),
@@ -144,19 +136,27 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
 
     /**
      * Set GWT Maven plug-in configuration in the specified pom.xml file, to set a code server configuration.
-     * 
-     * @param pomPath pom.xml path
-     * @param workDir code server working directory is the root of the directory tree where the code server will write compiler output. If
-     *            not supplied, a system temporary directory will be used
-     * @param port port on which code server will run. If -1 supplied, a default port will be 9876
-     * @throws IOException if any error occurred while writing a file
+     *
+     * @param pomPath
+     *         path to pom.xml that stores code server's configuration
+     * @param workDir
+     *         code server working directory is the root of the directory tree where the code server will write
+     *         compiler
+     *         output. If
+     *         not supplied, a system temporary directory will be used
+     * @param port
+     *         port on which code server will run. If -1 supplied, a default port will be 9876
+     * @throws IOException
+     *         if any error occurred while writing a file
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static void setCodeServerConfiguration(Path pomPath, Path workDir, String bindAddress, int port) throws IOException {
+    private static void setCodeServerConfiguration(Path pomPath, Path workDir, String bindAddress, int port)
+            throws IOException {
         final String workDirConf = workDir == null ? "" : "<codeServerWorkDir>" + workDir + "</codeServerWorkDir>";
         final String bindAddressConf = bindAddress == null ? "" : "<bindAddress>" + bindAddress + "</bindAddress>";
         final String portConf = port == -1 ? "" : "<codeServerPort>" + port + "</codeServerPort>";
-        final String codeServerConf = String.format("<configuration>%s%s%s</configuration>", workDirConf, bindAddressConf, portConf);
+        final String codeServerConf =
+                String.format("<configuration>%s%s%s</configuration>", workDirConf, bindAddressConf, portConf);
 
         try {
             Xpp3Dom additionalConfiguration = build(new StringReader(codeServerConf));

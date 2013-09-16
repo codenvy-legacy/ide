@@ -61,6 +61,10 @@
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-maven</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-core</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.maven</groupId>
