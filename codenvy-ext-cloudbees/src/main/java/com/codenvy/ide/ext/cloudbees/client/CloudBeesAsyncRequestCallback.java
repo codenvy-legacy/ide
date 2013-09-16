@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.cloudbees.client;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.ext.cloudbees.client.login.LoggedInHandler;
@@ -27,6 +28,8 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPStatus;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Asynchronous CloudBees request. The {@link #onFailure(Throwable)} method contains the check for user not authorized exception, in this
@@ -40,8 +43,8 @@ public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallb
     private LoggedInHandler      loggedIn;
     private LoginCanceledHandler loginCanceled;
     private EventBus             eventBus;
-    private ConsolePart          console;
     private LoginPresenter       loginPresenter;
+    private NotificationManager  notificationManager;
 
     /**
      * Create callback.
@@ -50,18 +53,18 @@ public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallb
      * @param loggedIn
      * @param loginCanceled
      * @param eventBus
-     * @param console
      * @param loginPresenter
+     * @param notificationManager
      */
     public CloudBeesAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
-                                         LoginCanceledHandler loginCanceled, EventBus eventBus, ConsolePart console,
-                                         LoginPresenter loginPresenter) {
+                                         LoginCanceledHandler loginCanceled, EventBus eventBus, LoginPresenter loginPresenter,
+                                         NotificationManager notificationManager) {
         super(unmarshaller);
         this.loggedIn = loggedIn;
         this.loginCanceled = loginCanceled;
         this.eventBus = eventBus;
-        this.console = console;
         this.loginPresenter = loginPresenter;
+        this.notificationManager = notificationManager;
     }
 
     /**
@@ -70,12 +73,12 @@ public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallb
      * @param loggedIn
      * @param loginCanceled
      * @param eventBus
-     * @param console
      * @param loginPresenter
+     * @param notificationManager
      */
     public CloudBeesAsyncRequestCallback(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled, EventBus eventBus,
-                                         ConsolePart console, LoginPresenter loginPresenter) {
-        this(null, loggedIn, loginCanceled, eventBus, console, loginPresenter);
+                                         LoginPresenter loginPresenter, NotificationManager notificationManager) {
+        this(null, loggedIn, loginCanceled, eventBus, loginPresenter, notificationManager);
     }
 
     /** {@inheritDoc} */
@@ -93,7 +96,8 @@ public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallb
                 return;
             }
         }
-        console.print(exception.getMessage());
+        Notification notification = new Notification(exception.getMessage(), ERROR);
+        notificationManager.showNotification(notification);
         eventBus.fireEvent(new ExceptionThrownEvent(exception));
     }
 }

@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.cloudbees.client.update;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesAsyncRequestCallback;
@@ -38,6 +39,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter for updating application on CloudBees.
  *
@@ -50,11 +53,11 @@ public class UpdateApplicationPresenter {
     private String                        warUrl;
     private EventBus                      eventBus;
     private ResourceProvider              resourceProvider;
-    private ConsolePart                   console;
     private CloudBeesLocalizationConstant constant;
     private LoginPresenter                loginPresenter;
     private CloudBeesClientService        service;
     private BuildApplicationPresenter     buildApplicationPresenter;
+    private NotificationManager           notificationManager;
     /** Message for git commit. */
     private String                        updateMessage;
     private Project                       project;
@@ -66,23 +69,23 @@ public class UpdateApplicationPresenter {
      *
      * @param eventBus
      * @param resourceProvider
-     * @param console
      * @param constant
      * @param loginPresenter
      * @param service
      * @param buildApplicationPresenter
+     * @param notificationManager
      */
     @Inject
-    protected UpdateApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                         CloudBeesLocalizationConstant constant, LoginPresenter loginPresenter,
-                                         CloudBeesClientService service, BuildApplicationPresenter buildApplicationPresenter) {
+    protected UpdateApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, CloudBeesLocalizationConstant constant,
+                                         LoginPresenter loginPresenter, CloudBeesClientService service,
+                                         BuildApplicationPresenter buildApplicationPresenter, NotificationManager notificationManager) {
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
-        this.console = console;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.buildApplicationPresenter = buildApplicationPresenter;
+        this.notificationManager = notificationManager;
     }
 
     /** Updates CloudBees application. */
@@ -140,15 +143,17 @@ public class UpdateApplicationPresenter {
         try {
             service.updateApplication(appId, resourceProvider.getVfsId(), projectId, warUrl, updateMessage,
                                       new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
-                                                                                         console, loginPresenter) {
+                                                                                         loginPresenter, notificationManager) {
                                           @Override
                                           protected void onSuccess(ApplicationInfo appInfo) {
-                                              console.print(constant.applicationUpdatedMsg(appTitle));
+                                              Notification notification = new Notification(constant.applicationUpdatedMsg(appTitle), ERROR);
+                                              notificationManager.showNotification(notification);
                                           }
                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -166,7 +171,7 @@ public class UpdateApplicationPresenter {
         try {
             service.getApplicationInfo(null, resourceProvider.getVfsId(), projectId,
                                        new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
-                                                                                          console, loginPresenter) {
+                                                                                          loginPresenter, notificationManager) {
                                            @Override
                                            protected void onSuccess(ApplicationInfo appInfo) {
                                                appId = appInfo.getId();
@@ -176,7 +181,8 @@ public class UpdateApplicationPresenter {
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 }

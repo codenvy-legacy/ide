@@ -18,14 +18,16 @@
 package com.codenvy.ide.ext.jenkins.client.build;
 
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
-import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitExtension;
@@ -39,7 +41,7 @@ import com.codenvy.ide.ext.jenkins.client.marshaller.JobUnmarshaller;
 import com.codenvy.ide.ext.jenkins.client.marshaller.StringContentUnmarshaller;
 import com.codenvy.ide.ext.jenkins.shared.Job;
 import com.codenvy.ide.ext.jenkins.shared.JobStatus;
-import com.codenvy.ide.api.parts.base.BasePresenter;
+import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
@@ -51,12 +53,16 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
+import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
 /**
  * Presenter for build project with jenkins.
@@ -64,7 +70,8 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
 @Singleton
-public class BuildApplicationPresenter extends BasePresenter implements BuildApplicationView.ActionDelegate {
+public class BuildApplicationPresenter extends BasePresenter
+        implements BuildApplicationView.ActionDelegate, Notification.OpenNotificationHandler {
     private static final String TITLE = "Building";
     private BuildApplicationView view;
     private ResourceProvider     resourceProvider;
@@ -91,6 +98,8 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
     private AsyncCallback<JobStatus>       buildApplicationCallback;
     private GitClientService               gitClientService;
     private GitLocalizationConstant        gitConstant;
+    private NotificationManager            notificationManager;
+    private Notification                   notification;
 
     /**
      * Create presenter.
@@ -106,12 +115,13 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
      * @param resources
      * @param gitClientService
      * @param gitConstant
+     * @param notificationManager
      */
     @Inject
     protected BuildApplicationPresenter(BuildApplicationView view, ResourceProvider resourceProvider, JenkinsService service,
                                         EventBus eventBus, ConsolePart console, WorkspaceAgent workspaceAgent, MessageBus messageBus,
                                         UserClientService userClientService, JenkinsResources resources, GitClientService gitClientService,
-                                        GitLocalizationConstant gitConstant) {
+                                        GitLocalizationConstant gitConstant, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.view.setTitle(TITLE);
@@ -125,6 +135,7 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
         this.resources = resources;
         this.gitClientService = gitClientService;
         this.gitConstant = gitConstant;
+        this.notificationManager = notificationManager;
 
         JobStatusUnmarshallerWS unmarshaller = new JobStatusUnmarshallerWS();
 
@@ -145,9 +156,10 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
                     // nothing to do
                 }
                 buildInProgress = false;
-                BuildApplicationPresenter.this.view.stopAnimation();
                 BuildApplicationPresenter.this.eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                BuildApplicationPresenter.this.console.print(exception.getMessage());
+                notification.setType(ERROR);
+                notification.setStatus(FINISHED);
+                notification.setMessage(exception.getMessage());
             }
         };
 
@@ -175,13 +187,16 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
                                                BuildApplicationPresenter.this.view.stopAnimation();
                                                BuildApplicationPresenter.this.eventBus
                                                        .fireEvent(new ExceptionThrownEvent(exception));
-                                               BuildApplicationPresenter.this.console.print(
-                                                       exception.getMessage());
+                                               notification.setType(ERROR);
+                                               notification.setStatus(FINISHED);
+                                               notification.setMessage(exception.getMessage());
                                            }
                                        });
                 } catch (RequestException e) {
                     BuildApplicationPresenter.this.eventBus.fireEvent(new ExceptionThrownEvent(e));
-                    BuildApplicationPresenter.this.console.print(e.getMessage());
+                    notification.setType(ERROR);
+                    notification.setStatus(FINISHED);
+                    notification.setMessage(e.getMessage());
                 }
             }
         };
@@ -243,7 +258,9 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
                 ? "Unknown" : status.getLastBuildResult();
 
         showBuildMessage(message);
-        view.stopAnimation();
+        notification.setType(INFO);
+        notification.setStatus(FINISHED);
+        notification.setMessage(message);
     }
 
     /**
@@ -271,12 +288,14 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
                 @Override
                 protected void onFailure(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), Notification.Type.ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), Notification.Type.ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -287,7 +306,9 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
             String message = "You can not start the build of two projects at the same time.<br>";
             message += "Building of project <b>" + project.getPath() + "</b> is performed.";
 
-            Window.alert(message);
+            Notification notification = new Notification(message, ERROR);
+            notificationManager.showNotification(notification);
+
             return;
         }
 
@@ -296,6 +317,7 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
         }
 
         UserUnmarshaller unmarshaller = new UserUnmarshaller();
+
 
         try {
             this.userClientService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
@@ -312,7 +334,8 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
             });
         } catch (RequestException e) {
             this.eventBus.fireEvent(new ExceptionThrownEvent(e));
-            this.console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -376,6 +399,8 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
     /** Performs actions when initialization of Git-repository successfully completed. */
     private void onInitSuccess() {
         showBuildMessage(gitConstant.initSuccess());
+        Notification notification = new Notification(gitConstant.initSuccess(), INFO);
+        notificationManager.showNotification(notification);
         eventBus.fireEvent(new RefreshBrowserEvent(project));
         createJob();
     }
@@ -388,7 +413,8 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
      */
     private void handleError(Throwable e) {
         String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : gitConstant.initFailed();
-        console.print(errorMessage);
+        Notification notification = new Notification(errorMessage, ERROR);
+        notificationManager.showNotification(notification);
     }
 
     /** Create new Jenkins job. */
@@ -412,12 +438,14 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
                 @Override
                 protected void onFailure(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -447,8 +475,10 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
                 @Override
                 protected void onSuccess(Object result) {
                     buildInProgress = true;
-                    showBuildMessage("Building project <b>" + project.getPath() + "</b>");
-                    view.startAnimation();
+                    String message = "Building project <b>" + project.getPath() + "</b>";
+                    showBuildMessage(message);
+                    notification = new Notification(message, PROGRESS, BuildApplicationPresenter.this);
+                    notificationManager.showNotification(notification);
                     prevStatus = null;
                     startCheckingStatus(jobName);
                 }
@@ -456,12 +486,14 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
                 @Override
                 protected void onFailure(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -472,16 +504,6 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
      *         message for output
      */
     private void showBuildMessage(String message) {
-        if (isViewClosed) {
-            workspaceAgent.openPart(this, PartStackType.INFORMATION);
-            isViewClosed = false;
-        }
-
-        PartPresenter activePart = partStack.getActivePart();
-        if (activePart == null || !activePart.equals(this)) {
-            partStack.setActivePart(this);
-        }
-
         view.showMessageInOutput(message);
     }
 
@@ -522,5 +544,19 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onOpenClicked() {
+        if (isViewClosed) {
+            workspaceAgent.openPart(this, PartStackType.INFORMATION);
+            isViewClosed = false;
+        }
+
+        PartPresenter activePart = partStack.getActivePart();
+        if (activePart == null || !activePart.equals(this)) {
+            partStack.setActivePart(this);
+        }
     }
 }

@@ -177,7 +177,8 @@ public class BuildProjectPresenter extends BasePresenter
     public void onBuildProject(BuildProjectEvent event) {
         if (isBuildInProgress) {
             String message = constant.buildInProgress(project.getPath().substring(1));
-            Window.alert(message);
+            Notification notification = new Notification(message, ERROR);
+            notificationManager.showNotification(notification);
             return;
         }
 

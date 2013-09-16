@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.cloudbees.client.info;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesAsyncRequestCallback;
@@ -31,6 +32,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter for showing application info.
  *
@@ -42,9 +45,9 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
     private ApplicationInfoView    view;
     private EventBus               eventBus;
     private ResourceProvider       resourceProvider;
-    private ConsolePart            console;
     private LoginPresenter         loginPresenter;
     private CloudBeesClientService service;
+    private NotificationManager    notificationManager;
 
     /**
      * Create presenter.
@@ -52,20 +55,20 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
      * @param view
      * @param eventBus
      * @param resourceProvider
-     * @param console
      * @param loginPresenter
      * @param service
      */
     @Inject
-    protected ApplicationInfoPresenter(ApplicationInfoView view, EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                       LoginPresenter loginPresenter, CloudBeesClientService service) {
+    protected ApplicationInfoPresenter(ApplicationInfoView view, EventBus eventBus, ResourceProvider resourceProvider,
+                                       LoginPresenter loginPresenter, CloudBeesClientService service,
+                                       NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
-        this.console = console;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
@@ -101,7 +104,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
         try {
             service.getApplicationInfo(null, resourceProvider.getVfsId(), projectId,
                                        new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
-                                                                                          console, loginPresenter) {
+                                                                                          loginPresenter, notificationManager) {
                                            @Override
                                            protected void onSuccess(ApplicationInfo result) {
                                                showAppInfo(result);
@@ -109,7 +112,8 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
