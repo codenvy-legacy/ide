@@ -1,25 +1,26 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.factory.server;
 
 import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.ide.commons.shared.ProjectType;
 
+import org.apache.commons.io.IOUtils;
 import org.codenvy.mail.MailSenderClient;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
@@ -27,23 +28,33 @@ import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.GitUser;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
 import javax.mail.MessagingException;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Service for sharing Factory URL by e-mail messages.
@@ -53,11 +64,14 @@ import java.net.URISyntaxException;
  */
 @Path("{ws-name}/factory")
 public class FactoryService {
-    private static final Log          LOG = ExoLogger.getLogger(FactoryService.class);
+    private static final Log LOG = ExoLogger.getLogger(FactoryService.class);
 
-    private final MailSenderClient    mailSenderClient;
-    private VirtualFileSystemRegistry vfsRegistry;
-    private LocalPathResolver         localPathResolver;
+    private final MailSenderClient          mailSenderClient;
+    private       VirtualFileSystemRegistry vfsRegistry;
+    private       LocalPathResolver         localPathResolver;
+
+    private static final Pattern PATTERN = Pattern.compile("public static final String PROJECT_ID = .*");
+    private static final Pattern PATTERN_NUMBER = Pattern.compile("public static final String PROJECT_NUMBER = .*");
 
     /**
      * Constructs a new {@link FactoryService}.
@@ -127,10 +141,15 @@ public class FactoryService {
 
     @POST
     @Path("clone")
-    public void cloneProject(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-                             @QueryParam("remoteuri") String remoteUri, @QueryParam("idcommit") String idCommit)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Item cloneProject(@QueryParam("vfsid") String vfsId,
+                             @QueryParam("projectid") String projectId,
+                             @QueryParam("remoteuri") String remoteUri,
+                             @QueryParam("idcommit") String idCommit,
+                             @QueryParam("ptype") String projectType,
+                             @QueryParam("action") String action)
             throws VirtualFileSystemException, GitException,
-                   URISyntaxException {
+                   URISyntaxException, IOException {
         GitConnection gitConnection = getGitConnection(projectId, vfsId);
         CloneRequest cloneRequest = new CloneRequest(remoteUri, null);
         gitConnection.clone(cloneRequest);
@@ -140,7 +159,53 @@ public class FactoryService {
         checkoutRequest.setStartPoint(idCommit);
         gitConnection.branchCheckout(checkoutRequest);
         deleteRepository(vfsId, projectId);
+        return convertToProject(vfsId, projectId, remoteUri, projectType, action);
 
+    }
+
+    private Item convertToProject(String vfsId, String projectId, String remoteUri, String projectType, String action)
+            throws VirtualFileSystemException, IOException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        Item itemToUpdate = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
+        try {
+            Item item = vfs.getItemByPath(itemToUpdate.getPath() + "/.project", null , false, null);
+            vfs.delete(item.getId(), null);
+        }catch (ItemNotFoundException ignore){
+            // ignore
+        }
+        if (projectType != null && !projectType.isEmpty()) {
+            List<Property> props = new ArrayList<Property>();
+            props.addAll(itemToUpdate.getProperties());
+            props.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+            props.add(new PropertyImpl("vfs:projectType", projectType));
+            props.add(new PropertyImpl("codenow", remoteUri));
+            itemToUpdate = vfs.updateItem(itemToUpdate.getId(), props, null);
+            if (ProjectType.GOOGLE_MBS_ANDROID.toString().equals(projectType)) {
+                File constJava = (File)vfs
+                        .getItemByPath(itemToUpdate.getPath() + "/src/com/google/cloud/backend/android/Consts.java", null, false,
+                                       PropertyFilter.NONE_FILTER);
+                String content = IOUtils.toString(vfs.getContent(constJava.getId()).getStream());
+
+                String[] actionParams = action.replaceAll("'", "").split(";");
+                String prjNum = null;
+                String prjID = null;
+
+                for (String param : actionParams) {
+                    if (param.startsWith("projectNumber")) {
+                        prjNum = param.split("=")[1];
+                    }
+                    if (param.startsWith("projectID")) {
+                        prjID = param.split("=")[1];
+                    }
+                }
+
+                String newContent = PATTERN.matcher(content).replaceFirst("public static final String PROJECT_ID = \"" + prjID + "\";");
+                newContent = PATTERN_NUMBER.matcher(newContent).replaceFirst("public static final String PROJECT_NUMBER = \"" + prjNum + "\";");
+                vfs.updateContent(constJava.getId(), MediaType.valueOf(constJava.getMimeType()),
+                                  new ByteArrayInputStream(newContent.getBytes()), null);
+            }
+        }
+        return itemToUpdate;
     }
 
     protected void deleteRepository(String vfsId, String projectId) throws VirtualFileSystemException {

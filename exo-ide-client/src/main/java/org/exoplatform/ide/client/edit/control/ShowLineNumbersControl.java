@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.client.edit.control;
 
@@ -35,8 +34,6 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -101,8 +98,10 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
-     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+     */
     @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         activeEditor = event.getEditor();
@@ -110,8 +109,10 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
         updateState();
     }
 
-    /** @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler#onApplicationSettingsSaved(org
-     * .exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler#onApplicationSettingsSaved(org
+     *      .exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent)
+     */
     @Override
     public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event) {
         if (event.getApplicationSettings().getValueAsBoolean("line-numbers") != null) {
@@ -123,8 +124,10 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
         updateState();
     }
 
-    /** @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org
-     * .exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org
+     *      .exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
+     */
     @Override
     public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
         if (event.getApplicationSettings().getValueAsBoolean("line-numbers") != null) {

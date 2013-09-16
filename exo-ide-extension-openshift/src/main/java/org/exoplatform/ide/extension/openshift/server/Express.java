@@ -1,40 +1,40 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.extension.openshift.server;
 
-import com.codenvy.ide.commons.cache.Cache;
-import com.codenvy.ide.commons.cache.SLRUCache;
+import com.codenvy.commons.lang.cache.Cache;
+import com.codenvy.commons.lang.cache.SLRUCache;
 import com.openshift.client.ApplicationScale;
 import com.openshift.client.IApplication;
-import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
-import com.openshift.client.IEmbeddableCartridge;
-import com.openshift.client.IEmbeddedCartridge;
 import com.openshift.client.IOpenShiftConnection;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftConnectionFactory;
 import com.openshift.client.OpenShiftException;
+import com.openshift.client.cartridge.EmbeddableCartridge;
+import com.openshift.client.cartridge.IEmbeddableCartridge;
+import com.openshift.client.cartridge.IEmbeddedCartridge;
+import com.openshift.client.cartridge.IStandaloneCartridge;
+import com.openshift.client.cartridge.ICartridge;
 import com.openshift.internal.client.APIResource;
 import com.openshift.internal.client.AbstractOpenShiftResource;
-import com.openshift.internal.client.Cartridge;
-import com.openshift.internal.client.EmbeddableCartridge;
 import com.openshift.internal.client.GearProfile;
+import com.openshift.internal.client.StandaloneCartridge;
 import com.openshift.internal.client.IRestService;
 import com.openshift.internal.client.response.Link;
 import com.openshift.internal.client.response.ResourceDTOFactory;
@@ -60,7 +60,6 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.jboss.dmr.ModelNode;
-import org.jboss.dmr.Property;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,20 +82,20 @@ import java.util.regex.Pattern;
 
 /** @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a> */
 public class Express {
-    private static final Pattern                      GIT_URL_PATTERN        =
-                                                                               Pattern.compile("ssh://(\\w+)@(\\w+)-(\\w+)\\.rhcloud\\.com/~/git/(\\w+)\\.git/");
-    private static final Log                          LOG                    = ExoLogger.getLogger(Express.class);
-    private static final String                       OPENSHIFT_URL          = "https://openshift.redhat.com";
+    private static final Pattern GIT_URL_PATTERN =
+            Pattern.compile("ssh://(\\w+)@(\\w+)-(\\w+)\\.rhcloud\\.com/~/git/(\\w+)\\.git/");
+    private static final Log     LOG             = ExoLogger.getLogger(Express.class);
+    private static final String  OPENSHIFT_URL   = "https://openshift.redhat.com";
 
-    private static final String                       LINK_LIST_CARTRIDGES   = "LIST_CARTRIDGES";
-    private static final String                       LINK_START_CARTRIDGE   = "START";
-    private static final String                       LINK_STOP_CARTRIDGE    = "STOP";
-    private static final String                       LINK_RESTART_CARTRIDGE = "RESTART";
-    private static final String                       LINK_RELOAD_CARTRIDGE  = "RELOAD";
+    private static final String LINK_LIST_CARTRIDGES   = "LIST_CARTRIDGES";
+    private static final String LINK_START_CARTRIDGE   = "START";
+    private static final String LINK_STOP_CARTRIDGE    = "STOP";
+    private static final String LINK_RESTART_CARTRIDGE = "RESTART";
+    private static final String LINK_RELOAD_CARTRIDGE  = "RELOAD";
 
-    private static Method                             GET_LINK_METHOD;
-    private static Method                             GET_SERVICE_METHOD;
-    private static Method                             GET_MODEL_NODE_METHOD;
+    private static Method GET_LINK_METHOD;
+    private static Method GET_SERVICE_METHOD;
+    private static Method GET_MODEL_NODE_METHOD;
 
     static {
         // Unfortunately cannot access methods for getting links to access info about application.
@@ -178,9 +177,9 @@ public class Express {
     }
 
     private void createDomain(IOpenShiftConnection connection, String namespace, boolean alter)
-                                                                                               throws ExpressException,
-                                                                                               SshKeyStoreException,
-                                                                                               CredentialStoreException {
+            throws ExpressException,
+                   SshKeyStoreException,
+                   CredentialStoreException {
         final String host = "rhcloud.com";
 
         SshKey publicKey;
@@ -215,12 +214,17 @@ public class Express {
 
     /**
      * Create new application.
-     * 
-     * @param appName application name
-     * @param type application type
-     * @param scale enable|disable application scaling
-     * @param instanceType instance type, supported types: "micro", "small", "medium", "large", "exlarge", "jumbo"
-     * @param workDir application directory
+     *
+     * @param appName
+     *         application name
+     * @param type
+     *         application type
+     * @param scale
+     *         enable|disable application scaling
+     * @param instanceType
+     *         instance type, supported types: "micro", "small", "medium", "large", "exlarge", "jumbo"
+     * @param workDir
+     *         application directory
      * @return description of newly created application
      */
     public AppInfo createApplication(String appName,
@@ -242,7 +246,7 @@ public class Express {
         try {
             application = connection.getUser().getDefaultDomain()
                                     .createApplication(appName,
-                                                       Cartridge.valueOf(type),
+                                                       new StandaloneCartridge(type),
                                                        scale ? ApplicationScale.SCALE : ApplicationScale.NO_SCALE,
                                                        new GearProfile(instanceType));
         } catch (OpenShiftException e) {
@@ -266,11 +270,11 @@ public class Express {
         }
 
         return new AppInfoImpl(
-                               application.getName(),
-                               application.getCartridge().getName(),
-                               application.getGitUrl(),
-                               application.getApplicationUrl(),
-                               application.getCreationTime().getTime());
+                application.getName(),
+                application.getCartridge().getName(),
+                application.getGitUrl(),
+                application.getApplicationUrl(),
+                application.getCreationTime().getTime());
     }
 
     private void validateAppType(String type, IOpenShiftConnection connection) throws ExpressException {
@@ -293,8 +297,8 @@ public class Express {
     }
 
     public AppInfo addEmbeddableCartridges(String appName, List<String> embeddableCartridges)
-                                                                                             throws ExpressException,
-                                                                                             CredentialStoreException {
+            throws ExpressException,
+                   CredentialStoreException {
         assertNotEmpty(appName, "Application name required. ");
         IOpenShiftConnection connection = getOpenShiftConnection();
         validateEmbeddableCartridgeType(embeddableCartridges, connection);
@@ -302,7 +306,7 @@ public class Express {
     }
 
     private void validateEmbeddableCartridgeType(List<String> embeddableCartridges, IOpenShiftConnection connection)
-                                                                                                                    throws ExpressException {
+            throws ExpressException {
         Set<String> supportedCartridges = embeddableCartridges(connection);
         for (String embeddableCartridge : embeddableCartridges) {
             if (!supportedCartridges.contains(embeddableCartridge)) {
@@ -324,8 +328,8 @@ public class Express {
     }
 
     private AppInfo addEmbeddableCartridge(IOpenShiftConnection connection, String appName, List<String> embeddableCartridges)
-                                                                                                                              throws ExpressException,
-                                                                                                                              CredentialStoreException {
+            throws ExpressException,
+                   CredentialStoreException {
         try {
             IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(appName);
             if (application != null) {
@@ -335,12 +339,12 @@ public class Express {
                 }
                 application.addEmbeddableCartridges(myEmbeddableCartridges);
                 AppInfoImpl myApplication = new AppInfoImpl(
-                                                            application.getName(),
-                                                            application.getCartridge().getName(),
-                                                            application.getGitUrl(),
-                                                            application.getApplicationUrl(),
-                                                            application.getCreationTime().getTime()
-                                            );
+                        application.getName(),
+                        application.getCartridge().getName(),
+                        application.getGitUrl(),
+                        application.getApplicationUrl(),
+                        application.getCreationTime().getTime()
+                );
                 myApplication.getEmbeddedCartridges().addAll(getApplicationEmbeddableCartridges(application));
                 return myApplication;
             }
@@ -351,24 +355,24 @@ public class Express {
     }
 
     public AppInfo removeEmbeddableCartridge(String appName, String embeddableCartridge)
-                                                                                        throws ExpressException, CredentialStoreException {
+            throws ExpressException, CredentialStoreException {
         assertNotEmpty(appName, "Application name required. ");
         return removeEmbeddableCartridge(getOpenShiftConnection(), appName, embeddableCartridge);
     }
 
     private AppInfo removeEmbeddableCartridge(IOpenShiftConnection connection, String appName, String embeddableCartridge)
-                                                                                                                          throws ExpressException,
-                                                                                                                          CredentialStoreException {
+            throws ExpressException,
+                   CredentialStoreException {
         IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(appName);
         if (application != null) {
             application.removeEmbeddedCartridge(new EmbeddableCartridge(embeddableCartridge));
             AppInfoImpl myApplication = new AppInfoImpl(
-                                                        application.getName(),
-                                                        application.getCartridge().getName(),
-                                                        application.getGitUrl(),
-                                                        application.getApplicationUrl(),
-                                                        application.getCreationTime().getTime()
-                                        );
+                    application.getName(),
+                    application.getCartridge().getName(),
+                    application.getGitUrl(),
+                    application.getApplicationUrl(),
+                    application.getCreationTime().getTime()
+            );
             myApplication.getEmbeddedCartridges().addAll(getApplicationEmbeddableCartridges(application));
             return myApplication;
         }
@@ -386,12 +390,12 @@ public class Express {
         IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(app);
         if (application != null) {
             AppInfoImpl myApplication = new AppInfoImpl(
-                                                        application.getName(),
-                                                        application.getCartridge().getName(),
-                                                        application.getGitUrl(),
-                                                        application.getApplicationUrl(),
-                                                        application.getCreationTime().getTime()
-                                        );
+                    application.getName(),
+                    application.getCartridge().getName(),
+                    application.getGitUrl(),
+                    application.getApplicationUrl(),
+                    application.getCreationTime().getTime()
+            );
             myApplication.getEmbeddedCartridges().addAll(getApplicationEmbeddableCartridges(application));
             return myApplication;
         }
@@ -401,12 +405,10 @@ public class Express {
     private Collection<OpenShiftEmbeddableCartridge> getApplicationEmbeddableCartridges(IApplication application) {
         final List<IEmbeddedCartridge> embeddedCartridges = application.getEmbeddedCartridges();
         final Map<String, OpenShiftEmbeddableCartridge> myEmbeddedCartridges =
-                                                                               new LinkedHashMap<String, OpenShiftEmbeddableCartridge>(
-                                                                                                                                       embeddedCartridges.size());
+                new LinkedHashMap<String, OpenShiftEmbeddableCartridge>(embeddedCartridges.size());
         for (IEmbeddedCartridge cartridge : embeddedCartridges) {
             myEmbeddedCartridges.put(cartridge.getName(), new OpenShiftEmbeddableCartridgeImpl(cartridge.getName(),
-                                                                                               cartridge.getUrl(),
-                                                                                               cartridge.getCreationLog()));
+                                                                                               cartridge.getUrl()));
         }
         try {
             final Link link = (Link)GET_LINK_METHOD.invoke(application, LINK_LIST_CARTRIDGES);
@@ -420,9 +422,10 @@ public class Express {
                         final String name = nameNode.asString();
                         final OpenShiftEmbeddableCartridge openShiftCartridge = myEmbeddedCartridges.get(name);
                         if (openShiftCartridge != null && cartridgeNode.has("properties")) {
-                            List<Property> properties = cartridgeNode.get("properties").asPropertyList();
-                            for (Property property : properties) {
-                                openShiftCartridge.getProperties().put(property.getName(), property.getValue().asString());
+                            List<ModelNode> properties = cartridgeNode.get("properties").asList();
+                            for (ModelNode property : properties) {
+                                openShiftCartridge.getProperties().put(property.get("name").asString(),
+                                                                       property.get("value").asString());
                             }
                         }
                     }
@@ -472,7 +475,7 @@ public class Express {
 
     private Set<String> frameworks(IOpenShiftConnection connection) throws ExpressException {
         try {
-            final List<ICartridge> cartridges = connection.getStandaloneCartridges();
+            final List<IStandaloneCartridge> cartridges = connection.getStandaloneCartridges();
             Set<String> frameworks = new LinkedHashSet<String>(cartridges.size());
             for (ICartridge cartridge : cartridges) {
                 frameworks.add(cartridge.getName());
@@ -562,31 +565,31 @@ public class Express {
 
     private RHUserInfo userInfo(IOpenShiftConnection connection, boolean appsInfo) throws ExpressException {
         try {
-            IUser user = connection.getUser();
-            IDomain domain = null;
+        IUser user = connection.getUser();
+        IDomain domain = null;
 
-            if (user.hasDomain()) {
-                domain = user.getDefaultDomain();
-            }
+        if (user.hasDomain()) {
+            domain = user.getDefaultDomain();
+        }
 
-            RHUserInfo userInfo =
-                                  new RHUserInfoImpl("rhcloud.com", null, user.getRhlogin(), (domain != null) ? domain.getId() : null);
-            if (appsInfo && domain != null) {
-                List<AppInfo> appInfoList = new ArrayList<AppInfo>();
-                for (IApplication application : domain.getApplications()) {
-                    AppInfoImpl myApplication = new AppInfoImpl(
-                                                                application.getName(),
-                                                                application.getCartridge().getName(),
-                                                                application.getGitUrl(),
-                                                                application.getApplicationUrl(),
-                                                                application.getCreationTime().getTime()
-                                                );
-                    myApplication.getEmbeddedCartridges().addAll(getApplicationEmbeddableCartridges(application));
-                    appInfoList.add(myApplication);
-                }
-                userInfo.setApps(appInfoList);
+        RHUserInfo userInfo =
+                new RHUserInfoImpl("rhcloud.com", null, user.getRhlogin(), (domain != null) ? domain.getId() : null);
+        if (appsInfo && domain != null) {
+            List<AppInfo> appInfoList = new ArrayList<AppInfo>();
+            for (IApplication application : domain.getApplications()) {
+                AppInfoImpl myApplication = new AppInfoImpl(
+                        application.getName(),
+                        application.getCartridge().getName(),
+                        application.getGitUrl(),
+                        application.getApplicationUrl(),
+                        application.getCreationTime().getTime()
+                );
+                myApplication.getEmbeddedCartridges().addAll(getApplicationEmbeddableCartridges(application));
+                appInfoList.add(myApplication);
             }
-            return userInfo;
+            userInfo.setApps(appInfoList);
+        }
+        return userInfo;
         } catch (OpenShiftException e) {
             throw new ExpressException(500, e.getMessage(), "text/plain");
         }
@@ -692,7 +695,7 @@ public class Express {
                     git.close();
                 }
             }
-            for (Iterator<Remote> iterator = remotes.iterator(); iterator.hasNext() && app == null;) {
+            for (Iterator<Remote> iterator = remotes.iterator(); iterator.hasNext() && app == null; ) {
                 Remote r = iterator.next();
                 Matcher m = GIT_URL_PATTERN.matcher(r.getUrl());
                 if (m.matches()) {
@@ -702,7 +705,7 @@ public class Express {
         }
         if (app == null || app.isEmpty()) {
             throw new RuntimeException(
-                                       "Not an Openshift Express application. Please select root folder of Openshift Express project. ");
+                    "Not an Openshift Express application. Please select root folder of Openshift Express project. ");
         }
         return app;
     }
@@ -737,7 +740,7 @@ public class Express {
     private IOpenShiftConnection newOpenShiftConnection(String rhlogin, String password) throws ExpressException {
         try {
             IOpenShiftConnection connection =
-                                              openShiftConnectionFactory.getConnection("show-domain-info", rhlogin, password, OPENSHIFT_URL);
+                    openShiftConnectionFactory.getConnection("show-domain-info", rhlogin, password, OPENSHIFT_URL);
             connection.getUser(); // Throws exception if credential is invalid.
             return connection;
         } catch (OpenShiftException e) {

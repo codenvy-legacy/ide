@@ -1,21 +1,19 @@
-/**
- * Copyright (C) 2009 eXo Platform SAS.
+/*
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.gwtframework.ui.client.dialog;
 
@@ -38,8 +36,6 @@ import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 
 /**
- * Created by The eXo Platform SAS .
- * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -64,38 +60,41 @@ public class GWTDialogs extends Dialogs {
     }
 
     private BooleanCallback booleanCallback = new BooleanCallback() {
-                                                public void execute(Boolean value) {
-                                                    if (currentDialog.getBooleanValueReceivedHandler() != null) {
-                                                        try {
-                                                            currentDialog.getBooleanValueReceivedHandler().booleanValueReceived(value);
-                                                        } catch (Throwable exc) {
-                                                            exc.printStackTrace();
-                                                        }
-                                                    }
+        public void execute(Boolean value) {
+            if (currentDialog.getBooleanValueReceivedHandler() != null) {
+                try {
+                    currentDialog.getBooleanValueReceivedHandler().booleanValueReceived(value);
+                } catch (Throwable exc) {
+                    exc.printStackTrace();
+                }
+            }
 
-                                                    showQueueDialog();
-                                                }
-                                            };
+            showQueueDialog();
+        }
+    };
 
-    private ValueCallback   valueCallback   = new ValueCallback() {
-                                                public void execute(String value) {
-                                                    if (currentDialog.getStringValueReceivedHandler() != null) {
-                                                        try {
-                                                            currentDialog.getStringValueReceivedHandler().stringValueReceived(value);
-                                                        } catch (Throwable exc) {
-                                                            exc.printStackTrace();
-                                                        }
-                                                    }
+    private ValueCallback valueCallback = new ValueCallback() {
+        public void execute(String value) {
+            if (currentDialog.getStringValueReceivedHandler() != null) {
+                try {
+                    currentDialog.getStringValueReceivedHandler().stringValueReceived(value);
+                } catch (Throwable exc) {
+                    exc.printStackTrace();
+                }
+            }
 
-                                                    showQueueDialog();
-                                                }
-                                            };
+            showQueueDialog();
+        }
+    };
 
     /**
      * @param name
-     * @param title title near input field
-     * @param width width
-     * @param value value by default
+     * @param title
+     *         title near input field
+     * @param width
+     *         width
+     * @param value
+     *         value by default
      * @return {@link TextField}
      */
     public static TextField createTextField(String name, String title, int width, String value) {
@@ -261,9 +260,11 @@ public class GWTDialogs extends Dialogs {
 
     /**
      * Create button.
-     * 
-     * @param title button's title
-     * @param icon button's image
+     *
+     * @param title
+     *         button's title
+     * @param icon
+     *         button's image
      * @return {@link IButton}
      */
     public ImageButton createButton(String title, ImageResource icon) {
@@ -290,9 +291,11 @@ public class GWTDialogs extends Dialogs {
 
     /**
      * Creates layout with pointed image and text near it.
-     * 
-     * @param icon image to display
-     * @param text text to display
+     *
+     * @param icon
+     *         image to display
+     * @param text
+     *         text to display
      * @return {@link HorizontalPanel}
      */
     public static HorizontalPanel createImageWithTextLayout(ImageResource icon, String text) {
