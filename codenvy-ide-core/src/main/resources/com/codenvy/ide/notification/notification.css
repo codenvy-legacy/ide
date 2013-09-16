@@ -22,10 +22,7 @@
     }
 
     .notificationPanel {
-        float: right;
         cursor: pointer;
-        position: relative;
-        width: 50px;
     }
 
     .floatLeft {

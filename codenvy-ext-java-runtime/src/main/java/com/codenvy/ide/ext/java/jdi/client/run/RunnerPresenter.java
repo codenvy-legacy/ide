@@ -18,6 +18,8 @@
 package com.codenvy.ide.ext.java.jdi.client.run;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -50,6 +52,11 @@ import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
+import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * The presenter provides run java application.
  *
@@ -71,8 +78,10 @@ public class RunnerPresenter implements ProjectBuiltHandler {
     private JavaRuntimeLocalizationConstant constant;
     private ConsolePart                     console;
     private MessageBus                      messageBus;
+    private NotificationManager             notificationManager;
     /** Handler for processing debugger disconnected event. */
     private SubscriptionHandler<Object>     applicationStoppedHandler;
+    private Notification                    notification;
 
     /**
      * Create presenter.
@@ -84,11 +93,12 @@ public class RunnerPresenter implements ProjectBuiltHandler {
      * @param constant
      * @param console
      * @param messageBus
+     * @param notificationManager
      */
     @Inject
     protected RunnerPresenter(@Named("restContext") String restContext, ApplicationRunnerClientService service, EventBus eventBus,
                               ResourceProvider resourceProvider, JavaRuntimeLocalizationConstant constant, ConsolePart console,
-                              MessageBus messageBus) {
+                              MessageBus messageBus, NotificationManager notificationManager) {
         this.restContext = restContext;
         this.service = service;
         this.eventBus = eventBus;
@@ -96,6 +106,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
         this.constant = constant;
         this.console = console;
         this.messageBus = messageBus;
+        this.notificationManager = notificationManager;
         applicationStoppedHandler = new SubscriptionHandler<Object>() {
             @Override
             protected void onMessageReceived(Object result) {
@@ -132,7 +143,8 @@ public class RunnerPresenter implements ProjectBuiltHandler {
         projectBuildHandler.removeHandler();
         BuildStatus buildStatus = event.getBuildStatus();
         if (buildStatus.getStatus().equals(BuildStatus.Status.SUCCESSFUL)) {
-            console.print(constant.applicationStarting());
+            notification = new Notification(constant.applicationStarting(), PROGRESS);
+            notificationManager.showNotification(notification);
 
             runApplication(buildStatus.getDownloadUrl());
         }
@@ -231,6 +243,9 @@ public class RunnerPresenter implements ProjectBuiltHandler {
         msg += "<br>" + constant.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
         console.print(msg);
 
+        notification.setStatus(FINISHED);
+        notification.setMessage(msg);
+
         try {
             applicationStoppedChannel = JavaRuntimeExtension.APPLICATION_STOP_CHANNEL + app.getName();
             messageBus.subscribe(applicationStoppedChannel, applicationStoppedHandler);
@@ -266,7 +281,8 @@ public class RunnerPresenter implements ProjectBuiltHandler {
         if (exception != null && exception.getMessage() != null) {
             msg += " : " + exception.getMessage();
         }
-        console.print(msg);
+        Notification notification = new Notification(msg, INFO);
+        notificationManager.showNotification(notification);
     }
 
     /**
@@ -298,7 +314,8 @@ public class RunnerPresenter implements ProjectBuiltHandler {
                     @Override
                     protected void onFailure(Throwable exception) {
                         String message = exception.getMessage() != null ? exception.getMessage() : constant.stopApplicationFailed();
-                        console.print(message);
+                        Notification notification = new Notification(message, ERROR);
+                        notificationManager.showNotification(notification);
 
                         if (exception instanceof ServerException) {
                             ServerException serverException = (ServerException)exception;
@@ -311,7 +328,8 @@ public class RunnerPresenter implements ProjectBuiltHandler {
                 });
             } catch (RequestException e) {
                 eventBus.fireEvent(new ExceptionThrownEvent(e));
-                console.print(e.getMessage());
+                Notification notification = new Notification(e.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
             }
         }
     }
@@ -324,7 +342,8 @@ public class RunnerPresenter implements ProjectBuiltHandler {
      */
     private void appStopped(@NotNull String appName) {
         String msg = constant.applicationStoped(appName);
-        console.print(msg);
+        Notification notification = new Notification(msg, INFO);
+        notificationManager.showNotification(notification);
         runningApp = null;
     }
 }

@@ -18,6 +18,7 @@
 package com.codenvy.ide.notification;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -34,14 +35,14 @@ import static com.google.gwt.dom.client.Style.Unit.PX;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class NotificationItem extends Composite {
+public class NotificationItem extends Composite implements Notification.NotificationObserver {
     /** Required for delegating open and close functions in view. */
     public interface ActionDelegate {
         /** Performs some actions in response to a user's opening a notification */
-        void onOpenItemClicked(Notification notification);
+        void onOpenItemClicked(@NotNull Notification notification);
 
         /** Performs some actions in response to a user's closing a notification */
-        void onCloseItemClicked(Notification notification);
+        void onCloseItemClicked(@NotNull Notification notification);
     }
 
     private static final DateTimeFormat DATA_FORMAT = DateTimeFormat.getFormat("h:mm:ss a");
@@ -61,11 +62,12 @@ public class NotificationItem extends Composite {
      * @param notification
      * @param delegate
      */
-    public NotificationItem(Resources resources, Notification notification, final ActionDelegate delegate) {
+    public NotificationItem(@NotNull Resources resources, @NotNull Notification notification, @NotNull final ActionDelegate delegate) {
         this.resources = resources;
         this.notification = notification;
         this.prevState = notification.clone();
         this.delegate = delegate;
+        notification.addObserver(this);
 
         mainPanel = new DockLayoutPanel(PX);
         mainPanel.setHeight("25px");
@@ -123,13 +125,14 @@ public class NotificationItem extends Composite {
      * @param icon
      *         icon that need to set
      */
-    private void changeImage(ImageResource icon) {
+    private void changeImage(@NotNull ImageResource icon) {
         Image messageIcon = new Image(icon);
         iconPanel.setWidget(messageIcon);
     }
 
-    /** Refresh notification element if it is needed */
-    public void refresh() {
+    /** {@inheritDoc} */
+    @Override
+    public void onValueChanged() {
         if (!prevState.equals(notification)) {
             if (!prevState.getMessage().equals(notification.getMessage())) {
                 title.setText(notification.getMessage());

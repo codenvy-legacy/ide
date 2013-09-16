@@ -18,6 +18,8 @@
 package com.codenvy.ide.ext.ssh.client.upload;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
@@ -27,6 +29,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Main appointment of this class is upload private SSH key to the server.
@@ -40,6 +44,7 @@ public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
     private String                  restContext;
     private EventBus                eventBus;
     private ConsolePart             console;
+    private NotificationManager     notificationManager;
 
     /**
      * Create presenter.
@@ -48,17 +53,18 @@ public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
      * @param constant
      * @param restContext
      * @param eventBus
-     * @param console
+     * @param notificationManager
      */
     @Inject
     public UploadSshKeyPresenter(UploadSshKeyView view, SshLocalizationConstant constant, @Named("restContext") String restContext,
-                                 EventBus eventBus, ConsolePart console) {
+                                 EventBus eventBus, ConsolePart console, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.constant = constant;
         this.restContext = restContext;
         this.console = console;
         this.eventBus = eventBus;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -99,6 +105,8 @@ public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
             }
             eventBus.fireEvent(new ExceptionThrownEvent(result));
             console.print(result);
+            Notification notification = new Notification(result, ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 

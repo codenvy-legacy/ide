@@ -18,11 +18,11 @@
 package com.codenvy.ide.ext.ssh.client.manage;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.preferences.AbstractPreferencesPagePresenter;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
-import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.github.GitHubClientService;
 import com.codenvy.ide.ext.git.client.marshaller.AllRepositoriesUnmarshaller;
@@ -39,6 +39,7 @@ import com.codenvy.ide.ext.ssh.shared.KeyItem;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.resources.marshal.StringUnmarshaller;
+import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.security.oauth.JsOAuthWindow;
@@ -57,6 +58,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.security.oauth.OAuthStatus.LOGGED_IN;
 import static com.google.gwt.http.client.RequestBuilder.POST;
 
@@ -72,13 +74,13 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     private SshKeyService           service;
     private SshLocalizationConstant constant;
     private EventBus                eventBus;
-    private ConsolePart             console;
     private UserClientService       userService;
     private GitHubClientService     gitHubClientService;
     private Loader                  loader;
     private String                  restContext;
     private SshKeyPresenter         sshKeyPresenter;
     private UploadSshKeyPresenter   uploadSshKeyPresenter;
+    private NotificationManager     notificationManager;
 
     /**
      * Create presenter.
@@ -88,16 +90,16 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
      * @param resources
      * @param constant
      * @param eventBus
-     * @param console
      * @param userService
      * @param gitHubClientService
      * @param restContext
+     * @param notificationManager
      */
     @Inject
     public SshKeyManagerPresenter(SshKeyManagerView view, SshKeyService service, SshResources resources, SshLocalizationConstant constant,
-                                  EventBus eventBus, ConsolePart console, UserClientService userService,
-                                  GitHubClientService gitHubClientService, @Named("restContext") String restContext,
-                                  SshKeyPresenter sshKeyPresenter, UploadSshKeyPresenter uploadSshKeyPresenter) {
+                                  EventBus eventBus, UserClientService userService, GitHubClientService gitHubClientService,
+                                  @Named("restContext") String restContext, SshKeyPresenter sshKeyPresenter,
+                                  UploadSshKeyPresenter uploadSshKeyPresenter, NotificationManager notificationManager) {
         super(constant.sshManagerTitle(), resources.sshKeyManager());
 
         this.view = view;
@@ -105,12 +107,12 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         this.service = service;
         this.constant = constant;
         this.eventBus = eventBus;
-        this.console = console;
         this.userService = userService;
         this.gitHubClientService = gitHubClientService;
         this.restContext = restContext;
         this.sshKeyPresenter = sshKeyPresenter;
         this.uploadSshKeyPresenter = uploadSshKeyPresenter;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
@@ -134,7 +136,8 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                 @Override
                 public void onFailure(Throwable exception) {
                     getLoader().hide();
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
                 }
             });
@@ -155,12 +158,14 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
 
                     @Override
                     protected void onFailure(Throwable exception) {
-                        console.print(exception.getMessage());
+                        Notification notification = new Notification(exception.getMessage(), ERROR);
+                        notificationManager.showNotification(notification);
                         eventBus.fireEvent(new ExceptionThrownEvent(exception));
                     }
                 });
             } catch (RequestException e) {
-                console.print(e.getMessage());
+                Notification notification = new Notification(e.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
                 eventBus.fireEvent(new ExceptionThrownEvent(e));
             }
         }
@@ -221,7 +226,8 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
             @Override
             public void onFailure(Throwable caught) {
                 getLoader().hide();
-                Window.alert("Getting ssh keys failed.");
+                Notification notification = new Notification("Getting ssh keys failed.", ERROR);
+                notificationManager.showNotification(notification);
             }
         });
     }
@@ -290,7 +296,8 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
             AsyncRequest.build(POST, url).loader(new EmptyLoader()).send(callback);
         } catch (RequestException e) {
             loader.hide();
-            Window.alert("Upload key to github failed.");
+            Notification notification = new Notification("Upload key to github failed.", ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -315,7 +322,8 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
             public void onFailure(Throwable exception) {
                 getLoader().hide();
                 refreshKeys();
-                console.print(exception.getMessage());
+                Notification notification = new Notification(exception.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
                 eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
         });
@@ -331,12 +339,13 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         service.deleteKey(key, new JsonpAsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
+                Notification notification = new Notification("Failed to delete invalid ssh key.", ERROR);
+                notificationManager.showNotification(notification);
                 refreshKeys();
             }
 
             @Override
             public void onSuccess(Void result) {
-                Window.alert("Failed to delete invalid ssh key.");
                 refreshKeys();
             }
         });
@@ -355,12 +364,14 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                 @Override
                 protected void onFailure(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -396,7 +407,8 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
             @Override
             public void onFailure(Throwable exception) {
                 getLoader().hide();
-                console.print(exception.getMessage());
+                Notification notification = new Notification(exception.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
                 eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
         });

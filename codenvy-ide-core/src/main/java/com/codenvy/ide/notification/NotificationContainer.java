@@ -18,10 +18,14 @@
 package com.codenvy.ide.notification;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.notification.Notification;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,24 +35,24 @@ import java.util.Map;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class NotificationContainer extends PopupPanel {
+@Singleton
+public class NotificationContainer extends PopupPanel implements View<NotificationItem.ActionDelegate> {
     public static final int WIDTH  = 400;
     public static final int HEIGHT = 200;
-    private final NotificationManagerImpl             manager;
-    private       FlowPanel                           panel;
-    private       Resources                           resources;
-    private       Map<Notification, NotificationItem> notificationWidget;
+    private FlowPanel                           panel;
+    private Resources                           resources;
+    private Map<Notification, NotificationItem> notificationWidget;
+    private NotificationItem.ActionDelegate     delegate;
 
     /**
      * Create notification container.
      *
-     * @param manager
      * @param resources
      */
-    public NotificationContainer(NotificationManagerImpl manager, Resources resources) {
+    @Inject
+    public NotificationContainer(Resources resources) {
         super(true);
 
-        this.manager = manager;
         this.resources = resources;
         this.notificationWidget = new HashMap<Notification, NotificationItem>();
 
@@ -80,8 +84,8 @@ public class NotificationContainer extends PopupPanel {
      * @param notification
      *         notification that need to show
      */
-    public void addNotification(Notification notification) {
-        NotificationItem item = new NotificationItem(resources, notification, manager);
+    public void addNotification(@NotNull Notification notification) {
+        NotificationItem item = new NotificationItem(resources, notification, delegate);
         panel.add(item);
         notificationWidget.put(notification, item);
     }
@@ -92,19 +96,14 @@ public class NotificationContainer extends PopupPanel {
      * @param notification
      *         notification that need to disable
      */
-    public void removeNotification(Notification notification) {
+    public void removeNotification(@NotNull Notification notification) {
         NotificationItem item = notificationWidget.get(notification);
         panel.remove(item);
     }
 
-    /**
-     * Redraw notification in container.
-     *
-     * @param notification
-     *         notification that need to redraw
-     */
-    public void refreshNotification(Notification notification) {
-        NotificationItem item = notificationWidget.get(notification);
-        item.refresh();
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(NotificationItem.ActionDelegate delegate) {
+        this.delegate = delegate;
     }
 }

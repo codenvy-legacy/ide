@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.ssh.client.key;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.ssh.client.JsonpAsyncCallback;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
@@ -29,6 +30,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * The presenter for showing ssh key.
  *
@@ -36,10 +39,10 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class SshKeyPresenter implements SshKeyView.ActionDelegate {
-    private SshKeyView    view;
-    private SshKeyService service;
-    private EventBus      eventBus;
-    private ConsolePart   consolePart;
+    private SshKeyView          view;
+    private SshKeyService       service;
+    private EventBus            eventBus;
+    private NotificationManager notificationManager;
 
     /**
      * Create presenter.
@@ -47,15 +50,15 @@ public class SshKeyPresenter implements SshKeyView.ActionDelegate {
      * @param view
      * @param service
      * @param eventBus
-     * @param consolePart
+     * @param notificationManager
      */
     @Inject
-    public SshKeyPresenter(SshKeyView view, SshKeyService service, EventBus eventBus, ConsolePart consolePart) {
+    public SshKeyPresenter(SshKeyView view, SshKeyService service, EventBus eventBus, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.eventBus = eventBus;
-        this.consolePart = consolePart;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -75,7 +78,8 @@ public class SshKeyPresenter implements SshKeyView.ActionDelegate {
             @Override
             public void onFailure(Throwable exception) {
                 getLoader().hide();
-                consolePart.print(exception.getMessage());
+                Notification notification = new Notification(exception.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
                 eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
         });

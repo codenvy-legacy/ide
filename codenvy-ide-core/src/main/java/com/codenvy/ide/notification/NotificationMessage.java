@@ -18,6 +18,7 @@
 package com.codenvy.ide.notification;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -34,14 +35,17 @@ import static com.google.gwt.dom.client.Style.Unit.PX;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class NotificationMessage extends PopupPanel {
+public class NotificationMessage extends PopupPanel implements Notification.NotificationObserver {
     /** Required for delegating open and close functions in view. */
     public interface ActionDelegate {
         /** Performs some actions in response to a user's opening a notification */
-        void onOpenMessageClicked(Notification notification);
+        void onOpenMessageClicked(@NotNull Notification notification);
 
         /** Performs some actions in response to a user's closing a notification */
-        void onCloseMessageClicked(Notification notification);
+        void onCloseMessageClicked(@NotNull Notification notification);
+
+        /** Performs some actions in response to a notification is closing */
+        void onClosingDialog(@NotNull NotificationMessage message);
     }
 
     public static final int DEFAULT_TIME = 5000;
@@ -52,7 +56,6 @@ public class NotificationMessage extends PopupPanel {
     private SimplePanel     iconPanel;
     private Notification    notification;
     private Notification    prevState;
-    private boolean         isKnown;
     private ActionDelegate  delegate;
     private Resources       resources;
 
@@ -63,14 +66,14 @@ public class NotificationMessage extends PopupPanel {
      * @param notification
      * @param delegate
      */
-    public NotificationMessage(Resources resources, Notification notification, ActionDelegate delegate) {
+    public NotificationMessage(@NotNull Resources resources, @NotNull Notification notification, @NotNull ActionDelegate delegate) {
         super(false, false);
 
         this.notification = notification;
         this.prevState = notification.clone();
-        this.isKnown = false;
         this.delegate = delegate;
         this.resources = resources;
+        notification.addObserver(this);
 
         mainPanel = new DockLayoutPanel(PX);
         mainPanel.setWidth(String.valueOf(WIDTH) + "px");
@@ -121,13 +124,14 @@ public class NotificationMessage extends PopupPanel {
      * @param icon
      *         icon that need to set
      */
-    private void changeImage(ImageResource icon) {
+    private void changeImage(@NotNull ImageResource icon) {
         Image messageIcon = new Image(icon);
         iconPanel.setWidget(messageIcon);
     }
 
-    /** Refresh notification element if it is needed */
-    public void refresh() {
+    /** {@inheritDoc} */
+    @Override
+    public void onValueChanged() {
         if (!prevState.equals(notification)) {
             if (!prevState.getMessage().equals(notification.getMessage())) {
                 title.setText(notification.getMessage());
@@ -190,16 +194,7 @@ public class NotificationMessage extends PopupPanel {
     /** {@inheritDoc} */
     @Override
     public void hide() {
-        isKnown = true;
+        delegate.onClosingDialog(this);
         super.hide();
-    }
-
-    /**
-     * Returns whether this notification is read.
-     *
-     * @return <code>true</code> if the notification is read, and <code>false</code> if it's not
-     */
-    public boolean isKnown() {
-        return isKnown || notification.isRead();
     }
 }

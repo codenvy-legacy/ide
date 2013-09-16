@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.java.jdi.client.debug.expression;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
@@ -29,6 +30,8 @@ import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Presenter for evaluate expression.
@@ -43,7 +46,7 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
     private DebuggerInfo                    debuggerInfo;
     private JavaRuntimeLocalizationConstant constant;
     private EventBus                        eventBus;
-    private ConsolePart                     console;
+    private NotificationManager             notificationManager;
 
     /**
      * Create presenter.
@@ -52,17 +55,18 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
      * @param service
      * @param constant
      * @param eventBus
-     * @param console
+     * @param notificationManager
      */
     @Inject
     protected EvaluateExpressionPresenter(EvaluateExpressionView view, DebuggerClientService service,
-                                          JavaRuntimeLocalizationConstant constant, EventBus eventBus, ConsolePart console) {
+                                          JavaRuntimeLocalizationConstant constant, EventBus eventBus,
+                                          NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.constant = constant;
         this.eventBus = eventBus;
-        this.console = console;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -111,7 +115,8 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             view.setEnableEvaluateButton(true);
         }
     }

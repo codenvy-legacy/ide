@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.java.jdi.client.debug.relaunch;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
 import com.codenvy.ide.ext.java.jdi.client.marshaller.DebuggerInfoUnmarshaller;
 import com.codenvy.ide.ext.java.jdi.shared.ApplicationInstance;
@@ -30,6 +31,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Provides relaunch debugger process.
  *
@@ -40,7 +43,7 @@ public class ReLaunchDebuggerPresenter implements ReLaunchDebuggerView.ActionDel
     private ReLaunchDebuggerView        view;
     private DebuggerClientService       service;
     private ApplicationInstance         instance;
-    private ConsolePart                 console;
+    private NotificationManager         notificationManager;
     private AsyncCallback<DebuggerInfo> callback;
     /** A timer for checking events. */
     private Timer tryConnectDebugger = new Timer() {
@@ -55,14 +58,14 @@ public class ReLaunchDebuggerPresenter implements ReLaunchDebuggerView.ActionDel
      *
      * @param view
      * @param service
-     * @param console
+     * @param notificationManager
      */
     @Inject
-    protected ReLaunchDebuggerPresenter(ReLaunchDebuggerView view, DebuggerClientService service, ConsolePart console) {
+    protected ReLaunchDebuggerPresenter(ReLaunchDebuggerView view, DebuggerClientService service, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
-        this.console = console;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
@@ -95,13 +98,15 @@ public class ReLaunchDebuggerPresenter implements ReLaunchDebuggerView.ActionDel
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                     callback.onFailure(exception);
 
                 }
             });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             callback.onFailure(e);
         }
     }
