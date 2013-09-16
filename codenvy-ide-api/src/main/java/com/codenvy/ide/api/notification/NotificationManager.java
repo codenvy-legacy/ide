@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.api.notification;
 
+import com.codenvy.ide.annotations.NotNull;
+
 /**
  * The manager for notifications. Used to show notifications and change their states.
  *
@@ -29,5 +31,5 @@ public interface NotificationManager {
      * @param notification
      *         notification that need to show
      */
-    void showNotification(Notification notification);
+    void showNotification(@NotNull Notification notification);
 }

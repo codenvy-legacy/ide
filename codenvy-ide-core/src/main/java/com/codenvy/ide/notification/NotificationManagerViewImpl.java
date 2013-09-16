@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.notification;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -76,7 +77,7 @@ public class NotificationManagerViewImpl extends Composite implements Notificati
 
     /** {@inheritDoc} */
     @Override
-    public void setStatus(Status status) {
+    public void setStatus(@NotNull Status status) {
         Image icon = createImage(status);
         iconPanel.setWidget(icon);
     }
@@ -87,7 +88,7 @@ public class NotificationManagerViewImpl extends Composite implements Notificati
      * @param status
      * @return image for status
      */
-    private Image createImage(Status status) {
+    private Image createImage(@NotNull Status status) {
         Image icon;
         if (status.equals(IN_PROGRESS)) {
             icon = new Image(res.progress());

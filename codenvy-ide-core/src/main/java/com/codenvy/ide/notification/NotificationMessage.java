@@ -18,6 +18,7 @@
 package com.codenvy.ide.notification;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -38,12 +39,13 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
     /** Required for delegating open and close functions in view. */
     public interface ActionDelegate {
         /** Performs some actions in response to a user's opening a notification */
-        void onOpenMessageClicked(Notification notification);
+        void onOpenMessageClicked(@NotNull Notification notification);
 
         /** Performs some actions in response to a user's closing a notification */
-        void onCloseMessageClicked(Notification notification);
+        void onCloseMessageClicked(@NotNull Notification notification);
 
-        void onClosingDialog(NotificationMessage message);
+        /** Performs some actions in response to a notification is closing */
+        void onClosingDialog(@NotNull NotificationMessage message);
     }
 
     public static final int DEFAULT_TIME = 5000;
@@ -64,7 +66,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
      * @param notification
      * @param delegate
      */
-    public NotificationMessage(Resources resources, Notification notification, ActionDelegate delegate) {
+    public NotificationMessage(@NotNull Resources resources, @NotNull Notification notification, @NotNull ActionDelegate delegate) {
         super(false, false);
 
         this.notification = notification;
@@ -122,7 +124,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
      * @param icon
      *         icon that need to set
      */
-    private void changeImage(ImageResource icon) {
+    private void changeImage(@NotNull ImageResource icon) {
         Image messageIcon = new Image(icon);
         iconPanel.setWidget(messageIcon);
     }

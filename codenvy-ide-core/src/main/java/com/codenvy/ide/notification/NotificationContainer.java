@@ -18,6 +18,7 @@
 package com.codenvy.ide.notification;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.notification.Notification;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -83,7 +84,7 @@ public class NotificationContainer extends PopupPanel implements View<Notificati
      * @param notification
      *         notification that need to show
      */
-    public void addNotification(Notification notification) {
+    public void addNotification(@NotNull Notification notification) {
         NotificationItem item = new NotificationItem(resources, notification, delegate);
         panel.add(item);
         notificationWidget.put(notification, item);
@@ -95,7 +96,7 @@ public class NotificationContainer extends PopupPanel implements View<Notificati
      * @param notification
      *         notification that need to disable
      */
-    public void removeNotification(Notification notification) {
+    public void removeNotification(@NotNull Notification notification) {
         NotificationItem item = notificationWidget.get(notification);
         panel.remove(item);
     }

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.notification;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 
 /**
@@ -52,7 +53,7 @@ public interface NotificationManagerView extends View<NotificationManagerView.Ac
      * @param status
      *         notification manager status
      */
-    void setStatus(Status status);
+    void setStatus(@NotNull Status status);
 
     /**
      * Show count of unread notifications on view

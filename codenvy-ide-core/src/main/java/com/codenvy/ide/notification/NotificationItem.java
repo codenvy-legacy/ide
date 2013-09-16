@@ -18,6 +18,7 @@
 package com.codenvy.ide.notification;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -38,10 +39,10 @@ public class NotificationItem extends Composite implements Notification.Notifica
     /** Required for delegating open and close functions in view. */
     public interface ActionDelegate {
         /** Performs some actions in response to a user's opening a notification */
-        void onOpenItemClicked(Notification notification);
+        void onOpenItemClicked(@NotNull Notification notification);
 
         /** Performs some actions in response to a user's closing a notification */
-        void onCloseItemClicked(Notification notification);
+        void onCloseItemClicked(@NotNull Notification notification);
     }
 
     private static final DateTimeFormat DATA_FORMAT = DateTimeFormat.getFormat("h:mm:ss a");
@@ -61,7 +62,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
      * @param notification
      * @param delegate
      */
-    public NotificationItem(Resources resources, Notification notification, final ActionDelegate delegate) {
+    public NotificationItem(@NotNull Resources resources, @NotNull Notification notification, @NotNull final ActionDelegate delegate) {
         this.resources = resources;
         this.notification = notification;
         this.prevState = notification.clone();
@@ -124,7 +125,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
      * @param icon
      *         icon that need to set
      */
-    private void changeImage(ImageResource icon) {
+    private void changeImage(@NotNull ImageResource icon) {
         Image messageIcon = new Image(icon);
         iconPanel.setWidget(messageIcon);
     }

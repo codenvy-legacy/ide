@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.notification;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.json.JsonArray;
@@ -39,7 +40,6 @@ import static com.codenvy.ide.notification.NotificationManagerView.Status.*;
 @Singleton
 public class NotificationManagerImpl implements NotificationManager, NotificationItem.ActionDelegate, Notification.NotificationObserver,
                                                 NotificationManagerView.ActionDelegate, NotificationMessageStack.ActionDelegate {
-
     private NotificationManagerView  view;
     private NotificationContainer    notificationContainer;
     private NotificationMessageStack notificationMessageStack;
@@ -93,7 +93,7 @@ public class NotificationManagerImpl implements NotificationManager, Notificatio
 
     /** {@inheritDoc} */
     @Override
-    public void showNotification(Notification notification) {
+    public void showNotification(@NotNull Notification notification) {
         notification.addObserver(this);
         notifications.add(notification);
         notificationMessageStack.addNotification(notification);
@@ -107,7 +107,7 @@ public class NotificationManagerImpl implements NotificationManager, Notificatio
      * @param notification
      *         notification that need to remove
      */
-    public void removeNotification(Notification notification) {
+    public void removeNotification(@NotNull Notification notification) {
         notification.removeObserver(this);
         notificationContainer.removeNotification(notification);
         notificationMessageStack.removeNotification(notification);
@@ -116,13 +116,13 @@ public class NotificationManagerImpl implements NotificationManager, Notificatio
 
     /** {@inheritDoc} */
     @Override
-    public void onOpenMessageClicked(Notification notification) {
+    public void onOpenMessageClicked(@NotNull Notification notification) {
         onOpenClicked(notification);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onOpenItemClicked(Notification notification) {
+    public void onOpenItemClicked(@NotNull Notification notification) {
         onOpenClicked(notification);
     }
 
@@ -132,7 +132,7 @@ public class NotificationManagerImpl implements NotificationManager, Notificatio
      * @param notification
      *         notification that is opening
      */
-    private void onOpenClicked(Notification notification) {
+    private void onOpenClicked(@NotNull Notification notification) {
         notification.setState(READ);
 
         Notification.OpenNotificationHandler openHandler = notification.getOpenHandler();
@@ -145,14 +145,14 @@ public class NotificationManagerImpl implements NotificationManager, Notificatio
 
     /** {@inheritDoc} */
     @Override
-    public void onCloseMessageClicked(Notification notification) {
+    public void onCloseMessageClicked(@NotNull Notification notification) {
         notification.setState(READ);
         onCloseClicked(notification);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onCloseItemClicked(Notification notification) {
+    public void onCloseItemClicked(@NotNull Notification notification) {
         removeNotification(notification);
         onCloseClicked(notification);
     }
@@ -163,7 +163,7 @@ public class NotificationManagerImpl implements NotificationManager, Notificatio
      * @param notification
      *         notification that is closing
      */
-    private void onCloseClicked(Notification notification) {
+    private void onCloseClicked(@NotNull Notification notification) {
         Notification.CloseNotificationHandler closeHandler = notification.getCloseHandler();
         if (closeHandler != null) {
             closeHandler.onCloseClicked();
@@ -182,7 +182,7 @@ public class NotificationManagerImpl implements NotificationManager, Notificatio
      * @param container
      *         container view
      */
-    public void go(FlowPanel container) {
+    public void go(@NotNull FlowPanel container) {
         container.add(view);
     }
 }
