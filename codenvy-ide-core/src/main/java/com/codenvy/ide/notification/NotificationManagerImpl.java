@@ -22,13 +22,8 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -38,7 +33,7 @@ import java.util.Map;
 import static com.codenvy.ide.api.notification.Notification.State.READ;
 import static com.codenvy.ide.notification.NotificationContainer.HEIGHT;
 import static com.codenvy.ide.notification.NotificationContainer.WIDTH;
-import static com.codenvy.ide.notification.NotificationManagerImpl.Status.*;
+import static com.codenvy.ide.notification.NotificationManagerView.Status.*;
 
 /**
  * The implementation of {@link NotificationManager}.
@@ -47,20 +42,10 @@ import static com.codenvy.ide.notification.NotificationManagerImpl.Status.*;
  */
 @Singleton
 public class NotificationManagerImpl
-        implements NotificationManager, ClickHandler, NotificationMessage.ActionDelegate, NotificationItem.ActionDelegate,
-                   Notification.NotificationObserver {
-    /**
-     * Status of a notification manager. The manager has 3 statuses: manager has unread messages, manager has at least one message in
-     * progress and manager has no new messages
-     */
-    public enum Status {
-        IN_PROGRESS, EMPTY, HAS_UNREAD
-    }
-
+        implements NotificationManager, NotificationMessage.ActionDelegate, NotificationItem.ActionDelegate,
+                   Notification.NotificationObserver, NotificationManagerView.ActionDelegate {
     public static final int POPUP_COUNT = 3;
-    private FlowPanel                              view;
-    private Label                                  notificationCount;
-    private SimplePanel                            iconPanel;
+    private NotificationManagerView                view;
     private NotificationContainer                  notificationContainer;
     private Resources                              resources;
     private Map<Notification, NotificationMessage> notificationMessage;
@@ -69,56 +54,18 @@ public class NotificationManagerImpl
     /**
      * Create manager.
      *
+     * @param view
      * @param resources
      */
     @Inject
-    public NotificationManagerImpl(Resources resources) {
+    public NotificationManagerImpl(NotificationManagerView view, Resources resources) {
         this.resources = resources;
         this.notificationMessage = new HashMap<Notification, NotificationMessage>();
         this.messages = JsonCollections.createArray();
-        this.view = createNotificationButton();
-        setStatus(EMPTY);
+        this.view = view;
+        this.view.setDelegate(this);
+        this.view.setStatus(EMPTY);
         this.notificationContainer = new NotificationContainer(this, resources);
-    }
-
-    /**
-     * Create notification button that will be showed on status panel.
-     *
-     * @return notification button
-     */
-    private FlowPanel createNotificationButton() {
-        FlowPanel notification = new FlowPanel();
-        notification.addStyleName(resources.notificationCss().notificationPanel());
-
-        iconPanel = new SimplePanel();
-        iconPanel.addStyleName(resources.notificationCss().floatLeft());
-
-        notificationCount = new Label();
-
-        notification.add(iconPanel);
-        notification.add(notificationCount);
-        notification.addDomHandler(this, ClickEvent.getType());
-
-        return notification;
-    }
-
-    /**
-     * Return image for status
-     *
-     * @param status
-     * @return image for status
-     */
-    private Image createImage(Status status) {
-        Image icon;
-        if (status.equals(IN_PROGRESS)) {
-            icon = new Image(resources.progress());
-        } else if (status.equals(EMPTY)) {
-            icon = new Image(resources.message());
-        } else {
-            icon = new Image(resources.message());
-        }
-
-        return icon;
     }
 
     /** {@inheritDoc} */
@@ -138,13 +85,13 @@ public class NotificationManagerImpl
             }
         }
 
-        setNotificationCount(countUnread);
+        view.setNotificationCount(countUnread);
         if (countUnread < 0 && !inProgress) {
-            setStatus(EMPTY);
+            view.setStatus(EMPTY);
         } else if (inProgress) {
-            setStatus(IN_PROGRESS);
+            view.setStatus(IN_PROGRESS);
         } else {
-            setStatus(HAS_UNREAD);
+            view.setStatus(HAS_UNREAD);
         }
     }
 
@@ -252,32 +199,10 @@ public class NotificationManagerImpl
         }
     }
 
-    /**
-     * Show count of unread notifications on view
-     *
-     * @param count
-     *         count of unread notification
-     */
-    private void setNotificationCount(int count) {
-        String text = count > 0 ? String.valueOf(count) : "";
-        notificationCount.setText(text);
-    }
-
-    /**
-     * Show status of notification manager on view
-     *
-     * @param status
-     *         notification manager status
-     */
-    private void setStatus(Status status) {
-        Image icon = createImage(status);
-        iconPanel.setWidget(icon);
-    }
-
     /** {@inheritDoc} */
     @Override
-    public void onClick(ClickEvent event) {
-        notificationContainer.show(event.getClientX() - WIDTH, event.getClientY() - HEIGHT - 50);
+    public void onClicked(int left, int top) {
+        notificationContainer.show(left - WIDTH, top - HEIGHT - 50);
     }
 
     /**
