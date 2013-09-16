@@ -416,6 +416,8 @@ public class CollaborationManager implements DisableEnableCollaborationHandler, 
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         project = null;
+        openedEditors.clear();
+        openedFiles.clear();
     }
 
     /** {@inheritDoc} */
