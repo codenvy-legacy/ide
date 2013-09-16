@@ -21,7 +21,7 @@ import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringSet;
 
 /**
- * Desription of the project containing nature set and it's specific properties
+ * Description of the project containing nature set and it's specific properties
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
