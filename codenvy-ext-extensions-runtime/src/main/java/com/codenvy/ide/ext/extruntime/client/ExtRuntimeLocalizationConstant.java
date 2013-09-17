@@ -20,8 +20,9 @@ package com.codenvy.ide.ext.extruntime.client;
 import com.google.gwt.i18n.client.Messages;
 
 /**
- * Localization constants. Interface to represent the constants contained in resource bundle: 'ExtRuntimeLocalizationConstant.properties'.
- * 
+ * Localization constants. Interface to represent the constants contained in resource bundle:
+ * 'ExtRuntimeLocalizationConstant.properties'.
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtRuntimeLocalizationConstant.java Jul 3, 2013 12:40:17 PM azatsarynnyy $
  */

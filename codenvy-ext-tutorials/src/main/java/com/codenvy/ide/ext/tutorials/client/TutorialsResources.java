@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.tutorials.client;
 
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -27,10 +28,19 @@ import com.google.gwt.resources.client.ImageResource;
  * @version $Id: TutorialsResources.java Sep 13, 2013 12:37:19 PM azatsarynnyy $
  */
 public interface TutorialsResources extends ClientBundle {
+    interface TutorialsCss extends CssResource {
+        String scrollPanel();
+    }
+
+    @Source("Tutorials.css")
+    TutorialsCss tutorialsCss();
 
     @Source("com/codenvy/ide/ext/tutorials/images/codenvyTutorialTemplate.png")
     ImageResource codenvyTutorialTemplate();
 
     @Source("com/codenvy/ide/ext/tutorials/images/codenvyTutorialProject.png")
     ImageResource codenvyTutorialProject();
+
+    @Source("com/codenvy/ide/ext/tutorials/images/info.png")
+    ImageResource info();
 }
