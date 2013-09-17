@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.openshift.client.login;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.openshift.client.OpenShiftClientServiceImpl;
 import com.codenvy.ide.ext.openshift.client.OpenShiftLocalizationConstant;
@@ -27,6 +28,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
 /**
  * Presenter to control user login form.
@@ -38,11 +42,11 @@ import com.google.web.bindery.event.shared.EventBus;
 public class LoginPresenter implements LoginView.ActionDelegate {
     private LoginView                     view;
     private EventBus                      eventBus;
-    private ConsolePart                   console;
     private OpenShiftClientServiceImpl    service;
     private OpenShiftLocalizationConstant constant;
     private LoggedInHandler               loggedIn;
     private LoginCanceledHandler          loginCanceled;
+    private NotificationManager           notificationManager;
     private AsyncCallback<Boolean>        callback;
 
     /**
@@ -50,18 +54,18 @@ public class LoginPresenter implements LoginView.ActionDelegate {
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param service
      * @param constant
+     * @param notificationManager
      */
     @Inject
-    protected LoginPresenter(LoginView view, EventBus eventBus, ConsolePart console, OpenShiftClientServiceImpl service,
-                             OpenShiftLocalizationConstant constant) {
+    protected LoginPresenter(LoginView view, EventBus eventBus, OpenShiftClientServiceImpl service, OpenShiftLocalizationConstant constant,
+                             NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
-        this.console = console;
         this.service = service;
         this.constant = constant;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -115,7 +119,8 @@ public class LoginPresenter implements LoginView.ActionDelegate {
             service.login(email, password, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
-                    console.print(constant.loginViewSuccessfullyLogined());
+                    Notification notification = new Notification(constant.loginViewSuccessfullyLogined(), INFO);
+                    notificationManager.showNotification(notification);
                     if (loggedIn != null) {
                         loggedIn.onLoggedIn();
                     }
@@ -128,7 +133,8 @@ public class LoginPresenter implements LoginView.ActionDelegate {
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
                     view.setError(constant.loginViewErrorInvalidUserOrPassword());
 
@@ -138,7 +144,8 @@ public class LoginPresenter implements LoginView.ActionDelegate {
                 }
             });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }

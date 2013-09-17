@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.openshift.client;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
@@ -29,6 +30,8 @@ import com.codenvy.ide.rest.HTTPStatus;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Asynchronous OpenShift request. The {@link #onFailure(Throwable)} method contains the check for user not authorized exception, in this
  * case - showDialog method calls on {@link LoginPresenter}.
@@ -37,12 +40,11 @@ import com.google.web.bindery.event.shared.EventBus;
  * @version $Id: $
  */
 public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallback<T> {
-    private LoggedInHandler               loggedIn;
-    private LoginCanceledHandler          loginCanceled;
-    private EventBus                      eventBus;
-    private ConsolePart                   console;
-    private OpenShiftLocalizationConstant constant;
-    private LoginPresenter                loginPresenter;
+    private LoggedInHandler      loggedIn;
+    private LoginCanceledHandler loginCanceled;
+    private EventBus             eventBus;
+    private LoginPresenter       loginPresenter;
+    private NotificationManager  notificationManager;
 
     /**
      * Create callback.
@@ -51,20 +53,17 @@ public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallb
      * @param loggedIn
      * @param loginCanceled
      * @param eventBus
-     * @param console
-     * @param constant
      * @param loginPresenter
+     * @param notificationManager
      */
     public OpenShiftAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled,
-                                         EventBus eventBus, ConsolePart console, OpenShiftLocalizationConstant constant,
-                                         LoginPresenter loginPresenter) {
+                                         EventBus eventBus, LoginPresenter loginPresenter, NotificationManager notificationManager) {
         super(unmarshaller);
         this.loggedIn = loggedIn;
         this.loginCanceled = loginCanceled;
         this.eventBus = eventBus;
-        this.console = console;
-        this.constant = constant;
         this.loginPresenter = loginPresenter;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
@@ -79,7 +78,8 @@ public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallb
             }
         }
 
-        console.print(exception.getMessage());
+        Notification notification = new Notification(exception.getMessage(), ERROR);
+        notificationManager.showNotification(notification);
         eventBus.fireEvent(new ExceptionThrownEvent(exception));
     }
 }

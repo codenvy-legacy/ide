@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.openshift.client;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
@@ -28,6 +29,8 @@ import com.codenvy.ide.rest.HTTPStatus;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.Unmarshallable;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Asynchronous OpenShift request. The {@link #onFailure(Throwable)} method contains the check for user not authorized exception, in this
@@ -40,8 +43,8 @@ public abstract class OpenShiftWSRequestCallback<T> extends RequestCallback<T> {
     private LoggedInHandler      loggedIn;
     private LoginCanceledHandler loginCanceled;
     private EventBus             eventBus;
-    private ConsolePart          console;
     private LoginPresenter       loginPresenter;
+    private NotificationManager  notificationManager;
 
     /**
      * Create callback.
@@ -50,17 +53,17 @@ public abstract class OpenShiftWSRequestCallback<T> extends RequestCallback<T> {
      * @param loggedIn
      * @param loginCanceled
      * @param eventBus
-     * @param console
      * @param loginPresenter
+     * @param notificationManager
      */
     public OpenShiftWSRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled,
-                                      EventBus eventBus, ConsolePart console, LoginPresenter loginPresenter) {
+                                      EventBus eventBus, LoginPresenter loginPresenter, NotificationManager notificationManager) {
         super(unmarshaller);
         this.loggedIn = loggedIn;
         this.loginCanceled = loginCanceled;
         this.eventBus = eventBus;
-        this.console = console;
         this.loginPresenter = loginPresenter;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
@@ -76,6 +79,7 @@ public abstract class OpenShiftWSRequestCallback<T> extends RequestCallback<T> {
         }
 
         eventBus.fireEvent(new ExceptionThrownEvent(exception));
-        console.print(exception.getMessage());
+        Notification notification = new Notification(exception.getMessage(), ERROR);
+        notificationManager.showNotification(notification);
     }
 }
