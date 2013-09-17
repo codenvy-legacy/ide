@@ -45,8 +45,9 @@ public class AndroidRunnerService {
     @Path("run")
     @Produces(MediaType.APPLICATION_JSON)
     public String run(@QueryParam("apk") URL apk, @QueryParam("oauth_token") String oauthToken) throws Exception {
-        final ManymoApplication manymoApplication = uploadApplication(apk, oauthToken);
-        return "{\"applicationUrl\":\"" + "https://www.manymo.com/apps/" + manymoApplication.getId() + "/emulators/83/connect" + "\"}";
+        final ManymoApplication manymo = uploadApplication(apk, oauthToken);
+        return "{\"applicationUrl\":\"" + "https://www.manymo.com/apps/" + manymo.getId() + "/emulators/83/connect?secret=" +
+               manymo.getSecret() + "\"}";
     }
 
     private ManymoApplication uploadApplication(URL apk, String oauthToken) throws Exception {
@@ -113,8 +114,10 @@ public class AndroidRunnerService {
     }
 
     public static class ManymoApplication {
-        // manymo.com provides large set of application attributes but at the moment we need just 'id' of application,
-        private long id;
+        // manymo.com provides large set of application attributes but
+        // at the moment we need just 'id' and 'secret' of application.
+        private long   id;
+        private String secret;
 
         public long getId() {
             return id;
@@ -122,6 +125,22 @@ public class AndroidRunnerService {
 
         public void setId(long id) {
             this.id = id;
+        }
+
+        public String getSecret() {
+            return secret;
+        }
+
+        public void setSecret(String secret) {
+            this.secret = secret;
+        }
+
+        @Override
+        public String toString() {
+            return "ManymoApplication{" +
+                   "id=" + id +
+                   ", secret='" + secret + '\'' +
+                   '}';
         }
     }
 }
