@@ -257,6 +257,12 @@ public class ProjectChatView extends ViewImpl implements Display {
         }
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void clearParticipants() {
+        participantList.clearParticipants();
+    }
+
     private AnchorElement createAnchorElement(final String message, final MessageCallback callback) {
         AnchorElement anchorElement = Elements.createAnchorElement(css.link());
         anchorElement.setHref("javascript:;");

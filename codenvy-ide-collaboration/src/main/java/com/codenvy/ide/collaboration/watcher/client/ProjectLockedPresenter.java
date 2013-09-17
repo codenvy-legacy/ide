@@ -65,7 +65,7 @@ public class ProjectLockedPresenter implements ResourceLockedView.ActionDelegate
         notification.setProjectId(project.getId()).setClientId(BootstrapSession.getBootstrapSession().getActiveClientId());
         String username = BootstrapSession.getBootstrapSession().getUsername();
         notification.setMessage(username + " wont to delete " + project.getName() + " and ask you to close this project.");
-        VfsWatcherExtension.get().collaborationApi.PROJECT_NOTOFICATION.send(notification);
+        VfsWatcherExtension.get().collaborationApi.PROJECT_NOTIFICATION.send(notification);
     }
 
     @Override

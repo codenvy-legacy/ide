@@ -28,7 +28,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryControl.java Jul 8, 2011 3:25:33 PM vereshchaka $
  */
-@RolesAllowed({"developer"})
+@RolesAllowed("developer")
 public class ManyMoControlGroup extends SimpleControl implements IDEControl {
 
     private static final String ID = "PaaS/ManyMo Android";

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.collaboration.chat.client;
 
+import com.codenvy.ide.client.util.logging.Log;
 import com.codenvy.ide.collaboration.dto.GetChatParticipantsResponse;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.GetChatParticipantsImpl;
 import com.codenvy.ide.commons.shared.ListenerManager;
@@ -112,16 +113,16 @@ public class ChatExtension extends Extension
         try {
             IDE.messageBus().unsubscribe("project_chat." + project.getId(), handler);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(ChatExtension.class, e);
         }
     }
 
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         currentProject = event.getProject();
-        if (!CollaborationPropertiesUtil.isCollaborationEnabled(currentProject)) {
-            return;
-        }
+//        if (!CollaborationPropertiesUtil.isCollaborationEnabled(currentProject)) {
+//            return;
+//        }
         if (IDE.messageBus().getReadyState() != ReadyState.OPEN) {
             subscribeOnReady = true;
         } else {
@@ -142,7 +143,10 @@ public class ChatExtension extends Extension
 
             @Override
             public void onMessageReceived(GetChatParticipantsResponse message) {
-                chatPresenter.setProjectId(currentProject);
+                if (!CollaborationPropertiesUtil.isCollaborationEnabled(currentProject)) {
+                    chatPresenter.setProjectId(currentProject);
+
+                }
                 chatPresenter.setChatParticipants(message.getParticipants());
             }
         });
@@ -161,10 +165,10 @@ public class ChatExtension extends Extension
 
     @Override
     public void onConnectionOpened() {
+        createPresenter();
         if (subscribeOnReady && currentProject != null) {
             subscribeToChanel();
         }
-        createPresenter();
     }
 
     public JsonArray<Participant> getCurrentProjectParticipants() {

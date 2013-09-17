@@ -21,6 +21,7 @@ import com.codenvy.ide.commons.shared.ProjectType;
 import com.codenvy.ide.extension.android.client.event.RunApplicationEvent;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -37,6 +38,7 @@ import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@RolesAllowed("developer")
 public class PaaSManyMoAndroid extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
                                                                     BuildProjectHandler, ProjectBuiltHandler {
     public static final String ID = "PaaS/ManyMo Android/Deploy";
