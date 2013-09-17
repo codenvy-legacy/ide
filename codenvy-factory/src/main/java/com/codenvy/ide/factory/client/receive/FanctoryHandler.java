@@ -40,6 +40,7 @@ import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -59,12 +60,12 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
-import org.exoplatform.ide.vfs.shared.File;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -342,6 +343,19 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
         }
     }
 
+    private Property getTarget(String projectType) {
+        org.exoplatform.ide.client.framework.project.ProjectType currentProjType =
+                org.exoplatform.ide.client.framework.project.ProjectType.fromValue(projectType);
+        List<String> target = new ArrayList<String>();
+        List<PaaS> paases = IDE.getInstance().getPaaSes();
+        for (PaaS paas : paases) {
+            if (paas.getSupportedProjectTypes().contains(currentProjType)) {
+                target.add(paas.getId());
+            }
+        }
+        return new PropertyImpl("exoide:target", target);
+    }
+
     /**
      * Perform actions when repository was successfully cloned.
      *
@@ -359,7 +373,26 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
             IDE.addHandler(ProjectOpenedEvent.TYPE, this);
             if (ItemType.PROJECT.toString().equalsIgnoreCase(itemType)) {
                 ProjectModel projectModel = new ProjectModel(object);
-                IDE.fireEvent(new OpenProjectEvent(projectModel));
+                VirtualFileSystem.getInstance().getItemById(projectModel.getId(),
+                                                            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {
+                                                                @Override
+                                                                protected void onSuccess(ItemWrapper result) {
+                                                                    if (result.getItem() instanceof ProjectModel) {
+                                                                        ProjectModel projectModel = (ProjectModel)result.getItem();
+                                                                        Property target = getTarget(projectModel.getProjectType());
+                                                                        Property oldTargetProperty =
+                                                                                projectModel.getProperty("exoide:target");
+                                                                        List<Property> properties = projectModel.getProperties();
+                                                                        properties.add(target);
+                                                                        properties.remove(oldTargetProperty);
+                                                                        writeUserPropertiesToProject(projectModel);
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                protected void onFailure(Throwable exception) {
+                                                                }
+                                                            });
             } else {
                 List<Property> properties = new ArrayList<Property>();
                 String id = object.get("id").isString().stringValue();
@@ -368,7 +401,25 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
             }
 
         } catch (Throwable e) {
-            Log.debug(getClass(), e);
+            Log.error(getClass(), e);
+        }
+    }
+
+    private void writeUserPropertiesToProject(final ProjectModel projectModel) {
+        try {
+            VirtualFileSystem.getInstance().updateItem(projectModel, null, new AsyncRequestCallback<ItemWrapper>() {
+                @Override
+                protected void onSuccess(ItemWrapper result) {
+                    IDE.fireEvent(new OpenProjectEvent(projectModel));
+                }
+
+                @Override
+                protected void onFailure(Throwable e) {
+                    Log.error(getClass(), e);
+                }
+            });
+        } catch (RequestException e) {
+            Log.error(getClass(), e);
         }
     }
 
