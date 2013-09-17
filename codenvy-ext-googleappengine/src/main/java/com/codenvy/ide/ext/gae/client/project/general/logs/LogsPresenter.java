@@ -18,7 +18,7 @@
 
 package com.codenvy.ide.ext.gae.client.project.general.logs;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
@@ -49,16 +49,16 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class LogsPresenter extends BasePresenter implements LogsView.ActionDelegate {
-    private LogsView         view;
-    private GAEClientService service;
-    private EventBus         eventBus;
-    private ConsolePart      console;
-    private LoginAction      loginAction;
-    private GAEResources     resources;
-    private ResourceProvider resourceProvider;
-    private WorkspaceAgent   workspaceAgent;
-    private GAELocalization  constant;
-    private Project          project;
+    private LogsView            view;
+    private GAEClientService    service;
+    private EventBus            eventBus;
+    private LoginAction         loginAction;
+    private GAEResources        resources;
+    private ResourceProvider    resourceProvider;
+    private WorkspaceAgent      workspaceAgent;
+    private GAELocalization     constant;
+    private NotificationManager notificationManager;
+    private Project             project;
 
     private JsonStringMap<String> severityFormatted = JsonCollections.createStringMap();
 
@@ -73,18 +73,18 @@ public class LogsPresenter extends BasePresenter implements LogsView.ActionDeleg
 
     /** Constructor for application logs presenter. */
     @Inject
-    public LogsPresenter(LogsView view, GAEClientService service, EventBus eventBus,
-                         ConsolePart console, LoginAction loginAction, GAEResources resources,
-                         ResourceProvider resourceProvider, WorkspaceAgent workspaceAgent, GAELocalization constant) {
+    public LogsPresenter(LogsView view, GAEClientService service, EventBus eventBus, LoginAction loginAction, GAEResources resources,
+                         ResourceProvider resourceProvider, WorkspaceAgent workspaceAgent, GAELocalization constant,
+                         NotificationManager notificationManager) {
         this.view = view;
         this.service = service;
         this.eventBus = eventBus;
-        this.console = console;
         this.loginAction = loginAction;
         this.resources = resources;
         this.resourceProvider = resourceProvider;
         this.workspaceAgent = workspaceAgent;
         this.constant = constant;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
         this.view.setTitle("Logs");
@@ -118,7 +118,7 @@ public class LogsPresenter extends BasePresenter implements LogsView.ActionDeleg
 
         try {
             service.requestLogs(vfsId, project.getId(), numDays, severity,
-                                new GAEAsyncRequestCallback<String>(unmarshaller, console, eventBus, constant, loginAction) {
+                                new GAEAsyncRequestCallback<String>(unmarshaller, eventBus, constant, loginAction, notificationManager) {
                                     @Override
                                     protected void onSuccess(String result) {
                                         view.setLogsContent(result);

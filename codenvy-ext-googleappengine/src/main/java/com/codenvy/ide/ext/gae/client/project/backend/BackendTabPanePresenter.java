@@ -19,7 +19,8 @@
 package com.codenvy.ide.ext.gae.client.project.backend;
 
 import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.gae.client.GAEAsyncRequestCallback;
@@ -37,6 +38,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter that to allow user to control backends state.
  *
@@ -45,28 +48,26 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.ActionDelegate {
-    private BackendTabPaneView view;
-    private GAEClientService   service;
-    private EventBus           eventBus;
-    private ConsolePart        console;
-    private ResourceProvider   resourceProvider;
-    private GAELocalization    constant;
-    private LoginAction        loginAction;
-    private Project            project;
+    private BackendTabPaneView  view;
+    private GAEClientService    service;
+    private EventBus            eventBus;
+    private ResourceProvider    resourceProvider;
+    private GAELocalization     constant;
+    private LoginAction         loginAction;
+    private NotificationManager notificationManager;
+    private Project             project;
 
     /** Constructor for backends presenter. */
     @Inject
-    public BackendTabPanePresenter(BackendTabPaneView view, GAEClientService service,
-                                   EventBus eventBus, ConsolePart console,
-                                   ResourceProvider resourceProvider,
-                                   GAELocalization constant, LoginAction loginAction) {
+    public BackendTabPanePresenter(BackendTabPaneView view, GAEClientService service, EventBus eventBus, ResourceProvider resourceProvider,
+                                   GAELocalization constant, LoginAction loginAction, NotificationManager notificationManager) {
         this.view = view;
         this.service = service;
         this.eventBus = eventBus;
-        this.console = console;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
         this.loginAction = loginAction;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -85,8 +86,8 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
 
         try {
             service.listBackends(vfsId, project.getId(),
-                                 new GAEAsyncRequestCallback<JsonArray<Backend>>(unmarshaller, console, eventBus,
-                                                                                 constant, loginAction) {
+                                 new GAEAsyncRequestCallback<JsonArray<Backend>>(unmarshaller, eventBus, constant, loginAction,
+                                                                                 notificationManager) {
                                      @Override
                                      protected void onSuccess(JsonArray<Backend> result) {
                                          view.setBackendsList(result);
@@ -111,11 +112,12 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
 
         try {
             service.configureBackend(vfsId, project.getId(), backend.getName(),
-                                     new GAEAsyncRequestCallback<Object>(null, console, eventBus, constant,
-                                                                         loginAction) {
+                                     new GAEAsyncRequestCallback<Object>(null, eventBus, constant, loginAction, notificationManager) {
                                          @Override
                                          protected void onSuccess(Object result) {
-                                             console.print(constant.configureBackendSuccessfully(backend.getName()));
+                                             Notification notification =
+                                                     new Notification(constant.configureBackendSuccessfully(backend.getName()), INFO);
+                                             notificationManager.showNotification(notification);
                                              init(project);
                                          }
                                      });
@@ -137,11 +139,12 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
 
         try {
             service.deleteBackend(vfsId, project.getId(), backend.getName(),
-                                  new GAEAsyncRequestCallback<Object>(null, console, eventBus, constant,
-                                                                      loginAction) {
+                                  new GAEAsyncRequestCallback<Object>(null, eventBus, constant, loginAction, notificationManager) {
                                       @Override
                                       protected void onSuccess(Object result) {
-                                          console.print(constant.deleteBackendSuccessfully(backend.getName()));
+                                          Notification notification =
+                                                  new Notification(constant.deleteBackendSuccessfully(backend.getName()), INFO);
+                                          notificationManager.showNotification(notification);
                                           init(project);
                                       }
                                   });
@@ -163,11 +166,12 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
 
         try {
             service.updateBackend(vfsId, project.getId(), backend.getName(),
-                                  new GAEAsyncRequestCallback<Object>(null, console, eventBus, constant,
-                                                                      loginAction) {
+                                  new GAEAsyncRequestCallback<Object>(null, eventBus, constant, loginAction, notificationManager) {
                                       @Override
                                       protected void onSuccess(Object result) {
-                                          console.print(constant.updateBackendSuccessfully(backend.getName()));
+                                          Notification notification =
+                                                  new Notification(constant.updateBackendSuccessfully(backend.getName()), INFO);
+                                          notificationManager.showNotification(notification);
                                           init(project);
                                       }
                                   });
@@ -189,11 +193,12 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
 
         try {
             service.rollbackBackend(vfsId, project.getId(), backend.getName(),
-                                    new GAEAsyncRequestCallback<Object>(null, console, eventBus, constant,
-                                                                        loginAction) {
+                                    new GAEAsyncRequestCallback<Object>(null, eventBus, constant, loginAction, notificationManager) {
                                         @Override
                                         protected void onSuccess(Object result) {
-                                            console.print(constant.rollbackBackendSuccessfully(backend.getName()));
+                                            Notification notification =
+                                                    new Notification(constant.rollbackBackendSuccessfully(backend.getName()), INFO);
+                                            notificationManager.showNotification(notification);
                                             init(project);
                                         }
                                     });
@@ -209,11 +214,12 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
 
         try {
             service.updateAllBackends(vfsId, project.getId(),
-                                      new GAEAsyncRequestCallback<Object>(null, console, eventBus, constant,
-                                                                          loginAction) {
+                                      new GAEAsyncRequestCallback<Object>(null, eventBus, constant, loginAction, notificationManager) {
                                           @Override
                                           protected void onSuccess(Object result) {
-                                              console.print(constant.updateAllBackendsSuccessfully());
+                                              Notification notification =
+                                                      new Notification(constant.updateAllBackendsSuccessfully(), INFO);
+                                              notificationManager.showNotification(notification);
                                               init(project);
                                           }
                                       });
@@ -229,11 +235,12 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
 
         try {
             service.rollbackAllBackends(vfsId, project.getId(),
-                                        new GAEAsyncRequestCallback<Object>(null, console, eventBus, constant,
-                                                                            loginAction) {
+                                        new GAEAsyncRequestCallback<Object>(null, eventBus, constant, loginAction, notificationManager) {
                                             @Override
                                             protected void onSuccess(Object result) {
-                                                console.print(constant.rollbackAllBackendsSuccessfully());
+                                                Notification notification =
+                                                        new Notification(constant.rollbackAllBackendsSuccessfully(), INFO);
+                                                notificationManager.showNotification(notification);
                                                 init(project);
                                             }
                                         });
@@ -249,8 +256,7 @@ public class BackendTabPanePresenter implements Presenter, BackendTabPaneView.Ac
 
         try {
             service.setBackendState(vfsId, project.getId(), backendName, backendState.toString(),
-                                    new GAEAsyncRequestCallback<Object>(null, console, eventBus, constant,
-                                                                        loginAction) {
+                                    new GAEAsyncRequestCallback<Object>(null, eventBus, constant, loginAction, notificationManager) {
                                         @Override
                                         protected void onSuccess(Object result) {
                                             init(project);

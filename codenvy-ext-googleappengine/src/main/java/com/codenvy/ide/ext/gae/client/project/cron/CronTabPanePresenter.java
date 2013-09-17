@@ -19,7 +19,8 @@
 package com.codenvy.ide.ext.gae.client.project.cron;
 
 import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.gae.client.GAEAsyncRequestCallback;
@@ -35,6 +36,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter that allow user to control crons information.
  *
@@ -43,24 +46,24 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class CronTabPanePresenter implements Presenter, CronTabPaneView.ActionDelegate {
-    private CronTabPaneView  view;
-    private GAEClientService service;
-    private EventBus         eventBus;
-    private ConsolePart      console;
-    private ResourceProvider resourceProvider;
-    private GAELocalization  constant;
-    private Project          project;
+    private CronTabPaneView     view;
+    private GAEClientService    service;
+    private EventBus            eventBus;
+    private ResourceProvider    resourceProvider;
+    private GAELocalization     constant;
+    private NotificationManager notificationManager;
+    private Project             project;
 
     /** Constructor for crons presenter. */
     @Inject
-    public CronTabPanePresenter(CronTabPaneView view, GAEClientService service, EventBus eventBus, ConsolePart console,
-                                ResourceProvider resourceProvider, GAELocalization constant) {
+    public CronTabPanePresenter(CronTabPaneView view, GAEClientService service, EventBus eventBus, ResourceProvider resourceProvider,
+                                GAELocalization constant, NotificationManager notificationManager) {
         this.view = view;
         this.service = service;
         this.eventBus = eventBus;
-        this.console = console;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -79,8 +82,8 @@ public class CronTabPanePresenter implements Presenter, CronTabPaneView.ActionDe
 
         try {
             service.cronInfo(vfsId, project.getId(),
-                             new GAEAsyncRequestCallback<JsonArray<CronEntry>>(unmarshaller, console, eventBus,
-                                                                               constant, null) {
+                             new GAEAsyncRequestCallback<JsonArray<CronEntry>>(unmarshaller, eventBus,
+                                                                               constant, null, notificationManager) {
                                  @Override
                                  protected void onSuccess(JsonArray<CronEntry> result) {
                                      view.setCronEntryData(result);
@@ -98,11 +101,12 @@ public class CronTabPanePresenter implements Presenter, CronTabPaneView.ActionDe
 
         try {
             service.updateCron(vfsId, project.getId(),
-                               new GAEAsyncRequestCallback<Object>(null, console, eventBus, constant, null) {
+                               new GAEAsyncRequestCallback<Object>(null, eventBus, constant, null, notificationManager) {
                                    @Override
                                    protected void onSuccess(Object result) {
                                        init(project);
-                                       console.print(constant.updateCronsSuccessfully());
+                                       Notification notification = new Notification(constant.updateCronsSuccessfully(), INFO);
+                                       notificationManager.showNotification(notification);
                                    }
                                });
         } catch (RequestException e) {

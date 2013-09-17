@@ -18,7 +18,8 @@
 
 package com.codenvy.ide.ext.gae.client.wizard;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.CreateProjectProvider;
 import com.codenvy.ide.api.template.TemplateAgent;
@@ -46,6 +47,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter that allow user to use Create Project Wizard to configure deployment application on Google App Engine.
  *
@@ -57,7 +60,6 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
     private GAEWizardView              view;
     private EventBus                   eventBus;
     private String                     existedAppId;
-    private ConsolePart                console;
     private GAELocalization            constant;
     private LoginAction                loginAction;
     private GAEClientService           service;
@@ -65,26 +67,26 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
     private CreateApplicationPresenter createApplicationPresenter;
     private ResourceProvider           resourceProvider;
     private CreateProjectProvider      createProjectProvider;
+    private NotificationManager        notificationManager;
     private boolean                    isLoggedIn;
 
     /** Constructor for Google App Engine Wizard page. */
     @Inject
-    public GAEWizardPresenter(EventBus eventBus, GAEWizardView view, ConsolePart console,
-                              GAELocalization constant, LoginAction loginAction,
+    public GAEWizardPresenter(EventBus eventBus, GAEWizardView view, GAELocalization constant, LoginAction loginAction,
                               GAEClientService service, TemplateAgent templateAgent, GAEResources resources,
-                              CreateApplicationPresenter createApplicationPresenter,
-                              ResourceProvider resourceProvider) {
+                              CreateApplicationPresenter createApplicationPresenter, ResourceProvider resourceProvider,
+                              NotificationManager notificationManager) {
         super("Deploy project to Google App Engine", resources.googleAppEngine48());
 
         this.eventBus = eventBus;
         this.view = view;
-        this.console = console;
         this.constant = constant;
         this.loginAction = loginAction;
         this.service = service;
         this.templateAgent = templateAgent;
         this.createApplicationPresenter = createApplicationPresenter;
         this.resourceProvider = resourceProvider;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -250,7 +252,7 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
         GaeUserUnmarshaller unmarshaller = new GaeUserUnmarshaller();
         try {
             service.getLoggedUser(
-                    new GAEAsyncRequestCallback<GaeUser>(unmarshaller, console, eventBus, constant, loginAction) {
+                    new GAEAsyncRequestCallback<GaeUser>(unmarshaller, eventBus, constant, loginAction, notificationManager) {
                         @Override
                         protected void onSuccess(GaeUser result) {
                             if (GAEExtension.isUserHasGaeScopes(result.getToken())) {
@@ -269,7 +271,8 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
                     });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -309,7 +312,7 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
 
         try {
             service.setApplicationId(vfsId, project.getId(), existedAppId,
-                                     new GAEAsyncRequestCallback<Object>(null, console, eventBus, constant, null) {
+                                     new GAEAsyncRequestCallback<Object>(null, eventBus, constant, null, notificationManager) {
                                          @Override
                                          protected void onSuccess(Object result) {
                                              //ignore

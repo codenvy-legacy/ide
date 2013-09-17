@@ -19,7 +19,7 @@
 package com.codenvy.ide.ext.gae.client.project.limit;
 
 import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.gae.client.GAEAsyncRequestCallback;
@@ -43,23 +43,23 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class LimitTabPanePresenter implements Presenter, LimitTabPaneView.ActionDelegate {
-    private LimitTabPaneView view;
-    private GAEClientService service;
-    private EventBus         eventBus;
-    private ConsolePart      console;
-    private ResourceProvider resourceProvider;
-    private GAELocalization  constant;
+    private LimitTabPaneView    view;
+    private GAEClientService    service;
+    private EventBus            eventBus;
+    private ResourceProvider    resourceProvider;
+    private GAELocalization     constant;
+    private NotificationManager notificationManager;
 
     /** Constructor for limits presenter. */
     @Inject
-    public LimitTabPanePresenter(LimitTabPaneView view, GAEClientService service, EventBus eventBus,
-                                 ConsolePart console, ResourceProvider resourceProvider, GAELocalization constant) {
+    public LimitTabPanePresenter(LimitTabPaneView view, GAEClientService service, EventBus eventBus, ResourceProvider resourceProvider,
+                                 GAELocalization constant, NotificationManager notificationManager) {
         this.view = view;
         this.service = service;
         this.eventBus = eventBus;
-        this.console = console;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -76,8 +76,8 @@ public class LimitTabPanePresenter implements Presenter, LimitTabPaneView.Action
 
         try {
             service.getResourceLimits(vfsId, project.getId(),
-                                      new GAEAsyncRequestCallback<JsonArray<ResourceLimit>>(unmarshaller, console,
-                                                                                            eventBus, constant, null) {
+                                      new GAEAsyncRequestCallback<JsonArray<ResourceLimit>>(unmarshaller, eventBus, constant, null,
+                                                                                            notificationManager) {
                                           @Override
                                           protected void onSuccess(JsonArray<ResourceLimit> result) {
                                               view.setResourceLimits(result);

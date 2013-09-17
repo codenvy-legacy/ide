@@ -18,6 +18,8 @@
 package com.codenvy.ide.ext.gae.client.create;
 
 import com.codenvy.ide.api.event.ResourceChangedEvent;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -44,6 +46,9 @@ import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
+import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
+
 /**
  * Presenter that allow user to create application on Google App Engine.
  *
@@ -60,16 +65,18 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     private ResourceProvider      resourceProvider;
     private String                restContext;
     private LoginAction           loginAction;
+    private NotificationManager   notificationManager;
     private HandlerRegistration   projectBuildHandler;
     private Project               project;
     private String                warUrl;
+    private Notification          notification;
 
     /** Constructor for Create Application Presenter. */
     @Inject
     public CreateApplicationPresenter(CreateApplicationView view, EventBus eventBus, ConsolePart console,
                                       GAEClientService service, GAELocalization constant,
                                       ResourceProvider resourceProvider, @Named("restContext") String restContext,
-                                      LoginAction loginAction) {
+                                      LoginAction loginAction, NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
         this.console = console;
@@ -78,6 +85,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         this.resourceProvider = resourceProvider;
         this.restContext = restContext;
         this.loginAction = loginAction;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -232,13 +240,20 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     private void uploadApplication() {
         ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
         final String vfsId = resourceProvider.getVfsId();
+        notification = new Notification(constant.deployApplicationStarted(project.getName()), PROGRESS);
+        notificationManager.showNotification(notification);
 
         try {
             service.update(vfsId, project, warUrl,
-                           new GAEAsyncRequestCallback<ApplicationInfo>(unmarshaller, console, eventBus, constant,
-                                                                        loginAction) {
+                           new GAEAsyncRequestCallback<ApplicationInfo>(unmarshaller, eventBus, constant, loginAction,
+                                                                        notificationManager) {
                                @Override
                                protected void onSuccess(ApplicationInfo result) {
+                                   notification.setMessage(constant.deployApplicationSuccess(project.getName(),
+                                                                                             "<a href='" + result.getWebURL() +
+                                                                                             "' target='_blank'>" +
+                                                                                             result.getWebURL() + "</a>"));
+                                   notification.setStatus(FINISHED);
                                    console.print(constant.deployApplicationSuccess(project.getName(),
                                                                                    "<a href='" + result.getWebURL() +
                                                                                    "' target='_blank'>" +
@@ -249,13 +264,15 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
                                @Override
                                protected void onFailure(Throwable exception) {
-                                   console.print(exception.getMessage());
+                                   notification.setStatus(FINISHED);
+                                   notification.setMessage(exception.getMessage());
                                    super.onFailure(exception);
                                }
                            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            notification.setStatus(FINISHED);
+            notification.setMessage(e.getMessage());
         }
     }
 

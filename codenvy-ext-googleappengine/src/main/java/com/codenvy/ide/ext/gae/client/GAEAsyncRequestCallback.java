@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.gae.client;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.commons.exception.UnauthorizedException;
@@ -26,6 +27,8 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Callback that uses to proceed request.
  *
@@ -33,21 +36,19 @@ import com.google.web.bindery.event.shared.EventBus;
  * @version $Id: May 18, 2012 11:25:43 AM anya $
  */
 public abstract class GAEAsyncRequestCallback<T> extends AsyncRequestCallback<T> {
-    private ConsolePart     console;
-    private EventBus        eventBus;
-    private LoginAction     loginAction;
-    private GAELocalization constant;
+    private EventBus            eventBus;
+    private LoginAction         loginAction;
+    private GAELocalization     constant;
+    private NotificationManager notificationManager;
 
-    /**
-     * Construct of the callback.
-     */
-    public GAEAsyncRequestCallback(Unmarshallable<T> unmarshaller, ConsolePart console, EventBus eventBus,
-                                   GAELocalization constant, LoginAction loginAction) {
+    /** Construct of the callback. */
+    public GAEAsyncRequestCallback(Unmarshallable<T> unmarshaller, EventBus eventBus, GAELocalization constant, LoginAction loginAction,
+                                   NotificationManager notificationManager) {
         super(unmarshaller);
-        this.console = console;
         this.constant = constant;
         this.eventBus = eventBus;
         this.loginAction = loginAction;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
@@ -59,16 +60,18 @@ public abstract class GAEAsyncRequestCallback<T> extends AsyncRequestCallback<T>
             }
             return;
         }
+        Notification notification = new Notification("", ERROR);
         if (exception instanceof ServerException) {
             ServerException serverException = (ServerException)exception;
             if (serverException.getMessage() != null) {
-                console.print(serverException.getMessage());
+                notification.setMessage(serverException.getMessage());
             } else {
-                console.print(constant.unknownErrorMessage());
+                notification.setMessage(constant.unknownErrorMessage());
             }
         } else {
             eventBus.fireEvent(new ExceptionThrownEvent(exception));
-            console.print(exception.getMessage());
+            notification.setMessage(exception.getMessage());
         }
+        notificationManager.showNotification(notification);
     }
 }
