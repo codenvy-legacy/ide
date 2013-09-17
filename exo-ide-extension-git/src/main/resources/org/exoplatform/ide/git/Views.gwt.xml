@@ -19,6 +19,7 @@
 -->
 <module>
     <inherits name='com.google.gwt.user.User'/>
+    <inherits name="org.exoplatform.ide.client.framework.IDEClientFramework"/>
     <replace-with class="org.exoplatform.ide.git.client.clone.CloneRepositoryView">
         <when-type-is class="org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display"/>
     </replace-with>
