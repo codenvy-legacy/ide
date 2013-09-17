@@ -32,10 +32,43 @@ import com.google.gwt.resources.client.ImageResource;
 /** Presenter for the participant list in the navigation bar. */
 public class ParticipantList extends UiComponent<ParticipantList.View> {
 
+    private ParticipantList(View view) {
+        super(view);
+    }
+
     /** Static factory method for obtaining an instance of the ParticipantList. */
     public static ParticipantList create(View view) {
         ParticipantList participantList = new ParticipantList(view);
         return participantList;
+    }
+
+    public void clearParticipants() {
+        getView().clearParticipants();
+    }
+
+    public void participantAdded(Participant participant) {
+        addParticipantToView(participant);
+    }
+
+    public void participantRemoved(Participant participant) {
+        getView().removeParticipant(participant.getClientId());
+    }
+
+    private void addParticipantToView(Participant participant) {
+        getView().addParticipant(participant.getClientId(), participant.getDisplayEmail(), participant.getDisplayName(),
+                                 participant.getColor());
+    }
+
+    public void setEditParticipant(String clientId, String color) {
+        getView().setColor(clientId, color);
+    }
+
+    public void clearEditParticipants() {
+        getView().clearColors();
+    }
+
+    public void removeEditParticipant(String clientId) {
+        getView().clearColor(clientId);
     }
 
     /** CSS for the participant list. */
@@ -61,9 +94,7 @@ public class ParticipantList extends UiComponent<ParticipantList.View> {
 
     public static class View extends CompositeView<Void> {
         final static Resources res = GWT.create(Resources.class);
-
         final Css css;
-
         private final JsoStringMap<DivElement> rows = JsoStringMap.create();
 
         public View() {
@@ -122,35 +153,13 @@ public class ParticipantList extends UiComponent<ParticipantList.View> {
                 element.setAttribute("data-collaboration", "false");
             }
         }
-    }
 
-    private ParticipantList(View view) {
-        super(view);
-    }
-
-    public void participantAdded(Participant participant) {
-        addParticipantToView(participant);
-    }
-
-    public void participantRemoved(Participant participant) {
-        getView().removeParticipant(participant.getClientId());
-    }
+        public void clearParticipants() {
+            for (String key : rows.getKeys().asIterable()) {
+                removeParticipant(key);
+            }
 
 
-    private void addParticipantToView(Participant participant) {
-        getView().addParticipant(participant.getClientId(), participant.getDisplayEmail(), participant.getDisplayName(),
-                                 participant.getColor());
-    }
-
-    public void setEditParticipant(String clientId, String color) {
-        getView().setColor(clientId, color);
-    }
-
-    public void clearEditParticipants() {
-        getView().clearColors();
-    }
-
-    public void removeEditParticipant(String clientId) {
-        getView().clearColor(clientId);
+        }
     }
 }

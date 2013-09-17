@@ -38,9 +38,10 @@ public class CollaborationApi extends FrontendApi {
     /** Send a message that user closed file. */
     public final SendApi<ProjectClosedDto> PROJECT_CLOSED = makeApi(Utils.getWorkspaceName() + "/vfs/watch/project/closed");
 
-    public final SendApi<ProjectOperationNotification> PROJECT_NOTOFICATION = makeApi("ide/collaboration/notification/project");
+    public final SendApi<ProjectOperationNotification> PROJECT_NOTIFICATION = makeApi("ide/collaboration/notification/project");
 
-    public final SendApi<DisableEnableCollaborationDto> DISABLE_ENABLE_COLLAB = makeApi("ide/collaboration/notification/switch/collaboration");
+    public final SendApi<DisableEnableCollaborationDto> DISABLE_ENABLE_COLLAB =
+            makeApi("ide/collaboration/notification/switch/collaboration");
 
 
     public CollaborationApi(MessageBus messageBus) {

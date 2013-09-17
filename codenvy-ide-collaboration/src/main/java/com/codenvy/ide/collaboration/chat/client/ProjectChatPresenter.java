@@ -343,8 +343,8 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
         participant.setClientId(user.getClientId());
         users.put(user.getClientId(), participant);
         dispatchParticipantAdded();
+        setParticipantColor(participant);
         if (display != null && !participant.isCurrentUser()) {
-            setParticipantColor(participant);
             display.addParticipant(participant);
             display.addNotificationMessage(
                     user.getUserDetails().getDisplayName() + " has joined the " + project.getName() + " project.");
@@ -398,6 +398,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
         if (StringUtils.isNullOrWhitespace(message)) {
             return;
         }
+        try {
         ChatMessageImpl chatMessage = ChatMessageImpl.make();
         chatMessage.setUserId(userId);
         chatMessage.setProjectId(project.getId());
@@ -413,10 +414,9 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
         chatMessage.setMessage(b.toSafeHtml().asString());
         display.clearMessage();
         display.addMessage(users.get(clientId), chatMessage.getMessage(), d.getTime());
-        try {
             chatApi.SEND_MESSAGE.send(chatMessage);
-        } catch (WebSocketException e) {
-            Log.debug(ProjectChatPresenter.class, e);
+        } catch (Exception e) {
+            Log.error(ProjectChatPresenter.class, e);
         }
 
     }
@@ -566,12 +566,22 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
     @Override
     public void onCollaborationChanged(CollaborationChangedEvent event) {
         if (event.isEnabled()) {
-            setProjectId(event.getProject());
             registerHandlers();
             if (display != null) {
                 display.removeDisabledMessage();
+                display.clearParticipants();
             }
-
+            else{
+               setProjectId(event.getProject());
+            }
+            users.iterate(new IterationCallback<Participant>() {
+                @Override
+                public void onIteration(String key, Participant value) {
+                    if(!value.isCurrentUser()){
+                       display.addParticipant(value);
+                    }
+                }
+            });
         } else {
             if (display != null) {
                 display.showChatDisabled();
@@ -614,6 +624,8 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
         void showChatDisabled();
 
         void removeDisabledMessage();
+
+        void clearParticipants();
     }
 
 
