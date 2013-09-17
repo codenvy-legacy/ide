@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.aws.client.beanstalk.environments.terminate;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.ext.aws.client.AWSLocalizationConstant;
@@ -35,6 +36,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter that allow user to terminate instance.
  *
@@ -45,11 +48,11 @@ import com.google.web.bindery.event.shared.EventBus;
 public class TerminateEnvironmentPresenter implements TerminateEnvironmentView.ActionDelegate {
     private TerminateEnvironmentView       view;
     private EventBus                       eventBus;
-    private ConsolePart                    console;
     private AWSLocalizationConstant        constant;
     private BeanstalkClientService         service;
     private LoginPresenter                 loginPresenter;
     private EnvironmentInfo                environmentInfo;
+    private NotificationManager            notificationManager;
     private AsyncCallback<EnvironmentInfo> callback;
 
     /**
@@ -57,21 +60,21 @@ public class TerminateEnvironmentPresenter implements TerminateEnvironmentView.A
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param constant
      * @param service
      * @param loginPresenter
+     * @param notificationManager
      */
     @Inject
-    public TerminateEnvironmentPresenter(TerminateEnvironmentView view, EventBus eventBus, ConsolePart console,
-                                         AWSLocalizationConstant constant,
-                                         BeanstalkClientService service, LoginPresenter loginPresenter) {
+    public TerminateEnvironmentPresenter(TerminateEnvironmentView view, EventBus eventBus, AWSLocalizationConstant constant,
+                                         BeanstalkClientService service, LoginPresenter loginPresenter,
+                                         NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
         this.service = service;
         this.loginPresenter = loginPresenter;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -115,7 +118,8 @@ public class TerminateEnvironmentPresenter implements TerminateEnvironmentView.A
                                                 message += "<br>" + exception.getMessage();
                                             }
 
-                                            console.print(message);
+                                            Notification notification = new Notification(message, ERROR);
+                                            notificationManager.showNotification(notification);
                                         }
 
                                         @Override
@@ -128,7 +132,8 @@ public class TerminateEnvironmentPresenter implements TerminateEnvironmentView.A
                                     });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 

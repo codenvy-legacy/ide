@@ -18,6 +18,8 @@
 package com.codenvy.ide.ext.aws.client.beanstalk.environments;
 
 import com.codenvy.ide.api.mvp.Presenter;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -44,6 +46,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.codenvy.ide.api.notification.Notification.Type.*;
+
 /**
  * Presenter that allow user to control environment state.
  *
@@ -62,6 +66,7 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
     private RebuildEnvironmentPresenter   rebuildEnvironmentPresenter;
     private TerminateEnvironmentPresenter terminateEnvironmentPresenter;
     private AWSLocalizationConstant       constant;
+    private NotificationManager           notificationManager;
 
     /**
      * Create presenter.
@@ -76,6 +81,7 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
      * @param rebuildEnvironmentPresenter
      * @param terminateEnvironmentPresenter
      * @param constant
+     * @param notificationManager
      */
     @Inject
     public EnvironmentTabPainPresenter(EnvironmentTabPainView view, EventBus eventBus, ConsolePart console,
@@ -83,7 +89,8 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
                                        EditConfigurationPresenter editConfigurationPresenter,
                                        RestartEnvironmentPresenter restartEnvironmentPresenter,
                                        RebuildEnvironmentPresenter rebuildEnvironmentPresenter,
-                                       TerminateEnvironmentPresenter terminateEnvironmentPresenter, AWSLocalizationConstant constant) {
+                                       TerminateEnvironmentPresenter terminateEnvironmentPresenter, AWSLocalizationConstant constant,
+                                       NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
         this.console = console;
@@ -94,6 +101,7 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
         this.rebuildEnvironmentPresenter = rebuildEnvironmentPresenter;
         this.terminateEnvironmentPresenter = terminateEnvironmentPresenter;
         this.constant = constant;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -156,7 +164,8 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
                 @Override
                 protected void onSuccess(JsonArray<InstanceLog> result) {
                     if (result.size() == 0) {
-                        console.print(constant.logsPreparing());
+                        Notification notification = new Notification(constant.logsPreparing(), WARNING);
+                        notificationManager.showNotification(notification);
                         return;
                     }
 
@@ -166,6 +175,8 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
                     }
 
                     console.print(message.toString());
+                    Notification notification = new Notification(message.toString(), INFO);
+                    notificationManager.showNotification(notification);
                 }
 
                 @Override
@@ -175,12 +186,14 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
                         message += "<br>" + exception.getMessage();
                     }
 
-                    console.print(message);
+                    Notification notification = new Notification(message, ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -222,12 +235,14 @@ public class EnvironmentTabPainPresenter implements Presenter, EnvironmentTabPai
                                         @Override
                                         protected void onFailure(Throwable exception) {
                                             eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                            console.print(exception.getMessage());
+                                            Notification notification = new Notification(exception.getMessage(), ERROR);
+                                            notificationManager.showNotification(notification);
                                         }
                                     });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 

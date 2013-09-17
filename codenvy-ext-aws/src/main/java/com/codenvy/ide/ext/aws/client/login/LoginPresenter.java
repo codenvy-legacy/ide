@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.aws.client.login;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.aws.client.AWSLocalizationConstant;
 import com.codenvy.ide.ext.aws.client.beanstalk.BeanstalkClientService;
@@ -26,6 +27,9 @@ import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
 /**
  * Presenter to allow user login with credentials.
@@ -36,30 +40,30 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class LoginPresenter implements LoginView.ActionDelegate {
     private LoginView               view;
-    private ConsolePart             console;
     private LoggedInHandler         loggedInHandler;
     private LoginCanceledHandler    loginCanceledHandler;
     private EventBus                eventBus;
     private AWSLocalizationConstant constant;
     private BeanstalkClientService  service;
+    private NotificationManager     notificationManager;
 
     /**
      * Create presenter.
      *
      * @param view
-     * @param console
      * @param eventBus
      * @param constant
      * @param service
+     * @param notificationManager
      */
     @Inject
-    protected LoginPresenter(LoginView view, ConsolePart console, EventBus eventBus, AWSLocalizationConstant constant,
-                             BeanstalkClientService service) {
+    protected LoginPresenter(LoginView view, EventBus eventBus, AWSLocalizationConstant constant, BeanstalkClientService service,
+                             NotificationManager notificationManager) {
         this.view = view;
-        this.console = console;
         this.eventBus = eventBus;
         this.constant = constant;
         this.service = service;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -96,7 +100,8 @@ public class LoginPresenter implements LoginView.ActionDelegate {
                         loggedInHandler.onLoggedIn();
                     }
                     String msg = constant.loginSuccess();
-                    console.print(msg);
+                    Notification notification = new Notification(msg, INFO);
+                    notificationManager.showNotification(notification);
                 }
 
                 @Override
@@ -106,7 +111,8 @@ public class LoginPresenter implements LoginView.ActionDelegate {
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 

@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.aws.client.beanstalk.versions.deploy;
 
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -43,6 +45,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $
@@ -61,13 +66,14 @@ public class DeployVersionPresenter implements DeployVersionView.ActionDelegate 
     private ResourceProvider               resourceProvider;
     private JsonArray<EnvironmentInfo>     environments;
     private LaunchEnvironmentPresenter     launchEnvironmentPresenter;
+    private NotificationManager            notificationManager;
 
     @Inject
 
     public DeployVersionPresenter(DeployVersionView view, EventBus eventBus, ConsolePart console,
                                   LoginPresenter loginPresenter, BeanstalkClientService service,
                                   AWSLocalizationConstant constant, ResourceProvider resourceProvider,
-                                  LaunchEnvironmentPresenter launchEnvironmentPresenter) {
+                                  LaunchEnvironmentPresenter launchEnvironmentPresenter, NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
         this.console = console;
@@ -76,6 +82,7 @@ public class DeployVersionPresenter implements DeployVersionView.ActionDelegate 
         this.constant = constant;
         this.resourceProvider = resourceProvider;
         this.launchEnvironmentPresenter = launchEnvironmentPresenter;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -108,14 +115,15 @@ public class DeployVersionPresenter implements DeployVersionView.ActionDelegate 
                         return;
                     }
 
-                    console.print(constant.launchEnvironmentLaunching(result.getName()));
+                    Notification notification = new Notification(constant.launchEnvironmentLaunching(result.getName()), INFO);
+                    notificationManager.showNotification(notification);
 
                     RequestStatusHandler environmentStatusHandler =
                             new EnvironmentRequestStatusHandler(constant.launchEnvironmentLaunching(result.getName()),
                                                                 constant.launchEnvironmentSuccess(result.getName()), eventBus);
 
                     new EnvironmentStatusChecker(resourceProvider, resourceProvider.getActiveProject(), result, true,
-                                                 environmentStatusHandler, eventBus, console, service, loginPresenter, constant)
+                                                 environmentStatusHandler, eventBus, service, loginPresenter, constant, notificationManager)
                             .startChecking();
                 }
             });
@@ -155,7 +163,8 @@ public class DeployVersionPresenter implements DeployVersionView.ActionDelegate 
                                         @Override
                                         protected void processFail(Throwable exception) {
                                             eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                            console.print(exception.getMessage());
+                                            Notification notification = new Notification(exception.getMessage(), ERROR);
+                                            notificationManager.showNotification(notification);
                                         }
 
                                         @Override
@@ -174,7 +183,8 @@ public class DeployVersionPresenter implements DeployVersionView.ActionDelegate 
                                     });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -203,7 +213,8 @@ public class DeployVersionPresenter implements DeployVersionView.ActionDelegate 
                                                   message += "<br>" + exception.getMessage();
                                               }
 
-                                              console.print(message);
+                                              Notification notification = new Notification(message, ERROR);
+                                              notificationManager.showNotification(notification);
                                           }
 
                                           @Override
@@ -222,7 +233,8 @@ public class DeployVersionPresenter implements DeployVersionView.ActionDelegate 
                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 }

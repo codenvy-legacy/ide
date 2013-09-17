@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.aws.client.beanstalk.wizard;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.CreateProjectProvider;
 import com.codenvy.ide.api.template.TemplateAgent;
@@ -58,6 +59,11 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
+import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter to allow user create application via wizard.
  *
@@ -71,7 +77,6 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
     private String                  environmentName;
     private Project                 project;
     private ResourceProvider        resourceProvider;
-    private ConsolePart             console;
     private AWSLocalizationConstant constant;
     private HandlerRegistration     projectBuildHandler;
     private LoginPresenter          loginPresenter;
@@ -81,6 +86,8 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
     private String                  warUrl;
     private String                  projectName;
     private Loader                  loader;
+    private NotificationManager     notificationManager;
+    private Notification            notification;
     private boolean                 isLogined;
 
     /**
@@ -89,7 +96,6 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
      * @param view
      * @param eventBus
      * @param resourceProvider
-     * @param console
      * @param constant
      * @param loginPresenter
      * @param service
@@ -97,24 +103,25 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
      * @param createProjectProvider
      * @param resource
      * @param loader
+     * @param notificationManager
      */
     @Inject
-    public BeanstalkPagePresenter(BeanstalkPageView view, EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                  AWSLocalizationConstant constant, LoginPresenter loginPresenter,
-                                  BeanstalkClientService service, TemplateAgent templateAgent,
-                                  CreateProjectProvider createProjectProvider, AWSResource resource, Loader loader) {
+    public BeanstalkPagePresenter(BeanstalkPageView view, EventBus eventBus, ResourceProvider resourceProvider,
+                                  AWSLocalizationConstant constant, LoginPresenter loginPresenter, BeanstalkClientService service,
+                                  TemplateAgent templateAgent, CreateProjectProvider createProjectProvider, AWSResource resource,
+                                  Loader loader, NotificationManager notificationManager) {
         super("Deploy project to Elastic Beanstalk", resource.elasticBeanstalk48());
 
         this.view = view;
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
-        this.console = console;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.templateAgent = templateAgent;
         this.createProjectProvider = createProjectProvider;
         this.loader = loader;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -216,6 +223,8 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
         createApplicationRequest.setWar(warUrl);
 
         ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
+        notification = new Notification(constant.creatingProject(), PROGRESS);
+        notificationManager.showNotification(notification);
 
         try {
             service.createApplication(resourceProvider.getVfsId(), project.getId(), createApplicationRequest,
@@ -228,18 +237,23 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
                                               }
 
                                               eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                              console.print(message);
+                                              notification.setStatus(FINISHED);
+                                              notification.setMessage(message);
+                                              notification.setType(ERROR);
                                           }
 
                                           @Override
                                           protected void onSuccess(ApplicationInfo result) {
-                                              console.print(constant.createApplicationSuccess(result.getName()));
+                                              notification.setStatus(FINISHED);
+                                              notification.setMessage(constant.createApplicationSuccess(result.getName()));
                                               createEnvironment(result.getName());
                                           }
                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            notification.setStatus(FINISHED);
+            notification.setMessage(e.getMessage());
+            notification.setType(ERROR);
         }
     }
 
@@ -280,27 +294,31 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
                                                   message += "<br>" + exception.getMessage();
                                               }
 
-                                              console.print(message);
+                                              Notification notification = new Notification(message, ERROR);
+                                              notificationManager.showNotification(notification);
                                           }
 
                                           @Override
                                           protected void onSuccess(EnvironmentInfo result) {
                                               loader.hide();
-                                              console.print(constant.launchEnvironmentLaunching(environmentName));
+                                              Notification notification = new Notification(constant.launchEnvironmentLaunching(
+                                                      environmentName), INFO);
+                                              notificationManager.showNotification(notification);
 
                                               RequestStatusHandler environmentStatusHandler =
                                                       new EnvironmentRequestStatusHandler(
                                                               constant.launchEnvironmentLaunching(result.getName()),
                                                               constant.launchEnvironmentSuccess(result.getName()), eventBus);
                                               new EnvironmentStatusChecker(resourceProvider, project, result, true,
-                                                                           environmentStatusHandler, eventBus, console, service,
-                                                                           loginPresenter, constant).startChecking();
+                                                                           environmentStatusHandler, eventBus, service,
+                                                                           loginPresenter, constant, notificationManager).startChecking();
                                           }
                                       });
         } catch (RequestException e) {
             loader.hide();
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -377,7 +395,8 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
                         @Override
                         protected void processFail(Throwable exception) {
                             eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                            console.print(exception.getMessage());
+                            Notification notification = new Notification(exception.getMessage(), ERROR);
+                            notificationManager.showNotification(notification);
                         }
 
                         @Override
@@ -395,7 +414,8 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
                     });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 }

@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.aws.client.beanstalk.manage;
 
 import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.aws.client.AWSLocalizationConstant;
@@ -46,6 +47,9 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.Date;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter to allow user view application info and control description.
  *
@@ -56,7 +60,6 @@ import java.util.Date;
 public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDelegate {
     private MainTabPainView            view;
     private EventBus                   eventBus;
-    private ConsolePart                console;
     private AWSLocalizationConstant    constant;
     private LoginPresenter             loginPresenter;
     private DescriptionUpdatePresenter descriptionUpdatePresenter;
@@ -65,13 +68,13 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
     private ResourceProvider           resourceProvider;
     private CreateVersionPresenter     createNewVersionPresenter;
     private LaunchEnvironmentPresenter launchEnvironmentPresenter;
+    private NotificationManager        notificationManager;
 
     /**
      * Create presenter.
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param constant
      * @param loginPresenter
      * @param descriptionUpdatePresenter
@@ -79,16 +82,15 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
      * @param resourceProvider
      * @param launchEnvironmentPresenter
      * @param createNewVersionPresenter
+     * @param notificationManager
      */
     @Inject
-    public MainTabPainPresenter(MainTabPainView view, EventBus eventBus, ConsolePart console,
-                                AWSLocalizationConstant constant, LoginPresenter loginPresenter,
+    public MainTabPainPresenter(MainTabPainView view, EventBus eventBus, AWSLocalizationConstant constant, LoginPresenter loginPresenter,
                                 DescriptionUpdatePresenter descriptionUpdatePresenter, BeanstalkClientService service,
                                 ResourceProvider resourceProvider, LaunchEnvironmentPresenter launchEnvironmentPresenter,
-                                CreateVersionPresenter createNewVersionPresenter) {
+                                CreateVersionPresenter createNewVersionPresenter, NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.descriptionUpdatePresenter = descriptionUpdatePresenter;
@@ -96,6 +98,7 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
         this.resourceProvider = resourceProvider;
         this.launchEnvironmentPresenter = launchEnvironmentPresenter;
         this.createNewVersionPresenter = createNewVersionPresenter;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -122,7 +125,8 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
                                            @Override
                                            protected void processFail(Throwable exception) {
                                                eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                               console.print(exception.getMessage());
+                                               Notification notification = new Notification(exception.getMessage(), ERROR);
+                                               notificationManager.showNotification(notification);
                                            }
 
                                            @Override
@@ -145,7 +149,8 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -194,7 +199,8 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
                                           @Override
                                           protected void processFail(Throwable exception) {
                                               eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                              console.print(exception.getMessage());
+                                              Notification notification = new Notification(exception.getMessage(), ERROR);
+                                              notificationManager.showNotification(notification);
                                           }
 
                                           @Override
@@ -204,7 +210,8 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -244,13 +251,15 @@ public class MainTabPainPresenter implements Presenter, MainTabPainView.ActionDe
                             return;
                         }
 
-                        console.print(constant.launchEnvironmentLaunching(result.getName()));
+                        Notification notification = new Notification(constant.launchEnvironmentLaunching(result.getName()), INFO);
+                        notificationManager.showNotification(notification);
                         RequestStatusHandler environmentStatusHandler =
                                 new EnvironmentRequestStatusHandler(constant.launchEnvironmentLaunching(result.getName()),
                                                                     constant.launchEnvironmentSuccess(result.getName()), eventBus);
 
                         new EnvironmentStatusChecker(resourceProvider, resourceProvider.getActiveProject(), result, true,
-                                                     environmentStatusHandler, eventBus, console, service, loginPresenter, constant)
+                                                     environmentStatusHandler, eventBus, service, loginPresenter, constant,
+                                                     notificationManager)
                                 .startChecking();
                     }
                 });

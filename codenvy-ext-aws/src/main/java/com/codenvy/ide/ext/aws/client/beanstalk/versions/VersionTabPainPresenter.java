@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.aws.client.beanstalk.versions;
 
 import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.aws.client.AWSLocalizationConstant;
@@ -42,6 +43,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter for displaying version information for selected application.
  *
@@ -52,41 +55,41 @@ import java.util.List;
 public class VersionTabPainPresenter implements Presenter, VersionTabPainView.ActionDelegate {
     private VersionTabPainView      view;
     private EventBus                eventBus;
-    private ConsolePart             console;
     private LoginPresenter          loginPresenter;
     private BeanstalkClientService  service;
     private DeployVersionPresenter  deployVersionPresenter;
     private DeleteVersionPresenter  deleteVersionPresenter;
     private AWSLocalizationConstant constant;
     private ResourceProvider        resourceProvider;
+    private NotificationManager     notificationManager;
 
     /**
      * Create presenter.
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param loginPresenter
      * @param service
      * @param deployVersionPresenter
      * @param deleteVersionPresenter
      * @param constant
      * @param resourceProvider
+     * @param notificationManager
      */
     @Inject
-    public VersionTabPainPresenter(VersionTabPainView view, EventBus eventBus, ConsolePart console,
-                                   LoginPresenter loginPresenter, BeanstalkClientService service,
-                                   DeployVersionPresenter deployVersionPresenter, DeleteVersionPresenter deleteVersionPresenter,
-                                   AWSLocalizationConstant constant, ResourceProvider resourceProvider) {
+    public VersionTabPainPresenter(VersionTabPainView view, EventBus eventBus, LoginPresenter loginPresenter,
+                                   BeanstalkClientService service, DeployVersionPresenter deployVersionPresenter,
+                                   DeleteVersionPresenter deleteVersionPresenter, AWSLocalizationConstant constant,
+                                   ResourceProvider resourceProvider, NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
-        this.console = console;
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.deployVersionPresenter = deployVersionPresenter;
         this.deleteVersionPresenter = deleteVersionPresenter;
         this.constant = constant;
         this.resourceProvider = resourceProvider;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -103,7 +106,8 @@ public class VersionTabPainPresenter implements Presenter, VersionTabPainView.Ac
             @Override
             public void onSuccess(EnvironmentInfo result) {
                 if (result == null) {
-                    console.print(constant.deployVersionFailed(object.getVersionLabel()));
+                    Notification notification = new Notification(constant.deployVersionFailed(object.getVersionLabel()), ERROR);
+                    notificationManager.showNotification(notification);
                 } else {
                     getVersions();
                 }
@@ -154,12 +158,14 @@ public class VersionTabPainPresenter implements Presenter, VersionTabPainView.Ac
                                     @Override
                                     protected void processFail(Throwable exception) {
                                         eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                        console.print(exception.getMessage());
+                                        Notification notification = new Notification(exception.getMessage(), ERROR);
+                                        notificationManager.showNotification(notification);
                                     }
                                 });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 

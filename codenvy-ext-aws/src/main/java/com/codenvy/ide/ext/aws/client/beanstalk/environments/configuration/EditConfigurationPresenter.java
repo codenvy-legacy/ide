@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.aws.client.beanstalk.environments.configuration;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
@@ -40,6 +41,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter that allow user to edit application configuration.
  *
@@ -52,12 +55,12 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
     private BeanstalkClientService             service;
     private ContainerTabPainPresenter          containerTabPainPresenter;
     private EventBus                           eventBus;
-    private ConsolePart                        console;
     private ResourceProvider                   resourceProvider;
     private AWSLocalizationConstant            constant;
     private ServerTabPainPresenter             serverTabPainPresenter;
     private LoadBalancerTabPainPresenter       loadBalancerTabPainPresenter;
     private EnvironmentInfo                    environmentInfo;
+    private NotificationManager                notificationManager;
     private JsonArray<ConfigurationOptionInfo> configurationOptionInfoList;
 
     /**
@@ -67,28 +70,29 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
      * @param service
      * @param containerTabPainPresenter
      * @param eventBus
-     * @param console
      * @param resourceProvider
      * @param constant
      * @param serverTabPainPresenter
      * @param loadBalancerTabPainPresenter
+     * @param notificationManager
      */
     @Inject
     protected EditConfigurationPresenter(EditConfigurationView view, BeanstalkClientService service,
-                                         ContainerTabPainPresenter containerTabPainPresenter, EventBus eventBus, ConsolePart console,
+                                         ContainerTabPainPresenter containerTabPainPresenter, EventBus eventBus,
                                          ResourceProvider resourceProvider, AWSLocalizationConstant constant,
                                          ServerTabPainPresenter serverTabPainPresenter,
-                                         LoadBalancerTabPainPresenter loadBalancerTabPainPresenter) {
+                                         LoadBalancerTabPainPresenter loadBalancerTabPainPresenter,
+                                         NotificationManager notificationManager) {
 
         this.view = view;
         this.service = service;
         this.containerTabPainPresenter = containerTabPainPresenter;
         this.eventBus = eventBus;
-        this.console = console;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
         this.serverTabPainPresenter = serverTabPainPresenter;
         this.loadBalancerTabPainPresenter = loadBalancerTabPainPresenter;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
 
@@ -136,7 +140,8 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
                                                          });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -156,7 +161,8 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
                         showConfiguration(result.get(0));
                     } else {
                         String message = constant.getEnvironmentConfigurationFailed();
-                        console.print(message);
+                        Notification notification = new Notification(message, ERROR);
+                        notificationManager.showNotification(notification);
                     }
                 }
 
@@ -167,12 +173,14 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
                         message += "<br>" + exception.getMessage();
                     }
 
-                    console.print(message);
+                    Notification notification = new Notification(message, ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -217,12 +225,14 @@ public class EditConfigurationPresenter implements EditConfigurationView.ActionD
                                                   message += "<br>" + exception.getMessage();
                                               }
 
-                                              console.print(message);
+                                              Notification notification = new Notification(message, ERROR);
+                                              notificationManager.showNotification(notification);
                                           }
                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 

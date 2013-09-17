@@ -17,9 +17,9 @@
  */
 package com.codenvy.ide.ext.aws.client.s3.create;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.ext.aws.client.AWSLocalizationConstant;
 import com.codenvy.ide.ext.aws.client.AwsAsyncRequestCallback;
 import com.codenvy.ide.ext.aws.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.aws.client.login.LoginPresenter;
@@ -33,6 +33,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter for creating S3 Buckets.
  *
@@ -41,33 +43,30 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class S3CreateBucketPresenter implements S3CreateBucketView.ActionDelegate {
-    private S3CreateBucketView      view;
-    private ConsolePart             console;
-    private EventBus                eventBus;
-    private AWSLocalizationConstant constant;
-    private S3ClientService         service;
-    private LoginPresenter          loginPresenter;
-    private AsyncCallback<String>   callback;
+    private S3CreateBucketView    view;
+    private EventBus              eventBus;
+    private S3ClientService       service;
+    private LoginPresenter        loginPresenter;
+    private NotificationManager   notificationManager;
+    private AsyncCallback<String> callback;
 
     /**
      * Create presenter.
      *
      * @param view
-     * @param console
      * @param eventBus
-     * @param constant
      * @param service
      * @param loginPresenter
+     * @param notificationManager
      */
     @Inject
-    protected S3CreateBucketPresenter(S3CreateBucketView view, ConsolePart console, EventBus eventBus, AWSLocalizationConstant constant,
-                                      S3ClientService service, LoginPresenter loginPresenter) {
+    protected S3CreateBucketPresenter(S3CreateBucketView view, EventBus eventBus, S3ClientService service, LoginPresenter loginPresenter,
+                                      NotificationManager notificationManager) {
         this.view = view;
-        this.console = console;
         this.eventBus = eventBus;
-        this.constant = constant;
         this.service = service;
         this.loginPresenter = loginPresenter;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -109,7 +108,8 @@ public class S3CreateBucketPresenter implements S3CreateBucketView.ActionDelegat
                 @Override
                 protected void processFail(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                     callback.onSuccess(null);
                     view.close();
                 }
@@ -122,7 +122,8 @@ public class S3CreateBucketPresenter implements S3CreateBucketView.ActionDelegat
             }, view.getBucketName(), S3Region.fromValue(view.getRegion()).toString());
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             callback.onFailure(e);
             view.close();
         }

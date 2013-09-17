@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.aws.client.beanstalk.versions.create;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
@@ -41,6 +42,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter that allow user to create application.
  *
@@ -51,7 +54,6 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 public class CreateVersionPresenter implements CreateVersionView.ActionDelegate, ProjectBuiltHandler {
     private CreateVersionView                     view;
     private EventBus                              eventBus;
-    private ConsolePart                           console;
     private BeanstalkClientService                service;
     private AWSLocalizationConstant               constant;
     private LoginPresenter                        loginPresenter;
@@ -59,6 +61,7 @@ public class CreateVersionPresenter implements CreateVersionView.ActionDelegate,
     private HandlerRegistration                   projectBuildHandler;
     private String                                warUrl;
     private String                                appName;
+    private NotificationManager                   notificationManager;
     private AsyncCallback<ApplicationVersionInfo> callback;
 
     /**
@@ -66,23 +69,23 @@ public class CreateVersionPresenter implements CreateVersionView.ActionDelegate,
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param service
      * @param constant
      * @param loginPresenter
      * @param resourceProvider
+     * @param notificationManager
      */
     @Inject
-    public CreateVersionPresenter(CreateVersionView view, EventBus eventBus, ConsolePart console,
-                                  BeanstalkClientService service, AWSLocalizationConstant constant,
-                                  LoginPresenter loginPresenter, ResourceProvider resourceProvider) {
+    public CreateVersionPresenter(CreateVersionView view, EventBus eventBus, BeanstalkClientService service,
+                                  AWSLocalizationConstant constant, LoginPresenter loginPresenter, ResourceProvider resourceProvider,
+                                  NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
-        this.console = console;
         this.service = service;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.resourceProvider = resourceProvider;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -172,7 +175,8 @@ public class CreateVersionPresenter implements CreateVersionView.ActionDelegate,
                                               message += "<br>" + exception.getMessage();
                                           }
 
-                                          console.print(message);
+                                          Notification notification = new Notification(message, ERROR);
+                                          notificationManager.showNotification(notification);
 
                                           if (callback != null) {
                                               callback.onSuccess(null);
@@ -190,7 +194,8 @@ public class CreateVersionPresenter implements CreateVersionView.ActionDelegate,
                                   });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 }
