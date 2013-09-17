@@ -72,7 +72,7 @@
         <dependency>
             <groupId>com.cloudbees</groupId>
             <artifactId>cloudbees-api-client</artifactId>
-            <version>1.4.0</version>
+            <version>1.5.4</version>
         </dependency>
 
         <dependency>

@@ -49,13 +49,13 @@ public class JenkinsExtension extends Extension implements InitializeServicesHan
     public void initialize() {
         // IDE.getInstance().addControl(new BuildControl(), DockTarget.NONE, false);
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
+        new BuildApplicationPresenter();
     }
 
     /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
      * .client.framework.application.event.InitializeServicesEvent) */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new BuildApplicationPresenter();
         new JenkinsService(event.getLoader());
     }
 
