@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.git.client.reset.files;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
@@ -36,6 +37,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter for reseting files from index.
  * <p/>
@@ -53,7 +57,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
     private GitClientService        service;
     private ResourceProvider        resourceProvider;
     private GitLocalizationConstant constant;
-    private ConsolePart             console;
+    private NotificationManager     notificationManager;
     private Project                 project;
     private JsonArray<IndexFile>    indexedFiles;
 
@@ -64,17 +68,17 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
      * @param service
      * @param resourceProvider
      * @param constant
-     * @param console
+     * @param notificationManager
      */
     @Inject
     public ResetFilesPresenter(ResetFilesView view, GitClientService service, ResourceProvider resourceProvider,
-                               GitLocalizationConstant constant, ConsolePart console) {
+                               GitLocalizationConstant constant, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
-        this.console = console;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -115,12 +119,14 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
                 @Override
                 protected void onFailure(Throwable exception) {
                     String errorMassage = exception.getMessage() != null ? exception.getMessage() : constant.statusFailed();
-                    console.print(errorMassage);
+                    Notification notification = new Notification(errorMassage, ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             String errorMassage = e.getMessage() != null ? e.getMessage() : constant.statusFailed();
-            console.print(errorMassage);
+            Notification notification = new Notification(errorMassage, ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -137,7 +143,8 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
 
         if (files.isEmpty()) {
             view.close();
-            console.print(constant.nothingToReset());
+            Notification notification = new Notification(constant.nothingToReset(), INFO);
+            notificationManager.showNotification(notification);
             return;
         }
 
@@ -151,7 +158,8 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
                         @Override
                         public void onSuccess(Project result) {
                             view.close();
-                            console.print(constant.resetFilesSuccessfully());
+                            Notification notification = new Notification(constant.resetFilesSuccessfully(), INFO);
+                            notificationManager.showNotification(notification);
                         }
 
                         @Override
@@ -164,12 +172,14 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
                 @Override
                 protected void onFailure(Throwable exception) {
                     String errorMassage = exception.getMessage() != null ? exception.getMessage() : constant.resetFilesFailed();
-                    console.print(errorMassage);
+                    Notification notification = new Notification(errorMassage, ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             String errorMassage = e.getMessage() != null ? e.getMessage() : constant.resetFilesFailed();
-            console.print(errorMassage);
+            Notification notification = new Notification(errorMassage, ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 

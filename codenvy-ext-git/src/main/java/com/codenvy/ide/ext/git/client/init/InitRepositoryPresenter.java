@@ -19,7 +19,8 @@ package com.codenvy.ide.ext.git.client.init;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
@@ -34,6 +35,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter for Git command Init Repository.
  *
@@ -47,8 +51,8 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
     private Project                 project;
     private ResourceProvider        resourceProvider;
     private EventBus                eventBus;
-    private ConsolePart             console;
     private GitLocalizationConstant constant;
+    private NotificationManager     notificationManager;
 
     /**
      * Create presenter.
@@ -57,19 +61,19 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
      * @param service
      * @param resourceProvider
      * @param eventBus
-     * @param console
      * @param constant
+     * @param notificationManager
      */
     @Inject
     public InitRepositoryPresenter(InitRepositoryView view, GitClientService service, ResourceProvider resourceProvider,
-                                   EventBus eventBus, ConsolePart console, GitLocalizationConstant constant) {
+                                   EventBus eventBus, GitLocalizationConstant constant, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -129,7 +133,8 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
         project.refreshProperties(new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
-                console.print(constant.initSuccess());
+                Notification notification = new Notification(constant.initSuccess(), INFO);
+                notificationManager.showNotification(notification);
                 eventBus.fireEvent(new RefreshBrowserEvent(project));
             }
 
@@ -148,7 +153,8 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
      */
     private void handleError(@NotNull Throwable e) {
         String errorMessage = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : constant.initFailed();
-        console.print(errorMessage);
+        Notification notification = new Notification(errorMessage, ERROR);
+        notificationManager.showNotification(notification);
     }
 
     /** {@inheritDoc} */

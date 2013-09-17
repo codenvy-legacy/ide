@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.git.client.fetch;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
@@ -38,6 +39,8 @@ import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_LOCAL;
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_REMOTE;
 
@@ -52,9 +55,9 @@ public class FetchPresenter implements FetchView.ActionDelegate {
     private FetchView               view;
     private GitClientService        service;
     private ResourceProvider        resourceProvider;
-    private ConsolePart             console;
     private GitLocalizationConstant constant;
     private Project                 project;
+    private NotificationManager     notificationManager;
 
     /**
      * Create presenter.
@@ -62,18 +65,18 @@ public class FetchPresenter implements FetchView.ActionDelegate {
      * @param view
      * @param service
      * @param resourceProvider
-     * @param console
      * @param constant
+     * @param notificationManager
      */
     @Inject
-    public FetchPresenter(FetchView view, GitClientService service, ResourceProvider resourceProvider, ConsolePart console,
-                          GitLocalizationConstant constant) {
+    public FetchPresenter(FetchView view, GitClientService service, ResourceProvider resourceProvider,
+                          GitLocalizationConstant constant, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
-        this.console = console;
         this.constant = constant;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -144,13 +147,15 @@ public class FetchPresenter implements FetchView.ActionDelegate {
                                    protected void onFailure(Throwable exception) {
                                        String errorMessage =
                                                exception.getMessage() != null ? exception.getMessage() : constant.branchesListFailed();
-                                       console.print(errorMessage);
+                                       Notification notification = new Notification(errorMessage, ERROR);
+                                       notificationManager.showNotification(notification);
                                        view.setEnableFetchButton(false);
                                    }
                                });
         } catch (RequestException e) {
             String errorMessage = e.getMessage() != null ? e.getMessage() : constant.branchesListFailed();
-            console.print(errorMessage);
+            Notification notification = new Notification(errorMessage, ERROR);
+            notificationManager.showNotification(notification);
             view.setEnableFetchButton(false);
         }
     }
@@ -223,7 +228,8 @@ public class FetchPresenter implements FetchView.ActionDelegate {
             service.fetchWS(resourceProvider.getVfsId(), project, remoteName, getRefs(), removeDeletedRefs, new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
-                    console.print(constant.fetchSuccess(remoteUrl));
+                    Notification notification = new Notification(constant.fetchSuccess(remoteUrl), INFO);
+                    notificationManager.showNotification(notification);
                 }
 
                 @Override
@@ -244,7 +250,8 @@ public class FetchPresenter implements FetchView.ActionDelegate {
                           new AsyncRequestCallback<String>() {
                               @Override
                               protected void onSuccess(String result) {
-                                  console.print(constant.fetchSuccess(remoteUrl));
+                                  Notification notification = new Notification(constant.fetchSuccess(remoteUrl), INFO);
+                                  notificationManager.showNotification(notification);
                               }
 
                               @Override
@@ -279,7 +286,8 @@ public class FetchPresenter implements FetchView.ActionDelegate {
      */
     private void handleError(@NotNull Throwable t, @NotNull String remoteUrl) {
         String errorMessage = (t.getMessage() != null) ? t.getMessage() : constant.fetchFail(remoteUrl);
-        console.print(errorMessage);
+        Notification notification = new Notification(errorMessage, ERROR);
+        notificationManager.showNotification(notification);
     }
 
     /** {@inheritDoc} */

@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.git.client.push;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
@@ -38,6 +39,8 @@ import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_LOCAL;
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_REMOTE;
 
@@ -52,8 +55,8 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
     private PushToRemoteView        view;
     private GitClientService        service;
     private ResourceProvider        resourceProvider;
-    private ConsolePart             console;
     private GitLocalizationConstant constant;
+    private NotificationManager     notificationManager;
     private Project                 project;
 
     /**
@@ -62,18 +65,18 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
      * @param view
      * @param service
      * @param resourceProvider
-     * @param console
      * @param constant
+     * @param notificationManager
      */
     @Inject
-    public PushToRemotePresenter(PushToRemoteView view, GitClientService service, ResourceProvider resourceProvider, ConsolePart console,
-                                 GitLocalizationConstant constant) {
+    public PushToRemotePresenter(PushToRemoteView view, GitClientService service, ResourceProvider resourceProvider,
+                                 GitLocalizationConstant constant, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
-        this.console = console;
         this.constant = constant;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -141,13 +144,15 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
                                    protected void onFailure(Throwable exception) {
                                        String errorMessage =
                                                exception.getMessage() != null ? exception.getMessage() : constant.branchesListFailed();
-                                       console.print(errorMessage);
+                                       Notification notification = new Notification(errorMessage, ERROR);
+                                       notificationManager.showNotification(notification);
                                        view.setEnablePushButton(false);
                                    }
                                });
         } catch (RequestException e) {
             String errorMessage = e.getMessage() != null ? e.getMessage() : constant.branchesListFailed();
-            console.print(errorMessage);
+            Notification notification = new Notification(errorMessage, ERROR);
+            notificationManager.showNotification(notification);
             view.setEnablePushButton(false);
         }
     }
@@ -217,14 +222,16 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
             service.pushWS(resourceProvider.getVfsId(), project, getRefs(), repository, false, new RequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
-                    console.print(constant.pushSuccess(repository));
+                    Notification notification = new Notification(constant.pushSuccess(repository), INFO);
+                    notificationManager.showNotification(notification);
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
                     handleError(exception);
                     if (repository.startsWith("https://")) {
-                        console.print(constant.useSshProtocol());
+                        Notification notification = new Notification(constant.useSshProtocol(), ERROR);
+                        notificationManager.showNotification(notification);
                     }
                 }
             });
@@ -240,14 +247,16 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
             service.push(resourceProvider.getVfsId(), project, getRefs(), repository, false, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
-                    console.print(constant.pushSuccess(repository));
+                    Notification notification = new Notification(constant.pushSuccess(repository), INFO);
+                    notificationManager.showNotification(notification);
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
                     handleError(exception);
                     if (repository.startsWith("https://")) {
-                        console.print(constant.useSshProtocol());
+                        Notification notification = new Notification(constant.useSshProtocol(), ERROR);
+                        notificationManager.showNotification(notification);
                     }
                 }
             });
@@ -274,7 +283,8 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
      */
     private void handleError(@NotNull Throwable t) {
         String errorMessage = t.getMessage() != null ? t.getMessage() : constant.pushFail();
-        console.print(errorMessage);
+        Notification notification = new Notification(errorMessage, ERROR);
+        notificationManager.showNotification(notification);
     }
 
     /** {@inheritDoc} */
