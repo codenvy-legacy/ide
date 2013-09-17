@@ -21,7 +21,6 @@ import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.workspace.WorkspacePresenter;
-import com.google.gwt.core.client.Scheduler;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -30,7 +29,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_PROJECT_TYPE;
 
 /**
- * TODO
+ * Controls a tutorial page state: can shows or hides it. Automatically shows tutorial page when project has opened and
+ * closes it when project has closed.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: TutorialPageController.java Sep 13, 2013 12:48:08 PM azatsarynnyy $
@@ -70,11 +70,13 @@ public class TutorialPageController {
         });
     }
 
+    /** Open tutorial description page. */
     public void openTutorialPage() {
         workspacePresenter.openPart(tutorialPage, PartStackType.EDITING);
     }
 
-    private void closeTutorialPage() {
+    /** Close tutorial description page. */
+    public void closeTutorialPage() {
         workspacePresenter.removePart(tutorialPage);
     }
 }

@@ -30,7 +30,7 @@ import com.google.inject.Singleton;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_PROJECT_TYPE;
 
 /**
- * Action to open tutorial's readme file.
+ * Action to open tutorial page.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ShowTutorialPageAction.java Sep 16, 2013 1:58:47 PM azatsarynnyy $
@@ -46,7 +46,7 @@ public class ShowTutorialPageAction extends Action {
                                   ResourceProvider resourceProvider,
                                   TutorialsLocalizationConstant localizationConstants) {
         super(localizationConstants.showTutorialPageActionText(),
-              localizationConstants.showTutorialPageActionDescription(), resources.file());
+              localizationConstants.showTutorialPageActionDescription(), resources.info());
         this.tutorialPageController = tutorialPageController;
         this.resourceProvider = resourceProvider;
     }
