@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.aws.client.beanstalk.environments.launch;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
@@ -42,6 +43,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter that allow user to launch environment.
  *
@@ -52,12 +55,12 @@ import com.google.web.bindery.event.shared.EventBus;
 public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionDelegate {
     private LaunchEnvironmentView          view;
     private EventBus                       eventBus;
-    private ConsolePart                    console;
     private BeanstalkClientService         service;
     private LoginPresenter                 loginPresenter;
     private ResourceProvider               resourceProvider;
     private String                         appName;
     private AWSLocalizationConstant        constant;
+    private NotificationManager            notificationManager;
     private AsyncCallback<EnvironmentInfo> callback;
 
     /**
@@ -65,23 +68,23 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param service
      * @param loginPresenter
      * @param resourceProvider
      * @param constant
+     * @param notificationManager
      */
     @Inject
-    public LaunchEnvironmentPresenter(LaunchEnvironmentView view, EventBus eventBus, ConsolePart console,
-                                      BeanstalkClientService service, LoginPresenter loginPresenter, ResourceProvider resourceProvider,
-                                      AWSLocalizationConstant constant) {
+    public LaunchEnvironmentPresenter(LaunchEnvironmentView view, EventBus eventBus, BeanstalkClientService service,
+                                      LoginPresenter loginPresenter, ResourceProvider resourceProvider,
+                                      AWSLocalizationConstant constant, NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
-        this.console = console;
         this.service = service;
         this.loginPresenter = loginPresenter;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -124,7 +127,8 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
                         @Override
                         protected void processFail(Throwable exception) {
                             eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                            console.print(exception.getMessage());
+                            Notification notification = new Notification(exception.getMessage(), ERROR);
+                            notificationManager.showNotification(notification);
                         }
 
                         @Override
@@ -142,7 +146,8 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
                     });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -168,7 +173,8 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
                                     @Override
                                     protected void processFail(Throwable exception) {
                                         eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                        console.print(exception.getMessage());
+                                        Notification notification = new Notification(exception.getMessage(), ERROR);
+                                        notificationManager.showNotification(notification);
                                     }
 
                                     @Override
@@ -183,7 +189,8 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
                                 });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -219,7 +226,8 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
                                                   message += "<br>" + exception.getMessage();
                                               }
 
-                                              console.print(message);
+                                              Notification notification = new Notification(message, ERROR);
+                                              notificationManager.showNotification(notification);
                                           }
 
                                           @Override
@@ -233,7 +241,8 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentView.ActionD
                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
 
     }

@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.aws.client.ec2;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.aws.client.AWSLocalizationConstant;
 import com.codenvy.ide.ext.aws.client.AwsAsyncRequestCallback;
@@ -32,6 +33,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter for controlling EC2 instances.
  *
@@ -41,31 +45,31 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class EC2ManagerPresenter implements EC2ManagerView.ActionDelegate {
     private EC2ManagerView          view;
-    private ConsolePart             console;
     private EventBus                eventBus;
     private AWSLocalizationConstant constant;
     private EC2ClientService        service;
     private LoginPresenter          loginPresenter;
+    private NotificationManager     notificationManager;
 
     /**
      * Create presenter.
      *
      * @param view
-     * @param console
      * @param eventBus
      * @param constant
      * @param service
      * @param loginPresenter
+     * @param notificationManager
      */
     @Inject
-    protected EC2ManagerPresenter(EC2ManagerView view, ConsolePart console, EventBus eventBus, AWSLocalizationConstant constant,
-                                  EC2ClientService service, LoginPresenter loginPresenter) {
+    protected EC2ManagerPresenter(EC2ManagerView view, EventBus eventBus, AWSLocalizationConstant constant,
+                                  EC2ClientService service, LoginPresenter loginPresenter, NotificationManager notificationManager) {
         this.view = view;
-        this.console = console;
         this.eventBus = eventBus;
         this.constant = constant;
         this.service = service;
         this.loginPresenter = loginPresenter;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -101,12 +105,14 @@ public class EC2ManagerPresenter implements EC2ManagerView.ActionDelegate {
 
                 @Override
                 protected void processFail(Throwable exception) {
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
                 }
             });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -132,12 +138,16 @@ public class EC2ManagerPresenter implements EC2ManagerView.ActionDelegate {
                                       new AwsAsyncRequestCallback<Object>(null, loggedInHandler, null, loginPresenter) {
                                           @Override
                                           protected void onSuccess(Object result) {
-                                              console.print(constant.terminateInstanceSuccess(instanceInfo.getId()));
+                                              Notification notification = new Notification(constant.terminateInstanceSuccess(
+                                                      instanceInfo.getId()), INFO);
+                                              notificationManager.showNotification(notification);
                                           }
 
                                           @Override
                                           protected void processFail(Throwable exception) {
-                                              console.print(constant.terminateInstanceFailed(instanceInfo.getId()));
+                                              Notification notification = new Notification(constant.terminateInstanceFailed(
+                                                      instanceInfo.getId()), ERROR);
+                                              notificationManager.showNotification(notification);
                                               eventBus.fireEvent(new ExceptionThrownEvent(exception));
                                           }
                                       });
@@ -166,12 +176,14 @@ public class EC2ManagerPresenter implements EC2ManagerView.ActionDelegate {
             service.rebootInstance(instanceInfo.getId(), new AwsAsyncRequestCallback<Object>(null, loggedInHandler, null, loginPresenter) {
                 @Override
                 protected void onSuccess(Object result) {
-                    console.print(constant.rebootInstanceSuccess(instanceInfo.getId()));
+                    Notification notification = new Notification(constant.rebootInstanceSuccess(instanceInfo.getId()), INFO);
+                    notificationManager.showNotification(notification);
                 }
 
                 @Override
                 protected void processFail(Throwable exception) {
-                    console.print(constant.rebootInstanceFailed(instanceInfo.getId()));
+                    Notification notification = new Notification(constant.rebootInstanceFailed(instanceInfo.getId()), ERROR);
+                    notificationManager.showNotification(notification);
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
                 }
             });
@@ -200,12 +212,14 @@ public class EC2ManagerPresenter implements EC2ManagerView.ActionDelegate {
             service.startInstance(instanceInfo.getId(), new AwsAsyncRequestCallback<Object>(null, loggedInHandler, null, loginPresenter) {
                 @Override
                 protected void onSuccess(Object result) {
-                    console.print(constant.startInstanceSuccess(instanceInfo.getId()));
+                    Notification notification = new Notification(constant.startInstanceSuccess(instanceInfo.getId()), INFO);
+                    notificationManager.showNotification(notification);
                 }
 
                 @Override
                 protected void processFail(Throwable exception) {
-                    console.print(constant.startInstanceFailed(instanceInfo.getId()));
+                    Notification notification = new Notification(constant.startInstanceFailed(instanceInfo.getId()), ERROR);
+                    notificationManager.showNotification(notification);
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
                 }
             });
@@ -237,12 +251,16 @@ public class EC2ManagerPresenter implements EC2ManagerView.ActionDelegate {
                                  new AwsAsyncRequestCallback<Object>(null, loggedInHandler, null, loginPresenter) {
                                      @Override
                                      protected void onSuccess(Object result) {
-                                         console.print(constant.stopInstanceSuccess(instanceInfo.getId()));
+                                         Notification notification =
+                                                 new Notification(constant.stopInstanceSuccess(instanceInfo.getId()), INFO);
+                                         notificationManager.showNotification(notification);
                                      }
 
                                      @Override
                                      protected void processFail(Throwable exception) {
-                                         console.print(constant.stopInstanceFailed(instanceInfo.getId()));
+                                         Notification notification =
+                                                 new Notification(constant.stopInstanceFailed(instanceInfo.getId()), ERROR);
+                                         notificationManager.showNotification(notification);
                                          eventBus.fireEvent(new ExceptionThrownEvent(exception));
                                      }
                                  });

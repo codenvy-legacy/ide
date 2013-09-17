@@ -19,7 +19,8 @@ package com.codenvy.ide.ext.git.client.delete;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.GitClientService;
@@ -34,6 +35,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Delete repository command handler, performs deleting Git repository.
  *
@@ -45,9 +49,9 @@ public class DeleteRepositoryPresenter {
     private GitClientService        service;
     private EventBus                eventBus;
     private GitLocalizationConstant constant;
-    private ConsolePart             console;
     private ResourceProvider        resourceProvider;
     private Project                 project;
+    private NotificationManager     notificationManager;
 
     /**
      * Create presenter.
@@ -55,17 +59,17 @@ public class DeleteRepositoryPresenter {
      * @param service
      * @param eventBus
      * @param constant
-     * @param console
      * @param resourceProvider
+     * @param notificationManager
      */
     @Inject
-    public DeleteRepositoryPresenter(GitClientService service, EventBus eventBus, GitLocalizationConstant constant, ConsolePart console,
-                                     ResourceProvider resourceProvider) {
+    public DeleteRepositoryPresenter(GitClientService service, EventBus eventBus, GitLocalizationConstant constant,
+                                     ResourceProvider resourceProvider, NotificationManager notificationManager) {
         this.service = service;
         this.eventBus = eventBus;
         this.constant = constant;
-        this.console = console;
         this.resourceProvider = resourceProvider;
+        this.notificationManager = notificationManager;
     }
 
     /** Delete Git repository. */
@@ -97,7 +101,8 @@ public class DeleteRepositoryPresenter {
                     project.refreshProperties(new AsyncCallback<Project>() {
                         @Override
                         public void onSuccess(Project result) {
-                            console.print(constant.deleteGitRepositorySuccess());
+                            Notification notification = new Notification(constant.deleteGitRepositorySuccess(), INFO);
+                            notificationManager.showNotification(notification);
                             eventBus.fireEvent(new RefreshBrowserEvent(project));
                         }
 
@@ -111,12 +116,14 @@ public class DeleteRepositoryPresenter {
                 @Override
                 protected void onFailure(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 }

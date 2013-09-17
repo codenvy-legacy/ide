@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.aws.client.beanstalk.environments;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
@@ -37,6 +38,9 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
 /**
  * Checker for getting information about starting environment and it logs.
@@ -71,13 +75,13 @@ public class EnvironmentStatusChecker {
 
     private EventBus eventBus;
 
-    private ConsolePart console;
-
     private BeanstalkClientService service;
 
     private LoginPresenter loginPresenter;
 
     private AWSLocalizationConstant constant;
+
+    private NotificationManager notificationManager;
 
     /**
      * Create checker.
@@ -88,24 +92,25 @@ public class EnvironmentStatusChecker {
      * @param showEvents
      * @param statusHandler
      * @param eventBus
-     * @param console
      * @param service
      * @param loginPresenter
      * @param constant
+     * @param notificationManager
      */
     public EnvironmentStatusChecker(ResourceProvider resourceProvider, Project project, EnvironmentInfo environmentToCheck,
-                                    boolean showEvents, RequestStatusHandler statusHandler, EventBus eventBus, ConsolePart console,
-                                    BeanstalkClientService service, LoginPresenter loginPresenter, AWSLocalizationConstant constant) {
+                                    boolean showEvents, RequestStatusHandler statusHandler, EventBus eventBus,
+                                    BeanstalkClientService service, LoginPresenter loginPresenter, AWSLocalizationConstant constant,
+                                    NotificationManager notificationManager) {
         this.resourceProvider = resourceProvider;
         this.project = project;
         this.environmentToCheck = environmentToCheck;
         this.showEvents = showEvents;
         this.statusHandler = statusHandler;
         this.eventBus = eventBus;
-        this.console = console;
         this.service = service;
         this.loginPresenter = loginPresenter;
         this.constant = constant;
+        this.notificationManager = notificationManager;
     }
 
     /** Start checking environment status. */
@@ -164,7 +169,9 @@ public class EnvironmentStatusChecker {
                                                    message += "<br>" + exception.getMessage();
                                                }
 
-                                               console.print(message);
+                                               Notification notification = new Notification(message, ERROR);
+                                               notificationManager.showNotification(notification);
+
                                                statusHandler.requestError(environmentToCheck.getId(), exception);
                                            }
 
@@ -182,7 +189,8 @@ public class EnvironmentStatusChecker {
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -216,7 +224,8 @@ public class EnvironmentStatusChecker {
                                                      // shows events in chronological order
                                                      for (int i = events.size() - 1; i >= 0; i--) {
                                                          Event event = events.get(i);
-                                                         console.print(event.getMessage());
+                                                         Notification notification = new Notification(event.getMessage(), ERROR);
+                                                         notificationManager.showNotification(notification);
                                                      }
                                                      lastReceivedEventTime = (long)events.get(events.size() - 1).getEventDate() + 1;
                                                  }
@@ -224,7 +233,8 @@ public class EnvironmentStatusChecker {
                                          });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -250,12 +260,14 @@ public class EnvironmentStatusChecker {
             if (env.getHealth() != EnvironmentHealth.Green) {
                 message.append(", but health status of the application's environment is " + env.getHealth().name());
             }
-            console.print(message.toString());
+            Notification notification = new Notification(message.toString(), INFO);
+            notificationManager.showNotification(notification);
         } else if (env.getStatus() == EnvironmentStatus.Terminated) {
             statusHandler.requestFinished(env.getId());
 
             message.append(constant.terminateEnvironmentSuccess(env.getName()));
-            console.print(message.toString());
+            Notification notification = new Notification(message.toString(), INFO);
+            notificationManager.showNotification(notification);
         }
     }
 

@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.git.client.clone;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.GitClientService;
@@ -39,6 +40,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
+import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * The presenter for Clone Repository from github.com.
  *
@@ -53,18 +58,19 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
     private ResourceProvider        resourceProvider;
     private EventBus                eventBus;
     private GitLocalizationConstant constant;
-    private ConsolePart             console;
+    private NotificationManager     notificationManager;
+    private Notification            notification;
 
     @Inject
     public CloneRepositoryPresenter(CloneRepositoryView view, GitClientService service, ResourceProvider resourceProvider,
-                                    EventBus eventBus, GitLocalizationConstant constant, ConsolePart console) {
+                                    EventBus eventBus, GitLocalizationConstant constant, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.eventBus = eventBus;
         this.constant = constant;
-        this.console = console;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
@@ -73,6 +79,8 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
         String projectName = view.getProjectName();
         final String remoteName = view.getRemoteName();
         final String remoteUri = view.getRemoteUri();
+        notification = new Notification(constant.cloneStarted(projectName, remoteName), PROGRESS);
+        notificationManager.showNotification(notification);
 
         resourceProvider.createProject(projectName, JsonCollections.<Property>createArray(), new AsyncCallback<Project>() {
             @Override
@@ -84,7 +92,9 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
             public void onFailure(Throwable caught) {
                 String errorMessage = (caught.getMessage() != null && caught.getMessage().length() > 0) ? caught.getMessage()
                                                                                                         : constant.cloneFailed(remoteUri);
-                console.print(errorMessage);
+                notification.setStatus(FINISHED);
+                notification.setType(ERROR);
+                notification.setMessage(errorMessage);
             }
         });
     }
@@ -164,7 +174,8 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
         resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
-                console.print(constant.cloneSuccess(gitRepositoryInfo.getRemoteUri()));
+                notification.setStatus(FINISHED);
+                notification.setMessage(constant.cloneSuccess(gitRepositoryInfo.getRemoteUri()));
             }
 
             @Override
@@ -205,7 +216,9 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
     private void handleError(@NotNull Throwable e, @NotNull String remoteUri) {
         String errorMessage =
                 (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : constant.cloneFailed(remoteUri);
-        console.print(errorMessage);
+        notification.setStatus(FINISHED);
+        notification.setType(ERROR);
+        notification.setMessage(errorMessage);
     }
 
     /** {@inheritDoc} */

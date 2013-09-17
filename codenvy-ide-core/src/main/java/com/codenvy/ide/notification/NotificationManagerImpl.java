@@ -109,6 +109,7 @@ public class NotificationManagerImpl implements NotificationManager, Notificatio
      */
     public void removeNotification(@NotNull Notification notification) {
         notification.removeObserver(this);
+        notifications.remove(notification);
         notificationContainer.removeNotification(notification);
         notificationMessageStack.removeNotification(notification);
         onValueChanged();

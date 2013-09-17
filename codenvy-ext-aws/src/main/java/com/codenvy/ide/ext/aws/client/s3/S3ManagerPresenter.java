@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.ext.aws.client.s3;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.ext.aws.client.AWSLocalizationConstant;
 import com.codenvy.ide.ext.aws.client.AwsAsyncRequestCallback;
 import com.codenvy.ide.ext.aws.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.aws.client.login.LoginPresenter;
@@ -42,6 +42,8 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter for managing S3 Buckets and Objects.
  *
@@ -51,9 +53,7 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
     private S3ManagerView           view;
-    private ConsolePart             console;
     private EventBus                eventBus;
-    private AWSLocalizationConstant constant;
     private S3ClientService         service;
     private LoginPresenter          loginPresenter;
     private String                  restServiceContext;
@@ -61,37 +61,35 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
     private S3UploadObjectPresenter s3UploadObjectPresenter;
     private ResourceProvider        resourceProvider;
     private Project                 activeProject;
+    private NotificationManager     notificationManager;
 
     /**
      * Create presenter.
      *
      * @param view
-     * @param console
      * @param eventBus
-     * @param constant
      * @param service
      * @param loginPresenter
      * @param restServiceContext
      * @param s3CreateBucketPresenter
      * @param s3UploadObjectPresenter
      * @param resourceProvider
+     * @param notificationManager
      */
     @Inject
-    protected S3ManagerPresenter(S3ManagerView view, ConsolePart console, EventBus eventBus, AWSLocalizationConstant constant,
-                                 S3ClientService service, LoginPresenter loginPresenter, @Named("restContext") String restServiceContext,
-                                 S3CreateBucketPresenter s3CreateBucketPresenter, S3UploadObjectPresenter s3UploadObjectPresenter,
-                                 ResourceProvider resourceProvider) {
+    protected S3ManagerPresenter(S3ManagerView view, EventBus eventBus, S3ClientService service, LoginPresenter loginPresenter,
+                                 @Named("restContext") String restServiceContext, S3CreateBucketPresenter s3CreateBucketPresenter,
+                                 S3UploadObjectPresenter s3UploadObjectPresenter, ResourceProvider resourceProvider,
+                                 NotificationManager notificationManager) {
         this.view = view;
-        this.console = console;
         this.eventBus = eventBus;
-        this.constant = constant;
         this.service = service;
         this.loginPresenter = loginPresenter;
         this.restServiceContext = restServiceContext;
         this.s3CreateBucketPresenter = s3CreateBucketPresenter;
         this.s3UploadObjectPresenter = s3UploadObjectPresenter;
         this.resourceProvider = resourceProvider;
-
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -125,7 +123,8 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
                 @Override
                 protected void processFail(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
 
                 @Override
@@ -136,7 +135,8 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -155,7 +155,8 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
                 @Override
                 protected void processFail(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
 
                 @Override
@@ -165,7 +166,8 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
             }, bucketId, objectId);
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -175,7 +177,8 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
         s3UploadObjectPresenter.showDialog(bucketId, new AsyncCallback<Boolean>() {
             @Override
             public void onFailure(Throwable caught) {
-                console.print(caught.getMessage());
+                Notification notification = new Notification(caught.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
                 eventBus.fireEvent(new ExceptionThrownEvent(caught));
             }
 
@@ -210,8 +213,8 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
             service.uploadProject(new AwsAsyncRequestCallback<NewS3Object>(unmarshaller, loggedInHandler, null, loginPresenter) {
                 @Override
                 protected void processFail(Throwable exception) {
-                    console.print(exception.getMessage());
-                    eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
 
                 @Override
@@ -220,7 +223,8 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
                 }
             }, view.getSelectedBucketId(), view.getSelectedObject().getS3Key(), resourceProvider.getVfsId(), activeProject.getId());
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -241,7 +245,8 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
                 @Override
                 protected void processFail(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
 
                 @Override
@@ -251,7 +256,8 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
             }, bucketId, null, 25);
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -270,7 +276,8 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
                 @Override
                 protected void processFail(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
 
                 @Override
@@ -280,7 +287,8 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
             }, bucketId);
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -291,7 +299,8 @@ public class S3ManagerPresenter implements S3ManagerView.ActionDelegate {
             @Override
             public void onFailure(Throwable caught) {
                 eventBus.fireEvent(new ExceptionThrownEvent(caught));
-                console.print(caught.getMessage());
+                Notification notification = new Notification(caught.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
             }
 
             @Override

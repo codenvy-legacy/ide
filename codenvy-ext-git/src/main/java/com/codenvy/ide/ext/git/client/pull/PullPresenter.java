@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.git.client.pull;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
@@ -39,6 +40,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_LOCAL;
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_REMOTE;
 
@@ -53,8 +56,8 @@ public class PullPresenter implements PullView.ActionDelegate {
     private PullView                view;
     private GitClientService        service;
     private ResourceProvider        resourceProvider;
-    private ConsolePart             console;
     private GitLocalizationConstant constant;
+    private NotificationManager     notificationManager;
     private Project                 project;
 
     /**
@@ -63,18 +66,18 @@ public class PullPresenter implements PullView.ActionDelegate {
      * @param view
      * @param service
      * @param resourceProvider
-     * @param console
      * @param constant
+     * @param notificationManager
      */
     @Inject
-    public PullPresenter(PullView view, GitClientService service, ResourceProvider resourceProvider, ConsolePart console,
-                         GitLocalizationConstant constant) {
+    public PullPresenter(PullView view, GitClientService service, ResourceProvider resourceProvider,
+                         GitLocalizationConstant constant, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
-        this.console = console;
         this.constant = constant;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -145,13 +148,15 @@ public class PullPresenter implements PullView.ActionDelegate {
                                    protected void onFailure(Throwable exception) {
                                        String errorMessage =
                                                exception.getMessage() != null ? exception.getMessage() : constant.branchesListFailed();
-                                       console.print(errorMessage);
+                                       Notification notification = new Notification(errorMessage, ERROR);
+                                       notificationManager.showNotification(notification);
                                        view.setEnablePullButton(false);
                                    }
                                });
         } catch (RequestException e) {
             String errorMessage = e.getMessage() != null ? e.getMessage() : constant.branchesListFailed();
-            console.print(errorMessage);
+            Notification notification = new Notification(errorMessage, ERROR);
+            notificationManager.showNotification(notification);
             view.setEnablePullButton(false);
         }
     }
@@ -225,7 +230,8 @@ public class PullPresenter implements PullView.ActionDelegate {
                     resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
                         @Override
                         public void onSuccess(Project result) {
-                            console.print(constant.pullSuccess(remoteUrl));
+                            Notification notification = new Notification(constant.pullSuccess(remoteUrl), INFO);
+                            notificationManager.showNotification(notification);
                         }
 
                         @Override
@@ -258,7 +264,8 @@ public class PullPresenter implements PullView.ActionDelegate {
                     resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
                         @Override
                         public void onSuccess(Project result) {
-                            console.print(constant.pullSuccess(remoteUrl));
+                            Notification notification = new Notification(constant.pullSuccess(remoteUrl), INFO);
+                            notificationManager.showNotification(notification);
                         }
 
                         @Override
@@ -297,7 +304,8 @@ public class PullPresenter implements PullView.ActionDelegate {
      */
     private void handleError(@NotNull Throwable t, @NotNull String remoteUrl) {
         String errorMessage = (t.getMessage() != null) ? t.getMessage() : constant.pullFail(remoteUrl);
-        console.print(errorMessage);
+        Notification notification = new Notification(errorMessage, ERROR);
+        notificationManager.showNotification(notification);
     }
 
     /** {@inheritDoc} */

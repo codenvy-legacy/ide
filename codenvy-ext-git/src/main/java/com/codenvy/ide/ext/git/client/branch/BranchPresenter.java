@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.git.client.branch;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
@@ -34,6 +35,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_ALL;
 
 /**
@@ -48,7 +50,7 @@ public class BranchPresenter implements BranchView.ActionDelegate {
     private GitClientService        service;
     private ResourceProvider        resourceProvider;
     private GitLocalizationConstant constant;
-    private ConsolePart             console;
+    private NotificationManager     notificationManager;
     private Branch                  selectedBranch;
     private Project                 project;
 
@@ -59,17 +61,17 @@ public class BranchPresenter implements BranchView.ActionDelegate {
      * @param service
      * @param resourceProvider
      * @param constant
-     * @param console
+     * @param notificationManager
      */
     @Inject
     public BranchPresenter(BranchView view, GitClientService service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
-                           ConsolePart console) {
+                           NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
-        this.console = console;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -106,12 +108,14 @@ public class BranchPresenter implements BranchView.ActionDelegate {
                     protected void onFailure(Throwable exception) {
                         String errorMessage =
                                 (exception.getMessage() != null) ? exception.getMessage() : constant.branchRenameFailed();
-                        console.print(errorMessage);
+                        Notification notification = new Notification(errorMessage, ERROR);
+                        notificationManager.showNotification(notification);
                     }
                 });
             } catch (RequestException e) {
                 String errorMessage = (e.getMessage() != null) ? e.getMessage() : constant.branchRenameFailed();
-                console.print(errorMessage);
+                Notification notification = new Notification(errorMessage, ERROR);
+                notificationManager.showNotification(notification);
             }
         }
     }
@@ -133,12 +137,14 @@ public class BranchPresenter implements BranchView.ActionDelegate {
                     @Override
                     protected void onFailure(Throwable exception) {
                         String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : constant.branchDeleteFailed();
-                        console.print(errorMessage);
+                        Notification notification = new Notification(errorMessage, ERROR);
+                        notificationManager.showNotification(notification);
                     }
                 });
             } catch (RequestException e) {
                 String errorMessage = (e.getMessage() != null) ? e.getMessage() : constant.branchDeleteFailed();
-                console.print(errorMessage);
+                Notification notification = new Notification(errorMessage, ERROR);
+                notificationManager.showNotification(notification);
             }
         }
     }
@@ -177,12 +183,14 @@ public class BranchPresenter implements BranchView.ActionDelegate {
                 @Override
                 protected void onFailure(Throwable exception) {
                     String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : constant.branchCheckoutFailed();
-                    console.print(errorMessage);
+                    Notification notification = new Notification(errorMessage, ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             String errorMessage = (e.getMessage() != null) ? e.getMessage() : constant.branchCheckoutFailed();
-            console.print(errorMessage);
+            Notification notification = new Notification(errorMessage, ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -205,12 +213,14 @@ public class BranchPresenter implements BranchView.ActionDelegate {
                 @Override
                 protected void onFailure(Throwable exception) {
                     String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : constant.branchesListFailed();
-                    console.print(errorMessage);
+                    Notification notification = new Notification(errorMessage, ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             String errorMessage = (e.getMessage() != null) ? e.getMessage() : constant.branchesListFailed();
-            console.print(errorMessage);
+            Notification notification = new Notification(errorMessage, ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -231,12 +241,14 @@ public class BranchPresenter implements BranchView.ActionDelegate {
                     @Override
                     protected void onFailure(Throwable exception) {
                         String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : constant.branchCreateFailed();
-                        console.print(errorMessage);
+                        Notification notification = new Notification(errorMessage, ERROR);
+                        notificationManager.showNotification(notification);
                     }
                 });
             } catch (RequestException e) {
                 String errorMessage = (e.getMessage() != null) ? e.getMessage() : constant.branchCreateFailed();
-                console.print(errorMessage);
+                Notification notification = new Notification(errorMessage, ERROR);
+                notificationManager.showNotification(notification);
             }
         }
     }

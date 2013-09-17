@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.git.client.merge;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.GitClientService;
@@ -40,6 +41,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_LOCAL;
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_REMOTE;
 import static com.codenvy.ide.ext.git.shared.MergeResult.MergeStatus.ALREADY_UP_TO_DATE;
@@ -60,8 +63,8 @@ public class MergePresenter implements MergeView.ActionDelegate {
     private GitClientService        service;
     private ResourceProvider        resourceProvider;
     private EventBus                eventBus;
-    private ConsolePart             console;
     private GitLocalizationConstant constant;
+    private NotificationManager     notificationManager;
     private Reference               selectedReference;
     private String                  projectId;
     private String                  projectName;
@@ -73,19 +76,19 @@ public class MergePresenter implements MergeView.ActionDelegate {
      * @param service
      * @param resourceProvider
      * @param eventBus
-     * @param console
      * @param constant
+     * @param notificationManager
      */
     @Inject
     public MergePresenter(MergeView view, GitClientService service, ResourceProvider resourceProvider, EventBus eventBus,
-                          ConsolePart console, GitLocalizationConstant constant) {
+                          GitLocalizationConstant constant, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -122,12 +125,14 @@ public class MergePresenter implements MergeView.ActionDelegate {
                                    @Override
                                    protected void onFailure(Throwable exception) {
                                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                       console.print(exception.getMessage());
+                                       Notification notification = new Notification(exception.getMessage(), ERROR);
+                                       notificationManager.showNotification(notification);
                                    }
                                });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
 
         try {
@@ -156,12 +161,14 @@ public class MergePresenter implements MergeView.ActionDelegate {
                                    @Override
                                    protected void onFailure(Throwable exception) {
                                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                       console.print(exception.getMessage());
+                                       Notification notification = new Notification(exception.getMessage(), ERROR);
+                                       notificationManager.showNotification(notification);
                                    }
                                });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
 
         view.showDialog();
@@ -186,7 +193,8 @@ public class MergePresenter implements MergeView.ActionDelegate {
                                   resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
                                       @Override
                                       public void onSuccess(Project project) {
-                                          console.print(formMergeMessage(result));
+                                          Notification notification = new Notification(formMergeMessage(result), INFO);
+                                          notificationManager.showNotification(notification);
                                           view.close();
                                       }
 
@@ -200,12 +208,14 @@ public class MergePresenter implements MergeView.ActionDelegate {
                               @Override
                               protected void onFailure(Throwable exception) {
                                   eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                  console.print(exception.getMessage());
+                                  Notification notification = new Notification(exception.getMessage(), ERROR);
+                                  notificationManager.showNotification(notification);
                               }
                           });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 

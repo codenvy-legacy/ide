@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.git.client.remove;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -35,6 +36,9 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter for removing files from index and file system.
  *
@@ -44,31 +48,32 @@ import com.google.inject.Inject;
 public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDelegate {
     private RemoveFromIndexView     view;
     private GitClientService        service;
-    private ConsolePart             console;
     private GitLocalizationConstant constant;
     private ResourceProvider        resourceProvider;
     private Project                 project;
     private SelectionAgent          selectionAgent;
+    private NotificationManager     notificationManager;
 
     /**
      * Create presenter
      *
      * @param view
      * @param service
-     * @param console
      * @param constant
      * @param resourceProvider
+     * @param notificationManager
      */
     @Inject
-    public RemoveFromIndexPresenter(RemoveFromIndexView view, GitClientService service, ConsolePart console,
-                                    GitLocalizationConstant constant, ResourceProvider resourceProvider, SelectionAgent selectionAgent) {
+    public RemoveFromIndexPresenter(RemoveFromIndexView view, GitClientService service, GitLocalizationConstant constant,
+                                    ResourceProvider resourceProvider, SelectionAgent selectionAgent,
+                                    NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
-        this.console = console;
         this.constant = constant;
         this.resourceProvider = resourceProvider;
         this.selectionAgent = selectionAgent;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -122,7 +127,8 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
                                    resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
                                        @Override
                                        public void onSuccess(Project result) {
-                                           console.print(constant.removeFilesSuccessfull());
+                                           Notification notification = new Notification(constant.removeFilesSuccessfull(), INFO);
+                                           notificationManager.showNotification(notification);
                                        }
 
                                        @Override
@@ -182,7 +188,8 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
      */
     private void handleError(@NotNull Throwable e) {
         String errorMessage = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : constant.removeFilesFailed();
-        console.print(errorMessage);
+        Notification notification = new Notification(errorMessage, ERROR);
+        notificationManager.showNotification(notification);
     }
 
     /** {@inheritDoc} */

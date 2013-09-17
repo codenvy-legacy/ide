@@ -17,16 +17,17 @@
  */
 package com.codenvy.ide.ext.gae.client.actions;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
-import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.gae.client.*;
 import com.codenvy.ide.ext.gae.client.marshaller.GaeUserUnmarshaller;
 import com.codenvy.ide.ext.gae.shared.GaeUser;
+import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.security.oauth.JsOAuthWindow;
 import com.codenvy.ide.security.oauth.OAuthCallback;
@@ -40,6 +41,9 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.inject.Inject;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Action for "PaaS/Google App Engine/Login..." to allow user to login on on Google.
  *
@@ -52,22 +56,22 @@ public class LoginAction extends Action implements OAuthCallback {
     private GAEResources           resources;
     private GAEClientService       service;
     private EventBus               eventBus;
-    private ConsolePart            console;
     private GAELocalization        constant;
     private OAuthStatus            authStatus;
+    private NotificationManager    notificationManager;
     private AsyncCallback<Boolean> callback;
 
     /** Constructor for action. */
     @Inject
-    public LoginAction(UserClientService userClientService, GAEResources resources, GAEClientService service,
-                       EventBus eventBus, ConsolePart console, GAELocalization constant) {
+    public LoginAction(UserClientService userClientService, GAEResources resources, GAEClientService service, EventBus eventBus,
+                       GAELocalization constant, NotificationManager notificationManager) {
         super("Login...", "Login to Google App Engine.", resources.login());
         this.userClientService = userClientService;
         this.resources = resources;
         this.service = service;
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
+        this.notificationManager = notificationManager;
 
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
@@ -128,7 +132,7 @@ public class LoginAction extends Action implements OAuthCallback {
         GaeUserUnmarshaller unmarshaller = new GaeUserUnmarshaller();
 
         try {
-            service.getLoggedUser(new GAEAsyncRequestCallback<GaeUser>(unmarshaller, console, eventBus, constant, null) {
+            service.getLoggedUser(new GAEAsyncRequestCallback<GaeUser>(unmarshaller, eventBus, constant, null, notificationManager) {
                 @Override
                 protected void onSuccess(GaeUser result) {
                     if (GAEExtension.isUserHasGaeScopes(result.getToken())) {
@@ -140,7 +144,8 @@ public class LoginAction extends Action implements OAuthCallback {
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -174,12 +179,14 @@ public class LoginAction extends Action implements OAuthCallback {
                 @Override
                 protected void onFailure(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException exception) {
             eventBus.fireEvent(new ExceptionThrownEvent(exception));
-            console.print(exception.getMessage());
+            Notification notification = new Notification(exception.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -204,18 +211,21 @@ public class LoginAction extends Action implements OAuthCallback {
                 @Override
                 protected void onSuccess(Object result) {
                     onAuthenticated(OAuthStatus.LOGGED_OUT);
-                    console.print(constant.logoutSuccess());
+                    Notification notification = new Notification(constant.logoutSuccess(), INFO);
+                    notificationManager.showNotification(notification);
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(constant.logoutNotLogged());
+                    Notification notification = new Notification(constant.logoutNotLogged(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 }

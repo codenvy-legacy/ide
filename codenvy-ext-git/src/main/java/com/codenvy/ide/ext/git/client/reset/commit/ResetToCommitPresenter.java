@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.git.client.reset.commit;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
@@ -34,6 +35,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter for resetting head to commit.
  *
@@ -47,7 +51,7 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
     private Revision                selectedRevision;
     private ResourceProvider        resourceProvider;
     private GitLocalizationConstant constant;
-    private ConsolePart             console;
+    private NotificationManager     notificationManager;
     private String                  projectId;
 
     /**
@@ -57,17 +61,17 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
      * @param service
      * @param resourceProvider
      * @param constant
-     * @param console
+     * @param notificationManager
      */
     @Inject
     public ResetToCommitPresenter(ResetToCommitView view, GitClientService service, ResourceProvider resourceProvider,
-                                  GitLocalizationConstant constant, ConsolePart console) {
+                                  GitLocalizationConstant constant, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
-        this.console = console;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -89,12 +93,14 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
                 @Override
                 protected void onFailure(Throwable exception) {
                     String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : constant.logFailed();
-                    console.print(errorMessage);
+                    Notification notification = new Notification(errorMessage, ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             String errorMessage = (e.getMessage() != null) ? e.getMessage() : constant.logFailed();
-            console.print(errorMessage);
+            Notification notification = new Notification(errorMessage, ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -114,7 +120,8 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
                     resourceProvider.getActiveProject().refreshTree(new AsyncCallback<Project>() {
                         @Override
                         public void onSuccess(Project result) {
-                            console.print(constant.resetSuccessfully());
+                            Notification notification = new Notification(constant.resetSuccessfully(), INFO);
+                            notificationManager.showNotification(notification);
                         }
 
                         @Override
@@ -128,12 +135,14 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
                 @Override
                 protected void onFailure(Throwable exception) {
                     String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : constant.resetFail();
-                    console.print(errorMessage);
+                    Notification notification = new Notification(errorMessage, ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             String errorMessage = (e.getMessage() != null) ? e.getMessage() : constant.resetFail();
-            console.print(errorMessage);
+            Notification notification = new Notification(errorMessage, ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 

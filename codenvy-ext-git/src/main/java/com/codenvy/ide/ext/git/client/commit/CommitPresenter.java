@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.git.client.commit;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.GitClientService;
@@ -41,6 +42,9 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.Date;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter for commit changes on git.
  *
@@ -53,9 +57,9 @@ public class CommitPresenter implements CommitView.ActionDelegate {
     private GitClientService        service;
     private ResourceProvider        resourceProvider;
     private GitLocalizationConstant constant;
-    private ConsolePart             console;
     private Project                 project;
     private EventBus                eventBus;
+    private NotificationManager     notificationManager;
 
     /**
      * Create presenter.
@@ -63,20 +67,20 @@ public class CommitPresenter implements CommitView.ActionDelegate {
      * @param view
      * @param service
      * @param resourceProvider
-     * @param console
      * @param constant
      * @param eventBus
+     * @param notificationManager
      */
     @Inject
-    public CommitPresenter(CommitView view, GitClientService service, ResourceProvider resourceProvider, ConsolePart console,
-                           GitLocalizationConstant constant, EventBus eventBus) {
+    public CommitPresenter(CommitView view, GitClientService service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
+                           EventBus eventBus, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
-        this.console = console;
         this.constant = constant;
         this.eventBus = eventBus;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -108,7 +112,8 @@ public class CommitPresenter implements CommitView.ActionDelegate {
                     if (!result.fake()) {
                         onCommitSuccess(result);
                     } else {
-                        console.print(result.getMessage());
+                        Notification notification = new Notification(result.getMessage(), ERROR);
+                        notificationManager.showNotification(notification);
                     }
                 }
 
@@ -138,7 +143,8 @@ public class CommitPresenter implements CommitView.ActionDelegate {
                                    if (!result.fake()) {
                                        onCommitSuccess(result);
                                    } else {
-                                       console.print(result.getMessage());
+                                       Notification notification = new Notification(result.getMessage(), ERROR);
+                                       notificationManager.showNotification(notification);
                                    }
                                }
 
@@ -149,7 +155,8 @@ public class CommitPresenter implements CommitView.ActionDelegate {
                            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -169,7 +176,8 @@ public class CommitPresenter implements CommitView.ActionDelegate {
                 message += (revision.getCommitter() != null && revision.getCommitter().getName() != null &&
                             !revision.getCommitter().getName().isEmpty())
                            ? " " + constant.commitUser(revision.getCommitter().getName()) : "";
-                console.print(message);
+                Notification notification = new Notification(message, INFO);
+                notificationManager.showNotification(notification);
             }
 
             @Override
@@ -187,7 +195,8 @@ public class CommitPresenter implements CommitView.ActionDelegate {
      */
     private void handleError(@NotNull Throwable e) {
         String errorMessage = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : constant.commitFailed();
-        console.print(errorMessage);
+        Notification notification = new Notification(errorMessage, ERROR);
+        notificationManager.showNotification(notification);
     }
 
     /** {@inheritDoc} */

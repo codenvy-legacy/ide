@@ -29,6 +29,7 @@ import org.mockito.Mock;
 import static com.codenvy.ide.api.notification.Notification.State.READ;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.notification.NotificationContainer.HEIGHT;
 import static com.codenvy.ide.notification.NotificationContainer.WIDTH;
 import static com.codenvy.ide.notification.NotificationManagerView.Status.*;
@@ -130,30 +131,31 @@ public class NotificationManagerImplTest extends GwtTestWithMockito {
     @Test
     public void testOnCloseMessageClicked() throws Exception {
         Notification.CloseNotificationHandler closeNotificationHandler = mock(Notification.CloseNotificationHandler.class);
-        Notification notification = mock(Notification.class);
-        when(notification.getCloseHandler()).thenReturn(closeNotificationHandler);
+        Notification notification = new Notification("test message", INFO, closeNotificationHandler);
 
+        manager.showNotification(notification);
+        reset(view);
         manager.onCloseMessageClicked(notification);
 
-        verify(notification).setState(eq(READ));
-        verify(notification).getCloseHandler();
         verify(closeNotificationHandler).onCloseClicked();
+        verify(view).setNotificationCount(eq(0));
+        verify(view).setStatus(eq(EMPTY));
     }
 
     @Test
     public void testOnCloseItemClicked() throws Exception {
         Notification.CloseNotificationHandler closeNotificationHandler = mock(Notification.CloseNotificationHandler.class);
-        Notification notification = mock(Notification.class);
-        when(notification.getCloseHandler()).thenReturn(closeNotificationHandler);
+        Notification notification = new Notification("test message", INFO, closeNotificationHandler);
 
+        manager.showNotification(notification);
+        reset(view);
         manager.onCloseItemClicked(notification);
 
-        verify(notification).getCloseHandler();
         verify(closeNotificationHandler).onCloseClicked();
         verify(notificationContainer).removeNotification(eq(notification));
         verify(notificationMessageStack).removeNotification(eq(notification));
-        verify(view).setNotificationCount(anyInt());
-        verify(view).setStatus((NotificationManagerView.Status)anyObject());
+        verify(view).setNotificationCount(eq(0));
+        verify(view).setStatus(eq(EMPTY));
     }
 
     @Test

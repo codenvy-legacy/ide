@@ -37,7 +37,7 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
 /**
- * The implementation of {@link CreateProjectProvider} to create 'DTO tutorial' project.
+ * The implementation of {@link CreateProjectProvider} to create a project that contains DTO tutorial.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: CreateDTOTutorialProjectPresenter.java Sep 13, 2013 10:54:05 AM azatsarynnyy $

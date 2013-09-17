@@ -50,6 +50,8 @@ public class TutorialsExtension {
                               ProjectTypeAgent projectTypeAgent, TutorialsResources resources,
                               TutorialsLocalizationConstant localizationConstants,
                               ActionManager actionManager, ShowTutorialPageAction showAction) {
+        resources.tutorialsCss().ensureInjected();
+
         // register actions
         DefaultActionGroup windowMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_WINDOW);
 
@@ -57,7 +59,7 @@ public class TutorialsExtension {
         windowMenuActionGroup.add(showAction);
 
         // register project type
-        projectTypeAgent.registerProjectType(TUTORIAL_PROJECT_TYPE, "Tutorial project",
+        projectTypeAgent.registerProjectType(TUTORIAL_PROJECT_TYPE, "Tutorial",
                                              resources.codenvyTutorialProject());
 
         // register templates

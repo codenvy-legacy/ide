@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.aws.client.beanstalk.environments.restart;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.ext.aws.client.AWSLocalizationConstant;
@@ -33,6 +34,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter that allow user to restart instance.
  *
@@ -43,32 +46,32 @@ import com.google.web.bindery.event.shared.EventBus;
 public class RestartEnvironmentPresenter implements RestartEnvironmentView.ActionDelegate {
     private RestartEnvironmentView  view;
     private EventBus                eventBus;
-    private ConsolePart             console;
     private BeanstalkClientService  service;
     private AWSLocalizationConstant constant;
     private LoginPresenter          loginPresenter;
     private EnvironmentInfo         environmentInfo;
+    private NotificationManager     notificationManager;
 
     /**
      * Create presenter.
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param service
      * @param constant
      * @param loginPresenter
+     * @param notificationManager
      */
     @Inject
-    public RestartEnvironmentPresenter(RestartEnvironmentView view, EventBus eventBus, ConsolePart console,
-                                       BeanstalkClientService service, AWSLocalizationConstant constant,
-                                       LoginPresenter loginPresenter) {
+    public RestartEnvironmentPresenter(RestartEnvironmentView view, EventBus eventBus, BeanstalkClientService service,
+                                       AWSLocalizationConstant constant, LoginPresenter loginPresenter,
+                                       NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
-        this.console = console;
         this.service = service;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -109,7 +112,8 @@ public class RestartEnvironmentPresenter implements RestartEnvironmentView.Actio
                                                          message += "<br>" + exception.getMessage();
                                                      }
 
-                                                     console.print(message);
+                                                     Notification notification = new Notification(message, ERROR);
+                                                     notificationManager.showNotification(notification);
                                                  }
 
                                                  @Override
@@ -119,7 +123,8 @@ public class RestartEnvironmentPresenter implements RestartEnvironmentView.Actio
                                              });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 

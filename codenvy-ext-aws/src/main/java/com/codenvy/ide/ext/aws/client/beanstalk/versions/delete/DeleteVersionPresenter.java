@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.aws.client.beanstalk.versions.delete;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
@@ -33,6 +34,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter to allow user delete beanstalk application.
  *
@@ -43,12 +46,12 @@ import com.google.web.bindery.event.shared.EventBus;
 public class DeleteVersionPresenter implements DeleteVersionView.ActionDelegate {
     private DeleteVersionView                     view;
     private EventBus                              eventBus;
-    private ConsolePart                           console;
     private BeanstalkClientService                service;
     private LoginPresenter                        loginPresenter;
     private AWSLocalizationConstant               constant;
     private ApplicationVersionInfo                version;
     private ResourceProvider                      resourceProvider;
+    private NotificationManager                   notificationManager;
     private AsyncCallback<ApplicationVersionInfo> callback;
 
     /**
@@ -56,23 +59,23 @@ public class DeleteVersionPresenter implements DeleteVersionView.ActionDelegate 
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param service
      * @param loginPresenter
      * @param constant
      * @param resourceProvider
+     * @param notificationManager
      */
     @Inject
-    public DeleteVersionPresenter(DeleteVersionView view, EventBus eventBus, ConsolePart console,
-                                  BeanstalkClientService service, LoginPresenter loginPresenter,
-                                  AWSLocalizationConstant constant, ResourceProvider resourceProvider) {
+    public DeleteVersionPresenter(DeleteVersionView view, EventBus eventBus, BeanstalkClientService service, LoginPresenter loginPresenter,
+                                  AWSLocalizationConstant constant, ResourceProvider resourceProvider,
+                                  NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
-        this.console = console;
         this.service = service;
         this.loginPresenter = loginPresenter;
         this.constant = constant;
         this.resourceProvider = resourceProvider;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -110,7 +113,8 @@ public class DeleteVersionPresenter implements DeleteVersionView.ActionDelegate 
                                               message += "<br>" + exception.getMessage();
                                           }
 
-                                          console.print(message);
+                                          Notification notification = new Notification(message, ERROR);
+                                          notificationManager.showNotification(notification);
 
                                           if (callback != null) {
                                               callback.onSuccess(null);
@@ -128,7 +132,8 @@ public class DeleteVersionPresenter implements DeleteVersionView.ActionDelegate 
                                   });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 

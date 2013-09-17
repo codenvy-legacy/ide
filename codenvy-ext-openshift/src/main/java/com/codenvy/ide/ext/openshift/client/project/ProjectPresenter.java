@@ -17,12 +17,12 @@
  */
 package com.codenvy.ide.ext.openshift.client.project;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.openshift.client.OpenShiftAsyncRequestCallback;
 import com.codenvy.ide.ext.openshift.client.OpenShiftClientServiceImpl;
-import com.codenvy.ide.ext.openshift.client.OpenShiftLocalizationConstant;
 import com.codenvy.ide.ext.openshift.client.info.ApplicationInfoPresenter;
 import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.openshift.client.login.LoginPresenter;
@@ -33,6 +33,9 @@ import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Project preview window.
  *
@@ -40,40 +43,37 @@ import com.google.web.bindery.event.shared.EventBus;
  * @version $Id: $
  */
 public class ProjectPresenter implements ProjectView.ActionDelegate {
-    private ProjectView                   view;
-    private EventBus                      eventBus;
-    private ConsolePart                   console;
-    private OpenShiftClientServiceImpl    service;
-    private OpenShiftLocalizationConstant constant;
-    private LoginPresenter                loginPresenter;
-    private ResourceProvider              resourceProvider;
-    private ApplicationInfoPresenter      applicationInfoPresenter;
-    private AppInfo                       application;
+    private ProjectView                view;
+    private EventBus                   eventBus;
+    private OpenShiftClientServiceImpl service;
+    private LoginPresenter             loginPresenter;
+    private ResourceProvider           resourceProvider;
+    private ApplicationInfoPresenter   applicationInfoPresenter;
+    private AppInfo                    application;
+    private NotificationManager        notificationManager;
 
     /**
      * Create presenter.
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param service
-     * @param constant
      * @param loginPresenter
      * @param resourceProvider
      * @param applicationInfoPresenter
+     * @param notificationManager
      */
     @Inject
-    protected ProjectPresenter(ProjectView view, EventBus eventBus, ConsolePart console, OpenShiftClientServiceImpl service,
-                               OpenShiftLocalizationConstant constant, LoginPresenter loginPresenter, ResourceProvider resourceProvider,
-                               ApplicationInfoPresenter applicationInfoPresenter) {
+    protected ProjectPresenter(ProjectView view, EventBus eventBus, OpenShiftClientServiceImpl service,
+                               LoginPresenter loginPresenter, ResourceProvider resourceProvider,
+                               ApplicationInfoPresenter applicationInfoPresenter, NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
-        this.console = console;
         this.service = service;
-        this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.resourceProvider = resourceProvider;
         this.applicationInfoPresenter = applicationInfoPresenter;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -101,8 +101,8 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
 
         try {
             service.getApplicationInfo(null, vfsId, projectId,
-                                       new OpenShiftAsyncRequestCallback<AppInfo>(unmarshaller, loggedInHandler, null, eventBus, console,
-                                                                                  constant, loginPresenter) {
+                                       new OpenShiftAsyncRequestCallback<AppInfo>(unmarshaller, loggedInHandler, null, eventBus,
+                                                                                  loginPresenter, notificationManager) {
                                            @Override
                                            protected void onSuccess(AppInfo result) {
                                                application = result;
@@ -111,7 +111,8 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
                                            }
                                        });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -129,14 +130,15 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
         try {
             service.getApplicationHealth(application.getName(),
                                          new OpenShiftAsyncRequestCallback<String>(unmarshaller, loggedInHandler, null, eventBus,
-                                                                                   console, constant, loginPresenter) {
+                                                                                   loginPresenter, notificationManager) {
                                              @Override
                                              protected void onSuccess(String result) {
                                                  view.setApplicationHealth(result);
                                              }
                                          });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -160,17 +162,19 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
 
         try {
             service.startApplication(application.getName(),
-                                     new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, console, constant,
-                                                                             loginPresenter) {
+                                     new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, loginPresenter,
+                                                                             notificationManager) {
                                          @Override
                                          protected void onSuccess(Void result) {
                                              String msg = "Application successfully started";
-                                             console.print(msg);
+                                             Notification notification = new Notification(msg, INFO);
+                                             notificationManager.showNotification(notification);
                                              getApplicationHealth();
                                          }
                                      });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -187,17 +191,19 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
 
         try {
             service.stopApplication(application.getName(),
-                                    new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, console, constant,
-                                                                            loginPresenter) {
+                                    new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, loginPresenter,
+                                                                            notificationManager) {
                                         @Override
                                         protected void onSuccess(Void result) {
                                             String msg = "Application successfully stopped";
-                                            console.print(msg);
+                                            Notification notification = new Notification(msg, INFO);
+                                            notificationManager.showNotification(notification);
                                             getApplicationHealth();
                                         }
                                     });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -214,17 +220,19 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
 
         try {
             service.restartApplication(application.getName(),
-                                       new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, console, constant,
-                                                                               loginPresenter) {
+                                       new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, loginPresenter,
+                                                                               notificationManager) {
                                            @Override
                                            protected void onSuccess(Void result) {
                                                String msg = "Application successfully restarted";
-                                               console.print(msg);
+                                               Notification notification = new Notification(msg, INFO);
+                                               notificationManager.showNotification(notification);
                                                getApplicationHealth();
                                            }
                                        });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -250,17 +258,19 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
 
         try {
             service.destroyApplication(application.getName(), vfsId, projectId,
-                                       new OpenShiftAsyncRequestCallback<String>(null, loggedInHandler, null, eventBus, console, constant,
-                                                                                 loginPresenter) {
+                                       new OpenShiftAsyncRequestCallback<String>(null, loggedInHandler, null, eventBus, loginPresenter,
+                                                                                 notificationManager) {
                                            @Override
                                            protected void onSuccess(String result) {
                                                String msg = "Application deleted";
-                                               console.print(msg);
+                                               Notification notification = new Notification(msg, INFO);
+                                               notificationManager.showNotification(notification);
                                                view.close();
                                            }
                                        });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }

@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.openshift.client.cartridge;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.openshift.client.OpenShiftAsyncRequestCallback;
 import com.codenvy.ide.ext.openshift.client.OpenShiftClientServiceImpl;
@@ -33,6 +34,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter to control creating cartridges for the application on OpenShift.
  *
@@ -42,22 +46,23 @@ import com.google.web.bindery.event.shared.EventBus;
 public class CreateCartridgePresenter implements CreateCartridgeView.ActionDelegate {
     private CreateCartridgeView           view;
     private EventBus                      eventBus;
-    private ConsolePart                   console;
     private OpenShiftClientServiceImpl    service;
     private OpenShiftLocalizationConstant constant;
     private LoginPresenter                loginPresenter;
+    private NotificationManager           notificationManager;
     private AppInfo                       application;
     private AsyncCallback<Boolean>        callback;
 
     @Inject
-    protected CreateCartridgePresenter(CreateCartridgeView view, EventBus eventBus, ConsolePart console, OpenShiftClientServiceImpl service,
-                                       OpenShiftLocalizationConstant constant, LoginPresenter loginPresenter) {
+    protected CreateCartridgePresenter(CreateCartridgeView view, EventBus eventBus, OpenShiftClientServiceImpl service,
+                                       OpenShiftLocalizationConstant constant, LoginPresenter loginPresenter,
+                                       NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
         this.service = service;
         this.loginPresenter = loginPresenter;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -91,8 +96,8 @@ public class CreateCartridgePresenter implements CreateCartridgeView.ActionDeleg
 
         try {
             service.getCartridges(
-                    new OpenShiftAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, null, eventBus, console,
-                                                                         constant, loginPresenter) {
+                    new OpenShiftAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, null, eventBus, loginPresenter,
+                                                                         notificationManager) {
                         @Override
                         protected void onSuccess(JsonArray<String> result) {
                             JsonArray<OpenShiftEmbeddableCartridge> cartridges = application.getEmbeddedCartridges();
@@ -107,7 +112,8 @@ public class CreateCartridgePresenter implements CreateCartridgeView.ActionDeleg
                         }
                     });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -126,8 +132,8 @@ public class CreateCartridgePresenter implements CreateCartridgeView.ActionDeleg
         final String cartridgeName = view.getCartridgeName();
         try {
             service.addCartridge(appName, cartridgeName,
-                                 new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, console, constant,
-                                                                         loginPresenter) {
+                                 new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, loginPresenter,
+                                                                         notificationManager) {
                                      @Override
                                      protected void onSuccess(Void result) {
                                          if (callback != null) {
@@ -135,7 +141,8 @@ public class CreateCartridgePresenter implements CreateCartridgeView.ActionDeleg
                                          }
                                          view.close();
                                          String msg = constant.createCartridgeViewSuccessfullyAdded(cartridgeName, appName);
-                                         console.print(msg);
+                                         Notification notification = new Notification(msg, INFO);
+                                         notificationManager.showNotification(notification);
                                      }
 
                                      @Override
@@ -150,7 +157,8 @@ public class CreateCartridgePresenter implements CreateCartridgeView.ActionDeleg
         } catch (RequestException e) {
             view.close();
 
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }

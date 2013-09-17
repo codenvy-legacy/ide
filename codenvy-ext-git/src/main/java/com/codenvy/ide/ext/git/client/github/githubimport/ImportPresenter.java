@@ -18,6 +18,8 @@
 package com.codenvy.ide.ext.git.client.github.githubimport;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.user.User;
@@ -56,6 +58,9 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
+import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.security.oauth.OAuthStatus.LOGGED_IN;
 import static com.google.gwt.http.client.RequestBuilder.POST;
 
@@ -77,6 +82,8 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
     private ResourceProvider                           resourceProvider;
     private ConsolePart                                console;
     private GitClientService                           gitService;
+    private NotificationManager                        notificationManager;
+    private Notification                               notification;
 
 
     /**
@@ -90,11 +97,12 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
      * @param resourceProvider
      * @param console
      * @param gitService
+     * @param notificationManager
      */
     @Inject
     public ImportPresenter(ImportView view, GitHubClientService service, EventBus eventBus, @Named("restContext") String restContext,
                            GitLocalizationConstant constant, ResourceProvider resourceProvider, ConsolePart console,
-                           GitClientService gitService) {
+                           GitClientService gitService, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
@@ -104,6 +112,7 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.gitService = gitService;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -128,13 +137,15 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
                                      "SSH Keys, and try importing your GitHub projects again.");
                     } else {
                         eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                        console.print(exception.getMessage());
+                        Notification notification = new Notification(exception.getMessage(), ERROR);
+                        notificationManager.showNotification(notification);
                     }
                 }
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -199,7 +210,8 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -250,6 +262,9 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
                     remoteUri += ".git";
                 }
 
+                notification = new Notification(constant.cloneStarted(projectName, remoteUri), PROGRESS);
+                notificationManager.showNotification(notification);
+
                 final String finalRemoteUri = remoteUri;
                 resourceProvider.createProject(projectName, JsonCollections.<Property>createArray(), new AsyncCallback<Project>() {
                     @Override
@@ -262,7 +277,9 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
                         String errorMessage =
                                 (caught.getMessage() != null && caught.getMessage().length() > 0) ? caught.getMessage()
                                                                                                   : constant.cloneFailed(finalRemoteUri);
-                        console.print(errorMessage);
+                        notification.setStatus(FINISHED);
+                        notification.setType(ERROR);
+                        notification.setMessage(errorMessage);
                     }
                 });
             }
@@ -343,7 +360,8 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
         resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
-                console.print(constant.cloneSuccess(gitRepositoryInfo.getRemoteUri()));
+                notification.setStatus(FINISHED);
+                notification.setMessage(constant.cloneSuccess(gitRepositoryInfo.getRemoteUri()));
             }
 
             @Override
@@ -364,7 +382,9 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
     private void handleError(@NotNull Throwable e, @NotNull String remoteUri) {
         String errorMessage =
                 (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : constant.cloneFailed(remoteUri);
-        console.print(errorMessage);
+        notification.setStatus(FINISHED);
+        notification.setType(ERROR);
+        notification.setMessage(errorMessage);
     }
 
     /**

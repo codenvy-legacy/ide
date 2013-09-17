@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.aws.client.beanstalk.update;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
@@ -35,6 +36,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * Presenter the allow user to change description for application.
  *
@@ -44,7 +47,6 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class DescriptionUpdatePresenter implements DescriptionUpdateView.ActionDelegate {
     private DescriptionUpdateView          view;
-    private ConsolePart                    console;
     private LoginPresenter                 loginPresenter;
     private EventBus                       eventBus;
     private AWSLocalizationConstant        constant;
@@ -52,29 +54,30 @@ public class DescriptionUpdatePresenter implements DescriptionUpdateView.ActionD
     private ResourceProvider               resourceProvider;
     private AsyncCallback<ApplicationInfo> callback;
     private ApplicationInfo                applicationInfo;
+    private NotificationManager            notificationManager;
 
     /**
      * Create view.
      *
      * @param view
-     * @param console
      * @param loginPresenter
      * @param eventBus
      * @param constant
      * @param service
      * @param resourceProvider
+     * @param notificationManager
      */
     @Inject
-    public DescriptionUpdatePresenter(DescriptionUpdateView view, ConsolePart console,
-                                      LoginPresenter loginPresenter, EventBus eventBus,
-                                      AWSLocalizationConstant constant, BeanstalkClientService service, ResourceProvider resourceProvider) {
+    public DescriptionUpdatePresenter(DescriptionUpdateView view, LoginPresenter loginPresenter, EventBus eventBus,
+                                      AWSLocalizationConstant constant, BeanstalkClientService service, ResourceProvider resourceProvider,
+                                      NotificationManager notificationManager) {
         this.view = view;
-        this.console = console;
         this.loginPresenter = loginPresenter;
         this.eventBus = eventBus;
         this.constant = constant;
         this.service = service;
         this.resourceProvider = resourceProvider;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -120,7 +123,8 @@ public class DescriptionUpdatePresenter implements DescriptionUpdateView.ActionD
                                                   message += "<br>" + exception.getMessage();
                                               }
 
-                                              console.print(message);
+                                              Notification notification = new Notification(message, ERROR);
+                                              notificationManager.showNotification(notification);
                                           }
 
                                           @Override
@@ -134,7 +138,8 @@ public class DescriptionUpdatePresenter implements DescriptionUpdateView.ActionD
                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             if (callback != null) {
                 callback.onFailure(e);
             }

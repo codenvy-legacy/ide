@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.git.client.status;
 
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
@@ -27,6 +29,8 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Handler to process actions with displaying the status of the Git work tree.
@@ -40,6 +44,7 @@ public class StatusCommandPresenter {
     private ResourceProvider        resourceProvider;
     private GitLocalizationConstant constant;
     private ConsolePart             console;
+    private NotificationManager     notificationManager;
 
     /**
      * Create presenter.
@@ -48,14 +53,16 @@ public class StatusCommandPresenter {
      * @param resourceProvider
      * @param console
      * @param constant
+     * @param notificationManager
      */
     @Inject
     public StatusCommandPresenter(GitClientService service, ResourceProvider resourceProvider, ConsolePart console,
-                                  GitLocalizationConstant constant) {
+                                  GitLocalizationConstant constant, NotificationManager notificationManager) {
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.constant = constant;
+        this.notificationManager = notificationManager;
     }
 
     /** Show status. */
@@ -77,12 +84,14 @@ public class StatusCommandPresenter {
                 @Override
                 protected void onFailure(Throwable exception) {
                     String errorMessage = exception.getMessage() != null ? exception.getMessage() : constant.statusFailed();
-                    console.print(errorMessage);
+                    Notification notification = new Notification(errorMessage, ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             String errorMessage = (e.getMessage() != null) ? e.getMessage() : constant.statusFailed();
-            console.print(errorMessage);
+            Notification notification = new Notification(errorMessage, ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 }

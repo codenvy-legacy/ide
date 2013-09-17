@@ -145,7 +145,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
                                   partsClosable);
         bindEvents(tabItem, part);
 //        setActivePart(part);
-        // requst focus
+        // request focus
         onRequestFocus();
     }
 

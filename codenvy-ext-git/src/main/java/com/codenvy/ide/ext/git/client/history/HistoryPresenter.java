@@ -19,7 +19,8 @@ package com.codenvy.ide.ext.git.client.history;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
@@ -48,6 +49,7 @@ import com.google.inject.Singleton;
 
 import java.util.Date;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.ext.git.shared.DiffRequest.DiffType.RAW;
 
 /**
@@ -69,7 +71,6 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
     private GitLocalizationConstant constant;
     private GitResources            resources;
     private ResourceProvider        resourceProvider;
-    private ConsolePart             console;
     private WorkspaceAgent          workspaceAgent;
     /** If <code>true</code> then show all changes in project, if <code>false</code> then show changes of the selected resource. */
     private boolean                 showChangesInProject;
@@ -78,6 +79,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
     private JsonArray<Revision> revisions;
     private Revision            selectedRevision;
     private SelectionAgent      selectionAgent;
+    private NotificationManager notificationManager;
 
     /**
      * Create presenter.
@@ -87,13 +89,13 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
      * @param constant
      * @param resources
      * @param resourceProvider
-     * @param console
      * @param workspaceAgent
+     * @param notificationManager
      */
     @Inject
     public HistoryPresenter(HistoryView view, GitClientService service, GitLocalizationConstant constant, GitResources resources,
-                            ResourceProvider resourceProvider, ConsolePart console, WorkspaceAgent workspaceAgent,
-                            SelectionAgent selectionAgent) {
+                            ResourceProvider resourceProvider, WorkspaceAgent workspaceAgent, SelectionAgent selectionAgent,
+                            NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.view.setTitle(constant.historyTitle());
@@ -101,9 +103,9 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         this.constant = constant;
         this.resources = resources;
         this.resourceProvider = resourceProvider;
-        this.console = console;
         this.workspaceAgent = workspaceAgent;
         this.selectionAgent = selectionAgent;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -149,13 +151,15 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
                 protected void onFailure(Throwable exception) {
                     nothingToDisplay(null);
                     String errorMessage = exception.getMessage() != null ? exception.getMessage() : constant.logFailed();
-                    console.print(errorMessage);
+                    Notification notification = new Notification(errorMessage, ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             nothingToDisplay(null);
             String errorMessage = e.getMessage() != null ? e.getMessage() : constant.logFailed();
-            console.print(errorMessage);
+            Notification notification = new Notification(errorMessage, ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -358,13 +362,15 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
                              protected void onFailure(Throwable exception) {
                                  nothingToDisplay(revision);
                                  String errorMessage = exception.getMessage() != null ? exception.getMessage() : constant.diffFailed();
-                                 console.print(errorMessage);
+                                 Notification notification = new Notification(errorMessage, ERROR);
+                                 notificationManager.showNotification(notification);
                              }
                          });
         } catch (RequestException e) {
             nothingToDisplay(revision);
             String errorMessage = e.getMessage() != null ? e.getMessage() : constant.diffFailed();
-            console.print(errorMessage);
+            Notification notification = new Notification(errorMessage, ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -401,13 +407,15 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
                                  protected void onFailure(Throwable exception) {
                                      nothingToDisplay(revisionB);
                                      String errorMessage = exception.getMessage() != null ? exception.getMessage() : constant.diffFailed();
-                                     console.print(errorMessage);
+                                     Notification notification = new Notification(errorMessage, ERROR);
+                                     notificationManager.showNotification(notification);
                                  }
                              });
             } catch (RequestException e) {
                 nothingToDisplay(revisionB);
                 String errorMessage = e.getMessage() != null ? e.getMessage() : constant.diffFailed();
-                console.print(errorMessage);
+                Notification notification = new Notification(errorMessage, ERROR);
+                notificationManager.showNotification(notification);
             }
         } else {
             nothingToDisplay(revisionB);

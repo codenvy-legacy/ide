@@ -19,7 +19,8 @@
 package com.codenvy.ide.ext.gae.client.project.general;
 
 import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.gae.client.GAEAsyncRequestCallback;
@@ -35,6 +36,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter that allow user to control general state for application in Google App Engine.
  *
@@ -46,31 +49,28 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
     private GeneralTabPaneView         view;
     private CreateApplicationPresenter createApplicationPresenter;
     private EventBus                   eventBus;
-    private ConsolePart                console;
     private GAEClientService           service;
     private ResourceProvider           resourceProvider;
     private LoginAction                loginAction;
     private GAELocalization            constant;
     private LogsPresenter              logsPresenter;
+    private NotificationManager        notificationManager;
     private Project                    project;
 
-    /**
-     * Constructor for general control presenter.
-     */
+    /** Constructor for general control presenter. */
     @Inject
-    public GeneralTabPanePresenter(GeneralTabPaneView view, CreateApplicationPresenter createApplicationPresenter,
-                                   EventBus eventBus, ConsolePart console, GAEClientService service,
-                                   ResourceProvider resourceProvider, LoginAction loginAction,
-                                   GAELocalization constant, LogsPresenter logsPresenter) {
+    public GeneralTabPanePresenter(GeneralTabPaneView view, CreateApplicationPresenter createApplicationPresenter, EventBus eventBus,
+                                   GAEClientService service, ResourceProvider resourceProvider, LoginAction loginAction,
+                                   GAELocalization constant, LogsPresenter logsPresenter, NotificationManager notificationManager) {
         this.view = view;
         this.createApplicationPresenter = createApplicationPresenter;
         this.eventBus = eventBus;
-        this.console = console;
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.loginAction = loginAction;
         this.constant = constant;
         this.logsPresenter = logsPresenter;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -98,10 +98,11 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
 
         try {
             service.rollback(vfsId, project.getId(),
-                             new GAEAsyncRequestCallback<Object>(null, console, eventBus, constant, loginAction) {
+                             new GAEAsyncRequestCallback<Object>(null, eventBus, constant, loginAction, notificationManager) {
                                  @Override
                                  protected void onSuccess(Object result) {
-                                     console.print(constant.rollbackUpdateSuccess());
+                                     Notification notification = new Notification(constant.rollbackUpdateSuccess(), INFO);
+                                     notificationManager.showNotification(notification);
                                  }
                              });
         } catch (RequestException e) {
@@ -122,10 +123,11 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
 
         try {
             service.updateIndexes(vfsId, project.getId(),
-                                  new GAEAsyncRequestCallback<Object>(null, console, eventBus, constant, loginAction) {
+                                  new GAEAsyncRequestCallback<Object>(null, eventBus, constant, loginAction, notificationManager) {
                                       @Override
                                       protected void onSuccess(Object result) {
-                                          console.print(constant.updateIndexesSuccessfully());
+                                          Notification notification = new Notification(constant.updateIndexesSuccessfully(), INFO);
+                                          notificationManager.showNotification(notification);
                                       }
                                   });
         } catch (RequestException e) {
@@ -140,10 +142,11 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
 
         try {
             service.vacuumIndexes(vfsId, project.getId(),
-                                  new GAEAsyncRequestCallback<Object>(null, console, eventBus, constant, loginAction) {
+                                  new GAEAsyncRequestCallback<Object>(null, eventBus, constant, loginAction, notificationManager) {
                                       @Override
                                       protected void onSuccess(Object result) {
-                                          console.print(constant.vacuumIndexesSuccessfully());
+                                          Notification notification = new Notification(constant.vacuumIndexesSuccessfully(), INFO);
+                                          notificationManager.showNotification(notification);
                                       }
                                   });
         } catch (RequestException e) {
@@ -158,11 +161,11 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
 
         try {
             service.updatePagespeed(vfsId, project.getId(),
-                                    new GAEAsyncRequestCallback<Object>(null, console, eventBus, constant,
-                                                                        loginAction) {
+                                    new GAEAsyncRequestCallback<Object>(null, eventBus, constant, loginAction, notificationManager) {
                                         @Override
                                         protected void onSuccess(Object result) {
-                                            console.print(constant.updatePageSpeedSuccessfully());
+                                            Notification notification = new Notification(constant.updatePageSpeedSuccessfully(), INFO);
+                                            notificationManager.showNotification(notification);
                                         }
                                     });
         } catch (RequestException e) {
@@ -177,10 +180,11 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
 
         try {
             service.updateQueues(vfsId, project.getId(),
-                                 new GAEAsyncRequestCallback<Object>(null, console, eventBus, constant, loginAction) {
+                                 new GAEAsyncRequestCallback<Object>(null, eventBus, constant, loginAction, notificationManager) {
                                      @Override
                                      protected void onSuccess(Object result) {
-                                         console.print(constant.updateQueuesSuccessfully());
+                                         Notification notification = new Notification(constant.updateQueuesSuccessfully(), INFO);
+                                         notificationManager.showNotification(notification);
                                      }
                                  });
         } catch (RequestException e) {
@@ -195,10 +199,11 @@ public class GeneralTabPanePresenter implements Presenter, GeneralTabPaneView.Ac
 
         try {
             service.updateDos(vfsId, project.getId(),
-                              new GAEAsyncRequestCallback<Object>(null, console, eventBus, constant, loginAction) {
+                              new GAEAsyncRequestCallback<Object>(null, eventBus, constant, loginAction, notificationManager) {
                                   @Override
                                   protected void onSuccess(Object result) {
-                                      console.print(constant.updateDosSuccessfully());
+                                      Notification notification = new Notification(constant.updateDosSuccessfully(), INFO);
+                                      notificationManager.showNotification(notification);
                                   }
                               });
         } catch (RequestException e) {

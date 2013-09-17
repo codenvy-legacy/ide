@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.aws.client.beanstalk.create;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
@@ -52,6 +53,11 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
+import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter which allow user to create Elastic Beanstalk Application.
  *
@@ -62,7 +68,6 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 public class CreateApplicationPresenter implements CreateApplicationView.ActionDelegate, ProjectBuiltHandler {
     private CreateApplicationView   view;
     private EventBus                eventBus;
-    private ConsolePart             console;
     private AWSLocalizationConstant constant;
     private String                  warUrl;
     private Project                 openedProject;
@@ -71,31 +76,33 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     private LoginPresenter          loginPresenter;
     private HandlerRegistration     projectBuildHandler;
     private Loader                  loader;
+    private NotificationManager     notificationManager;
+    private Notification            notification;
 
     /**
      * Create presenter.
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param constant
      * @param resourceProvider
      * @param service
      * @param loginPresenter
      * @param loader
+     * @param notificationManager
      */
     @Inject
-    public CreateApplicationPresenter(CreateApplicationView view, EventBus eventBus, ConsolePart console,
-                                      AWSLocalizationConstant constant, ResourceProvider resourceProvider, BeanstalkClientService service,
-                                      LoginPresenter loginPresenter, Loader loader) {
+    public CreateApplicationPresenter(CreateApplicationView view, EventBus eventBus, AWSLocalizationConstant constant,
+                                      ResourceProvider resourceProvider, BeanstalkClientService service, LoginPresenter loginPresenter,
+                                      Loader loader, NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
         this.resourceProvider = resourceProvider;
         this.service = service;
         this.loginPresenter = loginPresenter;
         this.loader = loader;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -132,7 +139,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                         @Override
                         protected void processFail(Throwable exception) {
                             eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                            console.print(exception.getMessage());
+                            Notification notification = new Notification(exception.getMessage(), ERROR);
+                            notificationManager.showNotification(notification);
                         }
 
                         @Override
@@ -150,7 +158,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                     });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -242,6 +251,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         createApplicationRequest.setS3Key(view.getS3Key());
         createApplicationRequest.setWar(warUrl);
 
+        notification = new Notification(constant.creatingProject(), PROGRESS);
+        notificationManager.showNotification(notification);
+
         ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
         try {
@@ -255,13 +267,16 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                                                   message += "<br>" + exception.getMessage();
                                               }
 
-                                              console.print(message);
+                                              notification.setStatus(FINISHED);
+                                              notification.setType(ERROR);
+                                              notification.setMessage(message);
                                           }
 
                                           @Override
                                           protected void onSuccess(ApplicationInfo result) {
                                               loader.hide();
-                                              console.print(constant.createApplicationSuccess(result.getName()));
+                                              notification.setStatus(FINISHED);
+                                              notification.setMessage(constant.createApplicationSuccess(result.getName()));
 
                                               if (view.launchNewEnvironment()) {
                                                   createEnvironment(result.getName());
@@ -273,7 +288,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         } catch (RequestException e) {
             loader.hide();
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            notification.setStatus(FINISHED);
+            notification.setType(ERROR);
+            notification.setMessage(e.getMessage());
         }
     }
 
@@ -315,27 +332,31 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                                                   message += "<br>" + exception.getMessage();
                                               }
 
-                                              console.print(message);
+                                              Notification notification = new Notification(message, ERROR);
+                                              notificationManager.showNotification(notification);
                                           }
 
                                           @Override
                                           protected void onSuccess(EnvironmentInfo result) {
                                               loader.hide();
-                                              console.print(constant.launchEnvironmentLaunching(envName));
+                                              Notification notification =
+                                                      new Notification(constant.launchEnvironmentLaunching(envName), INFO);
+                                              notificationManager.showNotification(notification);
                                               RequestStatusHandler environmentStatusHandler =
                                                       new EnvironmentRequestStatusHandler(
                                                               constant.launchEnvironmentLaunching(result.getName()),
                                                               constant.launchEnvironmentSuccess(result.getName()), eventBus);
 
                                               new EnvironmentStatusChecker(resourceProvider, openedProject, result, true,
-                                                                           environmentStatusHandler, eventBus, console, service,
-                                                                           loginPresenter, constant).startChecking();
+                                                                           environmentStatusHandler, eventBus, service,
+                                                                           loginPresenter, constant, notificationManager).startChecking();
                                           }
                                       });
         } catch (RequestException e) {
             loader.hide();
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 }

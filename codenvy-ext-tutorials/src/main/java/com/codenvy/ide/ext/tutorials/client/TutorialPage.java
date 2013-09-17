@@ -32,7 +32,7 @@ import com.google.inject.Singleton;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.DEFAULT_README_FILE_NAME;
 
 /**
- * Displays the tutorial description.
+ * Displays the tutorial page.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: TutorialPage.java Sep 13, 2013 12:48:08 PM azatsarynnyy $
@@ -59,19 +59,19 @@ public class TutorialPage extends AbstractPartPresenter {
             if (resource.isFile() && resource.getName().equals(DEFAULT_README_FILE_NAME)) {
                 resourceProvider.getActiveProject().getContent((File)resource, new AsyncCallback<File>() {
                     @Override
-                    public void onFailure(Throwable caught) {
-                    }
-
-                    @Override
                     public void onSuccess(File result) {
                         builder.append(result.getContent());
                         HTMLPanel htmlPanel = new HTMLPanel(builder.toString());
+                        htmlPanel.setStyleName(resources.tutorialsCss().scrollPanel());
                         container.setWidget(htmlPanel);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable caught) {
                     }
                 });
             }
         }
-
     }
 
     /** {@inheritDoc} */
@@ -83,12 +83,12 @@ public class TutorialPage extends AbstractPartPresenter {
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
-        return resources.file();
+        return resources.info();
     }
 
     /** {@inheritDoc} */
     @Override
     public String getTitleToolTip() {
-        return "This view displays the tutorial's description";
+        return "This view displays the tutorial description";
     }
 }
