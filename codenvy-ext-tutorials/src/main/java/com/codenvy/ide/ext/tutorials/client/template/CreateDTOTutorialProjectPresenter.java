@@ -29,6 +29,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_PROJECT_TYPE;
@@ -77,6 +78,8 @@ public class CreateDTOTutorialProjectPresenter implements CreateProjectProvider 
     public void create(final AsyncCallback<Project> callback) {
         JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
                                                      new Property(PROPERTY_MIXIN_NATURES, TUTORIAL_PROJECT_TYPE),
+                                                     new Property(PROPERTY_MIXIN_NATURES,
+                                                                  CODENVY_EXTENSION_PROJECT_TYPE),
                                                      new Property(PROPERTY_SOURCE_FOLDERS,
                                                                   createArray("src/main/java")));
         try {
