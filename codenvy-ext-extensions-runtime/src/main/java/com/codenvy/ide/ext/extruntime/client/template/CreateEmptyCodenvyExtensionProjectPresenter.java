@@ -88,7 +88,7 @@ public class CreateEmptyCodenvyExtensionProjectPresenter implements CreateProjec
                                                      new Property(PROPERTY_MIXIN_NATURES,
                                                                   CODENVY_EXTENSION_PROJECT_TYPE),
                                                      new Property(PROPERTY_SOURCE_FOLDERS,
-                                                                  createArray("src/main/java")));
+                                                                  createArray("src/main/java", "src/main/resources")));
         try {
             service.createEmptyCodenvyExtensionProject(projectName, properties, new AsyncRequestCallback<Void>() {
                 @Override

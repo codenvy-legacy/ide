@@ -84,7 +84,7 @@ public class CreateSampleCodenvyExtensionProjectPresenter implements CreateProje
                                                      new Property(PROPERTY_MIXIN_NATURES,
                                                                   CODENVY_EXTENSION_PROJECT_TYPE),
                                                      new Property(PROPERTY_SOURCE_FOLDERS,
-                                                                  createArray("src/main/java")));
+                                                                  createArray("src/main/java", "src/main/resources")));
         final String groupId = view.getGroupId() == null ? "" : view.getGroupId();
         final String artifactId = view.getArtifactId() == null ? "" : view.getArtifactId();
         final String version = view.getVersion() == null ? "" : view.getVersion();
