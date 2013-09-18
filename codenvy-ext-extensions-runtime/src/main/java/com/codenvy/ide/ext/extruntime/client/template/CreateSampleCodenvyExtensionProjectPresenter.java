@@ -45,10 +45,10 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMAR
  */
 @Singleton
 public class CreateSampleCodenvyExtensionProjectPresenter implements CreateProjectProvider {
-    private String projectName;
+    private String                  projectName;
     private ExtRuntimeClientService service;
-    private ResourceProvider resourceProvider;
-    private ExtensionPageView view;
+    private ResourceProvider        resourceProvider;
+    private ExtensionPageView       view;
 
     /**
      * Create controller.
@@ -65,40 +65,38 @@ public class CreateSampleCodenvyExtensionProjectPresenter implements CreateProje
         this.view = view;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getProjectName() {
         return projectName;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setProjectName(String projectName) {
         this.projectName = projectName;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void create(final AsyncCallback<Project> callback) {
         JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
-                new Property(PROPERTY_MIXIN_NATURES, CODENVY_EXTENSION_PROJECT_TYPE),
-                new Property(PROPERTY_SOURCE_FOLDERS, createArray("src/main/java")));
+                                                     new Property(PROPERTY_MIXIN_NATURES,
+                                                                  CODENVY_EXTENSION_PROJECT_TYPE),
+                                                     new Property(PROPERTY_SOURCE_FOLDERS,
+                                                                  createArray("src/main/java")));
         final String groupId = view.getGroupId() == null ? "" : view.getGroupId();
         final String artifactId = view.getArtifactId() == null ? "" : view.getArtifactId();
         final String version = view.getVersion() == null ? "" : view.getVersion();
         try {
-            service.createSampleCodenvyExtensionProject(projectName, properties, groupId, artifactId, version, new AsyncRequestCallback<Void>() {
+            service.createSampleCodenvyExtensionProject(projectName, properties, groupId, artifactId, version,
+                                                        new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
                         @Override
-                        public void onSuccess(Project result) {
+                        public void
+                        onSuccess(Project result) {
                             callback.onSuccess(result);
                         }
 
@@ -113,7 +111,7 @@ public class CreateSampleCodenvyExtensionProjectPresenter implements CreateProje
                 protected void onFailure(Throwable exception) {
                     callback.onFailure(exception);
                 }
-            });
+                                                        });
         } catch (RequestException e) {
             callback.onFailure(e);
         }

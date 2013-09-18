@@ -20,7 +20,6 @@ package com.codenvy.ide.ext.extruntime.client.template;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.CreateProjectProvider;
 import com.codenvy.ide.ext.extruntime.client.ExtRuntimeClientService;
-import com.codenvy.ide.ext.extruntime.client.wizard.ExtensionPageView;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
@@ -38,16 +37,18 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
 /**
- * The implementation of {@link com.codenvy.ide.api.template.CreateProjectProvider} for creating empty Codenvy extension project.
+ * The implementation of {@link com.codenvy.ide.api.template.CreateProjectProvider} for creating empty Codenvy
+ * extension
+ * project.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: CreateEmptyCodenvyExtensionProjectPresenter.java Sep 2, 2013 10:54:05 AM azatsarynnyy $
  */
 @Singleton
 public class CreateEmptyCodenvyExtensionProjectPresenter implements CreateProjectProvider {
-    private String projectName;
+    private String                  projectName;
     private ExtRuntimeClientService service;
-    private ResourceProvider resourceProvider;
+    private ResourceProvider        resourceProvider;
 
     /**
      * Create controller.
@@ -84,8 +85,10 @@ public class CreateEmptyCodenvyExtensionProjectPresenter implements CreateProjec
     @Override
     public void create(final AsyncCallback<Project> callback) {
         JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
-                new Property(PROPERTY_MIXIN_NATURES, CODENVY_EXTENSION_PROJECT_TYPE),
-                new Property(PROPERTY_SOURCE_FOLDERS, createArray("src/main/java")));
+                                                     new Property(PROPERTY_MIXIN_NATURES,
+                                                                  CODENVY_EXTENSION_PROJECT_TYPE),
+                                                     new Property(PROPERTY_SOURCE_FOLDERS,
+                                                                  createArray("src/main/java")));
         try {
             service.createEmptyCodenvyExtensionProject(projectName, properties, new AsyncRequestCallback<Void>() {
                 @Override

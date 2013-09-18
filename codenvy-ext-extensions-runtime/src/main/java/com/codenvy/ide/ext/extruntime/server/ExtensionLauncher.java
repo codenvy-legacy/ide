@@ -191,6 +191,12 @@ public class ExtensionLauncher implements Startable {
             InputStream extPomContent = vfs.getContent(pomFile.getId()).getStream();
             Model extensionPom = readPom(extPomContent);
 
+            if (extensionPom.getGroupId() == null ||
+                extensionPom.getArtifactId() == null ||
+                extensionPom.getVersion() == null) {
+                throw new Exception("Missing Maven artifact coordinates.");
+            }
+
             // Unpack codenvy-ide-client module sources and user's extension project into temporary directory.
             InputStream codenvyClientSourcesStream = Thread.currentThread().getContextClassLoader()
                                                            .getResourceAsStream("CodenvyClient.zip");
