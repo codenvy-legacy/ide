@@ -54,24 +54,20 @@ public class TutorialPage extends AbstractPartPresenter {
     public void go(final AcceptsOneWidget container) {
         final StringBuilder builder = new StringBuilder();
 
-        JsonArray<Resource> children = resourceProvider.getActiveProject().getChildren();
-        for (Resource resource : children.asIterable()) {
-            if (resource.isFile() && resource.getName().equals(DEFAULT_README_FILE_NAME)) {
-                resourceProvider.getActiveProject().getContent((File)resource, new AsyncCallback<File>() {
-                    @Override
-                    public void onSuccess(File result) {
-                        builder.append(result.getContent());
-                        HTMLPanel htmlPanel = new HTMLPanel(builder.toString());
-                        htmlPanel.setStyleName(resources.tutorialsCss().scrollPanel());
-                        container.setWidget(htmlPanel);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                    }
-                });
+        File resource = (File)resourceProvider.getActiveProject().findResourceByName(DEFAULT_README_FILE_NAME, File.TYPE);
+        resourceProvider.getActiveProject().getContent(resource, new AsyncCallback<File>() {
+            @Override
+            public void onSuccess(File result) {
+                builder.append(result.getContent());
+                HTMLPanel htmlPanel = new HTMLPanel(builder.toString());
+                htmlPanel.setStyleName(resources.tutorialsCss().scrollPanel());
+                container.setWidget(htmlPanel);
             }
-        }
+
+            @Override
+            public void onFailure(Throwable caught) {
+            }
+        });
     }
 
     /** {@inheritDoc} */
