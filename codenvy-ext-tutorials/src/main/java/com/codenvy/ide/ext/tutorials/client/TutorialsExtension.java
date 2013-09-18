@@ -42,7 +42,7 @@ public class TutorialsExtension {
     /** Default name of the tutorial project type. */
     public static final String TUTORIAL_PROJECT_TYPE    = "Tutorial";
     /** Default name of the file that contains tutorial description. */
-    public static final String DEFAULT_README_FILE_NAME = "readme.html";
+    public static final String DEFAULT_README_FILE_NAME = "guide.html";
 
     @Inject
     public TutorialsExtension(TemplateAgent templateAgent,
