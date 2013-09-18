@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
-        <version>2.7.0</version>
+        <version>2.7.1-SNAPSHOT</version>
     </parent>
     <artifactId>exo-ide-extension-aws</artifactId>
     <name>Codenvy IDE :: Extension :: Amazon Web Services</name>
