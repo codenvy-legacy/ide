@@ -19,32 +19,36 @@ package com.codenvy.ide.ext.tutorials.client;
 
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
+import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.DEFAULT_README_FILE_NAME;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_PROJECT_TYPE;
 
 /**
- * Controls a tutorial page state: can shows or hides it. Automatically shows tutorial page when project has opened and
- * closes it when project has closed.
+ * Controls a tutorial page state: can shows or hides it. Automatically shows a tutorial page when project has opened
+ * and closes it when project has closed.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: TutorialPageController.java Sep 13, 2013 12:48:08 PM azatsarynnyy $
  */
 @Singleton
 public class TutorialPageController {
-    private final EventBus           eventBus;
+    private final ResourceProvider   resourceProvider;
     private final WorkspacePresenter workspacePresenter;
     private final TutorialPage       tutorialPage;
 
     @Inject
-    public TutorialPageController(EventBus eventBus, Provider<WorkspacePresenter> workspaceProvider,
+    public TutorialPageController(ResourceProvider resourceProvider, EventBus eventBus,
+                                  Provider<WorkspacePresenter> workspaceProvider,
                                   TutorialPage tutorialPage) {
-        this.eventBus = eventBus;
+        this.resourceProvider = resourceProvider;
         this.workspacePresenter = workspaceProvider.get();
         this.tutorialPage = tutorialPage;
 
@@ -72,11 +76,17 @@ public class TutorialPageController {
 
     /** Open tutorial description page. */
     public void openTutorialPage() {
-        workspacePresenter.openPart(tutorialPage, PartStackType.EDITING);
+        if (isTutorialContainsGuide()) {
+            workspacePresenter.openPart(tutorialPage, PartStackType.EDITING);
+        }
     }
 
     /** Close tutorial description page. */
     public void closeTutorialPage() {
         workspacePresenter.removePart(tutorialPage);
+    }
+
+    private boolean isTutorialContainsGuide() {
+        return resourceProvider.getActiveProject().findResourceByName(DEFAULT_README_FILE_NAME, File.TYPE) != null;
     }
 }
