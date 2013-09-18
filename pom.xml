@@ -549,6 +549,8 @@
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
         <module>codenvy-application-war</module>
+        <module>codenvy-ext-tutorials</module>
+        <module>codenvy-ext-extensions-runtime</module>
         <module>codenvy-ide-site-war</module>
         <module>codenvy-packaging-standalone-tomcat</module>
     </modules>

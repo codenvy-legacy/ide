@@ -23,6 +23,7 @@ import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.ext.tutorials.client.action.ShowTutorialPageAction;
 import com.codenvy.ide.ext.tutorials.client.template.CreateDTOTutorialProjectPresenter;
+import com.codenvy.ide.ext.tutorials.client.template.CreateNotificationTutorialProjectPresenter;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -47,6 +48,7 @@ public class TutorialsExtension {
     @Inject
     public TutorialsExtension(TemplateAgent templateAgent,
                               CreateDTOTutorialProjectPresenter createDTOTutorialProjectPresenter,
+                              CreateNotificationTutorialProjectPresenter createNotificationTutorialProjectPresenter,
                               ProjectTypeAgent projectTypeAgent, TutorialsResources resources,
                               TutorialsLocalizationConstant localizationConstants,
                               ActionManager actionManager, ShowTutorialPageAction showAction) {
@@ -66,5 +68,8 @@ public class TutorialsExtension {
         templateAgent.registerTemplate("Tutorial project that illustrates examples of using DTO.",
                                        resources.codenvyTutorialTemplate(), createArray(TUTORIAL_PROJECT_TYPE),
                                        createDTOTutorialProjectPresenter, null);
+        templateAgent.registerTemplate("Tutorial project that illustrates examples of using Notification API.",
+                                       resources.codenvyTutorialTemplate(), createArray(TUTORIAL_PROJECT_TYPE),
+                                       createNotificationTutorialProjectPresenter, null);
     }
 }
