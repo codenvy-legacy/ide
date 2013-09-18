@@ -144,7 +144,8 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler, 
     }
 
     private Display display;
-    private Map<FileModel, Editor> openedEditor = new LinkedHashMap<FileModel, Editor>();
+    private       Map<FileModel, Editor> openedEditor   = new LinkedHashMap<FileModel, Editor>();
+    private final String                 MERGE_CONFLICT = "Merge conflict appeared in files";
 
     public void bindDisplay(Display d) {
         this.display = d;
@@ -264,50 +265,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler, 
                                                       @Override
                                                       protected void onFailure(Throwable exception) {
                                                           handleError(exception, remoteUrl);
-                                                          //if it is a merge conflict
-                                                          if (exception.getMessage() != null &&
-                                                              exception.getMessage().contains("Merge conflict appeared in files")) {
-                                                              //set conflict icon
-                                                              IDE.fireEvent(new TreeRefreshedEvent(project));
-                                                              //get path for files wit conflicts
-                                                              String[] filesWithConflicts = exception.getMessage().split("</br>");
-                                                              //if file opened, update content for this file
-                                                              for (int i = 1; i < filesWithConflicts.length - 1; i++) {
-                                                                  Iterator<FileModel> iterator = openedEditor.keySet().iterator();
-                                                                  while (iterator.hasNext()) {
-                                                                      final FileModel openedFile = iterator.next();
-                                                                      if (openedFile.getPath().contains(filesWithConflicts[i])) {
-                                                                          try {
-                                                                              VirtualFileSystem.getInstance().getContent(
-                                                                                      new AsyncRequestCallback<FileModel>(
-                                                                                              new FileContentUnmarshaller(openedFile)) {
-                                                                                          @Override
-                                                                                          protected void onSuccess(FileModel result) {
-                                                                                              IDocument document =
-                                                                                                      openedEditor.get(openedFile)
-                                                                                                                  .getDocument();
-                                                                                              try {
-                                                                                                  document.replace(0,
-                                                                                                                   document.getLength(),
-                                                                                                                   result.getContent());
-                                                                                              } catch (BadLocationException e) {
-                                                                                                  handleError(e, remoteUrl);
-                                                                                              }
-                                                                                          }
-
-                                                                                          @Override
-                                                                                          protected void onFailure(Throwable exception) {
-                                                                                              handleError(exception, remoteUrl);
-                                                                                          }
-                                                                                      });
-                                                                          } catch (RequestException e) {
-                                                                              IDE.fireEvent(new ExceptionThrownEvent(e));
-                                                                          }
-                                                                      }
-                                                                  }
-                                                              }
-
-                                                          }
+                                                          parsePullExceptionMessage(exception.getMessage(), project, remoteUrl);
                                                       }
                                                   });
         } catch (WebSocketException e) {
@@ -333,54 +291,64 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler, 
                                                     @Override
                                                     protected void onFailure(Throwable exception) {
                                                         handleError(exception, remoteUrl);
-                                                        //if it is a merge conflict
-                                                        if (exception.getMessage() != null &&
-                                                            exception.getMessage().contains("Merge conflict appeared in files")) {
-                                                            //set conflict icons
-                                                            IDE.fireEvent(new TreeRefreshedEvent(project));
-                                                            //get path for files wit conflicts
-                                                            String[] filesWithConflicts = exception.getMessage().split("</br>");
-                                                            //if file opened, update content for this file
-                                                            for (int i = 1; i < filesWithConflicts.length - 1; i++) {
-                                                                Iterator<FileModel> iterator = openedEditor.keySet().iterator();
-                                                                while (iterator.hasNext()) {
-                                                                    final FileModel openedFile = iterator.next();
-                                                                    if (openedFile.getPath().contains(filesWithConflicts[i])) {
-                                                                        try {
-                                                                            VirtualFileSystem.getInstance().getContent(
-                                                                                    new AsyncRequestCallback<FileModel>(
-                                                                                            new FileContentUnmarshaller(openedFile)) {
-                                                                                        @Override
-                                                                                        protected void onSuccess(FileModel result) {
-                                                                                            IDocument document =
-                                                                                                    openedEditor.get(openedFile)
-                                                                                                                .getDocument();
-                                                                                            try {
-                                                                                                document.replace(0,
-                                                                                                                 document.getLength(),
-                                                                                                                 result.getContent());
-                                                                                            } catch (BadLocationException e) {
-                                                                                                handleError(e, remoteUrl);
-                                                                                            }
-                                                                                        }
-
-                                                                                        @Override
-                                                                                        protected void onFailure(Throwable exception) {
-                                                                                            handleError(exception, remoteUrl);
-                                                                                        }
-                                                                                    });
-                                                                        } catch (RequestException e) {
-                                                                            IDE.fireEvent(new ExceptionThrownEvent(e));
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-
-                                                        }
+                                                        parsePullExceptionMessage(exception.getMessage(), project, remoteUrl);
                                                     }
                                                 });
         } catch (RequestException e) {
             handleError(e, remoteUrl);
+        }
+    }
+
+    /** Set conflict icons and update content for files with conflicts if exception includes merge conflict message. */
+    private void parsePullExceptionMessage(String exceptionMessage, ProjectModel project, String remoteUrl) {
+        if (exceptionMessage != null &&
+            exceptionMessage.contains(MERGE_CONFLICT)) {
+            IDE.fireEvent(new TreeRefreshedEvent(project));
+            updateOpenedFiles(exceptionMessage, remoteUrl);
+        }
+    }
+
+    /** Get path for files with merge conflicts and update his content if it is opened. */
+    private void updateOpenedFiles(String exceptionMessage, final String remoteUrl) {
+        String[] filesWithConflicts = exceptionMessage.split("</br>");
+        for (int i = 1; i < filesWithConflicts.length - 1; i++) {
+            Iterator<FileModel> iterator = openedEditor.keySet().iterator();
+            while (iterator.hasNext()) {
+                final FileModel openedFile = iterator.next();
+                if (openedFile.getPath().contains(filesWithConflicts[i])) {
+                    updateFileContent(openedFile, remoteUrl);
+                }
+            }
+        }
+    }
+
+    /** Update content of a file. */
+    private void updateFileContent(final FileModel openedFile, final String remoteUrl) {
+        try {
+            VirtualFileSystem.getInstance().getContent(
+                    new AsyncRequestCallback<FileModel>(
+                            new FileContentUnmarshaller(openedFile)) {
+                        @Override
+                        protected void onSuccess(FileModel result) {
+                            IDocument document =
+                                    openedEditor.get(openedFile)
+                                                .getDocument();
+                            try {
+                                document.replace(0,
+                                                 document.getLength(),
+                                                 result.getContent());
+                            } catch (BadLocationException e) {
+                                handleError(e, remoteUrl);
+                            }
+                        }
+
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            handleError(exception, remoteUrl);
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
 
