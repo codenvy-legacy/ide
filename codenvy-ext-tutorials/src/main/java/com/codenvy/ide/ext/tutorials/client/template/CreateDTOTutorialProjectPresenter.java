@@ -77,9 +77,9 @@ public class CreateDTOTutorialProjectPresenter implements CreateProjectProvider 
     @Override
     public void create(final AsyncCallback<Project> callback) {
         JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
-                                                     new Property(PROPERTY_MIXIN_NATURES, TUTORIAL_PROJECT_TYPE),
                                                      new Property(PROPERTY_MIXIN_NATURES,
-                                                                  CODENVY_EXTENSION_PROJECT_TYPE),
+                                                                  createArray(TUTORIAL_PROJECT_TYPE,
+                                                                              CODENVY_EXTENSION_PROJECT_TYPE)),
                                                      new Property(PROPERTY_SOURCE_FOLDERS,
                                                                   createArray("src/main/java")));
         try {
