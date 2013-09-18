@@ -81,7 +81,7 @@ public class CreateDTOTutorialProjectPresenter implements CreateProjectProvider 
                                                                   createArray(TUTORIAL_PROJECT_TYPE,
                                                                               CODENVY_EXTENSION_PROJECT_TYPE)),
                                                      new Property(PROPERTY_SOURCE_FOLDERS,
-                                                                  createArray("src/main/java")));
+                                                                  createArray("src/main/java", "src/main/resources")));
         try {
             service.createDTOTutorialProject(projectName, properties, new AsyncRequestCallback<Void>() {
                 @Override
