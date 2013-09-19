@@ -71,7 +71,7 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
         IDE.getInstance().addControl(new DebugAppControl());
         IDE.getInstance().addControl(new RunAppControl(), Docking.TOOLBAR_RIGHT);
         IDE.getInstance().addControl(new StopAppControl());
-        IDE.getInstance().addControl(new UpdateAppControl());
+//        IDE.getInstance().addControl(new UpdateAppControl());
         IDE.getInstance().addControl(new ShowBreakpointPropertiesControl());
         new LogsHandler();
     }
