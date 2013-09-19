@@ -143,9 +143,8 @@ public class ChatExtension extends Extension
 
             @Override
             public void onMessageReceived(GetChatParticipantsResponse message) {
-                if (!CollaborationPropertiesUtil.isCollaborationEnabled(currentProject)) {
+                if (CollaborationPropertiesUtil.isCollaborationEnabled(currentProject)) {
                     chatPresenter.setProjectId(currentProject);
-
                 }
                 chatPresenter.setChatParticipants(message.getParticipants());
             }
