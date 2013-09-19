@@ -429,7 +429,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
                                                           protected void onSuccess(final ProjectModel result) {
                                                               if ((currentProjectType == ProjectType.JSP ||
                                                               currentProjectType == ProjectType.SPRING)) {
-                                                                  writeUseJRebelProperty(result);
+//                                                                  writeUseJRebelProperty(result);
                                                               }
                                                               IDELoader.getInstance().hide();
                                                               IDE.getInstance().closeView(display.asView().getId());
