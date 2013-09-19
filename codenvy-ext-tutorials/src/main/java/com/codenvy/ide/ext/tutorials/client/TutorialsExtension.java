@@ -42,7 +42,7 @@ import static com.codenvy.ide.json.JsonCollections.createArray;
 @Extension(title = "Codenvy tutorial projects support.", version = "3.0.0")
 public class TutorialsExtension {
     /** Default name of the tutorial project type. */
-    public static final String TUTORIAL_PROJECT_TYPE    = "Tutorial";
+    public static final String TUTORIAL_PROJECT_TYPE    = "CodenvyTutorial";
     /** Default name of the file that contains tutorial description. */
     public static final String DEFAULT_README_FILE_NAME = "guide.html";
 
@@ -63,7 +63,7 @@ public class TutorialsExtension {
         windowMenuActionGroup.add(showAction);
 
         // register project type
-        projectTypeAgent.registerProjectType(TUTORIAL_PROJECT_TYPE, "Tutorial",
+        projectTypeAgent.registerProjectType(TUTORIAL_PROJECT_TYPE, "Codenvy tutorial",
                                              resources.codenvyTutorialProject());
 
         // register templates
