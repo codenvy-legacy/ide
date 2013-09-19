@@ -371,26 +371,15 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler,
     public void onProjectClosed(ProjectClosedEvent event) {
         project = null;
 
-        if (display == null) {
-            return;
-        }
-
-        display.setProject(null);
-        
-        updateCloseProjectTimer.cancel();
-        updateCloseProjectTimer.schedule(250);
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                if (display != null) {
+                    IDE.getInstance().closeView(display.asView().getId());
+                }
+            }
+        });
     }
-
-    private Timer updateCloseProjectTimer = new Timer() {
-                                              @Override
-                                              public void run() {
-                                                  if (display == null) {
-                                                      return;
-                                                  }
-
-                                                  IDE.getInstance().closeView(display.asView().getId());
-                                              }
-                                          };
 
     @Override
     public void onViewOpened(ViewOpenedEvent event) {

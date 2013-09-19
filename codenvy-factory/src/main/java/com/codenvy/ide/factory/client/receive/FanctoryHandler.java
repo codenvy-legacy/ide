@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent;
+import org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -75,11 +76,12 @@ import java.util.Map;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: CodeNowHandler.java Dec 6, 2012 vetal $
  */
-public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHandler, ProjectOpenedHandler {
+public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHandler, ProjectOpenedHandler, IDELoadCompleteHandler {
 
     private final String                restServiceContext;
     private       VirtualFileSystemInfo vfs;
     private       String                filePathToOpen;
+    private       String                copiedProjectIdToOpen;
 
     public FanctoryHandler() {
         IDE.addHandler(VfsChangedEvent.TYPE, this);
@@ -163,6 +165,22 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
     private void handleCopyProjects(Map<String, List<String>> parameterMap) {
         final String downloadUrl = parameterMap.get(CopySpec10.DOWNLOAD_URL).get(0);
         final String projectId = parameterMap.get(CopySpec10.PROJECT_ID).get(0);
+
+        IDE.addHandler(IDELoadCompleteEvent.TYPE, this);
+
+        //Lets the magic begin. need to rework.
+        List<String> projectsToCopy = new ArrayList<String>();
+        for (String project : projectId.split(";")) {
+            String[] dividedIdAndName = project.split(":");
+            if (dividedIdAndName.length > 1) {
+                projectsToCopy.add(dividedIdAndName[0]);
+            }
+        }
+        if (projectsToCopy.size() == 1) {
+            copiedProjectIdToOpen = projectsToCopy.get(0);
+        }
+        projectsToCopy.clear();
+
         try {
             String uri = "/copy/projects?" + CopySpec10.DOWNLOAD_URL + "=" + downloadUrl + "&" + CopySpec10.PROJECT_ID + "=" + projectId;
             RequestMessage message = RequestMessageBuilder.build(RequestBuilder.POST, restServiceContext + uri).getRequestMessage();
@@ -185,6 +203,43 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
         } catch (WebSocketException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
+    }
+
+    @Override
+    public void onIDELoadComplete(IDELoadCompleteEvent event) {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                if (copiedProjectIdToOpen != null && !copiedProjectIdToOpen.isEmpty()) {
+                    try {
+                        VirtualFileSystem.getInstance().getItemById(copiedProjectIdToOpen, new AsyncRequestCallback<ItemWrapper>(
+                                new ItemUnmarshaller(new ItemWrapper())) {
+                            @Override
+                            protected void onSuccess(ItemWrapper result) {
+                                if (result.getItem() instanceof ProjectModel) {
+                                    IDE.fireEvent(new OpenProjectEvent((ProjectModel)result.getItem()));
+                                }
+                                copiedProjectIdToOpen = null;
+                                removeIDELoadCompleteHandler();
+                            }
+
+                            @Override
+                            protected void onFailure(Throwable exception) {
+                                Log.error(FanctoryHandler.class, exception.getMessage());
+                                removeIDELoadCompleteHandler();
+                            }
+                        });
+                    } catch (RequestException e) {
+                        Log.error(FanctoryHandler.class, e.getMessage());
+                        removeIDELoadCompleteHandler();
+                    }
+                }
+            }
+        });
+    }
+
+    private void removeIDELoadCompleteHandler() {
+        IDE.removeHandler(IDELoadCompleteEvent.TYPE, this);
     }
 
     private boolean isCopyAllProjectsValidParam(Map<String, List<String>> parameterMap) {
