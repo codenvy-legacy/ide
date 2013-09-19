@@ -41,8 +41,8 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createDTOTutorialProject(String projectName, JsonArray<Property> properties,
-                                  AsyncRequestCallback<Void> callback) throws RequestException;
+    void createDTOTutorialProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
+            throws RequestException;
 
     /**
      * Create 'Notification tutorial' project.
@@ -55,6 +55,20 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createNotificationTutorialProject(String projectName, JsonArray<Property> properties,
-                                           AsyncRequestCallback<Void> callback) throws RequestException;
+    void createNotificationTutorialProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
+            throws RequestException;
+
+    /**
+     * Create 'Notification tutorial' project.
+     *
+     * @param projectName
+     *         name of the project to create
+     * @param properties
+     *         properties to set to a newly created project
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    void createActionTutorialProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
+            throws RequestException;
 }

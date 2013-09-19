@@ -70,8 +70,8 @@ public class TutorialsService {
         createProject(vfsId, templateStream, name, rootId, properties);
     }
 
-    private void createProject(String vfsId, InputStream templateStream, String name, String rootId,
-                               List<Property> properties) throws VirtualFileSystemException, IOException {
+    private void createProject(String vfsId, InputStream templateStream, String name, String rootId, List<Property> properties)
+            throws VirtualFileSystemException, IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         if (templateStream == null) {
             throw new InvalidArgumentException("Can't find project template.");
@@ -83,8 +83,8 @@ public class TutorialsService {
         updateProperties(name, properties, vfs, projectFolder);
     }
 
-    private void updateProperties(String name, List<Property> properties, VirtualFileSystem vfs,
-                                  Folder projectFolder) throws VirtualFileSystemException {
+    private void updateProperties(String name, List<Property> properties, VirtualFileSystem vfs, Folder projectFolder)
+            throws VirtualFileSystemException {
         Item projectItem = vfs.getItem(projectFolder.getId(), false, ALL_FILTER);
         if (projectItem instanceof ProjectImpl) {
             Project project = (Project)projectItem;
@@ -113,10 +113,36 @@ public class TutorialsService {
     @Path("notification")
     @POST
     public void createNotificationTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-                                                  @QueryParam("rootid") String rootId,
-                                                  List<Property> properties) throws VirtualFileSystemException, IOException {
+                                                  @QueryParam("rootid") String rootId, List<Property> properties)
+            throws VirtualFileSystemException, IOException {
         InputStream templateStream =
                 Thread.currentThread().getContextClassLoader().getResourceAsStream("templates/NotificationTutorial.zip");
+        createProject(vfsId, templateStream, name, rootId, properties);
+    }
+
+    /**
+     * Create 'Action tutorial' project.
+     *
+     * @param vfsId
+     *         identifier of virtual file system
+     * @param name
+     *         name of the newly created project
+     * @param rootId
+     *         identifier of parent folder for the new project
+     * @param properties
+     *         properties to set to project
+     * @throws VirtualFileSystemException
+     *         if any error occurred in VFS
+     * @throws IOException
+     *         if any error occurred while input-output operations
+     */
+    @Path("action")
+    @POST
+    public void createActionTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
+                                            @QueryParam("rootid") String rootId, List<Property> properties)
+            throws VirtualFileSystemException, IOException {
+        InputStream templateStream =
+                Thread.currentThread().getContextClassLoader().getResourceAsStream("templates/ActionTutorial.zip");
         createProject(vfsId, templateStream, name, rootId, properties);
     }
 }

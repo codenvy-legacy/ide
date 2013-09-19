@@ -22,6 +22,7 @@ import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.ext.tutorials.client.action.ShowTutorialPageAction;
+import com.codenvy.ide.ext.tutorials.client.template.CreateActionTutorialProjectPresenter;
 import com.codenvy.ide.ext.tutorials.client.template.CreateDTOTutorialProjectPresenter;
 import com.codenvy.ide.ext.tutorials.client.template.CreateNotificationTutorialProjectPresenter;
 import com.codenvy.ide.resources.ProjectTypeAgent;
@@ -49,6 +50,7 @@ public class TutorialsExtension {
     public TutorialsExtension(TemplateAgent templateAgent,
                               CreateDTOTutorialProjectPresenter createDTOTutorialProjectPresenter,
                               CreateNotificationTutorialProjectPresenter createNotificationTutorialProjectPresenter,
+                              CreateActionTutorialProjectPresenter createActionTutorialProjectPresenter,
                               ProjectTypeAgent projectTypeAgent, TutorialsResources resources,
                               TutorialsLocalizationConstant localizationConstants,
                               ActionManager actionManager, ShowTutorialPageAction showAction) {
@@ -71,5 +73,8 @@ public class TutorialsExtension {
         templateAgent.registerTemplate("Tutorial project that illustrates examples of using Notification API.",
                                        resources.codenvyTutorialTemplate(), createArray(TUTORIAL_PROJECT_TYPE),
                                        createNotificationTutorialProjectPresenter, null);
+        templateAgent.registerTemplate("Tutorial project that illustrates examples of using Action API.",
+                                       resources.codenvyTutorialTemplate(), createArray(TUTORIAL_PROJECT_TYPE),
+                                       createActionTutorialProjectPresenter, null);
     }
 }
