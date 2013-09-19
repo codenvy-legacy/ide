@@ -72,7 +72,7 @@ public class ExtensionLauncher implements Startable {
     /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
     private static final int    DEFAULT_APPLICATION_LIFETIME     = 60;
     /** Default address where GWT code server should bound . */
-    private static final String DEFAULT_CODE_SERVER_BIND_ADDRESS = getLocalIPv4Address();
+    private static final String DEFAULT_CODE_SERVER_BIND_ADDRESS = "localhost";
     /** System property that contains build server URL. */
     public static final  String BUILD_SERVER_BASE_URL            = "exo.ide.builder.build-server-base-url";
     /** Default name of the client module directory. */
@@ -101,7 +101,7 @@ public class ExtensionLauncher implements Startable {
              parsePortRanges(readValuesParam(initParams, "http-connector-port-ranges")),
              parsePortRanges(readValuesParam(initParams, "ajp-connector-port-ranges")),
              parsePortRanges(readValuesParam(initParams, "code-server-port-ranges")),
-             parseCodeServerBindAddress(readValueParam(initParams, "code-server-bind-address")),
+             readValueParam(initParams, "code-server-bind-address", DEFAULT_CODE_SERVER_BIND_ADDRESS),
              parseApplicationLifeTime(readValueParam(initParams, "sdk-app-lifetime")));
     }
 
@@ -279,7 +279,8 @@ public class ExtensionLauncher implements Startable {
                                                     tomcatDir, tempDir));
 
             LOG.debug("Start Codenvy extension {}", appId);
-            return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort).setCodeServerPort(codeServerPort);
+            return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort)
+                                          .setCodeServerHost(codeServerBindAddress).setCodeServerPort(codeServerPort);
         } catch (Exception e) {
             LOG.warn("Codenvy extension {} failed to launch, cause: {}", appId, e);
             portManager.releasePorts(codeServerPort, shutdownPort, httpPort, ajpPort);
@@ -410,13 +411,6 @@ public class ExtensionLauncher implements Startable {
             throw new IllegalArgumentException(e);
         }
         return portList;
-    }
-
-    private static String parseCodeServerBindAddress(String str) {
-        if (str != null) {
-            return str;
-        }
-        return DEFAULT_CODE_SERVER_BIND_ADDRESS;
     }
 
     private static int parseApplicationLifeTime(String str) {

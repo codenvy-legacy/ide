@@ -18,9 +18,9 @@
 package com.codenvy.ide.ext.extruntime.server.codeserver;
 
 /**
- * Interface represents a launcher of GWT code servers. Concrete implementations of this interface should provide implementation of methods
- * to work with a GWT code server.
- * 
+ * Interface represents a launcher of GWT code servers. Concrete implementations provide an implementation of methods
+ * thereby controlling how the GWT code server will run, stop, get log files content.
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: GWTCodeServerLauncher.java Jul 26, 2013 10:23:07 AM azatsarynnyy $
  */
@@ -28,17 +28,20 @@ public interface GWTCodeServerLauncher {
 
     /**
      * Starts a new code server.
-     * 
-     * @param configuration code server configuration
-     * @throws GWTCodeServerException if any error has occurred while starting a code server
+     *
+     * @param configuration
+     *         code server configuration
+     * @throws GWTCodeServerException
+     *         if any error has occurred while starting a code server
      */
     void start(GWTCodeServerConfiguration configuration) throws GWTCodeServerException;
 
     /**
      * Get code server's logs.
-     * 
+     *
      * @return code server's logs
-     * @throws GWTCodeServerException if any error has occurred while getting code server logs
+     * @throws GWTCodeServerException
+     *         if any error has occurred while getting code server logs
      */
     String getLogs() throws GWTCodeServerException;
 
