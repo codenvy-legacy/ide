@@ -65,7 +65,7 @@ import java.util.Map;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.TERMINATE;
-import static org.codehaus.plexus.util.xml.Xpp3DomBuilder.build;
+import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 
 /**
  * A collection of utility methods that simplify editing of Maven POM and GWT module descriptor (gwt.xml) files.
@@ -289,7 +289,7 @@ public class Utils {
                                                 "</configuration>", extensionModuleName);
 
         try {
-            Xpp3Dom configuration = build(new StringReader(confString));
+            Xpp3Dom configuration = Xpp3DomBuilder.build(new StringReader(confString));
             execution.setConfiguration(configuration);
             profile.getBuild().setPlugins(new ArrayList(plugins.values()));
 
@@ -351,31 +351,26 @@ public class Utils {
         }
     }
 
-    /** Returns IPv4 address of this machine or loopback address. */
-    static String getLocalIPv4Address() {
-        try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface current = interfaces.nextElement();
-                if (!current.isUp() || current.isLoopback() || current.isVirtual()) {
-                    continue;
-                }
+    /** Copy all DtoGenerator invocations from one pom.xml to another. */
+    static void copyDtoGeneratorInvocations(Model sourcePom, Path destPomPath) throws IOException {
+        final String dtoGeneratorClassName = "DtoGenerator";
 
-                Enumeration<InetAddress> addresses = current.getInetAddresses();
-                while (addresses.hasMoreElements()) {
-                    InetAddress current_addr = addresses.nextElement();
-                    if (current_addr.isLoopbackAddress()) {
-                        continue;
-                    }
+        Model reactorPom = readPom(destPomPath);
+        Map<String, Plugin> reactorPlugins = reactorPom.getBuild().getPluginsAsMap();
+        Plugin reactorExecPlugin = reactorPlugins.get("org.codehaus.mojo:exec-maven-plugin");
 
-                    if (current_addr instanceof Inet4Address) {
-                        return current_addr.getHostAddress();
-                    }
-                }
+        Map<String, Plugin> plugins = sourcePom.getBuild().getPluginsAsMap();
+        Plugin execPlugin = plugins.get("org.codehaus.mojo:exec-maven-plugin");
+        if (execPlugin == null) {
+            return;
+        }
+
+        for (PluginExecution pluginExecution : execPlugin.getExecutions()) {
+            Xpp3Dom pluginConfiguration = (Xpp3Dom)pluginExecution.getConfiguration();
+            if (pluginConfiguration.getChild("mainClass").getValue().endsWith(dtoGeneratorClassName)) {
+                reactorExecPlugin.addExecution(pluginExecution);
+                writePom(reactorPom, destPomPath);
             }
-            return "127.0.0.1";
-        } catch (SocketException e) {
-            return "127.0.0.1";
         }
     }
 

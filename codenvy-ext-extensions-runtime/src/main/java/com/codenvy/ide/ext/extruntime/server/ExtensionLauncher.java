@@ -197,12 +197,15 @@ public class ExtensionLauncher implements Startable {
                 throw new Exception("Missing Maven artifact coordinates.");
             }
 
-            // Unpack codenvy-ide-client module sources and user's extension project into temporary directory.
+            // Unpack 'codenvy-ide-client' module sources and user's extension project into temporary directory.
             InputStream codenvyClientSourcesStream = Thread.currentThread().getContextClassLoader()
                                                            .getResourceAsStream("CodenvyClient.zip");
             if (codenvyClientSourcesStream == null) {
                 throw new InvalidArgumentException("Can't find codenvy-ide-client module sources.");
             }
+
+            /*********************************** Preparing ******************************************/
+
             unzip(codenvyClientSourcesStream, codeServerDirPath.toFile());
             Path customModulePath = codeServerDirPath.resolve(extensionPom.getArtifactId());
             unzip(vfs.exportZip(projectId).getStream(), customModulePath.toFile());
@@ -220,6 +223,9 @@ public class ExtensionLauncher implements Startable {
 
             // Add sources from custom project to allow code server access it.
             fixMGWT332Bug(clientModulePomPath, customModulePath.getFileName().toString(), ADD_SOURCES_PROFILE);
+
+            // Detect DTO usage and add an appropriate sections to the reactor pom.xml.
+            copyDtoGeneratorInvocations(extensionPom, clientModulePomPath);
 
             Path mainGwtModuleDescriptor =
                     clientModuleDirPath.resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
@@ -240,7 +246,9 @@ public class ExtensionLauncher implements Startable {
             Files.delete(customModulePath.resolve("pom.xml"));
             Files.createSymbolicLink(customModulePath.resolve("pom.xml"), extensionDirInFSRoot.resolve("pom.xml"));
 
-            // Deploy custom project to maven repository.
+            /*********************************** Building & Running ******************************************/
+
+            // Deploy custom project to Maven repository.
             File zippedExtensionProjectFile = tempDir.toPath().resolve("extension-project.zip").toFile();
             zipDir(customModulePath.toString(), customModulePath.toFile(), zippedExtensionProjectFile, ANY_FILTER);
             String deployId = deploy(zippedExtensionProjectFile);
@@ -258,7 +266,7 @@ public class ExtensionLauncher implements Startable {
             zipDir(clientModuleDirPath.toString(), clientModuleDirPath.toFile(), zippedProjectFile, ANY_FILTER);
             final String buildId = build(zippedProjectFile);
 
-            // Launch code server while project is building.
+            // Launch GWT code server while project is building.
             GWTCodeServerLauncher codeServer = new GWTMavenCodeServerLauncher();
             codeServer
                     .start(new GWTCodeServerConfiguration(codeServerBindAddress, codeServerPort, clientModuleDirPath));
@@ -270,9 +278,11 @@ public class ExtensionLauncher implements Startable {
                 throw new Exception(buildStatus.getError());
             }
 
+            // Launch Tomcat.
             File tomcatDir = createTempDirectory(tempDir, "tomcat-");
             Process tomcatProcess = runTomcat(tomcatDir.toPath(), new URL(buildStatus.getDownloadUrl()),
                                               shutdownPort, httpPort, ajpPort);
+
             final long expirationTime = System.currentTimeMillis() + applicationLifetime;
             applications.put(appId, new Application(appId, expirationTime, codeServer, tomcatProcess,
                                                     shutdownPort, httpPort, ajpPort,
