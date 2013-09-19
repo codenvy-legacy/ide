@@ -106,7 +106,7 @@ public abstract class LocalFileSystemTest extends TestCase {
     };
 
     protected final String BASE_URI              = "http://localhost/service";
-    protected final String SERVICE_URI           = BASE_URI + "/my-ws/vfs/v2/";
+    protected final String SERVICE_URI           = BASE_URI + "/api/my-ws/vfs/v2/";
     protected final String DEFAULT_CONTENT       = "__TEST__";
     protected final byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
 
