@@ -506,6 +506,7 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
 
             if (linkingWithEditor && editorActiveFile != null) {
                 display.selectItem(editorActiveFile);
+                IDE.fireEvent(new TreeRefreshedEvent(openedProject));
             }
         }
     };
