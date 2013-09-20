@@ -28,12 +28,12 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface TutorialsLocalizationConstant extends Messages {
     /* Actions */
-    @Key("control.showTutorialPage.id")
-    String showTutorialPageActionlId();
+    @Key("control.showTutorialGuide.id")
+    String showTutorialGuideActionId();
 
-    @Key("control.showTutorialPage.text")
-    String showTutorialPageActionText();
+    @Key("control.showTutorialGuide.text")
+    String showTutorialGuideActionText();
 
-    @Key("control.showTutorialPage.description")
-    String showTutorialPageActionDescription();
+    @Key("control.showTutorialGuide.description")
+    String showTutorialGuideActionDescription();
 }

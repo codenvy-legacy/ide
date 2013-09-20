@@ -19,9 +19,7 @@ package com.codenvy.ide.ext.tutorials.client;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Resource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -32,19 +30,19 @@ import com.google.inject.Singleton;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.DEFAULT_README_FILE_NAME;
 
 /**
- * Displays the tutorial page.
+ * Displays a page that contains a tutorial guide.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: TutorialPage.java Sep 13, 2013 12:48:08 PM azatsarynnyy $
+ * @version $Id: TutorialGuidePage.java Sep 13, 2013 12:48:08 PM azatsarynnyy $
  */
 @Singleton
-public class TutorialPage extends AbstractPartPresenter {
+public class TutorialGuidePage extends AbstractPartPresenter {
 
     private final ResourceProvider   resourceProvider;
     private       TutorialsResources resources;
 
     @Inject
-    public TutorialPage(ResourceProvider resourceProvider, TutorialsResources resources) {
+    public TutorialGuidePage(ResourceProvider resourceProvider, TutorialsResources resources) {
         this.resourceProvider = resourceProvider;
         this.resources = resources;
     }
@@ -73,18 +71,18 @@ public class TutorialPage extends AbstractPartPresenter {
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return "Tutorial";
+        return "Tutorial Guide";
     }
 
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
-        return resources.info();
+        return resources.guide();
     }
 
     /** {@inheritDoc} */
     @Override
     public String getTitleToolTip() {
-        return "This view displays the tutorial description";
+        return "This view displays a tutorial guide";
     }
 }

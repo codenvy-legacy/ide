@@ -35,12 +35,12 @@ public interface TutorialsResources extends ClientBundle {
     @Source("Tutorials.css")
     TutorialsCss tutorialsCss();
 
-    @Source("com/codenvy/ide/ext/tutorials/images/codenvyTutorialTemplate.png")
+    @Source("codenvyTutorialTemplate.png")
     ImageResource codenvyTutorialTemplate();
 
-    @Source("com/codenvy/ide/ext/tutorials/images/codenvyTutorialProject.png")
+    @Source("codenvyTutorialProject.png")
     ImageResource codenvyTutorialProject();
 
-    @Source("com/codenvy/ide/ext/tutorials/images/info.png")
-    ImageResource info();
+    @Source("guide.png")
+    ImageResource guide();
 }

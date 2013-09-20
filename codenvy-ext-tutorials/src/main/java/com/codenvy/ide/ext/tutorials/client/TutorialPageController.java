@@ -42,15 +42,15 @@ import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_P
 public class TutorialPageController {
     private final ResourceProvider   resourceProvider;
     private final WorkspacePresenter workspacePresenter;
-    private final TutorialPage       tutorialPage;
+    private final TutorialGuidePage  tutorialGuidePage;
 
     @Inject
     public TutorialPageController(ResourceProvider resourceProvider, EventBus eventBus,
                                   Provider<WorkspacePresenter> workspaceProvider,
-                                  TutorialPage tutorialPage) {
+                                  TutorialGuidePage tutorialGuidePage) {
         this.resourceProvider = resourceProvider;
         this.workspacePresenter = workspaceProvider.get();
-        this.tutorialPage = tutorialPage;
+        this.tutorialGuidePage = tutorialGuidePage;
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
@@ -77,13 +77,13 @@ public class TutorialPageController {
     /** Open tutorial description page. */
     public void openTutorialPage() {
         if (isTutorialContainsGuide()) {
-            workspacePresenter.openPart(tutorialPage, PartStackType.EDITING);
+            workspacePresenter.openPart(tutorialGuidePage, PartStackType.EDITING);
         }
     }
 
     /** Close tutorial description page. */
     public void closeTutorialPage() {
-        workspacePresenter.removePart(tutorialPage);
+        workspacePresenter.removePart(tutorialGuidePage);
     }
 
     private boolean isTutorialContainsGuide() {

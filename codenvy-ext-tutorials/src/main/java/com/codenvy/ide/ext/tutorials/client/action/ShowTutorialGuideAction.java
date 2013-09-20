@@ -30,23 +30,23 @@ import com.google.inject.Singleton;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_PROJECT_TYPE;
 
 /**
- * Action to open tutorial page.
+ * Action to open a tutorial guide.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ShowTutorialPageAction.java Sep 16, 2013 1:58:47 PM azatsarynnyy $
+ * @version $Id: ShowTutorialGuideAction.java Sep 16, 2013 1:58:47 PM azatsarynnyy $
  */
 @Singleton
-public class ShowTutorialPageAction extends Action {
+public class ShowTutorialGuideAction extends Action {
 
     private final ResourceProvider       resourceProvider;
     private       TutorialPageController tutorialPageController;
 
     @Inject
-    public ShowTutorialPageAction(TutorialPageController tutorialPageController, TutorialsResources resources,
-                                  ResourceProvider resourceProvider,
-                                  TutorialsLocalizationConstant localizationConstants) {
-        super(localizationConstants.showTutorialPageActionText(),
-              localizationConstants.showTutorialPageActionDescription(), resources.info());
+    public ShowTutorialGuideAction(TutorialPageController tutorialPageController, TutorialsResources resources,
+                                   ResourceProvider resourceProvider,
+                                   TutorialsLocalizationConstant localizationConstants) {
+        super(localizationConstants.showTutorialGuideActionText(),
+              localizationConstants.showTutorialGuideActionDescription(), resources.guide());
         this.tutorialPageController = tutorialPageController;
         this.resourceProvider = resourceProvider;
     }

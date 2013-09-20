@@ -21,7 +21,7 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.ext.tutorials.client.action.ShowTutorialPageAction;
+import com.codenvy.ide.ext.tutorials.client.action.ShowTutorialGuideAction;
 import com.codenvy.ide.ext.tutorials.client.template.CreateActionTutorialProjectPresenter;
 import com.codenvy.ide.ext.tutorials.client.template.CreateDTOTutorialProjectPresenter;
 import com.codenvy.ide.ext.tutorials.client.template.CreateNotificationTutorialProjectPresenter;
@@ -53,13 +53,13 @@ public class TutorialsExtension {
                               CreateActionTutorialProjectPresenter createActionTutorialProjectPresenter,
                               ProjectTypeAgent projectTypeAgent, TutorialsResources resources,
                               TutorialsLocalizationConstant localizationConstants,
-                              ActionManager actionManager, ShowTutorialPageAction showAction) {
+                              ActionManager actionManager, ShowTutorialGuideAction showAction) {
         resources.tutorialsCss().ensureInjected();
 
         // register actions
         DefaultActionGroup windowMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_WINDOW);
 
-        actionManager.registerAction(localizationConstants.showTutorialPageActionlId(), showAction);
+        actionManager.registerAction(localizationConstants.showTutorialGuideActionId(), showAction);
         windowMenuActionGroup.add(showAction);
 
         // register project type
