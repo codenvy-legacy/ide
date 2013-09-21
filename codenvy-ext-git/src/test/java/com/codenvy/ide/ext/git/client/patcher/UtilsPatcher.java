@@ -17,27 +17,17 @@
  */
 package com.codenvy.ide.ext.git.client.patcher;
 
-import com.google.gwt.user.client.Window;
+import com.codenvy.ide.util.Utils;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
-@PatchClass(Window.class)
-public class WindowPatcher {
-    public static final String RETURNED_MESSAGE = "returned text";
+@PatchClass(Utils.class)
+public class UtilsPatcher {
+    public static final String WORKSPACE_NAME = "workspaceName";
 
     @PatchMethod(override = true)
-    public static String prompt(String msg, String initialValue) {
-        return RETURNED_MESSAGE;
-    }
-
-    @PatchMethod(override = true)
-    public static boolean confirm(String msg) {
-        return true;
-    }
-
-    @PatchMethod(override = true)
-    public static void alert(String msg) {
-        // do nothing
+    public static String getWorkspaceName() {
+        return WORKSPACE_NAME;
     }
 }

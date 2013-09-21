@@ -328,6 +328,7 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
                                            }
                                        });
         } catch (RequestException e) {
+            deleteFolder(project);
             handleError(e, remoteUri);
         }
         view.close();

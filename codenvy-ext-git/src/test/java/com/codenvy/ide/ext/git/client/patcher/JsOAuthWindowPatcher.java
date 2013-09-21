@@ -17,27 +17,17 @@
  */
 package com.codenvy.ide.ext.git.client.patcher;
 
-import com.google.gwt.user.client.Window;
+import com.codenvy.ide.security.oauth.JsOAuthWindow;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
-@PatchClass(Window.class)
-public class WindowPatcher {
-    public static final String RETURNED_MESSAGE = "returned text";
+@PatchClass(JsOAuthWindow.class)
+public class JsOAuthWindowPatcher {
 
     @PatchMethod(override = true)
-    public static String prompt(String msg, String initialValue) {
-        return RETURNED_MESSAGE;
-    }
-
-    @PatchMethod(override = true)
-    public static boolean confirm(String msg) {
-        return true;
-    }
-
-    @PatchMethod(override = true)
-    public static void alert(String msg) {
+    public static void loginWithOAuth(JsOAuthWindow window, String authUrl, String errUrl, int popupHeight, int popupWidth,
+                                      int clientHeight, int clientWidth) {
         // do nothing
     }
 }
