@@ -17,27 +17,48 @@
  */
 package com.codenvy.ide.ext.git.client.init;
 
+import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.ext.git.client.BaseTest;
+import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import java.lang.reflect.Method;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * Testing {@link InitRepositoryPresenter} functionality.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public class InitRepositoryPresenterTest extends BaseTest {
     public static final boolean BARE = true;
     @Mock
     private InitRepositoryView      view;
-    @InjectMocks
     private InitRepositoryPresenter presenter;
+
+    @Before
+    public void disarm() {
+        super.disarm();
+
+        presenter = new InitRepositoryPresenter(view, service, resourceProvider, eventBus, console, constant);
+
+        when(view.isBare()).thenReturn(BARE);
+        when(project.getName()).thenReturn(PROJECT_NAME);
+    }
 
     @Test
     public void testShowDialog() throws Exception {
@@ -50,33 +71,127 @@ public class InitRepositoryPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testOnOkClickedWebsocketRequest() throws Exception {
-        when(view.isBare()).thenReturn(BARE);
-        when(project.getName()).thenReturn(PROJECT_NAME);
+    public void testOnOkClickedInitWSRequestIsSuccessful() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                RequestCallback<String> callback = (RequestCallback<String>)arguments[4];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, EMPTY_TEXT);
+                return callback;
+            }
+        }).when(service).initWS(anyString(), anyString(), anyString(), anyBoolean(), (RequestCallback<String>)anyObject());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[0];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, project);
+                return callback;
+            }
+        }).when(project).refreshProperties((AsyncCallback<Project>)anyObject());
 
+        presenter.showDialog();
         presenter.onOkClicked();
 
         verify(view).isBare();
         verify(view).close();
         verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<String>)anyObject());
         verify(service, never()).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<String>)anyObject());
-        verify(console, never()).print(anyString());
+        verify(constant).initSuccess();
+        verify(console).print(anyString());
+        verify(eventBus).fireEvent((RefreshBrowserEvent)anyObject());
+        verify(project).refreshProperties((AsyncCallback<Project>)anyObject());
     }
 
     @Test
-    public void testOnOkClickedRestRequest() throws Exception {
+    public void testOnOkClickedInitWSRequestIsFailed() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                RequestCallback<String> callback = (RequestCallback<String>)arguments[4];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(service).initWS(anyString(), anyString(), anyString(), anyBoolean(), (RequestCallback<String>)anyObject());
+
+        presenter.showDialog();
+        presenter.onOkClicked();
+
+        verify(view).isBare();
+        verify(view).close();
+        verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<String>)anyObject());
+        verify(service, never()).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<String>)anyObject());
+        verify(console).print(anyString());
+        verify(constant).initFailed();
+    }
+
+    @Test
+    public void testOnOkClickedInitRequestIsSuccessful() throws Exception {
         doThrow(WebSocketException.class).when(service)
                 .initWS(anyString(), anyString(), anyString(), anyBoolean(), (RequestCallback<String>)anyObject());
-        when(view.isBare()).thenReturn(BARE);
-        when(project.getName()).thenReturn(PROJECT_NAME);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, EMPTY_TEXT);
+                return callback;
+            }
+        }).when(service).init(anyString(), anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[0];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, project);
+                return callback;
+            }
+        }).when(project).refreshProperties((AsyncCallback<Project>)anyObject());
 
+        presenter.showDialog();
         presenter.onOkClicked();
 
         verify(view).isBare();
         verify(view).close();
         verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<String>)anyObject());
         verify(service).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<String>)anyObject());
-        verify(console, never()).print(anyString());
+        verify(constant).initSuccess();
+        verify(console).print(anyString());
+        verify(eventBus).fireEvent((RefreshBrowserEvent)anyObject());
+        verify(project).refreshProperties((AsyncCallback<Project>)anyObject());
+    }
+
+    @Test
+    public void testOnOkClickedInitRequestIsFailed() throws Exception {
+        doThrow(WebSocketException.class).when(service)
+                .initWS(anyString(), anyString(), anyString(), anyBoolean(), (RequestCallback<String>)anyObject());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(service).init(anyString(), anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
+
+        presenter.showDialog();
+        presenter.onOkClicked();
+
+        verify(view).isBare();
+        verify(view).close();
+        verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<String>)anyObject());
+        verify(service).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<String>)anyObject());
+        verify(console).print(anyString());
+        verify(constant).initFailed();
     }
 
     @Test
@@ -86,9 +201,7 @@ public class InitRepositoryPresenterTest extends BaseTest {
         doThrow(RequestException.class).when(service)
                 .init(anyString(), anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
 
-        when(view.isBare()).thenReturn(BARE);
-        when(project.getName()).thenReturn(PROJECT_NAME);
-
+        presenter.showDialog();
         presenter.onOkClicked();
 
         verify(view).isBare();
@@ -96,6 +209,7 @@ public class InitRepositoryPresenterTest extends BaseTest {
         verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<String>)anyObject());
         verify(service).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<String>)anyObject());
         verify(console).print(anyString());
+        verify(constant).initFailed();
     }
 
     @Test
