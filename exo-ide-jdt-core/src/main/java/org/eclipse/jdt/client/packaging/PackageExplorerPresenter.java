@@ -307,6 +307,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler,
         IDE.fireEvent(new ApplicationSettingsSavedEvent(applicationSettings, SaveType.COOKIES));
 
         if (linkWithEditor && editorActiveFile != null) {
+            IDE.fireEvent(new TreeRefreshedEvent(project));
             display.selectItem(editorActiveFile);
         }
     }
@@ -320,6 +321,9 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler,
         editorActiveFile = event.getFile();
         if (display != null && linkWithEditor && editorActiveFile != null) {
             display.selectItem(event.getFile());
+            if (linkWithEditor) {
+                IDE.fireEvent(new TreeRefreshedEvent(project));
+            }
         }
     }
 
