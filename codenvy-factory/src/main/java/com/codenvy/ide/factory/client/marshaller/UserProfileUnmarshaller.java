@@ -19,7 +19,6 @@
 package com.codenvy.ide.factory.client.marshaller;
 
 import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
@@ -29,6 +28,8 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import java.util.Map;
 
 /**
+ * Parsing information about current logged in user. Getting first and last name from response and construct map from theese values.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 23.09.13 vlad $
  */
@@ -39,6 +40,7 @@ public class UserProfileUnmarshaller implements Unmarshallable<Map<String, Strin
         this.profileFields = profileFields;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         if (response.getText() == null || response.getText().isEmpty()) {
@@ -57,6 +59,7 @@ public class UserProfileUnmarshaller implements Unmarshallable<Map<String, Strin
         profileFields.put("lastName", profileAttributes.get("lastName").isString().stringValue());
     }
 
+    /** {@inheritDoc} */
     @Override
     public Map<String, String> getPayload() {
         return profileFields;
