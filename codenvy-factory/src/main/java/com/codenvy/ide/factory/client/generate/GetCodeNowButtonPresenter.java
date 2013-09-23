@@ -179,7 +179,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
     private boolean darkStyle = true;
 
     public GetCodeNowButtonPresenter() {
-        IDE.addHandler(GetCodeNowButtonEvent.TYPE, this);
+        //IDE.addHandler(GetCodeNowButtonEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);

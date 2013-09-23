@@ -29,31 +29,19 @@ import org.exoplatform.ide.client.framework.util.Utils;
  */
 public class SpinnetGenerator {
 
-//  /** URL to CodeNow button. */
-//  //private static final String CODE_NOW_BUTTON_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow-embed.html";
-//  private static final String CODE_NOW_BUTTON_URL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("factory/codenow-embed.html").buildString();
-//
-//  /** URL of image which will be used as link for CodeNow button for GitHub Pages. */
-//  private static final String CODE_NOW_BUTTON_FOR_GITHUB_IMAGE_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow_gh.png";
-
     /**
      * Returns URL to CodeNow button template
      * 
      * @return
      */
     public static String getCodeNowButtonJavascriptURL() {
-        String jsURL;
-        
         if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
-            jsURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+            return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
                 .setPath("ide/_app/factory/resources/factory.js").buildString();
-        } else {
-            jsURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("factory/resources/factory.js").buildString();            
         }
         
-        //jsURL = jsURL.substring(jsURL.indexOf("//"));
-        return jsURL;
+        return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+            .setPath("factory/resources/factory.js").buildString();        
     }
 
     /**
