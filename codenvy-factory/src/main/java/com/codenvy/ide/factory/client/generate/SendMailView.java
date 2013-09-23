@@ -35,44 +35,50 @@ import static com.codenvy.ide.factory.client.FactoryExtension.LOCALIZATION_CONST
 
 /**
  * View for {@link SendMailPresenter}.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: SendMailView.java Jun 11, 2013 12:19:01 PM azatsarynnyy $
  */
 public class SendMailView extends ViewImpl implements Display {
 
-    private static final String              ID                 = LOCALIZATION_CONSTANTS.sendMailViewId();
+    private static final String ID = LOCALIZATION_CONSTANTS.sendMailViewId();
 
-    private static final String              TITLE              = LOCALIZATION_CONSTANTS.sendMailViewTitle();
+    private static final String TITLE = LOCALIZATION_CONSTANTS.sendMailViewTitle();
 
-    private static final int                 HEIGHT             = 250;
+    private static final int HEIGHT = 400;
 
-    private static final int                 WIDTH              = 450;
+    private static final int WIDTH = 700;
 
-    private static final String              RECIPIENT_FIELD_ID = LOCALIZATION_CONSTANTS.sendMailFieldMessageId();
+    private static final String RECIPIENT_FIELD_ID = LOCALIZATION_CONSTANTS.sendMailFieldMessageId();
 
-    private static final String              MESSAGE_FIELD_ID   = LOCALIZATION_CONSTANTS.sendMailFieldMessageId();
+    private static final String MESSAGE_FIELD_ID = LOCALIZATION_CONSTANTS.sendMailFieldMessageId();
 
-    private static final String              SEND_BUTTON_ID     = LOCALIZATION_CONSTANTS.sendMailButtonSend();
+    private static final String SEND_BUTTON_ID = LOCALIZATION_CONSTANTS.sendMailButtonSend();
 
-    private static final String              CANCEL_BUTTON_ID   = LOCALIZATION_CONSTANTS.sendMailButtonCancel();
+    private static final String CANCEL_BUTTON_ID = LOCALIZATION_CONSTANTS.sendMailButtonCancel();
 
-    private static CommitChangesViewUiBinder uiBinder           = GWT.create(CommitChangesViewUiBinder.class);
+    private static CommitChangesViewUiBinder uiBinder = GWT.create(CommitChangesViewUiBinder.class);
 
     interface CommitChangesViewUiBinder extends UiBinder<Widget, SendMailView> {
     }
 
     @UiField
-    TextInput     recipientField;
+    TextInput recipientField;
+
+    @UiField
+    TextInput senderEmailField;
+
+    @UiField
+    TextInput senderNameField;
 
     @UiField
     TextAreaInput messageField;
 
     @UiField
-    ImageButton   sendButton;
+    ImageButton sendButton;
 
     @UiField
-    ImageButton   cancelButton;
+    ImageButton cancelButton;
 
     public SendMailView() {
         super(ID, ViewType.MODAL, TITLE, null, WIDTH, HEIGHT, false);
@@ -87,51 +93,51 @@ public class SendMailView extends ViewImpl implements Display {
         sendButton.setEnabled(false);
     }
 
-    /**
-     * @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#getRecipientField()
-     */
+    /** @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#getRecipientField() */
     @Override
     public HasValue<String> getRecipientField() {
         return recipientField;
     }
 
-    /**
-     * @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#getMessageField()
-     */
+    /** @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#getMessageField() */
     @Override
     public HasValue<String> getMessageField() {
         return messageField;
     }
 
-    /**
-     * @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#getSendButton()
-     */
+    /** @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#getSendButton() */
     @Override
     public HasClickHandlers getSendButton() {
         return sendButton;
     }
 
-    /**
-     * @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#getCancelButton()
-     */
+    /** @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#getCancelButton() */
     @Override
     public HasClickHandlers getCancelButton() {
         return cancelButton;
     }
 
-    /**
-     * @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#focusRecipientField()
-     */
+    /** @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#focusRecipientField() */
     @Override
     public void focusRecipientField() {
         recipientField.focus();
     }
 
-    /**
-     * @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#enableSendButton(boolean)
-     */
+    /** @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#enableSendButton(boolean) */
     @Override
     public void enableSendButton(boolean enable) {
         sendButton.setEnabled(enable);
+    }
+
+    /** @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#getSenderName()  */
+    @Override
+    public HasValue<String> getSenderName() {
+        return senderNameField;
+    }
+
+    /** @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#getSenderEmail()  */
+    @Override
+    public HasValue<String> getSenderEmail() {
+        return senderEmailField;
     }
 }
