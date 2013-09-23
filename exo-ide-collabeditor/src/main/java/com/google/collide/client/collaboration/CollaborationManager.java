@@ -198,6 +198,7 @@ public class CollaborationManager implements DisableEnableCollaborationHandler, 
                     @Override
                     public void onMessageReceived(GetOpenedFilesInWorkspaceResponse message) {
                         openedFilesInWorkspace.putAll(message.getOpenedFiles());
+                        path2sessionId.putAll(message.getFileEditSessions());
                     }
                 });
         IDE.addHandler(DisableEnableCollaborationEvent.TYPE, this);
@@ -255,7 +256,6 @@ public class CollaborationManager implements DisableEnableCollaborationHandler, 
                 docCollabControllersByDocumentId.get(document.getId());
         if (docCollabController != null) {
             docCollabController.attachToEditor(editor);
-//         editor.getBuffer().addUnmanagedElement(participantsViews.get(document.getId()).getElement());
         }
     }
 
@@ -265,7 +265,6 @@ public class CollaborationManager implements DisableEnableCollaborationHandler, 
         if (docCollabController != null) {
             docCollabController.detachFromEditor();
         }
-//      participantsViews.erase(document.getId());
     }
 
     private void addNewCollaborator(final NewFileCollaborator message) {
