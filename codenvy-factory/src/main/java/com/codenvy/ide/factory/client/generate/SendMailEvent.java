@@ -31,15 +31,17 @@ public class SendMailEvent extends GwtEvent<SendMailHandler> {
     public static final Type<SendMailHandler> TYPE = new Type<SendMailHandler>();
 
     /** Text message to send. */
-    private String                            message;
+    private String factoryUrl;
+    private String projectName;
 
     /**
      * Constructs new event with specified text message to send.
-     * 
-     * @param message text message to send
+     *
+     * @param factoryUrl text message to send
      */
-    public SendMailEvent(String message) {
-        this.message = message;
+    public SendMailEvent(String factoryUrl, String projectName) {
+        this.factoryUrl = factoryUrl;
+        this.projectName = projectName;
     }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
@@ -54,8 +56,11 @@ public class SendMailEvent extends GwtEvent<SendMailHandler> {
         handler.onSendMail(this);
     }
 
-    public String getMessage() {
-        return message;
+    public String getFactoryUrl() {
+        return factoryUrl;
     }
 
+    public String getProjectName() {
+        return projectName;
+    }
 }
