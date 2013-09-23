@@ -35,4 +35,12 @@ public interface GetOpenedFilesInWorkspaceResponse extends ServerToClientDto {
      * @return the JsonStringMap
      */
     JsonStringMap<JsonArray<ParticipantUserDetails>> getOpenedFiles();
+
+
+    /**
+     * Key is file path, value is EditSessionId
+     *
+     * @return the JsonStringMap
+     */
+    JsonStringMap<String> getFileEditSessions();
 }
