@@ -381,8 +381,13 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler, 
 
     @Override
     public void onEditorFileClosed(EditorFileClosedEvent event) {
-        if (openedEditor.containsKey(event.getFile())) {
-            openedEditor.remove(event.getFile());
+        Iterator<FileModel> iterator = openedEditor.keySet().iterator();
+        while (iterator.hasNext()) {
+            FileModel file = iterator.next();
+            if(file.getId().equals(event.getFile().getId())) {
+                openedEditor.remove(file);
+                return;
+            }
         }
     }
 }
