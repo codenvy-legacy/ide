@@ -21,32 +21,48 @@ package org.exoplatform.ide.client.project.resource;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * Open resource event. May used by factory(in this case method that call this event should pass {@link
+ * org.exoplatform.ide.client.project.resource.OpenResourcePresenter.ResourceSelectedCallback} callback into constructor of event).
  */
 public class OpenResourceEvent extends GwtEvent<OpenResourceHandler> {
 
+    /** Type, used to register the event. */
     public static final GwtEvent.Type<OpenResourceHandler> TYPE = new GwtEvent.Type<OpenResourceHandler>();
 
+    /** Callback to process selected item in resources list. */
     private OpenResourcePresenter.ResourceSelectedCallback callback;
 
+    /** Construct event. */
     public OpenResourceEvent() {
     }
 
+    /**
+     * Construct event with setted callback. Used for factory.
+     *
+     * @param callback
+     *         {@link OpenResourcePresenter.ResourceSelectedCallback} callback.
+     */
     public OpenResourceEvent(OpenResourcePresenter.ResourceSelectedCallback callback) {
         this.callback = callback;
     }
 
+    /** {@inheritDoc} */
     @Override
     public com.google.gwt.event.shared.GwtEvent.Type<OpenResourceHandler> getAssociatedType() {
         return TYPE;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void dispatch(OpenResourceHandler handler) {
         handler.onOpenResource(this);
     }
 
+    /**
+     * Get selected item callback.
+     *
+     * @return {@link OpenResourcePresenter.ResourceSelectedCallback} callback.
+     */
     public OpenResourcePresenter.ResourceSelectedCallback getCallback() {
         return callback;
     }

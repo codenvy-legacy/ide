@@ -51,12 +51,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * Presenter that allow user to open any resource in project.
+ * Used also with factory. To use for factory user should pass into event callback {@link ResourceSelectedCallback}.
  */
-public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHandler, ProjectOpenedHandler,
-                                              ProjectClosedHandler {
-
+public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHandler, ProjectOpenedHandler, ProjectClosedHandler {
     /** Display */
     public interface Display extends IsView {
 
@@ -123,16 +121,22 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
     /** {@link Display} instance */
     private Display display;
 
+    /** Current opened project. */
     private ProjectModel project;
 
+    /** All files that was found in current project. */
     private List<FileModel> allFiles = new ArrayList<FileModel>();
 
+    /** Files that show to user when he try to type name of the file. */
     private List<FileModel> filteredFiles;
 
+    /** Selected file in file list. */
     private FileModel selectedFile;
 
+    /** {@link ResourceSelectedCallback} callback to process selected item in resources list. */
     private ResourceSelectedCallback callback;
 
+    /** Create presenter. */
     public OpenResourcePresenter() {
         IDE.getInstance().addControl(new OpenResourceControl());
 
@@ -142,6 +146,7 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onOpenResource(OpenResourceEvent event) {
         if (project == null || display != null) {
@@ -191,6 +196,7 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
         }
     }
 
+    /** Bind current display. */
     private void bindDisplay() {
         display.setItemFolderName(null);
 
@@ -238,6 +244,7 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
         updateTimer.schedule(100);
     }
 
+    /** Handle key event for file name field. */
     private KeyUpHandler fileNameFieldKeyHandler = new KeyUpHandler() {
         @Override
         public void onKeyUp(KeyUpEvent event) {
@@ -253,6 +260,7 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
         }
     };
 
+    /** Timer that perform checking input file name field and start filter files with setted search pattern. */
     private Timer updateTimer = new Timer() {
         @Override
         public void run() {
@@ -285,6 +293,7 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
         }
     };
 
+    /** {@inheritDoc} */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -292,41 +301,37 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         project = null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         project = event.getProject();
     }
 
+    /** Perform action when user selected file in file list. */
     private void actionSelectedFile() {
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
+
         if (callback != null) {
             Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
                 @Override
                 public void execute() {
                     callback.onSelectedResource(selectedFile);
-                    closeView();
                 }
             });
             return;
         }
 
         IDE.fireEvent(new OpenFileEvent(selectedFile));
-        closeView();
-    }
-
-    private void closeView() {
-        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-            @Override
-            public void execute() {
-                if (display != null) {
-                    selectedFile = null;
-                    IDE.getInstance().closeView(display.asView().getId());
-                }
-            }
-        });
     }
 }
