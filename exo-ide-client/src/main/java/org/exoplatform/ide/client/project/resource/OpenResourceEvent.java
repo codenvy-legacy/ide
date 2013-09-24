@@ -24,10 +24,18 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
 public class OpenResourceEvent extends GwtEvent<OpenResourceHandler> {
 
     public static final GwtEvent.Type<OpenResourceHandler> TYPE = new GwtEvent.Type<OpenResourceHandler>();
+
+    private OpenResourcePresenter.ResourceSelectedCallback callback;
+
+    public OpenResourceEvent() {
+    }
+
+    public OpenResourceEvent(OpenResourcePresenter.ResourceSelectedCallback callback) {
+        this.callback = callback;
+    }
 
     @Override
     public com.google.gwt.event.shared.GwtEvent.Type<OpenResourceHandler> getAssociatedType() {
@@ -39,4 +47,7 @@ public class OpenResourceEvent extends GwtEvent<OpenResourceHandler> {
         handler.onOpenResource(this);
     }
 
+    public OpenResourcePresenter.ResourceSelectedCallback getCallback() {
+        return callback;
+    }
 }
