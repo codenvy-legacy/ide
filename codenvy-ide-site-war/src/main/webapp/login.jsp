@@ -1,23 +1,23 @@
 <%--
-  ~ CODENVY CONFIDENTIAL
-  ~ __________________
-  ~
-  ~ [2012] - [2013] Codenvy, S.A.
-  ~ All Rights Reserved.
-  ~
-  ~ NOTICE:  All information contained herein is, and remains
-  ~ the property of Codenvy S.A. and its suppliers,
-  ~ if any.  The intellectual and technical concepts contained
-  ~ herein are proprietary to Codenvy S.A.
-  ~ and its suppliers and may be covered by U.S. and Foreign Patents,
-  ~ patents in process, and are protected by trade secret or copyright law.
-  ~ Dissemination of this information or reproduction of this material
-  ~ is strictly forbidden unless prior written permission is obtained
-  ~ from Codenvy S.A..
+   CODENVY CONFIDENTIAL
+   __________________
+
+   [2012] - [2013] Codenvy, S.A.
+   All Rights Reserved.
+
+   NOTICE:  All information contained herein is, and remains
+   the property of Codenvy S.A. and its suppliers,
+   if any.  The intellectual and technical concepts contained
+   herein are proprietary to Codenvy S.A.
+   and its suppliers and may be covered by U.S. and Foreign Patents,
+   patents in process, and are protected by trade secret or copyright law.
+   Dissemination of this information or reproduction of this material
+   is strictly forbidden unless prior written permission is obtained
+   from Codenvy S.A..
   --%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
 
-<%-- Login over Open ID or OAuth --%>
 <%
     String username = request.getParameter("username");
     String password = request.getParameter("password");
@@ -29,6 +29,7 @@
 <html>
 <head>
     <title>Codenvy Login Page</title>
+    <link rel="stylesheet" type="text/css" href="loginPageStyle.css">
     <script type="text/javascript" src="popup.js"></script>
     <script type="text/javascript">
         var REST_SERVICE_CONTEXT = "/rest";
@@ -46,7 +47,6 @@
 
         function showRegisterForm() {
             document.getElementById("loginFormId").style.display = "none";
-            document.getElementById("federatedloginFormId").style.display = "none";
             document.getElementById("registerForm").style.display = "block";
             document.getElementById("newUserID").value = "";
             document.getElementById("newUserPassword").value = "";
@@ -55,7 +55,6 @@
         function showloginFormId() {
             document.getElementById("registerForm").style.display = "none";
             document.getElementById("loginFormId").style.display = "block";
-            document.getElementById("federatedloginFormId").style.display = "block";
         }
 
         function isEmail(login) {
@@ -100,125 +99,69 @@
             xmlHttp.setRequestHeader("Content-type", "application/json");
             xmlHttp.send(body);
         }
-
-        function open_popup_openid(provider) {
-            var popup = new Popup(
-                    '<%= request.getContextPath() %>/rest/ide/openid/authenticate?popup=&favicon=&openid_provider=' + provider + '&redirect_after_login=/site/index.html',
-                    "/site/index.html",
-                    450,
-                    500);
-            popup.open_window();
-        }
-
-        function open_popup_oauth(provider, scopes) {
-            var url = '<%= request.getContextPath() %>/rest/ide/oauth/authenticate?oauth_provider=' + provider + '&mode=federated_login&redirect_after_login=/site/index.html';
-            for (var i = 0; i < scopes.length; i++) {
-                url += ('&scope=' + scopes[i]);
-            }
-            var popup = new Popup(url, "/site/index.html", 450, 500);
-            popup.open_window();
-        }
     </script>
 </head>
-<body bgcolor="white">
-<table width="100%" height="100%">
-    <tr align="center" valign="bottom">
-        <td><img alt="ide" src="/ide/_app/codenvy-logo.png"></td>
-    </tr>
-    <tr align="center" valign="top">
-        <td>
-            <form id="loginFormId" method="POST" action='<%= "j_security_check"%>'>
-                <table border="0" cellspacing="5">
-                    <tr>
-                        <th align="right">User ID:</th>
-                        <td align="left"><input type="text" id="userId" name="j_username" value="ide"></td>
-                    </tr>
-                    <tr>
-                        <th align="right">Password:</th>
-                        <td align="left"><input type="password" id="userPassword" name="j_password" value="codenvy123"></td>
-                    </tr>
-                    <tr>
-                        <td align="right"><input type="submit" value="Log In" id="loginButton"/></td>
-                        <td align="left"><input type="reset" value="Reset"></td>
-                    <tr>
-                        <td colspan="3">
-                            <table border="0">
-                                <tr bgcolor="#DDDDDD">
-                                    <td style="padding: 2" align="center">User ID / Password</td>
-                                    <td style="padding: 2" align="center">User role</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 2" align="left">ide/codenvy123</td>
-                                    <td style="padding: 2" align="left">developers</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" align="center">
-                            <input type="button" value="New User" onclick="showRegisterForm();"/>
-                        </td>
-                    </tr>
-                </table>
+<body bgcolor="#f3f3f3" style="font-family: 'Roboto',sans-serif">
+    <div class="logo">
+        <img alt="Codenvy" src="/ide/_app/logoCodenvy2x.png">
+    </div>
+    <div class="container center">
+        <div id="loginFormId">
+            <h2>Sign in to Codenvy</h2>
+            <hr>
+            <form method="POST" action='<%= "j_security_check"%>'>
+                <div class="inputLabel">User ID:</div>
+                <div class="field">
+                    <input type="text" id="userId" class="input" name="j_username" value="ide">
+                </div>
+                <div class="inputLabel">Password:</div>
+                <div class="field">
+                    <input type="password" id="userPassword" class="input" name="j_password" value="codenvy123">
+                </div>
+                <div class="field">
+                    <input type="submit" value="Sign In" id="loginButton" class="button"/>
+                    <input type="reset" value="Reset" class="button">
+                </div>
             </form>
-            <div id="federatedloginFormId">
-                <button
-                        onclick="window.location.replace('<%= request.getContextPath() %>/rest/ide/oauth/authenticate?oauth_provider=google&mode=federated_login&scope=https://www.googleapis.com/auth/userinfo.profile&scope=https://www.googleapis.com/auth/userinfo.email&scope=https://www.googleapis.com/auth/appengine.admin&scope=https://www.google.com/m8/feeds&redirect_after_login=/site/index.html');">
-                    <img src="http://www.google.com/favicon.ico"/>&nbsp; Sign in with a Google Account (OAuth)
-                </button>
-                <button
-                        onclick="window.location.replace('<%= request.getContextPath() %>/rest/ide/oauth/authenticate?oauth_provider=github&scope=user&scope=repo&mode=federated_login&redirect_after_login=/site/index.html');">
-                    <img src="octocat.png"/>&nbsp; Sign in with a GitHub Account(OAuth)
-                </button>
-                <br/>
-                <button
-                        onclick="open_popup_oauth('google', ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/appengine.admin', 'https://www.google.com/m8/feeds'])">
-                    <img src="http://www.google.com/favicon.ico"/>&nbsp; Sign in with a Google Account (OAuth Popup)
-                </button>
-                <button onclick="open_popup_oauth('github', ['user', 'repo'])">
-                    <img src="octocat.png"/>&nbsp; Sign in with a GitHub Account (OAuth Popup)
-                </button>
-                <br/>
-                <br/>
-                <button
-                        onclick="window.location.replace('<%= request.getContextPath() %>/rest/ide/openid/authenticate?openid_provider=google&favicon=&redirect_after_login=/site/index.html');">
-                    <img src="http://www.google.com/favicon.ico"/>&nbsp; Sign in with a Google Account (OpenId)
-                </button>
-                <button onclick="open_popup_openid('google');">
-                    <img src="http://www.google.com/favicon.ico"/>&nbsp; Sign in with a Google Account (OpenId Popup)
-                </button>
-            </div>
-            <div id="registerForm" style="display:none;">
-                <table border="0" cellspacing="5">
-                    <tr>
-                        <th colspan="2">Register new user</th>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <div style="width:1px; height:3px;"></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th align="right">User ID:</th>
-                        <td align="left"><input id="newUserID" type="text" name="userid"></td>
-                    </tr>
-                    <tr>
-                        <th align="right">Password:</th>
-                        <td align="left"><input id="newUserPassword" type="password" name="password"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <div style="width:1px; height:3px;"></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="right"><input type="button" value="Register" onclick="registerNewUser();"></td>
-                        <td align="left"><input type="button" value="Cancel" onclick="showloginFormId();"></td>
-                    </tr>
+            <div>
+                <table border="0" align="center">
+                    <thead>
+                        <tr>
+                            <td style="padding: 2" align="center">User ID / Password</td>
+                            <td style="padding: 2" align="center">User role</td>
+                        </tr>
+                    </thead>
+                    </tbody>
+                        <tr>
+                            <td style="padding: 2" align="left">ide/codenvy123</td>
+                            <td style="padding: 2" align="left">developers</td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
-        </td>
-    </tr>
-</table>
+            <div class="field center">
+                <input type="button" value="New User" class="button" onclick="showRegisterForm();"/>
+            </div>
+        </div>
+
+        <div id="registerForm" class="container" style="display:none;">
+            <h2>Register new user</h2>
+            <hr>
+            <div style="width:1px; height:3px;"></div>
+            <div class="inputLabel">User ID:</div>
+            <div class="field">
+                <input id="newUserID" type="text" name="userid" class="input">
+            </div>
+            <div class="inputLabel">Password:</div>
+            <div class="field">
+                <input id="newUserPassword" type="password" name="password" class="input">
+            </div>
+            <div style="width:1px; height:3px;"></div>
+            <div class="field">
+                <td align="right"><input type="button" class="button" value="Register" onclick="registerNewUser();"></td>
+                <td align="left"><input type="button" class="button" value="Cancel" onclick="showloginFormId();"></td>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
