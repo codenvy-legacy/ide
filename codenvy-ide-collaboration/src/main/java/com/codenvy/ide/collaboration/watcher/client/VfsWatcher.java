@@ -17,9 +17,20 @@
  */
 package com.codenvy.ide.collaboration.watcher.client;
 
-import com.codenvy.ide.collaboration.dto.*;
+import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.collaboration.dto.Item;
+import com.codenvy.ide.collaboration.dto.ItemCreatedDto;
+import com.codenvy.ide.collaboration.dto.ItemDeletedDto;
+import com.codenvy.ide.collaboration.dto.ItemMovedDto;
+import com.codenvy.ide.collaboration.dto.ItemRenamedDto;
+import com.codenvy.ide.collaboration.dto.Link;
+import com.codenvy.ide.collaboration.dto.ProjectOpenedResponseDto;
+import com.codenvy.ide.collaboration.dto.ProjectOperationNotification;
+import com.codenvy.ide.collaboration.dto.Property;
+import com.codenvy.ide.collaboration.dto.RoutingTypes;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.ProjectClosedDtoImpl;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.ProjectOpenedDtoImpl;
+import com.codenvy.ide.dtogen.shared.ServerError;
 import com.codenvy.ide.json.shared.JsonArray;
 import com.codenvy.ide.json.shared.JsonStringMap;
 import com.codenvy.ide.json.shared.JsonStringMap.IterationCallback;
@@ -33,6 +44,7 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.api.IDEProject;
+import org.exoplatform.ide.client.framework.websocket.FrontendApi;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecipient;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
@@ -44,7 +56,12 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.LinkImpl;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -54,7 +71,7 @@ public class VfsWatcher implements ProjectOpenedHandler, ProjectClosedHandler {
 
     public static final int DURATION = 7000;
 
-    private CollaborationApi collaborationApi;
+    private CollaborationApi    collaborationApi;
     private NotificationManager notificationManager;
 
     private ProjectModel project;
@@ -122,12 +139,13 @@ public class VfsWatcher implements ProjectOpenedHandler, ProjectClosedHandler {
                 NotificationManager.get().addNotification(notification);
             }
         });
-        messageFilter.registerMessageRecipient(RoutingTypes.PROJECT_OPERATION_NOTIFICATION, new MessageRecipient<ProjectOperationNotification>() {
-            @Override
-            public void onMessageReceived(ProjectOperationNotification message) {
-                showProjectNotification(message);
-            }
-        });
+        messageFilter.registerMessageRecipient(RoutingTypes.PROJECT_OPERATION_NOTIFICATION,
+                                               new MessageRecipient<ProjectOperationNotification>() {
+                                                   @Override
+                                                   public void onMessageReceived(ProjectOperationNotification message) {
+                                                       showProjectNotification(message);
+                                                   }
+                                               });
         IDE.messageBus().setOnOpenHandler(new ConnectionOpenedHandler() {
             @Override
             public void onConnectionOpened() {
@@ -226,6 +244,16 @@ public class VfsWatcher implements ProjectOpenedHandler, ProjectClosedHandler {
         dto.setProjectPath(project.getPath());
         dto.setVfsId(VirtualFileSystem.getInstance().getInfo().getId());
         dto.setProjectId(project.getId());
-        collaborationApi.PROJECT_OPEN.send(dto);
+        collaborationApi.PROJECT_OPEN.send(dto, new FrontendApi.ApiCallback<ProjectOpenedResponseDto>() {
+            @Override
+            public void onFail(ServerError.FailureReason reason) {
+                Log.error(VfsWatcher.class, reason);
+            }
+
+            @Override
+            public void onMessageReceived(ProjectOpenedResponseDto message) {
+                IDE.fireEvent(new ProjectParticipantsReceivedEvent(message.projectParticipants()));
+            }
+        });
     }
 }

@@ -45,16 +45,14 @@ public class RoutingTypes {
 
     public static final int CHAT_CODE_POINT = 8;
 
-    public static final int CHAT_PARTISIPANTS = 9;
+    public static final int PROJECT_PARTICIPANTS = 9;
 
-    public static final int CHAT_PARTISIPANTS_RESPONSE = 10;
+    public static final int CHAT_PARTISIPANT_ADD = 10;
 
-    public static final int CHAT_PARTISIPANT_ADD = 11;
+    public static final int CHAT_PARTISIPANT_REMOVE = 11;
 
-    public static final int CHAT_PARTISIPANT_REMOVE = 12;
+    public static final int PROJECT_OPERATION_NOTIFICATION = 12;
 
-    public static final int PROJECT_OPERATION_NOTIFICATION = 14;
-
-    public static final int DISABLE_ENABLE_COLLABORATION = 15;
+    public static final int DISABLE_ENABLE_COLLABORATION = 13;
 
 }

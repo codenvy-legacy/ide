@@ -17,14 +17,15 @@
  */
 package com.codenvy.ide.collaboration.dto;
 
-import com.codenvy.ide.dtogen.shared.ClientToServerDto;
 import com.codenvy.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.json.shared.JsonArray;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@RoutingType(type = RoutingTypes.CHAT_PARTISIPANTS)
-public interface GetChatParticipants extends ClientToServerDto {
-    String projectId();
+@RoutingType(type = RoutingTypes.PROJECT_PARTICIPANTS)
+public interface ProjectOpenedResponseDto extends ServerToClientDto {
+    JsonArray<ParticipantInfo> projectParticipants();
 }

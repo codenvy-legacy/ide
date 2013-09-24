@@ -204,6 +204,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
         control = chatControl;
         this.collabExtension = collabExtension;
         IDE.addHandler(CollaborationChangedEvent.TYPE, this);
+        IDE.eventBus().addHandler(ShowHideChatEvent.TYPE, this);
         registerHandlers();
     }
 
@@ -224,7 +225,6 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
     private void registerHandlers() {
         handlerRegistration = JsonCollections.createArray();
         handlerRegistration.add(IDE.eventBus().addHandler(ViewClosedEvent.TYPE, this));
-        handlerRegistration.add(IDE.eventBus().addHandler(ShowHideChatEvent.TYPE, this));
         handlerRegistration.add(IDE.eventBus().addHandler(SendCodePointEvent.TYPE, this));
         handlerRegistration.add(IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this));
         messageFilter.registerMessageRecipient(RoutingTypes.CHAT_MESSAGE, new MessageRecipient<ChatMessage>() {
@@ -399,21 +399,21 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
             return;
         }
         try {
-        ChatMessageImpl chatMessage = ChatMessageImpl.make();
-        chatMessage.setUserId(userId);
-        chatMessage.setProjectId(project.getId());
-        String clientId = BootstrapSession.getBootstrapSession().getActiveClientId();
-        chatMessage.setClientId(clientId);
-        Date d = new Date();
-        chatMessage.setDateTime(String.valueOf(d.getTime()));
-        MessagesTimer messagesTimer = new MessagesTimer(chatMessage.getDateTime());
-        messagesTimer.schedule(MESSAGE_DELIVER_TIMEOUT);
-        deliverTimers.put(chatMessage.getDateTime(), messagesTimer);
-        SafeHtmlBuilder b = new SafeHtmlBuilder();
-        b.appendEscapedLines(message);
-        chatMessage.setMessage(b.toSafeHtml().asString());
-        display.clearMessage();
-        display.addMessage(users.get(clientId), chatMessage.getMessage(), d.getTime());
+            ChatMessageImpl chatMessage = ChatMessageImpl.make();
+            chatMessage.setUserId(userId);
+            chatMessage.setProjectId(project.getId());
+            String clientId = BootstrapSession.getBootstrapSession().getActiveClientId();
+            chatMessage.setClientId(clientId);
+            Date d = new Date();
+            chatMessage.setDateTime(String.valueOf(d.getTime()));
+            MessagesTimer messagesTimer = new MessagesTimer(chatMessage.getDateTime());
+            messagesTimer.schedule(MESSAGE_DELIVER_TIMEOUT);
+            deliverTimers.put(chatMessage.getDateTime(), messagesTimer);
+            SafeHtmlBuilder b = new SafeHtmlBuilder();
+            b.appendEscapedLines(message);
+            chatMessage.setMessage(b.toSafeHtml().asString());
+            display.clearMessage();
+            display.addMessage(users.get(clientId), chatMessage.getMessage(), d.getTime());
             chatApi.SEND_MESSAGE.send(chatMessage);
         } catch (Exception e) {
             Log.error(ProjectChatPresenter.class, e);
@@ -475,10 +475,10 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
                 }
                 return;
             }
+            editor = (CollabEditor)event.getEditor();
             if (!CollaborationPropertiesUtil.isCollaborationEnabled(event.getFile().getProject())) {
                 return;
             }
-            editor = (CollabEditor)event.getEditor();
             DocumentCollaborationController controller = collabExtension.getCollaborationManager().getDocumentCollaborationController(
                     editor.getEditor().getDocument().getId());
 
@@ -566,28 +566,26 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
     @Override
     public void onCollaborationChanged(CollaborationChangedEvent event) {
         if (event.isEnabled()) {
-            registerHandlers();
             if (display != null) {
                 display.removeDisabledMessage();
                 display.clearParticipants();
-            }
-            else{
-               setProjectId(event.getProject());
+            } else {
+                setProjectId(event.getProject());
             }
             users.iterate(new IterationCallback<Participant>() {
                 @Override
                 public void onIteration(String key, Participant value) {
-                    if(!value.isCurrentUser()){
-                       display.addParticipant(value);
+                    if (!value.isCurrentUser()) {
+                        display.addParticipant(value);
                     }
                 }
             });
-        } else {
-            if (display != null) {
-                display.showChatDisabled();
-            }
-            removeHandlers();
+            pointerControl.setVisible(true);
+            pointerControl.setEnabled(true);
+        } else if (display != null) {
+            display.showChatDisabled();
         }
+
     }
 
     public interface Display extends IsView {
