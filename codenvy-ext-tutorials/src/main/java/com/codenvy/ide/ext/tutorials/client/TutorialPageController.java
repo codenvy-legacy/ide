@@ -55,14 +55,14 @@ public class TutorialPageController {
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
-                if (event.getProject().getDescription().getNatures().contains(TUTORIAL_PROJECT_TYPE)) {
+                if (event.getProject() != null && event.getProject().getDescription().getNatures().contains(TUTORIAL_PROJECT_TYPE)) {
                     openTutorialPage();
                 }
             }
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                if (event.getProject().getDescription().getNatures().contains(TUTORIAL_PROJECT_TYPE)) {
+                if (event.getProject() != null && event.getProject().getDescription().getNatures().contains(TUTORIAL_PROJECT_TYPE)) {
                     closeTutorialPage();
                 }
             }
