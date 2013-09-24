@@ -15,16 +15,14 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.collaboration.dto;
+package com.codenvy.ide.collaboration.watcher.client;
 
-import com.codenvy.ide.dtogen.shared.ClientToServerDto;
-import com.codenvy.ide.dtogen.shared.RoutingType;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@RoutingType(type = RoutingTypes.CHAT_PARTISIPANTS)
-public interface GetChatParticipants extends ClientToServerDto {
-    String projectId();
+public interface ProjectParticipantsReceivedHandler extends EventHandler {
+    void onProjectUsersReceived(ProjectParticipantsReceivedEvent event);
 }

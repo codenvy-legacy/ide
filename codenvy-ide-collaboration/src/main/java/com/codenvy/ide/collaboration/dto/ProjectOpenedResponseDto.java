@@ -21,12 +21,12 @@ import com.codenvy.ide.dtogen.shared.RoutingType;
 import com.codenvy.ide.dtogen.shared.ServerToClientDto;
 import com.codenvy.ide.json.shared.JsonArray;
 
-
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@RoutingType(type = RoutingTypes.CHAT_PARTISIPANTS_RESPONSE)
-public interface GetChatParticipantsResponse extends ServerToClientDto {
-    JsonArray<ParticipantInfo> getParticipants();
+@RoutingType(type = RoutingTypes.PROJECT_PARTICIPANTS)
+public interface ProjectOpenedResponseDto extends ServerToClientDto {
+    /** @return all participants (including this) that opened same project. */
+    JsonArray<ParticipantInfo> projectParticipants();
 }
