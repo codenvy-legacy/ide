@@ -22,6 +22,8 @@ import com.codenvy.ide.json.shared.JsonArray;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Event that fired after user opened project and self to VFS listener
+ *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */

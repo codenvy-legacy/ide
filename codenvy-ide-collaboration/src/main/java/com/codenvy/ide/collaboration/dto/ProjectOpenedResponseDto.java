@@ -27,5 +27,6 @@ import com.codenvy.ide.json.shared.JsonArray;
  */
 @RoutingType(type = RoutingTypes.PROJECT_PARTICIPANTS)
 public interface ProjectOpenedResponseDto extends ServerToClientDto {
+    /** @return all participants (including this) that opened same project. */
     JsonArray<ParticipantInfo> projectParticipants();
 }
