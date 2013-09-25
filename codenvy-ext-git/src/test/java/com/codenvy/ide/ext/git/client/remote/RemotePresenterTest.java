@@ -21,19 +21,24 @@ import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.client.remote.add.AddRemoteRepositoryPresenter;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import java.lang.reflect.Method;
+
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.*;
 
 /**
@@ -43,22 +48,84 @@ import static org.mockito.Mockito.*;
  */
 public class RemotePresenterTest extends BaseTest {
     public static final boolean SHOW_ALL_INFORMATION = true;
+    public static final boolean IS_SHOWN             = true;
     @Mock
     private RemoteView                   view;
     @Mock
     private Remote                       selectedRemote;
     @Mock
     private AddRemoteRepositoryPresenter addRemoteRepositoryPresenter;
-    @InjectMocks
     private RemotePresenter              presenter;
 
+    @Before
+    public void disarm() {
+        super.disarm();
+
+        presenter = new RemotePresenter(view, service, resourceProvider, constant, console, addRemoteRepositoryPresenter);
+
+        when(selectedRemote.getName()).thenReturn(REPOSITORY_NAME);
+    }
+
     @Test
-    public void testShowDialog() throws Exception {
+    public void testShowDialogWhenRemoteListRequestIsSuccessful() throws Exception {
+        final JsonArray<Remote> remotes = JsonCollections.createArray();
+        remotes.add(selectedRemote);
+        when(view.isShown()).thenReturn(!IS_SHOWN);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<JsonArray<Remote>> callback = (AsyncRequestCallback<JsonArray<Remote>>)arguments[4];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, remotes);
+                return callback;
+            }
+        }).when(service).remoteList(anyString(), anyString(), anyString(), anyBoolean(),
+                                    (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
+
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
         verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
                                    (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
+        verify(view).setEnableDeleteButton(eq(DISABLE_BUTTON));
+        verify(view).setRemotes((JsonArray<Remote>)anyObject());
+        verify(view).showDialog();
+    }
+
+    @Test
+    public void testShowDialogWhenRemoteListRequestIsFailed() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<JsonArray<Remote>> callback = (AsyncRequestCallback<JsonArray<Remote>>)arguments[4];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(service).remoteList(anyString(), anyString(), anyString(), anyBoolean(),
+                                    (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
+
+        presenter.showDialog();
+
+        verify(resourceProvider).getActiveProject();
+        verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
+                                   (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
+        verify(constant).remoteListFailed();
+    }
+
+    @Test
+    public void testShowDialogWhenRequestExceptionHappened() throws Exception {
+        doThrow(RequestException.class).when(service).remoteList(anyString(), anyString(), anyString(), anyBoolean(),
+                                                                 (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
+
+        presenter.showDialog();
+
+        verify(resourceProvider).getActiveProject();
+        verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
+                                   (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
+        verify(constant).remoteListFailed();
     }
 
     @Test
@@ -104,20 +171,65 @@ public class RemotePresenterTest extends BaseTest {
         verify(service, never()).remoteList(eq(VFS_ID), anyString(), anyString(), eq(SHOW_ALL_INFORMATION),
                                             (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
         verify(console).print(anyString());
+        verify(constant).remoteAddFailed();
     }
 
     @Test
-    @Ignore
-    // Ignore this test because this method uses native method (Window.confirm(constant.deleteRemoteRepositoryQuestion(name));)
-    public void testOnDeleteClicked() throws Exception {
-        when(selectedRemote.getName()).thenReturn(REPOSITORY_NAME);
+    public void testOnDeleteClickedWhenRemoteDeleteRequestIsSuccessful() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, EMPTY_TEXT);
+                return callback;
+            }
+        }).when(service).remoteDelete(anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onRemoteSelected(selectedRemote);
         presenter.onDeleteClicked();
 
         verify(service).remoteDelete(eq(VFS_ID), eq(PROJECT_ID), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
+        verify(service, times(2)).remoteList(eq(VFS_ID), anyString(), anyString(), eq(SHOW_ALL_INFORMATION),
+                                             (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
+    }
 
+    @Test
+    public void testOnDeleteClickedWhenRemoteDeleteRequestIsFailed() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(service).remoteDelete(anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+
+        presenter.showDialog();
+        presenter.onRemoteSelected(selectedRemote);
+        presenter.onDeleteClicked();
+
+        verify(service).remoteDelete(eq(VFS_ID), eq(PROJECT_ID), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
+        verify(constant).remoteDeleteFailed();
+        verify(console).print(anyString());
+    }
+
+    @Test
+    public void testOnDeleteClickedWhenRequestExceptionHappened() throws Exception {
+        doThrow(RequestException.class).when(service)
+                .remoteDelete(anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+
+        presenter.showDialog();
+        presenter.onRemoteSelected(selectedRemote);
+        presenter.onDeleteClicked();
+
+        verify(service).remoteDelete(eq(VFS_ID), eq(PROJECT_ID), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
+        verify(constant).remoteDeleteFailed();
+        verify(console).print(anyString());
     }
 
     @Test
