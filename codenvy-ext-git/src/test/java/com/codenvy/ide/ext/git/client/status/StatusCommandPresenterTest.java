@@ -20,9 +20,15 @@ package com.codenvy.ide.ext.git.client.status;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import java.lang.reflect.Method;
 
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyObject;
@@ -40,17 +46,56 @@ public class StatusCommandPresenterTest extends BaseTest {
     @InjectMocks
     private StatusCommandPresenter presenter;
 
+    @Before
+    public void disarm() {
+        super.disarm();
+
+        presenter = new StatusCommandPresenter(service, resourceProvider, console, constant);
+    }
+
     @Test
-    public void testShowStatus() throws RequestException {
+    public void testShowStatusWhenStatusTextRequestIsSuccessful() throws RequestException {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, EMPTY_TEXT);
+                return callback;
+            }
+        }).when(service).statusText(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
+
         presenter.showStatus();
 
         verify(resourceProvider).getActiveProject();
         verify(service).statusText(eq(VFS_ID), eq(PROJECT_ID), eq(IS_NOT_FORMATTED), (AsyncRequestCallback<String>)anyObject());
-        verify(console, never()).print(anyString());
+        verify(console).print(eq(EMPTY_TEXT));
     }
 
     @Test
-    public void testShowStatusWhenExceptionHappened() throws RequestException {
+    public void testShowStatusWhenStatusTextRequestIsFailed() throws RequestException {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(service).statusText(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
+
+        presenter.showStatus();
+
+        verify(resourceProvider).getActiveProject();
+        verify(service).statusText(eq(VFS_ID), eq(PROJECT_ID), eq(IS_NOT_FORMATTED), (AsyncRequestCallback<String>)anyObject());
+        verify(console).print(anyString());
+        verify(constant).statusFailed();
+    }
+
+    @Test
+    public void testShowStatusWhenRequestExceptionHappened() throws RequestException {
         doThrow(RequestException.class).when(service)
                 .statusText(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
 
@@ -59,5 +104,6 @@ public class StatusCommandPresenterTest extends BaseTest {
         verify(resourceProvider).getActiveProject();
         verify(service).statusText(eq(VFS_ID), eq(PROJECT_ID), eq(IS_NOT_FORMATTED), (AsyncRequestCallback<String>)anyObject());
         verify(console).print(anyString());
+        verify(constant).statusFailed();
     }
 }
