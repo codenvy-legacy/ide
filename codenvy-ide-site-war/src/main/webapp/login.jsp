@@ -44,61 +44,6 @@
             }
             return xmlHttp;
         }
-
-        function showRegisterForm() {
-            document.getElementById("loginFormId").style.display = "none";
-            document.getElementById("registerForm").style.display = "block";
-            document.getElementById("newUserID").value = "";
-            document.getElementById("newUserPassword").value = "";
-        }
-
-        function showloginFormId() {
-            document.getElementById("registerForm").style.display = "none";
-            document.getElementById("loginFormId").style.display = "block";
-        }
-
-        function isEmail(login) {
-            var pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return pattern.test(login);
-        }
-
-        function registerNewUser() {
-            var login = document.getElementById("newUserID").value;
-            var password = document.getElementById("newUserPassword").value;
-            var email = login;
-            if (!isEmail(login)) {
-                email += "@localhost"
-            }
-
-            var body = "{";
-            body += "\"id\":\"" + login + "\",";
-            body += "\"password\":\"" + password + "\",";
-            body += "\"firstName\":\"" + login + "\",";
-            body += "\"lastName\":\"" + login + "\",";
-            body += "\"email\":\"" + email + "\"";
-            body += "}";
-
-            var url = REST_SERVICE_CONTEXT + "/users/person";
-            var xmlHttp = getXmlHTTP();
-            xmlHttp.open('POST', url, true);
-
-            xmlHttp.onreadystatechange = function () {
-                if (xmlHttp.readyState == 4) {
-                    if (xmlHttp.status == 201) {
-                        alert("User " + login + " created.");
-                        document.getElementById("userId").value = login;
-                        document.getElementById("userPassword").value = password;
-                        showloginFormId();
-                    }
-                    else {
-                        alert("Can't register user.");
-                    }
-                }
-            }
-
-            xmlHttp.setRequestHeader("Content-type", "application/json");
-            xmlHttp.send(body);
-        }
     </script>
 </head>
 <body bgcolor="#f3f3f3" style="font-family: 'Roboto',sans-serif">
@@ -123,7 +68,7 @@
                     <input type="reset" value="Reset" class="button">
                 </div>
             </form>
-            <div>
+            <div style="padding-bottom: 30px">
                 <table border="0" align="center">
                     <thead>
                         <tr>
@@ -138,28 +83,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <div class="field center">
-                <input type="button" value="New User" class="button" onclick="showRegisterForm();"/>
-            </div>
-        </div>
-
-        <div id="registerForm" class="container" style="display:none;">
-            <h2>Register new user</h2>
-            <hr>
-            <div style="width:1px; height:3px;"></div>
-            <div class="inputLabel">User ID:</div>
-            <div class="field">
-                <input id="newUserID" type="text" name="userid" class="input">
-            </div>
-            <div class="inputLabel">Password:</div>
-            <div class="field">
-                <input id="newUserPassword" type="password" name="password" class="input">
-            </div>
-            <div style="width:1px; height:3px;"></div>
-            <div class="field">
-                <td align="right"><input type="button" class="button" value="Register" onclick="registerNewUser();"></td>
-                <td align="left"><input type="button" class="button" value="Cancel" onclick="showloginFormId();"></td>
             </div>
         </div>
     </div>
