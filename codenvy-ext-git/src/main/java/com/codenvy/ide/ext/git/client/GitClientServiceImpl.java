@@ -208,14 +208,11 @@ public class GitClientServiceImpl implements GitClientService {
                     @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         DtoClientImpls.AddRequestImpl addRequest = DtoClientImpls.AddRequestImpl.make();
         addRequest.setUpdate(update);
-
-        JsoArray<String> patterns = JsoArray.create();
         if (filePattern == null) {
-            patterns.addAll(AddRequest.DEFAULT_PATTERN);
+            addRequest.setFilepattern(AddRequest.DEFAULT_PATTERN);
         } else {
-            patterns.addAll(filePattern);
+            addRequest.setFilepattern(filePattern);
         }
-        addRequest.setFilepattern(patterns);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         String url = restServiceContext + ADD + params;
@@ -231,14 +228,11 @@ public class GitClientServiceImpl implements GitClientService {
                       @NotNull RequestCallback<String> callback) throws WebSocketException {
         DtoClientImpls.AddRequestImpl addRequest = DtoClientImpls.AddRequestImpl.make();
         addRequest.setUpdate(update);
-
-        JsoArray<String> patterns = JsoArray.create();
         if (filePattern == null) {
-            patterns.addAll(AddRequest.DEFAULT_PATTERN);
+            addRequest.setFilepattern(AddRequest.DEFAULT_PATTERN);
         } else {
-            patterns.addAll(filePattern);
+            addRequest.setFilepattern(filePattern);
         }
-        addRequest.setFilepattern(patterns);
 
         callback.setStatusHandler(new AddRequestHandler(project.getName(), eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -296,9 +290,7 @@ public class GitClientServiceImpl implements GitClientService {
                      boolean force, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         DtoClientImpls.PushRequestImpl pushRequest = DtoClientImpls.PushRequestImpl.make();
         pushRequest.setRemote(remote);
-        JsoArray<String> array = JsoArray.create();
-        array.addAll(refSpec);
-        pushRequest.setRefSpec(array);
+        pushRequest.setRefSpec(refSpec);
         pushRequest.setForce(force);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -315,9 +307,7 @@ public class GitClientServiceImpl implements GitClientService {
                        boolean force, @NotNull RequestCallback<String> callback) throws WebSocketException {
         DtoClientImpls.PushRequestImpl pushRequest = DtoClientImpls.PushRequestImpl.make();
         pushRequest.setRemote(remote);
-        JsoArray<String> array = JsoArray.create();
-        array.addAll(refSpec);
-        pushRequest.setRefSpec(array);
+        pushRequest.setRefSpec(refSpec);
         pushRequest.setForce(force);
 
         callback.setStatusHandler(new PushRequestHandler(project.getName(), refSpec, eventBus, constant));
@@ -439,9 +429,7 @@ public class GitClientServiceImpl implements GitClientService {
     public void remove(@NotNull String vfsId, @NotNull String projectid, JsonArray<String> files, boolean cached,
                        @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         DtoClientImpls.RmRequestImpl rmRequest = DtoClientImpls.RmRequestImpl.make();
-        JsoArray<String> filesArray = JsoArray.create();
-        filesArray.addAll(files);
-        rmRequest.setFiles(filesArray);
+        rmRequest.setFiles(files);
         rmRequest.setCached(cached);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
@@ -519,8 +507,6 @@ public class GitClientServiceImpl implements GitClientService {
         DtoClientImpls.FetchRequestImpl fetchRequest = DtoClientImpls.FetchRequestImpl.make();
         fetchRequest.setRemote(remote);
         // TODO This is workaround for getting remote branches
-        // JsoArray<String> array = JsoArray.create();
-        // array.addAll(refspec);
         // fetchRequest.setRefSpec(refspec);
         fetchRequest.setRemoveDeletedRefs(removeDeletedRefs);
 
@@ -539,8 +525,6 @@ public class GitClientServiceImpl implements GitClientService {
         DtoClientImpls.FetchRequestImpl fetchRequest = DtoClientImpls.FetchRequestImpl.make();
         fetchRequest.setRemote(remote);
         // TODO This is workaround for getting remote branches
-        // JsoArray<String> array = JsoArray.create();
-        // array.addAll(refspec);
         // fetchRequest.setRefSpec(refspec);
         fetchRequest.setRemoveDeletedRefs(removeDeletedRefs);
 
@@ -616,11 +600,8 @@ public class GitClientServiceImpl implements GitClientService {
     public void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull JsonArray<String> fileFilter,
                      @NotNull DiffRequest.DiffType type, boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached,
                      @NotNull AsyncRequestCallback<String> callback) throws RequestException {
-        JsonArray<String> filePatterns = JsoArray.create();
-        filePatterns.addAll(fileFilter);
-
         DtoClientImpls.DiffRequestImpl diffRequest = DtoClientImpls.DiffRequestImpl.make();
-        diffRequest.setFileFilter(filePatterns);
+        diffRequest.setFileFilter(fileFilter);
         diffRequest.setType(type);
         diffRequest.setNoRenames(noRenames);
         diffRequest.setRenameLimit(renameLimit);

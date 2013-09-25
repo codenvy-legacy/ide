@@ -28,6 +28,7 @@ import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -106,11 +107,13 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
                                        String errorMessage =
                                                exception.getMessage() != null ? exception.getMessage() : constant.remoteListFailed();
                                        Window.alert(errorMessage);
+                                       view.setEnablePushButton(false);
                                    }
                                });
         } catch (RequestException e) {
             String errorMessage = e.getMessage() != null ? e.getMessage() : constant.remoteListFailed();
             Window.alert(errorMessage);
+            view.setEnablePushButton(false);
         }
     }
 
@@ -260,7 +263,7 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
     private JsonArray<String> getRefs() {
         String localBranch = "refs/heads/" + view.getLocalBranch();
         String remoteBranch = "refs/heads/" + view.getRemoteBranch();
-        JsonArray<String> array = JsonCollections.createArray();
+        JsoArray<String> array = JsoArray.create();
         array.add(localBranch + ":" + remoteBranch);
         return array;
     }
