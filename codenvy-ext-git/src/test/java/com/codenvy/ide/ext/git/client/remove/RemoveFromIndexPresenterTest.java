@@ -17,14 +17,24 @@
  */
 package com.codenvy.ide.ext.git.client.remove;
 
+import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.resources.model.Folder;
+import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import java.lang.reflect.Method;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -39,24 +49,94 @@ import static org.mockito.Mockito.*;
  */
 public class RemoveFromIndexPresenterTest extends BaseTest {
     public static final boolean REMOVED = true;
+    public static final String  MESSAGE = "message";
     @Mock
     private RemoveFromIndexView      view;
-    @InjectMocks
     private RemoveFromIndexPresenter presenter;
 
-    @Test
-    public void testShowDialog() throws Exception {
-        presenter.showDialog();
+    @Before
+    public void disarm() {
+        super.disarm();
 
-        verify(view).setMessage(anyString());
-        verify(view).setRemoved(eq(!REMOVED));
-        verify(view).showDialog();
+        presenter = new RemoveFromIndexPresenter(view, service, console, constant, resourceProvider, selectionAgent);
     }
 
     @Test
-    public void testOnRemoveClicked() throws Exception {
+    public void testShowDialogWhenSomeFileIsSelected() throws Exception {
+        String filePath = PROJECT_PATH + PROJECT_NAME;
+        Selection selection = mock(Selection.class);
+        File file = mock(File.class);
+        when(file.getPath()).thenReturn(filePath);
+        when(selection.getFirstElement()).thenReturn(file);
+        when(selectionAgent.getSelection()).thenReturn(selection);
+        when(constant.removeFromIndexFile(anyString())).thenReturn(MESSAGE);
+
+        presenter.showDialog();
+
+        verify(view).setMessage(eq(MESSAGE));
+        verify(view).setRemoved(eq(!REMOVED));
+        verify(view).showDialog();
+        verify(constant).removeFromIndexFile(eq(PROJECT_NAME));
+    }
+
+    @Test
+    public void testShowDialogWhenSomeFolderIsSelected() throws Exception {
+        String folderPath = PROJECT_PATH + PROJECT_NAME;
+        Selection selection = mock(Selection.class);
+        Folder folder = mock(Folder.class);
+        when(folder.getPath()).thenReturn(folderPath);
+        when(selection.getFirstElement()).thenReturn(folder);
+        when(selectionAgent.getSelection()).thenReturn(selection);
+        when(constant.removeFromIndexFolder(anyString())).thenReturn(MESSAGE);
+
+        presenter.showDialog();
+
+        verify(view).setMessage(eq(MESSAGE));
+        verify(view).setRemoved(eq(!REMOVED));
+        verify(view).showDialog();
+        verify(constant).removeFromIndexFolder(eq(PROJECT_NAME));
+    }
+
+    @Test
+    public void testShowDialogWhenRootFolderIsSelected() throws Exception {
+        Selection selection = mock(Selection.class);
+        when(selection.getFirstElement()).thenReturn(project);
+        when(selectionAgent.getSelection()).thenReturn(selection);
+        when(constant.removeFromIndexAll()).thenReturn(MESSAGE);
+
+        presenter.showDialog();
+
+        verify(view).setMessage(eq(MESSAGE));
+        verify(view).setRemoved(eq(!REMOVED));
+        verify(view).showDialog();
+        verify(constant).removeFromIndexAll();
+    }
+
+    @Test
+    public void testOnRemoveClickedWhenRemoveRequestIsSuccessful() throws Exception {
         when(view.isRemoved()).thenReturn(REMOVED);
         when(selectionAgent.getSelection()).thenReturn(null);
+        when(project.getName()).thenReturn(PROJECT_NAME);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, EMPTY_TEXT);
+                return callback;
+            }
+        }).when(service).remove(anyString(), anyString(), (JsonArray<String>)anyObject(), anyBoolean(),
+                                (AsyncRequestCallback<String>)anyObject());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
+                callback.onSuccess(project);
+                return callback;
+            }
+        }).when(resourceProvider).getProject(anyString(), (AsyncCallback<Project>)anyObject());
 
         presenter.showDialog();
         presenter.onRemoveClicked();
@@ -64,6 +144,36 @@ public class RemoveFromIndexPresenterTest extends BaseTest {
         verify(service)
                 .remove(eq(VFS_ID), eq(PROJECT_ID), (JsonArray<String>)anyObject(), eq(REMOVED),
                         (AsyncRequestCallback<String>)anyObject());
+        verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
+        verify(console).print(anyString());
+        verify(constant).removeFilesSuccessfull();
+        verify(view).close();
+    }
+
+    @Test
+    public void testOnRemoveClickedWhenRemoveRequestIsFailed() throws Exception {
+        when(view.isRemoved()).thenReturn(REMOVED);
+        when(selectionAgent.getSelection()).thenReturn(null);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(service).remove(anyString(), anyString(), (JsonArray<String>)anyObject(), anyBoolean(),
+                                (AsyncRequestCallback<String>)anyObject());
+
+        presenter.showDialog();
+        presenter.onRemoveClicked();
+
+        verify(service)
+                .remove(eq(VFS_ID), eq(PROJECT_ID), (JsonArray<String>)anyObject(), eq(REMOVED),
+                        (AsyncRequestCallback<String>)anyObject());
+        verify(constant).removeFilesFailed();
+        verify(console).print(anyString());
         verify(view).close();
     }
 
@@ -81,6 +191,7 @@ public class RemoveFromIndexPresenterTest extends BaseTest {
                 .remove(eq(VFS_ID), eq(PROJECT_ID), (JsonArray<String>)anyObject(), eq(REMOVED),
                         (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
+        verify(constant).removeFilesFailed();
         verify(console).print(anyString());
     }
 
