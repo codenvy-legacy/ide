@@ -313,7 +313,8 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler, 
     private void updateOpenedFiles(String exceptionMessage, final String remoteUrl) {
         String[] filesWithConflicts = exceptionMessage.split("</br>");
         for (String filePath : filesWithConflicts){
-            for(FileModel openedFile : openedEditor.keySet()) {
+            Set<FileModel> openedFiles = new HashSet<FileModel>(openedEditor.keySet());
+            for(FileModel openedFile : openedFiles) {
                 if(openedFile.getPath().contains(filePath)) {
                     updateFileContent(openedFile, remoteUrl);
                 }
