@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.extension.cloudfoundry.client;
 
@@ -26,6 +25,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.MessageBus;
@@ -46,7 +46,7 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class CloudFoundryClientServiceImpl implements CloudFoundryClientService {
-    private static final String BASE_URL         = "/ide/cloudfoundry";
+    private static final String BASE_URL         = '/' + Utils.getWorkspaceName() + "/cloudfoundry";
     private static final String CREATE           = BASE_URL + "/apps/create";
     private static final String FRAMEWORKS       = BASE_URL + "/info/frameworks";
     private static final String START            = BASE_URL + "/apps/start";
@@ -73,7 +73,6 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
     private static final String SERVICES_BIND    = SERVICES + "/bind";
     private static final String SERVICES_UNBIND  = SERVICES + "/unbind";
     private static final String LOGS             = BASE_URL + "/apps/logs";
-    public static final  String SUPPORT          = "support";
     /** REST service context. */
     private String                           restServiceContext;
     /** Loader to be displayed. */
@@ -502,8 +501,7 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
 
     /** {@inheritDoc} */
     @Override
-    public void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback)
-            throws RequestException {
+    public void getLogs(String vfsId, String projectId, AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + LOGS + "?projectid=" + projectId + "&vfsid=" + vfsId;
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }

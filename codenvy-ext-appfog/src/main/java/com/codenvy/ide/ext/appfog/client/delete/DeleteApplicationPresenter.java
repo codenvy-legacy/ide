@@ -1,24 +1,24 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.appfog.client.delete;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
@@ -27,7 +27,6 @@ import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
 import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
-import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.http.client.RequestException;
@@ -50,11 +49,12 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
     private String                     serverName;
     private ResourceProvider           resourceProvider;
     private EventBus                   eventBus;
-    private ConsolePart                console;
     private AppfogLocalizationConstant constant;
     private LoginPresenter             loginPresenter;
     private AsyncCallback<String>      appDeleteCallback;
     private AppfogClientService        service;
+    private NotificationManager        notificationManager;
+
 
     /**
      * Create presenter.
@@ -62,23 +62,23 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
      * @param view
      * @param resourceProvider
      * @param eventBus
-     * @param console
      * @param constant
      * @param loginPresenter
      * @param service
+     * @param notificationManager
      */
     @Inject
     protected DeleteApplicationPresenter(DeleteApplicationView view, ResourceProvider resourceProvider, EventBus eventBus,
-                                         ConsolePart console, AppfogLocalizationConstant constant, LoginPresenter loginPresenter,
-                                         AppfogClientService service) {
+                                         AppfogLocalizationConstant constant, LoginPresenter loginPresenter,
+                                         AppfogClientService service, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.resourceProvider = resourceProvider;
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.notificationManager = notificationManager;
     }
 
     /** If user is not logged in to AppFog, this handler will be called, after user logged in. */
@@ -121,13 +121,13 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
     /** Get application's name and put it to the field. */
     private void getApplicationInfo() {
         String projectId = resourceProvider.getActiveProject().getId();
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, appInfoLoggedInHandler, null,
-                                                                                         eventBus, constant, console, loginPresenter) {
+                                                                                         eventBus, constant, loginPresenter,
+                                                                                         notificationManager) {
                                            @Override
                                            protected void onSuccess(AppfogApplication result) {
                                                appName = result.getName();
@@ -136,7 +136,8 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), Notification.Type.ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -160,7 +161,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
         try {
             service.deleteApplication(resourceProvider.getVfsId(), projectId, appName, serverName, isDeleteServices,
                                       new AppfogAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null, eventBus, constant,
-                                                                             console, loginPresenter) {
+                                                                             loginPresenter, notificationManager) {
                                           @Override
                                           protected void onSuccess(final String result) {
                                               if (project != null) {
@@ -168,7 +169,10 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
                                                       @Override
                                                       public void onSuccess(Project project) {
                                                           view.close();
-                                                          console.print(constant.applicationDeletedMsg(appName));
+                                                          Notification notification =
+                                                                  new Notification(constant.applicationDeletedMsg(appName),
+                                                                                   Notification.Type.INFO);
+                                                          notificationManager.showNotification(notification);
 
                                                           callback.onSuccess(result);
                                                       }
@@ -180,7 +184,9 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
                                                   });
                                               } else {
                                                   view.close();
-                                                  console.print(constant.applicationDeletedMsg(appName));
+                                                  Notification notification = new Notification(constant.applicationDeletedMsg(appName),
+                                                                                               Notification.Type.INFO);
+                                                  notificationManager.showNotification(notification);
 
                                                   callback.onSuccess(result);
                                               }
@@ -188,7 +194,8 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), Notification.Type.ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 

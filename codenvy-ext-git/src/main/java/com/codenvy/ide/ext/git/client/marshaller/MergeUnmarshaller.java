@@ -1,29 +1,27 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.git.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
+import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.MergeResult;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
@@ -33,73 +31,31 @@ import com.google.gwt.json.client.JSONParser;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 12:01:03 PM anya $
  */
-public class MergeUnmarshaller implements Unmarshallable<MergeResult>, Constants {
+public class MergeUnmarshaller implements Unmarshallable<MergeResult> {
     /** Result of merge operation. */
-    private Merge                   merge;
-    private GitLocalizationConstant constant;
-
-    /**
-     * @param merge
-     *         result of merge operation
-     */
-    public MergeUnmarshaller(Merge merge, GitLocalizationConstant constant) {
-        this.merge = merge;
-    }
+    private DtoClientImpls.MergeResultImpl merge;
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
-        try {
-            if (response.getText() == null || response.getText().isEmpty()) {
-                return;
-            }
-
-            JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
-
-            if (jsonObject == null) {
-                return;
-            }
-
-            if (jsonObject.containsKey(CONFLICTS) && jsonObject.get(CONFLICTS).isArray() != null) {
-                JSONArray array = jsonObject.get(CONFLICTS).isArray();
-                merge.setConflicts(getArray(array));
-            }
-            if (jsonObject.containsKey(MERGED_COMMITS) && jsonObject.get(MERGED_COMMITS).isArray() != null) {
-                JSONArray array = jsonObject.get(MERGED_COMMITS).isArray();
-                merge.setMergedCommits(getArray(array));
-            }
-            if (jsonObject.containsKey(MERGE_STATUS) && jsonObject.get(MERGE_STATUS).isString() != null) {
-                merge.setMergeStatus(MergeResult.MergeStatus.valueOf(jsonObject.get(MERGE_STATUS).isString().stringValue()));
-            }
-            if (jsonObject.containsKey(NEW_HEAD) && jsonObject.get(NEW_HEAD).isString() != null) {
-                merge.setNewHead(jsonObject.get(NEW_HEAD).isString().stringValue());
-            }
-        } catch (Exception e) {
-            throw new UnmarshallerException(constant.mergeUnmarshallerFailed(), e);
+        String text = response.getText();
+        if (text == null || text.isEmpty()) {
+            return;
         }
-    }
 
-    /**
-     * Get array from JSON array.
-     *
-     * @param jsonArray
-     *         JSON array
-     * @return array of {@link String}
-     */
-    private String[] getArray(JSONArray jsonArray) {
-        if (jsonArray == null || jsonArray.size() == 0) {
-            return null;
+        JSONObject jsonObject = JSONParser.parseStrict(text).isObject();
+
+        if (jsonObject == null) {
+            return;
         }
-        String[] array = new String[jsonArray.size()];
-        for (int i = 0; i < jsonArray.size(); i++) {
-            array[i] = jsonArray.get(i).isString().stringValue();
-        }
-        return array;
+
+        String s = jsonObject.toString();
+        merge = DtoClientImpls.MergeResultImpl.deserialize(s);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Merge getPayload() {
+    public MergeResult getPayload() {
         return merge;
     }
 }

@@ -1,24 +1,24 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.openshift.client.login;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.openshift.client.OpenShiftClientServiceImpl;
 import com.codenvy.ide.ext.openshift.client.OpenShiftLocalizationConstant;
@@ -28,6 +28,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
 /**
  * Presenter to control user login form.
@@ -39,11 +42,11 @@ import com.google.web.bindery.event.shared.EventBus;
 public class LoginPresenter implements LoginView.ActionDelegate {
     private LoginView                     view;
     private EventBus                      eventBus;
-    private ConsolePart                   console;
     private OpenShiftClientServiceImpl    service;
     private OpenShiftLocalizationConstant constant;
     private LoggedInHandler               loggedIn;
     private LoginCanceledHandler          loginCanceled;
+    private NotificationManager           notificationManager;
     private AsyncCallback<Boolean>        callback;
 
     /**
@@ -51,18 +54,18 @@ public class LoginPresenter implements LoginView.ActionDelegate {
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param service
      * @param constant
+     * @param notificationManager
      */
     @Inject
-    protected LoginPresenter(LoginView view, EventBus eventBus, ConsolePart console, OpenShiftClientServiceImpl service,
-                             OpenShiftLocalizationConstant constant) {
+    protected LoginPresenter(LoginView view, EventBus eventBus, OpenShiftClientServiceImpl service, OpenShiftLocalizationConstant constant,
+                             NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
-        this.console = console;
         this.service = service;
         this.constant = constant;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -116,7 +119,8 @@ public class LoginPresenter implements LoginView.ActionDelegate {
             service.login(email, password, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
-                    console.print(constant.loginViewSuccessfullyLogined());
+                    Notification notification = new Notification(constant.loginViewSuccessfullyLogined(), INFO);
+                    notificationManager.showNotification(notification);
                     if (loggedIn != null) {
                         loggedIn.onLoggedIn();
                     }
@@ -129,7 +133,8 @@ public class LoginPresenter implements LoginView.ActionDelegate {
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
                     view.setError(constant.loginViewErrorInvalidUserOrPassword());
 
@@ -139,7 +144,8 @@ public class LoginPresenter implements LoginView.ActionDelegate {
                 }
             });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }

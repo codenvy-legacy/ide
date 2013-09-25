@@ -1,23 +1,24 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.appfog.client.start;
 
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -27,7 +28,6 @@ import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
 import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
-import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
@@ -36,6 +36,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
 /**
  * Presenter for start and stop application commands.
@@ -51,6 +54,7 @@ public class StartApplicationPresenter {
     private AsyncCallback<String>      appInfoChangedCallback;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
+    private NotificationManager        notificationManager;
 
     /**
      * Create presenter.
@@ -61,16 +65,19 @@ public class StartApplicationPresenter {
      * @param constant
      * @param loginPresenter
      * @param service
+     * @param notificationManager
      */
     @Inject
     protected StartApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                        AppfogLocalizationConstant constant, LoginPresenter loginPresenter, AppfogClientService service) {
+                                        AppfogLocalizationConstant constant, LoginPresenter loginPresenter, AppfogClientService service,
+                                        NotificationManager notificationManager) {
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.notificationManager = notificationManager;
     }
 
     /** If user is not logged in to AppFog, this handler will be called, after user logged in. */
@@ -132,20 +139,20 @@ public class StartApplicationPresenter {
     /** Gets information about active project and check its state. */
     private void checkIsStarted() {
         Project project = resourceProvider.getActiveProject();
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, checkIsStartedLoggedInHandler,
-                                                                                         null, eventBus, constant, console,
-                                                                                         loginPresenter) {
+                                                                                         null, eventBus, constant, loginPresenter,
+                                                                                         notificationManager) {
                                            @Override
                                            protected void onSuccess(AppfogApplication result) {
                                                if ("STARTED".equals(result.getState()) &&
                                                    result.getInstances() == result.getRunningInstances()) {
                                                    String msg = constant.applicationAlreadyStarted(result.getName());
-                                                   console.print(msg);
+                                                   Notification notification = new Notification(msg, ERROR);
+                                                   notificationManager.showNotification(notification);
                                                } else {
                                                    startApplication(null, appInfoChangedCallback);
                                                }
@@ -153,7 +160,8 @@ public class StartApplicationPresenter {
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -170,15 +178,15 @@ public class StartApplicationPresenter {
         final String appName = (project != null && name == null) ? project.getProperty("appfog-application").getValue().get(0) : name;
         final String projectId = project != null ? project.getId() : null;
 
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             service.startApplication(null, null, appName, server,
                                      new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, startLoggedInHandler, null, eventBus,
-                                                                                       constant, console, loginPresenter) {
+                                                                                       constant, loginPresenter, notificationManager) {
                                          @Override
                                          protected void onSuccess(AppfogApplication result) {
+                                             Notification notification;
                                              if ("STARTED".equals(result.getState()) &&
                                                  result.getInstances() == result.getRunningInstances()) {
                                                  String msg = constant.applicationCreatedSuccessfully(result.getName());
@@ -189,18 +197,20 @@ public class StartApplicationPresenter {
                                                                                                        getAppUrisAsString(result));
                                                  }
 
+                                                 notification = new Notification(msg, INFO);
                                                  console.print(msg);
                                                  callback.onSuccess(projectId);
                                              } else {
                                                  String msg = constant.applicationWasNotStarted(result.getName());
-                                                 console.print(msg);
+                                                 notification = new Notification(msg, ERROR);
                                              }
-
+                                             notificationManager.showNotification(notification);
                                          }
                                      });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -246,20 +256,20 @@ public class StartApplicationPresenter {
     /** Gets information about active project and check its state. */
     private void checkIsStopped() {
         Project project = resourceProvider.getActiveProject();
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, checkIsStoppedLoggedInHandler,
-                                                                                         null, eventBus, constant, console,
-                                                                                         loginPresenter) {
+                                                                                         null, eventBus, constant, loginPresenter,
+                                                                                         notificationManager) {
 
                                            @Override
                                            protected void onSuccess(AppfogApplication result) {
                                                if ("STOPPED".equals(result.getState())) {
                                                    String msg = constant.applicationAlreadyStopped(result.getName());
-                                                   console.print(msg);
+                                                   Notification notification = new Notification(msg, ERROR);
+                                                   notificationManager.showNotification(notification);
                                                } else {
                                                    stopApplication(null, appInfoChangedCallback);
                                                }
@@ -267,7 +277,8 @@ public class StartApplicationPresenter {
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -286,38 +297,39 @@ public class StartApplicationPresenter {
 
         try {
             service.stopApplication(null, null, appName, server,
-                                    new AppfogAsyncRequestCallback<String>(null, stopLoggedInHandler, null, eventBus, constant, console,
-                                                                           loginPresenter) {
+                                    new AppfogAsyncRequestCallback<String>(null, stopLoggedInHandler, null, eventBus, constant,
+                                                                           loginPresenter, notificationManager) {
                                         @Override
                                         protected void onSuccess(String result) {
-                                            DtoClientImpls.AppfogApplicationImpl appfogApplication =
-                                                    DtoClientImpls.AppfogApplicationImpl.make();
-                                            AppFogApplicationUnmarshaller unmarshaller =
-                                                    new AppFogApplicationUnmarshaller(appfogApplication);
+                                            AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
                                             try {
                                                 service.getApplicationInfo(resourceProvider.getVfsId(), projectId, name, null,
                                                                            new AppfogAsyncRequestCallback<AppfogApplication>(
-                                                                                   unmarshaller, null, null, eventBus, constant, console,
-                                                                                   loginPresenter) {
+                                                                                   unmarshaller, null, null, eventBus, constant,
+                                                                                   loginPresenter, notificationManager) {
                                                                                @Override
                                                                                protected void
                                                                                onSuccess(AppfogApplication result) {
                                                                                    final String msg =
                                                                                            constant.applicationStopped(result.getName());
-                                                                                   console.print(msg);
+                                                                                   Notification notification =
+                                                                                           new Notification(msg, INFO);
+                                                                                   notificationManager.showNotification(notification);
                                                                                    callback.onSuccess(projectId);
                                                                                }
                                                                            });
                                             } catch (RequestException e) {
                                                 eventBus.fireEvent(new ExceptionThrownEvent(e));
-                                                console.print(e.getMessage());
+                                                Notification notification = new Notification(e.getMessage(), ERROR);
+                                                notificationManager.showNotification(notification);
                                             }
                                         }
                                     });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -345,15 +357,16 @@ public class StartApplicationPresenter {
         final String server = project != null ? project.getProperty("appfog-target").getValue().get(0) : null;
         final String appName = (project != null && name == null) ? project.getProperty("appfog-application").getValue().get(0) : name;
         final String projectId = project != null ? project.getId() : null;
-        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
-        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller();
 
         try {
             service.restartApplication(null, null, appName, server,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, restartLoggedInHandler, null,
-                                                                                         eventBus, constant, console, loginPresenter) {
+                                                                                         eventBus, constant, loginPresenter,
+                                                                                         notificationManager) {
                                            @Override
                                            protected void onSuccess(AppfogApplication result) {
+                                               Notification notification;
                                                if (result.getInstances() == result.getRunningInstances()) {
                                                    final String appUris = getAppUrisAsString(result);
                                                    String msg;
@@ -362,17 +375,19 @@ public class StartApplicationPresenter {
                                                    } else {
                                                        msg = constant.applicationRestartedUris(result.getName(), appUris);
                                                    }
-                                                   console.print(msg);
+                                                   notification = new Notification(msg, INFO);
                                                    callback.onSuccess(projectId);
                                                } else {
                                                    String msg = constant.applicationWasNotStarted(result.getName());
-                                                   console.print(msg);
+                                                   notification = new Notification(msg, ERROR);
                                                }
+                                               notificationManager.showNotification(notification);
                                            }
                                        });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 }

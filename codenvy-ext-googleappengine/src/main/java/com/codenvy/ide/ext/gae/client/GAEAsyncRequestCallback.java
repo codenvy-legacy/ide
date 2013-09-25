@@ -1,85 +1,77 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.gae.client;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.commons.exception.UnauthorizedException;
+import com.codenvy.ide.ext.gae.client.actions.LoginAction;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
+ * Callback that uses to proceed request.
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 18, 2012 11:25:43 AM anya $
  */
 public abstract class GAEAsyncRequestCallback<T> extends AsyncRequestCallback<T> {
-    private ConsolePart     console;
-    private EventBus        eventBus;
-    private GAELocalization constant;
+    private EventBus            eventBus;
+    private LoginAction         loginAction;
+    private GAELocalization     constant;
+    private NotificationManager notificationManager;
 
-    /**
-     * Create callback.
-     *
-     * @param console
-     * @param eventBus
-     * @param constant
-     */
-    public GAEAsyncRequestCallback(ConsolePart console, EventBus eventBus, GAELocalization constant) {
-        this(null, console, eventBus, constant);
-    }
-
-    /**
-     * Create callback.
-     *
-     * @param unmarshaller
-     * @param console
-     * @param eventBus
-     * @param constant
-     */
-    public GAEAsyncRequestCallback(Unmarshallable<T> unmarshaller, ConsolePart console, EventBus eventBus,
-                                   GAELocalization constant) {
+    /** Construct of the callback. */
+    public GAEAsyncRequestCallback(Unmarshallable<T> unmarshaller, EventBus eventBus, GAELocalization constant, LoginAction loginAction,
+                                   NotificationManager notificationManager) {
         super(unmarshaller);
-        this.console = console;
         this.constant = constant;
         this.eventBus = eventBus;
+        this.loginAction = loginAction;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
     @Override
     protected void onFailure(Throwable exception) {
         if (exception instanceof UnauthorizedException) {
-            // TODO replace with execute method on presenter
-            //            IDE.fireEvent(new LoginEvent());
+            if (loginAction != null) {
+                loginAction.doLogin();
+            }
             return;
         }
+        Notification notification = new Notification("", ERROR);
         if (exception instanceof ServerException) {
             ServerException serverException = (ServerException)exception;
             if (serverException.getMessage() != null) {
-                console.print(serverException.getMessage());
+                notification.setMessage(serverException.getMessage());
             } else {
-                console.print(constant.unknownErrorMessage());
+                notification.setMessage(constant.unknownErrorMessage());
             }
         } else {
             eventBus.fireEvent(new ExceptionThrownEvent(exception));
-            console.print(exception.getMessage());
+            notification.setMessage(exception.getMessage());
         }
+        notificationManager.showNotification(notification);
     }
 }

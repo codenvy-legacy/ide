@@ -1,64 +1,47 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.git.shared;
+
+import com.codenvy.ide.dto.DTO;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: MergeResult.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
+@DTO
 public interface MergeResult {
     public enum MergeStatus {
-        FAST_FORWARD {
-            @Override
-            public String toString() {
-                return "Fast-forward";
-            }
-        },
-        ALREADY_UP_TO_DATE {
-            @Override
-            public String toString() {
-                return "Already up-to-date";
-            }
-        },
-        FAILED {
-            @Override
-            public String toString() {
-                return "Failed";
-            }
-        },
-        MERGED {
-            @Override
-            public String toString() {
-                return "Merged";
-            }
-        },
-        CONFLICTING {
-            @Override
-            public String toString() {
-                return "Conflicting";
-            }
-        },
-        NOT_SUPPORTED {
-            @Override
-            public String toString() {
-                return "Not-yet-supported";
-            }
+        FAST_FORWARD("Fast-forward"),
+        ALREADY_UP_TO_DATE("Already up-to-date"),
+        FAILED("Failed"),
+        MERGED("Merged"),
+        CONFLICTING("Conflicting"),
+        NOT_SUPPORTED("Not-yet-supported");
+
+        private final String value;
+
+        private MergeStatus(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
         }
     }
 
@@ -69,11 +52,11 @@ public interface MergeResult {
     MergeStatus getMergeStatus();
 
     /** @return merged commits */
-    String[] getMergedCommits();
+    JsonArray<String> getMergedCommits();
 
     /** @return files that has conflicts. May return <code>null</code> or empty array if there is no conflicts */
-    String[] getConflicts();
+    JsonArray<String> getConflicts();
 
     /** @return files that failed to merge (not files that has conflicts). */
-    String[] getFailed();
+    JsonArray<String> getFailed();
 }

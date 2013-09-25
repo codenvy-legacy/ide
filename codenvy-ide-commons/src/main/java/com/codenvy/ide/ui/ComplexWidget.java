@@ -25,71 +25,62 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A widget that can have several child widgets.
- * <p>
+ * <p/>
  * Base of a lot of other components :)
- * 
- * @since 2.0.4.0
- * 
+ *
  * @author Carlos Alexandro Becker
+ * @since 2.0.4.0
  */
 public class ComplexWidget extends ComplexPanel implements HasWidgets,
                                                            HasStyle {
 
-	/**
-	 * Creates a new widget that is based on the provided html tag.
-	 * 
-	 * @param tag
-	 *            the html tag used for this widget
-	 */
-	public ComplexWidget(String tag) {
-		setElement(DOM.createElement(tag));
-	}
+    /**
+     * Creates a new widget that is based on the provided html tag.
+     *
+     * @param tag
+     *         the html tag used for this widget
+     */
+    public ComplexWidget(String tag) {
+        setElement(DOM.createElement(tag));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void add(Widget w) {
-		add(w, getElement());
-		
+    /** {@inheritDoc} */
+    @Override
+    public void add(Widget w) {
+        add(w, getElement());
+
 //		// logical add
 //		getChildren().add(w);
 //
 //		// physical add
 //		getElement().appendChild(w.getElement());
 
-	}
+    }
 
-	/**
-	 * Inserts another widget into this one.
-	 * 
-	 * @param w
-	 *            the widget to be inserted
-	 * @param beforeIndex
-	 *            the index of the position before which it should be set
-	 */
-	public void insert(Widget w, int beforeIndex) {
-		insert(w, getElement(), beforeIndex, true);
-	}
+    /**
+     * Inserts another widget into this one.
+     *
+     * @param w
+     *         the widget to be inserted
+     * @param beforeIndex
+     *         the index of the position before which it should be set
+     */
+    public void insert(Widget w, int beforeIndex) {
+        insert(w, getElement(), beforeIndex, true);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setStyle(Style style) {
-		StyleHelper.setStyle(this, style);
-	}
+    /** {@inheritDoc} */
+    public void setStyle(Style style) {
+        StyleHelper.setStyle(this, style);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addStyle(Style style) {
-		StyleHelper.addStyle(this, style);
-	}
+    /** {@inheritDoc} */
+    public void addStyle(Style style) {
+        StyleHelper.addStyle(this, style);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeStyle(Style style) {
-		StyleHelper.removeStyle(this, style);
-	}
+    /** {@inheritDoc} */
+    public void removeStyle(Style style) {
+        StyleHelper.removeStyle(this, style);
+    }
 }

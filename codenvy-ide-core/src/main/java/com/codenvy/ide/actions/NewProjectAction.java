@@ -1,28 +1,25 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.actions;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.paas.PaaSAgentImpl;
-import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.WizardPresenter;
 import com.codenvy.ide.wizard.newproject.NewProjectPagePresenter;
 import com.google.inject.Inject;
@@ -36,25 +33,20 @@ import com.google.inject.Singleton;
 @Singleton
 public class NewProjectAction extends Action {
 
-    private final WizardAgentImpl                   wizardAgent;
     private final Resources                         resources;
-    private final PaaSAgentImpl                     paasAgent;
     private final Provider<NewProjectPagePresenter> firstPage;
 
     @Inject
-    public NewProjectAction(WizardAgentImpl wizardAgent, Resources resources, PaaSAgentImpl paasAgent,
-                            Provider<NewProjectPagePresenter> firstPage) {
+    public NewProjectAction(Resources resources, Provider<NewProjectPagePresenter> firstPage) {
         super("Project", "Create new project", resources.project());
 
-        this.wizardAgent = wizardAgent;
         this.resources = resources;
-        this.paasAgent = paasAgent;
         this.firstPage = firstPage;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        WizardPresenter wizardDialog = new WizardPresenter(firstPage.get(), "Create project");
+        WizardPresenter wizardDialog = new WizardPresenter(firstPage.get(), "Create project", resources);
         wizardDialog.showWizard();
     }
 }

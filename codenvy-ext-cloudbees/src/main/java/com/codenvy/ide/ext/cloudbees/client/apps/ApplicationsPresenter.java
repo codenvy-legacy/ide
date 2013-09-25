@@ -1,24 +1,24 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.cloudbees.client.apps;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesAsyncRequestCallback;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientService;
@@ -29,13 +29,14 @@ import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationListUnmarshaller;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * The applications presenter manager CloudBees application.
@@ -48,35 +49,35 @@ import com.google.web.bindery.event.shared.EventBus;
 public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     private ApplicationsView           view;
     private EventBus                   eventBus;
-    private ConsolePart                console;
     private LoginPresenter             loginPresenter;
     private CloudBeesClientService     service;
     private ApplicationInfoPresenter   applicationInfoPresenter;
     private DeleteApplicationPresenter deleteApplicationPresenter;
+    private NotificationManager        notificationManager;
 
     /**
      * Create presenter.
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param loginPresenter
      * @param service
      * @param applicationInfoPresenter
      * @param deleteApplicationPresenter
+     * @param notificationManager
      */
     @Inject
-    protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, ConsolePart console, LoginPresenter loginPresenter,
+    protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, LoginPresenter loginPresenter,
                                     CloudBeesClientService service, ApplicationInfoPresenter applicationInfoPresenter,
-                                    DeleteApplicationPresenter deleteApplicationPresenter) {
+                                    DeleteApplicationPresenter deleteApplicationPresenter, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
-        this.console = console;
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.applicationInfoPresenter = applicationInfoPresenter;
         this.deleteApplicationPresenter = deleteApplicationPresenter;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -86,7 +87,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
 
     /** Gets list of available application for current user. */
     private void getOrUpdateAppList() {
-        ApplicationListUnmarshaller unmarshaller = new ApplicationListUnmarshaller(JsonCollections.<ApplicationInfo>createArray());
+        ApplicationListUnmarshaller unmarshaller = new ApplicationListUnmarshaller();
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
             public void onLoggedIn() {
@@ -97,7 +98,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
         try {
             service.applicationList(
                     new CloudBeesAsyncRequestCallback<JsonArray<ApplicationInfo>>(unmarshaller, loggedInHandler, null, eventBus,
-                                                                                  console, loginPresenter) {
+                                                                                  loginPresenter, notificationManager) {
                         @Override
                         protected void onSuccess(JsonArray<ApplicationInfo> result) {
                             view.setApplications(result);
@@ -108,7 +109,8 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
                         }
                     });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }

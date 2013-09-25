@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2003-2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.part.projectexplorer;
 
@@ -24,11 +25,16 @@ import com.codenvy.ide.api.event.ResourceChangedHandler;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEvent.FileOperation;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
-import com.codenvy.ide.part.base.BasePresenter;
+import com.codenvy.ide.contexmenu.ContextMenuPresenter;
+import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -42,23 +48,31 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
-    protected ProjectExplorerView view;
-
-    protected EventBus  eventBus;
-    private   Resources resources;
+    protected ProjectExplorerView  view;
+    protected EventBus             eventBus;
+    private   Resources            resources;
+    private   ResourceProvider     resourceProvider;
+    private   ContextMenuPresenter contextMenuPresenter;
 
     /**
      * Instantiates the ProjectExplorer Presenter
      *
      * @param view
      * @param eventBus
+     * @param resources
+     * @param resourceProvider
+     * @param contextMenuPresenter
      */
     @Inject
-    public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, Resources resources) {
+    public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, Resources resources,
+                                        ResourceProvider resourceProvider, ContextMenuPresenter contextMenuPresenter) {
         this.view = view;
         this.eventBus = eventBus;
         this.resources = resources;
-        view.setTitle("Project Explorer");
+        this.resourceProvider = resourceProvider;
+        this.view.setTitle("Project Explorer");
+        this.contextMenuPresenter = contextMenuPresenter;
+
         bind();
     }
 
@@ -97,7 +111,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         });
 
         eventBus.addHandler(ResourceChangedEvent.TYPE, new ResourceChangedHandler() {
-
             @Override
             public void onResourceRenamed(ResourceChangedEvent event) {
                 // TODO handle it
@@ -148,5 +161,24 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         if (resource.isFile()) {
             eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
         }
+        //open project
+        if (resource.getResourceType().equals(Project.TYPE) && resourceProvider.getActiveProject() == null) {
+            resourceProvider.getProject(resource.getName(), new AsyncCallback<Project>() {
+                @Override
+                public void onSuccess(Project result) {
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    Log.error(ProjectExplorerPartPresenter.class, "Can not get project", caught);
+                }
+            });
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onContextMenu(int mouseX, int mouseY) {
+        contextMenuPresenter.show(mouseX, mouseY);
     }
 }

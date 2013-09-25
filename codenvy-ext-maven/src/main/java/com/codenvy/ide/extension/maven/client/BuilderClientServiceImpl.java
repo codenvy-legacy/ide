@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.extension.maven.client;
 
@@ -25,6 +24,7 @@ import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
@@ -40,7 +40,7 @@ import com.google.inject.name.Named;
 @Singleton
 public class BuilderClientServiceImpl implements BuilderClientService {
     /** Base url. */
-    private static final String BASE_URL = "/ide/maven";
+    private static final String BASE_URL = '/' + Utils.getWorkspaceName() + "/maven";
     /** Build project method's path. */
     private static final String BUILD    = BASE_URL + "/build";
     /** Build project method's path. */
@@ -74,7 +74,7 @@ public class BuilderClientServiceImpl implements BuilderClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void build(String projectId, String vfsId, String projectName, String projectType, AsyncRequestCallback<StringBuilder> callback)
+    public void build(String projectId, String vfsId, String projectName, String projectType, AsyncRequestCallback<String> callback)
             throws RequestException {
         final String requesrUrl = restServiceContext + BUILD;
 
@@ -87,8 +87,7 @@ public class BuilderClientServiceImpl implements BuilderClientService {
     /** {@inheritDoc} */
     @Override
     public void buildAndPublish(String projectId, String vfsId, String projectName, String projectType,
-                                AsyncRequestCallback<StringBuilder> callback)
-            throws RequestException {
+                                AsyncRequestCallback<String> callback) throws RequestException {
         final String requesrUrl = restServiceContext + DEPLOY;
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&name=" + projectName + "&type=" + projectType;
@@ -126,7 +125,7 @@ public class BuilderClientServiceImpl implements BuilderClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void result(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+    public void result(String buildid, AsyncRequestCallback<String> callback) throws RequestException {
         final String requestUrl = restServiceContext + RESULT + "/" + buildid;
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
         AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)

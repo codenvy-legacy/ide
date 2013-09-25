@@ -1,0 +1,183 @@
+<!--
+  ~ CODENVY CONFIDENTIAL
+  ~ __________________
+  ~
+  ~ [2012] - [2013] Codenvy, S.A.
+  ~ All Rights Reserved.
+  ~
+  ~ NOTICE:  All information contained herein is, and remains
+  ~ the property of Codenvy S.A. and its suppliers,
+  ~ if any.  The intellectual and technical concepts contained
+  ~ herein are proprietary to Codenvy S.A.
+  ~ and its suppliers and may be covered by U.S. and Foreign Patents,
+  ~ patents in process, and are protected by trade secret or copyright law.
+  ~ Dissemination of this information or reproduction of this material
+  ~ is strictly forbidden unless prior written permission is obtained
+  ~ from Codenvy S.A..
+  -->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:c="urn:import:com.codenvy.ide.ui"
+             xmlns:l='urn:import:com.google.gwt.user.cellview.client'>
+    <ui:with field='resource' type='com.codenvy.ide.ext.aws.client.AWSResource'/>
+    <ui:with field='constant' type='com.codenvy.ide.ext.aws.client.AWSLocalizationConstant'/>
+    <ui:style>
+        .borderBottom {
+            border-bottom: 1px solid gray;
+            background-color: #F1EFEB
+        }
+
+        .leftAlign {
+            float: left;
+            padding-left: 10px;
+            padding-top: 3px;
+        }
+
+        .leftAlign2 {
+            float: left;
+        }
+
+        .marginTop {
+            margin-top: 1px;
+        }
+
+        .labelH {
+            float: left;
+        }
+
+        .buckets {
+            border-bottom: 1px solid gray;
+            background-color: #F1EFEB;
+            font-weight: bold;
+            padding: 4px;
+        }
+
+        .downArrow::AFTER {
+            content: "\25BE";
+            display: inline;
+        }
+
+        .aws-action-grad {
+            cursor: pointer;
+            color: #000000;
+            margin-top: 4px;
+            margin-left: 5px;
+            border: 1px solid #BBBBBB;
+            border-radius: 3px;
+            background: rgb(255, 255, 255);
+            background: literal("-moz-linear-gradient(top, rgb(255,255,255) 0%, rgb(224,224,224) 100%)");
+            background: literal("-webkit-linear-gradient(top,  rgb(255,255,255) 0%,rgb(224,224,224) 100%)");
+            background: literal("linear-gradient(to bottom,  rgb(255,255,255) 0%,rgb(224,224,224) 100%)");
+        }
+
+        .aws-action-grad:hover {
+            background: rgb(240, 247, 253);
+            background: literal("-moz-linear-gradient(top,  rgb(240,247,253) 0%, rgb(249,254,255) 11%, rgb(249,254,255) 21%, rgb(238,249,255) 37%, rgb(193,224,255) 89%, rgb(199,227,254) 95%, rgb(218,235,253) 100%)");
+            background: literal("-webkit-linear-gradient(top,  rgb(240,247,253) 0%,rgb(249,254,255) 11%,rgb(249,254,255) 21%,rgb(238,249,255) 37%,rgb(193,224,255) 89%,rgb(199,227,254) 95%,rgb(218,235,253) 100%)");
+            background: literal("linear-gradient(to bottom,  rgb(240,247,253) 0%,rgb(249,254,255) 11%,rgb(249,254,255) 21%,rgb(238,249,255) 37%,rgb(193,224,255) 89%,rgb(199,227,254) 95%,rgb(218,235,253) 100%)");
+        }
+
+        .rightSpacing {
+            margin-right: 10px;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .padding5 {
+            padding: 5px;
+        }
+    </ui:style>
+    <g:DockLayoutPanel width="1200px" height="780px">
+        <g:north size="750.0">
+            <g:SplitLayoutPanel width="1200px" height="750px">
+                <g:west size="260">
+                    <g:FlowPanel>
+                        <g:FlowPanel styleName="{style.borderBottom}" height="60px">
+                            <g:Label text="Buckets" styleName="{style.buckets}" width="100%"/>
+                            <c:Button ui:field="btnCreate" width="100px" height="20px" text="{constant.createBucketButton}"
+                                      styleName="{style.leftAlign} {style.aws-action-grad}" type="DEFAULT"/>
+                            <g:MenuBar styleName="{style.aws-action-grad} {style.leftAlign2}">
+                                <g:MenuItem text="Actions" styleName="{style.downArrow}" height="17px">
+                                    <g:MenuBar vertical="true">
+                                        <g:MenuItem ui:field="createBucketAction">
+                                            <div>
+                                                <img src="{resource.newBucket.getSafeUri}"/>
+                                                <ui:msg description="action.createBucketAction">Create Bucket</ui:msg>
+                                            </div>
+                                        </g:MenuItem>
+                                        <g:MenuItem ui:field="deleteBucketAction">
+                                            <div>
+                                                <img src="{resource.delete.getSafeUri}"/>
+                                                <ui:msg description="action.deleteBucketAction">Delete</ui:msg>
+                                            </div>
+                                        </g:MenuItem>
+                                    </g:MenuBar>
+                                </g:MenuItem>
+                            </g:MenuBar>
+                        </g:FlowPanel>
+                        <g:ScrollPanel verticalScrollPosition="0" styleName="{style.marginTop}">
+                            <l:CellTable width="100%" height="100%" ui:field="s3BucketCellTable"/>
+                        </g:ScrollPanel>
+                    </g:FlowPanel>
+                </g:west>
+                <g:center>
+                    <g:FlowPanel width="100%">
+                        <g:FlowPanel width="100%" height="60px" styleName="{style.borderBottom}">
+                            <g:FlowPanel addStyleNames="{style.buckets}" height="16px">
+                                <g:Label text="Objects" styleName="{style.labelH} {style.rightSpacing}"/>
+                                <g:Label styleName="{style.right} " ui:field="bucketId"/>
+                            </g:FlowPanel>
+                            <c:Button width="60px" height="20px" styleName="{style.leftAlign} {style.aws-action-grad}" ui:field="btnUpload"
+                                      text="{constant.uploadButton}"/>
+                            <c:Button width="60px" height="20px" styleName="{style.leftAlign} {style.aws-action-grad}"
+                                      ui:field="btnRefreshObjects"
+                                      text="{constant.refreshButton}"/>
+                            <g:MenuBar styleName="{style.aws-action-grad} {style.leftAlign2}">
+                                <g:MenuItem text="Actions" styleName="{style.downArrow}" height="17px">
+                                    <g:MenuBar vertical="true">
+                                        <g:MenuItem ui:field="downloadObjectAction">
+                                            <div>
+                                                <img src="{resource.download.getSafeUri}"/>
+                                                <ui:msg description="action.download">Download</ui:msg>
+                                            </div>
+                                        </g:MenuItem>
+                                        <g:MenuItem ui:field="uploadProjectAction">
+                                            <div>
+                                                <img src="{resource.upload.getSafeUri}"/>
+                                                <ui:msg description="action.uploadProject">Upload Project</ui:msg>
+                                            </div>
+                                        </g:MenuItem>
+                                        <g:MenuItem ui:field="deleteObjectAction">
+                                            <div>
+                                                <img src="{resource.delete.getSafeUri}"/>
+                                                <ui:msg description="action.delete">Delete</ui:msg>
+                                            </div>
+                                        </g:MenuItem>
+                                        <g:MenuItem ui:field="refreshObjectsAction">
+                                            <div>
+                                                <img src="{resource.s3Refresh.getSafeUri}"/>
+                                                <ui:msg description="action.refresh">Refresh</ui:msg>
+                                            </div>
+                                        </g:MenuItem>
+                                    </g:MenuBar>
+                                </g:MenuItem>
+                            </g:MenuBar>
+                        </g:FlowPanel>
+                        <g:ScrollPanel width="100%" ui:field="scrollPanel">
+                            <l:CellTable ui:field="s3ObjectCellTable" width="100%" height="100%"/>
+                        </g:ScrollPanel>
+                    </g:FlowPanel>
+                </g:center>
+            </g:SplitLayoutPanel>
+        </g:north>
+        <g:south size="30.0">
+            <g:FlowPanel>
+                <c:Button ui:field="btnClose" type="SUCCESS" height="18px" width="60px" text="Close"
+                          addStyleNames="{style.right} {style.padding5}"/>
+            </g:FlowPanel>
+        </g:south>
+    </g:DockLayoutPanel>
+</ui:UiBinder>

@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.extension.cloudfoundry.client.services;
 
@@ -28,11 +27,8 @@ import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryServicesUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.ProvisionedServiceUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
-import com.codenvy.ide.extension.cloudfoundry.shared.SystemService;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
@@ -40,8 +36,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
-
-import java.util.LinkedHashMap;
 
 /**
  * Presenter for creating new service.
@@ -100,8 +94,7 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
     private void doCreate() {
         String name = view.getName();
         String type = view.getSystemServices();
-        DtoClientImpls.ProvisionedServiceImpl provisionedService = DtoClientImpls.ProvisionedServiceImpl.make();
-        ProvisionedServiceUnmarshaller unmarshaller = new ProvisionedServiceUnmarshaller(provisionedService);
+        ProvisionedServiceUnmarshaller unmarshaller = new ProvisionedServiceUnmarshaller();
 
         try {
             service.createService(null, type, name, null, null, null,
@@ -146,13 +139,7 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
             service.services(null, paasProvider, new AsyncRequestCallback<CloudFoundryServices>(unmarshaller) {
                 @Override
                 protected void onSuccess(CloudFoundryServices result) {
-                    LinkedHashMap<String, String> values = new LinkedHashMap<String, String>();
-                    JsonArray<SystemService> systems = result.getSystem();
-                    for (int i = 0; i < systems.size(); i++) {
-                        SystemService service = systems.get(i);
-                        values.put(service.getVendor(), service.getDescription());
-                    }
-                    view.setServices(values);
+                    view.setServices(result.getSystem());
                 }
 
                 @Override

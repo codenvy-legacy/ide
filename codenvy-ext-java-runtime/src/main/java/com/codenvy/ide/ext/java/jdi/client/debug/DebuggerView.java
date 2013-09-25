@@ -1,29 +1,28 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.part.base.BaseActionDelegate;
 
 /**
  * The view of {@link DebuggerPresenter}.
@@ -57,18 +56,23 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
         /** Performs any actions appropriate in response to the user having pressed the Evaluate expression button. */
         void onEvaluateExpressionButtonClicked();
 
+        /** Performs any actions appropriate in response to the user having pressed the expand tree button. */
+        void onExpandTreeClicked();
+
         /**
-         * Returns selected variable.
+         * Return selected variable.
          *
-         * @param variable
+         * @param selectedVariable
+         *         variable what is selected
          */
-        void onSelectedVariable(@NotNull Variable variable);
+        void onSelectedTreeElementClicked(@NotNull Variable selectedVariable);
     }
 
     /**
      * Sets variables.
      *
      * @param variables
+     *         available variables
      */
     void setVariables(@NotNull JsonArray<Variable> variables);
 
@@ -76,6 +80,7 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      * Sets breakpoints.
      *
      * @param breakPoints
+     *         available breakpoints
      */
     void setBreakPoints(@NotNull JsonArray<Breakpoint> breakPoints);
 
@@ -83,6 +88,7 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      * Sets java virtual machine name and version.
      *
      * @param name
+     *         virtual machine name
      */
     void setVMName(@NotNull String name);
 
@@ -154,6 +160,18 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      * Sets title.
      *
      * @param title
+     *         title of view
      */
     void setTitle(@NotNull String title);
+
+    /** Update contents for selected variable. */
+    void updateSelectedVariable();
+
+    /**
+     * Add elements into selected variable.
+     *
+     * @param variables
+     *         variable what need to add into
+     */
+    void setVariablesIntoSelectedVariable(@NotNull JsonArray<Variable> variables);
 }

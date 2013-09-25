@@ -1,0 +1,76 @@
+form {
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+    background: -webkit-linear-gradient( #88c8f9 30%, #54aee1 70%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #88C8F9;
+    font-size: 1.6em;
+    font-weight: 300;
+    padding-top: 30px;
+}
+
+hr {
+    width: 100px;
+}
+
+thead {
+    color: darkgrey;
+    background-color: darkslategray;
+}
+
+tbody {
+    color: white;
+}
+
+.button {
+    cursor: pointer;
+    padding: 10px;
+    border: solid 1px #cfd2d6;
+    box-shadow: 0 0 1px 1px rgba(204,205,206,.25),0px 1px 2px 0 rgba(255,255,255,.75) inset;
+    background-image: -webkit-gradient(linear,50% 0,50% 100%,color-stop(10%, #fcfcfc),color-stop(66%, #ededed));
+    border-radius: 5px;
+    line-height: 0.5em;
+    width: 100px;
+}
+
+.center {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.container {
+    background-image: linear-gradient(rgb(35, 48, 65) 30%, rgb(62, 73, 90));
+    max-width: 600px;
+    border-radius: 6px;
+    box-shadow: rgba(14, 41, 57, 0.117647) 0px 0px 0px 1px, rgba(14, 41, 57, 0.439216) 0px 2px 5px, rgba(14, 41, 57, 0.14902) 0px -1px 2px inset;
+}
+
+.field {
+    padding: 10px;
+}
+
+.input {
+    width: 85%;
+    color: #fbfbfb;
+    background-color: #313a48;
+    font-size: 1.2em;
+    border: 0;
+    height: 2em;
+    box-shadow: #545e6c 0 1px 1px, #232834 0 1px 1px inset;
+    padding-left: 10px;
+}
+
+.inputLabel {
+    color: white;
+    text-align: left;
+    margin-left: 55px;
+}
+
+.logo {
+    width: 205px;
+    margin: 30px auto 0 auto;
+}

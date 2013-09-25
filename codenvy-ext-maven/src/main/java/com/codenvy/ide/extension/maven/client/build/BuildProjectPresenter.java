@@ -1,24 +1,26 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.extension.maven.client.build;
 
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
@@ -38,7 +40,6 @@ import com.codenvy.ide.extension.maven.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.maven.shared.BuildStatus;
 import com.codenvy.ide.extension.maven.shared.BuildStatus.Status;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.part.base.BasePresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.Property;
@@ -63,6 +64,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
+import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter for build project with maven.
  *
@@ -70,7 +76,8 @@ import com.google.web.bindery.event.shared.EventBus;
  * @version $Id: BuildProjectPresenter.java Feb 17, 2012 5:39:10 PM azatsarynnyy $
  */
 @Singleton
-public class BuildProjectPresenter extends BasePresenter implements BuildProjectHandler, BuildProjectView.ActionDelegate {
+public class BuildProjectPresenter extends BasePresenter
+        implements BuildProjectHandler, BuildProjectView.ActionDelegate, Notification.OpenNotificationHandler {
     private final static String LAST_SUCCESS_BUILD    = "lastSuccessBuild";
     private final static String ARTIFACT_DOWNLOAD_URL = "artifactDownloadUrl";
     private final static String TITLE                 = "Output";
@@ -100,6 +107,8 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
     private       BuilderResources                 resources;
     private       WorkspaceAgent                   workspaceAgent;
     private       MessageBus                       messageBus;
+    private       NotificationManager              notificationManager;
+    private       Notification                     notification;
     /** Handler for processing Maven build status which is received over WebSocket connection. */
     private final SubscriptionHandler<BuildStatus> buildStatusHandler;
 
@@ -115,11 +124,12 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
      * @param resources
      * @param workspaceAgent
      * @param messageBus
+     * @param notificationManager
      */
     @Inject
     protected BuildProjectPresenter(BuildProjectView view, EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
                                     BuilderClientService service, BuilderLocalizationConstant constant, BuilderResources resources,
-                                    WorkspaceAgent workspaceAgent, MessageBus messageBus) {
+                                    WorkspaceAgent workspaceAgent, MessageBus messageBus, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.view.setTitle(TITLE);
@@ -131,9 +141,9 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
         this.constant = constant;
         this.resources = resources;
         this.messageBus = messageBus;
+        this.notificationManager = notificationManager;
 
-        DtoClientImpls.BuildStatusImpl buildStatus = DtoClientImpls.BuildStatusImpl.make();
-        BuildStatusUnmarshallerWS unmarshaller = new BuildStatusUnmarshallerWS(buildStatus);
+        BuildStatusUnmarshallerWS unmarshaller = new BuildStatusUnmarshallerWS();
 
         buildStatusHandler = new SubscriptionHandler<BuildStatus>(unmarshaller) {
             @Override
@@ -150,9 +160,11 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
                 }
 
                 setBuildInProgress(false);
-                BuildProjectPresenter.this.view.stopAnimation();
+                notification.setType(ERROR);
+                notification.setStatus(FINISHED);
+                notification.setMessage(exception.getMessage());
+
                 BuildProjectPresenter.this.eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                BuildProjectPresenter.this.console.print(exception.getMessage());
             }
         };
 
@@ -165,7 +177,8 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
     public void onBuildProject(BuildProjectEvent event) {
         if (isBuildInProgress) {
             String message = constant.buildInProgress(project.getPath().substring(1));
-            Window.alert(message);
+            Notification notification = new Notification(message, ERROR);
+            notificationManager.showNotification(notification);
             return;
         }
 
@@ -185,18 +198,19 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
     private void doBuild() {
         projectId = project.getId();
         statusHandler.requestInProgress(projectId);
-        StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
             service.build(projectId, resourceProvider.getVfsId(), project.getName(),
                           (String)project.getPropertyValue(ProjectDescription.PROPERTY_PRIMARY_NATURE),
-                          new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                          new AsyncRequestCallback<String>(unmarshaller) {
                               @Override
-                              protected void onSuccess(StringBuilder result) {
+                              protected void onSuccess(String result) {
                                   buildID = result.substring(result.lastIndexOf("/") + 1);
                                   setBuildInProgress(true);
-                                  showBuildMessage("Building project <b>" + project.getPath().substring(1) + "</b>");
-                                  view.startAnimation();
+                                  String message = "Building project <b>" + project.getPath().substring(1) + "</b>";
+                                  notification = new Notification(message, PROGRESS, BuildProjectPresenter.this);
+                                  notificationManager.showNotification(notification);
                                   previousStatus = null;
                                   startCheckingStatus(buildID);
                               }
@@ -205,19 +219,20 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
                               protected void onFailure(Throwable exception) {
                                   statusHandler.requestError(projectId, exception);
                                   setBuildInProgress(false);
-                                  view.stopAnimation();
-                                  if (exception instanceof ServerException && exception.getMessage() != null) {
-                                      console.print(exception.getMessage());
-                                  } else {
+                                  notification.setStatus(FINISHED);
+                                  notification.setType(ERROR);
+                                  notification.setMessage(exception.getMessage());
+
+                                  if (!(exception instanceof ServerException)) {
                                       eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                      console.print(exception.getMessage());
                                   }
                               }
                           });
         } catch (RequestException e) {
             setBuildInProgress(false);
-            view.stopAnimation();
-            console.print(e.getMessage());
+            notification.setStatus(FINISHED);
+            notification.setType(ERROR);
+            notification.setMessage(e.getMessage());
         }
     }
 
@@ -241,20 +256,19 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
     private void doBuildAndPublish() {
         projectId = project.getId();
         statusHandler.requestInProgress(projectId);
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
-            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
             service.buildAndPublish(projectId, resourceProvider.getVfsId(), project.getName(),
                                     (String)project.getPropertyValue(ProjectDescription.PROPERTY_PRIMARY_NATURE),
-                                    new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                                    new AsyncRequestCallback<String>(unmarshaller) {
                                         @Override
-                                        protected void onSuccess(StringBuilder result) {
+                                        protected void onSuccess(String result) {
                                             buildID = result.substring(result.lastIndexOf("/") + 1);
                                             setBuildInProgress(true);
-                                            showBuildMessage(
-                                                    "Building project <b>" + project.getPath().substring(1) +
-                                                    "</b>");
-                                            view.startAnimation();
+                                            String message = "Building project <b>" + project.getPath().substring(1) + "</b>";
+                                            notification = new Notification(message, PROGRESS, BuildProjectPresenter.this);
+                                            notificationManager.showNotification(notification);
                                             previousStatus = null;
                                             refreshBuildStatusTimer.schedule(delay);
                                         }
@@ -263,20 +277,16 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
                                         protected void onFailure(Throwable exception) {
                                             statusHandler.requestError(projectId, exception);
                                             setBuildInProgress(false);
-                                            view.stopAnimation();
-                                            if (exception instanceof ServerException &&
-                                                exception.getMessage() != null) {
-                                                console.print(exception.getMessage());
-                                            } else {
-                                                eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                                console.print(exception.getMessage());
-                                            }
+                                            notification.setStatus(FINISHED);
+                                            notification.setMessage(exception.getMessage());
+                                            notification.setType(ERROR);
                                         }
                                     });
         } catch (RequestException e) {
             setBuildInProgress(false);
-            view.stopAnimation();
-            console.print(e.getMessage());
+            notification.setStatus(FINISHED);
+            notification.setMessage(e.getMessage());
+            notification.setType(ERROR);
         }
     }
 
@@ -386,8 +396,7 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
     private Timer refreshBuildStatusTimer = new Timer() {
         @Override
         public void run() {
-            DtoClientImpls.BuildStatusImpl buildStatus = DtoClientImpls.BuildStatusImpl.make();
-            BuildStatusUnmarshaller unmarshaller = new BuildStatusUnmarshaller(buildStatus);
+            BuildStatusUnmarshaller unmarshaller = new BuildStatusUnmarshaller();
 
             try {
                 service.status(buildID, new AsyncRequestCallback<BuildStatus>(unmarshaller) {
@@ -404,16 +413,19 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
                     @Override
                     protected void onFailure(Throwable exception) {
                         setBuildInProgress(false);
-                        view.stopAnimation();
+                        notification.setStatus(FINISHED);
+                        notification.setMessage(exception.getMessage());
+                        notification.setType(ERROR);
+
                         eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                        console.print(exception.getMessage());
                     }
                 });
             } catch (RequestException e) {
                 setBuildInProgress(false);
-                view.stopAnimation();
+                notification.setStatus(FINISHED);
+                notification.setMessage(e.getMessage());
+                notification.setType(ERROR);
                 eventBus.fireEvent(new ExceptionThrownEvent(e));
-                console.print(e.getMessage());
             }
         }
     };
@@ -459,8 +471,12 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
                 new StringBuilder("Finished building project <b>").append(project.getPath().substring(1))
                                                                   .append("</b>.\r\nResult: ").append(buildStatus.getStatus().getValue());
 
+        notification.setStatus(FINISHED);
+        notification.setMessage(message.toString());
+
         if (buildStatus.getStatus() == Status.SUCCESSFUL) {
-            console.print(constant.buildSuccess());
+            Notification notification = new Notification(constant.buildSuccess(), INFO, this);
+            notificationManager.showNotification(notification);
 
             statusHandler.requestFinished(projectId);
             if (projectId != null) {
@@ -471,7 +487,8 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
                 getPublishArtifactResult();
             }
         } else if (buildStatus.getStatus() == Status.FAILED) {
-            console.print(constant.buildFailed());
+            Notification notification = new Notification(constant.buildFailed(), ERROR, this);
+            notificationManager.showNotification(notification);
 
             String errorMessage = buildStatus.getError();
             String exceptionMessage = "Building of project failed";
@@ -484,18 +501,17 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
                     exceptionMessage)));
         }
         showBuildMessage(message.toString());
-        view.stopAnimation();
         eventBus.fireEvent(new ProjectBuiltEvent(buildStatus));
     }
 
     /** Getting information about publish artifact process for its only suggest dependency */
     private void getPublishArtifactResult() {
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
         try {
-            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
-            service.result(buildID, new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+            service.result(buildID, new AsyncRequestCallback<String>(unmarshaller) {
                 @Override
-                protected void onSuccess(StringBuilder result) {
-                    JSONObject json = JSONParser.parseStrict((result.toString())).isObject();
+                protected void onSuccess(String result) {
+                    JSONObject json = JSONParser.parseStrict((result)).isObject();
                     if (json.containsKey("artifactDownloadUrl")) {
                         String artifactUrl = json.get("artifactDownloadUrl").isString().stringValue();
                         console.print(
@@ -569,16 +585,6 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
      *         message for output
      */
     private void showBuildMessage(String message) {
-        if (isViewClosed) {
-            workspaceAgent.openPart(this, PartStackType.INFORMATION);
-            isViewClosed = false;
-        }
-
-        PartPresenter activePart = partStack.getActivePart();
-        if (activePart == null || !activePart.equals(this)) {
-            partStack.setActivePart(this);
-        }
-
         view.setClearOutputButtonEnabled(true);
         view.showMessageInOutput(message);
     }
@@ -647,23 +653,33 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
         container.setWidget(view);
     }
 
-    /** Deserializer for responses body. */
-    private class StringUnmarshaller implements Unmarshallable<StringBuilder> {
-        protected StringBuilder builder;
-
-        public StringUnmarshaller(StringBuilder builder) {
-            this.builder = builder;
+    /** {@inheritDoc} */
+    @Override
+    public void onOpenClicked() {
+        if (isViewClosed) {
+            workspaceAgent.openPart(this, PartStackType.INFORMATION);
+            isViewClosed = false;
         }
+
+        PartPresenter activePart = partStack.getActivePart();
+        if (activePart == null || !activePart.equals(this)) {
+            partStack.setActivePart(this);
+        }
+    }
+
+    /** Deserializer for responses body. */
+    private class StringUnmarshaller implements Unmarshallable<String> {
+        protected String builder;
 
         /** {@inheritDoc} */
         @Override
         public void unmarshal(Response response) {
-            builder.append(response.getText());
+            builder = response.getText();
         }
 
         /** {@inheritDoc} */
         @Override
-        public StringBuilder getPayload() {
+        public String getPayload() {
             return builder;
         }
     }

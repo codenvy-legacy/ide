@@ -1,20 +1,19 @@
 /*
-pal * Copyright (C) 2011 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.resources.marshal;
 
@@ -33,16 +32,9 @@ import com.google.gwt.json.client.JSONValue;
  *
  */
 public class ChildNamesUnmarshaller implements Unmarshallable<JsonArray<String>> {
-    private final JsonArray<String> items;
+    private JsonArray<String> items;
 
-    /** @param items */
-    public ChildNamesUnmarshaller() {
-        super();
-        this.items = JsonCollections.createArray();
-        this.items.clear();
-    }
-
-    /** @see com.codenvy.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         try {
@@ -54,6 +46,7 @@ public class ChildNamesUnmarshaller implements Unmarshallable<JsonArray<String>>
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public JsonArray<String> getPayload() {
         return this.items;
@@ -67,6 +60,8 @@ public class ChildNamesUnmarshaller implements Unmarshallable<JsonArray<String>>
      * @return list of children items
      */
     private void parseItems(JSONArray itemsArray) {
+        items = JsonCollections.createArray();
+
         for (int i = 0; i < itemsArray.size(); i++) {
             // get Json Object
             JSONObject object = itemsArray.get(i).isObject();

@@ -1,22 +1,23 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.git.shared;
+
+import com.codenvy.ide.dto.DTO;
 
 /**
  * Represents user's credentials.
@@ -25,33 +26,19 @@ package com.codenvy.ide.ext.git.shared;
  * @version $Id: Mar 28, 2012 12:44:37 PM anya $
  * @deprecated not need it any more, we use oauth for GItHub
  */
+@DTO
 public interface Credentials {
     /**
      * Get login.
      *
      * @return {@link String} login
      */
-    public String getLogin();
-
-    /**
-     * Set login.
-     *
-     * @param login
-     */
-    public void setLogin(String login);
+    String getLogin();
 
     /**
      * Get password.
      *
      * @return {@link String} password
      */
-    public String getPassword();
-
-    /**
-     * Set the password.
-     *
-     * @param password
-     *         password.
-     */
-    public void setPassword(String password);
+    String getPassword();
 }

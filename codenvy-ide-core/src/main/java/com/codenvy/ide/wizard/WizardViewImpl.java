@@ -1,29 +1,31 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.wizard;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import com.google.inject.Singleton;
 
 /**
  * WizardViewImpl is the view of wizard.
@@ -33,50 +35,46 @@ import com.google.gwt.user.client.ui.*;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
+@Singleton
 public class WizardViewImpl extends DialogBox implements WizardView {
+    interface ViewImplUiBinder extends UiBinder<Widget, WizardViewImpl> {
+    }
+
     private static ViewImplUiBinder uiBinder = GWT.create(ViewImplUiBinder.class);
 
     private final int ANIMATION_TIME = 400;
-
-    private final int NO_TIME = 0;
-
-    @UiField
-    Button btnCancel;
+    private final int NO_TIME        = 0;
 
     @UiField
-    Button btnFinish;
-
+    com.codenvy.ide.ui.Button btnCancel;
     @UiField
-    Button btnBack;
-
+    com.codenvy.ide.ui.Button btnFinish;
     @UiField
-    Button btnNext;
-
+    com.codenvy.ide.ui.Button btnBack;
     @UiField
-    SimplePanel imagePanel;
-
+    com.codenvy.ide.ui.Button btnNext;
     @UiField
-    Label caption;
-
+    SimplePanel               imagePanel;
     @UiField
-    Label notice;
-
+    Label                     caption;
     @UiField
-    DeckLayoutPanel contentPanel;
-
+    Label                     notice;
+    @UiField
+    DeckLayoutPanel           contentPanel;
+    @UiField(provided = true)
+    final   WizardResource res;
     private ActionDelegate delegate;
-
-    interface ViewImplUiBinder extends UiBinder<Widget, WizardViewImpl> {
-    }
 
     /**
      * Create view.
      *
      * @param title
+     * @param resource
      */
-    public WizardViewImpl(String title) {
-        Widget widget = uiBinder.createAndBindUi(this);
+    protected WizardViewImpl(@NotNull String title, @NotNull WizardResource resource) {
+        this.res = resource;
 
+        Widget widget = uiBinder.createAndBindUi(this);
         this.setText(title);
         this.setWidget(widget);
     }
@@ -108,17 +106,17 @@ public class WizardViewImpl extends DialogBox implements WizardView {
     }
 
     /** {@inheritDoc} */
-    public void setCaption(String caption) {
+    public void setCaption(@NotNull String caption) {
         this.caption.setText(caption);
     }
 
     /** {@inheritDoc} */
-    public void setNotice(String notice) {
+    public void setNotice(@Nullable String notice) {
         this.notice.setText(notice);
     }
 
     /** {@inheritDoc} */
-    public void setImage(Image image) {
+    public void setImage(@Nullable Image image) {
         imagePanel.setWidget(image);
     }
 

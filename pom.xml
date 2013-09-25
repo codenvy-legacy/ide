@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    CODENVY CONFIDENTIAL
+    __________________
+
+     [2012] - [2013] Codenvy, S.A.
+     All Rights Reserved.
+
+    NOTICE:  All information contained herein is, and remains
+    the property of Codenvy S.A. and its suppliers,
+    if any.  The intellectual and technical concepts contained
+    herein are proprietary to Codenvy S.A.
+    and its suppliers and may be covered by U.S. and Foreign Patents,
+    patents in process, and are protected by trade secret or copyright law.
+    Dissemination of this information or reproduction of this material
+    is strictly forbidden unless prior written permission is obtained
+    from Codenvy S.A..
+
+-->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.codenvy</groupId>
         <artifactId>maven-parent-pom</artifactId>
-        <version>1.0.0</version>
+        <version>2.0.0</version>
     </parent>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-parent</artifactId>
@@ -24,17 +44,17 @@
         <!-- eXo Modules -->
         <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
         <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
-        <org.exoplatform.ide.version>2.3.2</org.exoplatform.ide.version>
+        <org.exoplatform.ide.version>2.7.0</org.exoplatform.ide.version>
         <!-- CodeAssistant DataBase -->
         <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
         <!-- Everrest -->
-        <everrest.version>1.0.11-SNAPSHOT</everrest.version>
+        <everrest.version>1.1.3</everrest.version>
         <!-- Third parties -->
         <gwt.version>2.5.1</gwt.version>
         <shindig.version>2.5.0-beta2</shindig.version>
         <gwt.maven.plugin.version>2.5.1</gwt.maven.plugin.version>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
         <org.slf4j.version>1.6.2</org.slf4j.version>
         <apache.commons-compress.version>1.0</apache.commons-compress.version>
         <commons-fileupload.version>1.2.1</commons-fileupload.version>
@@ -50,9 +70,11 @@
         <version.buildnumber.plugin>1.1</version.buildnumber.plugin>
         <version.release.plugin>2.2.1</version.release.plugin>
         <version.enforcer.plugin>1.0.1</version.enforcer.plugin>
-        <appengine.version>1.6.5</appengine.version>
+        <appengine.version>1.7.7</appengine.version>
         <ch.qos.logback.version>0.9.29</ch.qos.logback.version>
-        <com.codenvy.organization.version>0.4</com.codenvy.organization.version>
+        <com.codenvy.platform-api.version>1.0-SNAPSHOT</com.codenvy.platform-api.version>
+        <com.codenvy.organization.version>0.7.0</com.codenvy.organization.version>
+        <com.codenvy.commons.version>0.8.0</com.codenvy.commons.version>
         <maven.build.timestamp.format>dd.MM.yy HH:mm</maven.build.timestamp.format>
         <buildNumber>${maven.build.timestamp}</buildNumber>
     </properties>
@@ -76,6 +98,9 @@
                 <artifactId>exo.core.component.security.core</artifactId>
                 <version>${org.exoplatform.core.version}</version>
             </dependency>
+
+            <!-- codenvy stuff -->
+
             <dependency>
                 <groupId>com.codenvy.organization</groupId>
                 <artifactId>codenvy-organization-api-java-client</artifactId>
@@ -85,6 +110,36 @@
                 <groupId>com.codenvy.organization</groupId>
                 <artifactId>codenvy-organization-api</artifactId>
                 <version>${com.codenvy.organization.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.commons</groupId>
+                <artifactId>codenvy-commons-security</artifactId>
+                <version>${com.codenvy.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.commons</groupId>
+                <artifactId>codenvy-commons-servlet</artifactId>
+                <version>${com.codenvy.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.commons</groupId>
+                <artifactId>codenvy-commons-lang</artifactId>
+                <version>${com.codenvy.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.commons</groupId>
+                <artifactId>codenvy-commons-env</artifactId>
+                <version>${com.codenvy.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.platform-api</groupId>
+                <artifactId>codenvy-api-core</artifactId>
+                <version>${com.codenvy.platform-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.platform-api</groupId>
+                <artifactId>codenvy-api-vfs</artifactId>
+                <version>${com.codenvy.platform-api.version}</version>
             </dependency>
 
             <!-- IDE -->
@@ -171,7 +226,17 @@
             </dependency>
             <dependency>
                 <groupId>com.codenvy.ide</groupId>
+                <artifactId>codenvy-ext-aws</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.ide</groupId>
                 <artifactId>codenvy-ext-maven</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.ide</groupId>
+                <artifactId>codenvy-ext-ssh</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -182,6 +247,21 @@
             <dependency>
                 <groupId>com.codenvy.ide</groupId>
                 <artifactId>codenvy-ext-git</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.ide</groupId>
+                <artifactId>codenvy-ext-extensions-runtime</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.ide</groupId>
+                <artifactId>codenvy-ext-tutorials</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.ide</groupId>
+                <artifactId>codenvy-ide-security</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -231,7 +311,7 @@
             <dependency>
                 <groupId>com.google.gwt.inject</groupId>
                 <artifactId>gin</artifactId>
-                <version>2.0.0</version>
+                <version>2.1.1</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -404,41 +484,19 @@
 
             <dependency>
                 <groupId>com.google.appengine</groupId>
-                <artifactId>appengine-python-sdk</artifactId>
-                <version>${appengine.version}</version>
-                <type>zip</type>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.appengine</groupId>
                 <artifactId>appengine-tools-sdk</artifactId>
                 <version>${appengine.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.6</version>
+            </dependency>
+
         </dependencies>
-        
     </dependencyManagement>
-    
-    <profiles>
-        <profile>
-            <id>osx_profile</id>
-            <activation>
-                <os>
-                    <family>mac</family>
-                </os>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>sun.jdt</groupId>
-                    <artifactId>tools</artifactId>
-                    <version>1.6.0</version>
-                    <scope>system</scope>
-                    <systemPath>${java.home}/../Classes/classes.jar</systemPath>
-                </dependency>                
-            </dependencies>
-        </profile>
-    </profiles>
-    
+
     <build>
         <pluginManagement>
             <plugins>
@@ -483,10 +541,16 @@
         <module>codenvy-ext-appfog</module>
         <module>codenvy-ext-openshift</module>
         <module>codenvy-ext-googleappengine</module>
+        <module>codenvy-ext-aws</module>
         <module>codenvy-ext-jenkins</module>
         <module>codenvy-ext-git</module>
         <module>codenvy-ext-maven</module>
+        <module>codenvy-ext-ssh</module>
+        <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
+        <module>codenvy-application-war</module>
+        <module>codenvy-ext-tutorials</module>
+        <module>codenvy-ext-extensions-runtime</module>
         <module>codenvy-ide-site-war</module>
         <module>codenvy-packaging-standalone-tomcat</module>
     </modules>

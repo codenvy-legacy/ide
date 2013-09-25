@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.java.client;
 
@@ -29,6 +28,7 @@ import com.codenvy.ide.ext.java.client.internal.compiler.env.AccessRestriction;
 import com.codenvy.ide.ext.java.client.internal.compiler.env.IBinaryMethod;
 import com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.ext.java.client.internal.compiler.env.NameEnvironmentAnswer;
+import com.codenvy.ide.ext.java.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.shared.*;
 import com.codenvy.ide.json.JsonStringSet;
 import com.codenvy.ide.json.JsonStringSet.IterationCallback;
@@ -37,6 +37,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPStatus;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestBuilder;
@@ -45,10 +46,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.Splittable;
-import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import java.util.HashSet;
 import java.util.List;
@@ -63,9 +60,9 @@ import java.util.Set;
  */
 public class NameEnvironment implements INameEnvironment {
 
-    private static final String GET_CLASS_URL = "/ide/code-assistant/java/class-description?fqn=";
+    private static final String GET_CLASS_URL = "/code-assistant/java/class-description?fqn=";
 
-    private static final String FIND_CLASS_BY_PREFIX = "/ide/code-assistant/java/find-by-prefix/";
+    private static final String FIND_CLASS_BY_PREFIX = "/code-assistant/java/find-by-prefix/";
 
     protected Loader loader;
 
@@ -73,11 +70,11 @@ public class NameEnvironment implements INameEnvironment {
 
     private String projectId;
 
+    private String wsName;
+
     private static Set<String> blackSet = new HashSet<String>();
 
     private static Set<String> packages = new HashSet<String>();
-
-    private final JavaAutoBeanFactory autoBeanFactory;
 
     public static void clearFQNBlackList() {
         blackSet.clear();
@@ -86,10 +83,11 @@ public class NameEnvironment implements INameEnvironment {
     /**
      *
      */
-    public NameEnvironment(String projectId, JavaAutoBeanFactory autoBeanFactory, String restContenxt) {
+    public NameEnvironment(String projectId, String restContenxt) {
         this.projectId = projectId;
-        this.autoBeanFactory = autoBeanFactory;
+        //this.autoBeanFactory = autoBeanFactory;
         restServiceContext = restContenxt;
+        wsName = '/' + Utils.getWorkspaceName();
     }
 
     /**
@@ -103,7 +101,7 @@ public class NameEnvironment implements INameEnvironment {
      */
     public void getClassDescription(String fqn, String projectId, AsyncRequestCallback<TypeInfo> callback) {
         String url =
-                restServiceContext + GET_CLASS_URL + fqn + "&projectid=" + projectId + "&vfsid="
+                restServiceContext + wsName + GET_CLASS_URL + fqn + "&projectid=" + projectId + "&vfsid="
                 + "dev-monit";
         int status[] = {HTTPStatus.NO_CONTENT, HTTPStatus.OK};
         callback.setSuccessCodes(status);
@@ -126,7 +124,7 @@ public class NameEnvironment implements INameEnvironment {
      */
     public void findClassesByPrefix(String prefix, String projectId, AsyncRequestCallback<TypesList> callback) {
         String url =
-                restServiceContext + FIND_CLASS_BY_PREFIX + prefix + "?where=className" + "&projectid=" + projectId
+                restServiceContext + wsName + FIND_CLASS_BY_PREFIX + prefix + "?where=className" + "&projectid=" + projectId
                 //TODO configure vfs id
                 + "&vfsid=" + "dev-monit";
         try {
@@ -280,7 +278,7 @@ public class NameEnvironment implements INameEnvironment {
             }
         }
         String url =
-                restServiceContext + "/ide/code-assistant/java/classes-by-prefix" + "?prefix=" + new String(simpleName)
+                restServiceContext + wsName + "/code-assistant/java/classes-by-prefix" + "?prefix=" + new String(simpleName)
                 + "&projectid=" + projectId + "&vfsid=" + "dev-monit";
         try {
             List<JSONObject> typesByNamePrefix =
@@ -394,7 +392,6 @@ public class NameEnvironment implements INameEnvironment {
         if (qualifiedName.length == 0) {
             return;
         }
-        AutoBean<TypesList> autoBean = autoBeanFactory.types();
         String searchType = convertSearchFilterToModelFilter(searchFor);
         String url = null;
         if (searchType == null) {
@@ -406,59 +403,25 @@ public class NameEnvironment implements INameEnvironment {
                 typeSearch = "fqn";
             }
             url =
-                    restServiceContext + "/ide/code-assistant/java/find-by-prefix/" + new String(qualifiedName) + "?where="
+                    restServiceContext + wsName + "/code-assistant/java/find-by-prefix/" + new String(qualifiedName) + "?where="
                     + typeSearch + "&projectid=" + projectId + "&vfsid=" + "dev-monit";
         } else {
             url =
-                    restServiceContext + "/ide/code-assistant/java/find-by-type/" + searchType + "?prefix="
+                    restServiceContext + wsName + "/code-assistant/java/find-by-type/" + searchType + "?prefix="
                     + new String(qualifiedName) + "&projectid=" + projectId + "&vfsid="
                     + "dev-monit";
         }
         try {
 
             String typesJson = runSyncReques(url);
-            Splittable data = StringQuoter.split(typesJson);
-            AutoBeanCodex.decodeInto(data, autoBean);
+            DtoClientImpls.TypesListImpl autoBean = DtoClientImpls.TypesListImpl.deserialize(typesJson);
 
-            for (ShortTypeInfo info : autoBean.as().getTypes()) {
-
-                requestor
-                        .acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(), info.getName()
-                                                                                                                    .substring(
-                                                                                                                            info.getName()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                                                                                                .lastIndexOf(
-                                                                                                                                        ".") +
-                                                                                                                            1)
-                                                                                                                    .toCharArray(), null,
-                                    info.getModifiers(), null);
+            for (ShortTypeInfo info : autoBean.getTypes().asIterable()) {
+                requestor.acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(),
+                                     info.getName().substring(info.getName().lastIndexOf(".") + 1).toCharArray(),
+                                     null,
+                                     info.getModifiers(),
+                                     null);
             }
             TypeInfoStorage.get().setShortTypesInfo(typesJson);
         } catch (Throwable e) {

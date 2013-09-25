@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.git.client;
 
@@ -76,6 +75,9 @@ public interface GitLocalizationConstant extends Messages {
 
     @Key("button.merge")
     String buttonMerge();
+
+    @Key("button.finish")
+    String finishButton();
 
     // MESSAGES
 
@@ -180,6 +182,9 @@ public interface GitLocalizationConstant extends Messages {
 
     @Key("messages.reset_files_successfully")
     String resetFilesSuccessfully();
+
+    @Key("messages.nothing_to_reset")
+    String nothingToReset();
 
     @Key("messages.reset_successfully")
     String resetSuccessfully();
@@ -708,4 +713,84 @@ public interface GitLocalizationConstant extends Messages {
 
     @Key("control.ro.url.prompt")
     String projectReadOnlyGitUrlPrompt();
+
+    /*
+     * CloneRepositoryView
+     */
+    @Key("noIncorrectProjectNameMessage")
+    String noIncorrectProjectNameMessage();
+
+    @Key("noIncorrectProjectNameTitle")
+    String noIncorrectProjectNameTitle();
+
+    @Key("projectNameStartWith_Message")
+    String projectNameStartWith_Message();
+
+    // Welcome page
+
+    @Key("welcome.clone.title")
+    String welcomeCloneTitle();
+
+    @Key("welcome.clone.text")
+    String welcomeCloneText();
+
+    @Key("welcome.import.title")
+    String welcomeImportTitle();
+
+    @Key("welcome.import.text")
+    String welcomeImportText();
+
+    /*
+     * ImportFromGitHub
+     */
+    @Key("import.github.title")
+    String importFromGithubTitle();
+
+    @Key("import.github.account")
+    String importFromGithubAccount();
+
+    @Key("import.github.selectProjectType")
+    String importFromGithubSelectProjectType();
+
+    @Key("import.github.login")
+    String importFromGithubLogin();
+
+    @Key("import.github.login.failed")
+    String importFromGithubLoginFailed();
+
+    @Key("git.read.only")
+    String gitReadOnly();
+
+    @Key("user.not.found")
+    String userNotFound();
+
+    @Key("login.oauth.title")
+    String loginOAuthTitle();
+
+    @Key("login.oauth.label")
+    String loginOAuthLabel();
+
+    /*
+     * Project
+     */
+    @Key("project.name")
+    String projectName();
+
+    /*
+     * SamplesListGrid
+     */
+    @Key("samplesListGrid.column.name")
+    String samplesListRepositoryColumn();
+
+    @Key("samplesListGrid.column.description")
+    String samplesListDescriptionColumn();
+
+    @Key("samplesListGrid.column.type")
+    String samplesListTypeColumn();
+
+    @Key("github.sshkey.title")
+    String githubSshKeyTitle();
+
+    @Key("github.sshkey.label")
+    String githubSshKeyLabel();
 }

@@ -15,11 +15,7 @@
 package com.codenvy.ide.ui;
 
 import elemental.dom.Node;
-import elemental.events.Event;
-import elemental.events.EventListener;
-import elemental.events.EventRemover;
-import elemental.events.EventTarget;
-import elemental.events.MouseEvent;
+import elemental.events.*;
 import elemental.html.Element;
 import elemental.util.Timer;
 

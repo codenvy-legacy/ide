@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.java.jdi.client;
 
@@ -32,8 +31,7 @@ import com.codenvy.ide.ext.java.jdi.client.fqn.JavaFqnResolver;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_TOOLBAR;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN;
+import static com.codenvy.ide.api.ui.action.IdeActions.*;
 import static com.codenvy.ide.extension.maven.client.BuilderExtension.SPRING_APPLICATION_PROJECT_TYPE;
 import static com.codenvy.ide.rest.MimeType.APPLICATION_JAVA;
 
@@ -55,25 +53,38 @@ public class JavaRuntimeExtension {
     public static final String APPLICATION_STOP_CHANNEL = "runner:application-stopped:";
 
     @Inject
-    public JavaRuntimeExtension(ActionManager actionManager, RunAction action, DebugAction debugAction, DebuggerManager debuggerManager,
+    public JavaRuntimeExtension(ActionManager actionManager, RunAction runAction, DebugAction debugAction, DebuggerManager debuggerManager,
                                 DebuggerPresenter debuggerPresenter, FqnResolverFactory resolverFactory, JavaFqnResolver javaFqnResolver,
                                 StopAction stopAction, LogsAction logsAction) {
-        actionManager.registerAction("runJavaProject", action);
+        actionManager.registerAction("runJavaProject", runAction);
         actionManager.registerAction("debugJavaProject", debugAction);
         actionManager.registerAction("stopJavaProject", stopAction);
         actionManager.registerAction("logsJavaProject", logsAction);
-        DefaultActionGroup run = (DefaultActionGroup)actionManager.getAction(GROUP_RUN);
-        run.add(action);
+        DefaultActionGroup run = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
+        run.add(runAction);
         run.add(debugAction);
         run.add(stopAction);
         run.add(logsAction);
 
         DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);
-        DefaultActionGroup runGroup = new DefaultActionGroup(GROUP_RUN, false, actionManager);
-        actionManager.registerAction(GROUP_RUN, runGroup);
-        runGroup.add(action);
+        DefaultActionGroup runGroup = new DefaultActionGroup(GROUP_RUN_TOOLBAR, false, actionManager);
+        actionManager.registerAction(GROUP_RUN_TOOLBAR, runGroup);
+        runGroup.add(runAction);
         runGroup.add(debugAction);
         mainToolbarGroup.add(runGroup);
+
+        DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
+
+        DefaultActionGroup runContextGroup = new DefaultActionGroup(GROUP_RUN_CONTEXT_MENU, false, actionManager);
+        actionManager.registerAction(GROUP_RUN_CONTEXT_MENU, runContextGroup);
+
+        runContextGroup.addSeparator();
+        runContextGroup.add(runAction);
+        runContextGroup.add(debugAction);
+        runContextGroup.add(stopAction);
+        runContextGroup.add(logsAction);
+
+        contextMenuGroup.add(runContextGroup);
 
         debuggerManager.registeredDebugger(SPRING_APPLICATION_PROJECT_TYPE, debuggerPresenter);
 

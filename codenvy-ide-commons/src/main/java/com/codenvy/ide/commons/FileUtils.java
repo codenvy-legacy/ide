@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.commons;
 
@@ -22,6 +21,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -56,13 +56,34 @@ public class FileUtils {
      * @return <code>true</code> if specified File was deleted and <code>false</code> otherwise
      */
     public static boolean deleteRecursive(File fileOrDirectory) {
+        return deleteRecursive(fileOrDirectory, true);
+    }
+
+    /**
+     * Remove specified file or directory.
+     *
+     * @param fileOrDirectory
+     *         the file or directory to cancel
+     * @param readSymlinks
+     *         if <code>true</code> - when <code>fileOrDirectory</code> represents a symbolic link
+     *         to a folder then all child elements of a target folder will be deleted,
+     *         if <code>false</code> - when <code>fileOrDirectory</code> represents a symbolic link
+     *         to a folder then target folder's content will not be read, just symbolic link itself will be deleted
+     * @return <code>true</code> if specified File was deleted and <code>false</code> otherwise
+     */
+    public static boolean deleteRecursive(File fileOrDirectory, boolean readSymlinks) {
         if (fileOrDirectory.isDirectory()) {
+            // If fileOrDirectory represents a symbolic link to a folder, do not read a target folder content.
+            // Just remove a symbolic link itself.
+            if (!readSymlinks && Files.isSymbolicLink(fileOrDirectory.toPath())) {
+                return !fileOrDirectory.exists() || fileOrDirectory.delete();
+            }
             File[] list = fileOrDirectory.listFiles();
             if (list == null) {
                 return false;
             }
             for (File f : list) {
-                if (!deleteRecursive(f)) {
+                if (!deleteRecursive(f, readSymlinks)) {
                     return false;
                 }
             }

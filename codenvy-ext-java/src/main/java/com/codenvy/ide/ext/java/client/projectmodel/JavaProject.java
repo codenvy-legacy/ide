@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2003-2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
@@ -117,41 +118,39 @@ public class JavaProject extends Project {
             final Folder packageParent = folderParent;
             final String path = packagePartName.replaceAll("\\.", "/");
             // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<Package> internalCallback =
-                    new AsyncRequestCallback<Package>(new PackageUnmarshaller(new Package())) {
-                        @Override
-                        protected void onSuccess(final Package pack) {
-
-                            if (path.contains("/")) {
-                                // refresh tree, cause additional hierarchy folders my have been created
-                                refreshTree(parent, new AsyncCallback<Folder>() {
-                                    @Override
-                                    public void onSuccess(Folder result) {
-                                        Package newPackage = (Package)parent.findResourceById(pack.getId());
-                                        eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newPackage));
-                                        callback.onSuccess(newPackage);
-                                    }
-
-                                    @Override
-                                    public void onFailure(Throwable exception) {
-                                        callback.onFailure(exception);
-                                    }
-                                });
-                            } else {
-                                // add to the list of items
-                                parent.addChild(pack);
-                                // set proper parent project
-                                pack.setProject(JavaProject.this);
-                                eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(pack));
-                                callback.onSuccess(pack);
+            AsyncRequestCallback<Package> internalCallback = new AsyncRequestCallback<Package>(new PackageUnmarshaller()) {
+                @Override
+                protected void onSuccess(final Package pack) {
+                    if (path.contains("/")) {
+                        // refresh tree, cause additional hierarchy folders my have been created
+                        refreshTree(parent, new AsyncCallback<Folder>() {
+                            @Override
+                            public void onSuccess(Folder result) {
+                                Package newPackage = (Package)parent.findResourceById(pack.getId());
+                                eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newPackage));
+                                callback.onSuccess(newPackage);
                             }
-                        }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            callback.onFailure(exception);
-                        }
-                    };
+                            @Override
+                            public void onFailure(Throwable exception) {
+                                callback.onFailure(exception);
+                            }
+                        });
+                    } else {
+                        // add to the list of items
+                        parent.addChild(pack);
+                        // set proper parent project
+                        pack.setProject(JavaProject.this);
+                        eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(pack));
+                        callback.onSuccess(pack);
+                    }
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            };
 
             String url = folderParent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref();
             String urlString = URL.decode(url).replace("[name]", path);
@@ -184,7 +183,7 @@ public class JavaProject extends Project {
             checkCompilationUnitName(name);
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<CompilationUnit> internalCallback =
-                    new AsyncRequestCallback<CompilationUnit>(new CompilationUnitUnmarshaller(new CompilationUnit())) {
+                    new AsyncRequestCallback<CompilationUnit>(new CompilationUnitUnmarshaller()) {
                         @Override
                         protected void onSuccess(CompilationUnit newCU) {
                             // add to the list of items

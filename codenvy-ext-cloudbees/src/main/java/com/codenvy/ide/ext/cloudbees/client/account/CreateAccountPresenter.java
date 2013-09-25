@@ -1,24 +1,24 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.cloudbees.client.account;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientService;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesLocalizationConstant;
@@ -33,6 +33,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Presenter for creating user account on CloudBees.
  *
@@ -43,27 +46,27 @@ import com.google.web.bindery.event.shared.EventBus;
 public class CreateAccountPresenter implements CreateAccountView.ActionDelegate {
     private CreateAccountView             view;
     private EventBus                      eventBus;
-    private ConsolePart                   console;
     private CloudBeesClientService        service;
     private CloudBeesLocalizationConstant constant;
+    private NotificationManager           notificationManager;
 
     /**
      * Create presenter.
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param service
+     * @param notificationManager
      */
     @Inject
-    protected CreateAccountPresenter(CreateAccountView view, EventBus eventBus, ConsolePart console, CloudBeesLocalizationConstant constant,
-                                     CloudBeesClientService service) {
+    protected CreateAccountPresenter(CreateAccountView view, EventBus eventBus, CloudBeesLocalizationConstant constant,
+                                     CloudBeesClientService service, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
         this.service = service;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -133,25 +136,27 @@ public class CreateAccountPresenter implements CreateAccountView.ActionDelegate 
         account.setName(view.getAccountName());
         account.setCompany(view.getCompany());
 
-        DtoClientImpls.CloudBeesAccountImpl cloudBeesAccount = DtoClientImpls.CloudBeesAccountImpl.make();
-        CloudBeesAccountUnmarshaller unmarshaller = new CloudBeesAccountUnmarshaller(cloudBeesAccount);
+        CloudBeesAccountUnmarshaller unmarshaller = new CloudBeesAccountUnmarshaller();
 
         try {
             service.createAccount(account, new AsyncRequestCallback<CloudBeesAccount>(unmarshaller) {
                 @Override
                 protected void onSuccess(CloudBeesAccount result) {
-                    console.print(constant.createAccountSuccess(result.getName()));
+                    Notification notification = new Notification(constant.createAccountSuccess(result.getName()), INFO);
+                    notificationManager.showNotification(notification);
                     addUserToAccount(result);
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
                 }
             });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -174,25 +179,27 @@ public class CreateAccountPresenter implements CreateAccountView.ActionDelegate 
             user.setRole("admin");
         }
 
-        DtoClientImpls.CloudBeesUserImpl cloudBeesUser = DtoClientImpls.CloudBeesUserImpl.make();
-        CloudBeesUserUnmarshaller unmarshaller = new CloudBeesUserUnmarshaller(cloudBeesUser);
+        CloudBeesUserUnmarshaller unmarshaller = new CloudBeesUserUnmarshaller();
 
         try {
             service.addUserToAccount(account.getName(), user, isExisting, new AsyncRequestCallback<CloudBeesUser>(unmarshaller) {
                 @Override
                 protected void onSuccess(CloudBeesUser result) {
-                    console.print(constant.addUserSuccess(result.getEmail()));
+                    Notification notification = new Notification(constant.addUserSuccess(result.getEmail()), ERROR);
+                    notificationManager.showNotification(notification);
                     view.close();
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
                 }
             });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }

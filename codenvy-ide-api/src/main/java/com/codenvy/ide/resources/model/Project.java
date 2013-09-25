@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2003-2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero GeneralLicense
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU GeneralLicense for more details.
- *
- * You should have received a copy of the GNU GeneralLicense
- * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.resources.model;
 
@@ -181,13 +182,12 @@ public class Project extends Folder {
      * @param callback
      * @throws ResourceException
      */
-    public void createFile(final Folder parent, String name, String content, String mimeType,
-                           final AsyncCallback<File> callback) {
+    public void createFile(final Folder parent, String name, String content, String mimeType, final AsyncCallback<File> callback) {
         try {
             checkItemValid(parent);
 
             // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<File> internalCallback = new AsyncRequestCallback<File>(new FileUnmarshaller(new File())) {
+            AsyncRequestCallback<File> internalCallback = new AsyncRequestCallback<File>(new FileUnmarshaller()) {
                 @Override
                 protected void onSuccess(File newFile) {
                     // add to the list of items
@@ -228,40 +228,39 @@ public class Project extends Folder {
             checkItemValid(parent);
 
             // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<Folder> internalCallback =
-                    new AsyncRequestCallback<Folder>(new FolderUnmarshaller(new Folder())) {
-                        @Override
-                        protected void onSuccess(final Folder folder) {
-                            if (name.contains("/")) {
-                                // refresh tree, cause additional hierarchy folders my have been created
-                                refreshTree(parent, new AsyncCallback<Folder>() {
-                                    @Override
-                                    public void onSuccess(Folder result) {
-                                        Folder newFolder = (Folder)result.findResourceById(folder.getId());
-                                        eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newFolder));
-                                        callback.onSuccess(newFolder);
-                                    }
-
-                                    @Override
-                                    public void onFailure(Throwable exception) {
-                                        callback.onFailure(exception);
-                                    }
-                                });
-                            } else {
-                                // add to the list of items
-                                parent.addChild(folder);
-                                // set proper parent project
-                                folder.setProject(Project.this);
-                                eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(folder));
-                                callback.onSuccess(folder);
+            AsyncRequestCallback<Folder> internalCallback = new AsyncRequestCallback<Folder>(new FolderUnmarshaller()) {
+                @Override
+                protected void onSuccess(final Folder folder) {
+                    if (name.contains("/")) {
+                        // refresh tree, cause additional hierarchy folders my have been created
+                        refreshTree(parent, new AsyncCallback<Folder>() {
+                            @Override
+                            public void onSuccess(Folder result) {
+                                Folder newFolder = (Folder)result.findResourceById(folder.getId());
+                                eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newFolder));
+                                callback.onSuccess(newFolder);
                             }
-                        }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            callback.onFailure(exception);
-                        }
-                    };
+                            @Override
+                            public void onFailure(Throwable exception) {
+                                callback.onFailure(exception);
+                            }
+                        });
+                    } else {
+                        // add to the list of items
+                        parent.addChild(folder);
+                        // set proper parent project
+                        folder.setProject(Project.this);
+                        eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(folder));
+                        callback.onSuccess(folder);
+                    }
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            };
 
             String url = parent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref();
             String urlString = URL.decode(url).replace("[name]", name);
@@ -381,18 +380,17 @@ public class Project extends Folder {
             }
 
             // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<File> internalCallback =
-                    new AsyncRequestCallback<File>(new FileContentUnmarshaller(file)) {
-                        @Override
-                        protected void onSuccess(File result) {
-                            callback.onSuccess(result);
-                        }
+            AsyncRequestCallback<File> internalCallback = new AsyncRequestCallback<File>(new FileContentUnmarshaller(file)) {
+                @Override
+                protected void onSuccess(File result) {
+                    callback.onSuccess(result);
+                }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            callback.onFailure(exception);
-                        }
-                    };
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            };
 
             String url = file.getLinkByRelation(Link.REL_CONTENT).getHref();
             loader.setMessage("Loading content...");
@@ -409,21 +407,19 @@ public class Project extends Folder {
      */
     public void updateContent(File file, final AsyncCallback<File> callback) {
         try {
-
             checkItemValid(file);
             // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<File> internalCallback =
-                    new AsyncRequestCallback<File>(new FileContentUnmarshaller(file)) {
-                        @Override
-                        protected void onSuccess(File result) {
-                            callback.onSuccess(result);
-                        }
+            AsyncRequestCallback<File> internalCallback = new AsyncRequestCallback<File>(new FileContentUnmarshaller(file)) {
+                @Override
+                protected void onSuccess(File result) {
+                    callback.onSuccess(result);
+                }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            callback.onFailure(exception);
-                        }
-                    };
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            };
 
             // TODO check with lock
             String url = file.getLinkByRelation(Link.REL_CONTENT).getHref();
@@ -445,18 +441,17 @@ public class Project extends Folder {
         try {
             checkItemValid(file);
             // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<StringBuilder> internalCallback =
-                    new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller()) {
-                        @Override
-                        protected void onSuccess(StringBuilder result) {
-                            callback.onSuccess(result.toString());
-                        }
+            AsyncRequestCallback<String> internalCallback = new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                @Override
+                protected void onSuccess(String result) {
+                    callback.onSuccess(result);
+                }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            callback.onFailure(exception);
-                        }
-                    };
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            };
 
             String url = file.getLinkByRelation(Link.REL_LOCK).getHref();
             loader.setMessage("Locking file...");
@@ -504,8 +499,7 @@ public class Project extends Folder {
      * @param callback
      * @throws ResourceException
      */
-    public void move(final Resource source, final Folder destination, String lockToken,
-                     final AsyncCallback<Resource> callback) {
+    public void move(final Resource source, final Folder destination, String lockToken, final AsyncCallback<Resource> callback) {
         try {
             checkItemValid(source);
             checkItemValid(destination);
@@ -547,9 +541,7 @@ public class Project extends Folder {
      * @param callback
      * @throws ResourceException
      */
-    public void copy(final Resource source, final Folder destination, final AsyncCallback<Resource> callback)
-
-    {
+    public void copy(final Resource source, final Folder destination, final AsyncCallback<Resource> callback) {
         callback.onFailure(new Exception("copy not supported"));
     }
 
@@ -561,8 +553,7 @@ public class Project extends Folder {
      * @param callback
      * @throws RequestException
      */
-    public void rename(final Resource resource, final String newname, String lockToken,
-                       final AsyncCallback<Resource> callback) {
+    public void rename(final Resource resource, final String newname, String lockToken, final AsyncCallback<Resource> callback) {
         try {
             checkItemValid(resource);
 

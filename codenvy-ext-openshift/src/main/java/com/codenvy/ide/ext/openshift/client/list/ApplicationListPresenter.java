@@ -1,24 +1,24 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.openshift.client.list;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.openshift.client.OpenShiftAsyncRequestCallback;
@@ -31,7 +31,6 @@ import com.codenvy.ide.ext.openshift.client.info.ApplicationProperty;
 import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.openshift.client.login.LoginPresenter;
 import com.codenvy.ide.ext.openshift.client.marshaller.UserInfoUnmarshaller;
-import com.codenvy.ide.ext.openshift.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
 import com.codenvy.ide.ext.openshift.shared.OpenShiftEmbeddableCartridge;
 import com.codenvy.ide.ext.openshift.shared.RHUserInfo;
@@ -43,6 +42,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * Application list window.
  *
@@ -52,7 +54,6 @@ import com.google.web.bindery.event.shared.EventBus;
 public class ApplicationListPresenter implements ApplicationListView.ActionDelegate {
     private ApplicationListView           view;
     private EventBus                      eventBus;
-    private ConsolePart                   console;
     private OpenShiftClientServiceImpl    service;
     private OpenShiftLocalizationConstant constant;
     private LoginPresenter                loginPresenter;
@@ -60,13 +61,14 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
     private CreateDomainPresenter         createDomainPresenter;
     private CreateCartridgePresenter      createCartridgePresenter;
     private ApplicationInfoPresenter      applicationInfoPresenter;
+    private NotificationManager           notificationManager;
+
 
     /**
      * Create presenter.
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param service
      * @param constant
      * @param loginPresenter
@@ -74,16 +76,16 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
      * @param createDomainPresenter
      * @param createCartridgePresenter
      * @param applicationInfoPresenter
+     * @param notificationManager
      */
     @Inject
-    protected ApplicationListPresenter(ApplicationListView view, EventBus eventBus, ConsolePart console, OpenShiftClientServiceImpl service,
+    protected ApplicationListPresenter(ApplicationListView view, EventBus eventBus, OpenShiftClientServiceImpl service,
                                        OpenShiftLocalizationConstant constant, LoginPresenter loginPresenter,
                                        ResourceProvider resourceProvider, CreateDomainPresenter createDomainPresenter,
                                        CreateCartridgePresenter createCartridgePresenter,
-                                       ApplicationInfoPresenter applicationInfoPresenter) {
+                                       ApplicationInfoPresenter applicationInfoPresenter, NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
-        this.console = console;
         this.service = service;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
@@ -91,6 +93,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         this.createDomainPresenter = createDomainPresenter;
         this.createCartridgePresenter = createCartridgePresenter;
         this.applicationInfoPresenter = applicationInfoPresenter;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -181,17 +184,19 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
 
         try {
             service.destroyApplication(application.getName(), vfsId, projectId,
-                                       new OpenShiftAsyncRequestCallback<String>(null, loggedInHandler, null, eventBus, console, constant,
-                                                                                 loginPresenter) {
+                                       new OpenShiftAsyncRequestCallback<String>(null, loggedInHandler, null, eventBus,
+                                                                                 loginPresenter, notificationManager) {
                                            @Override
                                            protected void onSuccess(String result) {
                                                String msg = constant.deleteApplicationSuccessfullyDeleted(application.getName());
-                                               console.print(msg);
+                                               Notification notification = new Notification(msg, INFO);
+                                               notificationManager.showNotification(notification);
                                                getApplications();
                                            }
                                        });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -208,16 +213,18 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
 
         try {
             service.startCartridge(view.getSelectedApplication().getName(), cartridge.getName(),
-                                   new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, console, constant,
-                                                                           loginPresenter) {
+                                   new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, loginPresenter,
+                                                                           notificationManager) {
                                        @Override
                                        protected void onSuccess(Void result) {
                                            String msg = constant.cartridgeSuccessfullyStarted(cartridge.getName());
-                                           console.print(msg);
+                                           Notification notification = new Notification(msg, INFO);
+                                           notificationManager.showNotification(notification);
                                        }
                                    });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -233,16 +240,18 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         };
         try {
             service.stopCartridge(view.getSelectedApplication().getName(), cartridge.getName(),
-                                  new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, console, constant,
-                                                                          loginPresenter) {
+                                  new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, loginPresenter,
+                                                                          notificationManager) {
                                       @Override
                                       protected void onSuccess(Void result) {
                                           String msg = constant.cartridgeSuccessfullyStopped(cartridge.getName());
-                                          console.print(msg);
+                                          Notification notification = new Notification(msg, INFO);
+                                          notificationManager.showNotification(notification);
                                       }
                                   });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -259,16 +268,18 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
 
         try {
             service.restartCartridge(view.getSelectedApplication().getName(), cartridge.getName(),
-                                     new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, console, constant,
-                                                                             loginPresenter) {
+                                     new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, loginPresenter,
+                                                                             notificationManager) {
                                          @Override
                                          protected void onSuccess(Void result) {
                                              String msg = constant.cartridgeSuccessfullyRestarted(cartridge.getName());
-                                             console.print(msg);
+                                             Notification notification = new Notification(msg, INFO);
+                                             notificationManager.showNotification(notification);
                                          }
                                      });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -285,16 +296,18 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
 
         try {
             service.reloadCartridge(view.getSelectedApplication().getName(), cartridge.getName(),
-                                    new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, console, constant,
-                                                                            loginPresenter) {
+                                    new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, loginPresenter,
+                                                                            notificationManager) {
                                         @Override
                                         protected void onSuccess(Void result) {
                                             String msg = constant.cartridgeSuccessfullyReloaded(cartridge.getName());
-                                            console.print(msg);
+                                            Notification notification = new Notification(msg, INFO);
+                                            notificationManager.showNotification(notification);
                                         }
                                     });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -311,17 +324,19 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
 
         try {
             service.deleteCartridge(view.getSelectedApplication().getName(), cartridge.getName(),
-                                    new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, console, constant,
-                                                                            loginPresenter) {
+                                    new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, loginPresenter,
+                                                                            notificationManager) {
                                         @Override
                                         protected void onSuccess(Void result) {
                                             String msg = constant.cartridgeSuccessfullyDeleted(cartridge.getName());
-                                            console.print(msg);
+                                            Notification notification = new Notification(msg, INFO);
+                                            notificationManager.showNotification(notification);
                                             getApplications();
                                         }
                                     });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -334,14 +349,12 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
                 getApplications();
             }
         };
+        UserInfoUnmarshaller unmarshaller = new UserInfoUnmarshaller();
 
         try {
-            DtoClientImpls.RHUserInfoImpl userInfo = DtoClientImpls.RHUserInfoImpl.make();
-            UserInfoUnmarshaller unmarshaller = new UserInfoUnmarshaller(userInfo);
-
             service.getUserInfo(true,
-                                new OpenShiftAsyncRequestCallback<RHUserInfo>(unmarshaller, loggedInHandler, null, eventBus, console,
-                                                                              constant, loginPresenter) {
+                                new OpenShiftAsyncRequestCallback<RHUserInfo>(unmarshaller, loggedInHandler, null, eventBus, loginPresenter,
+                                                                              notificationManager) {
                                     @Override
                                     protected void onSuccess(RHUserInfo result) {
                                         view.showDialog();
@@ -364,7 +377,8 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
                                     }
                                 });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }

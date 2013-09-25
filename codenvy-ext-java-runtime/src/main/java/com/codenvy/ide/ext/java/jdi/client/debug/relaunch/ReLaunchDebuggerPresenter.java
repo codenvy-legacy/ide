@@ -1,28 +1,27 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.java.jdi.client.debug.relaunch;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
 import com.codenvy.ide.ext.java.jdi.client.marshaller.DebuggerInfoUnmarshaller;
-import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.ApplicationInstance;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -31,6 +30,8 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Provides relaunch debugger process.
@@ -42,10 +43,10 @@ public class ReLaunchDebuggerPresenter implements ReLaunchDebuggerView.ActionDel
     private ReLaunchDebuggerView        view;
     private DebuggerClientService       service;
     private ApplicationInstance         instance;
-    private ConsolePart                 console;
+    private NotificationManager         notificationManager;
     private AsyncCallback<DebuggerInfo> callback;
     /** A timer for checking events. */
-    private Timer tryConnectDebuger = new Timer() {
+    private Timer tryConnectDebugger = new Timer() {
         @Override
         public void run() {
             connectDebugger();
@@ -57,20 +58,20 @@ public class ReLaunchDebuggerPresenter implements ReLaunchDebuggerView.ActionDel
      *
      * @param view
      * @param service
-     * @param console
+     * @param notificationManager
      */
     @Inject
-    protected ReLaunchDebuggerPresenter(ReLaunchDebuggerView view, DebuggerClientService service, ConsolePart console) {
+    protected ReLaunchDebuggerPresenter(ReLaunchDebuggerView view, DebuggerClientService service, NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
-        this.console = console;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {
-        tryConnectDebuger.cancel();
+        tryConnectDebugger.cancel();
         view.close();
         callback.onSuccess(null);
     }
@@ -82,29 +83,30 @@ public class ReLaunchDebuggerPresenter implements ReLaunchDebuggerView.ActionDel
         this.view.showDialog();
     }
 
-    /** Connect to debbuger. */
+    /** Connect to debugger. */
     protected void connectDebugger() {
-        DtoClientImpls.DebuggerInfoImpl debuggerInfo = DtoClientImpls.DebuggerInfoImpl.make();
-        DebuggerInfoUnmarshaller unmarshaller = new DebuggerInfoUnmarshaller(debuggerInfo);
+        DebuggerInfoUnmarshaller unmarshaller = new DebuggerInfoUnmarshaller();
 
         try {
             service.connect(instance.getDebugHost(), instance.getDebugPort(), new AsyncRequestCallback<DebuggerInfo>(unmarshaller) {
                 @Override
                 public void onSuccess(DebuggerInfo result) {
-                    tryConnectDebuger.cancel();
+                    tryConnectDebugger.cancel();
                     view.close();
                     callback.onSuccess(result);
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                     callback.onFailure(exception);
 
                 }
             });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             callback.onFailure(e);
         }
     }

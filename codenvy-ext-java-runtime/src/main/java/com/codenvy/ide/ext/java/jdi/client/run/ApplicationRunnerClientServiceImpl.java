@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.java.jdi.client.run;
 
@@ -26,6 +25,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.MessageBus;
@@ -71,7 +71,7 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
     @Inject
     protected ApplicationRunnerClientServiceImpl(MessageBus wsMessageBus, EventBus eventBus, JavaRuntimeLocalizationConstant constant,
                                                  Loader loader, @Named("restContext") String restContext) {
-        BASE_URL = "/ide" + "/java/runner";
+        BASE_URL = '/' + Utils.getWorkspaceName() + "/java/runner";
         this.wsMessageBus = wsMessageBus;
         this.eventBus = eventBus;
         this.constant = constant;
@@ -83,7 +83,7 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
     @Override
     public void runApplication(@NotNull String project, @NotNull String war, boolean useJRebel,
                                @NotNull AsyncRequestCallback<ApplicationInstance> callback) throws RequestException {
-        String requestUrl = BASE_URL + "/run?war=" + war;
+        String requestUrl = restContext + BASE_URL + "/run?war=" + war;
 
         String data = "";
         if (useJRebel) {
@@ -103,12 +103,12 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
                                  @NotNull RequestCallback<ApplicationInstance> callback) throws WebSocketException {
         String params = "?war=" + war;
 
-        String data = "";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("projectName", new JSONString(project));
         if (useJRebel) {
-            JSONObject jsonObject = new JSONObject();
             jsonObject.put("jrebel", new JSONString("true"));
-            data = jsonObject.toString();
         }
+        String data = jsonObject.toString();
 
         callback.setStatusHandler(new RunningAppStatusHandler(project, eventBus, constant));
 
@@ -124,14 +124,14 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
     @Override
     public void debugApplication(@NotNull String project, @NotNull String war, boolean useJRebel,
                                  @NotNull AsyncRequestCallback<ApplicationInstance> callback) throws RequestException {
-        String data = "";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("projectName", new JSONString(project));
         if (useJRebel) {
-            JSONObject jsonObject = new JSONObject();
             jsonObject.put("jrebel", new JSONString("true"));
-            data = jsonObject.toString();
         }
+        String data = jsonObject.toString();
 
-        String requestUrl = BASE_URL + "/debug?war=" + war + "&suspend=false";
+        String requestUrl = restContext + BASE_URL + "/debug?war=" + war + "&suspend=false";
         AsyncRequest.build(RequestBuilder.POST, requestUrl, true)
                     .requestStatusHandler(new RunningAppStatusHandler(project, eventBus, constant))
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
@@ -143,12 +143,12 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
                                    @NotNull RequestCallback<ApplicationInstance> callback) throws WebSocketException {
         String param = "?war=" + war + "&suspend=false";
 
-        String data = "";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("projectName", new JSONString(project));
         if (useJRebel) {
-            JSONObject jsonObject = new JSONObject();
             jsonObject.put("jrebel", new JSONString("true"));
-            data = jsonObject.toString();
         }
+        String data = jsonObject.toString();
 
         callback.setStatusHandler(new RunningAppStatusHandler(project, eventBus, constant));
 
@@ -162,7 +162,7 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
 
     /** {@inheritDoc} */
     @Override
-    public void getLogs(@NotNull String name, @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+    public void getLogs(@NotNull String name, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restContext + BASE_URL + "/logs";
         String params = "?name=" + name;
 
@@ -187,7 +187,7 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
     @Override
     public void updateApplication(@NotNull String name, @NotNull String war, @NotNull AsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = BASE_URL + "/update";
+        String url = restContext + BASE_URL + "/update";
         String params = "?name=" + name + "&war=" + war;
 
         loader.setMessage("Updating application...");

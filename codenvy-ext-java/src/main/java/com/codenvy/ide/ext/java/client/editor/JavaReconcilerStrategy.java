@@ -1,24 +1,23 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.java.client.editor;
 
-import com.codenvy.ide.ext.java.client.JavaAutoBeanFactory;
+import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.ext.java.client.NameEnvironment;
 import com.codenvy.ide.ext.java.client.TypeInfoStorage;
 import com.codenvy.ide.ext.java.client.core.IProblemRequestor;
@@ -28,8 +27,6 @@ import com.codenvy.ide.ext.java.client.core.dom.ASTNode;
 import com.codenvy.ide.ext.java.client.core.dom.ASTParser;
 import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment;
-
-import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.text.Document;
@@ -43,7 +40,6 @@ import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.core.shared.GWT;
 
 
 /**
@@ -81,8 +77,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider 
         this.document = document;
         file = editor.getEditorInput().getFile();
         nameEnvironment =
-                new NameEnvironment(file.getProject().getId(), GWT.<JavaAutoBeanFactory>create(JavaAutoBeanFactory.class),
-                                    "/rest");
+                new NameEnvironment(file.getProject().getId(), "/ide/rest");
         TypeInfoStorage.get().setPackages(file.getProject().getId(), JsonCollections.createStringSet());
     }
 

@@ -1,24 +1,25 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.java.jdi.client.run;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -51,6 +52,11 @@ import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
+import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+
 /**
  * The presenter provides run java application.
  *
@@ -72,8 +78,10 @@ public class RunnerPresenter implements ProjectBuiltHandler {
     private JavaRuntimeLocalizationConstant constant;
     private ConsolePart                     console;
     private MessageBus                      messageBus;
+    private NotificationManager             notificationManager;
     /** Handler for processing debugger disconnected event. */
     private SubscriptionHandler<Object>     applicationStoppedHandler;
+    private Notification                    notification;
 
     /**
      * Create presenter.
@@ -85,11 +93,12 @@ public class RunnerPresenter implements ProjectBuiltHandler {
      * @param constant
      * @param console
      * @param messageBus
+     * @param notificationManager
      */
     @Inject
     protected RunnerPresenter(@Named("restContext") String restContext, ApplicationRunnerClientService service, EventBus eventBus,
                               ResourceProvider resourceProvider, JavaRuntimeLocalizationConstant constant, ConsolePart console,
-                              MessageBus messageBus) {
+                              MessageBus messageBus, NotificationManager notificationManager) {
         this.restContext = restContext;
         this.service = service;
         this.eventBus = eventBus;
@@ -97,6 +106,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
         this.constant = constant;
         this.console = console;
         this.messageBus = messageBus;
+        this.notificationManager = notificationManager;
         applicationStoppedHandler = new SubscriptionHandler<Object>() {
             @Override
             protected void onMessageReceived(Object result) {
@@ -133,7 +143,8 @@ public class RunnerPresenter implements ProjectBuiltHandler {
         projectBuildHandler.removeHandler();
         BuildStatus buildStatus = event.getBuildStatus();
         if (buildStatus.getStatus().equals(BuildStatus.Status.SUCCESSFUL)) {
-            console.print(constant.applicationStarting());
+            notification = new Notification(constant.applicationStarting(), PROGRESS);
+            notificationManager.showNotification(notification);
 
             runApplication(buildStatus.getDownloadUrl());
         }
@@ -146,8 +157,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
      *         location of .war file
      */
     private void runApplication(@NotNull String warUrl) {
-        DtoClientImpls.ApplicationInstanceImpl applicationInstance = DtoClientImpls.ApplicationInstanceImpl.make();
-        ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS(applicationInstance);
+        ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS();
 
         try {
             service.runApplicationWS(project.getName(), warUrl, isUseJRebel(), new RequestCallback<ApplicationInstance>(unmarshaller) {
@@ -158,7 +168,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
                     // ide/java/runner/stop?name=app-zcuz5b5wawcn5u23
                     // but it must be like:
                     // http://127.0.0.1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
-                    if (!result.getStopURL().matches("http[s]?://.+/IDE/rest/private/.*/stop\\?name=.+")) {
+                    if (!result.getStopURL().matches("http[s]?://.+/ide/rest/.*/stop\\?name=.+")) {
                         String fixedStopURL =
                                 Window.Location.getProtocol() + "//" + Window.Location.getHost() + restContext + "/" + result.getStopURL();
                         ((DtoClientImpls.ApplicationInstanceImpl)result).setStopURL(fixedStopURL);
@@ -184,8 +194,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
      *         location of .war file
      */
     private void runApplicationREST(@NotNull String warUrl) {
-        DtoClientImpls.ApplicationInstanceImpl applicationInstance = DtoClientImpls.ApplicationInstanceImpl.make();
-        ApplicationInstanceUnmarshaller unmarshaller = new ApplicationInstanceUnmarshaller(applicationInstance);
+        ApplicationInstanceUnmarshaller unmarshaller = new ApplicationInstanceUnmarshaller();
 
         try {
             service.runApplication(project.getName(), warUrl, isUseJRebel(), new AsyncRequestCallback<ApplicationInstance>(unmarshaller) {
@@ -234,6 +243,9 @@ public class RunnerPresenter implements ProjectBuiltHandler {
         msg += "<br>" + constant.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
         console.print(msg);
 
+        notification.setStatus(FINISHED);
+        notification.setMessage(msg);
+
         try {
             applicationStoppedChannel = JavaRuntimeExtension.APPLICATION_STOP_CHANNEL + app.getName();
             messageBus.subscribe(applicationStoppedChannel, applicationStoppedHandler);
@@ -269,7 +281,8 @@ public class RunnerPresenter implements ProjectBuiltHandler {
         if (exception != null && exception.getMessage() != null) {
             msg += " : " + exception.getMessage();
         }
-        console.print(msg);
+        Notification notification = new Notification(msg, INFO);
+        notificationManager.showNotification(notification);
     }
 
     /**
@@ -301,7 +314,8 @@ public class RunnerPresenter implements ProjectBuiltHandler {
                     @Override
                     protected void onFailure(Throwable exception) {
                         String message = exception.getMessage() != null ? exception.getMessage() : constant.stopApplicationFailed();
-                        console.print(message);
+                        Notification notification = new Notification(message, ERROR);
+                        notificationManager.showNotification(notification);
 
                         if (exception instanceof ServerException) {
                             ServerException serverException = (ServerException)exception;
@@ -314,7 +328,8 @@ public class RunnerPresenter implements ProjectBuiltHandler {
                 });
             } catch (RequestException e) {
                 eventBus.fireEvent(new ExceptionThrownEvent(e));
-                console.print(e.getMessage());
+                Notification notification = new Notification(e.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
             }
         }
     }
@@ -327,7 +342,8 @@ public class RunnerPresenter implements ProjectBuiltHandler {
      */
     private void appStopped(@NotNull String appName) {
         String msg = constant.applicationStoped(appName);
-        console.print(msg);
+        Notification notification = new Notification(msg, INFO);
+        notificationManager.showNotification(notification);
         runningApp = null;
     }
 }

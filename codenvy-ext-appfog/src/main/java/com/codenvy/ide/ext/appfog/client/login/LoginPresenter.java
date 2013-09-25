@@ -1,24 +1,24 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.appfog.client.login;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.ext.appfog.client.AppFogExtension;
@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
 import com.codenvy.ide.ext.appfog.client.AppfogClientService;
 import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.marshaller.SystemInfoUnmarshaller;
-import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.SystemInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPStatus;
@@ -51,27 +50,27 @@ public class LoginPresenter implements LoginView.ActionDelegate {
     private AppfogClientService        service;
     private EventBus                   eventBus;
     private AppfogLocalizationConstant constant;
-    private ConsolePart                console;
+    private NotificationManager        notificationManager;
 
     /**
      * Create presenter.
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param service
      * @param constant
+     * @param notificationManager
      */
     @Inject
-    protected LoginPresenter(LoginView view, EventBus eventBus, ConsolePart console, AppfogClientService service,
-                             AppfogLocalizationConstant constant) {
+    protected LoginPresenter(LoginView view, EventBus eventBus, AppfogClientService service, AppfogLocalizationConstant constant,
+                             NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.service = service;
         this.constant = constant;
-        this.console = console;
         this.target = AppFogExtension.DEFAULT_SERVER;
+        this.notificationManager = notificationManager;
     }
 
     /** Shows dialog. */
@@ -105,20 +104,20 @@ public class LoginPresenter implements LoginView.ActionDelegate {
 
     /** Get AppFog system information to fill the login field, if user is logged in. */
     protected void getSystemInformation() {
-        DtoClientImpls.SystemInfoImpl systemInfo = DtoClientImpls.SystemInfoImpl.make();
-        SystemInfoUnmarshaller unmarshaller = new SystemInfoUnmarshaller(systemInfo);
+        SystemInfoUnmarshaller unmarshaller = new SystemInfoUnmarshaller();
 
         try {
             service.getSystemInfo(AppFogExtension.DEFAULT_SERVER,
                                   new AppfogAsyncRequestCallback<SystemInfo>(unmarshaller, loggedIn, loginCanceled, eventBus, constant,
-                                                                             console, this) {
+                                                                             this, notificationManager) {
                                       @Override
                                       protected void onSuccess(SystemInfo result) {
                                           view.setEmail(result.getUser());
                                       }
                                   });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), Notification.Type.ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -136,7 +135,9 @@ public class LoginPresenter implements LoginView.ActionDelegate {
                               @Override
                               protected void onSuccess(String result) {
                                   target = enteredServer;
-                                  console.print(constant.loginSuccess());
+                                  Notification notification = new Notification(constant.loginSuccess(), Notification.Type.INFO);
+                                  notificationManager.showNotification(notification);
+
                                   if (loggedIn != null) {
                                       loggedIn.onLoggedIn();
                                   }
@@ -167,7 +168,8 @@ public class LoginPresenter implements LoginView.ActionDelegate {
                                       // otherwise will be called method from superclass.
                                   }
                                   // TODO doesn't show invalid password error
-                                  console.print(exception.getMessage());
+                                  Notification notification = new Notification(exception.getMessage(), Notification.Type.ERROR);
+                                  notificationManager.showNotification(notification);
                                   eventBus.fireEvent(new ExceptionThrownEvent(exception));
                               }
                           });

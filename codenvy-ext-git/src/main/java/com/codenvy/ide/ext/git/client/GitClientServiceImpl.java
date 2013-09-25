@@ -1,40 +1,40 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.git.client;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.ext.git.client.add.AddRequestHandler;
 import com.codenvy.ide.ext.git.client.clone.CloneRequestStatusHandler;
 import com.codenvy.ide.ext.git.client.commit.CommitRequestHandler;
 import com.codenvy.ide.ext.git.client.fetch.FetchRequestHandler;
 import com.codenvy.ide.ext.git.client.init.InitRequestStatusHandler;
-import com.codenvy.ide.ext.git.client.marshaller.*;
 import com.codenvy.ide.ext.git.client.pull.PullRequestHandler;
 import com.codenvy.ide.ext.git.client.push.PushRequestHandler;
+import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.*;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.MessageBus;
@@ -47,6 +47,12 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.rest.HTTPHeader.ACCEPT;
+import static com.codenvy.ide.rest.HTTPHeader.CONTENTTYPE;
+import static com.codenvy.ide.rest.MimeType.APPLICATION_JSON;
+import static com.codenvy.ide.rest.MimeType.TEXT_PLAIN;
+import static com.google.gwt.http.client.RequestBuilder.POST;
+
 /**
  * Implementation of the {@link GitClientService}.
  *
@@ -55,30 +61,32 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class GitClientServiceImpl implements GitClientService {
-    public static final String ADD               = "/ide/git/add";
-    public static final String BRANCH_LIST       = "/ide/git/branch-list";
-    public static final String BRANCH_CHECKOUT   = "/ide/git/branch-checkout";
-    public static final String BRANCH_CREATE     = "/ide/git/branch-create";
-    public static final String BRANCH_DELETE     = "/ide/git/branch-delete";
-    public static final String BRANCH_RENAME     = "/ide/git/branch-rename";
-    public static final String CLONE             = "/ide/git/clone";
-    public static final String COMMIT            = "/ide/git/commit";
-    public static final String DIFF              = "/ide/git/diff";
-    public static final String FETCH             = "/ide/git/fetch";
-    public static final String INIT              = "/ide/git/init";
-    public static final String LOG               = "/ide/git/log";
-    public static final String MERGE             = "/ide/git/merge";
-    public static final String STATUS            = "/ide/git/status";
-    public static final String RO_URL            = "/ide/git/read-only-url";
-    public static final String PUSH              = "/ide/git/push";
-    public static final String PULL              = "/ide/git/pull";
-    public static final String REMOTE_LIST       = "/ide/git/remote-list";
-    public static final String REMOTE_ADD        = "/ide/git/remote-add";
-    public static final String REMOTE_DELETE     = "/ide/git/remote-delete";
-    public static final String REMOVE            = "/ide/git/rm";
-    public static final String RESET             = "/ide/git/reset";
-    public static final String COMMITERS         = "/ide/git/commiters";
-    public static final String DELETE_REPOSITORY = "/ide/git/delete-repository";
+    private static final String BASE_URL          = "/git";
+    public static final  String ADD               = BASE_URL + "/add";
+    public static final  String BRANCH_LIST       = BASE_URL + "/branch-list";
+    public static final  String BRANCH_CHECKOUT   = BASE_URL + "/branch-checkout";
+    public static final  String BRANCH_CREATE     = BASE_URL + "/branch-create";
+    public static final  String BRANCH_DELETE     = BASE_URL + "/branch-delete";
+    public static final  String BRANCH_RENAME     = BASE_URL + "/branch-rename";
+    public static final  String CLONE             = BASE_URL + "/clone";
+    public static final  String COMMIT            = BASE_URL + "/commit";
+    public static final  String DIFF              = BASE_URL + "/diff";
+    public static final  String FETCH             = BASE_URL + "/fetch";
+    public static final  String INIT              = BASE_URL + "/init";
+    public static final  String LOG               = BASE_URL + "/log";
+    public static final  String MERGE             = BASE_URL + "/merge";
+    public static final  String STATUS            = BASE_URL + "/status";
+    public static final  String RO_URL            = BASE_URL + "/read-only-url";
+    public static final  String PUSH              = BASE_URL + "/push";
+    public static final  String PULL              = BASE_URL + "/pull";
+    public static final  String REMOTE_LIST       = BASE_URL + "/remote-list";
+    public static final  String REMOTE_ADD        = BASE_URL + "/remote-add";
+    public static final  String REMOTE_DELETE     = BASE_URL + "/remote-delete";
+    public static final  String REMOVE            = BASE_URL + "/rm";
+    public static final  String RESET             = BASE_URL + "/reset";
+    public static final  String COMMITERS         = BASE_URL + "/commiters";
+    public static final  String DELETE_REPOSITORY = BASE_URL + "/delete-repository";
+    private String                  wsName;
     /** REST service context. */
     private String                  restServiceContext;
     /** Loader to be displayed. */
@@ -97,7 +105,8 @@ public class GitClientServiceImpl implements GitClientService {
     protected GitClientServiceImpl(@Named("restContext") String restContext, Loader loader, MessageBus wsMessageBus, EventBus eventBus,
                                    GitLocalizationConstant constant) {
         this.loader = loader;
-        this.restServiceContext = restContext;
+        this.wsName = '/' + Utils.getWorkspaceName();
+        this.restServiceContext = restContext + wsName;
         this.wsMessageBus = wsMessageBus;
         this.eventBus = eventBus;
         this.constant = constant;
@@ -105,32 +114,34 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void init(String vfsId, String projectid, String projectName, boolean bare, AsyncRequestCallback<String> callback)
-            throws RequestException {
-        String url = restServiceContext + INIT;
-
-        InitRequest initRequest = new InitRequest(projectid, bare);
-        InitRequestMarshaller marshaller = new InitRequestMarshaller(initRequest);
+    public void init(@NotNull String vfsId, @NotNull String projectid, @NotNull String projectName, boolean bare,
+                     @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        DtoClientImpls.InitRequestImpl initRequest = DtoClientImpls.InitRequestImpl.make();
+        initRequest.setBare(bare);
+        initRequest.setWorkingDir(projectid);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
+        String url = restServiceContext + INIT + "?" + params;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).delay(2000)
+        AsyncRequest.build(POST, url, true).data(initRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON).delay(2000)
                     .requestStatusHandler(new InitRequestStatusHandler(projectName, eventBus, constant)).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void initWS(String vfsId, String projectid, String projectName, boolean bare, RequestCallback<String> callback)
-            throws WebSocketException {
-        InitRequest initRequest = new InitRequest(projectid, bare);
-        InitRequestMarshaller marshaller = new InitRequestMarshaller(initRequest);
+    public void initWS(@NotNull String vfsId, @NotNull String projectid, @NotNull String projectName, boolean bare,
+                       @NotNull RequestCallback<String> callback) throws WebSocketException {
+        DtoClientImpls.InitRequestImpl initRequest = DtoClientImpls.InitRequestImpl.make();
+        initRequest.setBare(bare);
+        initRequest.setWorkingDir(projectid);
 
-        String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
         callback.setStatusHandler(new InitRequestStatusHandler(projectName, eventBus, constant));
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
+        String url = wsName + INIT + params;
 
-        MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, INIT + params);
-        builder.data(marshaller.marshal()).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON);
+        MessageBuilder builder = new MessageBuilder(POST, url);
+        builder.data(initRequest.serialize()).header(CONTENTTYPE, APPLICATION_JSON);
         Message message = builder.build();
 
         wsMessageBus.send(message, callback);
@@ -138,38 +149,41 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void cloneRepository(String vfsId, Folder folder, String remoteUri, String remoteName, AsyncRequestCallback<RepoInfo> callback)
-            throws RequestException {
-        String url = restServiceContext + CLONE;
-
-        CloneRequest cloneRequest = new CloneRequest(remoteUri, folder.getId());
+    public void cloneRepository(@NotNull String vfsId, @NotNull Project project, @NotNull String remoteUri, @NotNull String remoteName,
+                                @NotNull AsyncRequestCallback<RepoInfo> callback) throws RequestException {
+        DtoClientImpls.CloneRequestImpl cloneRequest = DtoClientImpls.CloneRequestImpl.make();
         cloneRequest.setRemoteName(remoteName);
-        CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
+        cloneRequest.setRemoteUri(remoteUri);
+        cloneRequest.setWorkingDir(project.getId());
 
-        String params = "vfsid=" + vfsId + "&projectid=" + folder.getId();
+        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+        String url = restServiceContext + CLONE + params;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true)
-                    .requestStatusHandler(new CloneRequestStatusHandler(folder.getName(), remoteUri, eventBus, constant))
-                    .data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-                    .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+        AsyncRequest.build(POST, url, true)
+                    .requestStatusHandler(new CloneRequestStatusHandler(project.getName(), remoteUri, eventBus, constant))
+                    .data(cloneRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON)
+                    .header(ACCEPT, APPLICATION_JSON).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void cloneRepositoryWS(String vfsId, Folder folder, String remoteUri, String remoteName, RequestCallback<RepoInfo> callback)
-            throws WebSocketException {
-        CloneRequest cloneRequest = new CloneRequest(remoteUri, folder.getId());
+    public void cloneRepositoryWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remoteUri, @NotNull String remoteName,
+                                  @NotNull RequestCallback<RepoInfo> callback) throws WebSocketException {
+        DtoClientImpls.CloneRequestImpl cloneRequest = DtoClientImpls.CloneRequestImpl.make();
         cloneRequest.setRemoteName(remoteName);
-        CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
+        cloneRequest.setRemoteUri(remoteUri);
+        cloneRequest.setWorkingDir(project.getId());
 
-        String params = "?vfsid=" + vfsId + "&projectid=" + folder.getId();
-        callback.setStatusHandler(new CloneRequestStatusHandler(folder.getName(), remoteUri, eventBus, constant));
+        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+        callback.setStatusHandler(new CloneRequestStatusHandler(project.getName(), remoteUri, eventBus, constant));
 
-        MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, CLONE + params);
-        builder.data(marshaller.marshal())
-               .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-               .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON);
+        String url = wsName + CLONE + params;
+
+        MessageBuilder builder = new MessageBuilder(POST, url);
+        builder.data(cloneRequest.serialize())
+               .header(CONTENTTYPE, APPLICATION_JSON)
+               .header(ACCEPT, APPLICATION_JSON);
         Message message = builder.build();
 
         wsMessageBus.send(message, callback);
@@ -177,45 +191,55 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void statusText(String vfsId, String projectid, boolean shortFormat, AsyncRequestCallback<String> callback)
-            throws RequestException {
+    public void statusText(@NotNull String vfsId, @NotNull String projectid, boolean shortFormat,
+                           @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + STATUS;
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid + "&short=" + shortFormat;
 
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid + "&short=" + shortFormat;
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN)
+        AsyncRequest.build(POST, url + params).loader(loader)
+                    .header(CONTENTTYPE, APPLICATION_JSON).header(ACCEPT, TEXT_PLAIN)
                     .send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void add(String vfsId, Project project, boolean update, String[] filePattern, AsyncRequestCallback<String> callback)
-            throws RequestException {
-        String url = restServiceContext + ADD;
+    public void add(@NotNull String vfsId, @NotNull Project project, boolean update, @Nullable JsonArray<String> filePattern,
+                    @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        DtoClientImpls.AddRequestImpl addRequest = DtoClientImpls.AddRequestImpl.make();
+        addRequest.setUpdate(update);
+        if (filePattern == null) {
+            addRequest.setFilepattern(AddRequest.DEFAULT_PATTERN);
+        } else {
+            addRequest.setFilepattern(filePattern);
+        }
 
-        AddRequest addRequest = new AddRequest(filePattern, update);
-        AddRequestMarshaller marshaller = new AddRequestMarshaller(addRequest);
+        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+        String url = restServiceContext + ADD + params;
 
-        String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
-
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+        AsyncRequest.build(POST, url, true).data(addRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON)
                     .requestStatusHandler(new AddRequestHandler(project.getName(), eventBus, constant)).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void addWS(String vfsId, Project project, boolean update, String[] filePattern, RequestCallback<String> callback)
-            throws WebSocketException {
-        AddRequest addRequest = new AddRequest(filePattern, update);
-        AddRequestMarshaller marshaller = new AddRequestMarshaller(addRequest);
+    public void addWS(@NotNull String vfsId, @NotNull Project project, boolean update, @Nullable JsonArray<String> filePattern,
+                      @NotNull RequestCallback<String> callback) throws WebSocketException {
+        DtoClientImpls.AddRequestImpl addRequest = DtoClientImpls.AddRequestImpl.make();
+        addRequest.setUpdate(update);
+        if (filePattern == null) {
+            addRequest.setFilepattern(AddRequest.DEFAULT_PATTERN);
+        } else {
+            addRequest.setFilepattern(filePattern);
+        }
 
-        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         callback.setStatusHandler(new AddRequestHandler(project.getName(), eventBus, constant));
+        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+        String url = wsName + ADD + params;
 
-        MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, ADD + params);
-        builder.data(marshaller.marshal())
-               .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON);
+        MessageBuilder builder = new MessageBuilder(POST, url);
+        builder.data(addRequest.serialize())
+               .header(CONTENTTYPE, APPLICATION_JSON);
         Message message = builder.build();
 
         wsMessageBus.send(message, callback);
@@ -223,33 +247,37 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void commit(String vfsId, Project project, String message, boolean all, boolean amend, AsyncRequestCallback<Revision> callback)
-            throws RequestException {
-        String url = restServiceContext + COMMIT;
+    public void commit(@NotNull String vfsId, @NotNull Project project, @NotNull String message, boolean all, boolean amend,
+                       @NotNull AsyncRequestCallback<Revision> callback) throws RequestException {
+        DtoClientImpls.CommitRequestImpl commitRequest = DtoClientImpls.CommitRequestImpl.make();
+        commitRequest.setMessage(message);
+        commitRequest.setAmend(amend);
+        commitRequest.setAll(all);
 
-        CommitRequest commitRequest = new CommitRequest(message, all, amend);
-        CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
+        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+        String url = restServiceContext + COMMIT + params;
 
-        String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
-
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+        AsyncRequest.build(POST, url, true).data(commitRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON)
                     .requestStatusHandler(new CommitRequestHandler(project.getName(), message, eventBus, constant)).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void commitWS(String vfsId, Project project, String message, boolean all, boolean amend, RequestCallback<Revision> callback)
-            throws WebSocketException {
-        CommitRequest commitRequest = new CommitRequest(message, all, amend);
-        CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
+    public void commitWS(@NotNull String vfsId, @NotNull Project project, @NotNull String message, boolean all, boolean amend,
+                         @NotNull RequestCallback<Revision> callback) throws WebSocketException {
+        DtoClientImpls.CommitRequestImpl commitRequest = DtoClientImpls.CommitRequestImpl.make();
+        commitRequest.setMessage(message);
+        commitRequest.setAmend(amend);
+        commitRequest.setAll(all);
 
-        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         callback.setStatusHandler(new CommitRequestHandler(project.getName(), message, eventBus, constant));
+        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+        String url = wsName + COMMIT + params;
 
-        MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, COMMIT + params);
-        builder.data(marshaller.marshal())
-               .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON);
+        MessageBuilder builder = new MessageBuilder(POST, url);
+        builder.data(commitRequest.serialize())
+               .header(CONTENTTYPE, APPLICATION_JSON);
         Message requestMessage = builder.build();
 
         wsMessageBus.send(requestMessage, callback);
@@ -257,40 +285,37 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void push(String vfsId, Project project, String[] refSpec, String remote, boolean force, AsyncRequestCallback<String> callback)
-            throws RequestException {
-        String url = restServiceContext + PUSH;
-        PushRequest pushRequest = new PushRequest();
+    public void push(@NotNull String vfsId, @NotNull Project project, @NotNull JsonArray<String> refSpec, @NotNull String remote,
+                     boolean force, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        DtoClientImpls.PushRequestImpl pushRequest = DtoClientImpls.PushRequestImpl.make();
         pushRequest.setRemote(remote);
         pushRequest.setRefSpec(refSpec);
         pushRequest.setForce(force);
 
-        PushRequestMarshaller marshaller = new PushRequestMarshaller(pushRequest);
-
-        String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
+        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+        String url = restServiceContext + PUSH + params;
 
         PushRequestHandler requestHandler = new PushRequestHandler(project.getName(), refSpec, eventBus, constant);
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).requestStatusHandler(requestHandler).send(callback);
+        AsyncRequest.build(POST, url, true).data(pushRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON).requestStatusHandler(requestHandler).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void pushWS(String vfsId, Project project, String[] refSpec, String remote, boolean force, RequestCallback<String> callback)
-            throws WebSocketException {
-        PushRequest pushRequest = new PushRequest();
+    public void pushWS(@NotNull String vfsId, @NotNull Project project, @NotNull JsonArray<String> refSpec, @NotNull String remote,
+                       boolean force, @NotNull RequestCallback<String> callback) throws WebSocketException {
+        DtoClientImpls.PushRequestImpl pushRequest = DtoClientImpls.PushRequestImpl.make();
         pushRequest.setRemote(remote);
         pushRequest.setRefSpec(refSpec);
         pushRequest.setForce(force);
 
-        PushRequestMarshaller marshaller = new PushRequestMarshaller(pushRequest);
-
-        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         callback.setStatusHandler(new PushRequestHandler(project.getName(), refSpec, eventBus, constant));
+        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+        String url = wsName + PUSH + params;
 
-        MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, PUSH + params);
-        builder.data(marshaller.marshal())
-               .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON);
+        MessageBuilder builder = new MessageBuilder(POST, url);
+        builder.data(pushRequest.serialize())
+               .header(CONTENTTYPE, APPLICATION_JSON);
         Message message = builder.build();
 
         wsMessageBus.send(message, callback);
@@ -298,217 +323,217 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void remoteList(String vfsId, String projectid, String remoteName, boolean verbose,
-                           AsyncRequestCallback<JsonArray<Remote>> callback) throws RequestException {
-        String url = restServiceContext + REMOTE_LIST;
+    public void remoteList(@NotNull String vfsId, @NotNull String projectid, @Nullable String remoteName, boolean verbose,
+                           @NotNull AsyncRequestCallback<JsonArray<Remote>> callback) throws RequestException {
+        DtoClientImpls.RemoteListRequestImpl remoteListRequest = DtoClientImpls.RemoteListRequestImpl.make();
+        if (remoteName != null) {
+            remoteListRequest.setRemote(remoteName);
+        }
+        remoteListRequest.setVerbose(verbose);
 
-        RemoteListRequest remoteListRequest = new RemoteListRequest(remoteName, verbose);
-        RemoteListRequestMarshaller marshaller = new RemoteListRequestMarshaller(remoteListRequest);
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
+        String url = restServiceContext + REMOTE_LIST + params;
 
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid;
-
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+        AsyncRequest.build(POST, url).loader(loader).data(remoteListRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void branchList(String vfsId, String projectid, String remoteMode, AsyncRequestCallback<JsonArray<Branch>> callback)
-            throws RequestException {
-        String url = restServiceContext + BRANCH_LIST;
-
-        BranchListRequest branchListRequest = new BranchListRequest();
+    public void branchList(@NotNull String vfsId, @NotNull String projectid, @Nullable String remoteMode,
+                           @NotNull AsyncRequestCallback<JsonArray<Branch>> callback) throws RequestException {
+        DtoClientImpls.BranchListRequestImpl branchListRequest = DtoClientImpls.BranchListRequestImpl.make();
         branchListRequest.setListMode(remoteMode);
 
-        BranchListRequestMarshaller marshaller = new BranchListRequestMarshaller(branchListRequest);
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid;
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
+        String url = restServiceContext + BRANCH_LIST + params;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+        AsyncRequest.build(POST, url).data(branchListRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void status(String vfsId, String projectid, AsyncRequestCallback<Status> callback) throws RequestException {
-        String url = restServiceContext + STATUS;
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid + "&short=false";
-
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-                    .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void branchDelete(String vfsId, String projectid, String name, boolean force,
-                             AsyncRequestCallback<String> callback) throws RequestException {
-        String url = restServiceContext + BRANCH_DELETE;
-
-        BranchDeleteRequest branchDeleteRequest = new BranchDeleteRequest(name, force);
-        BranchDeleteRequestMarshaller marshaller = new BranchDeleteRequestMarshaller(branchDeleteRequest);
-
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid;
-
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void branchRename(String vfsId, String projectid, String oldName, String newName,
-                             AsyncRequestCallback<String> callback) throws RequestException {
-
-        String url = restServiceContext + BRANCH_RENAME;
-
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid + "&oldName=" + oldName + "&newName=" + newName;
-
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_FORM_URLENCODED).send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void branchCreate(String vfsId, String projectid, String name, String startPoint,
-                             AsyncRequestCallback<Branch> callback) throws RequestException {
-        String url = restServiceContext + BRANCH_CREATE;
-
-        BranchCreateRequest branchCreateRequest = new BranchCreateRequest(name, startPoint);
-        BranchCreateRequestMarshaller marshaller = new BranchCreateRequestMarshaller(branchCreateRequest);
-
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid;
-
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-                    .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void branchCheckout(String vfsId, String projectid, String name, String startPoint, boolean createNew,
-                               AsyncRequestCallback<String> callback) throws RequestException {
-        String url = restServiceContext + BRANCH_CHECKOUT;
-
-        BranchCheckoutRequest branchCheckoutRequest = new BranchCheckoutRequest(name, startPoint, createNew);
-        BranchCheckoutRequestMarshaller marshaller = new BranchCheckoutRequestMarshaller(branchCheckoutRequest);
-
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid;
-
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void remove(String vfsId, String projectid, String[] files, Boolean cached, AsyncRequestCallback<String> callback)
+    public void status(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<Status> callback)
             throws RequestException {
-        String url = restServiceContext + REMOVE;
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid + "&short=false";
+        String url = restServiceContext + STATUS + params;
 
-        RmRequest rmRequest = new RmRequest(files);
+        AsyncRequest.build(POST, url).loader(loader)
+                    .header(CONTENTTYPE, APPLICATION_JSON)
+                    .header(ACCEPT, APPLICATION_JSON).send(callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void branchDelete(@NotNull String vfsId, @NotNull String projectid, @NotNull String name, boolean force,
+                             @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        DtoClientImpls.BranchDeleteRequestImpl branchDeleteRequest = DtoClientImpls.BranchDeleteRequestImpl.make();
+        branchDeleteRequest.setName(name);
+        branchDeleteRequest.setForce(force);
+
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
+        String url = restServiceContext + BRANCH_DELETE + params;
+
+        AsyncRequest.build(POST, url).loader(loader).data(branchDeleteRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void branchRename(@NotNull String vfsId, @NotNull String projectid, @NotNull String oldName, @NotNull String newName,
+                             @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid + "&oldName=" + oldName + "&newName=" + newName;
+        String url = restServiceContext + BRANCH_RENAME + params;
+
+        AsyncRequest.build(POST, url).loader(loader)
+                    .header(CONTENTTYPE, MimeType.APPLICATION_FORM_URLENCODED).send(callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void branchCreate(@NotNull String vfsId, @NotNull String projectid, @NotNull String name, @NotNull String startPoint,
+                             @NotNull AsyncRequestCallback<Branch> callback) throws RequestException {
+
+        DtoClientImpls.BranchCreateRequestImpl branchCreateRequest = DtoClientImpls.BranchCreateRequestImpl.make();
+        branchCreateRequest.setName(name);
+        branchCreateRequest.setStartPoint(startPoint);
+
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
+        String url = restServiceContext + BRANCH_CREATE + params;
+
+        AsyncRequest.build(POST, url).loader(loader).data(branchCreateRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON)
+                    .header(ACCEPT, APPLICATION_JSON).send(callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void branchCheckout(@NotNull String vfsId, @NotNull String projectid, @NotNull String name, @NotNull String startPoint,
+                               boolean createNew, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        DtoClientImpls.BranchCheckoutRequestImpl branchCheckoutRequest = DtoClientImpls.BranchCheckoutRequestImpl.make();
+        branchCheckoutRequest.setName(name);
+        branchCheckoutRequest.setStartPoint(startPoint);
+        branchCheckoutRequest.setCreateNew(createNew);
+
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
+        String url = restServiceContext + BRANCH_CHECKOUT + params;
+
+        AsyncRequest.build(POST, url).loader(loader).data(branchCheckoutRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void remove(@NotNull String vfsId, @NotNull String projectid, JsonArray<String> files, boolean cached,
+                       @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        DtoClientImpls.RmRequestImpl rmRequest = DtoClientImpls.RmRequestImpl.make();
+        rmRequest.setFiles(files);
         rmRequest.setCached(cached);
-        RemoveRequestMarshaller marshaller = new RemoveRequestMarshaller(rmRequest);
 
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid;
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
+        String url = restServiceContext + REMOVE + params;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+        AsyncRequest.build(POST, url).loader(loader).data(rmRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void reset(String vfsId, String projectid, String commit, ResetRequest.ResetType resetType,
-                      AsyncRequestCallback<String> callback) throws RequestException {
-        String url = restServiceContext + RESET;
+    public void reset(@NotNull String vfsId, @NotNull String projectid, @NotNull String commit, @Nullable ResetRequest.ResetType resetType,
+                      @NotNull AsyncRequestCallback<String> callback) throws RequestException {
 
-        ResetRequest resetRequest = new ResetRequest();
+        DtoClientImpls.ResetRequestImpl resetRequest = DtoClientImpls.ResetRequestImpl.make();
         resetRequest.setCommit(commit);
-        resetRequest.setType(resetType);
-
-        ResetRequestMarshaller marshaller = new ResetRequestMarshaller(resetRequest);
-
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid;
-
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void log(String vfsId, String projectid, boolean isTextFormat, AsyncRequestCallback<LogResponse> callback)
-            throws RequestException {
-        String url = restServiceContext + LOG;
-
-        LogRequest logRequest = new LogRequest();
-        LogRequestMarshaller marshaller = new LogRequestMarshaller(logRequest);
-
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid;
-
-        if (isTextFormat) {
-            AsyncRequest.build(RequestBuilder.POST, url + "?" + params).data(marshaller.marshal())
-                        .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
-        } else {
-            AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
-                        .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-                        .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+        if (resetType != null) {
+            resetRequest.setType(resetType);
         }
 
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
+        String url = restServiceContext + RESET + params;
+
+        AsyncRequest.build(POST, url).loader(loader).data(resetRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void remoteAdd(String vfsId, String projectid, String name, String repositoryURL,
-                          AsyncRequestCallback<String> callback) throws RequestException {
-        String url = restServiceContext + REMOTE_ADD;
+    public void log(@NotNull String vfsId, @NotNull String projectid, boolean isTextFormat,
+                    @NotNull AsyncRequestCallback<LogResponse> callback) throws RequestException {
+        DtoClientImpls.LogRequestImpl logRequest = DtoClientImpls.LogRequestImpl.make();
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
+        String url = restServiceContext + LOG + params;
 
-        RemoteAddRequest remoteAddRequest = new RemoteAddRequest(name, repositoryURL);
-
-        RemoteAddRequestMarshaller marshaller = new RemoteAddRequestMarshaller(remoteAddRequest);
-
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid;
-
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+        if (isTextFormat) {
+            AsyncRequest.build(POST, url).data(logRequest.serialize())
+                        .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
+        } else {
+            AsyncRequest.build(POST, url).loader(loader).data(logRequest.serialize())
+                        .header(CONTENTTYPE, APPLICATION_JSON)
+                        .header(ACCEPT, APPLICATION_JSON).send(callback);
+        }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void remoteDelete(String vfsId, String projectid, String name, AsyncRequestCallback<String> callback)
-            throws RequestException {
-        String url = restServiceContext + REMOTE_DELETE + "/" + name;
+    public void remoteAdd(@NotNull String vfsId, @NotNull String projectid, @NotNull String name, @NotNull String repositoryURL,
+                          @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        DtoClientImpls.RemoteAddRequestImpl remoteAddRequest = DtoClientImpls.RemoteAddRequestImpl.make();
+        remoteAddRequest.setName(name);
+        remoteAddRequest.setUrl(repositoryURL);
 
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid;
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
+        String url = restServiceContext + REMOTE_ADD + params;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).send(callback);
+        AsyncRequest.build(POST, url).loader(loader).data(remoteAddRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void fetch(String vfsId, Project project, String remote, String[] refspec, boolean removeDeletedRefs,
-                      AsyncRequestCallback<String> callback) throws RequestException {
-        String url = restServiceContext + FETCH;
+    public void remoteDelete(@NotNull String vfsId, @NotNull String projectid, @NotNull String name,
+                             @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
+        String url = restServiceContext + REMOTE_DELETE + '/' + name + params;
 
-        FetchRequest fetchRequest = new FetchRequest(refspec, remote, removeDeletedRefs, 0);
-        FetchRequestMarshaller marshaller = new FetchRequestMarshaller(fetchRequest);
+        AsyncRequest.build(POST, url).loader(loader).send(callback);
+    }
 
-        String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
+    /** {@inheritDoc} */
+    @Override
+    public void fetch(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, JsonArray<String> refspec,
+                      boolean removeDeletedRefs, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        DtoClientImpls.FetchRequestImpl fetchRequest = DtoClientImpls.FetchRequestImpl.make();
+        fetchRequest.setRemote(remote);
+        // TODO This is workaround for getting remote branches
+        // fetchRequest.setRefSpec(refspec);
+        fetchRequest.setRemoveDeletedRefs(removeDeletedRefs);
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+        String url = restServiceContext + FETCH + params;
+
+        AsyncRequest.build(POST, url).data(fetchRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON)
                     .requestStatusHandler(new FetchRequestHandler(project.getName(), refspec, eventBus, constant)).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void fetchWS(String vfsId, Project project, String remote, String[] refspec, boolean removeDeletedRefs,
-                        RequestCallback<String> callback) throws WebSocketException {
-        FetchRequest fetchRequest = new FetchRequest(refspec, remote, removeDeletedRefs, 0);
-        FetchRequestMarshaller marshaller = new FetchRequestMarshaller(fetchRequest);
+    public void fetchWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, JsonArray<String> refspec,
+                        boolean removeDeletedRefs, @NotNull RequestCallback<String> callback) throws WebSocketException {
+        DtoClientImpls.FetchRequestImpl fetchRequest = DtoClientImpls.FetchRequestImpl.make();
+        fetchRequest.setRemote(remote);
+        // TODO This is workaround for getting remote branches
+        // fetchRequest.setRefSpec(refspec);
+        fetchRequest.setRemoveDeletedRefs(removeDeletedRefs);
 
-        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         callback.setStatusHandler(new FetchRequestHandler(project.getName(), refspec, eventBus, constant));
+        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+        String url = wsName + FETCH + params;
 
-        MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, FETCH + params);
-        builder.data(marshaller.marshal())
-               .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON);
+        MessageBuilder builder = new MessageBuilder(POST, url);
+        builder.data(fetchRequest.serialize())
+               .header(CONTENTTYPE, APPLICATION_JSON);
         Message message = builder.build();
 
         wsMessageBus.send(message, callback);
@@ -516,33 +541,35 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void pull(String vfsId, Project project, String refSpec, String remote, AsyncRequestCallback<String> callback)
-            throws RequestException {
-        String url = restServiceContext + PULL;
+    public void pull(@NotNull String vfsId, @NotNull Project project, @NotNull String refSpec, @NotNull String remote,
+                     @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        DtoClientImpls.PullRequestImpl pullRequest = DtoClientImpls.PullRequestImpl.make();
+        pullRequest.setRemote(remote);
+        pullRequest.setRefSpec(refSpec);
 
-        PullRequest pullRequest = new PullRequest(remote, refSpec, 0);
-        PullRequestMarshaller marshaller = new PullRequestMarshaller(pullRequest);
+        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+        String url = restServiceContext + PULL + params;
 
-        String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
-
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+        AsyncRequest.build(POST, url, true).data(pullRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON)
                     .requestStatusHandler(new PullRequestHandler(project.getName(), refSpec, eventBus, constant)).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void pullWS(String vfsId, Project project, String refSpec, String remote, RequestCallback<String> callback)
-            throws WebSocketException {
-        PullRequest pullRequest = new PullRequest(remote, refSpec, 0);
-        PullRequestMarshaller marshaller = new PullRequestMarshaller(pullRequest);
+    public void pullWS(@NotNull String vfsId, @NotNull Project project, @NotNull String refSpec, @NotNull String remote,
+                       @NotNull RequestCallback<String> callback) throws WebSocketException {
+        DtoClientImpls.PullRequestImpl pullRequest = DtoClientImpls.PullRequestImpl.make();
+        pullRequest.setRemote(remote);
+        pullRequest.setRefSpec(refSpec);
 
-        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         callback.setStatusHandler(new PullRequestHandler(project.getName(), refSpec, eventBus, constant));
+        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+        String url = wsName + PULL + params;
 
-        MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, PULL + params);
-        builder.data(marshaller.marshal())
-               .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON);
+        MessageBuilder builder = new MessageBuilder(POST, url);
+        builder.data(pullRequest.serialize())
+               .header(CONTENTTYPE, APPLICATION_JSON);
         Message message = builder.build();
 
         wsMessageBus.send(message, callback);
@@ -550,19 +577,33 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void diff(String vfsId, String projectid, String[] fileFilter, DiffRequest.DiffType type, boolean noRenames,
-                     int renameLimit, String commitA, String commitB, AsyncRequestCallback<StringBuilder> callback)
-            throws RequestException {
-        DiffRequest diffRequest = new DiffRequest(fileFilter, type, noRenames, renameLimit, commitA, commitB);
+    public void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull JsonArray<String> fileFilter,
+                     @NotNull DiffRequest.DiffType type, boolean noRenames, int renameLimit, @NotNull String commitA,
+                     @NotNull String commitB, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        DtoClientImpls.DiffRequestImpl diffRequest = DtoClientImpls.DiffRequestImpl.make();
+        diffRequest.setFileFilter(fileFilter);
+        diffRequest.setType(type);
+        diffRequest.setNoRenames(noRenames);
+        diffRequest.setRenameLimit(renameLimit);
+        diffRequest.setCommitA(commitA);
+        diffRequest.setCommitB(commitB);
+
         diff(diffRequest, vfsId, projectid, callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void diff(String vfsId, String projectid, String[] fileFilter, DiffRequest.DiffType type, boolean noRenames,
-                     int renameLimit, String commitA, boolean cached, AsyncRequestCallback<StringBuilder> callback)
-            throws RequestException {
-        DiffRequest diffRequest = new DiffRequest(fileFilter, type, noRenames, renameLimit, commitA, cached);
+    public void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull JsonArray<String> fileFilter,
+                     @NotNull DiffRequest.DiffType type, boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached,
+                     @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        DtoClientImpls.DiffRequestImpl diffRequest = DtoClientImpls.DiffRequestImpl.make();
+        diffRequest.setFileFilter(fileFilter);
+        diffRequest.setType(type);
+        diffRequest.setNoRenames(noRenames);
+        diffRequest.setRenameLimit(renameLimit);
+        diffRequest.setCommitA(commitA);
+        diffRequest.setCached(cached);
+
         diff(diffRequest, vfsId, projectid, callback);
     }
 
@@ -571,43 +612,41 @@ public class GitClientServiceImpl implements GitClientService {
      *
      * @param diffRequest
      *         request for diff
-     * @param href
-     *         working directory's href
+     * @param vfsId
+     *         virtual file system id
+     * @param projectid
+     *         project id
      * @param callback
      *         callback
      * @throws RequestException
      */
-    protected void diff(DiffRequest diffRequest, String vfsId, String projectid, AsyncRequestCallback<StringBuilder> callback)
+    private void diff(DtoClientImpls.DiffRequestImpl diffRequest, String vfsId, String projectid, AsyncRequestCallback<String> callback)
             throws RequestException {
-        String url = restServiceContext + DIFF;
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
+        String url = restServiceContext + DIFF + params;
 
-        DiffRequestMarshaller marshaller = new DiffRequestMarshaller(diffRequest);
-
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid;
-
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+        AsyncRequest.build(POST, url).loader(loader).data(diffRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void merge(String vfsId, String projectid, String commit, AsyncRequestCallback<MergeResult> callback)
-            throws RequestException {
-        String url = restServiceContext + MERGE;
+    public void merge(@NotNull String vfsId, @NotNull String projectid, @NotNull String commit,
+                      @NotNull AsyncRequestCallback<MergeResult> callback) throws RequestException {
+        DtoClientImpls.MergeRequestImpl mergeRequest = DtoClientImpls.MergeRequestImpl.make();
+        mergeRequest.setCommit(commit);
 
-        MergeRequest mergeRequest = new MergeRequest(commit);
-        MergeRequestMarshaller marshaller = new MergeRequestMarshaller(mergeRequest);
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
+        String url = restServiceContext + MERGE + params;
 
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid;
-
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-                    .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+        AsyncRequest.build(POST, url).loader(loader).data(mergeRequest.serialize())
+                    .header(CONTENTTYPE, APPLICATION_JSON)
+                    .header(ACCEPT, APPLICATION_JSON).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getGitReadOnlyUrl(String vfsId, String projectid, AsyncRequestCallback<StringBuilder> callback)
+    public void getGitReadOnlyUrl(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<String> callback)
             throws RequestException {
         String url = restServiceContext + RO_URL;
         url += "?vfsid=" + vfsId + "&projectid=" + projectid;
@@ -616,23 +655,23 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void getCommiters(String vfsId, String projectid, AsyncRequestCallback<Commiters> callback)
+    public void getCommiters(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<Commiters> callback)
             throws RequestException {
-        String url = restServiceContext + COMMITERS;
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid;
-        AsyncRequest.build(RequestBuilder.GET, url + "?" + params).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
+        String url = restServiceContext + COMMITERS + params;
+        AsyncRequest.build(RequestBuilder.GET, url).header(ACCEPT, APPLICATION_JSON)
                     .send(callback);
     }
 
 
     /** {@inheritDoc} */
     @Override
-    public void deleteRepository(String vfsId, String projectid, AsyncRequestCallback<Void> callback) throws RequestException {
-        String url = restServiceContext + DELETE_REPOSITORY;
-
-        String params = "vfsid=" + vfsId + "&projectid=" + projectid;
-        AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader)
-                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN)
+    public void deleteRepository(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<Void> callback)
+            throws RequestException {
+        String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
+        String url = restServiceContext + DELETE_REPOSITORY + params;
+        AsyncRequest.build(RequestBuilder.GET, url).loader(loader)
+                    .header(CONTENTTYPE, APPLICATION_JSON).header(ACCEPT, TEXT_PLAIN)
                     .send(callback);
     }
 }

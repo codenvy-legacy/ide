@@ -1,26 +1,28 @@
 /*
- * Copyright (C) 2003-2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.client;
 
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.client.extensionsPart.ExtensionsPage;
-import com.codenvy.ide.client.marshaller.UserUnmarshaller;
+import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
 import com.codenvy.ide.json.JsonStringMap;
@@ -29,6 +31,8 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -41,27 +45,29 @@ import com.google.inject.Provider;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class BootstrapController {
+
     /**
      * Create controller.
      *
      * @param componentRegistry
-     * @param workspacePeresenter
      * @param styleInjector
      * @param extensionInitializer
      * @param extensionsPage
      * @param preferencesManager
      * @param userService
+     * @param resourceProvider
      */
     @Inject
     public BootstrapController(final ComponentRegistry componentRegistry, final Provider<WorkspacePresenter> workspaceProvider,
                                StyleInjector styleInjector, final ExtensionInitializer extensionInitializer,
                                final ExtensionsPage extensionsPage, final PreferencesManagerImpl preferencesManager,
-                               UserClientService userService) {
+                               UserClientService userService, final ResourceProvider resourceProvider) {
         styleInjector.inject();
+        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW).inject();
+        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_parsers.js").setWindow(ScriptInjector.TOP_WINDOW).inject();
 
         try {
-            DtoClientImpls.UserImpl user = DtoClientImpls.UserImpl.make();
-            UserUnmarshaller unmarshaller = new UserUnmarshaller(user);
+            UserUnmarshaller unmarshaller = new UserUnmarshaller();
             userService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
                 @Override
                 protected void onSuccess(User user) {
@@ -82,6 +88,8 @@ public class BootstrapController {
                             workspacePresenter.go(mainPanel);
                             // TODO FOR DEMO
                             workspacePresenter.openPart(extensionsPage, PartStackType.EDITING);
+                            //Display list of projects in project explorer
+                            resourceProvider.showListProjects();
                         }
 
                         @Override

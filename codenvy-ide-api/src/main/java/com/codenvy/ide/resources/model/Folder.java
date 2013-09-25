@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2003-2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero GeneralLicense
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU GeneralLicense for more details.
- *
- * You should have received a copy of the GNU GeneralLicense
- * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.resources.model;
 
@@ -133,12 +134,12 @@ public class Folder extends Resource {
     public Resource findResourceByName(String name, String type) {
         for (int i = 0; i < children.size(); i++) {
             Resource child = children.get(i);
-            if (child.getId().equals(id) && child.getResourceType().equals(type)) {
+            if (child.getName().equals(name) && child.getResourceType().equals(type)) {
                 return child;
             }
 
             if (child instanceof Folder) {
-                Resource resourceById = ((Folder)child).findResourceByName(id, type);
+                Resource resourceById = ((Folder)child).findResourceByName(name, type);
                 if (resourceById != null) {
                     return resourceById;
                 }

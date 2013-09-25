@@ -1,25 +1,26 @@
 /*
- * Copyright (C) 2003-2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.part.projectexplorer;
 
 import elemental.html.DragEvent;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.part.base.BaseView;
+import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.tree.FileTreeNodeRenderer;
 import com.codenvy.ide.tree.ResourceTreeNodeDataAdapter;
@@ -50,17 +51,11 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         container.add(tree.asWidget());
     }
 
-//    /** {@inheritDoc} */
-//    @Override
-//    public Widget asWidget() {
-//        return tree.asWidget();
-//    }
-
     /** {@inheritDoc} */
     @Override
     public void setItems(Resource resource) {
         tree.getModel().setRoot(resource);
-        tree.renderTree();
+        tree.renderTree(1);
     }
 
     /** {@inheritDoc} */
@@ -96,6 +91,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
             @Override
             public void onRootContextMenu(int mouseX, int mouseY) {
+                delegate.onContextMenu(mouseX, mouseY);
             }
 
             @Override

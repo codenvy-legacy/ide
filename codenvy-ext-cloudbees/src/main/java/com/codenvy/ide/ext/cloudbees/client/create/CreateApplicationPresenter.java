@@ -1,24 +1,25 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.cloudbees.client.create;
 
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -31,12 +32,10 @@ import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshaller;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshallerWS;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.DomainsUnmarshaller;
-import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.ext.jenkins.client.build.BuildApplicationPresenter;
 import com.codenvy.ide.ext.jenkins.shared.JobStatus;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -45,6 +44,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
+import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Presenter for creating application on CloudBees.
@@ -62,12 +65,14 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     private LoginPresenter                loginPresenter;
     private CloudBeesClientService        service;
     private BuildApplicationPresenter     buildApplicationPresenter;
+    private NotificationManager           notificationManager;
     /** Public url to war file of application. */
     private String                        warUrl;
     private String                        projectName;
     private String                        domain;
     private String                        name;
     private Project                       project;
+    private Notification                  notification;
 
     /**
      * Create presenter.
@@ -80,11 +85,13 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
      * @param loginPresenter
      * @param service
      * @param buildApplicationPresenter
+     * @param notificationManager
      */
     @Inject
     protected CreateApplicationPresenter(CreateApplicationView view, EventBus eventBus, ResourceProvider resourcesProvider,
                                          ConsolePart console, CloudBeesLocalizationConstant constant, LoginPresenter loginPresenter,
-                                         CloudBeesClientService service, BuildApplicationPresenter buildApplicationPresenter) {
+                                         CloudBeesClientService service, BuildApplicationPresenter buildApplicationPresenter,
+                                         NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
@@ -94,6 +101,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.buildApplicationPresenter = buildApplicationPresenter;
+        this.notificationManager = notificationManager;
     }
 
     /** Shows dialog. */
@@ -106,18 +114,18 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
     /** Gets domains. */
     private void getDomains() {
-        try {
-            DomainsUnmarshaller unmarshaller = new DomainsUnmarshaller(JsonCollections.<String>createArray());
-            LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                @Override
-                public void onLoggedIn() {
-                    getDomains();
-                }
-            };
+        DomainsUnmarshaller unmarshaller = new DomainsUnmarshaller();
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                getDomains();
+            }
+        };
 
+        try {
             service.getDomains(
-                    new CloudBeesAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, null, eventBus, console,
-                                                                         loginPresenter) {
+                    new CloudBeesAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, null, eventBus,
+                                                                         loginPresenter, notificationManager) {
                         @Override
                         protected void onSuccess(JsonArray<String> result) {
                             view.setDomainValues(result);
@@ -131,7 +139,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                     });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -171,13 +180,15 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
     /** Deploy application to Cloud Bees by sending request over WebSocket or HTTP. */
     private void doDeployApplication() {
-        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-        ApplicationInfoUnmarshallerWS unmarshaller = new ApplicationInfoUnmarshallerWS(applicationInfo);
+        ApplicationInfoUnmarshallerWS unmarshaller = new ApplicationInfoUnmarshallerWS();
+        notification = new Notification(constant.creatingApplication(), PROGRESS);
+        notificationManager.showNotification(notification);
 
         try {
             service.initializeApplicationWS(view.getUrl(), resourcesProvider.getVfsId(), project.getId(), warUrl, null,
                                             new CloudBeesRESTfulRequestCallback<ApplicationInfo>(unmarshaller, deployWarLoggedInHandler,
-                                                                                                 null, eventBus, console, loginPresenter) {
+                                                                                                 null, eventBus, loginPresenter,
+                                                                                                 notificationManager) {
                                                 @Override
                                                 protected void onSuccess(final ApplicationInfo appInfo) {
                                                     project.refreshProperties(new AsyncCallback<Project>() {
@@ -197,7 +208,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
                                                 @Override
                                                 protected void onFailure(Throwable exception) {
-                                                    console.print(constant.deployApplicationFailureMessage());
+                                                    notification.setStatus(FINISHED);
+                                                    notification.setType(ERROR);
+                                                    notification.setMessage(constant.deployApplicationFailureMessage());
                                                     super.onFailure(exception);
                                                 }
                                             });
@@ -208,13 +221,13 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
     /** Deploy application to Cloud Bees by sending request over HTTP. */
     private void doDeployApplicationREST() {
-        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
-        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller();
 
         try {
             service.initializeApplication(view.getUrl(), resourcesProvider.getVfsId(), project.getId(), warUrl, null,
                                           new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, deployWarLoggedInHandler, null,
-                                                                                             eventBus, console, loginPresenter) {
+                                                                                             eventBus, loginPresenter,
+                                                                                             notificationManager) {
                                               @Override
                                               protected void onSuccess(final ApplicationInfo appInfo) {
                                                   project.refreshProperties(new AsyncCallback<Project>() {
@@ -234,13 +247,17 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
                                               @Override
                                               protected void onFailure(Throwable exception) {
-                                                  console.print(constant.deployApplicationFailureMessage());
+                                                  notification.setStatus(FINISHED);
+                                                  notification.setType(ERROR);
+                                                  notification.setMessage(constant.deployApplicationFailureMessage());
                                                   super.onFailure(exception);
                                               }
                                           });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(constant.deployApplicationFailureMessage());
+            notification.setStatus(FINISHED);
+            notification.setType(ERROR);
+            notification.setMessage(constant.deployApplicationFailureMessage());
         }
     }
 
@@ -265,6 +282,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
               .append("' target='_blank'>").append(appInfo.getUrl()).append("</a>").append("<br>");
 
         console.print(output.toString());
+        notification.setStatus(FINISHED);
+        notification.setMessage(constant.deployApplicationSuccess());
     }
 
     /** {@inheritDoc} */

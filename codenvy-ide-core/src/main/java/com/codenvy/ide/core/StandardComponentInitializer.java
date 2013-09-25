@@ -1,32 +1,26 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.core;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.actions.NewFolderAction;
-import com.codenvy.ide.actions.NewProjectAction;
-import com.codenvy.ide.actions.NewResourceAction;
-import com.codenvy.ide.actions.OpenProjectAction;
-import com.codenvy.ide.actions.SaveAction;
-import com.codenvy.ide.actions.SaveAllAction;
-import com.codenvy.ide.actions.ShowPreferencesAction;
+import com.codenvy.ide.actions.*;
 import com.codenvy.ide.api.paas.PaaSAgent;
+import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
@@ -35,6 +29,11 @@ import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
+import com.codenvy.ide.welcome.WelcomeLocalizationConstant;
+import com.codenvy.ide.welcome.action.ConnectSupportAction;
+import com.codenvy.ide.welcome.action.CreateProjectAction;
+import com.codenvy.ide.welcome.action.InviteAction;
+import com.codenvy.ide.welcome.action.ShowDocumentationAction;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newfile.NewTextFilePagePresenter;
 import com.codenvy.ide.wizard.newfolder.NewFolderPagePresenter;
@@ -42,7 +41,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
-
 
 /**
  * Initializer for standard component i.e. some basic menu commands (Save, Save As etc)
@@ -98,7 +96,34 @@ public class StandardComponentInitializer {
     private ShowPreferencesAction showPreferencesAction;
 
     @Inject
+    private UpdateExtensionAction updateExtensionAction;
+
+    @Inject
     private ToolbarPresenter toolbarPresenter;
+
+    @Inject
+    private WelcomePart welcomePart;
+
+    @Inject
+    private WelcomeLocalizationConstant welcomeConstant;
+
+    @Inject
+    private CreateProjectAction createProjectAction;
+
+    @Inject
+    private ShowDocumentationAction showDocumentationAction;
+
+    @Inject
+    private InviteAction inviteAction;
+
+    @Inject
+    private ConnectSupportAction connectSupportAction;
+
+    @Inject
+    private DeleteResourceAction deleteResourceAction;
+
+    @Inject
+    private CloseProjectAction closeProjectAction;
 
     /** Instantiates {@link StandardComponentInitializer} an creates standard content */
     @Inject
@@ -149,7 +174,41 @@ public class StandardComponentInitializer {
         toolbarGroup.addSeparator();
         fileGroup.add(saveGroup);
 
+        DefaultActionGroup changeResourceGroup = new DefaultActionGroup(actionManager);
+        actionManager.registerAction("changeResourceGroup", changeResourceGroup);
+        actionManager.registerAction("closeProject", closeProjectAction);
+        actionManager.registerAction("deleteItem", deleteResourceAction);
+        changeResourceGroup.add(closeProjectAction);
+        changeResourceGroup.add(deleteResourceAction);
+        changeResourceGroup.addSeparator();
+        toolbarGroup.add(changeResourceGroup);
+
+        actionManager.registerAction("updateExtension", updateExtensionAction);
+        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_RUN_MAIN_MENU);
+        runMenuActionGroup.add(updateExtensionAction);
+
         toolbarPresenter.bindMainGroup(toolbarGroup);
         paasAgent.registerPaaS("None", "None", null, JsonCollections.<String>createArray("", "java", "War"), null, null);
+
+        welcomePart.addItem(createProjectAction);
+        welcomePart.addItem(showDocumentationAction);
+        welcomePart.addItem(inviteAction);
+        welcomePart.addItem(connectSupportAction);
+
+        DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_MAIN_CONTEXT_MENU);
+        contextMenuGroup.add(newGroup);
+        contextMenuGroup.addSeparator();
+
+        DefaultActionGroup resourceOperation = new DefaultActionGroup(actionManager);
+        resourceOperation.addSeparator();
+        actionManager.registerAction("resourceOperation", resourceOperation);
+        resourceOperation.add(deleteResourceAction);
+        contextMenuGroup.add(resourceOperation);
+
+        DefaultActionGroup closeProjectGroup = new DefaultActionGroup(actionManager);
+        closeProjectGroup.addSeparator();
+        actionManager.registerAction("closeProjectGroup", closeProjectGroup);
+        closeProjectGroup.add(closeProjectAction);
+        contextMenuGroup.add(closeProjectGroup);
     }
 }

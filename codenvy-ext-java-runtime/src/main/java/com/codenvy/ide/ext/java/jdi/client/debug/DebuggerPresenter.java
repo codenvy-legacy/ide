@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
@@ -22,7 +21,10 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
@@ -50,7 +52,6 @@ import com.codenvy.ide.extension.maven.shared.BuildStatus;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.part.base.BasePresenter;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
@@ -75,6 +76,10 @@ import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
+import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
 import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.BREAKPOINT;
 import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.STEP;
@@ -128,6 +133,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private ReLaunchDebuggerPresenter              reLaunchDebuggerPresenter;
     private EvaluateExpressionPresenter            evaluateExpressionPresenter;
     private ChangeValuePresenter                   changeValuePresenter;
+    private NotificationManager                    notificationManager;
     private JsonStringMap<File>                    fileWithBreakPoints;
     /** Handler for processing events which is received from debugger over WebSocket connection. */
     private SubscriptionHandler<DebuggerEventList> debuggerEventsHandler;
@@ -136,12 +142,12 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** Handler for processing debugger disconnected event. */
     private SubscriptionHandler<Object>            debuggerDisconnectedHandler;
     private JsonArray<Variable>                    variables;
+    private Notification                           notification;
     /** A timer for checking events */
     private Timer checkEventsTimer = new Timer() {
         @Override
         public void run() {
-            DtoClientImpls.DebuggerEventListImpl eventList = DtoClientImpls.DebuggerEventListImpl.make();
-            DebuggerEventListUnmarshaller unmarshaller = new DebuggerEventListUnmarshaller(eventList);
+            DebuggerEventListUnmarshaller unmarshaller = new DebuggerEventListUnmarshaller();
 
             try {
                 service.checkEvents(debuggerInfo.getId(), new AsyncRequestCallback<DebuggerEventList>(unmarshaller) {
@@ -197,6 +203,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * @param reLaunchDebuggerPresenter
      * @param evaluateExpressionPresenter
      * @param changeValuePresenter
+     * @param notificationManager
      */
     @Inject
     protected DebuggerPresenter(DebuggerView view, JavaRuntimeResources resources, DebuggerClientService service, EventBus eventBus,
@@ -205,7 +212,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                                 ApplicationRunnerClientService applicationRunnerClientService, @Named("restContext") String restContext,
                                 BreakpointGutterManager gutterManager, FqnResolverFactory resolverFactory, EditorAgent editorAgent,
                                 ReLaunchDebuggerPresenter reLaunchDebuggerPresenter,
-                                EvaluateExpressionPresenter evaluateExpressionPresenter, ChangeValuePresenter changeValuePresenter) {
+                                EvaluateExpressionPresenter evaluateExpressionPresenter, ChangeValuePresenter changeValuePresenter,
+                                NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.view.setTitle(TITLE);
@@ -227,6 +235,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         this.reLaunchDebuggerPresenter = reLaunchDebuggerPresenter;
         this.evaluateExpressionPresenter = evaluateExpressionPresenter;
         this.changeValuePresenter = changeValuePresenter;
+        this.notificationManager = notificationManager;
         this.expireSoonAppsHandler = new SubscriptionHandler<Object>() {
             @Override
             public void onMessageReceived(Object result) {
@@ -256,8 +265,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
             }
         };
 
-        DtoClientImpls.DebuggerEventListImpl debuggerEventList = DtoClientImpls.DebuggerEventListImpl.make();
-        DebuggerEventListUnmarshallerWS unmarshallerWS = new DebuggerEventListUnmarshallerWS(debuggerEventList);
+        DebuggerEventListUnmarshallerWS unmarshallerWS = new DebuggerEventListUnmarshallerWS();
         this.debuggerEventsHandler = new SubscriptionHandler<DebuggerEventList>(unmarshallerWS) {
             @Override
             public void onMessageReceived(DebuggerEventList result) {
@@ -288,7 +296,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                         }
                     }
                     DebuggerPresenter.this.eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    DebuggerPresenter.this.console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    DebuggerPresenter.this.notificationManager.showNotification(notification);
                 }
             }
         };
@@ -398,8 +407,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
     /** Get dump. */
     private void doGetDump() {
-        DtoClientImpls.StackFrameDumpImpl stackFrameDump = DtoClientImpls.StackFrameDumpImpl.make();
-        StackFrameDumpUnmarshaller unmarshaller = new StackFrameDumpUnmarshaller(stackFrameDump);
+        StackFrameDumpUnmarshaller unmarshaller = new StackFrameDumpUnmarshaller();
 
         try {
             service.dump(debuggerInfo.getId(), new AsyncRequestCallback<StackFrameDump>(unmarshaller) {
@@ -416,12 +424,14 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 @Override
                 protected void onFailure(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -455,14 +465,17 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 @Override
                 protected void onFailure(Throwable exception) {
                     if (exception.getMessage() == null) {
-                        Window.alert(constant.prolongExpirationTimeFailed());
+                        Notification notification = new Notification(constant.prolongExpirationTimeFailed(), ERROR);
+                        notificationManager.showNotification(notification);
                     } else {
-                        Window.alert(exception.getMessage());
+                        Notification notification = new Notification(exception.getMessage(), ERROR);
+                        notificationManager.showNotification(notification);
                     }
                 }
             });
         } catch (WebSocketException e) {
-            Window.alert(constant.prolongExpirationTimeFailed());
+            Notification notification = new Notification(constant.prolongExpirationTimeFailed(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -494,13 +507,15 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 @Override
                 protected void onFailure(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
 
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -518,13 +533,15 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 @Override
                 protected void onFailure(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
 
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -547,15 +564,19 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     @Override
                     protected void onFailure(Throwable exception) {
                         eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                        console.print(exception.getMessage());
+                        Notification notification = new Notification(exception.getMessage(), ERROR);
+                        notificationManager.showNotification(notification);
                     }
                 });
 
             } catch (RequestException e) {
                 eventBus.fireEvent(new ExceptionThrownEvent(e));
-                console.print(e.getMessage());
+                Notification notification = new Notification(e.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
             }
         } else {
+            enableButtons(false);
+            gutterManager.unmarkCurrentBreakPoint();
             doStopApp();
         }
     }
@@ -575,7 +596,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     @Override
                     protected void onFailure(Throwable exception) {
                         String message = exception.getMessage() != null ? exception.getMessage() : constant.stopApplicationFailed();
-                        console.print(message);
+                        Notification notification = new Notification(message, ERROR);
+                        notificationManager.showNotification(notification);
 
                         if (exception instanceof ServerException) {
                             ServerException serverException = (ServerException)exception;
@@ -588,7 +610,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 });
             } catch (RequestException e) {
                 eventBus.fireEvent(new ExceptionThrownEvent(e));
-                console.print(e.getMessage());
+                Notification notification = new Notification(e.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
             }
         }
     }
@@ -601,7 +624,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      */
     private void appStopped(@NotNull String appName) {
         String msg = constant.applicationStoped(appName);
-        console.print(msg);
+        Notification notification = new Notification(msg, INFO);
+        notificationManager.showNotification(notification);
         runningApp = null;
     }
 
@@ -640,13 +664,15 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 @Override
                 protected void onFailure(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
 
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -664,13 +690,15 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 @Override
                 protected void onFailure(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
 
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -688,13 +716,15 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 @Override
                 protected void onFailure(Throwable exception) {
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    console.print(exception.getMessage());
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
                 }
 
             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -727,8 +757,39 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
     /** {@inheritDoc} */
     @Override
-    public void onSelectedVariable(@NotNull Variable variable) {
-        selectedVariable = variable;
+    public void onExpandTreeClicked() {
+        JsonArray<Variable> rootVariables = selectedVariable.getVariables();
+        if (rootVariables == null) {
+            ValueUnmarshaller unmarshaller = new ValueUnmarshaller();
+
+            try {
+                service.getValue(debuggerInfo.getId(), selectedVariable, new AsyncRequestCallback<Value>(unmarshaller) {
+                    @Override
+                    protected void onSuccess(Value result) {
+                        JsonArray<Variable> variables = result.getVariables();
+                        view.setVariablesIntoSelectedVariable(variables);
+                        view.updateSelectedVariable();
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                        Notification notification = new Notification(exception.getMessage(), ERROR);
+                        notificationManager.showNotification(notification);
+                    }
+                });
+            } catch (RequestException e) {
+                eventBus.fireEvent(new ExceptionThrownEvent(e));
+                Notification notification = new Notification(e.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSelectedTreeElementClicked(@NotNull Variable selectedVariable) {
+        this.selectedVariable = selectedVariable;
         updateChangeValueButton();
     }
 
@@ -792,7 +853,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         projectBuildHandler.removeHandler();
         BuildStatus buildStatus = event.getBuildStatus();
         if (buildStatus.getStatus().equals(BuildStatus.Status.SUCCESSFUL)) {
-            console.print(constant.applicationStarting());
+            notification = new Notification(constant.applicationStarting(), PROGRESS);
+            notificationManager.showNotification(notification);
             if (updateApp) {
                 updateApp = false;
                 if (writeJRebelCountProperty(project)) {
@@ -862,19 +924,22 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     @Override
                     protected void onSuccess(Object result) {
                         String message = constant.applicationUpdated(runningApp.getName(), getAppUrlsAsString(runningApp));
-                        console.print(message);
+                        Notification notification = new Notification(message, INFO);
+                        notificationManager.showNotification(notification);
                     }
 
                     @Override
                     protected void onFailure(Throwable exception) {
                         String message = exception.getMessage() != null ? exception.getMessage()
                                                                         : constant.updateApplicationFailed(runningApp.getName());
-                        console.print(message);
+                        Notification notification = new Notification(message, ERROR);
+                        notificationManager.showNotification(notification);
                     }
                 });
             } catch (RequestException e) {
                 eventBus.fireEvent(new ExceptionThrownEvent(e));
-                console.print(e.getMessage());
+                Notification notification = new Notification(e.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
             }
         }
     }
@@ -901,8 +966,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      *         location of .war file
      */
     private void debugApplication(@NotNull String warUrl) {
-        DtoClientImpls.ApplicationInstanceImpl applicationInstance = DtoClientImpls.ApplicationInstanceImpl.make();
-        ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS(applicationInstance);
+        ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS();
 
         try {
             applicationRunnerClientService
@@ -914,7 +978,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                             // ide/java/runner/stop?name=app-zcuz5b5wawcn5u23
                             // but it must be like:
                             // http://127.0.0.1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
-                            if (!result.getStopURL().matches("http[s]?://.+/IDE/rest/private/.*/stop\\?name=.+")) {
+                            if (!result.getStopURL().matches("http[s]?://.+/ide/rest/.*/stop\\?name=.+")) {
                                 String fixedStopURL = Window.Location.getProtocol() + "//" + Window.Location.getHost() + restContext + "/" +
                                                       result.getStopURL();
                                 ((DtoClientImpls.ApplicationInstanceImpl)result).setStopURL(fixedStopURL);
@@ -944,6 +1008,9 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         msg += "<br>"
                + constant.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
         console.print(msg);
+        notification.setStatus(FINISHED);
+        notification.setMessage(msg);
+
         connectDebugger(app);
         runningApp = app;
 
@@ -962,8 +1029,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      *         current application
      */
     private void connectDebugger(@NotNull final ApplicationInstance debugApplicationInstance) {
-        DtoClientImpls.DebuggerInfoImpl debuggerInfo = DtoClientImpls.DebuggerInfoImpl.make();
-        DebuggerInfoUnmarshaller unmarshaller = new DebuggerInfoUnmarshaller(debuggerInfo);
+        DebuggerInfoUnmarshaller unmarshaller = new DebuggerInfoUnmarshaller();
 
         try {
             service.connect(debugApplicationInstance.getDebugHost(), debugApplicationInstance.getDebugPort(),
@@ -981,7 +1047,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -1023,14 +1090,18 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
                     @Override
                     protected void onFailure(Throwable exception) {
-                        console.print(exception.getMessage());
+                        Notification notification = new Notification(exception.getMessage(), ERROR);
+                        notificationManager.showNotification(notification);
                     }
                 });
 
             } catch (RequestException e) {
-                console.print(e.getMessage());
+                Notification notification = new Notification(e.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
             }
         } else {
+            enableButtons(false);
+            gutterManager.unmarkCurrentBreakPoint();
             doStopApp();
         }
     }
@@ -1042,8 +1113,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      *         location of .war file
      */
     private void debugApplicationREST(@NotNull String warUrl) {
-        DtoClientImpls.ApplicationInstanceImpl applicationInstance = DtoClientImpls.ApplicationInstanceImpl.make();
-        ApplicationInstanceUnmarshaller unmarshaller = new ApplicationInstanceUnmarshaller(applicationInstance);
+        ApplicationInstanceUnmarshaller unmarshaller = new ApplicationInstanceUnmarshaller();
 
         try {
             applicationRunnerClientService.debugApplication(project.getName(), warUrl, isUseJRebel(),
@@ -1074,7 +1144,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         if (exception.getMessage() != null) {
             msg += " : " + exception.getMessage();
         }
-        console.print(msg);
+        notification.setType(ERROR);
+        notification.setMessage(msg);
     }
 
     /**

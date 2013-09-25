@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2003-2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.resources;
 
@@ -30,6 +31,7 @@ import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.http.client.RequestBuilder;
@@ -75,12 +77,12 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
      */
     @Inject
     public ResourceProviderComponent(ModelProvider genericModelProvider, Loader loader, EventBus eventBus,
-                                     @Named("defaultFileType") FileType defaulFile) {
+                                     @Named("defaultFileType") FileType defaulFile, @Named("restContext") String restContext) {
         super();
         this.genericModelProvider = genericModelProvider;
         this.eventBus = eventBus;
         this.defaulFile = defaulFile;
-        this.workspaceURL = "rest/ide/vfs/v2";
+        this.workspaceURL = restContext + '/' + Utils.getWorkspaceName() + "/vfs/v2";
         this.modelProviders = JsonCollections.<ModelProvider>createStringMap();
         this.natures = JsonCollections.<ProjectNature>createStringMap();
         this.fileTypes = JsonCollections.createIntegerMap();
@@ -90,7 +92,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     @Override
     public void start(final Callback<Component, ComponentException> callback) {
         AsyncRequestCallback<VirtualFileSystemInfo> internalCallback =
-                new AsyncRequestCallback<VirtualFileSystemInfo>(new VFSInfoUnmarshaller(new VirtualFileSystemInfo())) {
+                new AsyncRequestCallback<VirtualFileSystemInfo>(new VFSInfoUnmarshaller()) {
                     @Override
                     protected void onSuccess(VirtualFileSystemInfo result) {
                         vfsInfo = result;
@@ -121,14 +123,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     /** {@inheritDoc} */
     @Override
     public void getProject(final String name, final AsyncCallback<Project> callback) {
-
-        // initialize empty project object
-        //Project newProject = new Project(name, parentProject, properties);
-        ProjectModelProviderAdapter adapter = new ProjectModelProviderAdapter(this);
-
         // create internal wrapping Request Callback with proper Unmarshaller
         AsyncRequestCallback<ProjectModelProviderAdapter> internalCallback =
-                new AsyncRequestCallback<ProjectModelProviderAdapter>(new ProjectModelUnmarshaller(adapter)) {
+                new AsyncRequestCallback<ProjectModelProviderAdapter>(new ProjectModelUnmarshaller(this)) {
                     @Override
                     protected void onSuccess(ProjectModelProviderAdapter result) {
                         Folder rootFolder = vfsInfo.getRoot();
@@ -207,12 +204,10 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     @Override
     public void createProject(String name, JsonArray<Property> properties, final AsyncCallback<Project> callback) {
         final Folder rootFolder = vfsInfo.getRoot();
-        // initialize empty project object
-        ProjectModelProviderAdapter adapter = new ProjectModelProviderAdapter(this);
 
         // create internal wrapping Request Callback with proper Unmarshaller
         AsyncRequestCallback<ProjectModelProviderAdapter> internalCallback =
-                new AsyncRequestCallback<ProjectModelProviderAdapter>(new ProjectModelUnmarshaller(adapter)) {
+                new AsyncRequestCallback<ProjectModelProviderAdapter>(new ProjectModelUnmarshaller(this)) {
                     @Override
                     protected void onSuccess(ProjectModelProviderAdapter result) {
                         Project project = result.getProject();
@@ -455,5 +450,76 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     @Override
     public String getRootId() {
         return vfsInfo.getRoot().getId();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void delete(final Resource item, final AsyncCallback<String> callback) {
+        String url = item.getLinkByRelation(Link.REL_DELETE).getHref();
+        if (item instanceof File) {
+            url = URL.decode(url).replace("[lockToken]", ((File)item).getLock().getLockToken());
+        }
+
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
+        AsyncRequestCallback<String> internalCallback = new AsyncRequestCallback<String>(unmarshaller) {
+            @Override
+            protected void onSuccess(final String result) {
+                if (item instanceof Project) {
+                    showListProjects();
+                    callback.onSuccess(result);
+                } else {
+                    getProject(activeProject.getName(), new AsyncCallback<Project>() {
+                        @Override
+                        public void onSuccess(Project result) {
+                            callback.onSuccess(result.toString());
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            callback.onFailure(caught);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        };
+
+        loader.setMessage("Deleting item...");
+        try {
+            AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+        } catch (RequestException e) {
+            callback.onFailure(e);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void showListProjects() {
+        eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
+        activeProject = null;
+
+        final Folder rootFolder = vfsInfo.getRoot();
+        rootFolder.getChildren().clear();
+
+        listProjects(new AsyncCallback<JsonArray<String>>() {
+            @Override
+            public void onSuccess(JsonArray<String> result) {
+                for (String projectName : result.asIterable()) {
+                    Project project = new Project(eventBus);
+                    project.setName(projectName);
+                    rootFolder.addChild(project);
+                    eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(ResourceProviderComponent.class, "Can not get list of projects", caught);
+            }
+        });
     }
 }

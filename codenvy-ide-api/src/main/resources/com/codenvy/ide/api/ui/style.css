@@ -1,5 +1,23 @@
+/*
+ * CODENVY CONFIDENTIAL
+ * __________________
+ *
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
+ */
+
 @CHARSET "UTF-8";
-/*Tabs*/
+    /*Tabs*/
 @def tabBorder #bdbdbd;
 @def inactiveTabBackground #d6d6d6;
 @def activeTabBackground #ffffff;
@@ -17,7 +35,7 @@
 @def keyboardSelectionBackgroundColor #C3DEFF;
 @def anchorColor #1155CC;
 
-/* Tree */
+    /* Tree */
 @def hoverBackground #D4E8FF;
 @def selectionBackground #C3DEFF;
 
@@ -50,12 +68,12 @@
 @def editorLineHeight 15px;
 @def editorFontFamily 'Andale Mono', monospace;
 
-/* DialogBox*/
-@def dialogTopLeft url("IDE/style/light/window/window_TL.png") no-repeat;
-@def dialogTopCenter url("IDE/style/light/window/window_T.png") repeat-x;
-@def dialogTopRight url("IDE/style/light/window/window_TR.png") no-repeat;
-@def dialogMiddleLeft url("IDE/style/light/window/window_L.png") repeat-y;
-@def dialogMiddleRight url("IDE/style/light/window/window_R.png") repeat-y;
-@def dialogBottomLeft url("IDE/style/light/window/window_BL.png") no-repeat;
-@def dialogBottomCenter url("IDE/style/light/window/window_B.png") repeat-x;
-@def dialogBottomRight url("IDE/style/light/window/window_BR.png") no-repeat;
+    /* DialogBox*/
+@def dialogTopLeft url("/ide/_app/style/light/window/window_TL.png") no-repeat;
+@def dialogTopCenter url("/ide/_app/style/light/window/window_T.png") repeat-x;
+@def dialogTopRight url("/ide/_app/style/light/window/window_TR.png") no-repeat;
+@def dialogMiddleLeft url("/ide/_app/style/light/window/window_L.png") repeat-y;
+@def dialogMiddleRight url("/ide/_app/style/light/window/window_R.png") repeat-y;
+@def dialogBottomLeft url("/ide/_app/style/light/window/window_BL.png") no-repeat;
+@def dialogBottomCenter url("/ide/_app/style/light/window/window_B.png") repeat-x;
+@def dialogBottomRight url("/ide/_app/style/light/window/window_BR.png") no-repeat;

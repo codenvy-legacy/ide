@@ -1,25 +1,25 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.java.jdi.client.debug.expression;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
@@ -30,6 +30,8 @@ import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Presenter for evaluate expression.
@@ -44,7 +46,7 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
     private DebuggerInfo                    debuggerInfo;
     private JavaRuntimeLocalizationConstant constant;
     private EventBus                        eventBus;
-    private ConsolePart                     console;
+    private NotificationManager             notificationManager;
 
     /**
      * Create presenter.
@@ -53,17 +55,18 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
      * @param service
      * @param constant
      * @param eventBus
-     * @param console
+     * @param notificationManager
      */
     @Inject
     protected EvaluateExpressionPresenter(EvaluateExpressionView view, DebuggerClientService service,
-                                          JavaRuntimeLocalizationConstant constant, EventBus eventBus, ConsolePart console) {
+                                          JavaRuntimeLocalizationConstant constant, EventBus eventBus,
+                                          NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.constant = constant;
         this.eventBus = eventBus;
-        this.console = console;
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -93,28 +96,27 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
     public void onEvaluateClicked() {
         view.setEnableEvaluateButton(false);
 
-        StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+        StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
-            service.evaluateExpression(debuggerInfo.getId(),
-                                       view.getExpression(),
-                                       new AsyncRequestCallback<StringBuilder>(unmarshaller) {
-                                           @Override
-                                           protected void onSuccess(StringBuilder result) {
-                                               view.setResult(result.toString());
-                                               view.setEnableEvaluateButton(true);
-                                           }
+            service.evaluateExpression(debuggerInfo.getId(), view.getExpression(), new AsyncRequestCallback<String>(unmarshaller) {
+                @Override
+                protected void onSuccess(String result) {
+                    view.setResult(result);
+                    view.setEnableEvaluateButton(true);
+                }
 
-                                           @Override
-                                           protected void onFailure(Throwable exception) {
-                                               String errorMessage = constant.evaluateExpressionFailed(exception.getMessage());
-                                               view.setResult(errorMessage);
-                                               view.setEnableEvaluateButton(true);
-                                           }
-                                       });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    String errorMessage = constant.evaluateExpressionFailed(exception.getMessage());
+                    view.setResult(errorMessage);
+                    view.setEnableEvaluateButton(true);
+                }
+            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             view.setEnableEvaluateButton(true);
         }
     }

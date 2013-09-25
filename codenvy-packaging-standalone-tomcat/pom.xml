@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (C) 2009 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public 
-   License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version. This software is distributed 
-   in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-   See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
-   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
+<!--
+  ~ CODENVY CONFIDENTIAL
+  ~ __________________
+  ~
+  ~ [2012] - [2013] Codenvy, S.A.
+  ~ All Rights Reserved.
+  ~
+  ~ NOTICE:  All information contained herein is, and remains
+  ~ the property of Codenvy S.A. and its suppliers,
+  ~ if any.  The intellectual and technical concepts contained
+  ~ herein are proprietary to Codenvy S.A.
+  ~ and its suppliers and may be covered by U.S. and Foreign Patents,
+  ~ patents in process, and are protected by trade secret or copyright law.
+  ~ Dissemination of this information or reproduction of this material
+  ~ is strictly forbidden unless prior written permission is obtained
+  ~ from Codenvy S.A..
+  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -14,18 +26,12 @@
     </parent>
     <artifactId>codenvy-packaging-standalone-tomcat</artifactId>
     <packaging>pom</packaging>
-    <name>Codenvy IDE :: Assemblies Tomcat</name>
+    <name>Codenvy :: Assemblies Tomcat</name>
     <dependencies>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-client</artifactId>
+            <artifactId>codenvy-application-war</artifactId>
             <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-rest-war</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
@@ -58,12 +64,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-storage</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-gadget-server</artifactId>
             <version>${org.exoplatform.ide.version}</version>
             <type>war</type>
         </dependency>
@@ -189,29 +189,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
             <version>${ch.qos.logback.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-gadget</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-ui</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-commons</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>gwt-user</artifactId>
-                    <groupId>com.google.gwt</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -546,12 +523,6 @@
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs-fs</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-ruby</artifactId>
             <version>${org.exoplatform.ide.version}</version>
             <exclusions>
@@ -712,39 +683,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>check-environment-ready</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireProperty>
-                                    <property>exo.projects.directory.dependencies</property>
-                                    <message>You must define the property exo.projects.directory.dependencies to
-                                        give the path to
-                                        the directory where you store
-                                        your applications servers
-                                    </message>
-                                </requireProperty>
-                                <requireProperty>
-                                    <property>tomcat.version</property>
-                                    <message>You must define the property tomcat.version to give the name of the directory where is stored
-                                        tomcat
-                                    </message>
-                                    <regex>${tomcat.version}</regex>
-                                    <regexMessage>Tomcat version must be: ${tomcat.version}</regexMessage>
-                                </requireProperty>
-                            </rules>
-                            <fail>true</fail>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
@@ -779,19 +717,21 @@
                                 <move file="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j-${org.slf4j.version}.jar"
                                       tofile="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j.jar"/>
 
-                                <unwar src="${project.build.directory}/packager-conf/war/codenvy-ide-client-${project.version}.war"
-                                       dest="${project.build.directory}/packager-conf/war/IDE">
+                                <unwar src="${project.build.directory}/packager-conf/war/codenvy-application-war-${project.version}.war"
+                                       dest="${project.build.directory}/packager-conf/war/ide">
                                     <patternset>
                                         <exclude name="**/lib/**"/>
                                     </patternset>
                                 </unwar>
 
-                                <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
-                                    <fileset dir="${project.build.directory}/packager-conf/war/IDE"/>
+                                <move todir="${project.build.directory}/packager-conf/war/ide/_app">
+                                    <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/"/>
+                                </move>
+
+                                <war destfile="${project.build.directory}/tomcat-ide/webapps/ide.war" needxmlfile="false">
+                                    <fileset dir="${project.build.directory}/packager-conf/war/ide"/>
                                 </war>
 
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${org.exoplatform.ide.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${org.exoplatform.ide.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${project.version}.war"
@@ -802,8 +742,6 @@
                                       tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${org.exoplatform.ide.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
                                 <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
@@ -842,7 +780,6 @@
                                 </unzip>
                                 <move file="${project.build.directory}/tomcat-ide/google_appengine"
                                       tofile="${project.build.directory}/tomcat-ide/appengine-python-sdk"/>
-
                             </tasks>
                         </configuration>
                         <goals>
@@ -873,4 +810,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

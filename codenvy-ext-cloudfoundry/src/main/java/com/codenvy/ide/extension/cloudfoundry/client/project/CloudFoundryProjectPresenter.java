@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.extension.cloudfoundry.client.project;
 
@@ -37,7 +36,6 @@ import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationPrese
 import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.update.UpdatePropertiesPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter;
-import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -161,12 +159,12 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
     /** Getting logs for CloudFoundry Application. */
     protected void getLogs() {
         try {
-            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+            StringUnmarshaller unmarshaller = new StringUnmarshaller();
             service.getLogs(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
-                            new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                            new AsyncRequestCallback<String>(unmarshaller) {
                                 @Override
-                                protected void onSuccess(StringBuilder result) {
-                                    console.print("<pre>" + result.toString() + "</pre>");
+                                protected void onSuccess(String result) {
+                                    console.print("<pre>" + result + "</pre>");
                                 }
 
                                 @Override
@@ -195,8 +193,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
      * @param project
      */
     protected void getApplicationInfo(final Project project) {
-        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
-        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller();
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
             public void onLoggedIn() {

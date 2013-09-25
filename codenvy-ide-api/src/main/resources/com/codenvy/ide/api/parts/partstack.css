@@ -1,0 +1,195 @@
+/*
+ * CODENVY CONFIDENTIAL
+ * __________________
+ *
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
+ */
+
+@CHARSET "UTF-8";
+
+.ide-PartStack {
+    /* fill */
+}
+
+.ide-PartStack .ide-PartStack-Tabs {
+    /* panel where tab-buttons created*/
+    background: tabsPanelBackground;
+    border-bottom: 1px solid tabBorder;
+}
+
+.ide-PartStack .ide-PartStack-Editor-Content {
+    /* content panel */
+    /*border: 2px solid activeTabBackground;*/
+    background-color: activeTabBackground;
+}
+
+.ide-PartStack .ide-PartStack-Tab {
+    /* tab button */
+    margin-left: 3px;
+    margin-top: 3px;
+    background: inactiveTabBackground;
+    border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    border: 1px solid tabBorder;
+    padding: 3px;
+    cursor: pointer;
+    cursor: hand;
+    position: relative;
+    display: inline-block;
+    height: 15px;
+}
+
+.ide-PartStack .ide-PartStack-Tab span {
+    /* margin between text and image */
+    margin-right: 4px;
+    margin-left: 4px;
+    white-space: nowrap;
+}
+
+.ide-PartStack .ide-PartStack-Tab img {
+    vertical-align: bottom;
+}
+
+.ide-PartStack .ide-PartStack-Tab .CloseButton {
+    /* change cursor for close button */
+    cursor: default;
+    opacity: 0.5;
+    vertical-align: top;
+}
+
+.ide-PartStack .ide-PartStack-Tab .CloseButton:hover {
+    /* hihglight on hover */
+    opacity: 1;
+}
+
+.ide-PartStack .ide-PartStack-Tab-selected {
+    /* tab that is currently selected (active) */
+    cursor: default;
+    /*font-weight: bold;*/
+    padding: 3px;
+    border-bottom: 2px solid activeTabBackground;
+    background: activeTabBackground;
+}
+
+.ide-PartStack-focused {
+
+}
+
+.ide-PartStack-focused .ide-Base-Part-Toolbar {
+    /*border: 2px solid highlightFocus;*/
+    background: -moz-linear-gradient(top, rgba(195,222,255,1) 0%, rgba(212,232,255,1) 5%, rgba(212,232,255,1) 95%, rgba(195,222,255,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(195,222,255,1)), color-stop(5%,rgba(212,232,255,1)), color-stop(95%,rgba(212,232,255,1)), color-stop(100%,rgba(195,222,255,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(195,222,255,1) 0%,rgba(212,232,255,1) 5%,rgba(212,232,255,1) 95%,rgba(195,222,255,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(195,222,255,1) 0%,rgba(212,232,255,1) 5%,rgba(212,232,255,1) 95%,rgba(195,222,255,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(195,222,255,1) 0%,rgba(212,232,255,1) 5%,rgba(212,232,255,1) 95%,rgba(195,222,255,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(195,222,255,1) 0%,rgba(212,232,255,1) 5%,rgba(212,232,255,1) 95%,rgba(195,222,255,1) 100%); /* W3C */
+}
+
+/*.ide-PartStack-focused .ide-PartStack-Tab-selected {*/
+    /*background: highlightFocus;*/
+    /*border-bottom: 2px solid highlightFocus;*/
+/*}*/
+
+.ide-PartStack-Tab-Left{
+    -webkit-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    transform: rotate(270deg);
+    transform-origin: 8px 8px;
+    -webkit-transform-origin:8px 8px; /* Safari and Chrome */
+    -moz-transform-origin:8px 8px; /* Firefox */
+    position: absolute;
+
+}
+.ide-PartStack-Tab-Label{
+    /* margin between text and image */
+    margin-right: 4px;
+    margin-left: 4px;
+    white-space: nowrap;
+
+}
+
+.ide-PartStack-Tab-Right{
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    transform: rotate(90deg);
+    transform-origin: 13px 8px;
+    -webkit-transform-origin:13px 8px; /* Safari and Chrome */
+    -moz-transform-origin:13px 8px; /* Firefox */
+    position: absolute;
+    margin-left: 0 !important;
+}
+.ide-PartStack-Tab-Below {
+    /* tab button */
+    margin-left: 3px;
+    background: inactiveTabBackground;
+    border: 1px solid tabBorder;
+    cursor: pointer;
+    cursor: hand;
+    position: relative;
+    display: inline-block;
+    height: 18px;
+    top: 1px;
+}
+
+.ide-PartStack-Tool-Tab-selected {
+    /* tab that is currently selected (active) */
+    cursor: default;
+    /*font-weight: bold;*/
+    /*padding: 3px;*/
+    /*border-top: 2px solid activeTabBackground;*/
+    background-color: activeTabBackground !important;
+}
+/*.ide-PartStack-focused .ide-PartStack-Tab-selected-Below {*/
+    /*background: highlightFocus;*/
+    /*border-top: 2px solid highlightFocus;*/
+/*}*/
+
+.ide-PartStack-Content{
+    background-color: activeTabBackground;
+    width: 100%;
+    height: 100%;
+}
+
+.ide-PartStack-Tool-Tab{
+    /* tab button */
+    margin-left: 1px;
+    /*margin-top: 3px;*/
+    background: inactiveTabBackground;
+    /*border-radius: 4px 4px 0 0;*/
+    /*-moz-border-radius: 4px 4px 0 0;*/
+    /*-webkit-border-radius: 4px 4px 0 0;*/
+    border: 1px solid tabBorder;
+    /*padding: 3px;*/
+    cursor: pointer;
+    cursor: hand;
+    position: relative;
+    height: 18px;
+    display: inline-block;
+}
+
+.ide-Base-Part-Toolbar{
+    background: -webkit-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);
+    background: -moz-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);
+    background: linear-gradient(to bottom, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);
+    padding-left: 3px;
+    padding-right: 5px;
+    /*border-left: 1px solid  rgb(150, 150, 150);*/
+}
+
+.ide-button-micro{
+    padding: 1px 5px;
+    font-size: 9px;
+    line-height: 16px;
+}

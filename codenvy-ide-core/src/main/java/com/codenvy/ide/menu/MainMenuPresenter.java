@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2003-2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.menu;
 
@@ -20,7 +21,6 @@ import com.codenvy.ide.api.mvp.Presenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 
 /**
@@ -31,34 +31,22 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class MainMenuPresenter implements Presenter, MainMenuView.ActionDelegate {
 
-    private final EventBus eventBus;
-
     private final MainMenuView view;
 
     /**
-     * Main Menu Presenter requires Event Bus to listen to Expression Changed Event
-     * and View implementation
+     * Main Menu Presenter requires View implementation
      *
-     * @param eventBus
      * @param view
      */
     @Inject
-    public MainMenuPresenter(EventBus eventBus, MainMenuView view) {
-        this.eventBus = eventBus;
+    public MainMenuPresenter(MainMenuView view) {
         this.view = view;
-        view.setDelegate(this);
-        bind();
+        this.view.setDelegate(this);
     }
-
-    /** Bind event handlers to Event Bus */
-    private void bind() {
-    }
-
 
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
     }
-
 }

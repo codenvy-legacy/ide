@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2003-2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.part;
 
@@ -26,7 +27,7 @@ import com.codenvy.ide.api.ui.workspace.PartStackView.TabItem;
 import com.codenvy.ide.api.ui.workspace.PropertyListener;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.part.base.BasePresenter;
+import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.workspace.WorkBenchPartController;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -53,7 +54,7 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class PartStackPresenter implements Presenter, PartStackView.ActionDelegate, PartStack {
 
-    private static final double                   DEFAULT_SIZE = 200;
+    private static final int                      DEFAULT_SIZE = 200;
     /** list of parts */
     protected final      JsonArray<PartPresenter> parts        = JsonCollections.createArray();
     /** view implementation */
@@ -131,9 +132,11 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             ((BasePresenter)part).setPartStack(this);
         }
         parts.add(part);
-        partsSize.add(DEFAULT_SIZE);
+
+        double partSize = part.getSize() <= 0 ? DEFAULT_SIZE : part.getSize();
+        partsSize.add(partSize);
         if (workBenchPartController != null)
-            workBenchPartController.setSize(DEFAULT_SIZE);
+            workBenchPartController.setSize(partSize);
         part.addPropertyListener(propertyListener);
         // include close button
         ImageResource titleImage = part.getTitleImage();
@@ -142,7 +145,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
                                   partsClosable);
         bindEvents(tabItem, part);
 //        setActivePart(part);
-        // requst focus
+        // request focus
         onRequestFocus();
     }
 

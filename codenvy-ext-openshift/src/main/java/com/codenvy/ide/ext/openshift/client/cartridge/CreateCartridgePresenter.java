@@ -1,24 +1,24 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.openshift.client.cartridge;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.openshift.client.OpenShiftAsyncRequestCallback;
 import com.codenvy.ide.ext.openshift.client.OpenShiftClientServiceImpl;
@@ -29,14 +29,13 @@ import com.codenvy.ide.ext.openshift.client.marshaller.ListUnmarshaller;
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
 import com.codenvy.ide.ext.openshift.shared.OpenShiftEmbeddableCartridge;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
 /**
  * Presenter to control creating cartridges for the application on OpenShift.
@@ -47,22 +46,23 @@ import java.util.List;
 public class CreateCartridgePresenter implements CreateCartridgeView.ActionDelegate {
     private CreateCartridgeView           view;
     private EventBus                      eventBus;
-    private ConsolePart                   console;
     private OpenShiftClientServiceImpl    service;
     private OpenShiftLocalizationConstant constant;
     private LoginPresenter                loginPresenter;
+    private NotificationManager           notificationManager;
     private AppInfo                       application;
     private AsyncCallback<Boolean>        callback;
 
     @Inject
-    protected CreateCartridgePresenter(CreateCartridgeView view, EventBus eventBus, ConsolePart console, OpenShiftClientServiceImpl service,
-                                       OpenShiftLocalizationConstant constant, LoginPresenter loginPresenter) {
+    protected CreateCartridgePresenter(CreateCartridgeView view, EventBus eventBus, OpenShiftClientServiceImpl service,
+                                       OpenShiftLocalizationConstant constant, LoginPresenter loginPresenter,
+                                       NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
-        this.console = console;
         this.constant = constant;
         this.service = service;
         this.loginPresenter = loginPresenter;
+        this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
     }
@@ -92,14 +92,14 @@ public class CreateCartridgePresenter implements CreateCartridgeView.ActionDeleg
                 setCartridges();
             }
         };
+        ListUnmarshaller unmarshaller = new ListUnmarshaller();
 
         try {
-            ListUnmarshaller unmarshaller = new ListUnmarshaller(new ArrayList<String>());
             service.getCartridges(
-                    new OpenShiftAsyncRequestCallback<List<String>>(unmarshaller, loggedInHandler, null, eventBus, console,
-                                                                    constant, loginPresenter) {
+                    new OpenShiftAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, null, eventBus, loginPresenter,
+                                                                         notificationManager) {
                         @Override
-                        protected void onSuccess(List<String> result) {
+                        protected void onSuccess(JsonArray<String> result) {
                             JsonArray<OpenShiftEmbeddableCartridge> cartridges = application.getEmbeddedCartridges();
                             for (int i = 0; i < cartridges.size(); i++) {
                                 if (result.contains(cartridges.get(i).getName())) {
@@ -107,17 +107,13 @@ public class CreateCartridgePresenter implements CreateCartridgeView.ActionDeleg
                                 }
                             }
 
-                            JsonArray<String> list = JsonCollections.createArray();
-                            for (String cartridge : result) {
-                                list.add(cartridge);
-                            }
-
-                            view.setCartridgesList(list);
+                            view.setCartridgesList(result);
                             view.showDialog();
                         }
                     });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -136,8 +132,8 @@ public class CreateCartridgePresenter implements CreateCartridgeView.ActionDeleg
         final String cartridgeName = view.getCartridgeName();
         try {
             service.addCartridge(appName, cartridgeName,
-                                 new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, console, constant,
-                                                                         loginPresenter) {
+                                 new OpenShiftAsyncRequestCallback<Void>(null, loggedInHandler, null, eventBus, loginPresenter,
+                                                                         notificationManager) {
                                      @Override
                                      protected void onSuccess(Void result) {
                                          if (callback != null) {
@@ -145,7 +141,8 @@ public class CreateCartridgePresenter implements CreateCartridgeView.ActionDeleg
                                          }
                                          view.close();
                                          String msg = constant.createCartridgeViewSuccessfullyAdded(cartridgeName, appName);
-                                         console.print(msg);
+                                         Notification notification = new Notification(msg, INFO);
+                                         notificationManager.showNotification(notification);
                                      }
 
                                      @Override
@@ -160,7 +157,8 @@ public class CreateCartridgePresenter implements CreateCartridgeView.ActionDeleg
         } catch (RequestException e) {
             view.close();
 
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }

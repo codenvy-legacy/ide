@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2003-2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.workspace;
 
@@ -21,6 +22,7 @@ import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.menu.MainMenuPresenter;
+import com.codenvy.ide.notification.NotificationManagerImpl;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -46,6 +48,8 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
 
     private final ToolbarPresenter toolbarPresenter;
 
+    private final NotificationManagerImpl notificationManager;
+
     /**
      * Instantiates Presenter
      *
@@ -55,12 +59,13 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
      */
     @Inject
     protected WorkspacePresenter(WorkspaceView view, MainMenuPresenter menu, ToolbarPresenter toolbarPresenter,
-                                 Provider<WorkBenchPresenter> genericPerspectiveProvider) {
+                                 Provider<WorkBenchPresenter> genericPerspectiveProvider, NotificationManagerImpl notificationManager) {
         super();
         this.view = view;
-        this.toolbarPresenter = toolbarPresenter;
         this.view.setDelegate(this);
+        this.toolbarPresenter = toolbarPresenter;
         this.menu = menu;
+        this.notificationManager = notificationManager;
 
         this.workBenchPresenter = genericPerspectiveProvider.get();
     }
@@ -72,6 +77,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
         menu.go(view.getMenuPanel());
         toolbarPresenter.go(view.getToolbarPanel());
         workBenchPresenter.go(view.getPerspectivePanel());
+        notificationManager.go(view.getStatusPanel());
         container.setWidget(view);
     }
 

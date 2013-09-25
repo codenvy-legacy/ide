@@ -1,38 +1,41 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
+import elemental.html.DragEvent;
 import elemental.html.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.parts.PartStackUIResources;
+import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
+import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.part.PartStackUIResources;
-import com.codenvy.ide.part.base.BaseView;
 import com.codenvy.ide.ui.Button;
 import com.codenvy.ide.ui.list.SimpleList;
+import com.codenvy.ide.ui.tree.Tree;
+import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -60,7 +63,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
     private static DebuggerViewImplUiBinder ourUiBinder = GWT.create(DebuggerViewImplUiBinder.class);
 
     private SimpleList<Breakpoint> breakPoints;
-    private SimpleList<Variable>   variables;
+    private Tree<Variable>         variables;
     @UiField
     Button                          btnResume;
     @UiField
@@ -89,6 +92,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
     JavaRuntimeResources            res;
     @UiField(provided = true)
     Resources                       coreRes;
+    private TreeNodeElement<Variable> selectedVariable;
 
     /**
      * Create view.
@@ -97,10 +101,12 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
      * @param resources
      * @param locale
      * @param coreRes
+     * @param rendererResources
      */
     @Inject
     protected DebuggerViewImpl(PartStackUIResources partStackUIResources, JavaRuntimeResources resources,
-                               JavaRuntimeLocalizationConstant locale, Resources coreRes) {
+                               JavaRuntimeLocalizationConstant locale, Resources coreRes,
+                               VariableTreeNodeRenderer.Resources rendererResources) {
         super(partStackUIResources);
 
         this.locale = locale;
@@ -152,57 +158,64 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
                                         listBreakPointsRenderer,
                                         listBreakPointsDelegate);
         this.breakPointsPanel.add(breakPoints);
-
-        TableElement variablesElement = Elements.createTableElement();
-        variablesElement.setAttribute("style", "width: 100%");
-        SimpleList.ListEventDelegate<Variable> variablesDelegate = new SimpleList.ListEventDelegate<Variable>() {
-            public void onListItemClicked(Element itemElement, Variable itemData) {
-                variables.getSelectionModel().setSelectedItem(itemData);
-                delegate.onSelectedVariable(itemData);
-            }
-
-            public void onListItemDoubleClicked(Element listItemBase, Variable itemData) {
-            }
-        };
-        SimpleList.ListItemRenderer<Variable> variablesItemRenderer = new SimpleList.ListItemRenderer<Variable>() {
+        this.variables = Tree.create(rendererResources, new VariableTreeNodeDataAdapter(), new VariableTreeNodeRenderer(rendererResources));
+        this.variables.setTreeEventHandler(new Tree.Listener<Variable>() {
             @Override
-            public void render(Element itemElement, Variable itemData) {
-                TableCellElement label = Elements.createTDElement();
-
-                SafeHtmlBuilder sb = new SafeHtmlBuilder();
-                // Add icon
-                sb.appendHtmlConstant("<table><tr><td>");
-                ImageResource icon = res.local();
-                if (icon != null) {
-                    sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
-                }
-                sb.appendHtmlConstant("</td>");
-
-                // Add title
-                sb.appendHtmlConstant("<td>");
-                sb.appendEscaped(itemData.getName() + ": " + itemData.getValue());
-                sb.appendHtmlConstant("</td></tr></table>");
-
-                label.setInnerHTML(sb.toSafeHtml().asString());
-
-                itemElement.appendChild(label);
+            public void onNodeAction(TreeNodeElement<Variable> node) {
+                selectedVariable = node;
+                delegate.onSelectedTreeElementClicked(selectedVariable.getData());
             }
 
             @Override
-            public Element createElement() {
-                return Elements.createTRElement();
+            public void onNodeClosed(TreeNodeElement<Variable> node) {
+                //do nothing
             }
-        };
-        variables = SimpleList.create((SimpleList.View)variablesElement, coreRes.defaultSimpleListCss(), variablesItemRenderer,
-                                      variablesDelegate);
-        this.variablesPanel.add(variables);
+
+            @Override
+            public void onNodeContextMenu(int mouseX, int mouseY, TreeNodeElement<Variable> node) {
+                //do nothing
+            }
+
+            @Override
+            public void onNodeDragStart(TreeNodeElement<Variable> node, DragEvent event) {
+                //do nothing
+            }
+
+            @Override
+            public void onNodeDragDrop(TreeNodeElement<Variable> node, DragEvent event) {
+                //do nothing
+            }
+
+            @Override
+            public void onNodeExpanded(final TreeNodeElement<Variable> node) {
+                selectedVariable = node;
+                delegate.onSelectedTreeElementClicked(selectedVariable.getData());
+                delegate.onExpandTreeClicked();
+            }
+
+            @Override
+            public void onRootContextMenu(int mouseX, int mouseY) {
+                //do nothing
+            }
+
+            @Override
+            public void onRootDragDrop(DragEvent event) {
+                //do nothing
+            }
+        });
+        this.variablesPanel.add(variables.asWidget());
     }
 
     /** {@inheritDoc} */
     @Override
     public void setVariables(@NotNull JsonArray<Variable> variables) {
-        // TODO change to tree
-        this.variables.render(variables);
+        Variable root = this.variables.getModel().getRoot();
+        if (root == null) {
+            root = DtoClientImpls.VariableImpl.make();
+            this.variables.getModel().setRoot(root);
+        }
+        ((DtoClientImpls.VariableImpl)root).setVariables(variables);
+        this.variables.renderTree(0);
     }
 
     /** {@inheritDoc} */
@@ -263,6 +276,20 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
     @Override
     public void setEnableEvaluateExpressionButtonEnable(boolean isEnable) {
         btnEvaluateExpression.setEnabled(isEnable);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void updateSelectedVariable() {
+        variables.closeNode(selectedVariable);
+        variables.expandNode(selectedVariable);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVariablesIntoSelectedVariable(@NotNull JsonArray<Variable> variables) {
+        Variable rootVariable = selectedVariable.getData();
+        ((DtoClientImpls.VariableImpl)rootVariable).setVariables(variables);
     }
 
     @UiHandler("btnResume")

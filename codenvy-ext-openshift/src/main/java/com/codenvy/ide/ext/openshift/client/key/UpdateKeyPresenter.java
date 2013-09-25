@@ -1,32 +1,30 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.openshift.client.key;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.openshift.client.OpenShiftAsyncRequestCallback;
 import com.codenvy.ide.ext.openshift.client.OpenShiftClientServiceImpl;
-import com.codenvy.ide.ext.openshift.client.OpenShiftLocalizationConstant;
 import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.openshift.client.login.LoginPresenter;
 import com.codenvy.ide.ext.openshift.client.marshaller.UserInfoUnmarshaller;
-import com.codenvy.ide.ext.openshift.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.openshift.shared.RHUserInfo;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
@@ -34,6 +32,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
 /**
  * Handler which execute update public ssh key for OpenShift account.
@@ -43,30 +44,27 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class UpdateKeyPresenter {
-    private EventBus                      eventBus;
-    private ConsolePart                   console;
-    private OpenShiftLocalizationConstant constant;
-    private LoginPresenter                loginPresenter;
-    private OpenShiftClientServiceImpl    service;
-    private AsyncCallback<Boolean>        publicKeyUpdateCallback;
+    private EventBus                   eventBus;
+    private LoginPresenter             loginPresenter;
+    private OpenShiftClientServiceImpl service;
+    private NotificationManager        notificationManager;
+    private AsyncCallback<Boolean>     publicKeyUpdateCallback;
 
     /**
      * Create handler.
      *
      * @param eventBus
-     * @param console
-     * @param constant
      * @param loginPresenter
      * @param service
+     * @param notificationManager
      */
     @Inject
-    protected UpdateKeyPresenter(EventBus eventBus, ConsolePart console, OpenShiftLocalizationConstant constant,
-                                 LoginPresenter loginPresenter, OpenShiftClientServiceImpl service) {
+    protected UpdateKeyPresenter(EventBus eventBus, LoginPresenter loginPresenter, OpenShiftClientServiceImpl service,
+                                 NotificationManager notificationManager) {
         this.eventBus = eventBus;
-        this.console = console;
-        this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.notificationManager = notificationManager;
     }
 
     /** If user is not logged in to OpenShift, this handler will be called, after user logged in. */
@@ -85,14 +83,12 @@ public class UpdateKeyPresenter {
      */
     public void updatePublicKey(AsyncCallback<Boolean> callback) {
         this.publicKeyUpdateCallback = callback;
+        UserInfoUnmarshaller unmarshaller = new UserInfoUnmarshaller();
 
         try {
-            DtoClientImpls.RHUserInfoImpl userInfo = DtoClientImpls.RHUserInfoImpl.make();
-            UserInfoUnmarshaller unmarshaller = new UserInfoUnmarshaller(userInfo);
-
             service.getUserInfo(false,
                                 new OpenShiftAsyncRequestCallback<RHUserInfo>(unmarshaller, updatePublicKeyLoginHandler, null, eventBus,
-                                                                              console, constant, loginPresenter) {
+                                                                              loginPresenter, notificationManager) {
                                     @Override
                                     protected void onSuccess(RHUserInfo result) {
                                         if (result.getNamespace() != null && !result.getNamespace().isEmpty()) {
@@ -107,7 +103,8 @@ public class UpdateKeyPresenter {
                                 });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
     }
 
@@ -120,12 +117,13 @@ public class UpdateKeyPresenter {
     private void updateDomainWithNewKey(String nameSpace) {
         try {
             service.createDomain(nameSpace, true,
-                                 new OpenShiftAsyncRequestCallback<String>(null, updatePublicKeyLoginHandler, null, eventBus, console,
-                                                                           constant, loginPresenter) {
+                                 new OpenShiftAsyncRequestCallback<String>(null, updatePublicKeyLoginHandler, null, eventBus,
+                                                                           loginPresenter, notificationManager) {
                                      @Override
                                      protected void onSuccess(String result) {
                                          String msg = "Public key successfully updated.";
-                                         console.print(msg);
+                                         Notification notification = new Notification(msg, INFO);
+                                         notificationManager.showNotification(notification);
                                          if (publicKeyUpdateCallback != null) {
                                              publicKeyUpdateCallback.onSuccess(true);
                                          }
@@ -141,7 +139,8 @@ public class UpdateKeyPresenter {
                                  });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
             if (publicKeyUpdateCallback != null) {
                 publicKeyUpdateCallback.onFailure(e);
             }
