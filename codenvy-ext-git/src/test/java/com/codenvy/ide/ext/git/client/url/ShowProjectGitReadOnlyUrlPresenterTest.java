@@ -20,10 +20,15 @@ package com.codenvy.ide.ext.git.client.url;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import java.lang.reflect.Method;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -38,20 +43,58 @@ import static org.mockito.Mockito.*;
 public class ShowProjectGitReadOnlyUrlPresenterTest extends BaseTest {
     @Mock
     private ShowProjectGitReadOnlyUrlView      view;
-    @InjectMocks
     private ShowProjectGitReadOnlyUrlPresenter presenter;
 
+    @Before
+    public void disarm() {
+        super.disarm();
+
+        presenter = new ShowProjectGitReadOnlyUrlPresenter(view, service, resourceProvider, console, constant);
+    }
+
     @Test
-    public void testShowDialog() throws Exception {
+    public void testShowDialogWhenGetGitUrlRequestIsSuccessful() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, REMOTE_URI);
+                return callback;
+            }
+        }).when(service).getGitReadOnlyUrl(anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
         verify(service).getGitReadOnlyUrl(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<String>)anyObject());
-        verify(console, never()).print(anyString());
+        verify(view).setUrl(eq(REMOTE_URI));
     }
 
     @Test
-    public void testShowDialogWhenExceptionHappened() throws Exception {
+    public void testShowDialogWhenGetGitUrlRequestIsFailed() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(service).getGitReadOnlyUrl(anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+
+        presenter.showDialog();
+
+        verify(resourceProvider).getActiveProject();
+        verify(service).getGitReadOnlyUrl(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<String>)anyObject());
+        verify(console).print(anyString());
+        verify(constant).initFailed();
+    }
+
+    @Test
+    public void testShowDialogWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
                 .getGitReadOnlyUrl(anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
 
@@ -60,6 +103,7 @@ public class ShowProjectGitReadOnlyUrlPresenterTest extends BaseTest {
         verify(resourceProvider).getActiveProject();
         verify(service).getGitReadOnlyUrl(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<String>)anyObject());
         verify(console).print(anyString());
+        verify(constant).initFailed();
     }
 
     @Test
