@@ -21,11 +21,15 @@ import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import java.lang.reflect.Method;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -42,12 +46,13 @@ public class AddRemoteRepositoryPresenterTest extends BaseTest {
     private AddRemoteRepositoryView      view;
     @Mock
     private AsyncCallback<Void>          callback;
-    @InjectMocks
     private AddRemoteRepositoryPresenter presenter;
 
     @Before
     public void disarm() {
         super.disarm();
+
+        presenter = new AddRemoteRepositoryPresenter(view, service, resourceProvider);
 
         when(view.getName()).thenReturn(REMOTE_NAME);
         when(view.getUrl()).thenReturn(REMOTE_URI);
@@ -64,21 +69,50 @@ public class AddRemoteRepositoryPresenterTest extends BaseTest {
     }
 
     @Test
-    public void testOnOkClicked() throws Exception {
-        when(view.getName()).thenReturn(REMOTE_NAME);
-        when(view.getUrl()).thenReturn(REMOTE_URI);
+    public void testOnOkClickedWhenRemoteAddRequestIsSuccessful() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, EMPTY_TEXT);
+                return callback;
+            }
+        }).when(service).remoteAdd(anyString(), anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog(callback);
         presenter.onOkClicked();
 
         verify(service).remoteAdd(eq(VFS_ID), anyString(), eq(REMOTE_NAME), eq(REMOTE_URI), (AsyncRequestCallback<String>)anyObject());
+        verify(callback).onSuccess(eq((Void)null));
         verify(callback, never()).onFailure((Throwable)anyObject());
+        verify(view).close();
+    }
+
+    @Test
+    public void testOnOkClickedWhenRemoteAddRequestIsFailed() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[4];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(service).remoteAdd(anyString(), anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
+
+
+        presenter.showDialog(callback);
+        presenter.onOkClicked();
+
+        verify(service).remoteAdd(eq(VFS_ID), anyString(), eq(REMOTE_NAME), eq(REMOTE_URI), (AsyncRequestCallback<String>)anyObject());
+        verify(callback).onFailure((Throwable)anyObject());
     }
 
     @Test
     public void testOnOkClickedWhenExceptionHappened() throws Exception {
-        when(view.getName()).thenReturn(REMOTE_NAME);
-        when(view.getUrl()).thenReturn(REMOTE_URI);
         doThrow(RequestException.class).when(service)
                 .remoteAdd(anyString(), anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
 
@@ -98,9 +132,6 @@ public class AddRemoteRepositoryPresenterTest extends BaseTest {
 
     @Test
     public void testOnValueChangedEnableButton() throws Exception {
-        when(view.getName()).thenReturn(REMOTE_NAME);
-        when(view.getUrl()).thenReturn(REMOTE_URI);
-
         presenter.onValueChanged();
 
         verify(view).setEnableOkButton(eq(ENABLE_BUTTON));
