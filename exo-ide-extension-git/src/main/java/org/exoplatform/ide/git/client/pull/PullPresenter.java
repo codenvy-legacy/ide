@@ -54,7 +54,8 @@ import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-import java.util.Iterator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -311,11 +312,9 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler, 
     /** Get path for files with merge conflicts and update his content if it is opened. */
     private void updateOpenedFiles(String exceptionMessage, final String remoteUrl) {
         String[] filesWithConflicts = exceptionMessage.split("</br>");
-        for (int i = 1; i < filesWithConflicts.length - 1; i++) {
-            Iterator<FileModel> iterator = openedEditor.keySet().iterator();
-            while (iterator.hasNext()) {
-                final FileModel openedFile = iterator.next();
-                if (openedFile.getPath().contains(filesWithConflicts[i])) {
+        for (String filePath : filesWithConflicts){
+            for(FileModel openedFile : openedEditor.keySet()) {
+                if(openedFile.getPath().contains(filePath)) {
                     updateFileContent(openedFile, remoteUrl);
                 }
             }
@@ -381,10 +380,9 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler, 
 
     @Override
     public void onEditorFileClosed(EditorFileClosedEvent event) {
-        Iterator<FileModel> iterator = openedEditor.keySet().iterator();
-        while (iterator.hasNext()) {
-            FileModel file = iterator.next();
-            if(file.getId().equals(event.getFile().getId())) {
+        Set<FileModel> openedFiles = new HashSet<FileModel>(openedEditor.keySet());
+        for (FileModel file : openedFiles) {
+            if (file.getId().equals(event.getFile().getId())) {
                 openedEditor.remove(file);
                 return;
             }
