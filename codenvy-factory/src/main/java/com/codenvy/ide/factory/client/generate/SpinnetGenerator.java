@@ -36,6 +36,7 @@ public class SpinnetGenerator {
      */
     public static String getCodeNowButtonJavascriptURL() {
         if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
+            // || Location.getHost().indexOf("127.0.0.1:8080") >= 0) {
             return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
                 .setPath("ide/_app/factory/resources/factory.js").buildString();
         }

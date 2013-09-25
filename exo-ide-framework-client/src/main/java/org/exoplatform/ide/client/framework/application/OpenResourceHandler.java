@@ -16,9 +16,10 @@
  * from Codenvy S.A..
  */
 
-package org.exoplatform.ide.client.project.resource;
+package org.exoplatform.ide.client.framework.application;
 
 import com.google.gwt.event.shared.EventHandler;
+
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>

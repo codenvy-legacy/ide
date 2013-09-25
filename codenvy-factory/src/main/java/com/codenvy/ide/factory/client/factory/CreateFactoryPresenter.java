@@ -20,6 +20,7 @@ package com.codenvy.ide.factory.client.factory;
 import com.codenvy.ide.factory.client.FactoryClientService;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonEvent;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonHandler;
+import com.codenvy.ide.factory.client.generate.SendMailEvent;
 import com.codenvy.ide.factory.client.generate.SpinnetGenerator;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -29,9 +30,12 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.safehtml.shared.UriUtils;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.application.OpenResourceEvent;
+import org.exoplatform.ide.client.framework.application.ResourceSelectedCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -51,6 +55,7 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.client.marshaller.LogResponseUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import static com.codenvy.ide.factory.client.FactorySpec10.ACTION_PARAMETER;
@@ -101,8 +106,16 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         
         HasValue<String> snippetGitHub();
         
-        HasValue<String> snippetDirectSharing();        
+        HasValue<String> snippetDirectSharing();
         
+        
+        HasClickHandlers getShareFacebookButton();
+        
+        HasClickHandlers getShareGooglePlusButton();
+        
+        HasClickHandlers getShareTwitterButton();
+        
+        HasClickHandlers getShareEmailButton();
         
         
         HasClickHandlers getCancelButton();
@@ -115,6 +128,10 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         
         
         void addStyleChangedHandler(StyleChangedHandler handler);
+        
+        void addOpenAfterLaunchClickHandler(ClickHandler clickHandler);
+        
+        void setOpenAfterLaunch(String path);
         
     }
     
@@ -316,11 +333,66 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                 //generateDirectSharingSnippet();
             }
         });
+        
+        final String factoryURLEscaped = encodeQueryString(factoryURL);
+        
+        /** A summary info to display in a special area in the bottom of Facebook's post. */
+        final String facebookSummaryInfo = "Code, Build, Test and Deploy instantly using Codenvy";
+        
+        display.getShareFacebookButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Window.open("https://www.facebook.com/sharer/sharer.php?s=100&p[url]="
+                            + factoryURLEscaped
+                            + "&p[images][0]=https://codenvy.com/images/logoCodenvy.png&p[title]=" + openedProject.getName() + " - Codenvy "
+                            + "&p[summary]=" + facebookSummaryInfo,
+                            "", "width=626,height=436");
+            }
+        });
+
+        display.getShareGooglePlusButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Window.open("https://plus.google.com/share?url=" + factoryURLEscaped, "",
+                            "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600");
+            }
+        });
+
+        display.getShareTwitterButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Window.open("https://twitter.com/share?url=" + factoryURLEscaped + "&text=" + facebookSummaryInfo, "",
+                            "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=260,width=660");
+            }
+        });
+
+        display.getShareEmailButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.fireEvent(new SendMailEvent(factoryURLEscaped, openedProject.getName()));
+            }
+        });
+        
+        display.addOpenAfterLaunchClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.fireEvent(new OpenResourceEvent(new ResourceSelectedCallback() {
+                    @Override
+                    public void onResourceSelected(Item resource) {
+                        if (resource != null) {
+                            display.setOpenAfterLaunch(resource.getPath());
+                        }
+                    }
+                }));
+            }
+        });
     }
     
     private void generateWebsitesSnippet() {
         String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
         String style = display.isWhiteStyle() ? "white" : "dark";
+        boolean counter = display.showCounter();
+        boolean vertical = display.isVerticalOrientation();
 
         String javascript = "" +
         		"<script " +
@@ -328,7 +400,8 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                     "language=\"javascript\" " +
                     "src=\"" + jsURL + "\" " +
                     "style=\"" + style + "\" " +
-                    "target=\"" + factoryURL + "\"" +
+                    (counter ? (vertical ? "counter=\"vertical\" " : "counter=\"horizontal\" ") : "") + 
+                    "target=\"" + factoryURL + "\" " +
                    "></script>";
         
         display.snippetWebsites().setValue(javascript);
@@ -339,14 +412,25 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                 "language=\"javascript\" " +
                 "src=\"" + jsURL + "\" " +
                 "style=\"" + style + "\" " +
+                (counter ? (vertical ? "counter=\"vertical\" " : " counter=\"horizontal\" ") : "") +
                 //"target=\"" + factoryURL + "\"" +
                "></script>";
+        
+        int top = 35;
+        if (display.showCounter() && display.isVerticalOrientation()) {
+            top = 12;
+        }
+        
+        int width = 77;
+        if (display.showCounter() && !display.isVerticalOrientation()) {
+            width = 118;
+        }
         
         display.setPreviewContent("" +
             "<html>" +
             "<head></head>" +
             "<body style=\"margin: 0px; padding: 0px;\">" +
-                "<div style=\"margin-left:auto; margin-right:auto; width:77px; height:21px; position:relative; top:35px;\">" +
+                "<div style=\"margin-left:auto; margin-right:auto; width:" + width + "px; height:21px; position:relative; top:" + top + "px;\">" +
                 javascriptPreview +
                 "</div>" +
             "</body>" +

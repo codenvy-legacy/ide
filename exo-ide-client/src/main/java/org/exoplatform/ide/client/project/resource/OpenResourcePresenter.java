@@ -31,6 +31,9 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.application.OpenResourceEvent;
+import org.exoplatform.ide.client.framework.application.OpenResourceHandler;
+import org.exoplatform.ide.client.framework.application.ResourceSelectedCallback;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -111,11 +114,6 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
          */
         HasClickHandlers getCancelButton();
 
-    }
-
-    /** Callback to process selected item in resources list. */
-    public interface ResourceSelectedCallback {
-        void onSelectedResource(Item resource);
     }
 
     /** {@link Display} instance */
@@ -326,7 +324,7 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
             Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
                 @Override
                 public void execute() {
-                    callback.onSelectedResource(selectedFile);
+                    callback.onResourceSelected(selectedFile);
                 }
             });
             return;

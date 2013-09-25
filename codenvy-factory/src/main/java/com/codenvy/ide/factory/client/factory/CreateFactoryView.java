@@ -20,7 +20,6 @@ package com.codenvy.ide.factory.client.factory;
 import com.codenvy.ide.factory.client.factory.CreateFactoryPresenter.StyleChangedHandler;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -32,9 +31,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
@@ -47,7 +45,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
  * @version $
  */
 public class CreateFactoryView extends ViewImpl
-                                               implements com.codenvy.ide.factory.client.factory.CreateFactoryPresenter.Display {
+    implements com.codenvy.ide.factory.client.factory.CreateFactoryPresenter.Display {
 
     private static CreateFactoryViewUiBinder uiBinder = GWT.create(CreateFactoryViewUiBinder.class);
 
@@ -60,7 +58,7 @@ public class CreateFactoryView extends ViewImpl
 
     public static final int       WIDTH       = 800;
 
-    public static final int       HEIGHT      = 450;
+    public static final int       HEIGHT      = 480;
 
     @UiField
     DivElement                    wizard1, wizard2;
@@ -69,13 +67,25 @@ public class CreateFactoryView extends ViewImpl
     IFrameElement                 previewFrame1, previewFrame2;
 
     @UiField
-    InputElement                  checkShowCounter, radioVertical, radioHorizontal, radioDark, radioWhite;
+    InputElement                  checkShowCounter, radioVertical, radioHorizontal, radioDark, radioWhite, openAfterLaunchField;
 
     @UiField
     ImageButton                   buttonCancel, buttonCreate, buttonBack, buttonFinish;
     
     @UiField
     TextAreaInput                 snippetWebsites, snippetGitHub, snippetDirectSharing;
+    
+    @UiField
+    Image         shareFacebookButton;
+
+    @UiField
+    Image         shareGooglePlusButton;
+
+    @UiField
+    Image         shareTwitterButton;
+
+    @UiField
+    Image         shareEmailButton;    
 
     private int                   currentPage = 0;
 
@@ -129,7 +139,7 @@ public class CreateFactoryView extends ViewImpl
 
         currentPage++;
         tmpLeft = 0;
-        hideButtons();
+        disableButtons();
 
         new Timer() {
             @Override
@@ -153,7 +163,7 @@ public class CreateFactoryView extends ViewImpl
 
         currentPage--;
         tmpLeft = 10;
-        hideButtons();
+        disableButtons();
 
         new Timer() {
             @Override
@@ -169,12 +179,7 @@ public class CreateFactoryView extends ViewImpl
         }.scheduleRepeating(25);
     }
 
-    private void hideButtons() {
-//        buttonCancel.setVisible(false);
-//        buttonCreate.setVisible(false);
-//        buttonBack.setVisible(false);
-//        buttonFinish.setVisible(false);
-        
+    private void disableButtons() {
         buttonCancel.setEnabled(false);
         buttonCreate.setEnabled(false);
         buttonBack.setEnabled(false);
@@ -282,4 +287,54 @@ public class CreateFactoryView extends ViewImpl
         return snippetDirectSharing;
     }
 
+    /**
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getShareFacebookButton()
+     */
+    @Override
+    public HasClickHandlers getShareFacebookButton() {
+        return shareFacebookButton;
+    }
+
+    /**
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getShareGooglePlusButton()
+     */
+    @Override
+    public HasClickHandlers getShareGooglePlusButton() {
+        return shareGooglePlusButton;
+    }
+
+    /**
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getShareTwitterButton()
+     */
+    @Override
+    public HasClickHandlers getShareTwitterButton() {
+        return shareTwitterButton;
+    }
+
+    /**
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getShareEmailButton()
+     */
+    @Override
+    public HasClickHandlers getShareEmailButton() {
+        return shareEmailButton;
+    }
+
+    @Override
+    public void addOpenAfterLaunchClickHandler(final ClickHandler clickHandler) {
+        DOM.sinkEvents((com.google.gwt.user.client.Element)openAfterLaunchField.cast(), Event.ONCLICK);        
+        DOM.setEventListener((com.google.gwt.user.client.Element)openAfterLaunchField.cast(), new EventListener() {
+            @Override
+            public void onBrowserEvent(Event event) {
+                if (clickHandler != null) {
+                    clickHandler.onClick(null);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void setOpenAfterLaunch(String path) {
+        openAfterLaunchField.setValue(path);
+    }
+    
 }

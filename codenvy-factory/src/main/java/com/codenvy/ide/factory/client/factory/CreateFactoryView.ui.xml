@@ -507,7 +507,7 @@
         	position:absolute;
         	left:0px;
         	right:0px;
-        	top:45px;
+        	top:40px;
         	bottom:0px;
         	overflow:hidden;
         	padding-bottom: 1px;
@@ -546,9 +546,14 @@
 			overflow: auto;
 		}
 		
+        .shareButton {
+            float: left;
+            width: 50px;
+            height: 50px;
+            margin: 0px 10px 0px 10px;
+            cursor: pointer;
+        }				
 		
-		
-
 	</ui:style>
 
 	<g:HTMLPanel styleName="{style.wizard-container}">
@@ -562,7 +567,7 @@
 				</div>
 			</div>
 			
-			<div class="{style.block}" style="height: 130px;">
+			<div class="{style.block}" style="height: 115px;">
 				<div class="{style.block-header}">Customize<hr noshade="noshade"></hr></div>					
 				<div class="{style.block-content}">
 					<div style="position: absolute; left:0px; top:0px; right: 350px; bottom: 0px; overflow:hidden;">
@@ -570,20 +575,20 @@
 							<input type="checkbox" name="show_counter" ui:field="checkShowCounter" value="true"></input>
 							<label for="checkShowCounter">Show number of projects created from your factory</label>
 						</div>
-						<div class="{style.label}" style="position: absolute; left:0px; right:0px; top:25px;">Configure your style:</div>
-						<div class="{style.radio}" style="position: absolute; left:30px; top:50px;">
+						<div class="{style.label}" style="position: absolute; left:0px; right:0px; top:20px;">Configure your style:</div>
+						<div class="{style.radio}" style="position: absolute; left:30px; top:43px;">
 							<input type="radio" name="orientation" value="Vertical" ui:field="radioVertical" tabindex="0" checked=""></input>
 							<label for="radioVertical">Vertical</label>
 						</div>
-						<div class="{style.radio}" style="position: absolute; left:140px; top:50px;">
+						<div class="{style.radio}" style="position: absolute; left:140px; top:43px;">
 							<input type="radio" name="orientation" value="Horizontal" ui:field="radioHorizontal" tabindex="0" checked=""></input>
 							<label for="radioHorizontal">Horizontal</label>
 						</div>
-						<div class="{style.radio}" style="position: absolute; left:30px; top:75px;">
+						<div class="{style.radio}" style="position: absolute; left:30px; top:65px;">
 							<input type="radio" name="style" value="Dark" ui:field="radioDark" tabindex="0" checked=""></input>
 							<label for="radioDark">Dark</label>
 						</div>
-						<div class="{style.radio}" style="position: absolute; left:140px; top:75px;">
+						<div class="{style.radio}" style="position: absolute; left:140px; top:65px;">
 							<input type="radio" name="style" value="White" ui:field="radioWhite" tabindex="0" checked=""></input>
 							<label for="radioWhite">White</label>
 						</div>
@@ -631,7 +636,7 @@
 					<div class="{style.info}" style="position: absolute; right:0px; top:120px;">?</div>
 
 					<div class="{style.label}" style="position: absolute; left:0px; top:150px;">Open after launch:</div>
-					<input type="text" value="readme.txt" readonly="readonly"
+					<input type="text" value="" readonly="readonly" ui:field="openAfterLaunchField"
 						class="{style.textField} {style.file-select}" 
 						style="position: absolute; left:120px; top:150px;"></input>
 					<div class="{style.info}" style="position: absolute; left:335px; top:150px;">?</div>
@@ -650,7 +655,7 @@
 				</div>
 			</div>
 				
-			<div class="{style.block}" style="height: 130px;">
+			<div class="{style.block}" style="height: 115px;">
 				<div class="{style.block-header}"><hr noshade="noshade"></hr></div>
 				<div class="{style.block-content}">
 					<div style="position: absolute; overflow: hidden; 
@@ -700,13 +705,12 @@
 			<div class="{style.block}" style="height: 130px;">
 				<div class="{style.block-header}">Share<hr noshade="noshade"></hr></div>
 				<div class="{style.block-content}">
-					<div style="position: absolute; 
-						left: 0px;
-						right:0px; 
-						top:0px;
-						bottom: 0px;
-						text-align: center; 
-						line-height: 100px;  "></div>
+	                <div style="width:280px; height: 50px; margin-left:auto; margin-right:auto; position: relative">
+	                    <g:Image ui:field="shareFacebookButton" resource="{resource.facebook}" styleName="{style.shareButton}"></g:Image>
+	                    <g:Image ui:field="shareGooglePlusButton" resource="{resource.gplus}" styleName="{style.shareButton}"></g:Image>
+	                    <g:Image ui:field="shareTwitterButton" resource="{resource.twitter}" styleName="{style.shareButton}"></g:Image>
+	                    <g:Image ui:field="shareEmailButton" resource="{resource.mail}" styleName="{style.shareButton}"></g:Image>
+	                </div>						
 				</div>
 			</div>				
 

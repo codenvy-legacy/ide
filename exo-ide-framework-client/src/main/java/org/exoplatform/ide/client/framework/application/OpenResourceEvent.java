@@ -16,7 +16,7 @@
  * from Codenvy S.A..
  */
 
-package org.exoplatform.ide.client.project.resource;
+package org.exoplatform.ide.client.framework.application;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -30,7 +30,7 @@ public class OpenResourceEvent extends GwtEvent<OpenResourceHandler> {
     public static final GwtEvent.Type<OpenResourceHandler> TYPE = new GwtEvent.Type<OpenResourceHandler>();
 
     /** Callback to process selected item in resources list. */
-    private OpenResourcePresenter.ResourceSelectedCallback callback;
+    private ResourceSelectedCallback resourceSelectedCallback;
 
     /** Construct event. */
     public OpenResourceEvent() {
@@ -42,8 +42,8 @@ public class OpenResourceEvent extends GwtEvent<OpenResourceHandler> {
      * @param callback
      *         {@link OpenResourcePresenter.ResourceSelectedCallback} callback.
      */
-    public OpenResourceEvent(OpenResourcePresenter.ResourceSelectedCallback callback) {
-        this.callback = callback;
+    public OpenResourceEvent(ResourceSelectedCallback resourceSelectedCallback) {
+        this.resourceSelectedCallback = resourceSelectedCallback;
     }
 
     /** {@inheritDoc} */
@@ -63,7 +63,8 @@ public class OpenResourceEvent extends GwtEvent<OpenResourceHandler> {
      *
      * @return {@link OpenResourcePresenter.ResourceSelectedCallback} callback.
      */
-    public OpenResourcePresenter.ResourceSelectedCallback getCallback() {
-        return callback;
+    public ResourceSelectedCallback getCallback() {
+        return resourceSelectedCallback;
     }
+    
 }
