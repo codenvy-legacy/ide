@@ -32,8 +32,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.framework.event.SaveFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -339,7 +339,8 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler, 
                                                  document.getLength(),
                                                  result.getContent());
                                 //It is required for deleting '*' character on the opened file tab
-                                IDE.fireEvent(new SaveFileEvent(result));
+                                result.setContentChanged(false);
+                                IDE.fireEvent(new FileSavedEvent(result, null));
                             } catch (BadLocationException e) {
                                 handleError(e, remoteUrl);
                             }
