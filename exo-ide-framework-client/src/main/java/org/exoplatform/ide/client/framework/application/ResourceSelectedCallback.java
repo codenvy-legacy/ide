@@ -23,9 +23,15 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
+ * Callback to receive selected resource
  */
 public interface ResourceSelectedCallback {
     
+    /**
+     * Handle resource selected.
+     * 
+     * @param resource Selected resource
+     */
     void onResourceSelected(Item resource);
 
 }
