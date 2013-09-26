@@ -27,7 +27,7 @@
 	
 	<ui:with field='resource' type='com.codenvy.ide.factory.client.FactoryClientBundle'/>
 	
-	<ui:style>
+    <ui:style type='com.codenvy.ide.factory.client.factory.CreateFactoryView.Style'>
 	
 		/**********************************************************************************************************
 		 *
@@ -80,7 +80,7 @@
 			overflow: hidden;
 		}
 		
-		.block-header {
+		.blockHeader {
 			position: absolute;
 			top: 0px;
 			height: 20px;
@@ -97,21 +97,21 @@
             white-space:nowrap;            
 		}
 		
-		.block-header-collapsed {
+		.blockHeaderCollapsed {
 			padding-left: 20px;
 			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAPElEQVR42mNgGAU0BeHh4f+pbiBVDYUZSDVDkQ2kiqHoBlJsKDYDKTIUl4FkG0oXFw7eWB68OWW0RCMIAMWdYsVP2fFfAAAAAElFTkSuQmCC);
 			background-repeat: no-repeat;
 			cursor: pointer;		
 		}
 		
-		.block-header-expanded {
+		.blockHeaderExpanded {
 			padding-left: 20px;
 			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAK0lEQVR42mNgGAWjYJCB8PDw/6RiqhpKVZdS1ftUDVOqRhRVY380DwxhAAAEVGLFMjM0mgAAAABJRU5ErkJggg==);
 			background-repeat: no-repeat;
 			cursor: pointer;
 		}
 		
-		.block-header hr {
+		.blockHeader hr {
 			border-width: 0;
 			background-color:#AAAAAA;
 			height:1px;
@@ -275,10 +275,6 @@
 			margin:0;
 			padding:0;
 			cursor: pointer;
-			/*
-			width:18px;
-			height:18px;
-			*/			
 		}
 		
 		.radio label {
@@ -466,12 +462,7 @@
         .snippetPanel {
 			border-radius: 4px;
 			height: 100%;
-			overflow: hidden;
-			
-			/**
-			width: 32%;
-			**/
-			
+			overflow: hidden;			
 			width: 242px;
 			position: absolute;
 		}		
@@ -528,13 +519,6 @@
             outline: none;
             width: 100%;
             height: 100%;
-            /*
-            position: absolute;
-            left: 0px;
-            top: 37px;
-            right: 0px;
-            bottom: 3px;
-            */
             -moz-box-sizing: border-box;
             -webkit-box-sizing: border-box;
             box-sizing: border-box;
@@ -552,8 +536,92 @@
             height: 50px;
             margin: 0px 10px 0px 10px;
             cursor: pointer;
-        }				
+        }
+        
+		/**********************************************************************************************************
+		 *
+		 *   TOOLTIPS
+		 *
+		 **********************************************************************************************************/
+
+		.tooltip {
+			outline:none;
+			margin-left: 2px;
+			margin-top: 2px;
+			width: 18px;
+			height: 18px;
+			background: #aaa;
+			color: white;
+			border-radius: 9px;
+			text-align: center;
+			line-height: 18px;
+			font-family: Arial Unicode MS, Arial, sans-serif;
+			font-size: 13px;
+			font-weight: bold;
+			cursor: pointer;
+			
+			opacity: 0.6;
+		}
 		
+		.tooltip:hover {
+			opacity: 1;
+		}
+		
+		.tooltip span {
+			display: none;
+		}
+		
+		.tooltip span:hover {
+			display: none;
+		}
+		
+		.tooltip:hover span {
+			display: inline;
+			position: fixed;
+			
+    		color:#333;
+    		border:1px solid #DCA;
+    		background:#fffAF0;			
+			
+			border-radius:4px;
+    		-moz-border-radius: 4px;
+    		-webkit-border-radius: 4px;
+        
+    		-moz-box-shadow: 5px 5px 8px #ccc;
+    		-webkit-box-shadow: 5px 5px 8px #ccc;
+    		box-shadow: 5px 5px 8px #ccc;
+    		
+    		white-space: nowrap;
+    		
+			font-family: Arial Unicode MS, Arial, sans-serif;
+			font-size: 13px;
+			font-weight: normal;    		
+    		
+			padding:10px 20px;
+    		line-height:16px;
+    		
+    		z-index: 1147483647;    		
+		}
+		
+		.tooltip:hover span {
+			margin-left:20px;
+			margin-top: -9px;
+		}
+		
+		.tooltip span div {
+			position: absolute;
+			width: 12px;
+			height:22px;			
+			top:50%;
+			margin-top: -11px;
+			border:0;
+		}
+				
+		.tooltip span div {
+			background-image: url(data:image/gif;base64,R0lGODlhDAAWAJEAAP/68NK8jv///wAAACH5BAUUAAIALAAAAAAMABYAAAIrlI8SmQF83INyNoBtzPhyXXHb1ylkZp5dSBqs6KrIq6Xw/FG3V+M9DpkVAAA7);
+			left:-12px;	
+		}
+
 	</ui:style>
 
 	<g:HTMLPanel styleName="{style.wizard-container}">
@@ -568,7 +636,7 @@
 			</div>
 			
 			<div class="{style.block}" style="height: 115px;">
-				<div class="{style.block-header}">Customize<hr noshade="noshade"></hr></div>					
+				<div class="{style.blockHeader}">Customize<hr noshade="noshade"></hr></div>					
 				<div class="{style.block-content}">
 					<div style="position: absolute; left:0px; top:0px; right: 350px; bottom: 0px; overflow:hidden;">
 						<div class="{style.check}" style="position: absolute; left:0px; right:0px; top:0px;">
@@ -604,42 +672,67 @@
 				</div>				
 			</div>
 			
+			<div class="{style.block}" style="height: 10px;"></div>
+			
 			<div class="{style.block}" style="height: 230px;">
-				<div class="{style.block-header} {style.block-header-expanded}" id="blockAdvancedOptionsControl" onclick="showHideAdvancedOptions();">Advanced Options<hr noshade="noshade"></hr></div>
-				<div class="{style.block-content}" id="blockAdvancedOptions">
+				<div class="{style.blockHeader} {style.blockHeaderExpanded}" ui:field="advancedOptionsControl" >Advanced Options<hr noshade="noshade"></hr></div>
+				<div class="{style.block-content}" ui:field="advancedOptions">
 					<div class="{style.label}" style="position: absolute; left:0px; top:0px;">Logo (200 x 200):</div>
 					<label class="{style.file-upload}" style="position: absolute; left:120px; top:0px;">
 						<span>Upload image (JPG, GIF or PNG)</span>
 						<input type="file" name="uploadfile3"></input>
 					</label>
-					<div class="{style.info}" style="position: absolute; left:335px; top:0px;">?</div>
+					<div class="{style.tooltip}" style="position: absolute; left: 335px; top: 0px;">
+						?
+						<span><div></div>Create and embed a custom Factory button with your own logo</span>	
+					</div>
 					
 					<div class="{style.label}" style="position: absolute; left:0px; top:30px;">Description:</div>
 					<textarea class="{style.textarea}" rows="4" cols="50" 
 						style="position: absolute; left:120px; top:30px; height: 52px; right:22px;"></textarea>
-					<div class="{style.info}" style="position: absolute; right:0px; top:30px;">?</div>
+					<div class="{style.tooltip}" style="position: absolute; right:0px; top: 30px;">
+						?
+						<span><div></div>Specify a description of your Factory to all users</span>	
+					</div>
 					
 					<div class="{style.label}" style="position: absolute; left:0px; top:90px;">Contact email:</div>					
 					<input type="text" class="{style.textField}" style="position: absolute; left:120px; top:90px;"></input>
-					<div class="{style.info}" style="position: absolute; left:335px; top:90px;">?</div>
+					<div class="{style.tooltip}" style="position: absolute; left:335px; top:90px;">
+						?
+						<span><div></div>Include your author informations and let everyone that you originated this Factory</span>	
+					</div>
 					
-					<div class="{style.label}" style="position: absolute; left:380px; top:90px;">Copmany ID:</div>					
-					<input type="text" class="{style.textField}" style="position: absolute; left:500px; top:90px;"></input>
-					<div class="{style.info}" style="position: absolute; right:0px; top:90px;">?</div>
-
 					<div class="{style.label}" style="position: absolute; left:0px; top:120px;">Author:</div>
 					<input type="text" class="{style.textField}" style="position: absolute; left:120px; top:120px;"></input>
-					<div class="{style.info}" style="position: absolute; left:335px; top:120px;">?</div>
+					<div class="{style.tooltip}" style="position: absolute; left:335px; top:120px;">
+						?
+						<span><div></div>Include your author informations and let everyone that you originated this Factory</span>	
+					</div>
 					
-					<div class="{style.label}" style="position: absolute; left:380px; top:120px;">Affiliate ID:</div>
-					<input type="text" class="{style.textField}" style="position: absolute; left:500px; top:120px;"></input>
-					<div class="{style.info}" style="position: absolute; right:0px; top:120px;">?</div>
-
 					<div class="{style.label}" style="position: absolute; left:0px; top:150px;">Open after launch:</div>
 					<input type="text" value="" readonly="readonly" ui:field="openAfterLaunchField"
 						class="{style.textField} {style.file-select}" 
 						style="position: absolute; left:120px; top:150px;"></input>
-					<div class="{style.info}" style="position: absolute; left:335px; top:150px;">?</div>
+					<div class="{style.tooltip}" style="position: absolute; left:335px; top:150px;">
+						?
+						<span><div></div>Define the file to open once the project will be factory-created</span>	
+					</div>
+					
+					
+					<div class="{style.label}" style="position: absolute; left:408px; top:90px;">Copmany ID:</div>					
+					<input type="text" class="{style.textField}" style="position: absolute; left:528px; top:90px;"></input>
+					<div class="{style.tooltip}" style="position: absolute; right:0px; top:90px;">
+						?
+						<span><div></div>Define your company informations</span>	
+					</div>
+					
+					<div class="{style.label}" style="position: absolute; left:408px; top:120px;">Affiliate ID:</div>
+					<input type="text" class="{style.textField}" style="position: absolute; left:528px; top:120px;"></input>
+					<div class="{style.tooltip}" style="position: absolute; right:0px; top:120px;">
+						?
+						<span><div></div>Define affiliate identifier</span>	
+					</div>
+					
 				</div>
 			</div>
 			
@@ -656,7 +749,7 @@
 			</div>
 				
 			<div class="{style.block}" style="height: 115px;">
-				<div class="{style.block-header}"><hr noshade="noshade"></hr></div>
+				<div class="{style.blockHeader}"><hr noshade="noshade"></hr></div>
 				<div class="{style.block-content}">
 					<div style="position: absolute; overflow: hidden; 
 						width: 300px;
@@ -672,7 +765,7 @@
 			</div>
 				
 			<div class="{style.block}" style="height: 160px;">
-				<div class="{style.block-header}">Embed<hr noshade="noshade"></hr></div>
+				<div class="{style.blockHeader}">Embed<hr noshade="noshade"></hr></div>
 				<div class="{style.block-content}">
 				
                     <g:FlowPanel addStyleNames="{style.snippetPanel} {style.snippetPanelLeft}">
@@ -703,7 +796,7 @@
 			</div>
 			
 			<div class="{style.block}" style="height: 130px;">
-				<div class="{style.block-header}">Share<hr noshade="noshade"></hr></div>
+				<div class="{style.blockHeader}">Share<hr noshade="noshade"></hr></div>
 				<div class="{style.block-content}">
 	                <div style="width:280px; height: 50px; margin-left:auto; margin-right:auto; position: relative">
 	                    <g:Image ui:field="shareFacebookButton" resource="{resource.facebook}" styleName="{style.shareButton}"></g:Image>

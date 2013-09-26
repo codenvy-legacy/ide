@@ -61,14 +61,6 @@ public class LinkButton extends Anchor implements HasText, MouseDownHandler, Mou
     private List<ClickHandler> clickHandlers = new ArrayList<ClickHandler>();
 
     private interface Style extends CssResource {
-//        static final String MAIN = "linkButtonPanel";
-//
-//        static final String OVER = "linkButtonOver";
-//
-//        static final String DOWN = "linkButtonDown";
-//
-//        static final String DISABLED = "linkButtonDisabled";
-
         String linkButtonHidden();
 
         String linkButtonPanel();

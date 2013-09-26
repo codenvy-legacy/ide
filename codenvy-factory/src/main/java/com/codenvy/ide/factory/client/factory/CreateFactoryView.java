@@ -22,9 +22,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
@@ -51,14 +53,33 @@ public class CreateFactoryView extends ViewImpl
 
     interface CreateFactoryViewUiBinder extends UiBinder<Widget, CreateFactoryView> {
     }
+    
+    interface Style extends CssResource {
+        
+        String blockHeader();
+        
+        String blockHeaderExpanded();
+        
+        String blockHeaderCollapsed();
+        
+    }
+
+    @UiField
+    Style style;    
 
     public static final String    ID          = "ide.factory.pupop";
 
     public static final String    TITLE       = "Create and Publish a Factory";
+    
+    public static final int       INITIAL_WIDTH       = 800;
+    
+    public static final int       INITIAL_HEIGHT      = 270;
 
-    public static final int       WIDTH       = 800;
+    public static final int       WIDTH       = 788;
 
     public static final int       HEIGHT      = 480;
+
+    public static final int       HEIGHT_MINI = 270;
 
     @UiField
     DivElement                    wizard1, wizard2;
@@ -76,6 +97,9 @@ public class CreateFactoryView extends ViewImpl
     TextAreaInput                 snippetWebsites, snippetGitHub, snippetDirectSharing;
     
     @UiField
+    DivElement                    advancedOptionsControl, advancedOptions;
+    
+    @UiField
     Image         shareFacebookButton;
 
     @UiField
@@ -90,9 +114,15 @@ public class CreateFactoryView extends ViewImpl
     private int                   currentPage = 0;
 
     private StyleChangedHandler refreshCallback;
+    
+    private boolean advancedOptionsVisible = false;
+    
+    private int previousHeight = HEIGHT_MINI;
+    
+    private int animationLeft;
 
     public CreateFactoryView() {
-        super(ID, ViewType.MODAL, TITLE, null, WIDTH, HEIGHT, false);
+        super(ID, ViewType.MODAL, TITLE, null, INITIAL_WIDTH, INITIAL_HEIGHT, false);
         add(uiBinder.createAndBindUi(this));
 
         checkShowCounter.setId("checkShowCounter");
@@ -114,6 +144,16 @@ public class CreateFactoryView extends ViewImpl
                 snippetWebsites.selectAll();
             }
         });
+        
+        addClickHandler(advancedOptionsControl, new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                showHideAdvancedOptions();
+            }
+        });
+        
+        advancedOptions.getStyle().setDisplay(Display.NONE);
+        advancedOptionsControl.setClassName(style.blockHeader() + " " + style.blockHeaderCollapsed());
     }
     
     private void addChangeListener(InputElement element) {
@@ -127,10 +167,59 @@ public class CreateFactoryView extends ViewImpl
             }
         });
     }
-
-
-    int                   tmpLeft;
-
+    
+    private void addClickHandler(DivElement element, final ClickHandler clickHandler) {
+        DOM.sinkEvents((com.google.gwt.user.client.Element)element.cast(), Event.ONCLICK);        
+        DOM.setEventListener((com.google.gwt.user.client.Element)element.cast(), new EventListener() {
+            @Override
+            public void onBrowserEvent(Event event) {
+                if (clickHandler != null) {
+                    clickHandler.onClick(null);
+                }
+            }
+        });
+    }
+    
+    private void showAdvancedOptions() {
+        advancedOptions.getStyle().clearDisplay();
+        advancedOptionsControl.setClassName(style.blockHeader() + " " + style.blockHeaderExpanded());
+        advancedOptionsVisible = true;
+        updateDimensions();
+    }
+    
+    private void hideAdvancedOptions() {
+        advancedOptions.getStyle().setDisplay(Display.NONE);
+        advancedOptionsControl.setClassName(style.blockHeader() + " " + style.blockHeaderCollapsed());
+        advancedOptionsVisible = false;
+        updateDimensions();
+    }
+    
+    private void showHideAdvancedOptions() {
+        if ("none".equalsIgnoreCase(advancedOptions.getStyle().getDisplay())) {
+            showAdvancedOptions();
+        } else {
+            hideAdvancedOptions();
+        }
+    }
+    
+    private void updateDimensions() {
+        setPopupWidth(WIDTH);
+        
+        if (currentPage == 0 && !advancedOptionsVisible) {
+            setPopupHeight(HEIGHT_MINI);
+            if (previousHeight != HEIGHT_MINI) {
+                shiftVertical((HEIGHT - HEIGHT_MINI) / 2);
+                previousHeight = HEIGHT_MINI;
+            }
+        } else {
+            setPopupHeight(HEIGHT);
+            if (previousHeight != HEIGHT) {
+                shiftVertical((HEIGHT_MINI - HEIGHT) / 2);
+                previousHeight = HEIGHT;                
+            }
+        }
+    }
+        
     @Override
     public void nextPage() {
         if (currentPage == 1) {
@@ -138,16 +227,17 @@ public class CreateFactoryView extends ViewImpl
         }
 
         currentPage++;
-        tmpLeft = 0;
+        updateDimensions();
+        animationLeft = 0;
         disableButtons();
 
         new Timer() {
             @Override
             public void run() {
-                tmpLeft++;
-                wizard1.getStyle().setProperty("left", "-" + (tmpLeft * 10) + "%");
-                wizard2.getStyle().setProperty("left", "" + (100 - tmpLeft * 10) + "%");
-                if (tmpLeft == 10) {
+                animationLeft++;
+                wizard1.getStyle().setProperty("left", "-" + (animationLeft * 10) + "%");
+                wizard2.getStyle().setProperty("left", "" + (100 - animationLeft * 10) + "%");
+                if (animationLeft == 10) {
                     cancel();
                     pageChanged();
                 }
@@ -161,18 +251,21 @@ public class CreateFactoryView extends ViewImpl
             return;
         }
 
-        currentPage--;
-        tmpLeft = 10;
+        animationLeft = 10;
         disableButtons();
 
         new Timer() {
             @Override
             public void run() {
-                tmpLeft--;
-                wizard2.getStyle().setProperty("left", "" + (100 - tmpLeft * 10) + "%");
-                wizard1.getStyle().setProperty("left", "-" + (tmpLeft * 10) + "%");
-                if (tmpLeft == 0) {
+                animationLeft--;
+                wizard2.getStyle().setProperty("left", "" + (100 - animationLeft * 10) + "%");
+                wizard1.getStyle().setProperty("left", "-" + (animationLeft * 10) + "%");
+                if (animationLeft == 0) {
                     cancel();
+                    
+                    currentPage--;
+                    updateDimensions();
+                    
                     pageChanged();
                 }
             }
@@ -192,7 +285,6 @@ public class CreateFactoryView extends ViewImpl
         buttonCreate.setEnabled(true);
         buttonBack.setEnabled(true);
         buttonFinish.setEnabled(true);        
-        
         
         switch (currentPage) {
             case 0:
