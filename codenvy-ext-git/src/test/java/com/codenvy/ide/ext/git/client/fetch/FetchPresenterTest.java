@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.fetch;
 
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
@@ -29,7 +30,6 @@ import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -58,11 +58,11 @@ public class FetchPresenterTest extends BaseTest {
     private Branch         branch;
     private FetchPresenter presenter;
 
-    @Before
+    @Override
     public void disarm() {
         super.disarm();
 
-        presenter = new FetchPresenter(view, service, resourceProvider, console, constant);
+        presenter = new FetchPresenter(view, service, resourceProvider, constant, notificationManager);
 
         when(view.getRepositoryName()).thenReturn(REPOSITORY_NAME);
         when(view.getRepositoryUrl()).thenReturn(REMOTE_URI);
@@ -164,7 +164,7 @@ public class FetchPresenterTest extends BaseTest {
         verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
                                    (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
         verify(constant, times(2)).branchesListFailed();
-        verify(console, times(2)).print(anyString());
+        verify(notificationManager, times(2)).showNotification((Notification)anyObject());
         verify(view, times(2)).setEnableFetchButton(eq(DISABLE_BUTTON));
     }
 
@@ -193,7 +193,7 @@ public class FetchPresenterTest extends BaseTest {
         verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
                                    (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
         verify(constant, times(2)).branchesListFailed();
-        verify(console, times(2)).print(anyString());
+        verify(notificationManager, times(2)).showNotification((Notification)anyObject());
         verify(view, times(2)).setEnableFetchButton(eq(DISABLE_BUTTON));
     }
 
@@ -263,7 +263,7 @@ public class FetchPresenterTest extends BaseTest {
         verify(service, never()).fetch(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (JsonArray<String>)anyObject(),
                                        eq(NO_REMOVE_DELETE_REFS), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).fetchSuccess(eq(REMOTE_URI));
     }
 
@@ -297,7 +297,7 @@ public class FetchPresenterTest extends BaseTest {
                                        eq(NO_REMOVE_DELETE_REFS), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).fetchFail(eq(REMOTE_URI));
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -332,7 +332,7 @@ public class FetchPresenterTest extends BaseTest {
         verify(service).fetch(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (JsonArray<String>)anyObject(),
                               eq(NO_REMOVE_DELETE_REFS), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).fetchSuccess(eq(REMOTE_URI));
     }
 
@@ -369,7 +369,7 @@ public class FetchPresenterTest extends BaseTest {
                               eq(NO_REMOVE_DELETE_REFS), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).fetchFail(eq(REMOTE_URI));
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -398,7 +398,7 @@ public class FetchPresenterTest extends BaseTest {
                               eq(NO_REMOVE_DELETE_REFS), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).fetchFail(eq(REMOTE_URI));
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test

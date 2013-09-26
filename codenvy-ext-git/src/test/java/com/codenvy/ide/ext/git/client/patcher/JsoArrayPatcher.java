@@ -22,12 +22,18 @@ import com.codenvy.ide.json.js.JsoArray;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * Patcher for JsoArray class. Replace native method into JsonArray.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 @PatchClass(JsoArray.class)
 public class JsoArrayPatcher<T> {
 
+    /** Patch create method. */
     @PatchMethod
-    static JsoArray create(JsoArray jsoArray) {
+    public static JsoArray create(JsoArray jsoArray) {
+        // TODO This doesn't work now.
         return (JsoArray)JsonCollections.createArray();
     }
 }

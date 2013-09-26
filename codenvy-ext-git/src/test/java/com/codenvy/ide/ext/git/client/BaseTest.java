@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client;
 
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -67,6 +68,8 @@ public abstract class BaseTest extends GwtTestWithMockito {
     protected EventBus                eventBus;
     @Mock
     protected SelectionAgent          selectionAgent;
+    @Mock
+    protected NotificationManager     notificationManager;
 
     @Before
     public void disarm() {

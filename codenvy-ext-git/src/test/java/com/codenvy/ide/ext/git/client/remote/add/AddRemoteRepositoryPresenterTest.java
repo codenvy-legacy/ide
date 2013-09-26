@@ -23,7 +23,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -48,7 +47,7 @@ public class AddRemoteRepositoryPresenterTest extends BaseTest {
     private AsyncCallback<Void>          callback;
     private AddRemoteRepositoryPresenter presenter;
 
-    @Before
+    @Override
     public void disarm() {
         super.disarm();
 

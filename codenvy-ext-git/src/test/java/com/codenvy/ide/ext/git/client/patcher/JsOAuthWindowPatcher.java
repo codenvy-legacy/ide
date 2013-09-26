@@ -21,10 +21,15 @@ import com.codenvy.ide.security.oauth.JsOAuthWindow;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * Patcher for JsOAuthWindow class. Replace native method into JsOAuthWindow.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 @PatchClass(JsOAuthWindow.class)
 public class JsOAuthWindowPatcher {
 
+    /** Patch loginWithOAuth method. */
     @PatchMethod(override = true)
     public static void loginWithOAuth(JsOAuthWindow window, String authUrl, String errUrl, int popupHeight, int popupWidth,
                                       int clientHeight, int clientWidth) {

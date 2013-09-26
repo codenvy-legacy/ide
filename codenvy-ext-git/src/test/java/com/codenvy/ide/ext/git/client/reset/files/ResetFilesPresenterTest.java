@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.reset.files;
 
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.IndexFile;
 import com.codenvy.ide.ext.git.shared.ResetRequest;
@@ -29,7 +30,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -53,11 +53,11 @@ public class ResetFilesPresenterTest extends BaseTest {
     private ResetFilesView      view;
     private ResetFilesPresenter presenter;
 
-    @Before
+    @Override
     public void disarm() {
         super.disarm();
 
-        presenter = new ResetFilesPresenter(view, service, resourceProvider, constant, console);
+        presenter = new ResetFilesPresenter(view, service, resourceProvider, constant, notificationManager);
     }
 
     @Test
@@ -104,7 +104,7 @@ public class ResetFilesPresenterTest extends BaseTest {
 
         verify(resourceProvider).getActiveProject();
         verify(service).status(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<Status>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).statusFailed();
     }
 
@@ -116,7 +116,7 @@ public class ResetFilesPresenterTest extends BaseTest {
 
         verify(resourceProvider).getActiveProject();
         verify(service).status(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<Status>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).statusFailed();
     }
 
@@ -145,7 +145,7 @@ public class ResetFilesPresenterTest extends BaseTest {
         verify(view).close();
         verify(service, never()).reset(eq(VFS_ID), eq(PROJECT_ID), anyString(), (ResetRequest.ResetType)anyObject(),
                                        (AsyncRequestCallback<String>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).nothingToReset();
     }
 
@@ -198,7 +198,7 @@ public class ResetFilesPresenterTest extends BaseTest {
         verify(service).reset(eq(VFS_ID), eq(PROJECT_ID), anyString(), (ResetRequest.ResetType)anyObject(),
                               (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).resetFilesSuccessfully();
     }
 
@@ -241,7 +241,7 @@ public class ResetFilesPresenterTest extends BaseTest {
         verify(service).reset(eq(VFS_ID), eq(PROJECT_ID), anyString(), (ResetRequest.ResetType)anyObject(),
                               (AsyncRequestCallback<String>)anyObject());
         verify(constant).resetFilesFailed();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -274,7 +274,7 @@ public class ResetFilesPresenterTest extends BaseTest {
         verify(service).reset(eq(VFS_ID), eq(PROJECT_ID), anyString(), (ResetRequest.ResetType)anyObject(),
                               (AsyncRequestCallback<String>)anyObject());
         verify(constant).resetFilesFailed();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test

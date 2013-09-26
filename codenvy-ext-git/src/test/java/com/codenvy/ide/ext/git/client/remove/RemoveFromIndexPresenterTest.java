@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.remove;
 
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.json.JsonArray;
@@ -28,7 +29,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -55,11 +55,11 @@ public class RemoveFromIndexPresenterTest extends BaseTest {
     private RemoveFromIndexView      view;
     private RemoveFromIndexPresenter presenter;
 
-    @Before
+    @Override
     public void disarm() {
         super.disarm();
 
-        presenter = new RemoveFromIndexPresenter(view, service, console, constant, resourceProvider, selectionAgent);
+        presenter = new RemoveFromIndexPresenter(view, service, constant, resourceProvider, selectionAgent, notificationManager);
     }
 
     @Test
@@ -148,7 +148,7 @@ public class RemoveFromIndexPresenterTest extends BaseTest {
                 .remove(eq(VFS_ID), eq(PROJECT_ID), (JsonArray<String>)anyObject(), eq(REMOVED),
                         (AsyncRequestCallback<String>)anyObject());
         verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).removeFilesSuccessfull();
         verify(view).close();
     }
@@ -178,7 +178,7 @@ public class RemoveFromIndexPresenterTest extends BaseTest {
                 .remove(eq(VFS_ID), eq(PROJECT_ID), (JsonArray<String>)anyObject(), eq(REMOVED),
                         (AsyncRequestCallback<String>)anyObject());
         verify(constant).removeFilesFailed();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(view).close();
     }
 
@@ -199,7 +199,7 @@ public class RemoveFromIndexPresenterTest extends BaseTest {
                         (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).removeFilesFailed();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test

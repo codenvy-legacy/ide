@@ -17,12 +17,12 @@
  */
 package com.codenvy.ide.ext.git.client.url;
 
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -45,11 +45,11 @@ public class ShowProjectGitReadOnlyUrlPresenterTest extends BaseTest {
     private ShowProjectGitReadOnlyUrlView      view;
     private ShowProjectGitReadOnlyUrlPresenter presenter;
 
-    @Before
+    @Override
     public void disarm() {
         super.disarm();
 
-        presenter = new ShowProjectGitReadOnlyUrlPresenter(view, service, resourceProvider, console, constant);
+        presenter = new ShowProjectGitReadOnlyUrlPresenter(view, service, resourceProvider, constant, notificationManager);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class ShowProjectGitReadOnlyUrlPresenterTest extends BaseTest {
 
         verify(resourceProvider).getActiveProject();
         verify(service).getGitReadOnlyUrl(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<String>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).initFailed();
     }
 
@@ -102,7 +102,7 @@ public class ShowProjectGitReadOnlyUrlPresenterTest extends BaseTest {
 
         verify(resourceProvider).getActiveProject();
         verify(service).getGitReadOnlyUrl(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<String>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).initFailed();
     }
 

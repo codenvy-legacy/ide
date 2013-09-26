@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.clone;
 
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.RepoInfo;
 import com.codenvy.ide.json.JsonArray;
@@ -58,7 +59,7 @@ public class CloneRepositoryPresenterTest extends BaseTest {
     public void disarm() {
         super.disarm();
 
-        presenter = new CloneRepositoryPresenter(view, service, resourceProvider, eventBus, constant, console);
+        presenter = new CloneRepositoryPresenter(view, service, resourceProvider, eventBus, constant, notificationManager);
 
         when(view.getProjectName()).thenReturn(PROJECT_NAME);
         when(view.getRemoteName()).thenReturn(REMOTE_NAME);
@@ -108,7 +109,7 @@ public class CloneRepositoryPresenterTest extends BaseTest {
         verify(service, never()).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME),
                                                  (AsyncRequestCallback<RepoInfo>)anyObject());
         verify(constant).cloneSuccess(eq(REMOTE_URI));
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -145,7 +146,6 @@ public class CloneRepositoryPresenterTest extends BaseTest {
         verify(service, never()).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME),
                                                  (AsyncRequestCallback<RepoInfo>)anyObject());
         verify(constant).cloneFailed(eq(REMOTE_URI));
-        verify(console).print(anyString());
     }
 
     @Test
@@ -192,7 +192,7 @@ public class CloneRepositoryPresenterTest extends BaseTest {
         verify(service).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(REMOTE_NAME),
                                         (AsyncRequestCallback<RepoInfo>)anyObject());
         verify(constant).cloneSuccess(eq(REMOTE_URI));
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
 
@@ -233,7 +233,6 @@ public class CloneRepositoryPresenterTest extends BaseTest {
         verify(resourceProvider).createProject(eq(PROJECT_NAME), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
         verify(resourceProvider).delete(eq(project), (AsyncCallback<String>)anyObject());
         verify(constant).cloneFailed(eq(REMOTE_URI));
-        verify(console).print(anyString());
     }
 
     @Test
@@ -264,7 +263,6 @@ public class CloneRepositoryPresenterTest extends BaseTest {
         verify(resourceProvider).createProject(eq(PROJECT_NAME), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
         verify(resourceProvider).delete(eq(project), (AsyncCallback<String>)anyObject());
         verify(constant).cloneFailed(eq(REMOTE_URI));
-        verify(console).print(anyString());
     }
 
     @Test
@@ -287,7 +285,6 @@ public class CloneRepositoryPresenterTest extends BaseTest {
         verify(view).getRemoteUri();
         verify(resourceProvider).createProject(eq(PROJECT_NAME), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
         verify(constant).cloneFailed(eq(REMOTE_URI));
-        verify(console).print(anyString());
     }
 
     @Test

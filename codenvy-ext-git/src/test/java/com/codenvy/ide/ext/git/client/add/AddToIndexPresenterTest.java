@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.add;
 
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.ext.git.client.BaseTest;
@@ -62,7 +63,7 @@ public class AddToIndexPresenterTest extends BaseTest {
     @Override
     public void disarm() {
         super.disarm();
-        presenter = new AddToIndexPresenter(view, service, console, constant, resourceProvider, selectionAgent);
+        presenter = new AddToIndexPresenter(view, service, constant, resourceProvider, selectionAgent, notificationManager);
     }
 
     @Test
@@ -160,7 +161,7 @@ public class AddToIndexPresenterTest extends BaseTest {
                 .add(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (JsonArray<String>)anyObject(),
                      (AsyncRequestCallback<String>)anyObject());
         verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
-        verify(console).print(eq(MESSAGE));
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).addSuccess();
     }
 
@@ -192,7 +193,7 @@ public class AddToIndexPresenterTest extends BaseTest {
         verify(service, never())
                 .add(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (JsonArray<String>)anyObject(),
                      (AsyncRequestCallback<String>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).addFailed();
     }
 
@@ -240,7 +241,7 @@ public class AddToIndexPresenterTest extends BaseTest {
                      (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
-        verify(console).print(eq(MESSAGE));
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).addSuccess();
     }
 
@@ -275,7 +276,7 @@ public class AddToIndexPresenterTest extends BaseTest {
                 .add(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (JsonArray<String>)anyObject(),
                      (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).addFailed();
     }
 
@@ -301,7 +302,7 @@ public class AddToIndexPresenterTest extends BaseTest {
                 .add(eq(VFS_ID), eq(project), eq(NEED_UPDATING), (JsonArray<String>)anyObject(),
                      (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test

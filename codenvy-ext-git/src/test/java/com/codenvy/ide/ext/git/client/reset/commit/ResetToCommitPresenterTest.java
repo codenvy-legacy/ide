@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.reset.commit;
 
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.LogResponse;
 import com.codenvy.ide.ext.git.shared.ResetRequest;
@@ -28,7 +29,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -60,11 +60,11 @@ public class ResetToCommitPresenterTest extends BaseTest {
     @InjectMocks
     private ResetToCommitPresenter presenter;
 
-    @Before
+    @Override
     public void disarm() {
         super.disarm();
 
-        presenter = new ResetToCommitPresenter(view, service, resourceProvider, constant, console);
+        presenter = new ResetToCommitPresenter(view, service, resourceProvider, constant, notificationManager);
     }
 
     @Test
@@ -110,7 +110,7 @@ public class ResetToCommitPresenterTest extends BaseTest {
         verify(resourceProvider).getActiveProject();
         verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(!IS_TEXT_FORMATTED), (AsyncRequestCallback<LogResponse>)anyObject());
         verify(constant).logFailed();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -123,7 +123,7 @@ public class ResetToCommitPresenterTest extends BaseTest {
         verify(resourceProvider).getActiveProject();
         verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(!IS_TEXT_FORMATTED), (AsyncRequestCallback<LogResponse>)anyObject());
         verify(constant).logFailed();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -155,7 +155,7 @@ public class ResetToCommitPresenterTest extends BaseTest {
         presenter.onResetClicked();
 
         verify(service).reset(eq(VFS_ID), anyString(), eq(PROJECT_ID), eq(MIXED), (AsyncRequestCallback<String>)anyObject());
-        verify(console, never()).print(anyString());
+        verify(notificationManager, never()).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -179,7 +179,7 @@ public class ResetToCommitPresenterTest extends BaseTest {
 
         verify(service).reset(eq(VFS_ID), anyString(), eq(PROJECT_ID), eq(MIXED), (AsyncRequestCallback<String>)anyObject());
         verify(constant).resetFail();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -194,7 +194,7 @@ public class ResetToCommitPresenterTest extends BaseTest {
 
         verify(service).reset(eq(VFS_ID), anyString(), eq(REVISION_ID), eq(MIXED), (AsyncRequestCallback<String>)anyObject());
         verify(constant).resetFail();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test

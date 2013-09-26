@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.merge;
 
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.Branch;
@@ -30,7 +31,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -60,11 +60,11 @@ public class MergePresenterTest extends BaseTest {
     private Reference      selectedReference;
     private MergePresenter presenter;
 
-    @Before
+    @Override
     public void disarm() {
         super.disarm();
 
-        presenter = new MergePresenter(view, service, resourceProvider, eventBus, console, constant);
+        presenter = new MergePresenter(view, service, resourceProvider, eventBus, constant, notificationManager);
     }
 
     @Test
@@ -105,7 +105,7 @@ public class MergePresenterTest extends BaseTest {
         verify(view).setRemoteBranches((JsonArray<Reference>)anyObject());
         verify(view).setLocalBranches((JsonArray<Reference>)anyObject());
         verify(eventBus, never()).fireEvent((ExceptionThrownEvent)anyObject());
-        verify(console, never()).print(anyString());
+        verify(notificationManager, never()).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -136,7 +136,7 @@ public class MergePresenterTest extends BaseTest {
         verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_LOCAL), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
         verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_REMOTE), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
         verify(eventBus, times(2)).fireEvent((ExceptionThrownEvent)anyObject());
-        verify(console, times(2)).print(anyString());
+        verify(notificationManager, times(2)).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -151,7 +151,7 @@ public class MergePresenterTest extends BaseTest {
         verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_LOCAL), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
         verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_REMOTE), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
         verify(eventBus, times(2)).fireEvent((ExceptionThrownEvent)anyObject());
-        verify(console, times(2)).print(anyString());
+        verify(notificationManager, times(2)).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -190,7 +190,7 @@ public class MergePresenterTest extends BaseTest {
         presenter.onMergeClicked();
 
         verify(service).merge(eq(VFS_ID), anyString(), eq(DISPLAY_NAME), (AsyncRequestCallback<MergeResult>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(view).close();
     }
 
@@ -216,7 +216,7 @@ public class MergePresenterTest extends BaseTest {
         verify(service).merge(eq(VFS_ID), anyString(), eq(DISPLAY_NAME), (AsyncRequestCallback<MergeResult>)anyObject());
 
         verify(eventBus).fireEvent((ExceptionThrownEvent)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test

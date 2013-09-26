@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.pull;
 
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
@@ -30,7 +31,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -57,11 +57,11 @@ public class PullPresenterTest extends BaseTest {
     private Branch        branch;
     private PullPresenter presenter;
 
-    @Before
+    @Override
     public void disarm() {
         super.disarm();
 
-        presenter = new PullPresenter(view, service, resourceProvider, console, constant);
+        presenter = new PullPresenter(view, service, resourceProvider, constant, notificationManager);
 
         when(view.getRepositoryName()).thenReturn(REPOSITORY_NAME);
         when(view.getRepositoryUrl()).thenReturn(REMOTE_URI);
@@ -162,7 +162,7 @@ public class PullPresenterTest extends BaseTest {
         verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
                                    (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
         verify(constant, times(2)).branchesListFailed();
-        verify(console, times(2)).print(anyString());
+        verify(notificationManager, times(2)).showNotification((Notification)anyObject());
         verify(view, times(2)).setEnablePullButton(eq(DISABLE_BUTTON));
     }
 
@@ -191,7 +191,7 @@ public class PullPresenterTest extends BaseTest {
         verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
                                    (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
         verify(constant, times(2)).branchesListFailed();
-        verify(console, times(2)).print(anyString());
+        verify(notificationManager, times(2)).showNotification((Notification)anyObject());
         verify(view, times(2)).setEnablePullButton(eq(DISABLE_BUTTON));
     }
 
@@ -261,7 +261,7 @@ public class PullPresenterTest extends BaseTest {
         verify(service).pullWS(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (RequestCallback<String>)anyObject());
         verify(service, never()).pull(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).pullSuccess(eq(REMOTE_URI));
     }
 
@@ -285,7 +285,7 @@ public class PullPresenterTest extends BaseTest {
         verify(service, never()).pull(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).pullFail(eq(REMOTE_URI));
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -319,7 +319,7 @@ public class PullPresenterTest extends BaseTest {
         verify(service).pullWS(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (RequestCallback<String>)anyObject());
         verify(service).pull(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).pullSuccess(eq(REMOTE_URI));
     }
 
@@ -345,7 +345,7 @@ public class PullPresenterTest extends BaseTest {
         verify(service).pull(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).pullFail(eq(REMOTE_URI));
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -362,7 +362,7 @@ public class PullPresenterTest extends BaseTest {
         verify(service).pull(eq(VFS_ID), eq(project), anyString(), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).pullFail(eq(REMOTE_URI));
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test

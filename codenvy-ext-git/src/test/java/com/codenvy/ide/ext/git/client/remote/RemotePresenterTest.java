@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.remote;
 
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.client.remote.add.AddRemoteRepositoryPresenter;
 import com.codenvy.ide.ext.git.shared.Remote;
@@ -27,7 +28,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -57,11 +57,11 @@ public class RemotePresenterTest extends BaseTest {
     private AddRemoteRepositoryPresenter addRemoteRepositoryPresenter;
     private RemotePresenter              presenter;
 
-    @Before
+    @Override
     public void disarm() {
         super.disarm();
 
-        presenter = new RemotePresenter(view, service, resourceProvider, constant, console, addRemoteRepositoryPresenter);
+        presenter = new RemotePresenter(view, service, resourceProvider, constant, addRemoteRepositoryPresenter, notificationManager);
 
         when(selectedRemote.getName()).thenReturn(REPOSITORY_NAME);
     }
@@ -151,7 +151,7 @@ public class RemotePresenterTest extends BaseTest {
 
         verify(service).remoteList(eq(VFS_ID), anyString(), anyString(), eq(SHOW_ALL_INFORMATION),
                                    (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
-        verify(console, never()).print(anyString());
+        verify(notificationManager, never()).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -170,7 +170,7 @@ public class RemotePresenterTest extends BaseTest {
 
         verify(service, never()).remoteList(eq(VFS_ID), anyString(), anyString(), eq(SHOW_ALL_INFORMATION),
                                             (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).remoteAddFailed();
     }
 
@@ -215,7 +215,7 @@ public class RemotePresenterTest extends BaseTest {
 
         verify(service).remoteDelete(eq(VFS_ID), eq(PROJECT_ID), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
         verify(constant).remoteDeleteFailed();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -229,7 +229,7 @@ public class RemotePresenterTest extends BaseTest {
 
         verify(service).remoteDelete(eq(VFS_ID), eq(PROJECT_ID), eq(REPOSITORY_NAME), (AsyncRequestCallback<String>)anyObject());
         verify(constant).remoteDeleteFailed();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.github.githubimport;
 
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.BaseTest;
@@ -36,7 +37,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -67,11 +67,12 @@ public class ImportPresenterTest extends BaseTest {
     private Throwable           throwable;
     private ImportPresenter     presenter;
 
-    @Before
+    @Override
     public void disarm() {
         super.disarm();
 
-        presenter = new ImportPresenter(view, gitHubService, eventBus, "restContext", constant, resourceProvider, console, service);
+        presenter = new ImportPresenter(view, gitHubService, eventBus, "restContext", constant, resourceProvider, console, service,
+                                        notificationManager);
 
         when(user.getUserId()).thenReturn(USER_ID);
         when(repoInfo.getRemoteUri()).thenReturn(REMOTE_URI);
@@ -167,7 +168,7 @@ public class ImportPresenterTest extends BaseTest {
 
         verify(gitHubService).getUserToken(eq(USER_ID), (AsyncRequestCallback<String>)anyObject());
         verify(eventBus).fireEvent((ExceptionThrownEvent)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -189,7 +190,7 @@ public class ImportPresenterTest extends BaseTest {
 
         verify(gitHubService).getUserToken(eq(USER_ID), (AsyncRequestCallback<String>)anyObject());
         verify(eventBus).fireEvent((ExceptionThrownEvent)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -221,7 +222,7 @@ public class ImportPresenterTest extends BaseTest {
 
         verify(gitHubService).getUserToken(eq(USER_ID), (AsyncRequestCallback<String>)anyObject());
         verify(eventBus).fireEvent((ExceptionThrownEvent)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -290,7 +291,7 @@ public class ImportPresenterTest extends BaseTest {
                 .cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(PROJECT_NAME), (RequestCallback<RepoInfo>)anyObject());
         verify(service, never())
                 .cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(PROJECT_NAME), (AsyncRequestCallback<RepoInfo>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).cloneSuccess(eq(REMOTE_URI));
         verify(view).close();
     }
@@ -330,9 +331,9 @@ public class ImportPresenterTest extends BaseTest {
                 .cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(PROJECT_NAME), (RequestCallback<RepoInfo>)anyObject());
         verify(service, never())
                 .cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(PROJECT_NAME), (AsyncRequestCallback<RepoInfo>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).cloneFailed(anyString());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(view).close();
     }
 
@@ -384,7 +385,7 @@ public class ImportPresenterTest extends BaseTest {
                 .cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(PROJECT_NAME), (RequestCallback<RepoInfo>)anyObject());
         verify(service).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(PROJECT_NAME),
                                         (AsyncRequestCallback<RepoInfo>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).cloneSuccess(eq(REMOTE_URI));
         verify(view).close();
     }
@@ -426,9 +427,9 @@ public class ImportPresenterTest extends BaseTest {
                 .cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(PROJECT_NAME), (RequestCallback<RepoInfo>)anyObject());
         verify(service).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(PROJECT_NAME),
                                         (AsyncRequestCallback<RepoInfo>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).cloneFailed(anyString());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(view).close();
     }
 
@@ -460,9 +461,9 @@ public class ImportPresenterTest extends BaseTest {
                 .cloneRepositoryWS(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(PROJECT_NAME), (RequestCallback<RepoInfo>)anyObject());
         verify(service).cloneRepository(eq(VFS_ID), eq(project), eq(REMOTE_URI), eq(PROJECT_NAME),
                                         (AsyncRequestCallback<RepoInfo>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).cloneFailed(anyString());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(view).close();
     }
 
@@ -485,7 +486,7 @@ public class ImportPresenterTest extends BaseTest {
         presenter.onFinishClicked();
 
         verify(resourceProvider).createProject(eq(PROJECT_NAME), (JsonArray<Property>)anyObject(), (AsyncCallback<Project>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.push;
 
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
@@ -29,7 +30,6 @@ import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -58,11 +58,11 @@ public class PushToRemotePresenterTest extends BaseTest {
     private Branch                branch;
     private PushToRemotePresenter presenter;
 
-    @Before
+    @Override
     public void disarm() {
         super.disarm();
 
-        presenter = new PushToRemotePresenter(view, service, resourceProvider, console, constant);
+        presenter = new PushToRemotePresenter(view, service, resourceProvider, constant, notificationManager);
 
         when(view.getRepository()).thenReturn(REPOSITORY_NAME);
         when(view.getLocalBranch()).thenReturn(LOCAL_BRANCH);
@@ -162,7 +162,7 @@ public class PushToRemotePresenterTest extends BaseTest {
         verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
                                    (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
         verify(constant, times(2)).branchesListFailed();
-        verify(console, times(2)).print(anyString());
+        verify(notificationManager, times(2)).showNotification((Notification)anyObject());
         verify(view, times(2)).setEnablePushButton(eq(DISABLE_BUTTON));
     }
 
@@ -191,7 +191,7 @@ public class PushToRemotePresenterTest extends BaseTest {
         verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
                                    (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
         verify(constant, times(2)).branchesListFailed();
-        verify(console, times(2)).print(anyString());
+        verify(notificationManager, times(2)).showNotification((Notification)anyObject());
         verify(view, times(2)).setEnablePushButton(eq(DISABLE_BUTTON));
     }
 
@@ -258,7 +258,7 @@ public class PushToRemotePresenterTest extends BaseTest {
                 .push(eq(VFS_ID), eq(project), (JsonArray<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
                       (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).pushSuccess(eq(REPOSITORY_NAME));
     }
 
@@ -289,7 +289,7 @@ public class PushToRemotePresenterTest extends BaseTest {
                       (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).pushFail();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -321,7 +321,7 @@ public class PushToRemotePresenterTest extends BaseTest {
                 .push(eq(VFS_ID), eq(project), (JsonArray<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
                       (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).pushSuccess(eq(REPOSITORY_NAME));
     }
 
@@ -355,7 +355,7 @@ public class PushToRemotePresenterTest extends BaseTest {
                       (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).pushFail();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -379,7 +379,7 @@ public class PushToRemotePresenterTest extends BaseTest {
                 .push(eq(VFS_ID), eq(project), (JsonArray<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
                       (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test

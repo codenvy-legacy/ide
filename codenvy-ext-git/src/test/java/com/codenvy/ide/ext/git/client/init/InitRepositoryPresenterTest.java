@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.git.client.init;
 
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -27,7 +28,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -50,11 +50,11 @@ public class InitRepositoryPresenterTest extends BaseTest {
     private InitRepositoryView      view;
     private InitRepositoryPresenter presenter;
 
-    @Before
+    @Override
     public void disarm() {
         super.disarm();
 
-        presenter = new InitRepositoryPresenter(view, service, resourceProvider, eventBus, console, constant);
+        presenter = new InitRepositoryPresenter(view, service, resourceProvider, eventBus, constant, notificationManager);
 
         when(view.isBare()).thenReturn(BARE);
         when(project.getName()).thenReturn(PROJECT_NAME);
@@ -101,7 +101,7 @@ public class InitRepositoryPresenterTest extends BaseTest {
         verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<String>)anyObject());
         verify(service, never()).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<String>)anyObject());
         verify(constant).initSuccess();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(eventBus).fireEvent((RefreshBrowserEvent)anyObject());
         verify(project).refreshProperties((AsyncCallback<Project>)anyObject());
     }
@@ -126,7 +126,7 @@ public class InitRepositoryPresenterTest extends BaseTest {
         verify(view).close();
         verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<String>)anyObject());
         verify(service, never()).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<String>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).initFailed();
     }
 
@@ -163,7 +163,7 @@ public class InitRepositoryPresenterTest extends BaseTest {
         verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<String>)anyObject());
         verify(service).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<String>)anyObject());
         verify(constant).initSuccess();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(eventBus).fireEvent((RefreshBrowserEvent)anyObject());
         verify(project).refreshProperties((AsyncCallback<Project>)anyObject());
     }
@@ -190,7 +190,7 @@ public class InitRepositoryPresenterTest extends BaseTest {
         verify(view).close();
         verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<String>)anyObject());
         verify(service).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<String>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).initFailed();
     }
 
@@ -208,7 +208,7 @@ public class InitRepositoryPresenterTest extends BaseTest {
         verify(view).close();
         verify(service).initWS(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<String>)anyObject());
         verify(service).init(eq(VFS_ID), eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (AsyncRequestCallback<String>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).initFailed();
     }
 

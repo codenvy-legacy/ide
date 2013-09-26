@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.git.client.delete;
 
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.resources.model.Project;
@@ -49,7 +50,7 @@ public class DeleteRepositoryPresenterTest extends BaseTest {
     public void disarm() {
         super.disarm();
 
-        presenter = new DeleteRepositoryPresenter(service, eventBus, constant, console, resourceProvider);
+        presenter = new DeleteRepositoryPresenter(service, eventBus, constant, resourceProvider, notificationManager);
     }
 
     @Test
@@ -80,7 +81,7 @@ public class DeleteRepositoryPresenterTest extends BaseTest {
         verify(resourceProvider).getActiveProject();
         verify(project).getPath();
         verify(service).deleteRepository(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<Void>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).deleteGitRepositorySuccess();
         verify(eventBus).fireEvent((RefreshBrowserEvent)anyObject());
     }
@@ -103,7 +104,7 @@ public class DeleteRepositoryPresenterTest extends BaseTest {
         verify(resourceProvider).getActiveProject();
         verify(project).getPath();
         verify(service).deleteRepository(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<Void>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(eventBus).fireEvent((ExceptionThrownEvent)anyObject());
     }
 
@@ -116,7 +117,7 @@ public class DeleteRepositoryPresenterTest extends BaseTest {
         verify(resourceProvider).getActiveProject();
         verify(project).getPath();
         verify(service).deleteRepository(eq(VFS_ID), eq(PROJECT_ID), (AsyncRequestCallback<Void>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(eventBus).fireEvent((ExceptionThrownEvent)anyObject());
     }
 }

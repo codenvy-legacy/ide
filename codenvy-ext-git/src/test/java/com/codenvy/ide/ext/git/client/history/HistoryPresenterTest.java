@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.history;
 
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStack;
@@ -33,7 +34,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -76,11 +76,12 @@ public class HistoryPresenterTest extends BaseTest {
     private LogResponse      logResponse;
     private HistoryPresenter presenter;
 
-    @Before
+    @Override
     public void disarm() {
         super.disarm();
 
-        presenter = new HistoryPresenter(view, service, constant, resources, resourceProvider, console, workspaceAgent, selectionAgent);
+        presenter = new HistoryPresenter(view, service, constant, resources, resourceProvider, workspaceAgent, selectionAgent,
+                                         notificationManager);
         presenter.setPartStack(partStack);
 
         when(partStack.getActivePart()).thenReturn(partPresenter);
@@ -148,7 +149,7 @@ public class HistoryPresenterTest extends BaseTest {
         verify(partStack).setActivePart(eq(presenter));
         verify(constant, times(2)).historyNothingToDisplay();
         verify(constant).logFailed();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -173,7 +174,7 @@ public class HistoryPresenterTest extends BaseTest {
         verify(partStack).setActivePart(eq(presenter));
         verify(constant, times(2)).historyNothingToDisplay();
         verify(constant).logFailed();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test
@@ -247,7 +248,7 @@ public class HistoryPresenterTest extends BaseTest {
                 .diff(eq(VFS_ID), eq(PROJECT_ID), (JsonArray<String>)anyObject(), eq(RAW), eq(NO_RENAMES), eq(RENAME_LIMIT),
                       eq(REVISION_ID), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
         verify(constant).diffFailed();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(view).setCommitADate(anyString());
         verify(view).setCommitARevision(anyString());
         verify(view).setCommitBDate(eq(EMPTY_TEXT));
@@ -490,7 +491,7 @@ public class HistoryPresenterTest extends BaseTest {
         verify(view).setCommitBDate(anyString());
         verify(view).setCommitBRevision(anyString());
         verify(constant).diffFailed();
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test

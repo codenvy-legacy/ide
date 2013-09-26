@@ -17,12 +17,12 @@
  */
 package com.codenvy.ide.ext.git.client.status;
 
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.invocation.InvocationOnMock;
@@ -46,11 +46,11 @@ public class StatusCommandPresenterTest extends BaseTest {
     @InjectMocks
     private StatusCommandPresenter presenter;
 
-    @Before
+    @Override
     public void disarm() {
         super.disarm();
 
-        presenter = new StatusCommandPresenter(service, resourceProvider, console, constant);
+        presenter = new StatusCommandPresenter(service, resourceProvider, console, constant, notificationManager);
     }
 
     @Test
@@ -90,7 +90,7 @@ public class StatusCommandPresenterTest extends BaseTest {
 
         verify(resourceProvider).getActiveProject();
         verify(service).statusText(eq(VFS_ID), eq(PROJECT_ID), eq(IS_NOT_FORMATTED), (AsyncRequestCallback<String>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).statusFailed();
     }
 
@@ -103,7 +103,7 @@ public class StatusCommandPresenterTest extends BaseTest {
 
         verify(resourceProvider).getActiveProject();
         verify(service).statusText(eq(VFS_ID), eq(PROJECT_ID), eq(IS_NOT_FORMATTED), (AsyncRequestCallback<String>)anyObject());
-        verify(console).print(anyString());
+        verify(notificationManager).showNotification((Notification)anyObject());
         verify(constant).statusFailed();
     }
 }

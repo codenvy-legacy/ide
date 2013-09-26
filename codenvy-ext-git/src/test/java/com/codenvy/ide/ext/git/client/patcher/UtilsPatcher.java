@@ -21,11 +21,16 @@ import com.codenvy.ide.util.Utils;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * Patcher for Utils class. Replace native method into Utils.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 @PatchClass(Utils.class)
 public class UtilsPatcher {
     public static final String WORKSPACE_NAME = "workspaceName";
 
+    /** Patch getWorkspaceName method. */
     @PatchMethod(override = true)
     public static String getWorkspaceName() {
         return WORKSPACE_NAME;
