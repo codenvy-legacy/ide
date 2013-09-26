@@ -241,7 +241,7 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
             return;
         }
 
-        if (ProjectUpdater.isNeedUpdateProject(openedProject)) {
+        if (ProjectUpdater.isNeedUpdateProject(openedProject) && !IDE.isRoUser()) {
             ProjectUpdater.updateProject(openedProject, new ProjectUpdater.ProjectUpdatedHandler() {
                 @Override
                 public void onProjectUpdated() {
@@ -260,7 +260,7 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
         openedProject = projectOpenedEvent.getProject();
         ensureProjectExplorerDisplayCreated();
 
-        if (ProjectUpdater.isNeedUpdateProject(openedProject)) {
+        if (ProjectUpdater.isNeedUpdateProject(openedProject) && !IDE.isRoUser()) {
             ProjectUpdater.updateProject(projectOpenedEvent.getProject(), new ProjectUpdater.ProjectUpdatedHandler() {
                 @Override
                 public void onProjectUpdated() {
