@@ -26,7 +26,7 @@ import com.codenvy.ide.resources.model.Property;
 
 
 /**
- * This class is used during unmarshaling of the project. It encapsulates both
+ * This class is used during unmarshalling of the project. It encapsulates both
  * {@link ResourceProvider} used to get proper {@link ModelProvider} and the
  * new {@link Project} instance that is filled with response data.
  * <p/>

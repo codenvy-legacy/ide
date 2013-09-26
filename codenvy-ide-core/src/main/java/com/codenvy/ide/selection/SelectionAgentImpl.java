@@ -76,7 +76,7 @@ public class SelectionAgentImpl implements ActivePartChangedHandler, PropertyLis
     /** {@inheritDoc} */
     @Override
     public void propertyChanged(PartPresenter source, int propId) {
-        // Check prperty and ensure came from active part
+        // Check property and ensure came from active part
         if (propId == PartPresenter.SELECTION_PROPERTY && source == activePart) {
             notifySelectionChanged();
         }

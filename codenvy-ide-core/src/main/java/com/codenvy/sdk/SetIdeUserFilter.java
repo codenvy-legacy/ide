@@ -72,12 +72,12 @@ public class SetIdeUserFilter implements Filter {
             try {
                 ConversationState.setCurrent(null);
             } catch (Exception e) {
-                LOG.warn("An error occured while cleaning the ThreadLocal", e);
+                LOG.warn("An error occurred while cleaning the ThreadLocal", e);
             }
             try {
                 ExoContainerContext.setCurrentContainer(null);
             } catch (Exception e) {
-                LOG.warn("An error occured while cleaning the ThreadLocal", e);
+                LOG.warn("An error occurred while cleaning the ThreadLocal", e);
             }
         }
     }
