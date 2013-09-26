@@ -45,6 +45,9 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
+ * 
+ * Factory dialog view, also is implementation of CreateFactoryPresenter's display.
+ * 
  */
 public class CreateFactoryView extends ViewImpl
     implements com.codenvy.ide.factory.client.factory.CreateFactoryPresenter.Display {
@@ -73,13 +76,13 @@ public class CreateFactoryView extends ViewImpl
     
     public static final int       INITIAL_WIDTH       = 800;
     
-    public static final int       INITIAL_HEIGHT      = 270;
+    public static final int       INITIAL_HEIGHT      = 270 + 35;
 
     public static final int       WIDTH       = 788;
 
-    public static final int       HEIGHT      = 480;
+    public static final int       HEIGHT      = 480 + 35;
 
-    public static final int       HEIGHT_MINI = 270;
+    public static final int       HEIGHT_MINI = 270 + 35;
 
     @UiField
     DivElement                    wizard1, wizard2;

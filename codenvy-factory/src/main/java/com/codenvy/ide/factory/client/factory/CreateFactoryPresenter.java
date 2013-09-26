@@ -74,6 +74,8 @@ import static com.google.gwt.http.client.URL.encodeQueryString;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
+ * This presenter creates and manages functionality of Factory popup.
+ * 
  */
 public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClosedHandler,
     VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler {
@@ -86,51 +88,147 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
     
     public interface Display extends IsView {
         
+        /**
+         * Returns index of current page.
+         * 
+         * @return current page index
+         */
         int getPageIndex();
         
+        /**
+         * Switches to next page.
+         */
         void nextPage();
         
+        /**
+         * Switches to previous page.
+         */
         void previousPage();
         
+        /**
+         * Sets new content in preview area.
+         * 
+         * @param content new content
+         */
         void setPreviewContent(String content);
         
-        
+        /**
+         * Determines whether Show counter field selected.
+         * 
+         * @return <b>true</b> if Show counter field selected, <b>false</b> otherwise
+         */
         boolean showCounter();
         
+        /**
+         * Determines whether Vertical orientation field selected.
+         * 
+         * @return <b>true</b> if Vertical orientation field selected, <b>false</b> otherwise
+         */
         boolean isVerticalOrientation();
         
+        /**
+         * Determines whether White style field selected.
+         * 
+         * @return <b>true</b> if White style field selected, <b>false</b> otherwise
+         */
         boolean isWhiteStyle();
         
-        
+        /**
+         * Returns snippet with content for embedding on websites.
+         * 
+         * @return snippet with content for embedding on websites
+         */
         HasValue<String> snippetWebsites();
         
+        /**
+         * Returns snippet with content for embedding on Github.
+         * 
+         * @return snippet with content for embedding on Github
+         */
         HasValue<String> snippetGitHub();
         
+        /**
+         * Returns snippet with content for direct sharing.
+         * 
+         * @return snippet with content for direct sharing
+         */
         HasValue<String> snippetDirectSharing();
         
-        
+        /**
+         * Returns Share on Facebook button.
+         * 
+         * @return Share on Facebook button
+         */
         HasClickHandlers getShareFacebookButton();
         
+        /**
+         * Returns Share on Google button.
+         * 
+         * @return Share on Google button
+         */
         HasClickHandlers getShareGooglePlusButton();
         
+        /**
+         * Returns Share on Twitter button.
+         * 
+         * @return Share on Twitter button
+         */
         HasClickHandlers getShareTwitterButton();
         
+        /**
+         * Returns Share by Email button.
+         * 
+         * @return Share by Email button
+         */
         HasClickHandlers getShareEmailButton();
         
-        
+        /**
+         * Returns Cancel button.
+         * 
+         * @return Cancel button
+         */
         HasClickHandlers getCancelButton();
         
+        /**
+         * Returns Create Factory button.
+         * 
+         * @return Create Factory button
+         */
         HasClickHandlers getCreateButton();
         
+        /**
+         * Returns Back button.
+         * 
+         * @return Back button
+         */
         HasClickHandlers getBackButton();
         
+        /**
+         * Returns Finish button.
+         * 
+         * @return Finish button.
+         */
         HasClickHandlers getFinishButton();
         
-        
+        /**
+         * Adds Style changed handler of Factory button.
+         * 
+         * @param handler handler
+         */
         void addStyleChangedHandler(StyleChangedHandler handler);
         
+        /**
+         * Adds Click handler to Open after launch field.
+         * 
+         * @param clickHandler click handler
+         */
         void addOpenAfterLaunchClickHandler(ClickHandler clickHandler);
         
+        /**
+         * Sets Open after launch field value.
+         * 
+         * @param path
+         */
         void setOpenAfterLaunch(String path);
         
     }
@@ -149,8 +247,14 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
     /** A Factory URL itself. */
     private String                factoryURL;
     
+    /**
+     * Display instance.
+     */
     private Display display;
     
+    /**
+     * Creates new instance of this presenter.
+     */
     public CreateFactoryPresenter() {
         IDE.addHandler(GetCodeNowButtonEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -184,6 +288,9 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         openedProject = null;
     }
     
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -191,6 +298,9 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         }
     }    
 
+    /**
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonHandler#onGetCodeNowButton(com.codenvy.ide.factory.client.generate.GetCodeNowButtonEvent)
+     */
     @Override
     public void onGetCodeNowButton(GetCodeNowButtonEvent event) {
         if (display != null) {
@@ -200,6 +310,9 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         getLatestCommitId();        
     }
     
+    /**
+     * Fetch ID of last commit.
+     */
     private void getLatestCommitId() {
         try {
             GitClientService.getInstance().log(vfs.getId(), openedProject.getId(), false,
@@ -225,6 +338,9 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         }
     }
     
+    /**
+     * Fetch Git repository URL.
+     */
     private void getGitRepositoryURL() {
         try {
             GitClientService.getInstance().getGitReadOnlyUrl(vfs.getId(), openedProject.getId(),
@@ -249,6 +365,9 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         }
     }
     
+    /**
+     * Creates and displays Factory popup.
+     */
     private void showPopup() {
         factoryURL = SpinnetGenerator.getBaseFactoryURL() + "?" + //
                      VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
@@ -274,9 +393,13 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                 generateDirectSharingSnippet();
             }
         });
-        
     }
     
+    /**
+     * Notify server just after factory created.
+     * 
+     * @param factoryURL
+     */
     private void logFactoryCreated(String factoryURL) {
         try {
             FactoryClientService.getInstance().logFactoryCreated(vfs.getId(), openedProject.getId(), factoryURL,
@@ -296,6 +419,9 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         }
     }
 
+    /**
+     * Binds display.
+     */
     private void bindDisplay() {        
         display.getCreateButton().addClickHandler(new ClickHandler() {
             @Override
@@ -388,6 +514,9 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         });
     }
     
+    /**
+     * Generates spinnet content for embedding on websites.
+     */
     private void generateWebsitesSnippet() {
         String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
         String style = display.isWhiteStyle() ? "white" : "dark";
@@ -438,12 +567,18 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             "");
     }
     
+    /**
+     * Generates content for embedding on Github.
+     */
     private void generateGitHubSnippet() {
         String code = "[![alt](" + 
             SpinnetGenerator.getCodeNowGitHubImageURL(!display.isWhiteStyle()) + ")](" + factoryURL + ")";
         display.snippetGitHub().setValue(code);
     }
     
+    /**
+     * Generates content for direct sharing.
+     */
     private void generateDirectSharingSnippet() {
         display.snippetDirectSharing().setValue(factoryURL);
     }

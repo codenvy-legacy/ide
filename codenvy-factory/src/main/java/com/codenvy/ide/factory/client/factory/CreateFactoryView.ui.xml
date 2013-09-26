@@ -125,7 +125,7 @@
 		.block-content {
 			position: absolute;
 			left:0px;
-			top:25px;
+			top:30px;
 			right:0px;
 			bottom:5px;
 			overflow:hidden;
@@ -178,7 +178,30 @@
 		}
 
 		.step-header-step-selected {
-			background-color: #8888EE;
+			background-color: #45AFDD;
+		}
+		
+		.step-header-step-left span,
+		.step-header-step-right span {
+			position: absolute;
+			left: -32px;
+			top: 20px;
+			width: 80px;
+			height: 16px;
+
+			color: #999;
+
+			font-family: Verdana, Arial, sans-serif;
+			font-size: 12px;
+			font-weight: normal;
+			line-height: 16px;
+			
+			text-align: center;
+		}
+		
+		.step-header-step-selected span {
+			color: #555;
+			font-weight: bold;
 		}
 		
 		/**********************************************************************************************************
@@ -461,7 +484,12 @@
 		
         .snippetPanel {
 			border-radius: 4px;
-			height: 100%;
+			
+			/* height: 100%; */
+			
+			top: 0px;
+			bottom: 10px;
+			
 			overflow: hidden;			
 			width: 242px;
 			position: absolute;
@@ -628,14 +656,14 @@
 		
 		<div class="{style.wizard-content}" ui:field="wizard1" style="">
 			
-			<div class="{style.block}" style="height:50px;">
+			<div class="{style.block}" style="height:75px;">
 				<div class="{style.step-header}">
-					<div class="{style.step-header-step-left} {style.step-header-step-selected}"></div>
-					<div class="{style.step-header-step-right}"></div>
+					<div class="{style.step-header-step-left} {style.step-header-step-selected}"><span>CREATE</span></div>
+					<div class="{style.step-header-step-right}"><span>PUBLISH</span></div>
 				</div>
 			</div>
 			
-			<div class="{style.block}" style="height: 115px;">
+			<div class="{style.block}" style="height: 120px;">
 				<div class="{style.blockHeader}">Customize<hr noshade="noshade"></hr></div>					
 				<div class="{style.block-content}">
 					<div style="position: absolute; left:0px; top:0px; right: 350px; bottom: 0px; overflow:hidden;">
@@ -676,7 +704,7 @@
 			
 			<div class="{style.block}" style="height: 230px;">
 				<div class="{style.blockHeader} {style.blockHeaderExpanded}" ui:field="advancedOptionsControl" >Advanced Options<hr noshade="noshade"></hr></div>
-				<div class="{style.block-content}" ui:field="advancedOptions">
+				<div class="{style.block-content}" ui:field="advancedOptions" style="top:40px;">
 					<div class="{style.label}" style="position: absolute; left:0px; top:0px;">Logo (200 x 200):</div>
 					<label class="{style.file-upload}" style="position: absolute; left:120px; top:0px;">
 						<span>Upload image (JPG, GIF or PNG)</span>
@@ -741,14 +769,14 @@
 		
 		<div class="{style.wizard-content}" ui:field="wizard2" style="left:100%;">
 			
-			<div class="{style.block}" style="height:50px;">
+			<div class="{style.block}" style="height:75px;">
 				<div class="{style.step-header}">
-					<div class="{style.step-header-step-left}"></div>
-					<div class="{style.step-header-step-right} {style.step-header-step-selected}"></div>
+					<div class="{style.step-header-step-left}"><span>CREATE</span></div>
+					<div class="{style.step-header-step-right} {style.step-header-step-selected}"><span>PUBLISH</span></div>
 				</div>
 			</div>
 				
-			<div class="{style.block}" style="height: 115px;">
+			<div class="{style.block}" style="height: 120px;">
 				<div class="{style.blockHeader}"><hr noshade="noshade"></hr></div>
 				<div class="{style.block-content}">
 					<div style="position: absolute; overflow: hidden; 
