@@ -60,7 +60,7 @@ import static com.codenvy.ide.ext.git.shared.DiffRequest.DiffType.RAW;
  */
 @Singleton
 public class HistoryPresenter extends BasePresenter implements HistoryView.ActionDelegate {
-    private enum DiffWith {
+    protected enum DiffWith {
         DIFF_WITH_INDEX,
         DIFF_WITH_WORK_TREE,
         DIFF_WITH_PREV_VERSION

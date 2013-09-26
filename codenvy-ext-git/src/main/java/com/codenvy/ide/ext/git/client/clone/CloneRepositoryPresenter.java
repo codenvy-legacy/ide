@@ -52,7 +52,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDelegate {
-    private static final String DEFAULT_REPO_NAME = "origin";
+    public static final String DEFAULT_REPO_NAME = "origin";
     private CloneRepositoryView     view;
     private GitClientService        service;
     private ResourceProvider        resourceProvider;
@@ -126,10 +126,10 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
 
                                           }
                                       });
-            view.close();
         } catch (WebSocketException e) {
             cloneRepositoryREST(remoteUri, remoteName, project);
         }
+        view.close();
     }
 
     /**
@@ -159,9 +159,9 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
                                         }
                                     });
         } catch (RequestException e) {
+            deleteFolder(project);
             handleError(e, remoteUri);
         }
-        view.close();
     }
 
     /**

@@ -58,21 +58,21 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs</artifactId>
             <version>${org.exoplatform.ide.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Client side -->
@@ -93,6 +93,16 @@
             <artifactId>exo-ide-extension-git</artifactId>
             <version>${org.exoplatform.ide.version}</version>
             <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -170,7 +180,9 @@
                             <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                             <arguments>
                                 <argument>--dto_packages=com.codenvy.ide.ext.git.shared</argument>
-                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/ext/git/dto/client/DtoClientImpls.java</argument>
+                                <argument>
+                                    --gen_file_name=${generated.sources.directory}/com/codenvy/ide/ext/git/dto/client/DtoClientImpls.java
+                                </argument>
                                 <argument>--impl=client</argument>
                                 <argument>--package_base=${generated.sources.directory}/</argument>
                             </arguments>
@@ -208,6 +220,15 @@
             </resource>
         </resources>
         <sourceDirectory>src/main/java</sourceDirectory>
+        <testResources>
+            <testResource>
+                <directory>src/test/java</directory>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
         <outputDirectory>target/classes</outputDirectory>
     </build>
 </project>

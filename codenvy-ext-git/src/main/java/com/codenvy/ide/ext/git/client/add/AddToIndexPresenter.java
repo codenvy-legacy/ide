@@ -148,10 +148,10 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
                     handleError(exception);
                 }
             });
-            view.close();
         } catch (WebSocketException e) {
             doAddREST(update);
         }
+        view.close();
     }
 
     /** Perform adding to index (sends request over HTTP). */
@@ -182,7 +182,6 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
         } catch (RequestException e) {
             handleError(e);
         }
-        view.close();
     }
 
     /**

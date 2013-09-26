@@ -272,6 +272,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
         String remoteName = view.getRepositoryName();
         String refs = localBranch.isEmpty() ? remoteBranch
                                             : "refs/heads/" + localBranch + ":" + "refs/remotes/" + remoteName + "/" + remoteBranch;
+
         JsoArray<String> array = JsoArray.create();
         array.add(refs);
 
