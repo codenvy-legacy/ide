@@ -29,6 +29,7 @@ import com.codenvy.ide.ext.git.client.push.PushRequestHandler;
 import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.*;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -580,8 +581,11 @@ public class GitClientServiceImpl implements GitClientService {
     public void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull JsonArray<String> fileFilter,
                      @NotNull DiffRequest.DiffType type, boolean noRenames, int renameLimit, @NotNull String commitA,
                      @NotNull String commitB, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        JsonArray<String> filePatterns = JsoArray.create();
+        filePatterns.addAll(fileFilter);
+
         DtoClientImpls.DiffRequestImpl diffRequest = DtoClientImpls.DiffRequestImpl.make();
-        diffRequest.setFileFilter(fileFilter);
+        diffRequest.setFileFilter(filePatterns);
         diffRequest.setType(type);
         diffRequest.setNoRenames(noRenames);
         diffRequest.setRenameLimit(renameLimit);

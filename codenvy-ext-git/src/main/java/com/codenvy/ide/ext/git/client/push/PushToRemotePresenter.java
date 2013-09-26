@@ -110,11 +110,13 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
                                        String errorMessage =
                                                exception.getMessage() != null ? exception.getMessage() : constant.remoteListFailed();
                                        Window.alert(errorMessage);
+                                       view.setEnablePushButton(false);
                                    }
                                });
         } catch (RequestException e) {
             String errorMessage = e.getMessage() != null ? e.getMessage() : constant.remoteListFailed();
             Window.alert(errorMessage);
+            view.setEnablePushButton(false);
         }
     }
 
