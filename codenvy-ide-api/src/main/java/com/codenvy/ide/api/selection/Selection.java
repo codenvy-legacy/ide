@@ -24,7 +24,7 @@ import com.codenvy.ide.json.JsonCollections;
  * This class contains a single selected object or the bulk of selected objects.
  * Selection can contain any type of Objects and any number of them.
  * <br/>
- * Sinle selection can be created using {@link Selection#Selection(Object)} constructor
+ * Single selection can be created using {@link Selection#Selection(Object)} constructor
  * that accept one Object.
  * <br/>
  * Multiselection can be created with the help of {@link Selection#Selection(JsonArray)}.
@@ -53,7 +53,7 @@ public class Selection<T> {
     /**
      * Creates a MultiSelection, with the list of objects. <br/>
      * Please note, if list contains zero elements, Selection is considered as empty,
-     * if sinle element placed in the list, the Selection is considered as SingleSelection.
+     * if single element placed in the list, the Selection is considered as SingleSelection.
      *
      * @param list
      */
