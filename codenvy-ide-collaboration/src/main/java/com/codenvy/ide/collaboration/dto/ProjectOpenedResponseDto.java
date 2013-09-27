@@ -15,32 +15,18 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.google.collide.dto;
+package com.codenvy.ide.collaboration.dto;
 
 import com.codenvy.ide.dtogen.shared.RoutingType;
 import com.codenvy.ide.dtogen.shared.ServerToClientDto;
 import com.codenvy.ide.json.shared.JsonArray;
-import com.codenvy.ide.json.shared.JsonStringMap;
-
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@RoutingType(type = RoutingTypes.GETOPENEDFILESINWORKSPACERESPONSE)
-public interface GetOpenedFilesInWorkspaceResponse extends ServerToClientDto {
-    /**
-     * Key is file path, value array of users that open this file
-     *
-     * @return the JsonStringMap
-     */
-    JsonStringMap<JsonArray<ParticipantUserDetails>> getOpenedFiles();
-
-
-    /**
-     * Key is file path, value is EditSessionId
-     *
-     * @return the JsonStringMap
-     */
-    JsonStringMap<String> getFileEditSessions();
+@RoutingType(type = RoutingTypes.PROJECT_PARTICIPANTS)
+public interface ProjectOpenedResponseDto extends ServerToClientDto {
+    /** @return all participants (including this) that opened same project. */
+    JsonArray<ParticipantInfo> projectParticipants();
 }

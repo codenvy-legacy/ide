@@ -15,16 +15,9 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.collaboration.dto;
+package org.exoplatform.ide.vfs.server;
 
-import com.codenvy.ide.dtogen.shared.ClientToServerDto;
-import com.codenvy.ide.dtogen.shared.RoutingType;
-
-/**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
- */
-@RoutingType(type = RoutingTypes.CHAT_PARTISIPANTS)
-public interface GetChatParticipants extends ClientToServerDto {
-    String projectId();
+/** @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a> */
+public interface VirtualFileSystemUserContextProvider {
+    VirtualFileSystemUserContext newUserContext();
 }

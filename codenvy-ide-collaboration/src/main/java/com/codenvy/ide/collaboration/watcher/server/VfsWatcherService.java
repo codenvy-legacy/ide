@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.collaboration.watcher.server;
 
+import com.codenvy.ide.collaboration.dto.server.DtoServerImpls;
 import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.ProjectClosedDtoImpl;
 import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.ProjectOpenedDtoImpl;
 
@@ -30,6 +31,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
+import java.util.Set;
+
+import static com.codenvy.ide.collaboration.dto.server.DtoServerImpls.ProjectOpenedResponseDtoImpl;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -41,14 +45,28 @@ public class VfsWatcherService {
     @Inject
     private VfsWatcher vfsWatcher;
 
+    @Inject
+    private ProjectUsers projectUsers;
+
     @Path("/project/opened")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void projectOpened(String message, @Context WSConnection connection, @Context SecurityContext securityContext) {
+    public String projectOpened(String message, @Context WSConnection connection, @Context SecurityContext securityContext) {
         Principal principal = securityContext.getUserPrincipal();
         ProjectOpenedDtoImpl openedDto = ProjectOpenedDtoImpl.fromJsonString(message);
         vfsWatcher.openProject(connection.getHttpSession().getId(), principal != null ? principal.getName() : "anonymous",
                                openedDto);
+        Set<String> users = projectUsers.getProjectUsers(openedDto.projectId());
+        ProjectOpenedResponseDtoImpl response = ProjectOpenedResponseDtoImpl.make();
+        if (users != null) {
+            for (String clientId : users) {
+                DtoServerImpls.ParticipantInfoImpl participant = projectUsers.getParticipant(clientId);
+                if (participant != null) {
+                    response.addProjectParticipants(participant);
+                }
+            }
+        }
+        return response.toJson();
     }
 
     @Path("/project/closed")

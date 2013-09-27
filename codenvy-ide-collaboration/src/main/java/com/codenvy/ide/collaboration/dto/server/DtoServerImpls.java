@@ -1,6 +1,6 @@
 /*
  * CODENVY CONFIDENTIAL
- * __________________
+ *__________________
  *
  * [2012] - [2013] Codenvy, S.A.
  * All Rights Reserved.
@@ -36,3565 +36,3502 @@ import java.util.Map;
 @SuppressWarnings({"unchecked", "cast"})
 public class DtoServerImpls {
 
-  private static final Gson gson = new GsonBuilder().serializeNulls().create();
+    private static final Gson gson = new GsonBuilder().serializeNulls().create();
 
-  private  DtoServerImpls() {}
+    private DtoServerImpls() {
+    }
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "8a8cc2a880ceb2409a7cedd271da943f1fcf6a41";
+    public static final String CLIENT_SERVER_PROTOCOL_HASH = "7533dde2bfa2284b69172143482de0fd16524946";
 
-  public static class ChatCodePointMessageImpl extends ChatMessageImpl implements com.codenvy.ide.collaboration.dto.ChatCodePointMessage, JsonSerializable {
+    public static class ChatCodePointMessageImpl extends ChatMessageImpl
+            implements com.codenvy.ide.collaboration.dto.ChatCodePointMessage, JsonSerializable {
 
-    private ChatCodePointMessageImpl() {
-      super(8);
-    }
+        private ChatCodePointMessageImpl() {
+            super(8);
+        }
 
-    protected ChatCodePointMessageImpl(int type) {
-      super(type);
-    }
+        protected ChatCodePointMessageImpl(int type) {
+            super(type);
+        }
 
-    public static ChatCodePointMessageImpl make() {
-      return new ChatCodePointMessageImpl();
-    }
+        public static ChatCodePointMessageImpl make() {
+            return new ChatCodePointMessageImpl();
+        }
 
-    protected int endChar;
-    private boolean _hasEndChar;
-    protected int startChar;
-    private boolean _hasStartChar;
-    protected java.lang.String path;
-    private boolean _hasPath;
-    protected int startLine;
-    private boolean _hasStartLine;
-    protected int endLine;
-    private boolean _hasEndLine;
-
-    public boolean hasEndChar() {
-      return _hasEndChar;
-    }
+        protected int              startChar;
+        private   boolean          _hasStartChar;
+        protected int              endChar;
+        private   boolean          _hasEndChar;
+        protected java.lang.String path;
+        private   boolean          _hasPath;
+        protected int              startLine;
+        private   boolean          _hasStartLine;
+        protected int              endLine;
+        private   boolean          _hasEndLine;
 
-    @Override
-    public int getEndChar() {
-      return endChar;
-    }
+        public boolean hasStartChar() {
+            return _hasStartChar;
+        }
 
-    public ChatCodePointMessageImpl setEndChar(int v) {
-      _hasEndChar = true;
-      endChar = v;
-      return this;
-    }
+        @Override
+        public int getStartChar() {
+            return startChar;
+        }
 
-    public boolean hasStartChar() {
-      return _hasStartChar;
-    }
+        public ChatCodePointMessageImpl setStartChar(int v) {
+            _hasStartChar = true;
+            startChar = v;
+            return this;
+        }
 
-    @Override
-    public int getStartChar() {
-      return startChar;
-    }
+        public boolean hasEndChar() {
+            return _hasEndChar;
+        }
 
-    public ChatCodePointMessageImpl setStartChar(int v) {
-      _hasStartChar = true;
-      startChar = v;
-      return this;
-    }
+        @Override
+        public int getEndChar() {
+            return endChar;
+        }
 
-    public boolean hasPath() {
-      return _hasPath;
-    }
+        public ChatCodePointMessageImpl setEndChar(int v) {
+            _hasEndChar = true;
+            endChar = v;
+            return this;
+        }
 
-    @Override
-    public java.lang.String getPath() {
-      return path;
-    }
+        public boolean hasPath() {
+            return _hasPath;
+        }
 
-    public ChatCodePointMessageImpl setPath(java.lang.String v) {
-      _hasPath = true;
-      path = v;
-      return this;
-    }
+        @Override
+        public java.lang.String getPath() {
+            return path;
+        }
 
-    public boolean hasStartLine() {
-      return _hasStartLine;
-    }
+        public ChatCodePointMessageImpl setPath(java.lang.String v) {
+            _hasPath = true;
+            path = v;
+            return this;
+        }
 
-    @Override
-    public int getStartLine() {
-      return startLine;
-    }
+        public boolean hasStartLine() {
+            return _hasStartLine;
+        }
 
-    public ChatCodePointMessageImpl setStartLine(int v) {
-      _hasStartLine = true;
-      startLine = v;
-      return this;
-    }
+        @Override
+        public int getStartLine() {
+            return startLine;
+        }
 
-    public boolean hasEndLine() {
-      return _hasEndLine;
-    }
+        public ChatCodePointMessageImpl setStartLine(int v) {
+            _hasStartLine = true;
+            startLine = v;
+            return this;
+        }
 
-    @Override
-    public int getEndLine() {
-      return endLine;
-    }
+        public boolean hasEndLine() {
+            return _hasEndLine;
+        }
 
-    public ChatCodePointMessageImpl setEndLine(int v) {
-      _hasEndLine = true;
-      endLine = v;
-      return this;
-    }
+        @Override
+        public int getEndLine() {
+            return endLine;
+        }
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof ChatCodePointMessageImpl)) {
-        return false;
-      }
-      ChatCodePointMessageImpl other = (ChatCodePointMessageImpl) o;
-      if (this._hasEndChar != other._hasEndChar) {
-        return false;
-      }
-      if (this._hasEndChar) {
-        if (this.endChar != other.endChar) {
-          return false;
-        }
-      }
-      if (this._hasStartChar != other._hasStartChar) {
-        return false;
-      }
-      if (this._hasStartChar) {
-        if (this.startChar != other.startChar) {
-          return false;
-        }
-      }
-      if (this._hasPath != other._hasPath) {
-        return false;
-      }
-      if (this._hasPath) {
-        if (!this.path.equals(other.path)) {
-          return false;
-        }
-      }
-      if (this._hasStartLine != other._hasStartLine) {
-        return false;
-      }
-      if (this._hasStartLine) {
-        if (this.startLine != other.startLine) {
-          return false;
-        }
-      }
-      if (this._hasEndLine != other._hasEndLine) {
-        return false;
-      }
-      if (this._hasEndLine) {
-        if (this.endLine != other.endLine) {
-          return false;
-        }
-      }
-      return true;
-    }
+        public ChatCodePointMessageImpl setEndLine(int v) {
+            _hasEndLine = true;
+            endLine = v;
+            return this;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof ChatCodePointMessageImpl)) {
+                return false;
+            }
+            ChatCodePointMessageImpl other = (ChatCodePointMessageImpl)o;
+            if (this._hasStartChar != other._hasStartChar) {
+                return false;
+            }
+            if (this._hasStartChar) {
+                if (this.startChar != other.startChar) {
+                    return false;
+                }
+            }
+            if (this._hasEndChar != other._hasEndChar) {
+                return false;
+            }
+            if (this._hasEndChar) {
+                if (this.endChar != other.endChar) {
+                    return false;
+                }
+            }
+            if (this._hasPath != other._hasPath) {
+                return false;
+            }
+            if (this._hasPath) {
+                if (!this.path.equals(other.path)) {
+                    return false;
+                }
+            }
+            if (this._hasStartLine != other._hasStartLine) {
+                return false;
+            }
+            if (this._hasStartLine) {
+                if (this.startLine != other.startLine) {
+                    return false;
+                }
+            }
+            if (this._hasEndLine != other._hasEndLine) {
+                return false;
+            }
+            if (this._hasEndLine) {
+                if (this.endLine != other.endLine) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasStartChar ? java.lang.Integer.valueOf(startChar).hashCode() : 0);
+            hash = hash * 31 + (_hasEndChar ? java.lang.Integer.valueOf(endChar).hashCode() : 0);
+            hash = hash * 31 + (_hasPath ? path.hashCode() : 0);
+            hash = hash * 31 + (_hasStartLine ? java.lang.Integer.valueOf(startLine).hashCode() : 0);
+            hash = hash * 31 + (_hasEndLine ? java.lang.Integer.valueOf(endLine).hashCode() : 0);
+            return hash;
+        }
+
+        @Override
+        public JsonElement toJsonElement() {
+            JsonObject result = new JsonObject();
+
+            JsonPrimitive startCharOut = new JsonPrimitive(startChar);
+            result.add("startChar", startCharOut);
+
+            JsonPrimitive endCharOut = new JsonPrimitive(endChar);
+            result.add("endChar", endCharOut);
+
+            JsonElement pathOut = (path == null) ? JsonNull.INSTANCE : new JsonPrimitive(path);
+            result.add("path", pathOut);
+
+            JsonPrimitive startLineOut = new JsonPrimitive(startLine);
+            result.add("startLine", startLineOut);
+
+            JsonPrimitive endLineOut = new JsonPrimitive(endLine);
+            result.add("endLine", endLineOut);
+
+            JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
+            result.add("clientId", clientIdOut);
+
+            JsonElement dateTimeOut = (dateTime == null) ? JsonNull.INSTANCE : new JsonPrimitive(dateTime);
+            result.add("dateTime", dateTimeOut);
+
+            JsonElement messageOut = (message == null) ? JsonNull.INSTANCE : new JsonPrimitive(message);
+            result.add("message", messageOut);
+
+            JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
+            result.add("projectId", projectIdOut);
+
+            JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
+            result.add("userId", userIdOut);
+            result.add("_type", new JsonPrimitive(getType()));
+            return result;
+        }
+
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
+
+        @Override
+        public String toString() {
+            return toJson();
+        }
+
+        public static ChatCodePointMessageImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
+
+            ChatCodePointMessageImpl dto = new ChatCodePointMessageImpl();
+            JsonObject json = jsonElem.getAsJsonObject();
+
+            if (json.has("startChar")) {
+                JsonElement startCharIn = json.get("startChar");
+                int startCharOut = startCharIn.getAsInt();
+                dto.setStartChar(startCharOut);
+            }
+
+            if (json.has("endChar")) {
+                JsonElement endCharIn = json.get("endChar");
+                int endCharOut = endCharIn.getAsInt();
+                dto.setEndChar(endCharOut);
+            }
+
+            if (json.has("path")) {
+                JsonElement pathIn = json.get("path");
+                java.lang.String pathOut = gson.fromJson(pathIn, java.lang.String.class);
+                dto.setPath(pathOut);
+            }
+
+            if (json.has("startLine")) {
+                JsonElement startLineIn = json.get("startLine");
+                int startLineOut = startLineIn.getAsInt();
+                dto.setStartLine(startLineOut);
+            }
+
+            if (json.has("endLine")) {
+                JsonElement endLineIn = json.get("endLine");
+                int endLineOut = endLineIn.getAsInt();
+                dto.setEndLine(endLineOut);
+            }
+
+            if (json.has("clientId")) {
+                JsonElement clientIdIn = json.get("clientId");
+                java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
+                dto.setClientId(clientIdOut);
+            }
+
+            if (json.has("dateTime")) {
+                JsonElement dateTimeIn = json.get("dateTime");
+                java.lang.String dateTimeOut = gson.fromJson(dateTimeIn, java.lang.String.class);
+                dto.setDateTime(dateTimeOut);
+            }
+
+            if (json.has("message")) {
+                JsonElement messageIn = json.get("message");
+                java.lang.String messageOut = gson.fromJson(messageIn, java.lang.String.class);
+                dto.setMessage(messageOut);
+            }
+
+            if (json.has("projectId")) {
+                JsonElement projectIdIn = json.get("projectId");
+                java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
+                dto.setProjectId(projectIdOut);
+            }
+
+            if (json.has("userId")) {
+                JsonElement userIdIn = json.get("userId");
+                java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
+                dto.setUserId(userIdOut);
+            }
+
+            return dto;
+        }
+
+        public static ChatCodePointMessageImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasEndChar ? java.lang.Integer.valueOf(endChar).hashCode() : 0);
-      hash = hash * 31 + (_hasStartChar ? java.lang.Integer.valueOf(startChar).hashCode() : 0);
-      hash = hash * 31 + (_hasPath ? path.hashCode() : 0);
-      hash = hash * 31 + (_hasStartLine ? java.lang.Integer.valueOf(startLine).hashCode() : 0);
-      hash = hash * 31 + (_hasEndLine ? java.lang.Integer.valueOf(endLine).hashCode() : 0);
-      return hash;
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
+    public static class ChatMessageImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
+            implements com.codenvy.ide.collaboration.dto.ChatMessage, JsonSerializable {
 
-      JsonPrimitive endCharOut = new JsonPrimitive(endChar);
-      result.add("endChar", endCharOut);
+        private ChatMessageImpl() {
+            super(7);
+        }
 
-      JsonPrimitive startCharOut = new JsonPrimitive(startChar);
-      result.add("startChar", startCharOut);
+        protected ChatMessageImpl(int type) {
+            super(type);
+        }
 
-      JsonElement pathOut = (path == null) ? JsonNull.INSTANCE : new JsonPrimitive(path);
-      result.add("path", pathOut);
+        public static ChatMessageImpl make() {
+            return new ChatMessageImpl();
+        }
 
-      JsonPrimitive startLineOut = new JsonPrimitive(startLine);
-      result.add("startLine", startLineOut);
+        protected java.lang.String clientId;
+        private   boolean          _hasClientId;
+        protected java.lang.String dateTime;
+        private   boolean          _hasDateTime;
+        protected java.lang.String message;
+        private   boolean          _hasMessage;
+        protected java.lang.String projectId;
+        private   boolean          _hasProjectId;
+        protected java.lang.String userId;
+        private   boolean          _hasUserId;
+
+        public boolean hasClientId() {
+            return _hasClientId;
+        }
+
+        @Override
+        public java.lang.String getClientId() {
+            return clientId;
+        }
+
+        public ChatMessageImpl setClientId(java.lang.String v) {
+            _hasClientId = true;
+            clientId = v;
+            return this;
+        }
+
+        public boolean hasDateTime() {
+            return _hasDateTime;
+        }
+
+        @Override
+        public java.lang.String getDateTime() {
+            return dateTime;
+        }
+
+        public ChatMessageImpl setDateTime(java.lang.String v) {
+            _hasDateTime = true;
+            dateTime = v;
+            return this;
+        }
+
+        public boolean hasMessage() {
+            return _hasMessage;
+        }
+
+        @Override
+        public java.lang.String getMessage() {
+            return message;
+        }
+
+        public ChatMessageImpl setMessage(java.lang.String v) {
+            _hasMessage = true;
+            message = v;
+            return this;
+        }
+
+        public boolean hasProjectId() {
+            return _hasProjectId;
+        }
+
+        @Override
+        public java.lang.String getProjectId() {
+            return projectId;
+        }
+
+        public ChatMessageImpl setProjectId(java.lang.String v) {
+            _hasProjectId = true;
+            projectId = v;
+            return this;
+        }
+
+        public boolean hasUserId() {
+            return _hasUserId;
+        }
+
+        @Override
+        public java.lang.String getUserId() {
+            return userId;
+        }
+
+        public ChatMessageImpl setUserId(java.lang.String v) {
+            _hasUserId = true;
+            userId = v;
+            return this;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof ChatMessageImpl)) {
+                return false;
+            }
+            ChatMessageImpl other = (ChatMessageImpl)o;
+            if (this._hasClientId != other._hasClientId) {
+                return false;
+            }
+            if (this._hasClientId) {
+                if (!this.clientId.equals(other.clientId)) {
+                    return false;
+                }
+            }
+            if (this._hasDateTime != other._hasDateTime) {
+                return false;
+            }
+            if (this._hasDateTime) {
+                if (!this.dateTime.equals(other.dateTime)) {
+                    return false;
+                }
+            }
+            if (this._hasMessage != other._hasMessage) {
+                return false;
+            }
+            if (this._hasMessage) {
+                if (!this.message.equals(other.message)) {
+                    return false;
+                }
+            }
+            if (this._hasProjectId != other._hasProjectId) {
+                return false;
+            }
+            if (this._hasProjectId) {
+                if (!this.projectId.equals(other.projectId)) {
+                    return false;
+                }
+            }
+            if (this._hasUserId != other._hasUserId) {
+                return false;
+            }
+            if (this._hasUserId) {
+                if (!this.userId.equals(other.userId)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
+            hash = hash * 31 + (_hasDateTime ? dateTime.hashCode() : 0);
+            hash = hash * 31 + (_hasMessage ? message.hashCode() : 0);
+            hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
+            hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
+            return hash;
+        }
+
+        @Override
+        public JsonElement toJsonElement() {
+            JsonObject result = new JsonObject();
+
+            JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
+            result.add("clientId", clientIdOut);
 
-      JsonPrimitive endLineOut = new JsonPrimitive(endLine);
-      result.add("endLine", endLineOut);
+            JsonElement dateTimeOut = (dateTime == null) ? JsonNull.INSTANCE : new JsonPrimitive(dateTime);
+            result.add("dateTime", dateTimeOut);
 
-      JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
-      result.add("clientId", clientIdOut);
+            JsonElement messageOut = (message == null) ? JsonNull.INSTANCE : new JsonPrimitive(message);
+            result.add("message", messageOut);
 
-      JsonElement dateTimeOut = (dateTime == null) ? JsonNull.INSTANCE : new JsonPrimitive(dateTime);
-      result.add("dateTime", dateTimeOut);
+            JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
+            result.add("projectId", projectIdOut);
 
-      JsonElement messageOut = (message == null) ? JsonNull.INSTANCE : new JsonPrimitive(message);
-      result.add("message", messageOut);
+            JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
+            result.add("userId", userIdOut);
+            result.add("_type", new JsonPrimitive(getType()));
+            return result;
+        }
 
-      JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
-      result.add("projectId", projectIdOut);
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
 
-      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
-      result.add("userId", userIdOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
+        @Override
+        public String toString() {
+            return toJson();
+        }
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+        public static ChatMessageImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+            ChatMessageImpl dto = new ChatMessageImpl();
+            JsonObject json = jsonElem.getAsJsonObject();
 
-    public static ChatCodePointMessageImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      ChatCodePointMessageImpl dto = new ChatCodePointMessageImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("endChar")) {
-        JsonElement endCharIn = json.get("endChar");
-        int endCharOut = endCharIn.getAsInt();
-        dto.setEndChar(endCharOut);
-      }
-
-      if (json.has("startChar")) {
-        JsonElement startCharIn = json.get("startChar");
-        int startCharOut = startCharIn.getAsInt();
-        dto.setStartChar(startCharOut);
-      }
-
-      if (json.has("path")) {
-        JsonElement pathIn = json.get("path");
-        java.lang.String pathOut = gson.fromJson(pathIn, java.lang.String.class);
-        dto.setPath(pathOut);
-      }
-
-      if (json.has("startLine")) {
-        JsonElement startLineIn = json.get("startLine");
-        int startLineOut = startLineIn.getAsInt();
-        dto.setStartLine(startLineOut);
-      }
-
-      if (json.has("endLine")) {
-        JsonElement endLineIn = json.get("endLine");
-        int endLineOut = endLineIn.getAsInt();
-        dto.setEndLine(endLineOut);
-      }
-
-      if (json.has("clientId")) {
-        JsonElement clientIdIn = json.get("clientId");
-        java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
-        dto.setClientId(clientIdOut);
-      }
-
-      if (json.has("dateTime")) {
-        JsonElement dateTimeIn = json.get("dateTime");
-        java.lang.String dateTimeOut = gson.fromJson(dateTimeIn, java.lang.String.class);
-        dto.setDateTime(dateTimeOut);
-      }
-
-      if (json.has("message")) {
-        JsonElement messageIn = json.get("message");
-        java.lang.String messageOut = gson.fromJson(messageIn, java.lang.String.class);
-        dto.setMessage(messageOut);
-      }
-
-      if (json.has("projectId")) {
-        JsonElement projectIdIn = json.get("projectId");
-        java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
-        dto.setProjectId(projectIdOut);
-      }
-
-      if (json.has("userId")) {
-        JsonElement userIdIn = json.get("userId");
-        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
-        dto.setUserId(userIdOut);
-      }
-
-      return dto;
-    }
-    public static ChatCodePointMessageImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+            if (json.has("clientId")) {
+                JsonElement clientIdIn = json.get("clientId");
+                java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
+                dto.setClientId(clientIdOut);
+            }
 
-  public static class ChatMessageImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.ChatMessage, JsonSerializable {
+            if (json.has("dateTime")) {
+                JsonElement dateTimeIn = json.get("dateTime");
+                java.lang.String dateTimeOut = gson.fromJson(dateTimeIn, java.lang.String.class);
+                dto.setDateTime(dateTimeOut);
+            }
+
+            if (json.has("message")) {
+                JsonElement messageIn = json.get("message");
+                java.lang.String messageOut = gson.fromJson(messageIn, java.lang.String.class);
+                dto.setMessage(messageOut);
+            }
+
+            if (json.has("projectId")) {
+                JsonElement projectIdIn = json.get("projectId");
+                java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
+                dto.setProjectId(projectIdOut);
+            }
+
+            if (json.has("userId")) {
+                JsonElement userIdIn = json.get("userId");
+                java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
+                dto.setUserId(userIdOut);
+            }
+
+            return dto;
+        }
+
+        public static ChatMessageImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
+
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
+    }
 
-    private ChatMessageImpl() {
-      super(7);
-    }
+    public static class ChatParticipantAddImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
+            implements com.codenvy.ide.collaboration.dto.ChatParticipantAdd, JsonSerializable {
+
+        private ChatParticipantAddImpl() {
+            super(10);
+        }
 
-    protected ChatMessageImpl(int type) {
-      super(type);
-    }
+        protected ChatParticipantAddImpl(int type) {
+            super(type);
+        }
 
-    public static ChatMessageImpl make() {
-      return new ChatMessageImpl();
-    }
+        public static ChatParticipantAddImpl make() {
+            return new ChatParticipantAddImpl();
+        }
 
-    protected java.lang.String clientId;
-    private boolean _hasClientId;
-    protected java.lang.String dateTime;
-    private boolean _hasDateTime;
-    protected java.lang.String message;
-    private boolean _hasMessage;
-    protected java.lang.String projectId;
-    private boolean _hasProjectId;
-    protected java.lang.String userId;
-    private boolean _hasUserId;
-
-    public boolean hasClientId() {
-      return _hasClientId;
-    }
+        protected ParticipantInfoImpl participant;
+        private   boolean             _hasParticipant;
+        protected java.lang.String    projectId;
+        private   boolean             _hasProjectId;
 
-    @Override
-    public java.lang.String getClientId() {
-      return clientId;
-    }
+        public boolean hasParticipant() {
+            return _hasParticipant;
+        }
 
-    public ChatMessageImpl setClientId(java.lang.String v) {
-      _hasClientId = true;
-      clientId = v;
-      return this;
-    }
+        @Override
+        public com.codenvy.ide.collaboration.dto.ParticipantInfo participant() {
+            return participant;
+        }
 
-    public boolean hasDateTime() {
-      return _hasDateTime;
-    }
+        public ChatParticipantAddImpl setParticipant(ParticipantInfoImpl v) {
+            _hasParticipant = true;
+            participant = v;
+            return this;
+        }
 
-    @Override
-    public java.lang.String getDateTime() {
-      return dateTime;
-    }
+        public boolean hasProjectId() {
+            return _hasProjectId;
+        }
 
-    public ChatMessageImpl setDateTime(java.lang.String v) {
-      _hasDateTime = true;
-      dateTime = v;
-      return this;
-    }
+        @Override
+        public java.lang.String projectId() {
+            return projectId;
+        }
 
-    public boolean hasMessage() {
-      return _hasMessage;
-    }
+        public ChatParticipantAddImpl setProjectId(java.lang.String v) {
+            _hasProjectId = true;
+            projectId = v;
+            return this;
+        }
 
-    @Override
-    public java.lang.String getMessage() {
-      return message;
-    }
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof ChatParticipantAddImpl)) {
+                return false;
+            }
+            ChatParticipantAddImpl other = (ChatParticipantAddImpl)o;
+            if (this._hasParticipant != other._hasParticipant) {
+                return false;
+            }
+            if (this._hasParticipant) {
+                if (!this.participant.equals(other.participant)) {
+                    return false;
+                }
+            }
+            if (this._hasProjectId != other._hasProjectId) {
+                return false;
+            }
+            if (this._hasProjectId) {
+                if (!this.projectId.equals(other.projectId)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-    public ChatMessageImpl setMessage(java.lang.String v) {
-      _hasMessage = true;
-      message = v;
-      return this;
-    }
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasParticipant ? participant.hashCode() : 0);
+            hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
+            return hash;
+        }
 
-    public boolean hasProjectId() {
-      return _hasProjectId;
-    }
+        @Override
+        public JsonElement toJsonElement() {
+            JsonObject result = new JsonObject();
 
-    @Override
-    public java.lang.String getProjectId() {
-      return projectId;
-    }
+            JsonElement participantOut = participant == null ? JsonNull.INSTANCE : participant.toJsonElement();
+            result.add("participant", participantOut);
 
-    public ChatMessageImpl setProjectId(java.lang.String v) {
-      _hasProjectId = true;
-      projectId = v;
-      return this;
-    }
+            JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
+            result.add("projectId", projectIdOut);
+            result.add("_type", new JsonPrimitive(getType()));
+            return result;
+        }
 
-    public boolean hasUserId() {
-      return _hasUserId;
-    }
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
 
-    @Override
-    public java.lang.String getUserId() {
-      return userId;
-    }
+        @Override
+        public String toString() {
+            return toJson();
+        }
 
-    public ChatMessageImpl setUserId(java.lang.String v) {
-      _hasUserId = true;
-      userId = v;
-      return this;
-    }
+        public static ChatParticipantAddImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof ChatMessageImpl)) {
-        return false;
-      }
-      ChatMessageImpl other = (ChatMessageImpl) o;
-      if (this._hasClientId != other._hasClientId) {
-        return false;
-      }
-      if (this._hasClientId) {
-        if (!this.clientId.equals(other.clientId)) {
-          return false;
-        }
-      }
-      if (this._hasDateTime != other._hasDateTime) {
-        return false;
-      }
-      if (this._hasDateTime) {
-        if (!this.dateTime.equals(other.dateTime)) {
-          return false;
-        }
-      }
-      if (this._hasMessage != other._hasMessage) {
-        return false;
-      }
-      if (this._hasMessage) {
-        if (!this.message.equals(other.message)) {
-          return false;
-        }
-      }
-      if (this._hasProjectId != other._hasProjectId) {
-        return false;
-      }
-      if (this._hasProjectId) {
-        if (!this.projectId.equals(other.projectId)) {
-          return false;
-        }
-      }
-      if (this._hasUserId != other._hasUserId) {
-        return false;
-      }
-      if (this._hasUserId) {
-        if (!this.userId.equals(other.userId)) {
-          return false;
-        }
-      }
-      return true;
-    }
+            ChatParticipantAddImpl dto = new ChatParticipantAddImpl();
+            JsonObject json = jsonElem.getAsJsonObject();
+
+            if (json.has("participant")) {
+                JsonElement participantIn = json.get("participant");
+                ParticipantInfoImpl participantOut = ParticipantInfoImpl.fromJsonElement(participantIn);
+                dto.setParticipant(participantOut);
+            }
+
+            if (json.has("projectId")) {
+                JsonElement projectIdIn = json.get("projectId");
+                java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
+                dto.setProjectId(projectIdOut);
+            }
+
+            return dto;
+        }
+
+        public static ChatParticipantAddImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
-      hash = hash * 31 + (_hasDateTime ? dateTime.hashCode() : 0);
-      hash = hash * 31 + (_hasMessage ? message.hashCode() : 0);
-      hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
-      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
-      return hash;
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
+    public static class ChatParticipantRemoveImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
+            implements com.codenvy.ide.collaboration.dto.ChatParticipantRemove, JsonSerializable {
 
-      JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
-      result.add("clientId", clientIdOut);
+        private ChatParticipantRemoveImpl() {
+            super(11);
+        }
 
-      JsonElement dateTimeOut = (dateTime == null) ? JsonNull.INSTANCE : new JsonPrimitive(dateTime);
-      result.add("dateTime", dateTimeOut);
+        protected ChatParticipantRemoveImpl(int type) {
+            super(type);
+        }
 
-      JsonElement messageOut = (message == null) ? JsonNull.INSTANCE : new JsonPrimitive(message);
-      result.add("message", messageOut);
+        public static ChatParticipantRemoveImpl make() {
+            return new ChatParticipantRemoveImpl();
+        }
 
-      JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
-      result.add("projectId", projectIdOut);
+        protected java.lang.String clientId;
+        private   boolean          _hasClientId;
+        protected java.lang.String projectId;
+        private   boolean          _hasProjectId;
+        protected java.lang.String userId;
+        private   boolean          _hasUserId;
 
-      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
-      result.add("userId", userIdOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
+        public boolean hasClientId() {
+            return _hasClientId;
+        }
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+        @Override
+        public java.lang.String clientId() {
+            return clientId;
+        }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+        public ChatParticipantRemoveImpl setClientId(java.lang.String v) {
+            _hasClientId = true;
+            clientId = v;
+            return this;
+        }
 
-    public static ChatMessageImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      ChatMessageImpl dto = new ChatMessageImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("clientId")) {
-        JsonElement clientIdIn = json.get("clientId");
-        java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
-        dto.setClientId(clientIdOut);
-      }
-
-      if (json.has("dateTime")) {
-        JsonElement dateTimeIn = json.get("dateTime");
-        java.lang.String dateTimeOut = gson.fromJson(dateTimeIn, java.lang.String.class);
-        dto.setDateTime(dateTimeOut);
-      }
-
-      if (json.has("message")) {
-        JsonElement messageIn = json.get("message");
-        java.lang.String messageOut = gson.fromJson(messageIn, java.lang.String.class);
-        dto.setMessage(messageOut);
-      }
-
-      if (json.has("projectId")) {
-        JsonElement projectIdIn = json.get("projectId");
-        java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
-        dto.setProjectId(projectIdOut);
-      }
-
-      if (json.has("userId")) {
-        JsonElement userIdIn = json.get("userId");
-        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
-        dto.setUserId(userIdOut);
-      }
-
-      return dto;
-    }
-    public static ChatMessageImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+        public boolean hasProjectId() {
+            return _hasProjectId;
+        }
 
-  public static class ChatParticipantAddImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.ChatParticipantAdd, JsonSerializable {
+        @Override
+        public java.lang.String projectId() {
+            return projectId;
+        }
 
-    private ChatParticipantAddImpl() {
-      super(11);
-    }
+        public ChatParticipantRemoveImpl setProjectId(java.lang.String v) {
+            _hasProjectId = true;
+            projectId = v;
+            return this;
+        }
 
-    protected ChatParticipantAddImpl(int type) {
-      super(type);
-    }
+        public boolean hasUserId() {
+            return _hasUserId;
+        }
 
-    public static ChatParticipantAddImpl make() {
-      return new ChatParticipantAddImpl();
-    }
+        @Override
+        public java.lang.String userId() {
+            return userId;
+        }
 
-    protected ParticipantInfoImpl participant;
-    private boolean _hasParticipant;
-    protected java.lang.String projectId;
-    private boolean _hasProjectId;
+        public ChatParticipantRemoveImpl setUserId(java.lang.String v) {
+            _hasUserId = true;
+            userId = v;
+            return this;
+        }
 
-    public boolean hasParticipant() {
-      return _hasParticipant;
-    }
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof ChatParticipantRemoveImpl)) {
+                return false;
+            }
+            ChatParticipantRemoveImpl other = (ChatParticipantRemoveImpl)o;
+            if (this._hasClientId != other._hasClientId) {
+                return false;
+            }
+            if (this._hasClientId) {
+                if (!this.clientId.equals(other.clientId)) {
+                    return false;
+                }
+            }
+            if (this._hasProjectId != other._hasProjectId) {
+                return false;
+            }
+            if (this._hasProjectId) {
+                if (!this.projectId.equals(other.projectId)) {
+                    return false;
+                }
+            }
+            if (this._hasUserId != other._hasUserId) {
+                return false;
+            }
+            if (this._hasUserId) {
+                if (!this.userId.equals(other.userId)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-    @Override
-    public com.codenvy.ide.collaboration.dto.ParticipantInfo participant() {
-      return participant;
-    }
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
+            hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
+            hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
+            return hash;
+        }
 
-    public ChatParticipantAddImpl setParticipant(ParticipantInfoImpl v) {
-      _hasParticipant = true;
-      participant = v;
-      return this;
-    }
+        @Override
+        public JsonElement toJsonElement() {
+            JsonObject result = new JsonObject();
 
-    public boolean hasProjectId() {
-      return _hasProjectId;
-    }
+            JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
+            result.add("clientId", clientIdOut);
 
-    @Override
-    public java.lang.String projectId() {
-      return projectId;
-    }
+            JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
+            result.add("projectId", projectIdOut);
 
-    public ChatParticipantAddImpl setProjectId(java.lang.String v) {
-      _hasProjectId = true;
-      projectId = v;
-      return this;
-    }
+            JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
+            result.add("userId", userIdOut);
+            result.add("_type", new JsonPrimitive(getType()));
+            return result;
+        }
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof ChatParticipantAddImpl)) {
-        return false;
-      }
-      ChatParticipantAddImpl other = (ChatParticipantAddImpl) o;
-      if (this._hasParticipant != other._hasParticipant) {
-        return false;
-      }
-      if (this._hasParticipant) {
-        if (!this.participant.equals(other.participant)) {
-          return false;
-        }
-      }
-      if (this._hasProjectId != other._hasProjectId) {
-        return false;
-      }
-      if (this._hasProjectId) {
-        if (!this.projectId.equals(other.projectId)) {
-          return false;
-        }
-      }
-      return true;
-    }
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasParticipant ? participant.hashCode() : 0);
-      hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
-      return hash;
-    }
+        @Override
+        public String toString() {
+            return toJson();
+        }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
+        public static ChatParticipantRemoveImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
 
-      JsonElement participantOut = participant == null ? JsonNull.INSTANCE : participant.toJsonElement();
-      result.add("participant", participantOut);
+            ChatParticipantRemoveImpl dto = new ChatParticipantRemoveImpl();
+            JsonObject json = jsonElem.getAsJsonObject();
 
-      JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
-      result.add("projectId", projectIdOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
+            if (json.has("clientId")) {
+                JsonElement clientIdIn = json.get("clientId");
+                java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
+                dto.setClientId(clientIdOut);
+            }
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+            if (json.has("projectId")) {
+                JsonElement projectIdIn = json.get("projectId");
+                java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
+                dto.setProjectId(projectIdOut);
+            }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+            if (json.has("userId")) {
+                JsonElement userIdIn = json.get("userId");
+                java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
+                dto.setUserId(userIdOut);
+            }
 
-    public static ChatParticipantAddImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      ChatParticipantAddImpl dto = new ChatParticipantAddImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("participant")) {
-        JsonElement participantIn = json.get("participant");
-        ParticipantInfoImpl participantOut = ParticipantInfoImpl.fromJsonElement(participantIn);
-        dto.setParticipant(participantOut);
-      }
-
-      if (json.has("projectId")) {
-        JsonElement projectIdIn = json.get("projectId");
-        java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
-        dto.setProjectId(projectIdOut);
-      }
-
-      return dto;
-    }
-    public static ChatParticipantAddImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
+            return dto;
+        }
+
+        public static ChatParticipantRemoveImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
+
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
-  }
+
+    public static class DisableEnableCollaborationDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
+            implements com.codenvy.ide.collaboration.dto.DisableEnableCollaborationDto, JsonSerializable {
+
+        private DisableEnableCollaborationDtoImpl() {
+            super(13);
+        }
+
+        protected DisableEnableCollaborationDtoImpl(int type) {
+            super(type);
+        }
+
+        public static DisableEnableCollaborationDtoImpl make() {
+            return new DisableEnableCollaborationDtoImpl();
+        }
+
+        protected java.lang.String clientId;
+        private   boolean          _hasClientId;
+        protected boolean          isEnabled;
+        private   boolean          _hasIsEnabled;
+        protected java.lang.String projectId;
+        private   boolean          _hasProjectId;
+
+        public boolean hasClientId() {
+            return _hasClientId;
+        }
+
+        @Override
+        public java.lang.String clientId() {
+            return clientId;
+        }
+
+        public DisableEnableCollaborationDtoImpl setClientId(java.lang.String v) {
+            _hasClientId = true;
+            clientId = v;
+            return this;
+        }
+
+        public boolean hasIsEnabled() {
+            return _hasIsEnabled;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return isEnabled;
+        }
+
+        public DisableEnableCollaborationDtoImpl setIsEnabled(boolean v) {
+            _hasIsEnabled = true;
+            isEnabled = v;
+            return this;
+        }
+
+        public boolean hasProjectId() {
+            return _hasProjectId;
+        }
+
+        @Override
+        public java.lang.String projectId() {
+            return projectId;
+        }
+
+        public DisableEnableCollaborationDtoImpl setProjectId(java.lang.String v) {
+            _hasProjectId = true;
+            projectId = v;
+            return this;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof DisableEnableCollaborationDtoImpl)) {
+                return false;
+            }
+            DisableEnableCollaborationDtoImpl other = (DisableEnableCollaborationDtoImpl)o;
+            if (this._hasClientId != other._hasClientId) {
+                return false;
+            }
+            if (this._hasClientId) {
+                if (!this.clientId.equals(other.clientId)) {
+                    return false;
+                }
+            }
+            if (this._hasIsEnabled != other._hasIsEnabled) {
+                return false;
+            }
+            if (this._hasIsEnabled) {
+                if (this.isEnabled != other.isEnabled) {
+                    return false;
+                }
+            }
+            if (this._hasProjectId != other._hasProjectId) {
+                return false;
+            }
+            if (this._hasProjectId) {
+                if (!this.projectId.equals(other.projectId)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
+            hash = hash * 31 + (_hasIsEnabled ? java.lang.Boolean.valueOf(isEnabled).hashCode() : 0);
+            hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
+            return hash;
+        }
+
+        @Override
+        public JsonElement toJsonElement() {
+            JsonObject result = new JsonObject();
+
+            JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
+            result.add("clientId", clientIdOut);
+
+            JsonPrimitive isEnabledOut = new JsonPrimitive(isEnabled);
+            result.add("isEnabled", isEnabledOut);
+
+            JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
+            result.add("projectId", projectIdOut);
+            result.add("_type", new JsonPrimitive(getType()));
+            return result;
+        }
+
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
+
+        @Override
+        public String toString() {
+            return toJson();
+        }
+
+        public static DisableEnableCollaborationDtoImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
+
+            DisableEnableCollaborationDtoImpl dto = new DisableEnableCollaborationDtoImpl();
+            JsonObject json = jsonElem.getAsJsonObject();
+
+            if (json.has("clientId")) {
+                JsonElement clientIdIn = json.get("clientId");
+                java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
+                dto.setClientId(clientIdOut);
+            }
+
+            if (json.has("isEnabled")) {
+                JsonElement isEnabledIn = json.get("isEnabled");
+                boolean isEnabledOut = isEnabledIn.getAsBoolean();
+                dto.setIsEnabled(isEnabledOut);
+            }
+
+            if (json.has("projectId")) {
+                JsonElement projectIdIn = json.get("projectId");
+                java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
+                dto.setProjectId(projectIdOut);
+            }
 
-  public static class ChatParticipantRemoveImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.ChatParticipantRemove, JsonSerializable {
+            return dto;
+        }
+
+        public static DisableEnableCollaborationDtoImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
 
-    private ChatParticipantRemoveImpl() {
-      super(12);
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
+
+    public static class ItemImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
+            implements com.codenvy.ide.collaboration.dto.Item, JsonSerializable {
+
+        public static ItemImpl make() {
+            return new ItemImpl();
+        }
+
+        protected java.lang.String                                id;
+        private   boolean                                         _hasId;
+        protected java.lang.String                                name;
+        private   boolean                                         _hasName;
+        protected com.codenvy.ide.collaboration.dto.Item.ItemType itemType;
+        private   boolean                                         _hasItemType;
+        protected java.lang.String                                path;
+        private   boolean                                         _hasPath;
+        protected java.lang.String                                parentId;
+        private   boolean                                         _hasParentId;
+        protected java.lang.String                                mimeType;
+        private   boolean                                         _hasMimeType;
+        protected java.util.List<PropertyImpl>                    properties;
+        private   boolean                                         _hasProperties;
+        protected java.util.Map<String, LinkImpl>                 links;
+        private   boolean                                         _hasLinks;
+
+        public boolean hasId() {
+            return _hasId;
+        }
+
+        @Override
+        public java.lang.String getId() {
+            return id;
+        }
+
+        public ItemImpl setId(java.lang.String v) {
+            _hasId = true;
+            id = v;
+            return this;
+        }
+
+        public boolean hasName() {
+            return _hasName;
+        }
+
+        @Override
+        public java.lang.String getName() {
+            return name;
+        }
+
+        public ItemImpl setName(java.lang.String v) {
+            _hasName = true;
+            name = v;
+            return this;
+        }
+
+        public boolean hasItemType() {
+            return _hasItemType;
+        }
+
+        @Override
+        public com.codenvy.ide.collaboration.dto.Item.ItemType getItemType() {
+            return itemType;
+        }
+
+        public ItemImpl setItemType(com.codenvy.ide.collaboration.dto.Item.ItemType v) {
+            _hasItemType = true;
+            itemType = v;
+            return this;
+        }
+
+        public boolean hasPath() {
+            return _hasPath;
+        }
+
+        @Override
+        public java.lang.String getPath() {
+            return path;
+        }
+
+        public ItemImpl setPath(java.lang.String v) {
+            _hasPath = true;
+            path = v;
+            return this;
+        }
+
+        public boolean hasParentId() {
+            return _hasParentId;
+        }
+
+        @Override
+        public java.lang.String getParentId() {
+            return parentId;
+        }
+
+        public ItemImpl setParentId(java.lang.String v) {
+            _hasParentId = true;
+            parentId = v;
+            return this;
+        }
+
+        public boolean hasMimeType() {
+            return _hasMimeType;
+        }
+
+        @Override
+        public java.lang.String getMimeType() {
+            return mimeType;
+        }
+
+        public ItemImpl setMimeType(java.lang.String v) {
+            _hasMimeType = true;
+            mimeType = v;
+            return this;
+        }
+
+        public boolean hasProperties() {
+            return _hasProperties;
+        }
+
+        @Override
+        public com.codenvy.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.Property> getProperties() {
+            ensureProperties();
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(properties);
+        }
+
+        public ItemImpl setProperties(java.util.List<PropertyImpl> v) {
+            _hasProperties = true;
+            properties = v;
+            return this;
+        }
+
+        public void addProperties(PropertyImpl v) {
+            ensureProperties();
+            properties.add(v);
+        }
+
+        public void clearProperties() {
+            ensureProperties();
+            properties.clear();
+        }
+
+        private void ensureProperties() {
+            if (!_hasProperties) {
+                setProperties(properties != null ? properties : new java.util.ArrayList<PropertyImpl>());
+            }
+        }
+
+        public boolean hasLinks() {
+            return _hasLinks;
+        }
+
+        @Override
+        public com.codenvy.ide.json.shared.JsonStringMap<com.codenvy.ide.collaboration.dto.Link> getLinks() {
+            ensureLinks();
+            return (com.codenvy.ide.json.shared.JsonStringMap)new com.codenvy.ide.json.server.JsonStringMapAdapter(links);
+        }
+
+        public ItemImpl setLinks(java.util.Map<String, LinkImpl> v) {
+            _hasLinks = true;
+            links = v;
+            return this;
+        }
+
+        public void putLinks(String k, LinkImpl v) {
+            ensureLinks();
+            links.put(k, v);
+        }
+
+        public void clearLinks() {
+            ensureLinks();
+            links.clear();
+        }
+
+        private void ensureLinks() {
+            if (!_hasLinks) {
+                setLinks(links != null ? links : new java.util.HashMap<String, LinkImpl>());
+            }
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof ItemImpl)) {
+                return false;
+            }
+            ItemImpl other = (ItemImpl)o;
+            if (this._hasId != other._hasId) {
+                return false;
+            }
+            if (this._hasId) {
+                if (!this.id.equals(other.id)) {
+                    return false;
+                }
+            }
+            if (this._hasName != other._hasName) {
+                return false;
+            }
+            if (this._hasName) {
+                if (!this.name.equals(other.name)) {
+                    return false;
+                }
+            }
+            if (this._hasItemType != other._hasItemType) {
+                return false;
+            }
+            if (this._hasItemType) {
+                if (!this.itemType.equals(other.itemType)) {
+                    return false;
+                }
+            }
+            if (this._hasPath != other._hasPath) {
+                return false;
+            }
+            if (this._hasPath) {
+                if (!this.path.equals(other.path)) {
+                    return false;
+                }
+            }
+            if (this._hasParentId != other._hasParentId) {
+                return false;
+            }
+            if (this._hasParentId) {
+                if (!this.parentId.equals(other.parentId)) {
+                    return false;
+                }
+            }
+            if (this._hasMimeType != other._hasMimeType) {
+                return false;
+            }
+            if (this._hasMimeType) {
+                if (!this.mimeType.equals(other.mimeType)) {
+                    return false;
+                }
+            }
+            if (this._hasProperties != other._hasProperties) {
+                return false;
+            }
+            if (this._hasProperties) {
+                if (!this.properties.equals(other.properties)) {
+                    return false;
+                }
+            }
+            if (this._hasLinks != other._hasLinks) {
+                return false;
+            }
+            if (this._hasLinks) {
+                if (!this.links.equals(other.links)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasId ? id.hashCode() : 0);
+            hash = hash * 31 + (_hasName ? name.hashCode() : 0);
+            hash = hash * 31 + (_hasItemType ? itemType.hashCode() : 0);
+            hash = hash * 31 + (_hasPath ? path.hashCode() : 0);
+            hash = hash * 31 + (_hasParentId ? parentId.hashCode() : 0);
+            hash = hash * 31 + (_hasMimeType ? mimeType.hashCode() : 0);
+            hash = hash * 31 + (_hasProperties ? properties.hashCode() : 0);
+            hash = hash * 31 + (_hasLinks ? links.hashCode() : 0);
+            return hash;
+        }
+
+        @Override
+        public JsonElement toJsonElement() {
+            JsonArray result = new JsonArray();
+
+            JsonElement idOut = (id == null) ? JsonNull.INSTANCE : new JsonPrimitive(id);
+            result.add(idOut);
+
+            JsonElement nameOut = (name == null) ? JsonNull.INSTANCE : new JsonPrimitive(name);
+            result.add(nameOut);
+
+            JsonElement itemTypeOut = (itemType == null) ? JsonNull.INSTANCE : new JsonPrimitive(itemType.name());
+            result.add(itemTypeOut);
+
+            JsonElement pathOut = (path == null) ? JsonNull.INSTANCE : new JsonPrimitive(path);
+            result.add(pathOut);
+
+            JsonElement parentIdOut = (parentId == null) ? JsonNull.INSTANCE : new JsonPrimitive(parentId);
+            result.add(parentIdOut);
+
+            JsonElement mimeTypeOut = (mimeType == null) ? JsonNull.INSTANCE : new JsonPrimitive(mimeType);
+            result.add(mimeTypeOut);
+
+            JsonArray propertiesOut = new JsonArray();
+            ensureProperties();
+            for (PropertyImpl properties_ : properties) {
+                JsonElement propertiesOut_ = properties_ == null ? JsonNull.INSTANCE : properties_.toJsonElement();
+                propertiesOut.add(propertiesOut_);
+            }
+            result.add(propertiesOut);
+
+            JsonObject linksOut = new JsonObject();
+            ensureLinks();
+            for (Map.Entry<String, LinkImpl> entry0 : links.entrySet()) {
+                LinkImpl links_ = entry0.getValue();
+                JsonElement linksOut_ = links_ == null ? JsonNull.INSTANCE : links_.toJsonElement();
+                linksOut.add(entry0.getKey(), linksOut_);
+            }
+            result.add(linksOut);
+            return result;
+        }
+
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
+
+        @Override
+        public String toString() {
+            return toJson();
+        }
+
+        public static ItemImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
+
+            ItemImpl dto = new ItemImpl();
+            JsonArray json = jsonElem.getAsJsonArray();
+
+            if (0 < json.size()) {
+                JsonElement idIn = json.get(0);
+                java.lang.String idOut = gson.fromJson(idIn, java.lang.String.class);
+                dto.setId(idOut);
+            }
+
+            if (1 < json.size()) {
+                JsonElement nameIn = json.get(1);
+                java.lang.String nameOut = gson.fromJson(nameIn, java.lang.String.class);
+                dto.setName(nameOut);
+            }
+
+            if (2 < json.size()) {
+                JsonElement itemTypeIn = json.get(2);
+                com.codenvy.ide.collaboration.dto.Item.ItemType itemTypeOut =
+                        gson.fromJson(itemTypeIn, com.codenvy.ide.collaboration.dto.Item.ItemType.class);
+                dto.setItemType(itemTypeOut);
+            }
+
+            if (3 < json.size()) {
+                JsonElement pathIn = json.get(3);
+                java.lang.String pathOut = gson.fromJson(pathIn, java.lang.String.class);
+                dto.setPath(pathOut);
+            }
+
+            if (4 < json.size()) {
+                JsonElement parentIdIn = json.get(4);
+                java.lang.String parentIdOut = gson.fromJson(parentIdIn, java.lang.String.class);
+                dto.setParentId(parentIdOut);
+            }
+
+            if (5 < json.size()) {
+                JsonElement mimeTypeIn = json.get(5);
+                java.lang.String mimeTypeOut = gson.fromJson(mimeTypeIn, java.lang.String.class);
+                dto.setMimeType(mimeTypeOut);
+            }
+
+            if (6 < json.size()) {
+                JsonElement propertiesIn = json.get(6);
+                java.util.ArrayList<PropertyImpl> propertiesOut = null;
+                if (propertiesIn != null && !propertiesIn.isJsonNull()) {
+                    propertiesOut = new java.util.ArrayList<PropertyImpl>();
+                    java.util.Iterator<JsonElement> propertiesInIterator = propertiesIn.getAsJsonArray().iterator();
+                    while (propertiesInIterator.hasNext()) {
+                        JsonElement propertiesIn_ = propertiesInIterator.next();
+                        PropertyImpl propertiesOut_ = PropertyImpl.fromJsonElement(propertiesIn_);
+                        propertiesOut.add(propertiesOut_);
+                    }
+                }
+                dto.setProperties(propertiesOut);
+            }
+
+            if (7 < json.size()) {
+                JsonElement linksIn = json.get(7);
+                java.util.HashMap<String, LinkImpl> linksOut = null;
+                if (linksIn != null && !linksIn.isJsonNull()) {
+                    linksOut = new java.util.HashMap<String, LinkImpl>();
+                    java.util.Set<Map.Entry<String, JsonElement>> entries0 = linksIn.getAsJsonObject().entrySet();
+                    for (Map.Entry<String, JsonElement> entry0 : entries0) {
+                        JsonElement linksIn_ = entry0.getValue();
+                        LinkImpl linksOut_ = LinkImpl.fromJsonElement(linksIn_);
+                        linksOut.put(entry0.getKey(), linksOut_);
+                    }
+                }
+                dto.setLinks(linksOut);
+            }
 
-    protected ChatParticipantRemoveImpl(int type) {
-      super(type);
-    }
+            return dto;
+        }
 
-    public static ChatParticipantRemoveImpl make() {
-      return new ChatParticipantRemoveImpl();
-    }
+        public static ItemImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
 
-    protected java.lang.String clientId;
-    private boolean _hasClientId;
-    protected java.lang.String projectId;
-    private boolean _hasProjectId;
-    protected java.lang.String userId;
-    private boolean _hasUserId;
-
-    public boolean hasClientId() {
-      return _hasClientId;
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
 
-    @Override
-    public java.lang.String clientId() {
-      return clientId;
-    }
+    public static class ItemCreatedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
+            implements com.codenvy.ide.collaboration.dto.ItemCreatedDto, JsonSerializable {
 
-    public ChatParticipantRemoveImpl setClientId(java.lang.String v) {
-      _hasClientId = true;
-      clientId = v;
-      return this;
-    }
+        private ItemCreatedDtoImpl() {
+            super(4);
+        }
 
-    public boolean hasProjectId() {
-      return _hasProjectId;
-    }
+        protected ItemCreatedDtoImpl(int type) {
+            super(type);
+        }
 
-    @Override
-    public java.lang.String projectId() {
-      return projectId;
-    }
+        public static ItemCreatedDtoImpl make() {
+            return new ItemCreatedDtoImpl();
+        }
 
-    public ChatParticipantRemoveImpl setProjectId(java.lang.String v) {
-      _hasProjectId = true;
-      projectId = v;
-      return this;
-    }
+        protected ItemImpl         item;
+        private   boolean          _hasItem;
+        protected java.lang.String userId;
+        private   boolean          _hasUserId;
 
-    public boolean hasUserId() {
-      return _hasUserId;
-    }
+        public boolean hasItem() {
+            return _hasItem;
+        }
 
-    @Override
-    public java.lang.String userId() {
-      return userId;
-    }
+        @Override
+        public com.codenvy.ide.collaboration.dto.Item getItem() {
+            return item;
+        }
 
-    public ChatParticipantRemoveImpl setUserId(java.lang.String v) {
-      _hasUserId = true;
-      userId = v;
-      return this;
-    }
+        public ItemCreatedDtoImpl setItem(ItemImpl v) {
+            _hasItem = true;
+            item = v;
+            return this;
+        }
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof ChatParticipantRemoveImpl)) {
-        return false;
-      }
-      ChatParticipantRemoveImpl other = (ChatParticipantRemoveImpl) o;
-      if (this._hasClientId != other._hasClientId) {
-        return false;
-      }
-      if (this._hasClientId) {
-        if (!this.clientId.equals(other.clientId)) {
-          return false;
-        }
-      }
-      if (this._hasProjectId != other._hasProjectId) {
-        return false;
-      }
-      if (this._hasProjectId) {
-        if (!this.projectId.equals(other.projectId)) {
-          return false;
-        }
-      }
-      if (this._hasUserId != other._hasUserId) {
-        return false;
-      }
-      if (this._hasUserId) {
-        if (!this.userId.equals(other.userId)) {
-          return false;
-        }
-      }
-      return true;
-    }
+        public boolean hasUserId() {
+            return _hasUserId;
+        }
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
-      hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
-      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
-      return hash;
-    }
+        @Override
+        public java.lang.String getUserId() {
+            return userId;
+        }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
+        public ItemCreatedDtoImpl setUserId(java.lang.String v) {
+            _hasUserId = true;
+            userId = v;
+            return this;
+        }
 
-      JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
-      result.add("clientId", clientIdOut);
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof ItemCreatedDtoImpl)) {
+                return false;
+            }
+            ItemCreatedDtoImpl other = (ItemCreatedDtoImpl)o;
+            if (this._hasItem != other._hasItem) {
+                return false;
+            }
+            if (this._hasItem) {
+                if (!this.item.equals(other.item)) {
+                    return false;
+                }
+            }
+            if (this._hasUserId != other._hasUserId) {
+                return false;
+            }
+            if (this._hasUserId) {
+                if (!this.userId.equals(other.userId)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-      JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
-      result.add("projectId", projectIdOut);
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasItem ? item.hashCode() : 0);
+            hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
+            return hash;
+        }
 
-      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
-      result.add("userId", userIdOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
+        @Override
+        public JsonElement toJsonElement() {
+            JsonObject result = new JsonObject();
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+            JsonElement itemOut = item == null ? JsonNull.INSTANCE : item.toJsonElement();
+            result.add("item", itemOut);
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+            JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
+            result.add("userId", userIdOut);
+            result.add("_type", new JsonPrimitive(getType()));
+            return result;
+        }
 
-    public static ChatParticipantRemoveImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      ChatParticipantRemoveImpl dto = new ChatParticipantRemoveImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("clientId")) {
-        JsonElement clientIdIn = json.get("clientId");
-        java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
-        dto.setClientId(clientIdOut);
-      }
-
-      if (json.has("projectId")) {
-        JsonElement projectIdIn = json.get("projectId");
-        java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
-        dto.setProjectId(projectIdOut);
-      }
-
-      if (json.has("userId")) {
-        JsonElement userIdIn = json.get("userId");
-        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
-        dto.setUserId(userIdOut);
-      }
-
-      return dto;
-    }
-    public static ChatParticipantRemoveImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
 
-  public static class DisableEnableCollaborationDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.DisableEnableCollaborationDto, JsonSerializable {
+        @Override
+        public String toString() {
+            return toJson();
+        }
 
-    private DisableEnableCollaborationDtoImpl() {
-      super(15);
-    }
+        public static ItemCreatedDtoImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
 
-    protected DisableEnableCollaborationDtoImpl(int type) {
-      super(type);
-    }
+            ItemCreatedDtoImpl dto = new ItemCreatedDtoImpl();
+            JsonObject json = jsonElem.getAsJsonObject();
 
-    public static DisableEnableCollaborationDtoImpl make() {
-      return new DisableEnableCollaborationDtoImpl();
-    }
+            if (json.has("item")) {
+                JsonElement itemIn = json.get("item");
+                ItemImpl itemOut = ItemImpl.fromJsonElement(itemIn);
+                dto.setItem(itemOut);
+            }
 
-    protected java.lang.String clientId;
-    private boolean _hasClientId;
-    protected boolean isEnabled;
-    private boolean _hasIsEnabled;
-    protected java.lang.String projectId;
-    private boolean _hasProjectId;
-
-    public boolean hasClientId() {
-      return _hasClientId;
-    }
+            if (json.has("userId")) {
+                JsonElement userIdIn = json.get("userId");
+                java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
+                dto.setUserId(userIdOut);
+            }
 
-    @Override
-    public java.lang.String clientId() {
-      return clientId;
-    }
+            return dto;
+        }
 
-    public DisableEnableCollaborationDtoImpl setClientId(java.lang.String v) {
-      _hasClientId = true;
-      clientId = v;
-      return this;
-    }
+        public static ItemCreatedDtoImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
 
-    public boolean hasIsEnabled() {
-      return _hasIsEnabled;
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
 
-    @Override
-    public boolean isEnabled() {
-      return isEnabled;
-    }
+    public static class ItemDeletedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
+            implements com.codenvy.ide.collaboration.dto.ItemDeletedDto, JsonSerializable {
 
-    public DisableEnableCollaborationDtoImpl setIsEnabled(boolean v) {
-      _hasIsEnabled = true;
-      isEnabled = v;
-      return this;
-    }
+        private ItemDeletedDtoImpl() {
+            super(3);
+        }
 
-    public boolean hasProjectId() {
-      return _hasProjectId;
-    }
+        protected ItemDeletedDtoImpl(int type) {
+            super(type);
+        }
 
-    @Override
-    public java.lang.String projectId() {
-      return projectId;
-    }
+        public static ItemDeletedDtoImpl make() {
+            return new ItemDeletedDtoImpl();
+        }
 
-    public DisableEnableCollaborationDtoImpl setProjectId(java.lang.String v) {
-      _hasProjectId = true;
-      projectId = v;
-      return this;
-    }
+        protected java.lang.String filePath;
+        private   boolean          _hasFilePath;
+        protected java.lang.String fileId;
+        private   boolean          _hasFileId;
+        protected java.lang.String userId;
+        private   boolean          _hasUserId;
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof DisableEnableCollaborationDtoImpl)) {
-        return false;
-      }
-      DisableEnableCollaborationDtoImpl other = (DisableEnableCollaborationDtoImpl) o;
-      if (this._hasClientId != other._hasClientId) {
-        return false;
-      }
-      if (this._hasClientId) {
-        if (!this.clientId.equals(other.clientId)) {
-          return false;
-        }
-      }
-      if (this._hasIsEnabled != other._hasIsEnabled) {
-        return false;
-      }
-      if (this._hasIsEnabled) {
-        if (this.isEnabled != other.isEnabled) {
-          return false;
-        }
-      }
-      if (this._hasProjectId != other._hasProjectId) {
-        return false;
-      }
-      if (this._hasProjectId) {
-        if (!this.projectId.equals(other.projectId)) {
-          return false;
-        }
-      }
-      return true;
-    }
+        public boolean hasFilePath() {
+            return _hasFilePath;
+        }
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
-      hash = hash * 31 + (_hasIsEnabled ? java.lang.Boolean.valueOf(isEnabled).hashCode() : 0);
-      hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
-      return hash;
-    }
+        @Override
+        public java.lang.String getFilePath() {
+            return filePath;
+        }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
+        public ItemDeletedDtoImpl setFilePath(java.lang.String v) {
+            _hasFilePath = true;
+            filePath = v;
+            return this;
+        }
 
-      JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
-      result.add("clientId", clientIdOut);
+        public boolean hasFileId() {
+            return _hasFileId;
+        }
 
-      JsonPrimitive isEnabledOut = new JsonPrimitive(isEnabled);
-      result.add("isEnabled", isEnabledOut);
+        @Override
+        public java.lang.String getFileId() {
+            return fileId;
+        }
 
-      JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
-      result.add("projectId", projectIdOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
+        public ItemDeletedDtoImpl setFileId(java.lang.String v) {
+            _hasFileId = true;
+            fileId = v;
+            return this;
+        }
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+        public boolean hasUserId() {
+            return _hasUserId;
+        }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+        @Override
+        public java.lang.String getUserId() {
+            return userId;
+        }
 
-    public static DisableEnableCollaborationDtoImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      DisableEnableCollaborationDtoImpl dto = new DisableEnableCollaborationDtoImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("clientId")) {
-        JsonElement clientIdIn = json.get("clientId");
-        java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
-        dto.setClientId(clientIdOut);
-      }
-
-      if (json.has("isEnabled")) {
-        JsonElement isEnabledIn = json.get("isEnabled");
-        boolean isEnabledOut = isEnabledIn.getAsBoolean();
-        dto.setIsEnabled(isEnabledOut);
-      }
-
-      if (json.has("projectId")) {
-        JsonElement projectIdIn = json.get("projectId");
-        java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
-        dto.setProjectId(projectIdOut);
-      }
-
-      return dto;
-    }
-    public static DisableEnableCollaborationDtoImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+        public ItemDeletedDtoImpl setUserId(java.lang.String v) {
+            _hasUserId = true;
+            userId = v;
+            return this;
+        }
 
-  public static class GetChatParticipantsImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.GetChatParticipants, JsonSerializable {
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof ItemDeletedDtoImpl)) {
+                return false;
+            }
+            ItemDeletedDtoImpl other = (ItemDeletedDtoImpl)o;
+            if (this._hasFilePath != other._hasFilePath) {
+                return false;
+            }
+            if (this._hasFilePath) {
+                if (!this.filePath.equals(other.filePath)) {
+                    return false;
+                }
+            }
+            if (this._hasFileId != other._hasFileId) {
+                return false;
+            }
+            if (this._hasFileId) {
+                if (!this.fileId.equals(other.fileId)) {
+                    return false;
+                }
+            }
+            if (this._hasUserId != other._hasUserId) {
+                return false;
+            }
+            if (this._hasUserId) {
+                if (!this.userId.equals(other.userId)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-    private GetChatParticipantsImpl() {
-      super(9);
-    }
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasFilePath ? filePath.hashCode() : 0);
+            hash = hash * 31 + (_hasFileId ? fileId.hashCode() : 0);
+            hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
+            return hash;
+        }
 
-    protected GetChatParticipantsImpl(int type) {
-      super(type);
-    }
+        @Override
+        public JsonElement toJsonElement() {
+            JsonObject result = new JsonObject();
 
-    protected java.lang.String projectId;
-    private boolean _hasProjectId;
+            JsonElement filePathOut = (filePath == null) ? JsonNull.INSTANCE : new JsonPrimitive(filePath);
+            result.add("filePath", filePathOut);
 
-    public boolean hasProjectId() {
-      return _hasProjectId;
-    }
+            JsonElement fileIdOut = (fileId == null) ? JsonNull.INSTANCE : new JsonPrimitive(fileId);
+            result.add("fileId", fileIdOut);
 
-    @Override
-    public java.lang.String projectId() {
-      return projectId;
-    }
+            JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
+            result.add("userId", userIdOut);
+            result.add("_type", new JsonPrimitive(getType()));
+            return result;
+        }
 
-    public GetChatParticipantsImpl setProjectId(java.lang.String v) {
-      _hasProjectId = true;
-      projectId = v;
-      return this;
-    }
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof GetChatParticipantsImpl)) {
-        return false;
-      }
-      GetChatParticipantsImpl other = (GetChatParticipantsImpl) o;
-      if (this._hasProjectId != other._hasProjectId) {
-        return false;
-      }
-      if (this._hasProjectId) {
-        if (!this.projectId.equals(other.projectId)) {
-          return false;
-        }
-      }
-      return true;
-    }
+        @Override
+        public String toString() {
+            return toJson();
+        }
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
-      return hash;
-    }
+        public static ItemDeletedDtoImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
-
-      JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
-      result.add("projectId", projectIdOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
+            ItemDeletedDtoImpl dto = new ItemDeletedDtoImpl();
+            JsonObject json = jsonElem.getAsJsonObject();
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+            if (json.has("filePath")) {
+                JsonElement filePathIn = json.get("filePath");
+                java.lang.String filePathOut = gson.fromJson(filePathIn, java.lang.String.class);
+                dto.setFilePath(filePathOut);
+            }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+            if (json.has("fileId")) {
+                JsonElement fileIdIn = json.get("fileId");
+                java.lang.String fileIdOut = gson.fromJson(fileIdIn, java.lang.String.class);
+                dto.setFileId(fileIdOut);
+            }
 
-    public static GetChatParticipantsImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
+            if (json.has("userId")) {
+                JsonElement userIdIn = json.get("userId");
+                java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
+                dto.setUserId(userIdOut);
+            }
 
-      GetChatParticipantsImpl dto = new GetChatParticipantsImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
+            return dto;
+        }
 
-      if (json.has("projectId")) {
-        JsonElement projectIdIn = json.get("projectId");
-        java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
-        dto.setProjectId(projectIdOut);
-      }
+        public static ItemDeletedDtoImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
 
-      return dto;
-    }
-    public static GetChatParticipantsImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
-  }
 
-  public static class GetChatParticipantsResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.GetChatParticipantsResponse, JsonSerializable {
+    public static class ItemMovedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
+            implements com.codenvy.ide.collaboration.dto.ItemMovedDto, JsonSerializable {
 
-    private GetChatParticipantsResponseImpl() {
-      super(10);
-    }
+        private ItemMovedDtoImpl() {
+            super(5);
+        }
 
-    protected GetChatParticipantsResponseImpl(int type) {
-      super(type);
-    }
+        protected ItemMovedDtoImpl(int type) {
+            super(type);
+        }
 
-    public static GetChatParticipantsResponseImpl make() {
-      return new GetChatParticipantsResponseImpl();
-    }
+        public static ItemMovedDtoImpl make() {
+            return new ItemMovedDtoImpl();
+        }
 
-    protected java.util.List<ParticipantInfoImpl> participants;
-    private boolean _hasParticipants;
+        protected java.lang.String oldPath;
+        private   boolean          _hasOldPath;
+        protected ItemImpl         movedItem;
+        private   boolean          _hasMovedItem;
+        protected java.lang.String userId;
+        private   boolean          _hasUserId;
 
-    public boolean hasParticipants() {
-      return _hasParticipants;
-    }
+        public boolean hasOldPath() {
+            return _hasOldPath;
+        }
 
-    @Override
-    public com.codenvy.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.ParticipantInfo> getParticipants() {
-      ensureParticipants();
-      return (com.codenvy.ide.json.shared.JsonArray) new com.codenvy.ide.json.server.JsonArrayListAdapter(participants);
-    }
+        @Override
+        public java.lang.String oldPath() {
+            return oldPath;
+        }
 
-    public GetChatParticipantsResponseImpl setParticipants(java.util.List<ParticipantInfoImpl> v) {
-      _hasParticipants = true;
-      participants = v;
-      return this;
-    }
+        public ItemMovedDtoImpl setOldPath(java.lang.String v) {
+            _hasOldPath = true;
+            oldPath = v;
+            return this;
+        }
 
-    public void addParticipants(ParticipantInfoImpl v) {
-      ensureParticipants();
-      participants.add(v);
-    }
+        public boolean hasMovedItem() {
+            return _hasMovedItem;
+        }
 
-    public void clearParticipants() {
-      ensureParticipants();
-      participants.clear();
-    }
+        @Override
+        public com.codenvy.ide.collaboration.dto.Item movedItem() {
+            return movedItem;
+        }
 
-    private void ensureParticipants() {
-      if (!_hasParticipants) {
-        setParticipants(participants != null ? participants : new java.util.ArrayList<ParticipantInfoImpl>());
-      }
-    }
+        public ItemMovedDtoImpl setMovedItem(ItemImpl v) {
+            _hasMovedItem = true;
+            movedItem = v;
+            return this;
+        }
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof GetChatParticipantsResponseImpl)) {
-        return false;
-      }
-      GetChatParticipantsResponseImpl other = (GetChatParticipantsResponseImpl) o;
-      if (this._hasParticipants != other._hasParticipants) {
-        return false;
-      }
-      if (this._hasParticipants) {
-        if (!this.participants.equals(other.participants)) {
-          return false;
-        }
-      }
-      return true;
-    }
+        public boolean hasUserId() {
+            return _hasUserId;
+        }
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasParticipants ? participants.hashCode() : 0);
-      return hash;
-    }
+        @Override
+        public java.lang.String getUserId() {
+            return userId;
+        }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
-
-      JsonArray participantsOut = new JsonArray();
-      ensureParticipants();
-      for (ParticipantInfoImpl participants_ : participants) {
-        JsonElement participantsOut_ = participants_ == null ? JsonNull.INSTANCE : participants_.toJsonElement();
-        participantsOut.add(participantsOut_);
-      }
-      result.add("participants", participantsOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
+        public ItemMovedDtoImpl setUserId(java.lang.String v) {
+            _hasUserId = true;
+            userId = v;
+            return this;
+        }
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof ItemMovedDtoImpl)) {
+                return false;
+            }
+            ItemMovedDtoImpl other = (ItemMovedDtoImpl)o;
+            if (this._hasOldPath != other._hasOldPath) {
+                return false;
+            }
+            if (this._hasOldPath) {
+                if (!this.oldPath.equals(other.oldPath)) {
+                    return false;
+                }
+            }
+            if (this._hasMovedItem != other._hasMovedItem) {
+                return false;
+            }
+            if (this._hasMovedItem) {
+                if (!this.movedItem.equals(other.movedItem)) {
+                    return false;
+                }
+            }
+            if (this._hasUserId != other._hasUserId) {
+                return false;
+            }
+            if (this._hasUserId) {
+                if (!this.userId.equals(other.userId)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasOldPath ? oldPath.hashCode() : 0);
+            hash = hash * 31 + (_hasMovedItem ? movedItem.hashCode() : 0);
+            hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
+            return hash;
+        }
 
-    public static GetChatParticipantsResponseImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      GetChatParticipantsResponseImpl dto = new GetChatParticipantsResponseImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("participants")) {
-        JsonElement participantsIn = json.get("participants");
-        java.util.ArrayList<ParticipantInfoImpl> participantsOut = null;
-        if (participantsIn != null && !participantsIn.isJsonNull()) {
-          participantsOut = new java.util.ArrayList<ParticipantInfoImpl>();
-          java.util.Iterator<JsonElement> participantsInIterator = participantsIn.getAsJsonArray().iterator();
-          while (participantsInIterator.hasNext()) {
-            JsonElement participantsIn_ = participantsInIterator.next();
-            ParticipantInfoImpl participantsOut_ = ParticipantInfoImpl.fromJsonElement(participantsIn_);
-            participantsOut.add(participantsOut_);
-          }
-        }
-        dto.setParticipants(participantsOut);
-      }
-
-      return dto;
-    }
-    public static GetChatParticipantsResponseImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+        @Override
+        public JsonElement toJsonElement() {
+            JsonObject result = new JsonObject();
 
-  public static class ItemImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.Item, JsonSerializable {
+            JsonElement oldPathOut = (oldPath == null) ? JsonNull.INSTANCE : new JsonPrimitive(oldPath);
+            result.add("oldPath", oldPathOut);
 
-    public static ItemImpl make() {
-      return new ItemImpl();
-    }
+            JsonElement movedItemOut = movedItem == null ? JsonNull.INSTANCE : movedItem.toJsonElement();
+            result.add("movedItem", movedItemOut);
 
-    protected java.lang.String id;
-    private boolean _hasId;
-    protected java.lang.String name;
-    private boolean _hasName;
-    protected com.codenvy.ide.collaboration.dto.Item.ItemType itemType;
-    private boolean _hasItemType;
-    protected java.lang.String path;
-    private boolean _hasPath;
-    protected java.lang.String parentId;
-    private boolean _hasParentId;
-    protected java.lang.String mimeType;
-    private boolean _hasMimeType;
-    protected java.util.List<PropertyImpl> properties;
-    private boolean _hasProperties;
-    protected java.util.Map<String, LinkImpl> links;
-    private boolean _hasLinks;
-
-    public boolean hasId() {
-      return _hasId;
-    }
+            JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
+            result.add("userId", userIdOut);
+            result.add("_type", new JsonPrimitive(getType()));
+            return result;
+        }
 
-    @Override
-    public java.lang.String getId() {
-      return id;
-    }
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
 
-    public ItemImpl setId(java.lang.String v) {
-      _hasId = true;
-      id = v;
-      return this;
-    }
+        @Override
+        public String toString() {
+            return toJson();
+        }
 
-    public boolean hasName() {
-      return _hasName;
-    }
+        public static ItemMovedDtoImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
 
-    @Override
-    public java.lang.String getName() {
-      return name;
-    }
+            ItemMovedDtoImpl dto = new ItemMovedDtoImpl();
+            JsonObject json = jsonElem.getAsJsonObject();
 
-    public ItemImpl setName(java.lang.String v) {
-      _hasName = true;
-      name = v;
-      return this;
-    }
+            if (json.has("oldPath")) {
+                JsonElement oldPathIn = json.get("oldPath");
+                java.lang.String oldPathOut = gson.fromJson(oldPathIn, java.lang.String.class);
+                dto.setOldPath(oldPathOut);
+            }
 
-    public boolean hasItemType() {
-      return _hasItemType;
-    }
+            if (json.has("movedItem")) {
+                JsonElement movedItemIn = json.get("movedItem");
+                ItemImpl movedItemOut = ItemImpl.fromJsonElement(movedItemIn);
+                dto.setMovedItem(movedItemOut);
+            }
 
-    @Override
-    public com.codenvy.ide.collaboration.dto.Item.ItemType getItemType() {
-      return itemType;
-    }
+            if (json.has("userId")) {
+                JsonElement userIdIn = json.get("userId");
+                java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
+                dto.setUserId(userIdOut);
+            }
 
-    public ItemImpl setItemType(com.codenvy.ide.collaboration.dto.Item.ItemType v) {
-      _hasItemType = true;
-      itemType = v;
-      return this;
-    }
+            return dto;
+        }
 
-    public boolean hasPath() {
-      return _hasPath;
-    }
+        public static ItemMovedDtoImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
 
-    @Override
-    public java.lang.String getPath() {
-      return path;
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
 
-    public ItemImpl setPath(java.lang.String v) {
-      _hasPath = true;
-      path = v;
-      return this;
-    }
+    public static class ItemRenamedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
+            implements com.codenvy.ide.collaboration.dto.ItemRenamedDto, JsonSerializable {
 
-    public boolean hasParentId() {
-      return _hasParentId;
-    }
+        private ItemRenamedDtoImpl() {
+            super(6);
+        }
 
-    @Override
-    public java.lang.String getParentId() {
-      return parentId;
-    }
+        protected ItemRenamedDtoImpl(int type) {
+            super(type);
+        }
 
-    public ItemImpl setParentId(java.lang.String v) {
-      _hasParentId = true;
-      parentId = v;
-      return this;
-    }
+        public static ItemRenamedDtoImpl make() {
+            return new ItemRenamedDtoImpl();
+        }
 
-    public boolean hasMimeType() {
-      return _hasMimeType;
-    }
+        protected ItemImpl         renamedItem;
+        private   boolean          _hasRenamedItem;
+        protected java.lang.String oldPath;
+        private   boolean          _hasOldPath;
+        protected java.lang.String userId;
+        private   boolean          _hasUserId;
 
-    @Override
-    public java.lang.String getMimeType() {
-      return mimeType;
-    }
+        public boolean hasRenamedItem() {
+            return _hasRenamedItem;
+        }
 
-    public ItemImpl setMimeType(java.lang.String v) {
-      _hasMimeType = true;
-      mimeType = v;
-      return this;
-    }
+        @Override
+        public com.codenvy.ide.collaboration.dto.Item renamedItem() {
+            return renamedItem;
+        }
 
-    public boolean hasProperties() {
-      return _hasProperties;
-    }
+        public ItemRenamedDtoImpl setRenamedItem(ItemImpl v) {
+            _hasRenamedItem = true;
+            renamedItem = v;
+            return this;
+        }
 
-    @Override
-    public com.codenvy.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.Property> getProperties() {
-      ensureProperties();
-      return (com.codenvy.ide.json.shared.JsonArray) new com.codenvy.ide.json.server.JsonArrayListAdapter(properties);
-    }
+        public boolean hasOldPath() {
+            return _hasOldPath;
+        }
 
-    public ItemImpl setProperties(java.util.List<PropertyImpl> v) {
-      _hasProperties = true;
-      properties = v;
-      return this;
-    }
+        @Override
+        public java.lang.String oldPath() {
+            return oldPath;
+        }
 
-    public void addProperties(PropertyImpl v) {
-      ensureProperties();
-      properties.add(v);
-    }
+        public ItemRenamedDtoImpl setOldPath(java.lang.String v) {
+            _hasOldPath = true;
+            oldPath = v;
+            return this;
+        }
 
-    public void clearProperties() {
-      ensureProperties();
-      properties.clear();
-    }
+        public boolean hasUserId() {
+            return _hasUserId;
+        }
 
-    private void ensureProperties() {
-      if (!_hasProperties) {
-        setProperties(properties != null ? properties : new java.util.ArrayList<PropertyImpl>());
-      }
-    }
+        @Override
+        public java.lang.String getUserId() {
+            return userId;
+        }
 
-    public boolean hasLinks() {
-      return _hasLinks;
-    }
+        public ItemRenamedDtoImpl setUserId(java.lang.String v) {
+            _hasUserId = true;
+            userId = v;
+            return this;
+        }
 
-    @Override
-    public com.codenvy.ide.json.shared.JsonStringMap<com.codenvy.ide.collaboration.dto.Link> getLinks() {
-      ensureLinks();
-      return (com.codenvy.ide.json.shared.JsonStringMap) new com.codenvy.ide.json.server.JsonStringMapAdapter(links);
-    }
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof ItemRenamedDtoImpl)) {
+                return false;
+            }
+            ItemRenamedDtoImpl other = (ItemRenamedDtoImpl)o;
+            if (this._hasRenamedItem != other._hasRenamedItem) {
+                return false;
+            }
+            if (this._hasRenamedItem) {
+                if (!this.renamedItem.equals(other.renamedItem)) {
+                    return false;
+                }
+            }
+            if (this._hasOldPath != other._hasOldPath) {
+                return false;
+            }
+            if (this._hasOldPath) {
+                if (!this.oldPath.equals(other.oldPath)) {
+                    return false;
+                }
+            }
+            if (this._hasUserId != other._hasUserId) {
+                return false;
+            }
+            if (this._hasUserId) {
+                if (!this.userId.equals(other.userId)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-    public ItemImpl setLinks(java.util.Map<String, LinkImpl> v) {
-      _hasLinks = true;
-      links = v;
-      return this;
-    }
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasRenamedItem ? renamedItem.hashCode() : 0);
+            hash = hash * 31 + (_hasOldPath ? oldPath.hashCode() : 0);
+            hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
+            return hash;
+        }
 
-    public void putLinks(String k, LinkImpl v) {
-      ensureLinks();
-      links.put(k, v);
-    }
+        @Override
+        public JsonElement toJsonElement() {
+            JsonObject result = new JsonObject();
 
-    public void clearLinks() {
-      ensureLinks();
-      links.clear();
-    }
+            JsonElement renamedItemOut = renamedItem == null ? JsonNull.INSTANCE : renamedItem.toJsonElement();
+            result.add("renamedItem", renamedItemOut);
 
-    private void ensureLinks() {
-      if (!_hasLinks) {
-        setLinks(links != null ? links : new java.util.HashMap<String, LinkImpl>());
-      }
-    }
+            JsonElement oldPathOut = (oldPath == null) ? JsonNull.INSTANCE : new JsonPrimitive(oldPath);
+            result.add("oldPath", oldPathOut);
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof ItemImpl)) {
-        return false;
-      }
-      ItemImpl other = (ItemImpl) o;
-      if (this._hasId != other._hasId) {
-        return false;
-      }
-      if (this._hasId) {
-        if (!this.id.equals(other.id)) {
-          return false;
-        }
-      }
-      if (this._hasName != other._hasName) {
-        return false;
-      }
-      if (this._hasName) {
-        if (!this.name.equals(other.name)) {
-          return false;
-        }
-      }
-      if (this._hasItemType != other._hasItemType) {
-        return false;
-      }
-      if (this._hasItemType) {
-        if (!this.itemType.equals(other.itemType)) {
-          return false;
-        }
-      }
-      if (this._hasPath != other._hasPath) {
-        return false;
-      }
-      if (this._hasPath) {
-        if (!this.path.equals(other.path)) {
-          return false;
-        }
-      }
-      if (this._hasParentId != other._hasParentId) {
-        return false;
-      }
-      if (this._hasParentId) {
-        if (!this.parentId.equals(other.parentId)) {
-          return false;
-        }
-      }
-      if (this._hasMimeType != other._hasMimeType) {
-        return false;
-      }
-      if (this._hasMimeType) {
-        if (!this.mimeType.equals(other.mimeType)) {
-          return false;
-        }
-      }
-      if (this._hasProperties != other._hasProperties) {
-        return false;
-      }
-      if (this._hasProperties) {
-        if (!this.properties.equals(other.properties)) {
-          return false;
-        }
-      }
-      if (this._hasLinks != other._hasLinks) {
-        return false;
-      }
-      if (this._hasLinks) {
-        if (!this.links.equals(other.links)) {
-          return false;
-        }
-      }
-      return true;
-    }
+            JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
+            result.add("userId", userIdOut);
+            result.add("_type", new JsonPrimitive(getType()));
+            return result;
+        }
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasId ? id.hashCode() : 0);
-      hash = hash * 31 + (_hasName ? name.hashCode() : 0);
-      hash = hash * 31 + (_hasItemType ? itemType.hashCode() : 0);
-      hash = hash * 31 + (_hasPath ? path.hashCode() : 0);
-      hash = hash * 31 + (_hasParentId ? parentId.hashCode() : 0);
-      hash = hash * 31 + (_hasMimeType ? mimeType.hashCode() : 0);
-      hash = hash * 31 + (_hasProperties ? properties.hashCode() : 0);
-      hash = hash * 31 + (_hasLinks ? links.hashCode() : 0);
-      return hash;
-    }
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonArray result = new JsonArray();
-
-      JsonElement idOut = (id == null) ? JsonNull.INSTANCE : new JsonPrimitive(id);
-      result.add(idOut);
-
-      JsonElement nameOut = (name == null) ? JsonNull.INSTANCE : new JsonPrimitive(name);
-      result.add(nameOut);
-
-      JsonElement itemTypeOut = (itemType == null) ? JsonNull.INSTANCE : new JsonPrimitive(itemType.name());
-      result.add(itemTypeOut);
-
-      JsonElement pathOut = (path == null) ? JsonNull.INSTANCE : new JsonPrimitive(path);
-      result.add(pathOut);
-
-      JsonElement parentIdOut = (parentId == null) ? JsonNull.INSTANCE : new JsonPrimitive(parentId);
-      result.add(parentIdOut);
-
-      JsonElement mimeTypeOut = (mimeType == null) ? JsonNull.INSTANCE : new JsonPrimitive(mimeType);
-      result.add(mimeTypeOut);
-
-      JsonArray propertiesOut = new JsonArray();
-      ensureProperties();
-      for (PropertyImpl properties_ : properties) {
-        JsonElement propertiesOut_ = properties_ == null ? JsonNull.INSTANCE : properties_.toJsonElement();
-        propertiesOut.add(propertiesOut_);
-      }
-      result.add(propertiesOut);
-
-      JsonObject linksOut = new JsonObject();
-      ensureLinks();
-      for (Map.Entry<String, LinkImpl> entry0 : links.entrySet()) {
-        LinkImpl links_ = entry0.getValue();
-        JsonElement linksOut_ = links_ == null ? JsonNull.INSTANCE : links_.toJsonElement();
-        linksOut.add(entry0.getKey(), linksOut_);
-      }
-      result.add(linksOut);
-      return result;
-    }
+        @Override
+        public String toString() {
+            return toJson();
+        }
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+        public static ItemRenamedDtoImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+            ItemRenamedDtoImpl dto = new ItemRenamedDtoImpl();
+            JsonObject json = jsonElem.getAsJsonObject();
 
-    public static ItemImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      ItemImpl dto = new ItemImpl();
-      JsonArray json = jsonElem.getAsJsonArray();
-
-      if (0 < json.size()) {
-        JsonElement idIn = json.get(0);
-        java.lang.String idOut = gson.fromJson(idIn, java.lang.String.class);
-        dto.setId(idOut);
-      }
-
-      if (1 < json.size()) {
-        JsonElement nameIn = json.get(1);
-        java.lang.String nameOut = gson.fromJson(nameIn, java.lang.String.class);
-        dto.setName(nameOut);
-      }
-
-      if (2 < json.size()) {
-        JsonElement itemTypeIn = json.get(2);
-        com.codenvy.ide.collaboration.dto.Item.ItemType itemTypeOut = gson.fromJson(itemTypeIn, com.codenvy.ide.collaboration.dto.Item.ItemType.class);
-        dto.setItemType(itemTypeOut);
-      }
-
-      if (3 < json.size()) {
-        JsonElement pathIn = json.get(3);
-        java.lang.String pathOut = gson.fromJson(pathIn, java.lang.String.class);
-        dto.setPath(pathOut);
-      }
-
-      if (4 < json.size()) {
-        JsonElement parentIdIn = json.get(4);
-        java.lang.String parentIdOut = gson.fromJson(parentIdIn, java.lang.String.class);
-        dto.setParentId(parentIdOut);
-      }
-
-      if (5 < json.size()) {
-        JsonElement mimeTypeIn = json.get(5);
-        java.lang.String mimeTypeOut = gson.fromJson(mimeTypeIn, java.lang.String.class);
-        dto.setMimeType(mimeTypeOut);
-      }
-
-      if (6 < json.size()) {
-        JsonElement propertiesIn = json.get(6);
-        java.util.ArrayList<PropertyImpl> propertiesOut = null;
-        if (propertiesIn != null && !propertiesIn.isJsonNull()) {
-          propertiesOut = new java.util.ArrayList<PropertyImpl>();
-          java.util.Iterator<JsonElement> propertiesInIterator = propertiesIn.getAsJsonArray().iterator();
-          while (propertiesInIterator.hasNext()) {
-            JsonElement propertiesIn_ = propertiesInIterator.next();
-            PropertyImpl propertiesOut_ = PropertyImpl.fromJsonElement(propertiesIn_);
-            propertiesOut.add(propertiesOut_);
-          }
-        }
-        dto.setProperties(propertiesOut);
-      }
-
-      if (7 < json.size()) {
-        JsonElement linksIn = json.get(7);
-        java.util.HashMap<String, LinkImpl> linksOut = null;
-        if (linksIn != null && !linksIn.isJsonNull()) {
-          linksOut = new java.util.HashMap<String, LinkImpl>();
-          java.util.Set<Map.Entry<String, JsonElement>> entries0 = linksIn.getAsJsonObject().entrySet();
-          for (Map.Entry<String, JsonElement> entry0 : entries0) {
-            JsonElement linksIn_ = entry0.getValue();
-            LinkImpl linksOut_ = LinkImpl.fromJsonElement(linksIn_);
-            linksOut.put(entry0.getKey(), linksOut_);
-          }
-        }
-        dto.setLinks(linksOut);
-      }
-
-      return dto;
-    }
-    public static ItemImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+            if (json.has("renamedItem")) {
+                JsonElement renamedItemIn = json.get("renamedItem");
+                ItemImpl renamedItemOut = ItemImpl.fromJsonElement(renamedItemIn);
+                dto.setRenamedItem(renamedItemOut);
+            }
 
-  public static class ItemCreatedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.ItemCreatedDto, JsonSerializable {
+            if (json.has("oldPath")) {
+                JsonElement oldPathIn = json.get("oldPath");
+                java.lang.String oldPathOut = gson.fromJson(oldPathIn, java.lang.String.class);
+                dto.setOldPath(oldPathOut);
+            }
 
-    private ItemCreatedDtoImpl() {
-      super(4);
-    }
+            if (json.has("userId")) {
+                JsonElement userIdIn = json.get("userId");
+                java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
+                dto.setUserId(userIdOut);
+            }
 
-    protected ItemCreatedDtoImpl(int type) {
-      super(type);
-    }
+            return dto;
+        }
+
+        public static ItemRenamedDtoImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
 
-    public static ItemCreatedDtoImpl make() {
-      return new ItemCreatedDtoImpl();
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
 
-    protected ItemImpl item;
-    private boolean _hasItem;
-    protected java.lang.String userId;
-    private boolean _hasUserId;
+    public static class LinkImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
+            implements com.codenvy.ide.collaboration.dto.Link, JsonSerializable {
 
-    public boolean hasItem() {
-      return _hasItem;
-    }
+        public static LinkImpl make() {
+            return new LinkImpl();
+        }
 
-    @Override
-    public com.codenvy.ide.collaboration.dto.Item getItem() {
-      return item;
-    }
+        protected java.lang.String href;
+        private   boolean          _hasHref;
+        protected java.lang.String rel;
+        private   boolean          _hasRel;
+        protected java.lang.String typeLink;
+        private   boolean          _hasTypeLink;
 
-    public ItemCreatedDtoImpl setItem(ItemImpl v) {
-      _hasItem = true;
-      item = v;
-      return this;
-    }
+        public boolean hasHref() {
+            return _hasHref;
+        }
 
-    public boolean hasUserId() {
-      return _hasUserId;
-    }
+        @Override
+        public java.lang.String getHref() {
+            return href;
+        }
 
-    @Override
-    public java.lang.String getUserId() {
-      return userId;
-    }
+        public LinkImpl setHref(java.lang.String v) {
+            _hasHref = true;
+            href = v;
+            return this;
+        }
 
-    public ItemCreatedDtoImpl setUserId(java.lang.String v) {
-      _hasUserId = true;
-      userId = v;
-      return this;
-    }
+        public boolean hasRel() {
+            return _hasRel;
+        }
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof ItemCreatedDtoImpl)) {
-        return false;
-      }
-      ItemCreatedDtoImpl other = (ItemCreatedDtoImpl) o;
-      if (this._hasItem != other._hasItem) {
-        return false;
-      }
-      if (this._hasItem) {
-        if (!this.item.equals(other.item)) {
-          return false;
-        }
-      }
-      if (this._hasUserId != other._hasUserId) {
-        return false;
-      }
-      if (this._hasUserId) {
-        if (!this.userId.equals(other.userId)) {
-          return false;
-        }
-      }
-      return true;
-    }
+        @Override
+        public java.lang.String getRel() {
+            return rel;
+        }
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasItem ? item.hashCode() : 0);
-      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
-      return hash;
-    }
+        public LinkImpl setRel(java.lang.String v) {
+            _hasRel = true;
+            rel = v;
+            return this;
+        }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
+        public boolean hasTypeLink() {
+            return _hasTypeLink;
+        }
 
-      JsonElement itemOut = item == null ? JsonNull.INSTANCE : item.toJsonElement();
-      result.add("item", itemOut);
+        @Override
+        public java.lang.String getTypeLink() {
+            return typeLink;
+        }
 
-      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
-      result.add("userId", userIdOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
+        public LinkImpl setTypeLink(java.lang.String v) {
+            _hasTypeLink = true;
+            typeLink = v;
+            return this;
+        }
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof LinkImpl)) {
+                return false;
+            }
+            LinkImpl other = (LinkImpl)o;
+            if (this._hasHref != other._hasHref) {
+                return false;
+            }
+            if (this._hasHref) {
+                if (!this.href.equals(other.href)) {
+                    return false;
+                }
+            }
+            if (this._hasRel != other._hasRel) {
+                return false;
+            }
+            if (this._hasRel) {
+                if (!this.rel.equals(other.rel)) {
+                    return false;
+                }
+            }
+            if (this._hasTypeLink != other._hasTypeLink) {
+                return false;
+            }
+            if (this._hasTypeLink) {
+                if (!this.typeLink.equals(other.typeLink)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasHref ? href.hashCode() : 0);
+            hash = hash * 31 + (_hasRel ? rel.hashCode() : 0);
+            hash = hash * 31 + (_hasTypeLink ? typeLink.hashCode() : 0);
+            return hash;
+        }
 
-    public static ItemCreatedDtoImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      ItemCreatedDtoImpl dto = new ItemCreatedDtoImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("item")) {
-        JsonElement itemIn = json.get("item");
-        ItemImpl itemOut = ItemImpl.fromJsonElement(itemIn);
-        dto.setItem(itemOut);
-      }
-
-      if (json.has("userId")) {
-        JsonElement userIdIn = json.get("userId");
-        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
-        dto.setUserId(userIdOut);
-      }
-
-      return dto;
-    }
-    public static ItemCreatedDtoImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+        @Override
+        public JsonElement toJsonElement() {
+            JsonArray result = new JsonArray();
 
-  public static class ItemDeletedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.ItemDeletedDto, JsonSerializable {
+            JsonElement hrefOut = (href == null) ? JsonNull.INSTANCE : new JsonPrimitive(href);
+            result.add(hrefOut);
 
-    private ItemDeletedDtoImpl() {
-      super(3);
-    }
+            JsonElement relOut = (rel == null) ? JsonNull.INSTANCE : new JsonPrimitive(rel);
+            result.add(relOut);
 
-    protected ItemDeletedDtoImpl(int type) {
-      super(type);
-    }
+            JsonElement typeLinkOut = (typeLink == null) ? JsonNull.INSTANCE : new JsonPrimitive(typeLink);
+            result.add(typeLinkOut);
+            return result;
+        }
 
-    public static ItemDeletedDtoImpl make() {
-      return new ItemDeletedDtoImpl();
-    }
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
 
-    protected java.lang.String filePath;
-    private boolean _hasFilePath;
-    protected java.lang.String fileId;
-    private boolean _hasFileId;
-    protected java.lang.String userId;
-    private boolean _hasUserId;
-
-    public boolean hasFilePath() {
-      return _hasFilePath;
-    }
+        @Override
+        public String toString() {
+            return toJson();
+        }
 
-    @Override
-    public java.lang.String getFilePath() {
-      return filePath;
-    }
+        public static LinkImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
 
-    public ItemDeletedDtoImpl setFilePath(java.lang.String v) {
-      _hasFilePath = true;
-      filePath = v;
-      return this;
-    }
+            LinkImpl dto = new LinkImpl();
+            JsonArray json = jsonElem.getAsJsonArray();
 
-    public boolean hasFileId() {
-      return _hasFileId;
-    }
+            if (0 < json.size()) {
+                JsonElement hrefIn = json.get(0);
+                java.lang.String hrefOut = gson.fromJson(hrefIn, java.lang.String.class);
+                dto.setHref(hrefOut);
+            }
 
-    @Override
-    public java.lang.String getFileId() {
-      return fileId;
-    }
+            if (1 < json.size()) {
+                JsonElement relIn = json.get(1);
+                java.lang.String relOut = gson.fromJson(relIn, java.lang.String.class);
+                dto.setRel(relOut);
+            }
 
-    public ItemDeletedDtoImpl setFileId(java.lang.String v) {
-      _hasFileId = true;
-      fileId = v;
-      return this;
-    }
+            if (2 < json.size()) {
+                JsonElement typeLinkIn = json.get(2);
+                java.lang.String typeLinkOut = gson.fromJson(typeLinkIn, java.lang.String.class);
+                dto.setTypeLink(typeLinkOut);
+            }
 
-    public boolean hasUserId() {
-      return _hasUserId;
-    }
+            return dto;
+        }
 
-    @Override
-    public java.lang.String getUserId() {
-      return userId;
-    }
+        public static LinkImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
 
-    public ItemDeletedDtoImpl setUserId(java.lang.String v) {
-      _hasUserId = true;
-      userId = v;
-      return this;
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof ItemDeletedDtoImpl)) {
-        return false;
-      }
-      ItemDeletedDtoImpl other = (ItemDeletedDtoImpl) o;
-      if (this._hasFilePath != other._hasFilePath) {
-        return false;
-      }
-      if (this._hasFilePath) {
-        if (!this.filePath.equals(other.filePath)) {
-          return false;
-        }
-      }
-      if (this._hasFileId != other._hasFileId) {
-        return false;
-      }
-      if (this._hasFileId) {
-        if (!this.fileId.equals(other.fileId)) {
-          return false;
-        }
-      }
-      if (this._hasUserId != other._hasUserId) {
-        return false;
-      }
-      if (this._hasUserId) {
-        if (!this.userId.equals(other.userId)) {
-          return false;
-        }
-      }
-      return true;
-    }
+    public static class ParticipantInfoImpl implements com.codenvy.ide.collaboration.dto.ParticipantInfo, JsonSerializable {
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasFilePath ? filePath.hashCode() : 0);
-      hash = hash * 31 + (_hasFileId ? fileId.hashCode() : 0);
-      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
-      return hash;
-    }
+        public static ParticipantInfoImpl make() {
+            return new ParticipantInfoImpl();
+        }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
+        protected UserDetailsImpl  userDetails;
+        private   boolean          _hasUserDetails;
+        protected java.lang.String clientId;
+        private   boolean          _hasClientId;
 
-      JsonElement filePathOut = (filePath == null) ? JsonNull.INSTANCE : new JsonPrimitive(filePath);
-      result.add("filePath", filePathOut);
+        public boolean hasUserDetails() {
+            return _hasUserDetails;
+        }
 
-      JsonElement fileIdOut = (fileId == null) ? JsonNull.INSTANCE : new JsonPrimitive(fileId);
-      result.add("fileId", fileIdOut);
+        @Override
+        public com.codenvy.ide.collaboration.dto.UserDetails getUserDetails() {
+            return userDetails;
+        }
 
-      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
-      result.add("userId", userIdOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
+        public ParticipantInfoImpl setUserDetails(UserDetailsImpl v) {
+            _hasUserDetails = true;
+            userDetails = v;
+            return this;
+        }
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+        public boolean hasClientId() {
+            return _hasClientId;
+        }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+        @Override
+        public java.lang.String getClientId() {
+            return clientId;
+        }
 
-    public static ItemDeletedDtoImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      ItemDeletedDtoImpl dto = new ItemDeletedDtoImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("filePath")) {
-        JsonElement filePathIn = json.get("filePath");
-        java.lang.String filePathOut = gson.fromJson(filePathIn, java.lang.String.class);
-        dto.setFilePath(filePathOut);
-      }
-
-      if (json.has("fileId")) {
-        JsonElement fileIdIn = json.get("fileId");
-        java.lang.String fileIdOut = gson.fromJson(fileIdIn, java.lang.String.class);
-        dto.setFileId(fileIdOut);
-      }
-
-      if (json.has("userId")) {
-        JsonElement userIdIn = json.get("userId");
-        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
-        dto.setUserId(userIdOut);
-      }
-
-      return dto;
-    }
-    public static ItemDeletedDtoImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+        public ParticipantInfoImpl setClientId(java.lang.String v) {
+            _hasClientId = true;
+            clientId = v;
+            return this;
+        }
 
-  public static class ItemMovedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.ItemMovedDto, JsonSerializable {
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof ParticipantInfoImpl)) {
+                return false;
+            }
+            ParticipantInfoImpl other = (ParticipantInfoImpl)o;
+            if (this._hasUserDetails != other._hasUserDetails) {
+                return false;
+            }
+            if (this._hasUserDetails) {
+                if (!this.userDetails.equals(other.userDetails)) {
+                    return false;
+                }
+            }
+            if (this._hasClientId != other._hasClientId) {
+                return false;
+            }
+            if (this._hasClientId) {
+                if (!this.clientId.equals(other.clientId)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-    private ItemMovedDtoImpl() {
-      super(5);
-    }
+        @Override
+        public int hashCode() {
+            int hash = 1;
+            hash = hash * 31 + (_hasUserDetails ? userDetails.hashCode() : 0);
+            hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
+            return hash;
+        }
 
-    protected ItemMovedDtoImpl(int type) {
-      super(type);
-    }
+        @Override
+        public JsonElement toJsonElement() {
+            JsonObject result = new JsonObject();
 
-    public static ItemMovedDtoImpl make() {
-      return new ItemMovedDtoImpl();
-    }
+            JsonElement userDetailsOut = userDetails == null ? JsonNull.INSTANCE : userDetails.toJsonElement();
+            result.add("userDetails", userDetailsOut);
 
-    protected java.lang.String oldPath;
-    private boolean _hasOldPath;
-    protected ItemImpl movedItem;
-    private boolean _hasMovedItem;
-    protected java.lang.String userId;
-    private boolean _hasUserId;
-
-    public boolean hasOldPath() {
-      return _hasOldPath;
-    }
+            JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
+            result.add("clientId", clientIdOut);
+            return result;
+        }
 
-    @Override
-    public java.lang.String oldPath() {
-      return oldPath;
-    }
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
 
-    public ItemMovedDtoImpl setOldPath(java.lang.String v) {
-      _hasOldPath = true;
-      oldPath = v;
-      return this;
-    }
+        @Override
+        public String toString() {
+            return toJson();
+        }
 
-    public boolean hasMovedItem() {
-      return _hasMovedItem;
-    }
+        public static ParticipantInfoImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
 
-    @Override
-    public com.codenvy.ide.collaboration.dto.Item movedItem() {
-      return movedItem;
-    }
+            ParticipantInfoImpl dto = new ParticipantInfoImpl();
+            JsonObject json = jsonElem.getAsJsonObject();
 
-    public ItemMovedDtoImpl setMovedItem(ItemImpl v) {
-      _hasMovedItem = true;
-      movedItem = v;
-      return this;
-    }
+            if (json.has("userDetails")) {
+                JsonElement userDetailsIn = json.get("userDetails");
+                UserDetailsImpl userDetailsOut = UserDetailsImpl.fromJsonElement(userDetailsIn);
+                dto.setUserDetails(userDetailsOut);
+            }
 
-    public boolean hasUserId() {
-      return _hasUserId;
-    }
+            if (json.has("clientId")) {
+                JsonElement clientIdIn = json.get("clientId");
+                java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
+                dto.setClientId(clientIdOut);
+            }
 
-    @Override
-    public java.lang.String getUserId() {
-      return userId;
-    }
+            return dto;
+        }
 
-    public ItemMovedDtoImpl setUserId(java.lang.String v) {
-      _hasUserId = true;
-      userId = v;
-      return this;
-    }
+        public static ParticipantInfoImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof ItemMovedDtoImpl)) {
-        return false;
-      }
-      ItemMovedDtoImpl other = (ItemMovedDtoImpl) o;
-      if (this._hasOldPath != other._hasOldPath) {
-        return false;
-      }
-      if (this._hasOldPath) {
-        if (!this.oldPath.equals(other.oldPath)) {
-          return false;
-        }
-      }
-      if (this._hasMovedItem != other._hasMovedItem) {
-        return false;
-      }
-      if (this._hasMovedItem) {
-        if (!this.movedItem.equals(other.movedItem)) {
-          return false;
-        }
-      }
-      if (this._hasUserId != other._hasUserId) {
-        return false;
-      }
-      if (this._hasUserId) {
-        if (!this.userId.equals(other.userId)) {
-          return false;
-        }
-      }
-      return true;
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasOldPath ? oldPath.hashCode() : 0);
-      hash = hash * 31 + (_hasMovedItem ? movedItem.hashCode() : 0);
-      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
-      return hash;
-    }
+    public static class ProjectClosedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
+            implements com.codenvy.ide.collaboration.dto.ProjectClosedDto, JsonSerializable {
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
+        private ProjectClosedDtoImpl() {
+            super(2);
+        }
 
-      JsonElement oldPathOut = (oldPath == null) ? JsonNull.INSTANCE : new JsonPrimitive(oldPath);
-      result.add("oldPath", oldPathOut);
+        protected ProjectClosedDtoImpl(int type) {
+            super(type);
+        }
 
-      JsonElement movedItemOut = movedItem == null ? JsonNull.INSTANCE : movedItem.toJsonElement();
-      result.add("movedItem", movedItemOut);
+        protected java.lang.String projectPath;
+        private   boolean          _hasProjectPath;
+        protected java.lang.String vfsId;
+        private   boolean          _hasVfsId;
+        protected java.lang.String projectId;
+        private   boolean          _hasProjectId;
 
-      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
-      result.add("userId", userIdOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
+        public boolean hasProjectPath() {
+            return _hasProjectPath;
+        }
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+        @Override
+        public java.lang.String projectPath() {
+            return projectPath;
+        }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+        public ProjectClosedDtoImpl setProjectPath(java.lang.String v) {
+            _hasProjectPath = true;
+            projectPath = v;
+            return this;
+        }
 
-    public static ItemMovedDtoImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      ItemMovedDtoImpl dto = new ItemMovedDtoImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("oldPath")) {
-        JsonElement oldPathIn = json.get("oldPath");
-        java.lang.String oldPathOut = gson.fromJson(oldPathIn, java.lang.String.class);
-        dto.setOldPath(oldPathOut);
-      }
-
-      if (json.has("movedItem")) {
-        JsonElement movedItemIn = json.get("movedItem");
-        ItemImpl movedItemOut = ItemImpl.fromJsonElement(movedItemIn);
-        dto.setMovedItem(movedItemOut);
-      }
-
-      if (json.has("userId")) {
-        JsonElement userIdIn = json.get("userId");
-        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
-        dto.setUserId(userIdOut);
-      }
-
-      return dto;
-    }
-    public static ItemMovedDtoImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+        public boolean hasVfsId() {
+            return _hasVfsId;
+        }
 
-  public static class ItemRenamedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.ItemRenamedDto, JsonSerializable {
+        @Override
+        public java.lang.String vfsId() {
+            return vfsId;
+        }
 
-    private ItemRenamedDtoImpl() {
-      super(6);
-    }
+        public ProjectClosedDtoImpl setVfsId(java.lang.String v) {
+            _hasVfsId = true;
+            vfsId = v;
+            return this;
+        }
 
-    protected ItemRenamedDtoImpl(int type) {
-      super(type);
-    }
+        public boolean hasProjectId() {
+            return _hasProjectId;
+        }
 
-    public static ItemRenamedDtoImpl make() {
-      return new ItemRenamedDtoImpl();
-    }
+        @Override
+        public java.lang.String projectId() {
+            return projectId;
+        }
 
-    protected ItemImpl renamedItem;
-    private boolean _hasRenamedItem;
-    protected java.lang.String oldPath;
-    private boolean _hasOldPath;
-    protected java.lang.String userId;
-    private boolean _hasUserId;
-
-    public boolean hasRenamedItem() {
-      return _hasRenamedItem;
-    }
+        public ProjectClosedDtoImpl setProjectId(java.lang.String v) {
+            _hasProjectId = true;
+            projectId = v;
+            return this;
+        }
 
-    @Override
-    public com.codenvy.ide.collaboration.dto.Item renamedItem() {
-      return renamedItem;
-    }
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof ProjectClosedDtoImpl)) {
+                return false;
+            }
+            ProjectClosedDtoImpl other = (ProjectClosedDtoImpl)o;
+            if (this._hasProjectPath != other._hasProjectPath) {
+                return false;
+            }
+            if (this._hasProjectPath) {
+                if (!this.projectPath.equals(other.projectPath)) {
+                    return false;
+                }
+            }
+            if (this._hasVfsId != other._hasVfsId) {
+                return false;
+            }
+            if (this._hasVfsId) {
+                if (!this.vfsId.equals(other.vfsId)) {
+                    return false;
+                }
+            }
+            if (this._hasProjectId != other._hasProjectId) {
+                return false;
+            }
+            if (this._hasProjectId) {
+                if (!this.projectId.equals(other.projectId)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-    public ItemRenamedDtoImpl setRenamedItem(ItemImpl v) {
-      _hasRenamedItem = true;
-      renamedItem = v;
-      return this;
-    }
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasProjectPath ? projectPath.hashCode() : 0);
+            hash = hash * 31 + (_hasVfsId ? vfsId.hashCode() : 0);
+            hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
+            return hash;
+        }
 
-    public boolean hasOldPath() {
-      return _hasOldPath;
-    }
+        @Override
+        public JsonElement toJsonElement() {
+            JsonObject result = new JsonObject();
 
-    @Override
-    public java.lang.String oldPath() {
-      return oldPath;
-    }
+            JsonElement projectPathOut = (projectPath == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectPath);
+            result.add("projectPath", projectPathOut);
 
-    public ItemRenamedDtoImpl setOldPath(java.lang.String v) {
-      _hasOldPath = true;
-      oldPath = v;
-      return this;
-    }
+            JsonElement vfsIdOut = (vfsId == null) ? JsonNull.INSTANCE : new JsonPrimitive(vfsId);
+            result.add("vfsId", vfsIdOut);
 
-    public boolean hasUserId() {
-      return _hasUserId;
-    }
+            JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
+            result.add("projectId", projectIdOut);
+            result.add("_type", new JsonPrimitive(getType()));
+            return result;
+        }
 
-    @Override
-    public java.lang.String getUserId() {
-      return userId;
-    }
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
 
-    public ItemRenamedDtoImpl setUserId(java.lang.String v) {
-      _hasUserId = true;
-      userId = v;
-      return this;
-    }
+        @Override
+        public String toString() {
+            return toJson();
+        }
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof ItemRenamedDtoImpl)) {
-        return false;
-      }
-      ItemRenamedDtoImpl other = (ItemRenamedDtoImpl) o;
-      if (this._hasRenamedItem != other._hasRenamedItem) {
-        return false;
-      }
-      if (this._hasRenamedItem) {
-        if (!this.renamedItem.equals(other.renamedItem)) {
-          return false;
-        }
-      }
-      if (this._hasOldPath != other._hasOldPath) {
-        return false;
-      }
-      if (this._hasOldPath) {
-        if (!this.oldPath.equals(other.oldPath)) {
-          return false;
-        }
-      }
-      if (this._hasUserId != other._hasUserId) {
-        return false;
-      }
-      if (this._hasUserId) {
-        if (!this.userId.equals(other.userId)) {
-          return false;
-        }
-      }
-      return true;
-    }
+        public static ProjectClosedDtoImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasRenamedItem ? renamedItem.hashCode() : 0);
-      hash = hash * 31 + (_hasOldPath ? oldPath.hashCode() : 0);
-      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
-      return hash;
-    }
+            ProjectClosedDtoImpl dto = new ProjectClosedDtoImpl();
+            JsonObject json = jsonElem.getAsJsonObject();
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
+            if (json.has("projectPath")) {
+                JsonElement projectPathIn = json.get("projectPath");
+                java.lang.String projectPathOut = gson.fromJson(projectPathIn, java.lang.String.class);
+                dto.setProjectPath(projectPathOut);
+            }
 
-      JsonElement renamedItemOut = renamedItem == null ? JsonNull.INSTANCE : renamedItem.toJsonElement();
-      result.add("renamedItem", renamedItemOut);
+            if (json.has("vfsId")) {
+                JsonElement vfsIdIn = json.get("vfsId");
+                java.lang.String vfsIdOut = gson.fromJson(vfsIdIn, java.lang.String.class);
+                dto.setVfsId(vfsIdOut);
+            }
 
-      JsonElement oldPathOut = (oldPath == null) ? JsonNull.INSTANCE : new JsonPrimitive(oldPath);
-      result.add("oldPath", oldPathOut);
+            if (json.has("projectId")) {
+                JsonElement projectIdIn = json.get("projectId");
+                java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
+                dto.setProjectId(projectIdOut);
+            }
 
-      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
-      result.add("userId", userIdOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
+            return dto;
+        }
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+        public static ProjectClosedDtoImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
 
-    @Override
-    public String toString() {
-      return toJson();
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
 
-    public static ItemRenamedDtoImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      ItemRenamedDtoImpl dto = new ItemRenamedDtoImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("renamedItem")) {
-        JsonElement renamedItemIn = json.get("renamedItem");
-        ItemImpl renamedItemOut = ItemImpl.fromJsonElement(renamedItemIn);
-        dto.setRenamedItem(renamedItemOut);
-      }
-
-      if (json.has("oldPath")) {
-        JsonElement oldPathIn = json.get("oldPath");
-        java.lang.String oldPathOut = gson.fromJson(oldPathIn, java.lang.String.class);
-        dto.setOldPath(oldPathOut);
-      }
-
-      if (json.has("userId")) {
-        JsonElement userIdIn = json.get("userId");
-        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
-        dto.setUserId(userIdOut);
-      }
-
-      return dto;
-    }
-    public static ItemRenamedDtoImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+    public static class ProjectOpenedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
+            implements com.codenvy.ide.collaboration.dto.ProjectOpenedDto, JsonSerializable {
 
-  public static class LinkImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.Link, JsonSerializable {
+        private ProjectOpenedDtoImpl() {
+            super(1);
+        }
 
-    public static LinkImpl make() {
-      return new LinkImpl();
-    }
+        protected ProjectOpenedDtoImpl(int type) {
+            super(type);
+        }
 
-    protected java.lang.String href;
-    private boolean _hasHref;
-    protected java.lang.String rel;
-    private boolean _hasRel;
-    protected java.lang.String typeLink;
-    private boolean _hasTypeLink;
-
-    public boolean hasHref() {
-      return _hasHref;
-    }
+        protected java.lang.String projectPath;
+        private   boolean          _hasProjectPath;
+        protected java.lang.String vfsId;
+        private   boolean          _hasVfsId;
+        protected java.lang.String projectId;
+        private   boolean          _hasProjectId;
 
-    @Override
-    public java.lang.String getHref() {
-      return href;
-    }
+        public boolean hasProjectPath() {
+            return _hasProjectPath;
+        }
 
-    public LinkImpl setHref(java.lang.String v) {
-      _hasHref = true;
-      href = v;
-      return this;
-    }
+        @Override
+        public java.lang.String projectPath() {
+            return projectPath;
+        }
 
-    public boolean hasRel() {
-      return _hasRel;
-    }
+        public ProjectOpenedDtoImpl setProjectPath(java.lang.String v) {
+            _hasProjectPath = true;
+            projectPath = v;
+            return this;
+        }
 
-    @Override
-    public java.lang.String getRel() {
-      return rel;
-    }
+        public boolean hasVfsId() {
+            return _hasVfsId;
+        }
 
-    public LinkImpl setRel(java.lang.String v) {
-      _hasRel = true;
-      rel = v;
-      return this;
-    }
+        @Override
+        public java.lang.String vfsId() {
+            return vfsId;
+        }
 
-    public boolean hasTypeLink() {
-      return _hasTypeLink;
-    }
+        public ProjectOpenedDtoImpl setVfsId(java.lang.String v) {
+            _hasVfsId = true;
+            vfsId = v;
+            return this;
+        }
 
-    @Override
-    public java.lang.String getTypeLink() {
-      return typeLink;
-    }
+        public boolean hasProjectId() {
+            return _hasProjectId;
+        }
 
-    public LinkImpl setTypeLink(java.lang.String v) {
-      _hasTypeLink = true;
-      typeLink = v;
-      return this;
-    }
+        @Override
+        public java.lang.String projectId() {
+            return projectId;
+        }
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof LinkImpl)) {
-        return false;
-      }
-      LinkImpl other = (LinkImpl) o;
-      if (this._hasHref != other._hasHref) {
-        return false;
-      }
-      if (this._hasHref) {
-        if (!this.href.equals(other.href)) {
-          return false;
-        }
-      }
-      if (this._hasRel != other._hasRel) {
-        return false;
-      }
-      if (this._hasRel) {
-        if (!this.rel.equals(other.rel)) {
-          return false;
-        }
-      }
-      if (this._hasTypeLink != other._hasTypeLink) {
-        return false;
-      }
-      if (this._hasTypeLink) {
-        if (!this.typeLink.equals(other.typeLink)) {
-          return false;
-        }
-      }
-      return true;
-    }
+        public ProjectOpenedDtoImpl setProjectId(java.lang.String v) {
+            _hasProjectId = true;
+            projectId = v;
+            return this;
+        }
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasHref ? href.hashCode() : 0);
-      hash = hash * 31 + (_hasRel ? rel.hashCode() : 0);
-      hash = hash * 31 + (_hasTypeLink ? typeLink.hashCode() : 0);
-      return hash;
-    }
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof ProjectOpenedDtoImpl)) {
+                return false;
+            }
+            ProjectOpenedDtoImpl other = (ProjectOpenedDtoImpl)o;
+            if (this._hasProjectPath != other._hasProjectPath) {
+                return false;
+            }
+            if (this._hasProjectPath) {
+                if (!this.projectPath.equals(other.projectPath)) {
+                    return false;
+                }
+            }
+            if (this._hasVfsId != other._hasVfsId) {
+                return false;
+            }
+            if (this._hasVfsId) {
+                if (!this.vfsId.equals(other.vfsId)) {
+                    return false;
+                }
+            }
+            if (this._hasProjectId != other._hasProjectId) {
+                return false;
+            }
+            if (this._hasProjectId) {
+                if (!this.projectId.equals(other.projectId)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonArray result = new JsonArray();
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasProjectPath ? projectPath.hashCode() : 0);
+            hash = hash * 31 + (_hasVfsId ? vfsId.hashCode() : 0);
+            hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
+            return hash;
+        }
 
-      JsonElement hrefOut = (href == null) ? JsonNull.INSTANCE : new JsonPrimitive(href);
-      result.add(hrefOut);
+        @Override
+        public JsonElement toJsonElement() {
+            JsonObject result = new JsonObject();
 
-      JsonElement relOut = (rel == null) ? JsonNull.INSTANCE : new JsonPrimitive(rel);
-      result.add(relOut);
+            JsonElement projectPathOut = (projectPath == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectPath);
+            result.add("projectPath", projectPathOut);
 
-      JsonElement typeLinkOut = (typeLink == null) ? JsonNull.INSTANCE : new JsonPrimitive(typeLink);
-      result.add(typeLinkOut);
-      return result;
-    }
+            JsonElement vfsIdOut = (vfsId == null) ? JsonNull.INSTANCE : new JsonPrimitive(vfsId);
+            result.add("vfsId", vfsIdOut);
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+            JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
+            result.add("projectId", projectIdOut);
+            result.add("_type", new JsonPrimitive(getType()));
+            return result;
+        }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
 
-    public static LinkImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      LinkImpl dto = new LinkImpl();
-      JsonArray json = jsonElem.getAsJsonArray();
-
-      if (0 < json.size()) {
-        JsonElement hrefIn = json.get(0);
-        java.lang.String hrefOut = gson.fromJson(hrefIn, java.lang.String.class);
-        dto.setHref(hrefOut);
-      }
-
-      if (1 < json.size()) {
-        JsonElement relIn = json.get(1);
-        java.lang.String relOut = gson.fromJson(relIn, java.lang.String.class);
-        dto.setRel(relOut);
-      }
-
-      if (2 < json.size()) {
-        JsonElement typeLinkIn = json.get(2);
-        java.lang.String typeLinkOut = gson.fromJson(typeLinkIn, java.lang.String.class);
-        dto.setTypeLink(typeLinkOut);
-      }
-
-      return dto;
-    }
-    public static LinkImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+        @Override
+        public String toString() {
+            return toJson();
+        }
 
-  public static class ParticipantInfoImpl implements com.codenvy.ide.collaboration.dto.ParticipantInfo, JsonSerializable {
+        public static ProjectOpenedDtoImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
 
-    public static ParticipantInfoImpl make() {
-      return new ParticipantInfoImpl();
-    }
+            ProjectOpenedDtoImpl dto = new ProjectOpenedDtoImpl();
+            JsonObject json = jsonElem.getAsJsonObject();
 
-    protected java.lang.String clientId;
-    private boolean _hasClientId;
-    protected UserDetailsImpl userDetails;
-    private boolean _hasUserDetails;
+            if (json.has("projectPath")) {
+                JsonElement projectPathIn = json.get("projectPath");
+                java.lang.String projectPathOut = gson.fromJson(projectPathIn, java.lang.String.class);
+                dto.setProjectPath(projectPathOut);
+            }
 
-    public boolean hasClientId() {
-      return _hasClientId;
-    }
+            if (json.has("vfsId")) {
+                JsonElement vfsIdIn = json.get("vfsId");
+                java.lang.String vfsIdOut = gson.fromJson(vfsIdIn, java.lang.String.class);
+                dto.setVfsId(vfsIdOut);
+            }
 
-    @Override
-    public java.lang.String getClientId() {
-      return clientId;
-    }
+            if (json.has("projectId")) {
+                JsonElement projectIdIn = json.get("projectId");
+                java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
+                dto.setProjectId(projectIdOut);
+            }
 
-    public ParticipantInfoImpl setClientId(java.lang.String v) {
-      _hasClientId = true;
-      clientId = v;
-      return this;
-    }
+            return dto;
+        }
 
-    public boolean hasUserDetails() {
-      return _hasUserDetails;
-    }
+        public static ProjectOpenedDtoImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
 
-    @Override
-    public com.codenvy.ide.collaboration.dto.UserDetails getUserDetails() {
-      return userDetails;
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
 
-    public ParticipantInfoImpl setUserDetails(UserDetailsImpl v) {
-      _hasUserDetails = true;
-      userDetails = v;
-      return this;
-    }
+    public static class ProjectOpenedResponseDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
+            implements com.codenvy.ide.collaboration.dto.ProjectOpenedResponseDto, JsonSerializable {
 
-    @Override
-    public boolean equals(Object o) {
-      if (!(o instanceof ParticipantInfoImpl)) {
-        return false;
-      }
-      ParticipantInfoImpl other = (ParticipantInfoImpl) o;
-      if (this._hasClientId != other._hasClientId) {
-        return false;
-      }
-      if (this._hasClientId) {
-        if (!this.clientId.equals(other.clientId)) {
-          return false;
-        }
-      }
-      if (this._hasUserDetails != other._hasUserDetails) {
-        return false;
-      }
-      if (this._hasUserDetails) {
-        if (!this.userDetails.equals(other.userDetails)) {
-          return false;
-        }
-      }
-      return true;
-    }
+        private ProjectOpenedResponseDtoImpl() {
+            super(9);
+        }
 
-    @Override
-    public int hashCode() {
-      int hash = 1;
-      hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
-      hash = hash * 31 + (_hasUserDetails ? userDetails.hashCode() : 0);
-      return hash;
-    }
+        protected ProjectOpenedResponseDtoImpl(int type) {
+            super(type);
+        }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
+        public static ProjectOpenedResponseDtoImpl make() {
+            return new ProjectOpenedResponseDtoImpl();
+        }
 
-      JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
-      result.add("clientId", clientIdOut);
+        protected java.util.List<ParticipantInfoImpl> projectParticipants;
+        private   boolean                             _hasProjectParticipants;
 
-      JsonElement userDetailsOut = userDetails == null ? JsonNull.INSTANCE : userDetails.toJsonElement();
-      result.add("userDetails", userDetailsOut);
-      return result;
-    }
+        public boolean hasProjectParticipants() {
+            return _hasProjectParticipants;
+        }
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+        @Override
+        public com.codenvy.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.ParticipantInfo> projectParticipants() {
+            ensureProjectParticipants();
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(projectParticipants);
+        }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+        public ProjectOpenedResponseDtoImpl setProjectParticipants(java.util.List<ParticipantInfoImpl> v) {
+            _hasProjectParticipants = true;
+            projectParticipants = v;
+            return this;
+        }
 
-    public static ParticipantInfoImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      ParticipantInfoImpl dto = new ParticipantInfoImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("clientId")) {
-        JsonElement clientIdIn = json.get("clientId");
-        java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
-        dto.setClientId(clientIdOut);
-      }
-
-      if (json.has("userDetails")) {
-        JsonElement userDetailsIn = json.get("userDetails");
-        UserDetailsImpl userDetailsOut = UserDetailsImpl.fromJsonElement(userDetailsIn);
-        dto.setUserDetails(userDetailsOut);
-      }
-
-      return dto;
-    }
-    public static ParticipantInfoImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+        public void addProjectParticipants(ParticipantInfoImpl v) {
+            ensureProjectParticipants();
+            projectParticipants.add(v);
+        }
 
-  public static class ProjectClosedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.ProjectClosedDto, JsonSerializable {
+        public void clearProjectParticipants() {
+            ensureProjectParticipants();
+            projectParticipants.clear();
+        }
 
-    private ProjectClosedDtoImpl() {
-      super(2);
-    }
+        private void ensureProjectParticipants() {
+            if (!_hasProjectParticipants) {
+                setProjectParticipants(projectParticipants != null ? projectParticipants : new java.util.ArrayList<ParticipantInfoImpl>());
+            }
+        }
 
-    protected ProjectClosedDtoImpl(int type) {
-      super(type);
-    }
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof ProjectOpenedResponseDtoImpl)) {
+                return false;
+            }
+            ProjectOpenedResponseDtoImpl other = (ProjectOpenedResponseDtoImpl)o;
+            if (this._hasProjectParticipants != other._hasProjectParticipants) {
+                return false;
+            }
+            if (this._hasProjectParticipants) {
+                if (!this.projectParticipants.equals(other.projectParticipants)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-    protected java.lang.String projectPath;
-    private boolean _hasProjectPath;
-    protected java.lang.String vfsId;
-    private boolean _hasVfsId;
-    protected java.lang.String projectId;
-    private boolean _hasProjectId;
-
-    public boolean hasProjectPath() {
-      return _hasProjectPath;
-    }
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasProjectParticipants ? projectParticipants.hashCode() : 0);
+            return hash;
+        }
 
-    @Override
-    public java.lang.String projectPath() {
-      return projectPath;
-    }
+        @Override
+        public JsonElement toJsonElement() {
+            JsonObject result = new JsonObject();
 
-    public ProjectClosedDtoImpl setProjectPath(java.lang.String v) {
-      _hasProjectPath = true;
-      projectPath = v;
-      return this;
-    }
+            JsonArray projectParticipantsOut = new JsonArray();
+            ensureProjectParticipants();
+            for (ParticipantInfoImpl projectParticipants_ : projectParticipants) {
+                JsonElement projectParticipantsOut_ =
+                        projectParticipants_ == null ? JsonNull.INSTANCE : projectParticipants_.toJsonElement();
+                projectParticipantsOut.add(projectParticipantsOut_);
+            }
+            result.add("projectParticipants", projectParticipantsOut);
+            result.add("_type", new JsonPrimitive(getType()));
+            return result;
+        }
 
-    public boolean hasVfsId() {
-      return _hasVfsId;
-    }
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
 
-    @Override
-    public java.lang.String vfsId() {
-      return vfsId;
-    }
+        @Override
+        public String toString() {
+            return toJson();
+        }
 
-    public ProjectClosedDtoImpl setVfsId(java.lang.String v) {
-      _hasVfsId = true;
-      vfsId = v;
-      return this;
-    }
+        public static ProjectOpenedResponseDtoImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
 
-    public boolean hasProjectId() {
-      return _hasProjectId;
-    }
+            ProjectOpenedResponseDtoImpl dto = new ProjectOpenedResponseDtoImpl();
+            JsonObject json = jsonElem.getAsJsonObject();
 
-    @Override
-    public java.lang.String projectId() {
-      return projectId;
-    }
+            if (json.has("projectParticipants")) {
+                JsonElement projectParticipantsIn = json.get("projectParticipants");
+                java.util.ArrayList<ParticipantInfoImpl> projectParticipantsOut = null;
+                if (projectParticipantsIn != null && !projectParticipantsIn.isJsonNull()) {
+                    projectParticipantsOut = new java.util.ArrayList<ParticipantInfoImpl>();
+                    java.util.Iterator<JsonElement> projectParticipantsInIterator = projectParticipantsIn.getAsJsonArray().iterator();
+                    while (projectParticipantsInIterator.hasNext()) {
+                        JsonElement projectParticipantsIn_ = projectParticipantsInIterator.next();
+                        ParticipantInfoImpl projectParticipantsOut_ = ParticipantInfoImpl.fromJsonElement(projectParticipantsIn_);
+                        projectParticipantsOut.add(projectParticipantsOut_);
+                    }
+                }
+                dto.setProjectParticipants(projectParticipantsOut);
+            }
 
-    public ProjectClosedDtoImpl setProjectId(java.lang.String v) {
-      _hasProjectId = true;
-      projectId = v;
-      return this;
-    }
+            return dto;
+        }
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof ProjectClosedDtoImpl)) {
-        return false;
-      }
-      ProjectClosedDtoImpl other = (ProjectClosedDtoImpl) o;
-      if (this._hasProjectPath != other._hasProjectPath) {
-        return false;
-      }
-      if (this._hasProjectPath) {
-        if (!this.projectPath.equals(other.projectPath)) {
-          return false;
-        }
-      }
-      if (this._hasVfsId != other._hasVfsId) {
-        return false;
-      }
-      if (this._hasVfsId) {
-        if (!this.vfsId.equals(other.vfsId)) {
-          return false;
-        }
-      }
-      if (this._hasProjectId != other._hasProjectId) {
-        return false;
-      }
-      if (this._hasProjectId) {
-        if (!this.projectId.equals(other.projectId)) {
-          return false;
-        }
-      }
-      return true;
-    }
+        public static ProjectOpenedResponseDtoImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasProjectPath ? projectPath.hashCode() : 0);
-      hash = hash * 31 + (_hasVfsId ? vfsId.hashCode() : 0);
-      hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
-      return hash;
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
+    public static class ProjectOperationNotificationImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
+            implements com.codenvy.ide.collaboration.dto.ProjectOperationNotification, JsonSerializable {
 
-      JsonElement projectPathOut = (projectPath == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectPath);
-      result.add("projectPath", projectPathOut);
-
-      JsonElement vfsIdOut = (vfsId == null) ? JsonNull.INSTANCE : new JsonPrimitive(vfsId);
-      result.add("vfsId", vfsIdOut);
+        private ProjectOperationNotificationImpl() {
+            super(12);
+        }
 
-      JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
-      result.add("projectId", projectIdOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
+        protected ProjectOperationNotificationImpl(int type) {
+            super(type);
+        }
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+        public static ProjectOperationNotificationImpl make() {
+            return new ProjectOperationNotificationImpl();
+        }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+        protected java.lang.String clientId;
+        private   boolean          _hasClientId;
+        protected java.lang.String message;
+        private   boolean          _hasMessage;
+        protected java.lang.String projectId;
+        private   boolean          _hasProjectId;
 
-    public static ProjectClosedDtoImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      ProjectClosedDtoImpl dto = new ProjectClosedDtoImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("projectPath")) {
-        JsonElement projectPathIn = json.get("projectPath");
-        java.lang.String projectPathOut = gson.fromJson(projectPathIn, java.lang.String.class);
-        dto.setProjectPath(projectPathOut);
-      }
-
-      if (json.has("vfsId")) {
-        JsonElement vfsIdIn = json.get("vfsId");
-        java.lang.String vfsIdOut = gson.fromJson(vfsIdIn, java.lang.String.class);
-        dto.setVfsId(vfsIdOut);
-      }
-
-      if (json.has("projectId")) {
-        JsonElement projectIdIn = json.get("projectId");
-        java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
-        dto.setProjectId(projectIdOut);
-      }
-
-      return dto;
-    }
-    public static ProjectClosedDtoImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+        public boolean hasClientId() {
+            return _hasClientId;
+        }
 
-  public static class ProjectOpenedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.ProjectOpenedDto, JsonSerializable {
+        @Override
+        public java.lang.String clientId() {
+            return clientId;
+        }
 
-    private ProjectOpenedDtoImpl() {
-      super(1);
-    }
+        public ProjectOperationNotificationImpl setClientId(java.lang.String v) {
+            _hasClientId = true;
+            clientId = v;
+            return this;
+        }
 
-    protected ProjectOpenedDtoImpl(int type) {
-      super(type);
-    }
+        public boolean hasMessage() {
+            return _hasMessage;
+        }
 
-    protected java.lang.String projectPath;
-    private boolean _hasProjectPath;
-    protected java.lang.String vfsId;
-    private boolean _hasVfsId;
-    protected java.lang.String projectId;
-    private boolean _hasProjectId;
-
-    public boolean hasProjectPath() {
-      return _hasProjectPath;
-    }
+        @Override
+        public java.lang.String message() {
+            return message;
+        }
 
-    @Override
-    public java.lang.String projectPath() {
-      return projectPath;
-    }
+        public ProjectOperationNotificationImpl setMessage(java.lang.String v) {
+            _hasMessage = true;
+            message = v;
+            return this;
+        }
 
-    public ProjectOpenedDtoImpl setProjectPath(java.lang.String v) {
-      _hasProjectPath = true;
-      projectPath = v;
-      return this;
-    }
+        public boolean hasProjectId() {
+            return _hasProjectId;
+        }
 
-    public boolean hasVfsId() {
-      return _hasVfsId;
-    }
+        @Override
+        public java.lang.String projectId() {
+            return projectId;
+        }
 
-    @Override
-    public java.lang.String vfsId() {
-      return vfsId;
-    }
+        public ProjectOperationNotificationImpl setProjectId(java.lang.String v) {
+            _hasProjectId = true;
+            projectId = v;
+            return this;
+        }
 
-    public ProjectOpenedDtoImpl setVfsId(java.lang.String v) {
-      _hasVfsId = true;
-      vfsId = v;
-      return this;
-    }
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof ProjectOperationNotificationImpl)) {
+                return false;
+            }
+            ProjectOperationNotificationImpl other = (ProjectOperationNotificationImpl)o;
+            if (this._hasClientId != other._hasClientId) {
+                return false;
+            }
+            if (this._hasClientId) {
+                if (!this.clientId.equals(other.clientId)) {
+                    return false;
+                }
+            }
+            if (this._hasMessage != other._hasMessage) {
+                return false;
+            }
+            if (this._hasMessage) {
+                if (!this.message.equals(other.message)) {
+                    return false;
+                }
+            }
+            if (this._hasProjectId != other._hasProjectId) {
+                return false;
+            }
+            if (this._hasProjectId) {
+                if (!this.projectId.equals(other.projectId)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-    public boolean hasProjectId() {
-      return _hasProjectId;
-    }
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
+            hash = hash * 31 + (_hasMessage ? message.hashCode() : 0);
+            hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
+            return hash;
+        }
 
-    @Override
-    public java.lang.String projectId() {
-      return projectId;
-    }
+        @Override
+        public JsonElement toJsonElement() {
+            JsonObject result = new JsonObject();
 
-    public ProjectOpenedDtoImpl setProjectId(java.lang.String v) {
-      _hasProjectId = true;
-      projectId = v;
-      return this;
-    }
+            JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
+            result.add("clientId", clientIdOut);
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof ProjectOpenedDtoImpl)) {
-        return false;
-      }
-      ProjectOpenedDtoImpl other = (ProjectOpenedDtoImpl) o;
-      if (this._hasProjectPath != other._hasProjectPath) {
-        return false;
-      }
-      if (this._hasProjectPath) {
-        if (!this.projectPath.equals(other.projectPath)) {
-          return false;
-        }
-      }
-      if (this._hasVfsId != other._hasVfsId) {
-        return false;
-      }
-      if (this._hasVfsId) {
-        if (!this.vfsId.equals(other.vfsId)) {
-          return false;
-        }
-      }
-      if (this._hasProjectId != other._hasProjectId) {
-        return false;
-      }
-      if (this._hasProjectId) {
-        if (!this.projectId.equals(other.projectId)) {
-          return false;
-        }
-      }
-      return true;
-    }
+            JsonElement messageOut = (message == null) ? JsonNull.INSTANCE : new JsonPrimitive(message);
+            result.add("message", messageOut);
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasProjectPath ? projectPath.hashCode() : 0);
-      hash = hash * 31 + (_hasVfsId ? vfsId.hashCode() : 0);
-      hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
-      return hash;
-    }
+            JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
+            result.add("projectId", projectIdOut);
+            result.add("_type", new JsonPrimitive(getType()));
+            return result;
+        }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
 
-      JsonElement projectPathOut = (projectPath == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectPath);
-      result.add("projectPath", projectPathOut);
+        @Override
+        public String toString() {
+            return toJson();
+        }
 
-      JsonElement vfsIdOut = (vfsId == null) ? JsonNull.INSTANCE : new JsonPrimitive(vfsId);
-      result.add("vfsId", vfsIdOut);
+        public static ProjectOperationNotificationImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
 
-      JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
-      result.add("projectId", projectIdOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
+            ProjectOperationNotificationImpl dto = new ProjectOperationNotificationImpl();
+            JsonObject json = jsonElem.getAsJsonObject();
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+            if (json.has("clientId")) {
+                JsonElement clientIdIn = json.get("clientId");
+                java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
+                dto.setClientId(clientIdOut);
+            }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+            if (json.has("message")) {
+                JsonElement messageIn = json.get("message");
+                java.lang.String messageOut = gson.fromJson(messageIn, java.lang.String.class);
+                dto.setMessage(messageOut);
+            }
 
-    public static ProjectOpenedDtoImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      ProjectOpenedDtoImpl dto = new ProjectOpenedDtoImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("projectPath")) {
-        JsonElement projectPathIn = json.get("projectPath");
-        java.lang.String projectPathOut = gson.fromJson(projectPathIn, java.lang.String.class);
-        dto.setProjectPath(projectPathOut);
-      }
-
-      if (json.has("vfsId")) {
-        JsonElement vfsIdIn = json.get("vfsId");
-        java.lang.String vfsIdOut = gson.fromJson(vfsIdIn, java.lang.String.class);
-        dto.setVfsId(vfsIdOut);
-      }
-
-      if (json.has("projectId")) {
-        JsonElement projectIdIn = json.get("projectId");
-        java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
-        dto.setProjectId(projectIdOut);
-      }
-
-      return dto;
-    }
-    public static ProjectOpenedDtoImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+            if (json.has("projectId")) {
+                JsonElement projectIdIn = json.get("projectId");
+                java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
+                dto.setProjectId(projectIdOut);
+            }
 
-  public static class ProjectOperationNotificationImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.ProjectOperationNotification, JsonSerializable {
+            return dto;
+        }
 
-    private ProjectOperationNotificationImpl() {
-      super(14);
-    }
+        public static ProjectOperationNotificationImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
 
-    protected ProjectOperationNotificationImpl(int type) {
-      super(type);
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
 
-    public static ProjectOperationNotificationImpl make() {
-      return new ProjectOperationNotificationImpl();
-    }
+    public static class PropertyImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
+            implements com.codenvy.ide.collaboration.dto.Property, JsonSerializable {
 
-    protected java.lang.String clientId;
-    private boolean _hasClientId;
-    protected java.lang.String message;
-    private boolean _hasMessage;
-    protected java.lang.String projectId;
-    private boolean _hasProjectId;
-
-    public boolean hasClientId() {
-      return _hasClientId;
-    }
+        public static PropertyImpl make() {
+            return new PropertyImpl();
+        }
 
-    @Override
-    public java.lang.String clientId() {
-      return clientId;
-    }
+        protected java.lang.String                 name;
+        private   boolean                          _hasName;
+        protected java.util.List<java.lang.String> value;
+        private   boolean                          _hasValue;
 
-    public ProjectOperationNotificationImpl setClientId(java.lang.String v) {
-      _hasClientId = true;
-      clientId = v;
-      return this;
-    }
+        public boolean hasName() {
+            return _hasName;
+        }
 
-    public boolean hasMessage() {
-      return _hasMessage;
-    }
+        @Override
+        public java.lang.String getName() {
+            return name;
+        }
 
-    @Override
-    public java.lang.String message() {
-      return message;
-    }
+        public PropertyImpl setName(java.lang.String v) {
+            _hasName = true;
+            name = v;
+            return this;
+        }
 
-    public ProjectOperationNotificationImpl setMessage(java.lang.String v) {
-      _hasMessage = true;
-      message = v;
-      return this;
-    }
+        public boolean hasValue() {
+            return _hasValue;
+        }
 
-    public boolean hasProjectId() {
-      return _hasProjectId;
-    }
+        @Override
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getValue() {
+            ensureValue();
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(value);
+        }
 
-    @Override
-    public java.lang.String projectId() {
-      return projectId;
-    }
+        public PropertyImpl setValue(java.util.List<java.lang.String> v) {
+            _hasValue = true;
+            value = v;
+            return this;
+        }
 
-    public ProjectOperationNotificationImpl setProjectId(java.lang.String v) {
-      _hasProjectId = true;
-      projectId = v;
-      return this;
-    }
+        public void addValue(java.lang.String v) {
+            ensureValue();
+            value.add(v);
+        }
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof ProjectOperationNotificationImpl)) {
-        return false;
-      }
-      ProjectOperationNotificationImpl other = (ProjectOperationNotificationImpl) o;
-      if (this._hasClientId != other._hasClientId) {
-        return false;
-      }
-      if (this._hasClientId) {
-        if (!this.clientId.equals(other.clientId)) {
-          return false;
-        }
-      }
-      if (this._hasMessage != other._hasMessage) {
-        return false;
-      }
-      if (this._hasMessage) {
-        if (!this.message.equals(other.message)) {
-          return false;
-        }
-      }
-      if (this._hasProjectId != other._hasProjectId) {
-        return false;
-      }
-      if (this._hasProjectId) {
-        if (!this.projectId.equals(other.projectId)) {
-          return false;
-        }
-      }
-      return true;
-    }
+        public void clearValue() {
+            ensureValue();
+            value.clear();
+        }
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
-      hash = hash * 31 + (_hasMessage ? message.hashCode() : 0);
-      hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
-      return hash;
-    }
+        private void ensureValue() {
+            if (!_hasValue) {
+                setValue(value != null ? value : new java.util.ArrayList<java.lang.String>());
+            }
+        }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
+        @Override
+        public boolean equals(Object o) {
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (!(o instanceof PropertyImpl)) {
+                return false;
+            }
+            PropertyImpl other = (PropertyImpl)o;
+            if (this._hasName != other._hasName) {
+                return false;
+            }
+            if (this._hasName) {
+                if (!this.name.equals(other.name)) {
+                    return false;
+                }
+            }
+            if (this._hasValue != other._hasValue) {
+                return false;
+            }
+            if (this._hasValue) {
+                if (!this.value.equals(other.value)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-      JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
-      result.add("clientId", clientIdOut);
+        @Override
+        public int hashCode() {
+            int hash = super.hashCode();
+            hash = hash * 31 + (_hasName ? name.hashCode() : 0);
+            hash = hash * 31 + (_hasValue ? value.hashCode() : 0);
+            return hash;
+        }
 
-      JsonElement messageOut = (message == null) ? JsonNull.INSTANCE : new JsonPrimitive(message);
-      result.add("message", messageOut);
+        @Override
+        public JsonElement toJsonElement() {
+            JsonArray result = new JsonArray();
 
-      JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
-      result.add("projectId", projectIdOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
+            JsonElement nameOut = (name == null) ? JsonNull.INSTANCE : new JsonPrimitive(name);
+            result.add(nameOut);
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+            JsonArray valueOut = new JsonArray();
+            ensureValue();
+            for (java.lang.String value_ : value) {
+                JsonElement valueOut_ = (value_ == null) ? JsonNull.INSTANCE : new JsonPrimitive(value_);
+                valueOut.add(valueOut_);
+            }
+            if (valueOut.size() != 0) {
+                result.add(valueOut);
+            }
+            return result;
+        }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
 
-    public static ProjectOperationNotificationImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      ProjectOperationNotificationImpl dto = new ProjectOperationNotificationImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("clientId")) {
-        JsonElement clientIdIn = json.get("clientId");
-        java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
-        dto.setClientId(clientIdOut);
-      }
-
-      if (json.has("message")) {
-        JsonElement messageIn = json.get("message");
-        java.lang.String messageOut = gson.fromJson(messageIn, java.lang.String.class);
-        dto.setMessage(messageOut);
-      }
-
-      if (json.has("projectId")) {
-        JsonElement projectIdIn = json.get("projectId");
-        java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
-        dto.setProjectId(projectIdOut);
-      }
-
-      return dto;
-    }
-    public static ProjectOperationNotificationImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+        @Override
+        public String toString() {
+            return toJson();
+        }
 
-  public static class PropertyImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.Property, JsonSerializable {
+        public static PropertyImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
 
-    public static PropertyImpl make() {
-      return new PropertyImpl();
-    }
+            PropertyImpl dto = new PropertyImpl();
+            JsonArray json = jsonElem.getAsJsonArray();
 
-    protected java.lang.String name;
-    private boolean _hasName;
-    protected java.util.List<java.lang.String> value;
-    private boolean _hasValue;
+            if (0 < json.size()) {
+                JsonElement nameIn = json.get(0);
+                java.lang.String nameOut = gson.fromJson(nameIn, java.lang.String.class);
+                dto.setName(nameOut);
+            }
 
-    public boolean hasName() {
-      return _hasName;
-    }
+            if (1 < json.size()) {
+                JsonElement valueIn = json.get(1);
+                java.util.ArrayList<java.lang.String> valueOut = null;
+                if (valueIn != null && !valueIn.isJsonNull()) {
+                    valueOut = new java.util.ArrayList<java.lang.String>();
+                    java.util.Iterator<JsonElement> valueInIterator = valueIn.getAsJsonArray().iterator();
+                    while (valueInIterator.hasNext()) {
+                        JsonElement valueIn_ = valueInIterator.next();
+                        java.lang.String valueOut_ = gson.fromJson(valueIn_, java.lang.String.class);
+                        valueOut.add(valueOut_);
+                    }
+                }
+                dto.setValue(valueOut);
+            }
 
-    @Override
-    public java.lang.String getName() {
-      return name;
-    }
+            return dto;
+        }
 
-    public PropertyImpl setName(java.lang.String v) {
-      _hasName = true;
-      name = v;
-      return this;
-    }
+        public static PropertyImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
 
-    public boolean hasValue() {
-      return _hasValue;
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
 
-    @Override
-    public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getValue() {
-      ensureValue();
-      return (com.codenvy.ide.json.shared.JsonArray) new com.codenvy.ide.json.server.JsonArrayListAdapter(value);
-    }
+    public static class UserDetailsImpl implements com.codenvy.ide.collaboration.dto.UserDetails, JsonSerializable {
 
-    public PropertyImpl setValue(java.util.List<java.lang.String> v) {
-      _hasValue = true;
-      value = v;
-      return this;
-    }
+        public static UserDetailsImpl make() {
+            return new UserDetailsImpl();
+        }
 
-    public void addValue(java.lang.String v) {
-      ensureValue();
-      value.add(v);
-    }
+        protected java.lang.String givenName;
+        private   boolean          _hasGivenName;
+        protected java.lang.String displayEmail;
+        private   boolean          _hasDisplayEmail;
+        protected java.lang.String portraitUrl;
+        private   boolean          _hasPortraitUrl;
+        protected boolean          isCurrentUser;
+        private   boolean          _hasIsCurrentUser;
+        protected java.lang.String displayName;
+        private   boolean          _hasDisplayName;
+        protected java.lang.String userId;
+        private   boolean          _hasUserId;
 
-    public void clearValue() {
-      ensureValue();
-      value.clear();
-    }
+        public boolean hasGivenName() {
+            return _hasGivenName;
+        }
 
-    private void ensureValue() {
-      if (!_hasValue) {
-        setValue(value != null ? value : new java.util.ArrayList<java.lang.String>());
-      }
-    }
+        @Override
+        public java.lang.String getGivenName() {
+            return givenName;
+        }
 
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof PropertyImpl)) {
-        return false;
-      }
-      PropertyImpl other = (PropertyImpl) o;
-      if (this._hasName != other._hasName) {
-        return false;
-      }
-      if (this._hasName) {
-        if (!this.name.equals(other.name)) {
-          return false;
-        }
-      }
-      if (this._hasValue != other._hasValue) {
-        return false;
-      }
-      if (this._hasValue) {
-        if (!this.value.equals(other.value)) {
-          return false;
-        }
-      }
-      return true;
-    }
+        public UserDetailsImpl setGivenName(java.lang.String v) {
+            _hasGivenName = true;
+            givenName = v;
+            return this;
+        }
 
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasName ? name.hashCode() : 0);
-      hash = hash * 31 + (_hasValue ? value.hashCode() : 0);
-      return hash;
-    }
+        public boolean hasDisplayEmail() {
+            return _hasDisplayEmail;
+        }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonArray result = new JsonArray();
-
-      JsonElement nameOut = (name == null) ? JsonNull.INSTANCE : new JsonPrimitive(name);
-      result.add(nameOut);
-
-      JsonArray valueOut = new JsonArray();
-      ensureValue();
-      for (java.lang.String value_ : value) {
-        JsonElement valueOut_ = (value_ == null) ? JsonNull.INSTANCE : new JsonPrimitive(value_);
-        valueOut.add(valueOut_);
-      }
-      if (valueOut.size() != 0) {
-        result.add(valueOut);
-      }
-      return result;
-    }
+        @Override
+        public java.lang.String getDisplayEmail() {
+            return displayEmail;
+        }
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+        public UserDetailsImpl setDisplayEmail(java.lang.String v) {
+            _hasDisplayEmail = true;
+            displayEmail = v;
+            return this;
+        }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+        public boolean hasPortraitUrl() {
+            return _hasPortraitUrl;
+        }
 
-    public static PropertyImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      PropertyImpl dto = new PropertyImpl();
-      JsonArray json = jsonElem.getAsJsonArray();
-
-      if (0 < json.size()) {
-        JsonElement nameIn = json.get(0);
-        java.lang.String nameOut = gson.fromJson(nameIn, java.lang.String.class);
-        dto.setName(nameOut);
-      }
-
-      if (1 < json.size()) {
-        JsonElement valueIn = json.get(1);
-        java.util.ArrayList<java.lang.String> valueOut = null;
-        if (valueIn != null && !valueIn.isJsonNull()) {
-          valueOut = new java.util.ArrayList<java.lang.String>();
-          java.util.Iterator<JsonElement> valueInIterator = valueIn.getAsJsonArray().iterator();
-          while (valueInIterator.hasNext()) {
-            JsonElement valueIn_ = valueInIterator.next();
-            java.lang.String valueOut_ = gson.fromJson(valueIn_, java.lang.String.class);
-            valueOut.add(valueOut_);
-          }
-        }
-        dto.setValue(valueOut);
-      }
-
-      return dto;
-    }
-    public static PropertyImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+        @Override
+        public java.lang.String getPortraitUrl() {
+            return portraitUrl;
+        }
 
-  public static class UserDetailsImpl implements com.codenvy.ide.collaboration.dto.UserDetails, JsonSerializable {
+        public UserDetailsImpl setPortraitUrl(java.lang.String v) {
+            _hasPortraitUrl = true;
+            portraitUrl = v;
+            return this;
+        }
 
-    public static UserDetailsImpl make() {
-      return new UserDetailsImpl();
-    }
+        public boolean hasIsCurrentUser() {
+            return _hasIsCurrentUser;
+        }
 
-    protected java.lang.String givenName;
-    private boolean _hasGivenName;
-    protected java.lang.String displayEmail;
-    private boolean _hasDisplayEmail;
-    protected java.lang.String portraitUrl;
-    private boolean _hasPortraitUrl;
-    protected boolean isCurrentUser;
-    private boolean _hasIsCurrentUser;
-    protected java.lang.String displayName;
-    private boolean _hasDisplayName;
-    protected java.lang.String userId;
-    private boolean _hasUserId;
-
-    public boolean hasGivenName() {
-      return _hasGivenName;
-    }
+        @Override
+        public boolean isCurrentUser() {
+            return isCurrentUser;
+        }
 
-    @Override
-    public java.lang.String getGivenName() {
-      return givenName;
-    }
+        public UserDetailsImpl setIsCurrentUser(boolean v) {
+            _hasIsCurrentUser = true;
+            isCurrentUser = v;
+            return this;
+        }
 
-    public UserDetailsImpl setGivenName(java.lang.String v) {
-      _hasGivenName = true;
-      givenName = v;
-      return this;
-    }
+        public boolean hasDisplayName() {
+            return _hasDisplayName;
+        }
 
-    public boolean hasDisplayEmail() {
-      return _hasDisplayEmail;
-    }
+        @Override
+        public java.lang.String getDisplayName() {
+            return displayName;
+        }
 
-    @Override
-    public java.lang.String getDisplayEmail() {
-      return displayEmail;
-    }
+        public UserDetailsImpl setDisplayName(java.lang.String v) {
+            _hasDisplayName = true;
+            displayName = v;
+            return this;
+        }
 
-    public UserDetailsImpl setDisplayEmail(java.lang.String v) {
-      _hasDisplayEmail = true;
-      displayEmail = v;
-      return this;
-    }
+        public boolean hasUserId() {
+            return _hasUserId;
+        }
 
-    public boolean hasPortraitUrl() {
-      return _hasPortraitUrl;
-    }
+        @Override
+        public java.lang.String getUserId() {
+            return userId;
+        }
 
-    @Override
-    public java.lang.String getPortraitUrl() {
-      return portraitUrl;
-    }
+        public UserDetailsImpl setUserId(java.lang.String v) {
+            _hasUserId = true;
+            userId = v;
+            return this;
+        }
 
-    public UserDetailsImpl setPortraitUrl(java.lang.String v) {
-      _hasPortraitUrl = true;
-      portraitUrl = v;
-      return this;
-    }
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof UserDetailsImpl)) {
+                return false;
+            }
+            UserDetailsImpl other = (UserDetailsImpl)o;
+            if (this._hasGivenName != other._hasGivenName) {
+                return false;
+            }
+            if (this._hasGivenName) {
+                if (!this.givenName.equals(other.givenName)) {
+                    return false;
+                }
+            }
+            if (this._hasDisplayEmail != other._hasDisplayEmail) {
+                return false;
+            }
+            if (this._hasDisplayEmail) {
+                if (!this.displayEmail.equals(other.displayEmail)) {
+                    return false;
+                }
+            }
+            if (this._hasPortraitUrl != other._hasPortraitUrl) {
+                return false;
+            }
+            if (this._hasPortraitUrl) {
+                if (!this.portraitUrl.equals(other.portraitUrl)) {
+                    return false;
+                }
+            }
+            if (this._hasIsCurrentUser != other._hasIsCurrentUser) {
+                return false;
+            }
+            if (this._hasIsCurrentUser) {
+                if (this.isCurrentUser != other.isCurrentUser) {
+                    return false;
+                }
+            }
+            if (this._hasDisplayName != other._hasDisplayName) {
+                return false;
+            }
+            if (this._hasDisplayName) {
+                if (!this.displayName.equals(other.displayName)) {
+                    return false;
+                }
+            }
+            if (this._hasUserId != other._hasUserId) {
+                return false;
+            }
+            if (this._hasUserId) {
+                if (!this.userId.equals(other.userId)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-    public boolean hasIsCurrentUser() {
-      return _hasIsCurrentUser;
-    }
+        @Override
+        public int hashCode() {
+            int hash = 1;
+            hash = hash * 31 + (_hasGivenName ? givenName.hashCode() : 0);
+            hash = hash * 31 + (_hasDisplayEmail ? displayEmail.hashCode() : 0);
+            hash = hash * 31 + (_hasPortraitUrl ? portraitUrl.hashCode() : 0);
+            hash = hash * 31 + (_hasIsCurrentUser ? java.lang.Boolean.valueOf(isCurrentUser).hashCode() : 0);
+            hash = hash * 31 + (_hasDisplayName ? displayName.hashCode() : 0);
+            hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
+            return hash;
+        }
 
-    @Override
-    public boolean isCurrentUser() {
-      return isCurrentUser;
-    }
+        @Override
+        public JsonElement toJsonElement() {
+            JsonObject result = new JsonObject();
 
-    public UserDetailsImpl setIsCurrentUser(boolean v) {
-      _hasIsCurrentUser = true;
-      isCurrentUser = v;
-      return this;
-    }
+            JsonElement givenNameOut = (givenName == null) ? JsonNull.INSTANCE : new JsonPrimitive(givenName);
+            result.add("givenName", givenNameOut);
 
-    public boolean hasDisplayName() {
-      return _hasDisplayName;
-    }
+            JsonElement displayEmailOut = (displayEmail == null) ? JsonNull.INSTANCE : new JsonPrimitive(displayEmail);
+            result.add("displayEmail", displayEmailOut);
 
-    @Override
-    public java.lang.String getDisplayName() {
-      return displayName;
-    }
+            JsonElement portraitUrlOut = (portraitUrl == null) ? JsonNull.INSTANCE : new JsonPrimitive(portraitUrl);
+            result.add("portraitUrl", portraitUrlOut);
 
-    public UserDetailsImpl setDisplayName(java.lang.String v) {
-      _hasDisplayName = true;
-      displayName = v;
-      return this;
-    }
+            JsonPrimitive isCurrentUserOut = new JsonPrimitive(isCurrentUser);
+            result.add("isCurrentUser", isCurrentUserOut);
 
-    public boolean hasUserId() {
-      return _hasUserId;
-    }
+            JsonElement displayNameOut = (displayName == null) ? JsonNull.INSTANCE : new JsonPrimitive(displayName);
+            result.add("displayName", displayNameOut);
 
-    @Override
-    public java.lang.String getUserId() {
-      return userId;
-    }
+            JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
+            result.add("userId", userIdOut);
+            return result;
+        }
 
-    public UserDetailsImpl setUserId(java.lang.String v) {
-      _hasUserId = true;
-      userId = v;
-      return this;
-    }
+        @Override
+        public String toJson() {
+            return gson.toJson(toJsonElement());
+        }
 
-    @Override
-    public boolean equals(Object o) {
-      if (!(o instanceof UserDetailsImpl)) {
-        return false;
-      }
-      UserDetailsImpl other = (UserDetailsImpl) o;
-      if (this._hasGivenName != other._hasGivenName) {
-        return false;
-      }
-      if (this._hasGivenName) {
-        if (!this.givenName.equals(other.givenName)) {
-          return false;
-        }
-      }
-      if (this._hasDisplayEmail != other._hasDisplayEmail) {
-        return false;
-      }
-      if (this._hasDisplayEmail) {
-        if (!this.displayEmail.equals(other.displayEmail)) {
-          return false;
-        }
-      }
-      if (this._hasPortraitUrl != other._hasPortraitUrl) {
-        return false;
-      }
-      if (this._hasPortraitUrl) {
-        if (!this.portraitUrl.equals(other.portraitUrl)) {
-          return false;
-        }
-      }
-      if (this._hasIsCurrentUser != other._hasIsCurrentUser) {
-        return false;
-      }
-      if (this._hasIsCurrentUser) {
-        if (this.isCurrentUser != other.isCurrentUser) {
-          return false;
-        }
-      }
-      if (this._hasDisplayName != other._hasDisplayName) {
-        return false;
-      }
-      if (this._hasDisplayName) {
-        if (!this.displayName.equals(other.displayName)) {
-          return false;
-        }
-      }
-      if (this._hasUserId != other._hasUserId) {
-        return false;
-      }
-      if (this._hasUserId) {
-        if (!this.userId.equals(other.userId)) {
-          return false;
-        }
-      }
-      return true;
-    }
+        @Override
+        public String toString() {
+            return toJson();
+        }
 
-    @Override
-    public int hashCode() {
-      int hash = 1;
-      hash = hash * 31 + (_hasGivenName ? givenName.hashCode() : 0);
-      hash = hash * 31 + (_hasDisplayEmail ? displayEmail.hashCode() : 0);
-      hash = hash * 31 + (_hasPortraitUrl ? portraitUrl.hashCode() : 0);
-      hash = hash * 31 + (_hasIsCurrentUser ? java.lang.Boolean.valueOf(isCurrentUser).hashCode() : 0);
-      hash = hash * 31 + (_hasDisplayName ? displayName.hashCode() : 0);
-      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
-      return hash;
-    }
+        public static UserDetailsImpl fromJsonElement(JsonElement jsonElem) {
+            if (jsonElem == null || jsonElem.isJsonNull()) {
+                return null;
+            }
 
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
+            UserDetailsImpl dto = new UserDetailsImpl();
+            JsonObject json = jsonElem.getAsJsonObject();
 
-      JsonElement givenNameOut = (givenName == null) ? JsonNull.INSTANCE : new JsonPrimitive(givenName);
-      result.add("givenName", givenNameOut);
+            if (json.has("givenName")) {
+                JsonElement givenNameIn = json.get("givenName");
+                java.lang.String givenNameOut = gson.fromJson(givenNameIn, java.lang.String.class);
+                dto.setGivenName(givenNameOut);
+            }
 
-      JsonElement displayEmailOut = (displayEmail == null) ? JsonNull.INSTANCE : new JsonPrimitive(displayEmail);
-      result.add("displayEmail", displayEmailOut);
+            if (json.has("displayEmail")) {
+                JsonElement displayEmailIn = json.get("displayEmail");
+                java.lang.String displayEmailOut = gson.fromJson(displayEmailIn, java.lang.String.class);
+                dto.setDisplayEmail(displayEmailOut);
+            }
 
-      JsonElement portraitUrlOut = (portraitUrl == null) ? JsonNull.INSTANCE : new JsonPrimitive(portraitUrl);
-      result.add("portraitUrl", portraitUrlOut);
+            if (json.has("portraitUrl")) {
+                JsonElement portraitUrlIn = json.get("portraitUrl");
+                java.lang.String portraitUrlOut = gson.fromJson(portraitUrlIn, java.lang.String.class);
+                dto.setPortraitUrl(portraitUrlOut);
+            }
 
-      JsonPrimitive isCurrentUserOut = new JsonPrimitive(isCurrentUser);
-      result.add("isCurrentUser", isCurrentUserOut);
+            if (json.has("isCurrentUser")) {
+                JsonElement isCurrentUserIn = json.get("isCurrentUser");
+                boolean isCurrentUserOut = isCurrentUserIn.getAsBoolean();
+                dto.setIsCurrentUser(isCurrentUserOut);
+            }
 
-      JsonElement displayNameOut = (displayName == null) ? JsonNull.INSTANCE : new JsonPrimitive(displayName);
-      result.add("displayName", displayNameOut);
+            if (json.has("displayName")) {
+                JsonElement displayNameIn = json.get("displayName");
+                java.lang.String displayNameOut = gson.fromJson(displayNameIn, java.lang.String.class);
+                dto.setDisplayName(displayNameOut);
+            }
 
-      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
-      result.add("userId", userIdOut);
-      return result;
-    }
+            if (json.has("userId")) {
+                JsonElement userIdIn = json.get("userId");
+                java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
+                dto.setUserId(userIdOut);
+            }
 
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
+            return dto;
+        }
 
-    @Override
-    public String toString() {
-      return toJson();
-    }
+        public static UserDetailsImpl fromJsonString(String jsonString) {
+            if (jsonString == null) {
+                return null;
+            }
 
-    public static UserDetailsImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      UserDetailsImpl dto = new UserDetailsImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("givenName")) {
-        JsonElement givenNameIn = json.get("givenName");
-        java.lang.String givenNameOut = gson.fromJson(givenNameIn, java.lang.String.class);
-        dto.setGivenName(givenNameOut);
-      }
-
-      if (json.has("displayEmail")) {
-        JsonElement displayEmailIn = json.get("displayEmail");
-        java.lang.String displayEmailOut = gson.fromJson(displayEmailIn, java.lang.String.class);
-        dto.setDisplayEmail(displayEmailOut);
-      }
-
-      if (json.has("portraitUrl")) {
-        JsonElement portraitUrlIn = json.get("portraitUrl");
-        java.lang.String portraitUrlOut = gson.fromJson(portraitUrlIn, java.lang.String.class);
-        dto.setPortraitUrl(portraitUrlOut);
-      }
-
-      if (json.has("isCurrentUser")) {
-        JsonElement isCurrentUserIn = json.get("isCurrentUser");
-        boolean isCurrentUserOut = isCurrentUserIn.getAsBoolean();
-        dto.setIsCurrentUser(isCurrentUserOut);
-      }
-
-      if (json.has("displayName")) {
-        JsonElement displayNameIn = json.get("displayName");
-        java.lang.String displayNameOut = gson.fromJson(displayNameIn, java.lang.String.class);
-        dto.setDisplayName(displayNameOut);
-      }
-
-      if (json.has("userId")) {
-        JsonElement userIdIn = json.get("userId");
-        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
-        dto.setUserId(userIdOut);
-      }
-
-      return dto;
-    }
-    public static UserDetailsImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
+            return fromJsonElement(new JsonParser().parse(jsonString));
+        }
     }
-  }
 
 }
