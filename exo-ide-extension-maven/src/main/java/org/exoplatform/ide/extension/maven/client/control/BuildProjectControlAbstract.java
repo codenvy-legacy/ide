@@ -79,7 +79,8 @@ public abstract class BuildProjectControlAbstract extends SimpleControl implemen
                || ProjectResolver.SPRING.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
                || ProjectType.JSP.value().equals(projectType) || ProjectType.WAR.value().equals(projectType)
                || ProjectType.JAR.value().equals(projectType)
-               || ProjectType.MultiModule.value().equals(projectType);
+               || ProjectType.MultiModule.value().equals(projectType)
+               || ProjectType.ANDROID.value().equals(projectType);
     }
 
 }
