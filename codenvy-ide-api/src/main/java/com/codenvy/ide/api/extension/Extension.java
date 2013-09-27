@@ -27,7 +27,10 @@ public @interface Extension {
     /** @return Extension version */
     String version();
 
-    /** @return Extension brief description */
+    /** @return Extension title */
     String title();
+
+    /** @return Extension brief description */
+    String description() default "";
 
 }

@@ -21,7 +21,7 @@
         "http://google-web-toolkit.googlecode.com/svn/tags/2.4.0/distro-source/core/src/gwt-module.dtd">
 <module>
     <!-- Generator that builds ExtensionManager from ExtensionDefinition annotations. -->
-    <generate-with class="com.codenvy.ide.extension.ExtensionRegistryGenerator">
+    <generate-with class="com.codenvy.util.ExtensionRegistryGenerator">
         <when-type-assignable class="com.codenvy.ide.extension.ExtensionRegistry"/>
     </generate-with>
 
