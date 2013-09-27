@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package com.codenvy.ide.factory.client.greeting;
 
@@ -46,15 +45,18 @@ import org.exoplatform.gwtframework.ui.client.command.ui.UniButton;
 import org.exoplatform.gwtframework.ui.client.command.ui.UniButton.Size;
 import org.exoplatform.gwtframework.ui.client.command.ui.UniButton.Type;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEInitialConfiguration;
 import org.exoplatform.ide.client.framework.configuration.InitialConfigurationReceivedEvent;
 import org.exoplatform.ide.client.framework.configuration.InitialConfigurationReceivedHandler;
+import org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent;
+import org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -67,8 +69,7 @@ import java.util.List;
  * @version $
  */
 public class GreetingUserPresenter implements 
-        InitialConfigurationReceivedHandler,
-        InitializeServicesHandler {
+        InitialConfigurationReceivedHandler, ProjectOpenedHandler, IDELoadCompleteHandler {
 
     public interface GreetingDisplay extends IsView {
     }
@@ -77,13 +78,21 @@ public class GreetingUserPresenter implements
      * Initial IDE configuration
      */
     private IDEInitialConfiguration initialConfiguration;
+    
+    /**
+     * Current opened project
+     */
+    private ProjectModel project;
+    
+    private boolean welcomeOnceAppeared = false;
 
     /**
      * Creates presenter instance
      */
     public GreetingUserPresenter() {
         IDE.addHandler(InitialConfigurationReceivedEvent.TYPE, this);
-        IDE.addHandler(InitializeServicesEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(IDELoadCompleteEvent.TYPE, this);
     }
 
     /**
@@ -102,21 +111,11 @@ public class GreetingUserPresenter implements
      */
     public static native String getGreetingPanelContentURL(String key) /*-{
         try {
-            return $wnd.greetingPaneContent[key];
+            return $wnd.GREETING_PANE_CONTENT[key];
         } catch (err) {
             return null;
         }
     }-*/;
-    
-    @Override
-    public void onInitializeServices(InitializeServicesEvent event) {
-        new Timer() {
-            @Override
-            public void run() {
-                loadGreeting();
-            }
-        }.schedule(1500);
-    }
     
     private void goToURL(String path) {
         UrlBuilder builder = new UrlBuilder();
@@ -167,7 +166,7 @@ public class GreetingUserPresenter implements
                         for (String projectId : projectIds) {
                             projectIDS.append(projectId).append(';');
                         }
-                        goToURL("/create-account?" + CopySpec10.DOWNLOAD_URL + "=" + projectsDownloadUrl + "&" + CopySpec10.PROJECT_ID + "=" + projectIDS.toString());
+                        goToURL("/site/create-account?" + CopySpec10.DOWNLOAD_URL + "=" + projectsDownloadUrl + "&" + CopySpec10.PROJECT_ID + "=" + projectIDS.toString());
                     }
                 }
                 
@@ -204,9 +203,12 @@ public class GreetingUserPresenter implements
     }
     
     /**
+     * Returns URL to the greeting page.
      * 
+     * @param projectSpecified
+     * @return
      */
-    private void loadGreeting() {
+    private String getGreetingPageURL() {
         String key = "anonymous";
 
         boolean workspaceTemporary = initialConfiguration.getCurrentWorkspace() == null ? false 
@@ -227,13 +229,43 @@ public class GreetingUserPresenter implements
                 key = "authenticated";
             }
         }
+
+        if (project != null) {
+            String projectType = project.getProjectType().toLowerCase();
+            while (projectType.indexOf("/") >= 0) {
+                projectType = projectType.replace('/', '-');
+            }
+
+            while (projectType.indexOf(" ") >= 0) {
+                projectType = projectType.replace(' ', '-');
+            }
+
+            String url = getGreetingPanelContentURL(key + "-" + projectType);
+            if (url != null && !url.trim().isEmpty()) {
+                return url;
+            }
+        }
         
         final String greetingContentURL = getGreetingPanelContentURL(key);
         if (greetingContentURL == null || greetingContentURL.trim().isEmpty()) {
+            return null;
+        }
+        
+        return greetingContentURL;
+    }
+    
+    /**
+     * 
+     */
+    private void loadGreeting() {
+        welcomeOnceAppeared = true;
+        
+        final String greetingPageURL = getGreetingPageURL();
+        if (greetingPageURL == null) {
             return;
         }
         
-        final Frame frame = new Frame(greetingContentURL);
+        final Frame frame = new Frame(greetingPageURL);
         Style style = frame.getElement().getStyle();
         
         style.setPosition(Position.ABSOLUTE);
@@ -246,12 +278,28 @@ public class GreetingUserPresenter implements
         frame.addLoadHandler(new LoadHandler() {
             @Override
             public void onLoad(LoadEvent event) {
-                fetchGreetingParamsFromIFrame(IFrameElement.as(frame.getElement()), greetingContentURL);
+                fetchGreetingParamsFromIFrame(IFrameElement.as(frame.getElement()), greetingPageURL);
                 frame.removeFromParent();
             }
         });
         
         RootPanel.get().add(frame);
+    }
+    
+    private Timer scheduleGreetingTimer = new Timer() {
+        @Override
+        public void run() {
+            loadGreeting();
+        }
+    };
+    
+    private void scheduleLoadGreeting() {
+        if (welcomeOnceAppeared) {
+            return;
+        }
+        
+        scheduleGreetingTimer.cancel();
+        scheduleGreetingTimer.schedule(1500);
     }
     
     private native void fetchGreetingParamsFromIFrame(Element element, String greetingContentURL)/*-{
@@ -320,6 +368,17 @@ public class GreetingUserPresenter implements
     
     private void loadGreetingError(String message) {
         Dialogs.getInstance().showError("IDE", "Could not load greeting page");
+    }
+
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        project = event.getProject();
+        scheduleLoadGreeting();
+    }
+
+    @Override
+    public void onIDELoadComplete(IDELoadCompleteEvent event) {
+        scheduleLoadGreeting();
     }
     
 }

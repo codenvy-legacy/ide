@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.git.client.pull;
 
@@ -27,106 +26,126 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Presenter of the view for pulling changes from remote repository. View must be pointed in Views.gwt.xml.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 4:20:24 PM anya $
  */
-public class PullPresenter extends HasBranchesPresenter implements PullHandler {
+public class PullPresenter extends HasBranchesPresenter implements PullHandler, EditorFileOpenedHandler, EditorFileClosedHandler {
 
     interface Display extends IsView {
         /**
          * Get pull button's click handler.
-         * 
+         *
          * @return {@link HasClickHandlers} click handler
          */
         HasClickHandlers getPullButton();
 
         /**
          * Get cancel button's click handler.
-         * 
+         *
          * @return {@link HasClickHandlers} click handler
          */
         HasClickHandlers getCancelButton();
 
         /**
          * Get remote repository field.
-         * 
+         *
          * @return {@link HasValue}
          */
         HasValue<String> getRemoteName();
 
         /**
          * Get remote branches field.
-         * 
+         *
          * @return {@link HasValue}
          */
         HasValue<String> getRemoteBranches();
 
         /**
          * Get local branches field.
-         * 
+         *
          * @return {@link HasValue}
          */
         HasValue<String> getLocalBranches();
 
         /**
          * Set values of remote repository branches.
-         * 
-         * @param values values to set
+         *
+         * @param values
+         *         values to set
          */
         void setRemoteBranches(String[] values);
 
         /**
          * Set values of local repository branches.
-         * 
-         * @param values values to set
+         *
+         * @param values
+         *         values to set
          */
         void setLocalBranches(String[] values);
 
         /**
          * Change the enable state of the pull button.
-         * 
-         * @param enable enable state
+         *
+         * @param enable
+         *         enable state
          */
         void enablePullButton(boolean enable);
 
         /**
          * Set values of remote repositories.
-         * 
-         * @param values values to set
+         *
+         * @param values
+         *         values to set
          */
         void setRemoteValues(LinkedHashMap<String, String> values);
 
         /**
          * Get the display name of the remote repository.
-         * 
+         *
          * @return String display name of the remote repository
          */
         String getRemoteDisplayValue();
     }
 
     private Display display;
+    private       Map<FileModel, Editor> openedEditor   = new LinkedHashMap<FileModel, Editor>();
+    private final String                 MERGE_CONFLICT = "Merge conflict appeared in files";
 
     public void bindDisplay(Display d) {
         this.display = d;
@@ -170,6 +189,8 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
      */
     public PullPresenter() {
         IDE.addHandler(PullEvent.TYPE, this);
+        IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+        IDE.addHandler(EditorFileClosedEvent.TYPE, this);
     }
 
     /** @see org.exoplatform.ide.git.client.pull.PullHandler#onPull(org.exoplatform.ide.git.client.pull.PullEvent) */
@@ -228,7 +249,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
     private void doPull() {
         String remoteName = display.getRemoteDisplayValue();
         final String remoteUrl = display.getRemoteName().getValue();
-        ProjectModel project = getSelectedProject();
+        final ProjectModel project = getSelectedProject();
         IDE.getInstance().closeView(display.asView().getId());
 
         try {
@@ -237,13 +258,14 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
                                                       @Override
                                                       protected void onSuccess(String result) {
                                                           IDE.fireEvent(
-                                                             new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
+                                                                  new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
                                                           IDE.fireEvent(new RefreshBrowserEvent());
                                                       }
 
                                                       @Override
                                                       protected void onFailure(Throwable exception) {
                                                           handleError(exception, remoteUrl);
+                                                          parsePullExceptionMessage(exception.getMessage(), project, remoteUrl);
                                                       }
                                                   });
         } catch (WebSocketException e) {
@@ -255,20 +277,21 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
      * Perform pull from pointed by user remote repository, from pointed remote branch to local one. Local branch may not be pointed. Sends
      * request over HTTP.
      */
-    private void doPullREST(ProjectModel project, final String remoteUrl, String remoteName) {
+    private void doPullREST(final ProjectModel project, final String remoteUrl, String remoteName) {
         try {
             GitClientService.getInstance().pull(vfs.getId(), project, getRefs(), remoteName,
                                                 new AsyncRequestCallback<String>() {
                                                     @Override
                                                     protected void onSuccess(String result) {
                                                         IDE.fireEvent(
-                                                           new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
+                                                                new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
                                                         IDE.fireEvent(new RefreshBrowserEvent());
                                                     }
 
                                                     @Override
                                                     protected void onFailure(Throwable exception) {
                                                         handleError(exception, remoteUrl);
+                                                        parsePullExceptionMessage(exception.getMessage(), project, remoteUrl);
                                                     }
                                                 });
         } catch (RequestException e) {
@@ -276,9 +299,62 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
         }
     }
 
+    /** Set conflict icons and update content for files with conflicts if exception includes merge conflict message. */
+    private void parsePullExceptionMessage(String exceptionMessage, ProjectModel project, String remoteUrl) {
+        if (exceptionMessage != null &&
+            exceptionMessage.contains(MERGE_CONFLICT)) {
+            IDE.fireEvent(new TreeRefreshedEvent(project));
+            updateOpenedFiles(exceptionMessage, remoteUrl);
+        }
+    }
+
+    /** Get path for files with merge conflicts and update his content if it is opened. */
+    private void updateOpenedFiles(String exceptionMessage, final String remoteUrl) {
+        String[] filesWithConflicts = exceptionMessage.split("</br>");
+        for (int i = 1; i < filesWithConflicts.length - 1; i++) {
+            Iterator<FileModel> iterator = openedEditor.keySet().iterator();
+            while (iterator.hasNext()) {
+                final FileModel openedFile = iterator.next();
+                if (openedFile.getPath().contains(filesWithConflicts[i])) {
+                    updateFileContent(openedFile, remoteUrl);
+                }
+            }
+        }
+    }
+
+    /** Update content of a file. */
+    private void updateFileContent(final FileModel openedFile, final String remoteUrl) {
+        try {
+            VirtualFileSystem.getInstance().getContent(
+                    new AsyncRequestCallback<FileModel>(
+                            new FileContentUnmarshaller(openedFile)) {
+                        @Override
+                        protected void onSuccess(FileModel result) {
+                            IDocument document =
+                                    openedEditor.get(openedFile)
+                                                .getDocument();
+                            try {
+                                document.replace(0,
+                                                 document.getLength(),
+                                                 result.getContent());
+                            } catch (BadLocationException e) {
+                                handleError(e, remoteUrl);
+                            }
+                        }
+
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            handleError(exception, remoteUrl);
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
     /**
      * Returns list of refs to fetch.
-     * 
+     *
      * @return list of refs to fetch
      */
     private String getRefs() {
@@ -287,9 +363,9 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
         String remoteBranch = display.getRemoteBranches().getValue();
         // Form the refspec. User points only the branch names:
         String refs =
-                      (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
-                                                                                          + "refs/remotes/" + remoteName + "/"
-                                                                                          + remoteBranch;
+                (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
+                                                                                    + "refs/remotes/" + remoteName + "/"
+                                                                                    + remoteBranch;
         return refs;
     }
 
@@ -298,4 +374,15 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
     }
 
+    @Override
+    public void onEditorFileOpened(EditorFileOpenedEvent event) {
+        openedEditor.put(event.getFile(), event.getEditor());
+    }
+
+    @Override
+    public void onEditorFileClosed(EditorFileClosedEvent event) {
+        if (openedEditor.containsKey(event.getFile())) {
+            openedEditor.remove(event.getFile());
+        }
+    }
 }

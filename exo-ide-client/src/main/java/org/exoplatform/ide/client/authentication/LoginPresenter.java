@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.client.authentication;
 
@@ -48,8 +47,6 @@ import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandl
 import org.exoplatform.ide.client.framework.util.Utils;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -59,7 +56,7 @@ import org.exoplatform.ide.client.framework.util.Utils;
  * @version $Id: exo-jboss-codetemplates.xml 34360 2009-07-22 23:58:59Z aheritier $
  */
 public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler, InitializeServicesHandler,
-                           UserInfoReceivedHandler {
+                                       UserInfoReceivedHandler {
 
     /** LoginDialog's display. */
     public interface Display extends IsView {
@@ -84,10 +81,10 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
     private Display display;
 
     /** Login. */
-    private String  login;
+    private String login;
 
     /** Password. */
-    private String  password;
+    private String password;
 
     /** Creates a new instance of LoginDialog. */
     public LoginPresenter() {
@@ -123,16 +120,16 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
     /**
      * Creates and shows new Login View.
-     * 
+     *
      * @param asyncRequest
      */
     private void showLoginDialog(final AsyncRequest asyncRequest, final Response response) {
-          Window window = new Window("Login");
-          window.add(new Frame(Utils.getRestContext() + Utils.getWorkspaceName() + "/configuration/init"));
-          window.setHeight(435);
-          window.setWidth(580);
-          window.showCentered();
-          
+        Window window = new Window("Login");
+        window.add(new Frame(Utils.getRestContext() + Utils.getWorkspaceName() + "/configuration/init"));
+        window.setHeight(435);
+        window.setWidth(580);
+        window.showCentered();
+
 //        if (display != null) {
 //            return;
 //        }
@@ -224,11 +221,11 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
     /** Handle changing of the text in text fields. */
     ValueChangeHandler<String> valueChangeHandler = new ValueChangeHandler<String>() {
-                                                      @Override
-                                                      public void onValueChange(ValueChangeEvent<String> event) {
-                                                          checkForLoginButtonEnabled();
-                                                      }
-                                                  };
+        @Override
+        public void onValueChange(ValueChangeEvent<String> event) {
+            checkForLoginButtonEnabled();
+        }
+    };
 
     /** Checks for text in the text fields and enables or disables Login button. */
     private void checkForLoginButtonEnabled() {

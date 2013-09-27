@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.maven;
 
@@ -74,7 +73,7 @@ public class Builder {
     public Response build(@Context UriInfo uriInfo, InputStream data)
             throws IOException {
         MavenBuildTask task = tasks.build(data);
-        final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+        final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(task.getId());
         return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
     }
 
@@ -84,7 +83,7 @@ public class Builder {
     public Response deploy(@Context UriInfo uriInfo, InputStream data)
             throws IOException {
         MavenBuildTask task = tasks.deploy(data);
-        final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+        final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(task.getId());
         return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
     }
 
@@ -94,7 +93,7 @@ public class Builder {
     public Response dependenciesList(@Context UriInfo uriInfo, InputStream data)
             throws IOException {
         MavenBuildTask task = tasks.dependenciesList(data);
-        final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+        final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(task.getId());
         return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
     }
 
@@ -104,7 +103,7 @@ public class Builder {
     public Response dependenciesCopy(@Context UriInfo uriInfo, @QueryParam("classifier") String classifier,
                                      InputStream data) throws IOException {
         MavenBuildTask task = tasks.dependenciesCopy(data, classifier);
-        final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+        final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(task.getId());
         return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
     }
 
@@ -124,9 +123,8 @@ public class Builder {
                             jsonObject.addElement("status", new StringValue("SUCCESSFUL"));
                             jsonObject.addElement("downloadUrl",
                                                   new StringValue(
-                                                          uriInfo.getBaseUriBuilder().path(getClass(), "download")
-                                                                 .build(buildID)
-                                                                 .toString()));
+                                                          uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "download")
+                                                                 .build(buildID).toString()));
                             jsonObject.addElement("time", new StringValue(Long.toString(result.getResult().getTime())));
                             return Response
                                     .status(200)
@@ -164,7 +162,7 @@ public class Builder {
                                     error.append("[ERROR] Please refer to ");
                                     error.append("<a href='");
                                     error.append(
-                                            uriInfo.getBaseUriBuilder().path(getClass(), "getSurefireReports")
+                                            uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "getSurefireReports")
                                                    .build(buildID).toString());
                                     error.append("' target='_blank'>surefire reports</a>");
                                     error.append(" for the individual test results.<br/>");
@@ -219,11 +217,9 @@ public class Builder {
                     public void write(OutputStream output) throws IOException, WebApplicationException {
                         PrintWriter writer = new PrintWriter(output);
                         for (String name : files) {
-                            writer.printf("<a href='%s'>%s</a><br/>", uriInfo.getBaseUriBuilder()
-                                                                             .path(Builder.this.getClass(),
-                                                                                   "getReportFile")
-                                                                             .queryParam("name", name).build(buildID),
-                                          name);
+                            writer.printf("<a href='%s'>%s</a><br/>", uriInfo.getBaseUriBuilder().path(Builder.this.getClass())
+                                                                             .path(Builder.this.getClass(), "getReportFile").queryParam(
+                                            "name", name).build(buildID), name);
                         }
                         writer.flush();
                     }
@@ -317,7 +313,7 @@ public class Builder {
                 }
             }
             // Sent location to check status method.
-            final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
+            final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(buildID);
             return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN)
                            .build();
         }
@@ -357,7 +353,7 @@ public class Builder {
                 }
             }
             // Sent location to check status method.
-            final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
+            final URI location = uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "status").build(buildID);
             return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN)
                            .build();
         }

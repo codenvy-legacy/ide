@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.client.operation.openlocalfile;
 
@@ -41,8 +40,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
@@ -90,24 +87,30 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, V
         setEnabled(vfsInfo != null && browserPanelSelected && selectedItems.size() > 0);
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
-     * .application.event.VfsChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     *      .application.event.VfsChangedEvent)
+     */
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
         vfsInfo = event.getVfsInfo();
         updateEnabling();
     }
 
-    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
-     * .framework.navigation.event.ItemsSelectedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     *      .framework.navigation.event.ItemsSelectedEvent)
+     */
     @Override
     public void onItemsSelected(ItemsSelectedEvent event) {
         selectedItems = event.getSelectedItems();
         updateEnabling();
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
-     * .client.framework.ui.api.event.ViewVisibilityChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
+     *      .client.framework.ui.api.event.ViewVisibilityChangedEvent)
+     */
     @Override
     public void onViewVisibilityChanged(ViewVisibilityChangedEvent event) {
         if (event.getView() instanceof NavigatorDisplay ||

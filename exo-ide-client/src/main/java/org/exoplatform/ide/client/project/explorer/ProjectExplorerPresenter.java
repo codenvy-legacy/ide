@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.client.project.explorer;
 
@@ -107,21 +106,19 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by The eXo Platform SAS .
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class ProjectExplorerPresenter implements SelectItemHandler,
-    ApplicationSettingsReceivedHandler,
-    ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler,
-    ShowProjectExplorerHandler,
-    ViewActivatedHandler, VfsChangedHandler,
-    GoToItemHandler, EditorActiveFileChangedHandler, IDELoadCompleteHandler,
-    EditorFileOpenedHandler, EditorFileClosedHandler, ShowHideHiddenFilesHandler,
-    ItemDeletedHandler,
-    ProjectOpenedHandler, ProjectClosedHandler, TreeRefreshedHandler {
+                                                 ApplicationSettingsReceivedHandler,
+                                                 ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler,
+                                                 ShowProjectExplorerHandler,
+                                                 ViewActivatedHandler, VfsChangedHandler,
+                                                 GoToItemHandler, EditorActiveFileChangedHandler, IDELoadCompleteHandler,
+                                                 EditorFileOpenedHandler, EditorFileClosedHandler, ShowHideHiddenFilesHandler,
+                                                 ItemDeletedHandler,
+                                                 ProjectOpenedHandler, ProjectClosedHandler, TreeRefreshedHandler {
 
     private static final String DEFAULT_TITLE = "Project Explorer";
 
@@ -131,18 +128,18 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
     private ProjectExplorerDisplay display;
 
     private List<ProjectModel> projects = new ArrayList<ProjectModel>();
-    
+
     private ProjectModel openedProject;
 
     private FileModel editorActiveFile;
 
     private ApplicationSettings applicationSettings;
-    
+
     /** Enabled or disabled Linking with Editor. */
     private boolean linkingWithEditor = false;
-    
+
     /** Opened files. */
-    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();    
+    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
     public ProjectExplorerPresenter() {
         IDE.getInstance().addControl(new OpenProjectControl());
@@ -156,7 +153,7 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
         IDE.addHandler(SelectItemEvent.TYPE, this);
-        
+
         IDE.addHandler(TreeRefreshedEvent.TYPE, this);
         IDE.addHandler(AddItemTreeIconEvent.TYPE, this);
         IDE.addHandler(RemoveItemTreeIconEvent.TYPE, this);
@@ -164,16 +161,15 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
         IDE.addHandler(GoToItemEvent.TYPE, this);
 
         IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-        
+
         IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
         IDE.addHandler(EditorFileClosedEvent.TYPE, this);
         IDE.addHandler(ShowHideHiddenFilesEvent.TYPE, this);
         IDE.addHandler(ItemDeletedEvent.TYPE, this);
     }
-    
-    /**
-     * @see org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent)
-     */
+
+    /** @see org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org
+     * .exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent) */
     public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
         applicationSettings = event.getApplicationSettings();
 
@@ -194,7 +190,7 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
             display.setLinkWithEditorButtonEnabled(false);
         }
     }
-    
+
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
         if (display == null) {
@@ -204,11 +200,10 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
         display.setProject(null);
         display.asView().setTitle(DEFAULT_TITLE);
     }
-    
-    
-    /**
-     * @see org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler#onIDELoadComplete(org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent)
-     */
+
+
+    /** @see org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler#onIDELoadComplete(org.exoplatform.ide.client.framework
+     * .event.IDELoadCompleteEvent) */
     @Override
     public void onIDELoadComplete(IDELoadCompleteEvent event) {
         if (openedProject == null) {
@@ -217,7 +212,7 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
     }
 
     /**
-     * 
+     *
      */
     private void ensureProjectExplorerDisplayCreated() {
         if (display != null) {
@@ -227,11 +222,10 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
         display = GWT.create(ProjectExplorerDisplay.class);
         IDE.getInstance().openView(display.asView());
         bindDisplay();
-    }    
-    
-    /**
-     * @see org.exoplatform.ide.client.project.explorer.ShowProjectExplorerHandler#onShowProjectExplorer(org.exoplatform.ide.client.project.explorer.ShowProjectExplorerEvent)
-     */
+    }
+
+    /** @see org.exoplatform.ide.client.project.explorer.ShowProjectExplorerHandler#onShowProjectExplorer(org.exoplatform.ide.client
+     * .project.explorer.ShowProjectExplorerEvent) */
     @Override
     public void onShowProjectExplorer(ShowProjectExplorerEvent event) {
         if (display != null) {
@@ -240,7 +234,7 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
         }
 
         ensureProjectExplorerDisplayCreated();
-        
+
         if (openedProject == null) {
             display.setProject(null);
             refreshProjectsList(event);
@@ -258,10 +252,9 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
             showProjectTree();
         }
     }
-    
-    /**
-     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-     */
+
+    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     * .project.ProjectOpenedEvent) */
     @Override
     public void onProjectOpened(final ProjectOpenedEvent projectOpenedEvent) {
         openedProject = projectOpenedEvent.getProject();
@@ -279,9 +272,8 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
         }
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-     */
+    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     * .project.ProjectClosedEvent) */
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         openedProject = null;
@@ -295,18 +287,18 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
         display.asView().setTitle(DEFAULT_TITLE);
         display.setLinkWithEditorButtonEnabled(false);
         refreshProjectsList(event);
-        
+
         IDE.fireEvent(new ItemsSelectedEvent(new ArrayList<Item>(), display.asView()));
     }
-    
+
     private void showProjectTree() {
         display.asView().setTitle(openedProject.getName());
         display.setProject(openedProject);
 
         display.setLinkWithEditorButtonEnabled(true);
         display.setLinkWithEditorButtonSelected(linkingWithEditor);
-    }    
-    
+    }
+
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof ProjectExplorerDisplay) {
@@ -327,7 +319,7 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
                 });
             }
         });
-        
+
         display.getProjectTree().addCloseHandler(new CloseHandler<Item>() {
             @Override
             public void onClose(final CloseEvent<Item> event) {
@@ -386,17 +378,17 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
         if (!display.asView().isViewVisible()) {
             return;
         }
-        
+
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {
                 if (display == null) {
                     return;
                 }
-                
+
                 Item selectedItem = display.getSelectedItem();
                 IDE.fireEvent(new ItemsSelectedEvent(selectedItem, display.asView()));
-                
+
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                     @Override
                     public void execute() {
@@ -407,23 +399,22 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
         });
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler#onSelectItem(org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent)
-     */
+    /** @see org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler#onSelectItem(org.exoplatform.ide.client.framework
+     * .navigation.event.SelectItemEvent) */
     public void onSelectItem(final SelectItemEvent event) {
         if (display == null) {
             return;
         }
 
         //if (display.asView().isViewVisible()) {
-            display.selectItem(event.getItem());
+        display.selectItem(event.getItem());
 
-            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    IDE.fireEvent(new ItemsSelectedEvent(event.getItem(), display.asView()));
-                }
-            });
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                IDE.fireEvent(new ItemsSelectedEvent(event.getItem(), display.asView()));
+            }
+        });
         //}
     }
 
@@ -461,15 +452,19 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
         // }
     }
 
-    /** @see org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler#onRemoveItemTreeIcon(org.exoplatform.ide
-     * .client.framework.navigation.event.RemoveItemTreeIconEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler#onRemoveItemTreeIcon(org.exoplatform.ide
+     *      .client.framework.navigation.event.RemoveItemTreeIconEvent)
+     */
     @Override
     public void onRemoveItemTreeIcon(RemoveItemTreeIconEvent event) {
         display.removeItemIcons(event.getIconsToRemove());
     }
 
-    /** @see org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconHandler#onAddItemTreeIcon(org.exoplatform.ide.client
-     * .framework.navigation.event.AddItemTreeIconEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconHandler#onAddItemTreeIcon(org.exoplatform.ide.client
+     *      .framework.navigation.event.AddItemTreeIconEvent)
+     */
     @Override
     public void onAddItemTreeIcon(AddItemTreeIconEvent event) {
         display.addItemsIcons(event.getTreeItemIcons());
@@ -479,7 +474,7 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
     public void onViewActivated(ViewActivatedEvent event) {
         if (event.getView() instanceof ProjectExplorerDisplay) {
             treeItemSelected();
-            
+
 //            if (linkingWithEditor && editorActiveFile != null) {
 //                Item selectedItem = display.getSelectedItem();
 //                if (selectedItem == null || !selectedItem.getId().equals(editorActiveFile.getId())) {
@@ -506,7 +501,7 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
             display.setLinkWithEditorButtonSelected(linkingWithEditor);
 
             applicationSettings.setValue("project-explorer-linked-with-editor", new Boolean(linkingWithEditor), Store.COOKIES);
-            SettingsService.getInstance().saveSettingsToCookies(applicationSettings);            
+            SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
             IDE.fireEvent(new ApplicationSettingsSavedEvent(applicationSettings, SaveType.COOKIES));
 
             if (linkingWithEditor && editorActiveFile != null) {
@@ -514,28 +509,28 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
             }
         }
     };
-    
+
     @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         editorActiveFile = event.getFile();
-        
+
         if (display == null) {
             return;
         }
-        
+
         if (!linkingWithEditor) {
             return;
         }
-        
+
         if (editorActiveFile == null) {
             return;
         }
-        
+
         Item selectedItem = display.getSelectedItem();
-        if (selectedItem != null && selectedItem.getId().equals(editorActiveFile.getId()) ) {
+        if (selectedItem != null && selectedItem.getId().equals(editorActiveFile.getId())) {
             return;
         }
-        
+
         display.selectItem(editorActiveFile);
     }
 
@@ -548,7 +543,7 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
     public void onEditorFileOpened(EditorFileOpenedEvent event) {
         openedFiles = event.getOpenedFiles();
     }
-    
+
     /** Changes the active file in Editor just after item selected in the Tree. */
     private void changeActiveFileOnSelection() {
         Item selectedItem = display.getSelectedItem();
@@ -556,20 +551,22 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
         if (display == null || openedProject == null || !linkingWithEditor || selectedItem == null) {
             return;
         }
-        
+
         if (!openedFiles.containsKey(selectedItem.getId())) {
             return;
         }
-        
+
         if (editorActiveFile.getId().equals(selectedItem.getId())) {
             return;
         }
-        
-        IDE.fireEvent(new EditorChangeActiveFileEvent((FileModel)selectedItem));        
+
+        IDE.fireEvent(new EditorChangeActiveFileEvent((FileModel)selectedItem));
     }
 
-    /** @see org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler#onShowHideHiddenFiles(org.exoplatform.ide.client
-     * .navigation.event.ShowHideHiddenFilesEvent) */
+    /**
+     * @see org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler#onShowHideHiddenFiles(org.exoplatform.ide.client
+     *      .navigation.event.ShowHideHiddenFilesEvent)
+     */
     @Override
     public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event) {
         if (display == null) {
@@ -612,14 +609,15 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
             });
         }
     }
-    
+
     private void refreshProjectsList(final GwtEvent event) {
         try {
             VirtualFileSystem.getInstance().getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
-                ItemType.PROJECT, new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>())) {
+                                                        ItemType.PROJECT, new AsyncRequestCallback<List<Item>>(
+                    new ChildrenUnmarshaller(new ArrayList<Item>())) {
                 @Override
-                protected void onSuccess(List<Item> result) {                    
-                    projects.clear();                    
+                protected void onSuccess(List<Item> result) {
+                    projects.clear();
                     for (Item item : result) {
                         if (item instanceof ProjectModel) {
                             projects.add((ProjectModel)item);

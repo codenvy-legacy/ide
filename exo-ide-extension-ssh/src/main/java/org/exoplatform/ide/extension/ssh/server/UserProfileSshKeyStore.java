@@ -1,25 +1,24 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.extension.ssh.server;
 
-import com.codenvy.ide.commons.cache.Cache;
-import com.codenvy.ide.commons.cache.SLRUCache;
+import com.codenvy.commons.lang.cache.Cache;
+import com.codenvy.commons.lang.cache.SLRUCache;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.User;
@@ -43,19 +42,19 @@ import java.util.concurrent.locks.ReentrantLock;
  * @version $Id: $
  */
 public class UserProfileSshKeyStore implements SshKeyStore {
-    private static final int            PRIVATE                      = 0;
-    private static final int            PUBLIC                       = 1;
-    private static final String         KEY_ATTRIBUTE_PREFIX         = "ssh.key.";
+    private static final int    PRIVATE                      = 0;
+    private static final int    PUBLIC                       = 1;
+    private static final String KEY_ATTRIBUTE_PREFIX         = "ssh.key.";
     /** Prefix for attribute of user profile that store private SSH key. */
-    private static final String         PRIVATE_KEY_ATTRIBUTE_PREFIX = KEY_ATTRIBUTE_PREFIX + "private.";
+    private static final String PRIVATE_KEY_ATTRIBUTE_PREFIX = KEY_ATTRIBUTE_PREFIX + "private.";
     /** Prefix for attribute of user profile that store public SSH key. */
-    private static final String         PUBLIC_KEY_ATTRIBUTE_PREFIX  = KEY_ATTRIBUTE_PREFIX + "public.";
+    private static final String PUBLIC_KEY_ATTRIBUTE_PREFIX  = KEY_ATTRIBUTE_PREFIX + "public.";
 
-    private final UserManager           userManager;
+    private final UserManager userManager;
     // protected with lock
-    private final Cache<String, SshKey> cache                        = new SLRUCache<String, SshKey>(50, 100);
-    private final Lock                  lock                         = new ReentrantLock();
-    private final JSch                  genJsch;
+    private final Cache<String, SshKey> cache = new SLRUCache<String, SshKey>(50, 100);
+    private final Lock                  lock  = new ReentrantLock();
+    private final JSch genJsch;
 
     public UserProfileSshKeyStore(UserManager userManager) {
         this.userManager = userManager;

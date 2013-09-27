@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.client.dialogs;
 
@@ -52,8 +51,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 
 /**
- * Created by The eXo Platform SAS .
- * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -81,30 +78,30 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler {
     }
 
     private BooleanCallback booleanCallback = new BooleanCallback() {
-                                                public void execute(Boolean value) {
-                                                    if (currentDialog.getBooleanValueReceivedHandler() != null) {
-                                                        try {
-                                                            currentDialog.getBooleanValueReceivedHandler().booleanValueReceived(value);
-                                                        } catch (Throwable exc) {
-                                                        }
-                                                    }
+        public void execute(Boolean value) {
+            if (currentDialog.getBooleanValueReceivedHandler() != null) {
+                try {
+                    currentDialog.getBooleanValueReceivedHandler().booleanValueReceived(value);
+                } catch (Throwable exc) {
+                }
+            }
 
-                                                    showQueueDialog();
-                                                }
-                                            };
+            showQueueDialog();
+        }
+    };
 
-    private ValueCallback   valueCallback   = new ValueCallback() {
-                                                public void execute(String value) {
-                                                    if (currentDialog.getStringValueReceivedHandler() != null) {
-                                                        try {
-                                                            currentDialog.getStringValueReceivedHandler().stringValueReceived(value);
-                                                        } catch (Throwable exc) {
-                                                        }
-                                                    }
+    private ValueCallback valueCallback = new ValueCallback() {
+        public void execute(String value) {
+            if (currentDialog.getStringValueReceivedHandler() != null) {
+                try {
+                    currentDialog.getStringValueReceivedHandler().stringValueReceived(value);
+                } catch (Throwable exc) {
+                }
+            }
 
-                                                    showQueueDialog();
-                                                }
-                                            };
+            showQueueDialog();
+        }
+    };
 
     /*
      * VALUE ASKING
@@ -140,7 +137,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler {
         panel.add(textInput);
 
         final IDEDialogsView view =
-                                    new IDEDialogsView("codenvyAskForValueModalView", dialog.getTitle(), 400, 160, panel, dialog.getModal());
+                new IDEDialogsView("codenvyAskForValueModalView", dialog.getTitle(), 400, 160, panel, dialog.getModal());
         ImageButton okButton = createButton("Ok", null);
         view.getButtonsLayout().add(okButton);
         okButton.addClickHandler(new ClickHandler() {
@@ -194,7 +191,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler {
     protected void openAskDialog(Dialog dialog) {
         HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.askDialog(), dialog.getMessage());
         final IDEDialogsView view = new IDEDialogsView("ideAskModalView", dialog.getTitle(), 430, 150, content, dialog.getModal());
-        ImageButton yesButton = createButton(dialog.getConfirmButton() == null? "Yes" : dialog.getConfirmButton() , null);
+        ImageButton yesButton = createButton(dialog.getConfirmButton() == null ? "Yes" : dialog.getConfirmButton(), null);
         view.getButtonsLayout().add(yesButton);
         yesButton.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
@@ -281,9 +278,11 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler {
 
     /**
      * Create button.
-     * 
-     * @param title button's title
-     * @param icon button's image
+     *
+     * @param title
+     *         button's title
+     * @param icon
+     *         button's image
      * @return {@link org.exoplatform.gwtframework.ui.client.component.ImageButton}
      */
     public ImageButton createButton(String title, ImageResource icon) {
@@ -310,9 +309,11 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler {
 
     /**
      * Creates layout with pointed image and text near it.
-     * 
-     * @param icon image to display
-     * @param text text to display
+     *
+     * @param icon
+     *         image to display
+     * @param text
+     *         text to display
      * @return {@link HorizontalPanel}
      */
     public static HorizontalPanel createImageWithTextLayout(ImageResource icon, String text) {

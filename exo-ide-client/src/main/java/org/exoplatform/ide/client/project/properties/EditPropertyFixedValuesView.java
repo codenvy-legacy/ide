@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 
 package org.exoplatform.ide.client.project.properties;
@@ -36,23 +35,21 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class EditPropertyFixedValuesView extends ViewImpl implements EditPropertyFixedValuesPresenter.Display {
 
-    public static final String                         ID       = "ideEditProjectPropertyView";
+    public static final String ID = "ideEditProjectPropertyView";
 
-    public static final String                         TITLE    = "Edit Property";
+    public static final String TITLE = "Edit Property";
 
     /** Initial width of this view */
-    private static final int                           WIDTH    = 290;
+    private static final int WIDTH = 290;
 
     /** Initial height of this view */
-    private static final int                           HEIGHT   = 100;
+    private static final int HEIGHT = 100;
 
     private static EditPropertyFixedValuesViewUiBinder uiBinder = GWT.create(EditPropertyFixedValuesViewUiBinder.class);
 
@@ -60,16 +57,16 @@ public class EditPropertyFixedValuesView extends ViewImpl implements EditPropert
     }
 
     @UiField
-    TextBox       nameField;
+    TextBox nameField;
 
     @UiField
     ComboBoxField valueField;
 
     @UiField
-    ImageButton   okButton;
+    ImageButton okButton;
 
     @UiField
-    ImageButton   cancelButton;
+    ImageButton cancelButton;
 
     public EditPropertyFixedValuesView() {
         super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.projectProperties()), WIDTH, HEIGHT, false);

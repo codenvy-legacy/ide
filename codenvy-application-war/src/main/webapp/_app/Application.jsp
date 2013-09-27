@@ -1,21 +1,20 @@
 <!--
 
-    Copyright (C) 2012 eXo Platform SAS.
+    CODENVY CONFIDENTIAL
+    __________________
 
-    This is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Lesser General Public License as
-    published by the Free Software Foundation; either version 2.1 of
-    the License, or (at your option) any later version.
+    [2012] - [2013] Codenvy, S.A.
+    All Rights Reserved.
 
-    This software is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this software; if not, write to the Free
-    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+    NOTICE:  All information contained herein is, and remains
+    the property of Codenvy S.A. and its suppliers,
+    if any.  The intellectual and technical concepts contained
+    herein are proprietary to Codenvy S.A.
+    and its suppliers and may be covered by U.S. and Foreign Patents,
+    patents in process, and are protected by trade secret or copyright law.
+    Dissemination of this information or reproduction of this material
+    is strictly forbidden unless prior written permission is obtained
+    from Codenvy S.A..
 
 -->
 <!DOCTYPE html>
@@ -43,7 +42,7 @@
         var project = <%= request.getAttribute("project") != null ? "\"" + request.getAttribute("project")  + "\"" : null%>;
         var path = <%= request.getAttribute("path") != null ? "\"" + request.getAttribute("path")  + "\"" : null%>;
         var startUpParams = <%= request.getAttribute("startUpParams") != null ? "\"?" + request.getAttribute("startUpParams")  + "\"" : null%>;
-        var authorizationContext = "/rest";
+        var authorizationContext = "/site/rest";
         var authorizationErrorPageURL = "/ide/ide/error_oauth.html";
         var securityCheckURL = "/ide/j_security_check";
         var isTargetWindow = false;
@@ -53,31 +52,29 @@
 
         window.onload = function () {
             buildMenu();
-//            uuid = generate();
-//            sendSessionStatus("ide", uuid, "start");
+            uuid = generate();
+            sendSessionStatus("ide", uuid, "start");
         }
 
-//        window.onbeforeunload = function () {
-//            sendSessionStatus("ide", uuid, "stop");
-//        }
-//
-//        window.onfocus = function () {
-//            if (isTargetWindow == true) {
-//                isTargetWindow = false;
-//                uuid = generate();
-//                sendSessionStatus("ide", uuid, "start");
-//            }
-//            return false;
-//        }
-//
-//        window.onblur = function () {
-//            if (isTargetWindow == false) {
-//                isTargetWindow = true;
-//                sendSessionStatus("ide", uuid, "stop");
-//            }
-//            return false;
-//        }
-        window.buildMenu = function () {
+        window.onbeforeunload = function () {
+            sendSessionStatus("ide", uuid, "stop");
+        }
+
+        window.onfocus = function () {
+            if (isTargetWindow == true) {
+                isTargetWindow = false;
+                uuid = generate();
+                sendSessionStatus("ide", uuid, "start");
+            }
+            return false;
+        }
+
+        window.onblur = function () {
+            if (isTargetWindow == false) {
+                isTargetWindow = true;
+                sendSessionStatus("ide", uuid, "stop");
+            }
+            return false;
         }
     </script>
 
@@ -111,7 +108,7 @@
     </table>
 </div>
 
-<%--<script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "session.js")%>'></script>--%>
+<script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "session.js")%>'></script>
 <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "cloud_menu.js")%>'></script>
 
 

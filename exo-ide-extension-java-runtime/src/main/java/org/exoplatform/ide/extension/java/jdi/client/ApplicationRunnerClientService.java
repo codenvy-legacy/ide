@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
@@ -37,24 +36,22 @@ import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 
 /**
- * Created by The eXo Platform SAS.
- * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
 public class ApplicationRunnerClientService {
 
-    public static final String                    RUN      = "/run";
-    public static final String                    DEBUG    = "/debug";
-    public static final String                    PROLONG  = "/prolong";
-    private static final String                   BASE_URL = "/java/runner";
+    public static final  String RUN      = "/run";
+    public static final  String DEBUG    = "/debug";
+    public static final  String PROLONG  = "/prolong";
+    private static final String BASE_URL = "/java/runner";
     private static ApplicationRunnerClientService instance;
 
-    private MessageBus                            wsMessageBus;
+    private MessageBus wsMessageBus;
 
-    private final String                          wsName;
+    private final String wsName;
 
-    private final String                          restContext;
+    private final String restContext;
 
     public ApplicationRunnerClientService(MessageBus wsMessageBus, String wsName, String restContext) {
         this.wsName = wsName;
@@ -85,7 +82,7 @@ public class ApplicationRunnerClientService {
 
     /**
      * Run application by sending request over WebSocket.
-     * 
+     *
      * @param project
      * @param war
      * @param useJRebel
@@ -96,7 +93,7 @@ public class ApplicationRunnerClientService {
                                  RequestCallback<ApplicationInstance> callback) throws WebSocketException {
         String params = "?war=" + war;
 
-        
+
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("projectName", new JSONString(project));
         if (useJRebel) {
@@ -106,15 +103,15 @@ public class ApplicationRunnerClientService {
 
         callback.setStatusHandler(new RunningAppStatusHandler(project));
         RequestMessage message =
-                                 RequestMessageBuilder.build(RequestBuilder.POST, wsName + BASE_URL + RUN + params)
-                                                      .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data)
-                                                      .getRequestMessage();
+                RequestMessageBuilder.build(RequestBuilder.POST, wsName + BASE_URL + RUN + params)
+                                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data)
+                                     .getRequestMessage();
         wsMessageBus.send(message, callback);
     }
 
     public void debugApplication(String project, String war, boolean useJRebel,
                                  AsyncRequestCallback<ApplicationInstance> callback) throws RequestException {
-        
+
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("projectName", new JSONString(project));
         if (useJRebel) {
@@ -130,7 +127,7 @@ public class ApplicationRunnerClientService {
 
     /**
      * Run application in debug mode by sending request over WebSocket.
-     * 
+     *
      * @param project
      * @param war
      * @param useJRebel
@@ -150,14 +147,14 @@ public class ApplicationRunnerClientService {
 
         callback.setStatusHandler(new RunningAppStatusHandler(project));
         RequestMessage message =
-                                 RequestMessageBuilder.build(RequestBuilder.POST, wsName +  BASE_URL + DEBUG + param)
-                                                      .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data)
-                                                      .getRequestMessage();
+                RequestMessageBuilder.build(RequestBuilder.POST, wsName + BASE_URL + DEBUG + param)
+                                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data)
+                                     .getRequestMessage();
         wsMessageBus.send(message, callback);
     }
 
     public void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
-        String url = restContext + wsName + BASE_URL  + "/logs";
+        String url = restContext + wsName + BASE_URL + "/logs";
         StringBuilder params = new StringBuilder("?name=");
         params.append(name);
 
@@ -169,10 +166,13 @@ public class ApplicationRunnerClientService {
 
     /**
      * Prolong expiration time of the application.
-     * 
-     * @param name application name
-     * @param time time on which need to prolong expiration time of the application
-     * @param callback {@link RESTfulRequestCallback}
+     *
+     * @param name
+     *         application name
+     * @param time
+     *         time on which need to prolong expiration time of the application
+     * @param callback
+     *         {@link RESTfulRequestCallback}
      * @throws WebSocketException
      */
     public void prolongExpirationTime(String name, long time, RequestCallback<Object> callback) throws WebSocketException {
@@ -183,10 +183,13 @@ public class ApplicationRunnerClientService {
 
     /**
      * Update already deployed Java web application.
-     * 
-     * @param name application name
-     * @param war location of .war file. It may be local or remote location. File from this location will be used for update.
-     * @param callback {@link AsyncRequestCallback}
+     *
+     * @param name
+     *         application name
+     * @param war
+     *         location of .war file. It may be local or remote location. File from this location will be used for update.
+     * @param callback
+     *         {@link AsyncRequestCallback}
      * @throws RequestException
      */
     public void updateApplication(String name, String war, AsyncRequestCallback<Object> callback) throws RequestException {

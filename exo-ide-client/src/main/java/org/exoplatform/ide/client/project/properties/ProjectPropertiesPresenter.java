@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 
 package org.exoplatform.ide.client.project.properties;
@@ -55,14 +54,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
- * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler, ProjectOpenedHandler,
-                                       ProjectClosedHandler, ViewClosedHandler {
+                                                   ProjectClosedHandler, ViewClosedHandler {
 
     public interface Display extends IsView {
 
@@ -86,13 +83,13 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
 
     }
 
-    private Display                          display;
+    private Display display;
 
-    private ProjectModel                     currentProject;
+    private ProjectModel currentProject;
 
-    private Property                         selectedProperty;
+    private Property selectedProperty;
 
-    private EditPropertyPresenter            editPropertyPresenter           = new EditPropertyPresenter();
+    private EditPropertyPresenter editPropertyPresenter = new EditPropertyPresenter();
 
     private EditPropertyFixedValuesPresenter editPropertyFixedValuePresenter = new EditPropertyFixedValuesPresenter();
 
@@ -121,7 +118,7 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
             VirtualFileSystem.getInstance()
                              .getItemById(projectId,
                                           new AsyncRequestCallback<ItemWrapper>(
-                                                                                new ItemUnmarshaller(new ItemWrapper(new FileModel()))) {
+                                                  new ItemUnmarshaller(new ItemWrapper(new FileModel()))) {
                                               @Override
                                               protected void onSuccess(ItemWrapper result) {
                                                   if (!(result.getItem() instanceof ProjectModel)) {
@@ -233,12 +230,12 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
     }
 
     private EditCompleteHandler propertyEditCompleteHandler = new EditCompleteHandler() {
-                                                                @Override
-                                                                public void onEditComplete() {
-                                                                    display.setOkButtonEnabled(true);
-                                                                    refreshProperties();
-                                                                }
-                                                            };
+        @Override
+        public void onEditComplete() {
+            display.setOkButtonEnabled(true);
+            refreshProperties();
+        }
+    };
 
     private void deleteSelectedProperty() {
         if (selectedProperty.getName().equals(ProjectProperties.TYPE.value())
@@ -265,8 +262,7 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
 
     private void onPropertySelected(Property property) {
         selectedProperty = property;
-        if (!IDE.user.getRoles().contains("developer") && !IDE.user.getRoles().contains("admin"))
-        {
+        if (!IDE.user.getRoles().contains("developer") && !IDE.user.getRoles().contains("admin")) {
             display.setEditButtonEnabled(false);
             display.setDeleteButtonEnabled(false);
             return;

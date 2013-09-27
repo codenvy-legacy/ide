@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 package org.exoplatform.ide.client.application;
 
@@ -65,8 +64,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by The eXo Platform SAS.
- *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
@@ -157,16 +154,20 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
-     * .application.event.VfsChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     *      .application.event.VfsChangedEvent)
+     */
     public void onVfsChanged(VfsChangedEvent event) {
         String workspace = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
         applicationSettings.setValue(Settings.ENTRY_POINT, workspace, Store.COOKIES);
         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
     }
 
-    /** @see org.exoplatform.ide.client.editor.event.EditorReplaceFileHandler#onEditorReplaceFile(org.exoplatform.ide.client.editor.event
-     * .EditorReplaceFileEvent) */
+    /**
+     * @see org.exoplatform.ide.client.editor.event.EditorReplaceFileHandler#onEditorReplaceFile(org.exoplatform.ide.client.editor.event
+     *      .EditorReplaceFileEvent)
+     */
     public void onEditorReplaceFile(EditorReplaceFileEvent event) {
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
@@ -193,8 +194,10 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
         }
     }
 
-    /** @see org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.vfs.client.event
-     * .ItemUnlockedEvent) */
+    /**
+     * @see org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.vfs.client.event
+     *      .ItemUnlockedEvent)
+     */
     @Override
     public void onItemUnlocked(ItemUnlockedEvent event) {
         lockTokens.remove(event.getItem().getId());
@@ -221,16 +224,20 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
     }
 
-    /** @see org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler#onShowHideHiddenFiles(org.exoplatform.ide.client
-     * .navigation.event.ShowHideHiddenFilesEvent) */
+    /**
+     * @see org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler#onShowHideHiddenFiles(org.exoplatform.ide.client
+     *      .navigation.event.ShowHideHiddenFilesEvent)
+     */
     @Override
     public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event) {
         applicationSettings.setValue(Settings.SHOW_HIDDEN_FILES, new Boolean(event.isFilesShown()), Store.COOKIES);
         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
     }
 
-    /** @see org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsHandler#onSaveApplicationSettings(org.exoplatform
-     * .ide.client.framework.settings.event.SaveApplicationSettingsEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsHandler#onSaveApplicationSettings(org.exoplatform
+     *      .ide.client.framework.settings.event.SaveApplicationSettingsEvent)
+     */
     @Override
     public void onSaveApplicationSettings(SaveApplicationSettingsEvent event) {
         switch (event.getSaveType()) {

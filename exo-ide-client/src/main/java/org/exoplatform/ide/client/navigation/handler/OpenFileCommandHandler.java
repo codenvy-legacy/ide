@@ -1,38 +1,21 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * CODENVY CONFIDENTIAL
+ * __________________
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
  */
 // $codepro.audit.disable logExceptions
-/*
- * Copyright (C) 2003-2010 eXo Platform SAS.
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see<http://www.gnu.org/licenses/>.
- */
 package org.exoplatform.ide.client.navigation.handler;
 
 import com.google.gwt.core.client.Scheduler;
@@ -90,8 +73,10 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
         IDE.addHandler(ItemsSelectedEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.framework.event.OpenFileHandler#onOpenFile(org.exoplatform.ide.client.framework.event
-     * .OpenFileEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.event.OpenFileHandler#onOpenFile(org.exoplatform.ide.client.framework.event
+     *      .OpenFileEvent)
+     */
     public void onOpenFile(OpenFileEvent event) {
         cursorPosition = event.getCursorPosition();
 
@@ -121,7 +106,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
                     project = ((ItemContext)item).getProject();
                 }
             }
-            
+
             file.setProject(project);
         }
 
@@ -129,9 +114,8 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
 
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-     */
+    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .framework.navigation.event.ItemsSelectedEvent) */
     @Override
     public void onItemsSelected(ItemsSelectedEvent event) {
         selectedItems = event.getSelectedItems();
@@ -172,8 +156,10 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
         IDE.fireEvent(new EditorOpenFileEvent(file, cursorPosition));
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client
-     * .framework.editor.event.EditorFileOpenedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client
+     *      .framework.editor.event.EditorFileOpenedEvent)
+     */
     public void onEditorFileOpened(final EditorFileOpenedEvent event) {
         openedFiles = event.getOpenedFiles();
 
@@ -188,8 +174,10 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client
-     * .framework.editor.event.EditorFileClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client
+     *      .framework.editor.event.EditorFileClosedEvent)
+     */
     public void onEditorFileClosed(EditorFileClosedEvent event) {
         openedFiles = event.getOpenedFiles();
     }
