@@ -130,6 +130,8 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
 
         void onNodeExpanded(TreeNodeElement<D> node);
 
+        void onNodeSelected(TreeNodeElement<D> node, SignalEvent event);
+
         void onRootContextMenu(int mouseX, int mouseY);
 
         void onRootDragDrop(DragEvent event);
@@ -622,7 +624,7 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
 
         @Override
         public void onNodeSelected(TreeNodeElement<D> node, SignalEvent event) {
-            getModel().selectionModel.selectNode(node.getData(), event);
+            selectNode(node.getData(), event, true);
         }
 
         @Override
@@ -680,6 +682,14 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
     private void selectSingleNode(TreeNodeElement<D> renderedNode, boolean dispatchNodeAction) {
         getModel().selectionModel.selectSingleNode(renderedNode.getData());
         maybeNotifyNodeActionExternal(renderedNode, dispatchNodeAction);
+    }
+
+    private void selectNode(D node, SignalEvent event, boolean dispatchNodeSelected) {
+        getModel().selectionModel.selectNode(node, event);
+        if (dispatchNodeSelected && getModel().externalEventDelegate != null) {
+            TreeNodeElement<D> renderedNode = getModel().dataAdapter.getRenderedTreeNode(node);
+            getModel().externalEventDelegate.onNodeSelected(renderedNode, event);
+        }
     }
 
     /**
@@ -969,7 +979,7 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
         for (int i = 0, n = selectedPaths.size(); i < n; i++) {
             D node = getModel().dataAdapter.getNodeByPath(getModel().root, selectedPaths.get(i));
             if (node != null) {
-                getModel().selectionModel.selectNode(node, null);
+                selectNode(node, null, true);
             }
         }
     }

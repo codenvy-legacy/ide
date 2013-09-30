@@ -46,6 +46,14 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
     /** Needs for delegate some function into ProjectTree view. */
     public interface ActionDelegate extends BaseActionDelegate {
         /**
+         * Performs any actions in response to node selection.
+         *
+         * @param resource
+         *         node
+         */
+        void onResourceSelected(Resource resource);
+
+        /**
          * Performs any actions in response to some node action.
          *
          * @param resource
