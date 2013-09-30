@@ -1,3 +1,21 @@
+/*
+ * CODENVY CONFIDENTIAL
+ * __________________
+ *
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
+ */
+
 package com.codenvy.sdk;
 
 import org.exoplatform.container.*;
@@ -35,18 +53,17 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 /**
- * Created with IntelliJ IDEA.
- * User: vetal
- * Date: 9/16/13
- * Time: 11:29 PM
- * To change this template use File | Settings | File Templates.
+ * Set current user as "ide" on all request.
+ * This is need for avoiding unauthorized access? during launch extension in SDK."
+ *
+ * @author <a href="mailto:vparfonov@codenvy.com">Vitalii Parfonov</a>
  */
 public class SetIdeUserFilter implements Filter {
 
     /**
      * Logger.
      */
-    private static final Log LOG = ExoLogger.getLogger("exo.core.component.security.core.SetCurrentIdentityFilter");
+    private static final Log LOG = ExoLogger.getLogger("com.codenvy.sdk.SetIdeUserFilter");
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
