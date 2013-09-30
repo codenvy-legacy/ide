@@ -289,8 +289,7 @@ public class ExtensionLauncher implements Startable {
                                                     tomcatDir, tempDir));
 
             LOG.debug("Start Codenvy extension {}", appId);
-            return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort)
-                                          .setCodeServerHost(codeServerBindAddress).setCodeServerPort(codeServerPort);
+            return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort).setCodeServerPort(codeServerPort);
         } catch (Exception e) {
             LOG.warn("Codenvy extension {} failed to launch, cause: {}", appId, e);
             portManager.releasePorts(codeServerPort, shutdownPort, httpPort, ajpPort);
