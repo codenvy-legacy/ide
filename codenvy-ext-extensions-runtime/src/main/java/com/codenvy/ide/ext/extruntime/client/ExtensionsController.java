@@ -51,7 +51,10 @@ public class ExtensionsController {
     private ConsolePart                    console;
     private ExtRuntimeClientService        service;
     private ExtRuntimeLocalizationConstant constant;
+    /** Launched app. */
     private ApplicationInstance            launchedApp;
+    /** Is launching of any application in progress? */
+    private boolean                        isLaunchingInProgress;
 
     /**
      * Create controller.
@@ -78,11 +81,13 @@ public class ExtensionsController {
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
-                // do nothing
+                isLaunchingInProgress = false;
+                launchedApp = null;
             }
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
+                isLaunchingInProgress = false;
                 launchedApp = null;
             }
 
@@ -104,6 +109,11 @@ public class ExtensionsController {
 
     /** Launch the Codenvy application with custom extension. */
     public void launch() {
+        if (isLaunchingInProgress) {
+            Window.alert("Launching of another app is in progress now.");
+            return;
+        }
+
         project = resourceProvider.getActiveProject();
         if (project == null) {
             Window.alert("Project is not opened.");
@@ -112,21 +122,25 @@ public class ExtensionsController {
 
         ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS();
         try {
-            beforeApplicationStart();
+            isLaunchingInProgress = true;
+            beforeApplicationLaunch();
             service.launch(resourceProvider.getVfsId(), project.getId(),
                            new RequestCallback<ApplicationInstance>(unmarshaller) {
                                @Override
                                protected void onSuccess(ApplicationInstance result) {
+                                   isLaunchingInProgress = false;
                                    launchedApp = result;
                                    afterApplicationLaunched();
                                }
 
                                @Override
                                protected void onFailure(Throwable exception) {
+                                   isLaunchingInProgress = false;
                                    onFail(constant.startApplicationFailed(), exception);
                                }
                            });
         } catch (WebSocketException e) {
+            isLaunchingInProgress = false;
             console.print(e.getMessage());
         }
     }
@@ -181,8 +195,8 @@ public class ExtensionsController {
         }
     }
 
-    /** Performs actions before starting application. */
-    private void beforeApplicationStart() {
+    /** Performs actions before launching an application. */
+    private void beforeApplicationLaunch() {
         final String message = constant.applicationStarting(project.getName());
         console.print(message);
     }
