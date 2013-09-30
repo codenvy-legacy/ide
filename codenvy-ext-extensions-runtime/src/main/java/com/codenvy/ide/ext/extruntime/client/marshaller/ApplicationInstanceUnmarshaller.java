@@ -25,10 +25,12 @@ import com.codenvy.ide.websocket.rest.Unmarshallable;
 import com.google.gwt.user.client.Window;
 
 /**
+ * Unmarshaller for {@link ApplicationInstance}.
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ApplicationInstanceUnmarshallerWS.java Jul 31, 2013 5:13:18 PM azatsarynnyy $
+ * @version $Id: ApplicationInstanceUnmarshaller.java Jul 31, 2013 5:13:18 PM azatsarynnyy $
  */
-public class ApplicationInstanceUnmarshallerWS implements Unmarshallable<ApplicationInstance> {
+public class ApplicationInstanceUnmarshaller implements Unmarshallable<ApplicationInstance> {
     private DtoClientImpls.ApplicationInstanceImpl applicationInstance;
 
     /** {@inheritDoc} */

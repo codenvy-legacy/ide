@@ -19,7 +19,7 @@ package com.codenvy.ide.ext.extruntime.client;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.ext.extruntime.client.marshaller.ApplicationInstanceUnmarshallerWS;
+import com.codenvy.ide.ext.extruntime.client.marshaller.ApplicationInstanceUnmarshaller;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 import com.codenvy.ide.resources.marshal.StringUnmarshaller;
 import com.codenvy.ide.resources.model.Project;
@@ -34,13 +34,13 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Controller for launching Codenvy extension.
+ * This class controls launching, stopping, getting logs of custom extension.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: LaunchExtensionController.java Jul 3, 2013 3:07:52 PM azatsarynnyy $
+ * @version $Id: ExtensionsController.java Jul 3, 2013 3:07:52 PM azatsarynnyy $
  */
 @Singleton
-public class LaunchExtensionController {
+public class ExtensionsController {
     /** Project to launch. */
     private Project                        project;
     private ResourceProvider               resourceProvider;
@@ -58,10 +58,8 @@ public class LaunchExtensionController {
      * @param constant
      */
     @Inject
-    protected LaunchExtensionController(ResourceProvider resourceProvider,
-                                        ConsolePart console,
-                                        ExtRuntimeClientService service,
-                                        ExtRuntimeLocalizationConstant constant) {
+    protected ExtensionsController(ResourceProvider resourceProvider, ConsolePart console,
+                                   ExtRuntimeClientService service, ExtRuntimeLocalizationConstant constant) {
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.service = service;
@@ -77,7 +75,7 @@ public class LaunchExtensionController {
         return launchedApp != null;
     }
 
-    /** Launch the Codenvy application with custom extesnion. */
+    /** Launch the Codenvy application with custom extension. */
     public void launch() {
         project = resourceProvider.getActiveProject();
         if (project == null) {
@@ -85,8 +83,7 @@ public class LaunchExtensionController {
             return;
         }
 
-        ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS();
-
+        ApplicationInstanceUnmarshaller unmarshaller = new ApplicationInstanceUnmarshaller();
         try {
             beforeApplicationStart();
             service.launch(resourceProvider.getVfsId(), project.getId(),
@@ -131,7 +128,7 @@ public class LaunchExtensionController {
         }
     }
 
-    /** Stop the Codenvy application. */
+    /** Stop the current Codenvy application. */
     public void stop() {
         if (project == null) {
             Window.alert("Project is not opened.");
@@ -171,7 +168,8 @@ public class LaunchExtensionController {
                                   .setPath("ide" + '/' + Utils.getWorkspaceName())
                                   .setParameter("h", launchedApp.getCodeServerHost())
                                   .setParameter("p", String.valueOf(launchedApp.getCodeServerPort())).buildString();
-        console.print(constant.applicationStartedOnUrls(project.getName(), "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
+        console.print(constant.applicationStartedOnUrls(project.getName(),
+                                                        "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
     }
 
     private void onFail(String message, Throwable exception) {
