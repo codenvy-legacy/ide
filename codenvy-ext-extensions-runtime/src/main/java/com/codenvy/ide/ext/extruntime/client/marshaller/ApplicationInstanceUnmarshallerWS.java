@@ -28,9 +28,9 @@ import com.google.gwt.user.client.Window;
  * Unmarshaller for {@link ApplicationInstance}.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ApplicationInstanceUnmarshaller.java Jul 31, 2013 5:13:18 PM azatsarynnyy $
+ * @version $Id: ApplicationInstanceUnmarshallerWS.java Jul 31, 2013 5:13:18 PM azatsarynnyy $
  */
-public class ApplicationInstanceUnmarshaller implements Unmarshallable<ApplicationInstance> {
+public class ApplicationInstanceUnmarshallerWS implements Unmarshallable<ApplicationInstance> {
     private DtoClientImpls.ApplicationInstanceImpl applicationInstance;
 
     /** {@inheritDoc} */

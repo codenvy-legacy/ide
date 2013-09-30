@@ -17,9 +17,11 @@
  */
 package com.codenvy.ide.ext.extruntime.client;
 
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.ext.extruntime.client.marshaller.ApplicationInstanceUnmarshaller;
+import com.codenvy.ide.ext.extruntime.client.marshaller.ApplicationInstanceUnmarshallerWS;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 import com.codenvy.ide.resources.marshal.StringUnmarshaller;
 import com.codenvy.ide.resources.model.Project;
@@ -32,6 +34,7 @@ import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * This class controls launching, stopping, getting logs of custom extension.
@@ -44,6 +47,7 @@ public class ExtensionsController {
     /** Project to launch. */
     private Project                        project;
     private ResourceProvider               resourceProvider;
+    private EventBus                       eventBus;
     private ConsolePart                    console;
     private ExtRuntimeClientService        service;
     private ExtRuntimeLocalizationConstant constant;
@@ -52,18 +56,41 @@ public class ExtensionsController {
     /**
      * Create controller.
      *
-     * @param resourceProvider
-     * @param console
-     * @param service
-     * @param constant
+     * @param resourceProvider {@link ResourceProvider}
+     * @param eventBus {@link EventBus}
+     * @param console {@link ConsolePart}
+     * @param service {@link ExtRuntimeClientService}
+     * @param constant {@link ExtRuntimeLocalizationConstant}
      */
     @Inject
-    protected ExtensionsController(ResourceProvider resourceProvider, ConsolePart console,
+    protected ExtensionsController(ResourceProvider resourceProvider, EventBus eventBus, ConsolePart console,
                                    ExtRuntimeClientService service, ExtRuntimeLocalizationConstant constant) {
         this.resourceProvider = resourceProvider;
+        this.eventBus = eventBus;
         this.console = console;
         this.service = service;
         this.constant = constant;
+
+        init();
+    }
+
+    private void init() {
+        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
+            @Override
+            public void onProjectOpened(ProjectActionEvent event) {
+                // do nothing
+            }
+
+            @Override
+            public void onProjectClosed(ProjectActionEvent event) {
+                launchedApp = null;
+            }
+
+            @Override
+            public void onProjectDescriptionChanged(ProjectActionEvent event) {
+                // do nothing
+            }
+        });
     }
 
     /**
@@ -83,7 +110,7 @@ public class ExtensionsController {
             return;
         }
 
-        ApplicationInstanceUnmarshaller unmarshaller = new ApplicationInstanceUnmarshaller();
+        ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS();
         try {
             beforeApplicationStart();
             service.launch(resourceProvider.getVfsId(), project.getId(),
@@ -104,7 +131,7 @@ public class ExtensionsController {
         }
     }
 
-    /** Get logs of launched application. */
+    /** Get logs of the currently launched application. */
     public void getLogs() {
         if (project == null) {
             Window.alert("Project is not opened.");
@@ -128,7 +155,7 @@ public class ExtensionsController {
         }
     }
 
-    /** Stop the current Codenvy application. */
+    /** Stop the currently launched application. */
     public void stop() {
         if (project == null) {
             Window.alert("Project is not opened.");
