@@ -134,7 +134,7 @@ public class FactoryService {
         String user = ConversationState.getCurrent().getIdentity().getUserId();
         factoryUrl.append("&pname=").append(project.getName()).append("&wname=").append(workspace).append("&vcs=")
                   .append(vcs).append("&vcsurl=").append(vcsUrl).append("&idcommit=").append(idCommit)
-                  .append("&action=").append(action);
+                  .append("&action=").append(action).append("&ptype=").append(project.getProjectType());
         LOG.info("EVENT#factory-created# WS#" + workspace + "# USER#" + user + "# PROJECT#" + project.getName() +
                  "# TYPE#" + project.getProjectType() + "# REPO-URL#" + vcsUrl + "# FACTORY-URL#" + factoryUrl + "#");
     }
