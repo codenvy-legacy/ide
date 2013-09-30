@@ -32,7 +32,7 @@ import com.google.gwt.json.client.JSONValue;
 
 
 /**
- * Recursively traverses the JSon Response to build tree Fodler model
+ * Recursively traverses the JSon Response to build tree Folder model
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
