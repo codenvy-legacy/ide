@@ -197,9 +197,9 @@ public class SelectionModel<D> {
         D parentNode = dataAdapter.getParent(startNode);
 
         // Do some debug compile sanity checking.
-        assert (parentNode != null) : "Null parent nmode when doing range select!";
+        assert (parentNode != null) : "Null parent node when doing range select!";
         assert (parentNode.equals(
-                dataAdapter.getParent(endNode))) : "Different parent nodes when doing range highlgiht!";
+                dataAdapter.getParent(endNode))) : "Different parent nodes when doing range highlight!";
         assert (dataAdapter.compare(startNode, endNode) <= 0) :
                 "Nodes are in reverse order for range select! " + dataAdapter.getNodeName(startNode) + " - "
                 + dataAdapter.getNodeName(endNode);
