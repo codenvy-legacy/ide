@@ -32,7 +32,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -121,8 +120,6 @@ public class AddToIndexPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnAddClickedWhenAddWSRequestIsSuccessful() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -166,8 +163,6 @@ public class AddToIndexPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnAddClickedWhenAddWSRequestIsFailed() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -198,8 +193,6 @@ public class AddToIndexPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnAddClickedWhenAddRequestIsSuccessful() throws Exception {
         doThrow(WebSocketException.class).when(service)
                 .addWS(anyString(), (Project)anyObject(), anyBoolean(), (JsonArray<String>)anyObject(),
@@ -246,8 +239,6 @@ public class AddToIndexPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnAddClickedWhenAddRequestIsFailed() throws Exception {
         doThrow(WebSocketException.class).when(service)
                 .addWS(anyString(), (Project)anyObject(), anyBoolean(), (JsonArray<String>)anyObject(),
@@ -281,8 +272,6 @@ public class AddToIndexPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnAddClickedWhenRequestExceptionHappened() throws Exception {
         doThrow(WebSocketException.class).when(service)
                 .addWS(anyString(), (Project)anyObject(), anyBoolean(), (JsonArray<String>)anyObject(),
