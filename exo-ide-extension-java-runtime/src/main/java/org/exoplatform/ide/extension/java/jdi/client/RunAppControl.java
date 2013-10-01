@@ -24,9 +24,15 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
@@ -40,12 +46,16 @@ import org.exoplatform.ide.vfs.shared.Item;
 @RolesAllowed("developer")
 public class RunAppControl extends SimpleControl implements IDEControl,
                                                 ProjectOpenedHandler,
-                                                AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler {
-    public static final String  ID     = DebuggerExtension.LOCALIZATION_CONSTANT.runAppControlId();
+                                                AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler, ViewActivatedHandler {
+    public static final String  ID                = DebuggerExtension.LOCALIZATION_CONSTANT.runAppControlId();
 
-    private static final String TITLE  = "Run Application";
+    private static final String TITLE             = "Run Application";
 
-    private static final String PROMPT = "Run Application";
+    private static final String PROMPT            = "Run Application";
+
+    private boolean             navigatorSelected = false;
+
+    private ProjectModel        currentProject    = null;
 
     public RunAppControl() {
         super(ID);
@@ -66,6 +76,7 @@ public class RunAppControl extends SimpleControl implements IDEControl,
         IDE.addHandler(AppStoppedEvent.TYPE, this);
         IDE.addHandler(ItemsSelectedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ViewActivatedEvent.TYPE, this);
     }
 
     // /**
@@ -86,7 +97,8 @@ public class RunAppControl extends SimpleControl implements IDEControl,
     @Override
     public void onProjectOpened(ProjectOpenedEvent event)
     {
-        String projectType = event.getProject().getProjectType();
+        currentProject = event.getProject();
+        String projectType = currentProject.getProjectType();
         boolean isJavaProject = ProjectResolver.SPRING.equals(projectType)
                                 || ProjectResolver.SERVLET_JSP.equals(projectType)
                                 || ProjectResolver.APP_ENGINE_JAVA.equals(projectType)
@@ -94,18 +106,19 @@ public class RunAppControl extends SimpleControl implements IDEControl,
                                 || ProjectType.JSP.value().equals(projectType)
                                 || ProjectType.WAR.value().equals(projectType)
                                 || ProjectType.MultiModule.value().equals(projectType);
-        setEnabled(isJavaProject);
+        setEnabled(isJavaProject && navigatorSelected);
     }
 
     /** @param projectType */
-    private void updateStatus(String projectType) {
-        boolean isJavaProject = ProjectResolver.SPRING.equals(projectType)
-                                || ProjectResolver.SERVLET_JSP.equals(projectType)
-                                || ProjectResolver.APP_ENGINE_JAVA.equals(projectType)
-                                || ProjectType.JAVA.value().equals(projectType)
-                                || ProjectType.JSP.value().equals(projectType)
-                                || ProjectType.WAR.value().equals(projectType);
-        setVisible(isJavaProject);
+    private void updateStatus() {
+        String projectType = (currentProject != null) ? currentProject.getProjectType() : null;
+        boolean isJavaProject = projectType != null && (ProjectResolver.SPRING.equals(projectType)
+                                                        || ProjectResolver.SERVLET_JSP.equals(projectType)
+                                                        || ProjectResolver.APP_ENGINE_JAVA.equals(projectType)
+                                                        || ProjectType.JAVA.value().equals(projectType)
+                                                        || ProjectType.JSP.value().equals(projectType)
+                                                        || ProjectType.WAR.value().equals(projectType));
+        setVisible(isJavaProject && navigatorSelected);
         setShowInContextMenu(isJavaProject);
     }
 
@@ -127,10 +140,21 @@ public class RunAppControl extends SimpleControl implements IDEControl,
             setVisible(true);
             Item selectedItem = event.getSelectedItems().get(0);
 
-            ProjectModel project = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem
+            currentProject = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem
                 : ((ItemContext)selectedItem).getProject();
-            updateStatus(project.getProjectType());
+            updateStatus();
         }
+    }
+
+    @Override
+    public void onViewActivated(ViewActivatedEvent event) {
+        View activeView = event.getView();
+
+        navigatorSelected =
+                            activeView instanceof NavigatorDisplay ||
+                                activeView instanceof ProjectExplorerDisplay ||
+                                activeView instanceof PackageExplorerDisplay;
+        updateStatus();
     }
 
 }

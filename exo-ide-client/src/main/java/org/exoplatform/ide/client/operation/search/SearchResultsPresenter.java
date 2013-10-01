@@ -39,6 +39,7 @@ import org.exoplatform.ide.vfs.client.event.SearchResultReceivedEvent;
 import org.exoplatform.ide.vfs.client.event.SearchResultReceivedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -153,6 +154,7 @@ public class SearchResultsPresenter implements ViewVisibilityChangedHandler, Vie
 
         Item item = selectedItems.get(0);
         if (item instanceof File) {
+            ((ItemContext)item).setProject(searchResult.getProject());
             IDE.fireEvent(new OpenFileEvent((FileModel)item));
         }
     }
