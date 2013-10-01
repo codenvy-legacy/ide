@@ -190,14 +190,15 @@ public class MavenInvoker extends DefaultInvoker {
     }
 
     private static void kill(Process process) {
-        if (isAlive(process)) {
+        /*if (isAlive(process)) {
             process.destroy();
             try {
                 process.waitFor(); // wait for process death
             } catch (InterruptedException e) {
                 Thread.interrupted();
             }
-        }
+        }*/
+        UnixProcessManager.kill(process);
     }
 
     /**

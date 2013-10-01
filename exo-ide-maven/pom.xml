@@ -56,6 +56,12 @@
             <groupId>org.everrest</groupId>
             <artifactId>everrest-core</artifactId>
         </dependency>
+	<dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>3.5.2</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
