@@ -17,7 +17,7 @@
   ~ from Codenvy S.A..
   -->
 
-<!-- This GWT-module descriptor needed for using in GWT DevMode only. -->
+<!-- This GWT-module descriptor needed for launching Codenvy SDK in GWT DevMode. -->
 
 <module rename-to='_app'>
     <!-- Inherit the core Web Toolkit stuff.                        -->
@@ -53,7 +53,7 @@
     <inherits name='com.codenvy.ide.ext.git.Git'/>
     <inherits name='com.codenvy.ide.ext.ssh.Ssh'/>
 
-    <!-- The following modules are present only in the SDK version. -->
+    <!-- Add next two modules to allow launching Codenvy SDK in GWT DevMode. -->
     <inherits name='com.codenvy.ide.ext.extruntime.ExtRuntime'/>
     <inherits name='com.codenvy.ide.ext.tutorials.Tutorials'/>
 
