@@ -193,13 +193,16 @@ public class ActionButton extends Composite implements MouseOverHandler, MouseOu
     /** Mouse Click handler. */
     @Override
     public void onClick(ClickEvent event) {
+        if (!enabled) {
+            return;
+        }
+
         //todo handle popup group
         ActionEvent e = new ActionEvent(
                 place,
                 presentation,
                 actionManager,
                 0
-
         );
         if (action instanceof ActionGroup && !(action instanceof CustomComponentAction) && ((ActionGroup)action).isPopup()) {
 
