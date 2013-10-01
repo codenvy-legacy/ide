@@ -20,7 +20,6 @@ package com.codenvy.ide.welcome.action;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.WelcomeItemAction;
 import com.codenvy.ide.welcome.WelcomeLocalizationConstant;
-import com.codenvy.ide.wizard.WizardPresenter;
 import com.codenvy.ide.wizard.newproject.NewProjectPagePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
@@ -74,7 +73,7 @@ public class CreateProjectAction implements WelcomeItemAction {
     /** {@inheritDoc} */
     @Override
     public void execute() {
-        WizardPresenter wizardDialog = new WizardPresenter(newProjectPage.get(), "Create project", resources);
-        wizardDialog.showWizard();
+//        WizardPresenter wizardDialog = new WizardPresenter(newProjectPage.get(), "Create project", resources);
+//        wizardDialog.showWizard();
     }
 }

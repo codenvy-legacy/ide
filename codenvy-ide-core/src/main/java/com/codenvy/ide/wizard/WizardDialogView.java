@@ -20,8 +20,8 @@ package com.codenvy.ide.wizard;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.mvp.View;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Image;
 
 
 /**
@@ -29,7 +29,8 @@ import com.google.gwt.user.client.ui.Image;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface WizardView extends View<WizardView.ActionDelegate> {
+public interface WizardDialogView extends View<WizardDialogView.ActionDelegate> {
+
     /** Needs for delegate some function into Wizard view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Next button */
@@ -81,6 +82,8 @@ public interface WizardView extends View<WizardView.ActionDelegate> {
      */
     void setFinishButtonEnabled(boolean isEnabled);
 
+    void setTitle(String title);
+
     /**
      * Sets new caption of wizard's page
      *
@@ -100,13 +103,13 @@ public interface WizardView extends View<WizardView.ActionDelegate> {
      *
      * @param image
      */
-    void setImage(@Nullable Image image);
+    void setImage(@Nullable ImageResource image);
 
     /** Close wizard */
     void close();
 
-    /** Show wizard */
-    void showWizard();
+    /** Show dialog */
+    void showDialog();
 
     /**
      * Sets whether animation for change page is enabled.
@@ -115,7 +118,7 @@ public interface WizardView extends View<WizardView.ActionDelegate> {
      *         <code>true</code> to enable the animation, <code>false</code>
      *         to disable it
      */
-    void setChangePageAnimationEnabled(boolean isEnabled);
+    void setEnabledAnimation(boolean isEnabled);
 
     /**
      * Returns place of main form where will be shown current wizard page.

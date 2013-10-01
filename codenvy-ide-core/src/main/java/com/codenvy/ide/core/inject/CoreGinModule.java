@@ -30,10 +30,12 @@ import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.template.TemplateAgent;
+import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
+import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
 import com.codenvy.ide.api.ui.workspace.EditorPartStack;
 import com.codenvy.ide.api.ui.workspace.PartStack;
@@ -95,6 +97,9 @@ import com.codenvy.ide.welcome.WelcomePartPresenter;
 import com.codenvy.ide.welcome.WelcomePartView;
 import com.codenvy.ide.welcome.WelcomePartViewImpl;
 import com.codenvy.ide.wizard.WizardAgentImpl;
+import com.codenvy.ide.wizard.WizardDialogPresenter;
+import com.codenvy.ide.wizard.WizardDialogView;
+import com.codenvy.ide.wizard.WizardDialogViewImpl;
 import com.codenvy.ide.wizard.newfile.NewGenericFilePageViewImpl;
 import com.codenvy.ide.wizard.newproject.NewProjectPageView;
 import com.codenvy.ide.wizard.newproject.NewProjectPageViewImpl;
@@ -154,8 +159,10 @@ public class CoreGinModule extends AbstractGinModule {
         bind(PaaSAgent.class).to(PaaSAgentImpl.class).in(Singleton.class);
         bind(TemplateAgent.class).to(TemplateAgentImpl.class).in(Singleton.class);
         bind(ProjectTypeAgent.class).to(ProjectTypeAgentImpl.class).in(Singleton.class);
+        bind(WizardDialogView.class).to(WizardDialogViewImpl.class);
         // UI Model
         bind(EditorPartStack.class).to(EditorPartStackPresenter.class).in(Singleton.class);
+        install(new GinFactoryModuleBuilder().implement(WizardDialog.class, WizardDialogPresenter.class).build(WizardDialogFactory.class));
         // Parts
         bind(ConsolePart.class).to(ConsolePartPresenter.class).in(Singleton.class);
         bind(WelcomePart.class).to(WelcomePartPresenter.class).in(Singleton.class);

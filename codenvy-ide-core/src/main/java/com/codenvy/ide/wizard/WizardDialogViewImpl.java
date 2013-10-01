@@ -21,23 +21,23 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
-import com.google.inject.Singleton;
+import com.google.inject.Inject;
 
 /**
- * WizardViewImpl is the view of wizard.
+ * WizardDialogViewImpl is the view of wizard.
  * The view shows wizard pages to the end user. It has an area at the top containing
  * the wizard page title and notice, at the middle of page is the current wizard page,
  * Back and Next buttons, at the bottom of page is Cancel and Finish buttons.
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-@Singleton
-public class WizardViewImpl extends DialogBox implements WizardView {
-    interface ViewImplUiBinder extends UiBinder<Widget, WizardViewImpl> {
+public class WizardDialogViewImpl extends DialogBox implements WizardDialogView {
+    interface ViewImplUiBinder extends UiBinder<Widget, WizardDialogViewImpl> {
     }
 
     private static ViewImplUiBinder uiBinder = GWT.create(ViewImplUiBinder.class);
@@ -68,79 +68,91 @@ public class WizardViewImpl extends DialogBox implements WizardView {
     /**
      * Create view.
      *
-     * @param title
      * @param resource
      */
-    protected WizardViewImpl(@NotNull String title, @NotNull WizardResource resource) {
+    @Inject
+    protected WizardDialogViewImpl(WizardResource resource) {
         this.res = resource;
 
         Widget widget = uiBinder.createAndBindUi(this);
-        this.setText(title);
         this.setWidget(widget);
     }
 
-
     /** {@inheritDoc} */
+    @Override
     public void setNextButtonVisible(boolean isVisible) {
         btnNext.setVisible(isVisible);
     }
 
     /** {@inheritDoc} */
+    @Override
     public void setNextButtonEnabled(boolean isEnabled) {
         btnNext.setEnabled(isEnabled);
     }
 
     /** {@inheritDoc} */
+    @Override
     public void setBackButtonVisible(boolean isVisible) {
         btnBack.setVisible(isVisible);
     }
 
     /** {@inheritDoc} */
+    @Override
     public void setFinishButtonEnabled(boolean isEnabled) {
         btnFinish.setEnabled(isEnabled);
     }
 
     /** {@inheritDoc} */
+    @Override
+    public void setTitle(String title) {
+        this.setText(title);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
     /** {@inheritDoc} */
+    @Override
     public void setCaption(@NotNull String caption) {
         this.caption.setText(caption);
     }
 
     /** {@inheritDoc} */
+    @Override
     public void setNotice(@Nullable String notice) {
         this.notice.setText(notice);
     }
 
     /** {@inheritDoc} */
-    public void setImage(@Nullable Image image) {
-        imagePanel.setWidget(image);
+    @Override
+    public void setImage(@Nullable ImageResource image) {
+        imagePanel.setWidget(image == null ? null : new Image(image));
     }
 
     /** {@inheritDoc} */
+    @Override
     public void close() {
         this.hide();
     }
 
     /** {@inheritDoc} */
-    public void showWizard() {
+    @Override
+    public void showDialog() {
         this.center();
         this.show();
     }
 
     /** {@inheritDoc} */
-    public void setChangePageAnimationEnabled(boolean isEnabled) {
-        if (isEnabled) {
-            contentPanel.setAnimationDuration(ANIMATION_TIME);
-        } else {
-            contentPanel.setAnimationDuration(NO_TIME);
-        }
+    @Override
+    public void setEnabledAnimation(boolean isEnabled) {
+        contentPanel.setAnimationDuration(isEnabled ? ANIMATION_TIME : NO_TIME);
     }
 
     /** {@inheritDoc} */
+    @Override
     public AcceptsOneWidget getContentPanel() {
         return contentPanel;
     }
