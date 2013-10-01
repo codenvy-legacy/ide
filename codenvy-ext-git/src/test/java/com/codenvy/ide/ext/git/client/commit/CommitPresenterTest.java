@@ -29,7 +29,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -80,8 +79,6 @@ public class CommitPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with native method into DTO object
     public void testOnCommitClickedWhenCommitWSRequestIsSuccessful() throws Exception {
         when(view.getMessage()).thenReturn(COMMIT_TEXT);
         when(view.isAllFilesInclued()).thenReturn(ALL_FILE_INCLUDES);
@@ -108,6 +105,7 @@ public class CommitPresenterTest extends BaseTest {
             }
         }).when(resourceProvider).getProject(anyString(), (AsyncCallback<Project>)anyObject());
 
+        presenter.showDialog();
         presenter.onCommitClicked();
 
         verify(view).getMessage();
@@ -121,8 +119,6 @@ public class CommitPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with native method into DTO object
     public void testOnCommitClickedWhenCommitWSRequestIsFailed() throws Exception {
         when(view.getMessage()).thenReturn(COMMIT_TEXT);
         when(view.isAllFilesInclued()).thenReturn(ALL_FILE_INCLUDES);
@@ -139,6 +135,7 @@ public class CommitPresenterTest extends BaseTest {
         }).when(service).commitWS(anyString(), (Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
                                   (RequestCallback<Revision>)anyObject());
 
+        presenter.showDialog();
         presenter.onCommitClicked();
 
         verify(view).getMessage();
@@ -153,8 +150,6 @@ public class CommitPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with native method into DTO object
     public void testOnCommitClickedWhenCommitRequestIsSuccessful() throws Exception {
         when(view.getMessage()).thenReturn(COMMIT_TEXT);
         when(view.isAllFilesInclued()).thenReturn(ALL_FILE_INCLUDES);
@@ -183,6 +178,7 @@ public class CommitPresenterTest extends BaseTest {
             }
         }).when(resourceProvider).getProject(anyString(), (AsyncCallback<Project>)anyObject());
 
+        presenter.showDialog();
         presenter.onCommitClicked();
 
         verify(view).getMessage();
@@ -198,8 +194,6 @@ public class CommitPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with native method into DTO object
     public void testOnCommitClickedWhenCommitRequestIsFailed() throws Exception {
         when(view.getMessage()).thenReturn(COMMIT_TEXT);
         when(view.isAllFilesInclued()).thenReturn(ALL_FILE_INCLUDES);
@@ -218,6 +212,7 @@ public class CommitPresenterTest extends BaseTest {
         }).when(service).commit(anyString(), (Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
                                 (AsyncRequestCallback<Revision>)anyObject());
 
+        presenter.showDialog();
         presenter.onCommitClicked();
 
         verify(view).getMessage();
@@ -234,8 +229,6 @@ public class CommitPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with native method into DTO object
     public void testOnCommitClickedWhenRequestExceptionHappened() throws Exception {
         when(view.getMessage()).thenReturn(COMMIT_TEXT);
         when(view.isAllFilesInclued()).thenReturn(ALL_FILE_INCLUDES);
@@ -245,6 +238,7 @@ public class CommitPresenterTest extends BaseTest {
         doThrow(RequestException.class).when(service).commit(anyString(), (Project)anyObject(), anyString(), anyBoolean(), anyBoolean(),
                                                              (AsyncRequestCallback<Revision>)anyObject());
 
+        presenter.showDialog();
         presenter.onCommitClicked();
 
         verify(view).getMessage();

@@ -30,7 +30,6 @@ import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -235,8 +234,6 @@ public class FetchPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnFetchClickedWhenFetchWSRequestIsSuccessful() throws Exception {
         when(view.getRepositoryUrl()).thenReturn(REMOTE_URI);
         when(view.getRepositoryName()).thenReturn(REPOSITORY_NAME, REPOSITORY_NAME);
@@ -268,8 +265,6 @@ public class FetchPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnFetchClickedWhenFetchWSRequestIsFailed() throws Exception {
         when(view.getRepositoryUrl()).thenReturn(REMOTE_URI);
         when(view.getRepositoryName()).thenReturn(REPOSITORY_NAME, REPOSITORY_NAME);
@@ -301,8 +296,6 @@ public class FetchPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnFetchClickedWhenFetchRequestIsSuccessful() throws Exception {
         when(view.getRepositoryUrl()).thenReturn(REMOTE_URI);
         when(view.getRepositoryName()).thenReturn(REPOSITORY_NAME, REPOSITORY_NAME);
@@ -337,8 +330,6 @@ public class FetchPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnFetchClickedWhenFetchRequestIsFailed() throws Exception {
         when(view.getRepositoryUrl()).thenReturn(REMOTE_URI);
         when(view.getRepositoryName()).thenReturn(REPOSITORY_NAME, REPOSITORY_NAME);
@@ -373,8 +364,6 @@ public class FetchPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnFetchClickedWhenRequestExceptionHappened() throws Exception {
         when(view.getRepositoryUrl()).thenReturn(REMOTE_URI);
         when(view.getRepositoryName()).thenReturn(REPOSITORY_NAME, REPOSITORY_NAME);

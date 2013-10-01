@@ -34,7 +34,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -186,8 +185,6 @@ public class HistoryPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnProjectChangesClickedWhenDiffRequestIsSuccessful() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -221,8 +218,6 @@ public class HistoryPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnProjectChangesClickedWhenDiffRequestIsFailed() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -259,8 +254,6 @@ public class HistoryPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnProjectChangesClickedWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service).diff(anyString(), anyString(), (JsonArray<String>)anyObject(),
                                                            (DiffRequest.DiffType)anyObject(), anyBoolean(), anyInt(),
@@ -286,8 +279,6 @@ public class HistoryPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnResourceChangesClicked() throws Exception {
         presenter.onProjectChangesClicked();
         reset(view);
@@ -367,8 +358,6 @@ public class HistoryPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnRevisionSelectedWhenDiffRequestIsSuccessful() throws Exception {
         JsonArray<Revision> revisions = JsonCollections.createArray();
         revisions.add(selectedRevision);
@@ -412,8 +401,6 @@ public class HistoryPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnRevisionSelectedWhenDiffRequestIsFailed() throws Exception {
         JsonArray<Revision> revisions = JsonCollections.createArray();
         revisions.add(selectedRevision);
@@ -457,8 +444,6 @@ public class HistoryPresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnRevisionSelectedWhenRequestExceptionHappened() throws Exception {
         JsonArray<Revision> revisions = JsonCollections.createArray();
         revisions.add(selectedRevision);

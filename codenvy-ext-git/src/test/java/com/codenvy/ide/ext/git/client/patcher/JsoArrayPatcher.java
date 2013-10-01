@@ -17,10 +17,11 @@
  */
 package com.codenvy.ide.ext.git.client.patcher;
 
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.js.JsoArray;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
+
+import static org.mockito.Mockito.mock;
 
 /**
  * Patcher for JsoArray class. Replace native method into JsonArray.
@@ -28,12 +29,17 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @PatchClass(JsoArray.class)
-public class JsoArrayPatcher<T> {
+public class JsoArrayPatcher {
 
     /** Patch create method. */
+    @PatchMethod(override = true)
+    public static <T> JsoArray<T> create() {
+        return mock(JsoArray.class);
+    }
+
+    /** Patch add method. */
     @PatchMethod
-    public static JsoArray create(JsoArray jsoArray) {
-        // TODO This doesn't work now.
-        return (JsoArray)JsonCollections.createArray();
+    public static <T> void add(JsoArray array, T value) {
+        // do nothing
     }
 }
