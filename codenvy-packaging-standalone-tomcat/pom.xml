@@ -41,7 +41,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-websocket</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>httpclient</artifactId>
@@ -56,43 +55,36 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-maven</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-storage</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-packaging-api-war</artifactId>
             <type>war</type>
-            <version>${com.codenvy.organization.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-asm</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-site-war</artifactId>
-            <version>${project.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
-            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-maven</artifactId>
-            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.kernel</groupId>
@@ -104,7 +96,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-git-server</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
@@ -145,38 +136,31 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs-fs</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
-            <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-            <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>${ch.qos.logback.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>${ch.qos.logback.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-java</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -192,7 +176,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-aws</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>httpclient</artifactId>
@@ -204,31 +187,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-java-runtime</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-ui</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-commons</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>gwt-user</artifactId>
-                    <groupId>com.google.gwt</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>slf4j-log4j12</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-python-runtime</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -252,7 +210,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-jenkins</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -265,11 +222,9 @@
             </exclusions>
         </dependency>
 
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-googleappengine</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -289,7 +244,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-git</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -305,7 +259,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-ssh</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -314,26 +267,6 @@
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
                     <artifactId>codenvy-gwtframework-commons</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-heroku</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-ui</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-commons</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>gwt-user</artifactId>
-                    <groupId>com.google.gwt</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -341,7 +274,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-openshift</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -369,7 +301,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-cloudbees</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -385,7 +316,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-cloudfoundry</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -405,7 +335,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-appfog</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -425,34 +354,12 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-logreader</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-maven</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-ui</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-commons</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-samples</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.ide</groupId>
-                    <artifactId>exo-ide-framework-client</artifactId>
-                </exclusion>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
                     <artifactId>codenvy-gwtframework-ui</artifactId>
@@ -467,7 +374,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -480,41 +386,6 @@
                 <exclusion>
                     <artifactId>gwt-user</artifactId>
                     <groupId>com.google.gwt</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>codenvy-ide-collaboration</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-ui</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-commons</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>gwt-user</artifactId>
-                    <groupId>com.google.gwt</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-ruby</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-ui</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-commons</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -522,7 +393,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.ide</groupId>
@@ -549,14 +419,11 @@
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-java-sdk</artifactId>
             <type>zip</type>
-            <version>1.7.2</version>
         </dependency>
-
         <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-python-sdk</artifactId>
             <type>zip</type>
-            <version>1.7.2</version>
         </dependency>
 
     </dependencies>
@@ -613,13 +480,11 @@
                                 <artifactItem>
                                     <groupId>com.google.appengine</groupId>
                                     <artifactId>appengine-java-sdk</artifactId>
-                                    <version>${appengine.version}</version>
                                     <type>zip</type>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>com.google.appengine</groupId>
                                     <artifactId>appengine-python-sdk</artifactId>
-                                    <version>${appengine.version}</version>
                                     <type>zip</type>
                                 </artifactItem>
                             </artifactItems>
@@ -649,7 +514,6 @@
                                 <artifactItem>
                                     <groupId>org.exoplatform.ide</groupId>
                                     <artifactId>ide-codeassistant-lucene-index</artifactId>
-                                    <version>${ide.codeassistant.lucene.index.version}</version>
                                     <type>zip</type>
                                 </artifactItem>
                             </artifactItems>

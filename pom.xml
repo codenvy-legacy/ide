@@ -139,6 +139,12 @@
                 <version>${com.codenvy.organization.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.codenvy.organization</groupId>
+                <artifactId>codenvy-organization-packaging-api-war</artifactId>
+                <type>war</type>
+                <version>${com.codenvy.organization.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.codenvy.commons</groupId>
                 <artifactId>codenvy-commons-security</artifactId>
                 <version>${com.codenvy.commons.version}</version>
@@ -168,8 +174,45 @@
                 <artifactId>codenvy-api-vfs</artifactId>
                 <version>${com.codenvy.platform-api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.codenvy.ide</groupId>
+                <artifactId>codenvy-ide-site-war</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
+            </dependency>
 
             <!-- IDE 2.x -->
+            <dependency>
+                <groupId>org.exoplatform.ide</groupId>
+                <artifactId>exo-ide-codeassistant-asm</artifactId>
+                <version>${org.exoplatform.ide.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.exoplatform.ide</groupId>
+                <artifactId>exo-ide-codeassistant-storage</artifactId>
+                <type>war</type>
+                <version>${org.exoplatform.ide.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.exoplatform.ide</groupId>
+                <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
+                <version>${org.exoplatform.ide.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.exoplatform.ide</groupId>
+                <artifactId>exo-ide-extension-appfog</artifactId>
+                <version>${org.exoplatform.ide.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.exoplatform.ide</groupId>
+                <artifactId>exo-ide-extension-aws</artifactId>
+                <version>${org.exoplatform.ide.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.exoplatform.ide</groupId>
+                <artifactId>exo-ide-extension-cloudbees</artifactId>
+                <version>${org.exoplatform.ide.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.exoplatform.ide</groupId>
                 <artifactId>exo-ide-extension-cloudfoundry</artifactId>
@@ -187,7 +230,22 @@
             </dependency>
             <dependency>
                 <groupId>org.exoplatform.ide</groupId>
+                <artifactId>exo-ide-extension-java</artifactId>
+                <version>${org.exoplatform.ide.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.exoplatform.ide</groupId>
+                <artifactId>exo-ide-extension-java-runtime</artifactId>
+                <version>${org.exoplatform.ide.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.exoplatform.ide</groupId>
                 <artifactId>exo-ide-extension-jenkins</artifactId>
+                <version>${org.exoplatform.ide.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.exoplatform.ide</groupId>
+                <artifactId>exo-ide-extension-logreader</artifactId>
                 <version>${org.exoplatform.ide.version}</version>
             </dependency>
             <dependency>
@@ -198,6 +256,23 @@
             <dependency>
                 <groupId>org.exoplatform.ide</groupId>
                 <artifactId>exo-ide-extension-ssh</artifactId>
+                <version>${org.exoplatform.ide.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.exoplatform.ide</groupId>
+                <artifactId>exo-ide-extension-openshift</artifactId>
+                <version>${org.exoplatform.ide.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.exoplatform.ide</groupId>
+                <artifactId>exo-ide-git-server</artifactId>
+                <type>war</type>
+                <version>${org.exoplatform.ide.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.exoplatform.ide</groupId>
+                <artifactId>exo-ide-maven</artifactId>
+                <type>war</type>
                 <version>${org.exoplatform.ide.version}</version>
             </dependency>
             <dependency>
@@ -214,6 +289,12 @@
                 <groupId>org.exoplatform.ide</groupId>
                 <artifactId>exo-ide-websocket</artifactId>
                 <version>${org.exoplatform.ide.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.exoplatform.ide</groupId>
+                <artifactId>ide-codeassistant-lucene-index</artifactId>
+                <version>${ide.codeassistant.lucene.index.version}</version>
+                <type>zip</type>
             </dependency>
 
             <!-- Codenvy Platform -->
@@ -397,6 +478,11 @@
                 <artifactId>gwt-test-utils</artifactId>
                 <version>0.44</version>
             </dependency>
+            <dependency>
+                <groupId>org.easytesting</groupId>
+                <artifactId>fest-assert</artifactId>
+                <version>1.4</version>
+            </dependency>
 
             <!-- Logging libraries -->
             <dependency>
@@ -410,8 +496,28 @@
                 <version>${org.slf4j.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>log4j-over-slf4j</artifactId>
+                <version>${org.slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jul-to-slf4j</artifactId>
+                <version>${org.slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${org.slf4j.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
+                <version>${ch.qos.logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
                 <version>${ch.qos.logback.version}</version>
             </dependency>
 
@@ -566,6 +672,12 @@
             <dependency>
                 <groupId>com.google.appengine</groupId>
                 <artifactId>appengine-java-sdk</artifactId>
+                <version>${appengine.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>com.google.appengine</groupId>
+                <artifactId>appengine-python-sdk</artifactId>
                 <version>${appengine.version}</version>
                 <type>zip</type>
             </dependency>
