@@ -471,7 +471,6 @@
                         <goals>
                             <goal>compile</goal>
                             <goal>test</goal>
-                            <goal>i18n</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -479,7 +478,6 @@
                     <module>com.codenvy.ide.IDE</module>
                     <logLevel>INFO</logLevel>
                     <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
-                    <i18nMessagesBundle>com.codenvy.ide.client.Messages</i18nMessagesBundle>
                 </configuration>
             </plugin>
 
