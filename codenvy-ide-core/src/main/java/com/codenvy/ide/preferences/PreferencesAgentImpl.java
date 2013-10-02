@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.preferences;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.json.JsonArray;
@@ -42,7 +43,7 @@ public class PreferencesAgentImpl implements PreferencesAgent {
 
     /** {@inheritDoc} */
     @Override
-    public void addPage(PreferencesPagePresenter page) {
+    public void addPage(@NotNull PreferencesPagePresenter page) {
         preferences.add(page);
     }
 

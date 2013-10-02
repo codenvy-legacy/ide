@@ -23,6 +23,7 @@ import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.notification.NotificationManagerImpl;
+import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -58,7 +59,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
      * @param genericPerspectiveProvider
      */
     @Inject
-    protected WorkspacePresenter(WorkspaceView view, MainMenuPresenter menu, ToolbarPresenter toolbarPresenter,
+    protected WorkspacePresenter(WorkspaceView view, MainMenuPresenter menu, @MainToolbar ToolbarPresenter toolbarPresenter,
                                  Provider<WorkBenchPresenter> genericPerspectiveProvider, NotificationManagerImpl notificationManager) {
         super();
         this.view = view;
