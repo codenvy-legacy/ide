@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ CODENVY CONFIDENTIAL
-  ~ __________________
-  ~
-  ~ [2012] - [2013] Codenvy, S.A.
-  ~ All Rights Reserved.
-  ~
-  ~ NOTICE:  All information contained herein is, and remains
-  ~ the property of Codenvy S.A. and its suppliers,
-  ~ if any.  The intellectual and technical concepts contained
-  ~ herein are proprietary to Codenvy S.A.
-  ~ and its suppliers and may be covered by U.S. and Foreign Patents,
-  ~ patents in process, and are protected by trade secret or copyright law.
-  ~ Dissemination of this information or reproduction of this material
-  ~ is strictly forbidden unless prior written permission is obtained
-  ~ from Codenvy S.A..
-  -->
+
+    CODENVY CONFIDENTIAL
+    __________________
+
+     [2012] - [2013] Codenvy, S.A.
+     All Rights Reserved.
+
+    NOTICE:  All information contained herein is, and remains
+    the property of Codenvy S.A. and its suppliers,
+    if any.  The intellectual and technical concepts contained
+    herein are proprietary to Codenvy S.A.
+    and its suppliers and may be covered by U.S. and Foreign Patents,
+    patents in process, and are protected by trade secret or copyright law.
+    Dissemination of this information or reproduction of this material
+    is strictly forbidden unless prior written permission is obtained
+    from Codenvy S.A..
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.codenvy.ide</groupId>
@@ -27,17 +30,12 @@
     <artifactId>codenvy-sdk-packaging-standalone-tomcat</artifactId>
     <packaging>pom</packaging>
     <name>Codenvy SDK :: Assemblies Tomcat</name>
+
     <dependencies>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-sdk-application-war</artifactId>
             <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-packaging-shell-war</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
@@ -77,22 +75,6 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-asm</artifactId>
             <version>${org.exoplatform.ide.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-shell</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.gwt</groupId>
-                    <artifactId>gwt-dev</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>log4j</artifactId>
-                    <groupId>log4j</groupId>
-                </exclusion>
-            </exclusions>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -575,12 +557,6 @@
             <artifactId>jsch</artifactId>
         </dependency>
 
-        <!-- dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>ide-codeassistant-lucene-index</artifactId>
-            <type>zip</type>
-        </dependency-->
-
         <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-java-sdk</artifactId>
@@ -615,7 +591,7 @@
                                     <groupId>org.apache.tomcat</groupId>
                                     <artifactId>tomcat</artifactId>
                                     <type>zip</type>
-                                    <version>7.0.37</version>
+                                    <version>${tomcat.version}</version>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/packager-conf/zip</outputDirectory>
                                     <destFileName>tomcat.zip</destFileName>
@@ -712,7 +688,7 @@
                                         <exclude name="**/host-manager/**"/>
                                     </patternset>
                                 </unzip>
-                                <move file="${project.build.directory}/apache-tomcat-7.0.37"
+                                <move file="${project.build.directory}/apache-tomcat-${tomcat.version}"
                                       tofile="${project.build.directory}/tomcat-ide"/>
                                 <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
                                     <fileset dir="${basedir}/src/main/resources/tomcat"/>
@@ -748,8 +724,6 @@
                                       tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${project.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${org.exoplatform.ide.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${org.exoplatform.ide.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war"

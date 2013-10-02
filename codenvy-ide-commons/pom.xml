@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ CODENVY CONFIDENTIAL
-  ~ __________________
-  ~
-  ~ [2012] - [2013] Codenvy, S.A.
-  ~ All Rights Reserved.
-  ~
-  ~ NOTICE:  All information contained herein is, and remains
-  ~ the property of Codenvy S.A. and its suppliers,
-  ~ if any.  The intellectual and technical concepts contained
-  ~ herein are proprietary to Codenvy S.A.
-  ~ and its suppliers and may be covered by U.S. and Foreign Patents,
-  ~ patents in process, and are protected by trade secret or copyright law.
-  ~ Dissemination of this information or reproduction of this material
-  ~ is strictly forbidden unless prior written permission is obtained
-  ~ from Codenvy S.A..
-  -->
 
+    CODENVY CONFIDENTIAL
+    __________________
+
+     [2012] - [2013] Codenvy, S.A.
+     All Rights Reserved.
+
+    NOTICE:  All information contained herein is, and remains
+    the property of Codenvy S.A. and its suppliers,
+    if any.  The intellectual and technical concepts contained
+    herein are proprietary to Codenvy S.A.
+    and its suppliers and may be covered by U.S. and Foreign Patents,
+    patents in process, and are protected by trade secret or copyright law.
+    Dissemination of this information or reproduction of this material
+    is strictly forbidden unless prior written permission is obtained
+    from Codenvy S.A..
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <!-- POM file generated with GWT webAppCreator -->
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.codenvy.ide</groupId>
@@ -32,25 +32,12 @@
     <name>Codenvy :: Commons</name>
 
     <properties>
-        <!-- Convenience property to set the GWT version -->
-        <gwtVersion>2.4.0</gwtVersion>
-        <!-- GWT needs at least java 1.5 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.exoplatform.kernel</groupId>
-            <artifactId>exo.kernel.container</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>xstream</artifactId>
-                    <groupId>xstream</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
@@ -66,10 +53,6 @@
             <version>collide</version>
         </dependency>
         <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-core</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
@@ -78,38 +61,22 @@
             <artifactId>gson</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
-            <classifier>sources</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <!-- needs extra dependencies: objenesis & hamcrest -->
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.gwt-test-utils</groupId>
-            <artifactId>gwt-test-utils</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
-            <version>0.9.9-RC1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.kernel</groupId>
+            <artifactId>exo.kernel.container</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>xstream</artifactId>
+                    <groupId>xstream</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
@@ -122,13 +89,6 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
-        <testSourceDirectory>src/test/java</testSourceDirectory>
-
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-            </testResource>
-        </testResources>
         <sourceDirectory>src/main/java</sourceDirectory>
         <outputDirectory>target/classes</outputDirectory>
     </build>

@@ -46,7 +46,7 @@ public class TestExtensionManagerGenerator {
     @Test
     public void shouldNotMatchExtensions() {
         List<String> incorrect = new ArrayList<String>();
-        // no "@" char befor extension
+        // no "@" char before extension
         incorrect.add("@Singleton Extension  (title = \"Demo extension1\", id = \"ide.ext.demo\", version = \"2.0.0\")"
                       + "public class DemoExtension");
         matchExtensions(incorrect, false);
@@ -57,14 +57,14 @@ public class TestExtensionManagerGenerator {
      *
      * @param strings
      *         the collection of strings to test
-     * @param extected
+     * @param expected
      *         expected result
      */
-    protected void matchExtensions(List<String> strings, boolean extected) {
+    protected void matchExtensions(List<String> strings, boolean expected) {
         for (String matchingString : strings) {
             Matcher matcher = ExtensionManagerGenerator.EXT_PATTERN.matcher(matchingString);
-            assertEquals(String.format("Line '%s' should" + (extected ? "" : " not") + " match", matchingString),
-                         extected, matcher.matches());
+            assertEquals(String.format("Line '%s' should" + (expected ? "" : " not") + " match", matchingString),
+                         expected, matcher.matches());
         }
     }
 

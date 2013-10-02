@@ -42,7 +42,7 @@ import static org.mockito.Mockito.verify;
  *         Aug 3, 2012
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectExpolorerPresenterTest {
+public class ProjectExplorerPresenterTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     ProjectExplorerView projectExplorerView;
@@ -74,7 +74,7 @@ public class ProjectExpolorerPresenterTest {
 
     /** Testing that doubleClick generates OpenFileEvent and fire it on EventBus */
     @Test
-    public void shoudFireOpenFileOnDoubleClick() {
+    public void shouldFireOpenFileOnDoubleClick() {
         // TODO
     }
 
