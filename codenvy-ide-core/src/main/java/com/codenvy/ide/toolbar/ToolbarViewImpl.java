@@ -32,7 +32,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 
 /**
@@ -40,7 +39,6 @@ import com.google.inject.Singleton;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-@Singleton
 public class ToolbarViewImpl extends Composite implements ToolbarView {
 
     public static final int DELAY_MILLIS = 1000;

@@ -15,22 +15,23 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.api.extension;
+package com.codenvy.ide.toolbar;
+
+import com.google.inject.BindingAnnotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Extension Definition annotation. Used to mark class as Extension and declare it's description
+ * Annotation used instead named annotation.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @version $Id:
  */
-public @interface Extension {
-
-    /** @return Extension version */
-    String version() default "1.0";
-
-    /** @return Extension title */
-    String title();
-
-    /** @return Extension brief description */
-    String description() default "";
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD, ElementType.TYPE})
+@BindingAnnotation
+public @interface MainToolbar {
 }

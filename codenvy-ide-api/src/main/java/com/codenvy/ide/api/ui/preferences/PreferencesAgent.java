@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.api.ui.preferences;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.extension.SDK;
 
 
@@ -32,5 +33,5 @@ public interface PreferencesAgent {
      *
      * @param page
      */
-    void addPage(PreferencesPagePresenter page);
+    void addPage(@NotNull PreferencesPagePresenter page);
 }
