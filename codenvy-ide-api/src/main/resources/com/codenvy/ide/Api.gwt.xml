@@ -18,13 +18,8 @@
   -->
 
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.4.0//EN"
-  "http://google-web-toolkit.googlecode.com/svn/tags/2.4.0/distro-source/core/src/gwt-module.dtd">
+        "http://google-web-toolkit.googlecode.com/svn/tags/2.4.0/distro-source/core/src/gwt-module.dtd">
 <module>
-    <!-- Generator that builds ExtensionManager from ExtensionDefinition annotations. -->
-    <generate-with class="com.codenvy.ide.extension.ExtensionRegistryGenerator">
-        <when-type-assignable class="com.codenvy.ide.extension.ExtensionRegistry"/>
-    </generate-with>
-
     <inherits name="com.google.gwt.user.User"/>
 
     <inherits name="elemental.Elemental"/>

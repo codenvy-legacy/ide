@@ -22,7 +22,6 @@ import com.codenvy.ide.api.ui.action.ActionGroup;
 import com.codenvy.ide.api.ui.action.ActionPlaces;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 
 /**
@@ -30,7 +29,6 @@ import com.google.inject.Singleton;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-@Singleton
 public class ToolbarPresenter implements Presenter, ToolbarView.ActionDelegate {
     private ToolbarView view;
 
