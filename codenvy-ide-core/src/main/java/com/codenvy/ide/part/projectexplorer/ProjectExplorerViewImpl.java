@@ -26,6 +26,7 @@ import com.codenvy.ide.tree.FileTreeNodeRenderer;
 import com.codenvy.ide.tree.ResourceTreeNodeDataAdapter;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
+import com.codenvy.ide.util.input.SignalEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -87,6 +88,11 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
             @Override
             public void onNodeExpanded(TreeNodeElement<Resource> node) {
+            }
+
+            @Override
+            public void onNodeSelected(TreeNodeElement<Resource> node, SignalEvent event) {
+                delegate.onResourceSelected(node.getData());
             }
 
             @Override

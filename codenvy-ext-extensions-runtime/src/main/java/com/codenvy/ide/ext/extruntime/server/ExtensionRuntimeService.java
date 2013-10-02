@@ -92,7 +92,8 @@ public class ExtensionRuntimeService {
                                                    List<Property> properties) throws VirtualFileSystemException,
             IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("EmptyExtension.zip");
+        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(
+                "templates/EmptyExtension.zip");
         createProject(vfs, name, rootId, templateStream, properties);
     }
 
@@ -120,7 +121,8 @@ public class ExtensionRuntimeService {
                                                     @QueryParam("version") String version) throws VirtualFileSystemException,
             IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("GistExtensionSample.zip");
+        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(
+                "templates/GistExtensionSample.zip");
         createProject(vfs, name, rootId, templateStream, properties);
 
         MavenXpp3Reader pomReader = new MavenXpp3Reader();

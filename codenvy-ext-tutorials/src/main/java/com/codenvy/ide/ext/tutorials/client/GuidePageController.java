@@ -21,10 +21,9 @@ import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
+import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -36,33 +35,35 @@ import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_P
  * and closes it when project has closed.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: TutorialPageController.java Sep 13, 2013 12:48:08 PM azatsarynnyy $
+ * @version $Id: GuidePageController.java Sep 13, 2013 12:48:08 PM azatsarynnyy $
  */
 @Singleton
-public class TutorialPageController {
-    private final ResourceProvider   resourceProvider;
-    private final WorkspacePresenter workspacePresenter;
-    private final TutorialGuidePage  tutorialGuidePage;
+public class GuidePageController {
+    private final ResourceProvider resourceProvider;
+    private final WorkspaceAgent   workspaceAgent;
+    private final GuidePage        guidePage;
 
     @Inject
-    public TutorialPageController(ResourceProvider resourceProvider, EventBus eventBus,
-                                  Provider<WorkspacePresenter> workspaceProvider,
-                                  TutorialGuidePage tutorialGuidePage) {
+    public GuidePageController(ResourceProvider resourceProvider, EventBus eventBus,
+                               WorkspaceAgent workspaceAgent,
+                               GuidePage guidePage) {
         this.resourceProvider = resourceProvider;
-        this.workspacePresenter = workspaceProvider.get();
-        this.tutorialGuidePage = tutorialGuidePage;
+        this.workspaceAgent = workspaceAgent;
+        this.guidePage = guidePage;
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
-                if (event.getProject() != null && event.getProject().getDescription().getNatures().contains(TUTORIAL_PROJECT_TYPE)) {
+                if (event.getProject() != null &&
+                    event.getProject().getDescription().getNatures().contains(TUTORIAL_PROJECT_TYPE)) {
                     openTutorialPage();
                 }
             }
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                if (event.getProject() != null && event.getProject().getDescription().getNatures().contains(TUTORIAL_PROJECT_TYPE)) {
+                if (event.getProject() != null &&
+                    event.getProject().getDescription().getNatures().contains(TUTORIAL_PROJECT_TYPE)) {
                     closeTutorialPage();
                 }
             }
@@ -77,13 +78,13 @@ public class TutorialPageController {
     /** Open tutorial description page. */
     public void openTutorialPage() {
         if (isTutorialContainsGuide()) {
-            workspacePresenter.openPart(tutorialGuidePage, PartStackType.EDITING);
+            workspaceAgent.openPart(guidePage, PartStackType.EDITING);
         }
     }
 
     /** Close tutorial description page. */
     public void closeTutorialPage() {
-        workspacePresenter.removePart(tutorialGuidePage);
+        workspaceAgent.removePart(guidePage);
     }
 
     private boolean isTutorialContainsGuide() {

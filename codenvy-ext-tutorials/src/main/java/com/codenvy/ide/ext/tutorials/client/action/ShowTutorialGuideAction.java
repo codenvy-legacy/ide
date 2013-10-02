@@ -20,7 +20,7 @@ package com.codenvy.ide.ext.tutorials.client.action;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.ext.tutorials.client.TutorialPageController;
+import com.codenvy.ide.ext.tutorials.client.GuidePageController;
 import com.codenvy.ide.ext.tutorials.client.TutorialsLocalizationConstant;
 import com.codenvy.ide.ext.tutorials.client.TutorialsResources;
 import com.codenvy.ide.resources.model.Project;
@@ -38,23 +38,23 @@ import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_P
 @Singleton
 public class ShowTutorialGuideAction extends Action {
 
-    private final ResourceProvider       resourceProvider;
-    private       TutorialPageController tutorialPageController;
+    private final ResourceProvider    resourceProvider;
+    private       GuidePageController guidePageController;
 
     @Inject
-    public ShowTutorialGuideAction(TutorialPageController tutorialPageController, TutorialsResources resources,
+    public ShowTutorialGuideAction(GuidePageController guidePageController, TutorialsResources resources,
                                    ResourceProvider resourceProvider,
                                    TutorialsLocalizationConstant localizationConstants) {
         super(localizationConstants.showTutorialGuideActionText(),
               localizationConstants.showTutorialGuideActionDescription(), resources.guide());
-        this.tutorialPageController = tutorialPageController;
+        this.guidePageController = guidePageController;
         this.resourceProvider = resourceProvider;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        tutorialPageController.openTutorialPage();
+        guidePageController.openTutorialPage();
     }
 
     /** {@inheritDoc} */

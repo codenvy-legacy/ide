@@ -35,9 +35,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
 
-// TODO: Where possible, port more lists that we have hand-rolled in
-// other parts of the UI to use this widget.
-
 /** A simple list widget for displaying flat collections of things. */
 // TODO: When we hit a place where a componenet wants to ditch all of
 // the default simple list styles, figure out a way to make that easy.

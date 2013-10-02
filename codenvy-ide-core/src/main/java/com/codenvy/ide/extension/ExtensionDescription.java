@@ -31,14 +31,11 @@ import com.codenvy.ide.json.JsonArray;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class ExtensionDescription {
-    private final String id;
-
-    private final String version;
-
+    private final String                           id;
+    private final String                           version;
     private final JsonArray<DependencyDescription> dependencies;
-
-    private final String title;
-
+    private final String                           title;
+    private final String                           description;
     private boolean enabled = false;
 
     /**
@@ -48,12 +45,24 @@ public class ExtensionDescription {
      * @param version
      * @param title
      * @param dependencies
+     * @param description
      */
-    public ExtensionDescription(String id, String version, String title, JsonArray<DependencyDescription> dependencies) {
+    public ExtensionDescription(String id, String version, String title, String description,
+                                JsonArray<DependencyDescription> dependencies) {
         this.id = id;
         this.version = version;
         this.title = title;
         this.dependencies = dependencies;
+        this.description = description;
+    }
+
+    /**
+     * Get Extension description
+     *
+     * @return
+     */
+    public String getDescription() {
+        return description;
     }
 
     /**

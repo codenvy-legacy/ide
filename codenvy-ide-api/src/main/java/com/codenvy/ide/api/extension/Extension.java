@@ -25,9 +25,12 @@ package com.codenvy.ide.api.extension;
 public @interface Extension {
 
     /** @return Extension version */
-    String version();
+    String version() default "1.0";
+
+    /** @return Extension title */
+    String title();
 
     /** @return Extension brief description */
-    String title();
+    String description() default "";
 
 }

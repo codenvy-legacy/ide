@@ -22,7 +22,7 @@ import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.extruntime.client.ExtRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.extruntime.client.ExtRuntimeResources;
-import com.codenvy.ide.ext.extruntime.client.LaunchExtensionController;
+import com.codenvy.ide.ext.extruntime.client.ExtensionsController;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -30,24 +30,22 @@ import com.google.inject.Singleton;
 import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
 
 /**
- * Action to launch Codenvy application with custom extension.
- * 
+ * Action for launching Codenvy application with custom extension.
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: LaunchAction.java Jul 3, 2013 1:58:47 PM azatsarynnyy $
  */
 @Singleton
 public class LaunchAction extends Action {
 
-    private LaunchExtensionController controller;
-    private final ResourceProvider    resourceProvider;
+    private final ResourceProvider     resourceProvider;
+    private       ExtensionsController controller;
 
     @Inject
-    public LaunchAction(LaunchExtensionController controller,
-                        ExtRuntimeResources resources,
-                        ResourceProvider resourceProvider,
-                        ExtRuntimeLocalizationConstant localizationConstants) {
-        super(localizationConstants.launchExtensionActionText(), localizationConstants.launchExtensionActionDescription(),
-              resources.launchApp());
+    public LaunchAction(ExtensionsController controller, ExtRuntimeResources resources,
+                        ResourceProvider resourceProvider, ExtRuntimeLocalizationConstant localizationConstants) {
+        super(localizationConstants.launchExtensionActionText(),
+              localizationConstants.launchExtensionActionDescription(), resources.launchApp());
         this.controller = controller;
         this.resourceProvider = resourceProvider;
     }
@@ -63,7 +61,8 @@ public class LaunchAction extends Action {
     public void update(ActionEvent e) {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
-            e.getPresentation().setVisible(activeProject.getDescription().getNatures().contains(CODENVY_EXTENSION_PROJECT_TYPE));
+            e.getPresentation()
+             .setVisible(activeProject.getDescription().getNatures().contains(CODENVY_EXTENSION_PROJECT_TYPE));
             e.getPresentation().setEnabled(!controller.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);

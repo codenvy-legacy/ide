@@ -15,10 +15,11 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension;
+package com.codenvy.util;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.extension.SDK;
+import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
@@ -41,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class generates implementation for {@link ExtensionRegistry} that contains descriptive information about
+ * This class generates implementation for {@link com.codenvy.ide.extension.ExtensionRegistry} that contains descriptive information about
  * extensions present in IDE Bundle.
  * Generator processes all Types found by TypeOracle, looking for {@link Extension} annotation.
  * Each class annotated with Extension is processed to retrieve dependency information. Dependencies
@@ -180,9 +181,9 @@ public class ExtensionRegistryGenerator extends Generator {
                 // the class's fqn
                 String extensionId = extension.getQualifiedSourceName();
 
-                sw.println("extensions.put(\"%s\", new ExtensionDescription(\"%s\",\"%s\",\"%s\",deps));",
+                sw.println("extensions.put(\"%s\", new ExtensionDescription(\"%s\",\"%s\",\"%s\",\"%s\",deps));",
                            escape(extensionId), escape(extensionId), escape(annotation.version()),
-                           escape(annotation.title()));
+                           escape(annotation.title()), escape(annotation.description()));
                 sw.outdent();
                 sw.println("}");
             }

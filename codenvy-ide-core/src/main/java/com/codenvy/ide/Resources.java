@@ -66,4 +66,7 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
 
     @Source("tree/project-closed.png")
     ImageResource projectClosed();
+
+    @Source("extension/extention.png")
+    ImageResource extension();
 }
