@@ -39,7 +39,7 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
-@Extension(title = "Css Support : syntax highlighting and autocomplete.", version = "3.0.0")
+@Extension(title = "Css Support", version = "3.0.0", description = "syntax highlighting and autocomplete.")
 public class CssExtension {
     public interface ParserResource extends ClientBundle {
         @Source("com/codenvy/ide/extension/css/css_parser.js")

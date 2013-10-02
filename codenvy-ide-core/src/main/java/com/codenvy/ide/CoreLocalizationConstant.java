@@ -41,4 +41,7 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("noTechnologyMessage")
     String noTechnologyMessage();
+
+    @Key("extension.title")
+    String extensionTitle();
 }

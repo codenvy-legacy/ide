@@ -15,22 +15,23 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.api.extension;
+package com.codenvy.ide.extension;
+
+import com.codenvy.ide.api.mvp.View;
+
+import java.util.List;
 
 /**
- * Extension Definition annotation. Used to mark class as Extension and declare it's description
- *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @version $Id:
  */
-public @interface Extension {
+public interface ExtensionManagerView extends View<ExtensionManagerView.ActionDelegate> {
 
-    /** @return Extension version */
-    String version() default "1.0";
+    void setExtensions(List<ExtensionDescription> extensions);
 
-    /** @return Extension title */
-    String title();
+    public interface ActionDelegate {
 
-    /** @return Extension brief description */
-    String description() default "";
+        void setDirty();
+    }
 
 }

@@ -18,15 +18,13 @@
 package com.codenvy.ide.client;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
-import com.codenvy.ide.client.extensionsPart.ExtensionsPage;
-import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
+import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.workspace.WorkspacePresenter;
@@ -52,7 +50,6 @@ public class BootstrapController {
      * @param componentRegistry
      * @param styleInjector
      * @param extensionInitializer
-     * @param extensionsPage
      * @param preferencesManager
      * @param userService
      * @param resourceProvider
@@ -60,7 +57,7 @@ public class BootstrapController {
     @Inject
     public BootstrapController(final ComponentRegistry componentRegistry, final Provider<WorkspacePresenter> workspaceProvider,
                                StyleInjector styleInjector, final ExtensionInitializer extensionInitializer,
-                               final ExtensionsPage extensionsPage, final PreferencesManagerImpl preferencesManager,
+                               final PreferencesManagerImpl preferencesManager,
                                UserClientService userService, final ResourceProvider resourceProvider) {
         styleInjector.inject();
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW).inject();
@@ -86,8 +83,6 @@ public class BootstrapController {
                             WorkspacePresenter workspacePresenter = workspaceProvider.get();
                             // Display IDE
                             workspacePresenter.go(mainPanel);
-                            // TODO FOR DEMO
-                            workspacePresenter.openPart(extensionsPage, PartStackType.EDITING);
                             //Display list of projects in project explorer
                             resourceProvider.showListProjects();
                         }
