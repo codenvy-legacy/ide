@@ -82,11 +82,8 @@ public class NewProjectWizardModel implements WizardModel {
     @Override
     public WizardPage flipToFirst() {
         flippedPages.clear();
-        WizardPage page = getPage(newProjectPage);
-        flippedPages.add(page);
         index = 0;
-
-        return page;
+        return addPage(newProjectPage);
     }
 
     /** {@inheritDoc} */
@@ -96,19 +93,19 @@ public class NewProjectWizardModel implements WizardModel {
         index++;
 
         if (index == 1) {
-            flippedPages.add(getPage(templatePage));
+            addPage(templatePage);
         } else if (index == 2) {
             JsonArray<Provider<? extends WizardPage>> templatePageProviders = templatePages.get(wizardContext.getData(TEMPLATE));
             if (templatePageProviders != null) {
                 for (Provider<? extends WizardPage> provider : templatePageProviders.asIterable()) {
-                    flippedPages.add(getPage(provider));
+                    addPage(provider);
                 }
             }
 
             JsonArray<Provider<? extends WizardPage>> paasPageProviders = paasPages.get(wizardContext.getData(PAAS));
             if (paasPageProviders != null) {
                 for (Provider<? extends WizardPage> provider : paasPageProviders.asIterable()) {
-                    flippedPages.add(getPage(provider));
+                    addPage(provider);
                 }
             }
         }
@@ -116,10 +113,11 @@ public class NewProjectWizardModel implements WizardModel {
         return flippedPages.get(index);
     }
 
-    private WizardPage getPage(Provider<? extends WizardPage> provider) {
+    private WizardPage addPage(Provider<? extends WizardPage> provider) {
         WizardPage page = provider.get();
         page.setUpdateDelegate(delegate);
         page.setContext(wizardContext);
+        flippedPages.add(page);
         return page;
     }
 
@@ -127,19 +125,16 @@ public class NewProjectWizardModel implements WizardModel {
     @Nullable
     @Override
     public WizardPage flipToPrevious() {
-        index--;
-
-        if (!flippedPages.isEmpty() && flippedPages.size() < 2) {
-            return flippedPages.remove(index);
-        } else {
-            if (flippedPages.size() == 2) {
-                for (int i = flippedPages.size() - 1; i >= 2; i--) {
-                    flippedPages.remove(i);
-                }
+        if (!flippedPages.isEmpty() && flippedPages.size() <= 2) {
+            flippedPages.remove(index);
+        } else if (flippedPages.size() == 3) {
+            for (int i = flippedPages.size() - 1; i >= 2; i--) {
+                flippedPages.remove(i);
             }
-
-            return flippedPages.get(index);
         }
+
+        index--;
+        return flippedPages.get(index);
     }
 
     /** {@inheritDoc} */
@@ -152,12 +147,13 @@ public class NewProjectWizardModel implements WizardModel {
     /** {@inheritDoc} */
     @Override
     public boolean hasPrevious() {
-        return !flippedPages.isEmpty();
+        return flippedPages.size() > 1;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean canFinish() {
+        // TODO need to check it
         boolean isComplited = true;
         for (WizardPage page : flippedPages.asIterable()) {
             isComplited &= page.isCompleted();
