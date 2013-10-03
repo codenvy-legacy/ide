@@ -35,7 +35,7 @@ import com.codenvy.ide.ext.openshift.client.project.ProjectView;
 import com.codenvy.ide.ext.openshift.client.project.ProjectViewImpl;
 import com.codenvy.ide.ext.openshift.client.wizard.OpenShiftPageView;
 import com.codenvy.ide.ext.openshift.client.wizard.OpenShiftPageViewImpl;
-import com.codenvy.ide.extension.maven.client.template.CreateEmptyProjectPresenter;
+import com.codenvy.ide.extension.maven.client.template.empty.CreateEmptyProjectPresenter;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 

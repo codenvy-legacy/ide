@@ -17,6 +17,9 @@
  */
 package com.codenvy.ide.resources;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
+import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -32,12 +35,6 @@ public interface ProjectTypeAgent {
      * @param title
      * @param icon
      */
-    void registerProjectType(String typeName, String title, ImageResource icon);
-
-    /**
-     * Returns selected project type name.
-     *
-     * @return project type name.
-     */
-    String getSelectedProjectType();
+    void register(@NotNull String typeName, @NotNull String title, @Nullable ImageResource icon, @NotNull String primaryNature,
+                  @NotNull JsonArray<String> secondaryNature);
 }

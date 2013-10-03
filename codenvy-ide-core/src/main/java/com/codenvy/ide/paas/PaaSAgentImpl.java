@@ -17,12 +17,17 @@
  */
 package com.codenvy.ide.paas;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.paas.PaaSAgent;
+import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.wizard.newproject2.NewProjectWizardModel;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -36,45 +41,45 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class PaaSAgentImpl implements PaaSAgent {
-    private final JsonArray<PaaS> registeredPaaS;
-    private       PaaS            selectedPaaS;
+    private class NonePaaS extends PaaS {
+        public NonePaaS(@NotNull String id, @NotNull String title, @Nullable ImageResource image) {
+            super(id, title, image, JsonCollections.<JsonArray<String>>createStringMap());
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public boolean isAvailable(@NotNull String primaryNature, @NotNull JsonArray<String> secondaryNature) {
+            return true;
+        }
+    }
+
+    private       NewProjectWizardModel newProjectWizardModel;
+    private       PreferencesAgent      preferencesAgent;
+    private final JsonArray<PaaS>       registeredPaaS;
 
     /** Create agent. */
     @Inject
-    protected PaaSAgentImpl() {
+    protected PaaSAgentImpl(NewProjectWizardModel newProjectWizardModel, PreferencesAgent preferencesAgent) {
+        this.newProjectWizardModel = newProjectWizardModel;
+        this.preferencesAgent = preferencesAgent;
         this.registeredPaaS = JsonCollections.createArray();
+        registeredPaaS.add(new NonePaaS("None", "None", null));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void registerPaaS(String id, String title, ImageResource image, JsonArray<String> requiredTypes,
-                             Provider<? extends WizardPagePresenter> wizardPage, PreferencesPagePresenter preferencePage) {
-        PaaS paas = new PaaS(id, title, image, requiredTypes, wizardPage);
+    public void register(@NotNull String id, @NotNull String title, @Nullable ImageResource image,
+                         @NotNull JsonStringMap<JsonArray<String>> natures, @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages,
+                         @Nullable Provider<PreferencesPagePresenter> preferencePage) {
+        PaaS paas = new PaaS(id, title, image, natures);
         registeredPaaS.add(paas);
-
-        // TODO preference page
+        newProjectWizardModel.addPaaSPages(paas, wizardPages);
+        if (preferencePage != null) {
+            preferencesAgent.addPage(preferencePage);
+        }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public PaaS getSelectedPaaS() {
-        return selectedPaaS;
-    }
-
-    /**
-     * Sets selected PaaS.
-     *
-     * @param paas
-     */
-    public void setSelectedPaaS(PaaS paas) {
-        selectedPaaS = paas;
-    }
-
-    /**
-     * Returns all available PaaSes.
-     *
-     * @return
-     */
+    /** @return all available PaaSes. */
     public JsonArray<PaaS> getPaaSes() {
         return registeredPaaS;
     }

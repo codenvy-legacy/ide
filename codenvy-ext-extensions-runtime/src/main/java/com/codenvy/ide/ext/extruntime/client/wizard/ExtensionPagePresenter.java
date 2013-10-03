@@ -32,14 +32,14 @@ import com.google.inject.Singleton;
 
 /**
  * Presenter for creating Codenvy extension project from 'Create project wizard'.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtensionPagePresenter.java Jul 8, 2013 4:24:17 PM azatsarynnyy $
  */
 @Singleton
 public class ExtensionPagePresenter extends AbstractWizardPagePresenter
-                                                                       implements ExtensionPageView.ActionDelegate {
-    private static final String            DEFAULT_VERSION = "1.0-SNAPSHOT";
+        implements ExtensionPageView.ActionDelegate {
+    private static final String DEFAULT_VERSION = "1.0-SNAPSHOT";
     private ExtensionPageView              view;
     private String                         groupId;
     private String                         artifactId;
@@ -50,7 +50,7 @@ public class ExtensionPagePresenter extends AbstractWizardPagePresenter
 
     /**
      * Create presenter.
-     * 
+     *
      * @param view
      * @param resources
      * @param constant
@@ -136,7 +136,6 @@ public class ExtensionPagePresenter extends AbstractWizardPagePresenter
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        createProjectProvider = templateAgent.getSelectedTemplate().getCreateProjectProvider();
         final String projectName = createProjectProvider.getProjectName();
 
         view.setGroupId(projectName);

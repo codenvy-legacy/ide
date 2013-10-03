@@ -51,6 +51,7 @@ public class AWSExtension {
      * @param s3ManagementAction
      * @param beanstalkManagementAction
      * @param createApplicationManagementAction
+     *
      * @param wizardPage
      */
     @Inject
@@ -60,7 +61,8 @@ public class AWSExtension {
                         CreateApplicationManagementAction createApplicationManagementAction,
                         Provider<BeanstalkPagePresenter> wizardPage) {
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Spring", "War");
-        paasAgent.registerPaaS(ID, "Amazon Web Services", resource.elasticBeanstalk48(), requiredProjectTypes, wizardPage, null);
+        // TODO
+//        paasAgent.registerPaaS(ID, "Amazon Web Services", resource.elasticBeanstalk48(), requiredProjectTypes, wizardPage, null);
 
         actionManager.registerAction("awsSwitchAccount", switchAccountAction);
         actionManager.registerAction("awsEc2Management", ec2ManagementAction);

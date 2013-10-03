@@ -29,6 +29,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.action.ShowLoginAction;
 import com.codenvy.ide.extension.cloudfoundry.client.wizard.CloudFoundryPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -87,8 +88,12 @@ public class CloudFoundryExtension {
         resources.cloudFoundryCss().ensureInjected();
 
         // TODO change hard code types
-        JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War");
-        paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), requiredProjectTypes, wizardPage, null);
+        JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
+        natures.put("Java", JsonCollections.<String>createArray("Servlet/JSP", "Spring", "War"));
+        natures.put("Ruby", JsonCollections.<String>createArray("Rails"));
+
+        // TODO
+//        paasAgent.register(ID, ID, resources.cloudFoundry48(), natures, JsonCollections.createArray(wizardPage), null);
         DefaultActionGroup projectPaas = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PROJECT_PAAS);
         actionManager.registerAction("showCloudfoundryProject", showCloudFoundryProjectAction);
         projectPaas.add(showCloudFoundryProjectAction);

@@ -26,7 +26,7 @@ import java.util.Map;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 public class WizardContext {
-    public class Key<T> {
+    public static class Key<T> {
         private String name;
 
         public Key(@NotNull String name) {
@@ -36,6 +36,23 @@ public class WizardContext {
         @NotNull
         public String getName() {
             return name;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Key)) return false;
+
+            Key key = (Key)o;
+
+            if (!name.equals(key.name)) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            return name.hashCode();
         }
     }
 
@@ -53,5 +70,14 @@ public class WizardContext {
     @Nullable
     public <T> T getData(@NotNull Key<T> key) {
         return (T)dates.get(key);
+    }
+
+    public <T> void removeData(@NotNull Key<T> key) {
+        dates.remove(key);
+    }
+
+    public void clear() {
+        // TODO ?
+        dates.clear();
     }
 }

@@ -19,15 +19,19 @@ package com.codenvy.ide.extension.maven.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.template.TemplateAgent;
+import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
-import com.codenvy.ide.extension.maven.client.template.CreateJavaProjectPresenter;
-import com.codenvy.ide.extension.maven.client.template.CreateSpringProjectPresenter;
-import com.codenvy.ide.extension.maven.client.template.CreateWarProjectPresenter;
+import com.codenvy.ide.extension.maven.client.template.java.CreateJavaProjectPage;
+import com.codenvy.ide.extension.maven.client.template.spring.CreateSpringProjectPage;
+import com.codenvy.ide.extension.maven.client.template.war.CreateWarProjectPage;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.ext.java.client.JavaExtension.JAVA_APPLICATION_PROJECT_TYPE;
 import static com.codenvy.ide.ext.java.client.JavaExtension.JAVA_WEB_APPLICATION_PROJECT_TYPE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.json.JsonCollections.createArray;
@@ -50,25 +54,37 @@ public class BuilderExtension {
      *
      * @param buildProjectPresenter
      * @param templateAgent
-     * @param createProjectPresenter
-     * @param createJavaProjectPresenter
-     * @param createSpringProjectPresenter
      * @param projectTypeAgent
      */
+    // TODO javadoc
     @Inject
-    public BuilderExtension(BuildProjectPresenter buildProjectPresenter, TemplateAgent templateAgent,
-                            CreateWarProjectPresenter createProjectPresenter, CreateJavaProjectPresenter createJavaProjectPresenter,
-                            CreateSpringProjectPresenter createSpringProjectPresenter, ProjectTypeAgent projectTypeAgent) {
-        templateAgent.registerTemplate("War project", null, createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE),
-                                       createProjectPresenter, null);
-        templateAgent.registerTemplate("Java project", JavaClientBundle.INSTANCE.javaProject(),
-                                       createArray(PRIMARY_NATURE),
-                                       createJavaProjectPresenter, null);
-        templateAgent.registerTemplate("Spring project", JavaClientBundle.INSTANCE.javaProject(),
-                                       createArray(SPRING_APPLICATION_PROJECT_TYPE),
-                                       createSpringProjectPresenter, null);
+    public BuilderExtension(BuildProjectPresenter buildProjectPresenter,
+                            TemplateAgent templateAgent,
+                            ProjectTypeAgent projectTypeAgent,
+                            Provider<CreateJavaProjectPage> createJavaProjectPage,
+                            Provider<CreateWarProjectPage> createWarProjectPage,
+                            Provider<CreateSpringProjectPage> createSpringProjectPage) {
 
-        projectTypeAgent
-                .registerProjectType(SPRING_APPLICATION_PROJECT_TYPE, "Spring application", JavaClientBundle.INSTANCE.newJavaProject());
+        templateAgent.register("War project",
+                               null,
+                               PRIMARY_NATURE,
+                               createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends WizardPage>>createArray(createWarProjectPage));
+        templateAgent.register("Java project",
+                               JavaClientBundle.INSTANCE.javaProject(),
+                               PRIMARY_NATURE,
+                               createArray(JAVA_APPLICATION_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends WizardPage>>createArray(createJavaProjectPage));
+        templateAgent.register("Spring project",
+                               JavaClientBundle.INSTANCE.javaProject(),
+                               PRIMARY_NATURE,
+                               createArray(SPRING_APPLICATION_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends WizardPage>>createArray(createSpringProjectPage));
+
+        projectTypeAgent.register(SPRING_APPLICATION_PROJECT_TYPE,
+                                  "Spring application",
+                                  JavaClientBundle.INSTANCE.newJavaProject(),
+                                  PRIMARY_NATURE,
+                                  createArray(SPRING_APPLICATION_PROJECT_TYPE));
     }
 }

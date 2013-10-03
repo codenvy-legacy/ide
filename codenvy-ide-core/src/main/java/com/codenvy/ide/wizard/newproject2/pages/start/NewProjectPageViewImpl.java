@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.newproject;
+package com.codenvy.ide.wizard.newproject2.pages.start;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.paas.PaaS;
@@ -23,6 +23,8 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.codenvy.ide.wizard.WizardResource;
+import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
+import com.codenvy.ide.wizard.newproject.ProjectTypeData;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -81,6 +83,8 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
         this.res = resource;
         this.locale = locale;
 
+
+        // TODO remove agents
         JsonArray<ProjectTypeData> projectTypes = projectTypeAgent.getProjectTypes();
         createTechnologiesTable(projectTypes);
 
@@ -126,23 +130,24 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
                         }
                         selectedProjectType = btn;
 
-                        String nature = projectTypeData.getTypeName();
-                        for (int i = 0; i < availablePaaS.size(); i++) {
-                            PaaS paas = availablePaaS.get(i);
-                            JsonArray<String> paases = paas.getRequiredProjectTypes();
-                            ToggleButton button = paasButton.get(i);
-                            button.setEnabled(false);
-                            button.setDown(false);
-
-                            // TODO constant
-                            if (!paas.getId().equals("None")) {
-                                if (paases.contains(nature)) {
-                                    button.setEnabled(true);
-                                }
-                            } else {
-                                button.setEnabled(true);
-                            }
-                        }
+// TODO need to improve
+//                        String nature = projectTypeData.getTypeName();
+//                        for (int i = 0; i < availablePaaS.size(); i++) {
+//                            PaaS paas = availablePaaS.get(i);
+//                            JsonArray<String> paases = paas.getRequiredProjectTypes();
+//                            ToggleButton button = paasButton.get(i);
+//                            button.setEnabled(false);
+//                            button.setDown(false);
+//
+//                            // TODO constant
+//                            if (!paas.getId().equals("None")) {
+//                                if (paases.contains(nature)) {
+//                                    button.setEnabled(true);
+//                                }
+//                            } else {
+//                                button.setEnabled(true);
+//                            }
+//                        }
 
                         selectedPaaS = null;
 

@@ -17,6 +17,9 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
+import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -25,9 +28,12 @@ import com.google.gwt.resources.client.ImageResource;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class ProjectTypeData {
-    private String        typeName;
-    private String        title;
-    private ImageResource icon;
+    private String            typeName;
+    private String            title;
+    private ImageResource     icon;
+    private String            primaryNature;
+    private JsonArray<String> secondaryNature;
+
 
     /**
      * Create project type.
@@ -36,24 +42,40 @@ public class ProjectTypeData {
      * @param title
      * @param icon
      */
-    public ProjectTypeData(String typeName, String title, ImageResource icon) {
+    public ProjectTypeData(@NotNull String typeName, @NotNull String title, @Nullable ImageResource icon, @NotNull String primaryNature,
+                           @NotNull JsonArray<String> secondaryNature) {
         this.typeName = typeName;
         this.title = title;
         this.icon = icon;
+        this.primaryNature = primaryNature;
+        this.secondaryNature = secondaryNature;
     }
 
     /** @return the project type's name */
+    @NotNull
     public String getTypeName() {
         return typeName;
     }
 
     /** @return the title */
+    @NotNull
     public String getTitle() {
         return title;
     }
 
     /** @return the icon */
+    @NotNull
     public ImageResource getIcon() {
         return icon;
+    }
+
+    @NotNull
+    public String getPrimaryNature() {
+        return primaryNature;
+    }
+
+    @NotNull
+    public JsonArray<String> getSecondaryNature() {
+        return secondaryNature;
     }
 }

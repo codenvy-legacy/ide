@@ -17,6 +17,9 @@
  */
 package com.codenvy.ide.api.ui.wizard;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
+
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 public interface WizardModel {
 
@@ -30,14 +33,18 @@ public interface WizardModel {
      *
      * @param delegate
      */
-    void setUpdateDelegate(UpdateDelegate delegate);
+    void setUpdateDelegate(@NotNull UpdateDelegate delegate);
 
+    @NotNull
     String getTitle();
 
-    WizardPage getFirst();
+    @NotNull
+    WizardPage flipToFirst();
 
+    @Nullable
     WizardPage flipToNext();
 
+    @Nullable
     WizardPage flipToPrevious();
 
     /**

@@ -17,7 +17,9 @@
  */
 package com.codenvy.ide.api.template;
 
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
+import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
@@ -33,17 +35,8 @@ public interface TemplateAgent {
      *
      * @param title
      * @param icon
-     * @param projectTypes
-     * @param createProjectProvider
-     * @param wizardPage
      */
-    void registerTemplate(String title, ImageResource icon, JsonArray<String> projectTypes, CreateProjectProvider createProjectProvider,
-                          Provider<? extends WizardPagePresenter> wizardPage);
-
-    /**
-     * Returns selected template for creating project.
-     *
-     * @return template
-     */
-    Template getSelectedTemplate();
+    // TODO javadoc
+    void register(@NotNull String title, @Nullable ImageResource icon, @NotNull String primaryNature,
+                  @NotNull JsonArray<String> secondaryNatures, @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages);
 }

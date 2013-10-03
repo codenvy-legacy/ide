@@ -17,10 +17,13 @@
  */
 package com.codenvy.ide.api.paas;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonStringMap;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
 
@@ -41,13 +44,8 @@ public interface PaaSAgent {
      * @param wizardPage
      * @param preferencePage
      */
-    void registerPaaS(String id, String title, ImageResource image, JsonArray<String> requiredTypes,
-                      Provider<? extends WizardPagePresenter> wizardPage, PreferencesPagePresenter preferencePage);
-
-    /**
-     * Returns selected PaaS.
-     *
-     * @return paas
-     */
-    PaaS getSelectedPaaS();
+    // TODO javadoc
+    void register(@NotNull String id, @NotNull String title, @Nullable ImageResource image,
+                  @NotNull JsonStringMap<JsonArray<String>> natures, @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages,
+                  @Nullable Provider<PreferencesPagePresenter> preferencePage);
 }

@@ -22,6 +22,7 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
+import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.ext.appfog.client.actions.CreateApplicationAction;
 import com.codenvy.ide.ext.appfog.client.actions.ShowApplicationsAction;
 import com.codenvy.ide.ext.appfog.client.actions.ShowProjectAction;
@@ -29,6 +30,7 @@ import com.codenvy.ide.ext.appfog.client.actions.SwitchAccountAction;
 import com.codenvy.ide.ext.appfog.client.wizard.AppFogPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -52,7 +54,8 @@ public class AppFogExtension {
      * @param wizardPage
      */
     @Inject
-    public AppFogExtension(PaaSAgent paasAgent, AppfogResources resources,
+    public AppFogExtension(PaaSAgent paasAgent,
+                           AppfogResources resources,
                            ActionManager actionManager,
                            CreateApplicationAction createApplicationAction,
                            ShowApplicationsAction showApplicationsAction,
@@ -62,8 +65,16 @@ public class AppFogExtension {
         resources.appFogCSS().ensureInjected();
 
         // TODO change hard code types
-        JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War", "Python", "PHP");
-        paasAgent.registerPaaS(ID, ID, resources.appfog48(), requiredProjectTypes, wizardPage, null);
+        JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
+        natures.put("Java", JsonCollections.<String>createArray("Servlet/JSP", "Spring", "War"));
+        natures.put("Ruby", JsonCollections.<String>createArray("Rails"));
+        natures.put("Python", JsonCollections.<String>createArray());
+        natures.put("PHP", JsonCollections.<String>createArray());
+
+        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
+        wizardPages.add(wizardPage);
+
+        paasAgent.register(ID, ID, resources.appfog48(), natures, wizardPages, null);
 
         actionManager.registerAction("appFogCreateApplication", createApplicationAction);
         actionManager.registerAction("appFogShowApplications", showApplicationsAction);

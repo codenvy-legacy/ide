@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- *
- * [2012] - [2013] Codenvy, S.A.
+ * 
+ * [2012] - [2013] Codenvy, S.A. 
  * All Rights Reserved.
- *
+ * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -15,24 +15,9 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.api.ui.preferences;
+package com.codenvy.ide.api.ui.wizard;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.extension.SDK;
-import com.google.inject.Provider;
-
-
-/**
- * Provides add new preference page.
- *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- */
-@SDK(title = "ide.api.ui.preferences")
-public interface PreferencesAgent {
-    /**
-     * Adds new preference page into preferences list.
-     *
-     * @param page
-     */
-    void addPage(@NotNull Provider<? extends PreferencesPagePresenter> page);
+/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+public interface WizardKeys {
+    WizardContext.Key<String> PROJECT_NAME = new WizardContext.Key<String>("Project name");
 }

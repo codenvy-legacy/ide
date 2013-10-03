@@ -432,7 +432,6 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        createProjectProvider = templateAgent.getSelectedTemplate().getCreateProjectProvider();
         projectName = createProjectProvider.getProjectName();
         isLogined = true;
         getServers();

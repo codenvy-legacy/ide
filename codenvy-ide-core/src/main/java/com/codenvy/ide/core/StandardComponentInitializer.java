@@ -27,7 +27,6 @@ import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.welcome.WelcomeLocalizationConstant;
 import com.codenvy.ide.welcome.action.ConnectSupportAction;
@@ -188,7 +187,6 @@ public class StandardComponentInitializer {
         runMenuActionGroup.add(updateExtensionAction);
 
         toolbarPresenter.bindMainGroup(toolbarGroup);
-        paasAgent.registerPaaS("None", "None", null, JsonCollections.<String>createArray("", "java", "War"), null, null);
 
         welcomePart.addItem(createProjectAction);
         welcomePart.addItem(showDocumentationAction);

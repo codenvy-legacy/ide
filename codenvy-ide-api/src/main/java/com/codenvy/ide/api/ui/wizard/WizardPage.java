@@ -20,12 +20,18 @@ package com.codenvy.ide.api.ui.wizard;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.google.gwt.resources.client.ImageResource;
 
+import static com.codenvy.ide.api.ui.wizard.WizardModel.UpdateDelegate;
+
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 public interface WizardPage extends Presenter {
     public interface CommitCallback {
 
-        void onCommit();
+        void onSuccessful();
+
+        void onFailed();
     }
+
+    void setUpdateDelegate(UpdateDelegate delegate);
 
     /**
      * Returns wizard page caption.
@@ -71,5 +77,5 @@ public interface WizardPage extends Presenter {
 
     void removeOptions();
 
-    void setContext(WizardContext context);
+    void setContext(WizardContext wizardContext);
 }

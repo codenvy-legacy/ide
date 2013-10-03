@@ -22,11 +22,7 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
-import com.codenvy.ide.ext.openshift.client.actions.ChangeDomainAction;
-import com.codenvy.ide.ext.openshift.client.actions.ShowApplicationsAction;
-import com.codenvy.ide.ext.openshift.client.actions.ShowProjectAction;
-import com.codenvy.ide.ext.openshift.client.actions.SwitchAccountAction;
-import com.codenvy.ide.ext.openshift.client.actions.UpdatePublicKeyAction;
+import com.codenvy.ide.ext.openshift.client.actions.*;
 import com.codenvy.ide.ext.openshift.client.wizard.OpenShiftPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -66,7 +62,8 @@ public class OpenShiftExtension {
 
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "nodejs", "War", "Python", "PHP", "Rails");
 
-        paasAgent.registerPaaS(ID, ID, resources.openShift48(), requiredProjectTypes, wizardPage, null);
+        // TODO
+//        paasAgent.registerPaaS(ID, ID, resources.openShift48(), requiredProjectTypes, wizardPage, null);
 
         actionManager.registerAction("openShiftChangeDomain", changeDomainAction);
         actionManager.registerAction("openShiftSwitchAccount", switchAccountAction);

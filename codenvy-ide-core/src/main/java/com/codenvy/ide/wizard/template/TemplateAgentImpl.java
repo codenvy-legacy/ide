@@ -17,12 +17,14 @@
  */
 package com.codenvy.ide.wizard.template;
 
-import com.codenvy.ide.api.template.CreateProjectProvider;
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.template.TemplateAgent;
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.wizard.newproject2.NewProjectWizardModel;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -35,54 +37,40 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class TemplateAgentImpl implements TemplateAgent {
-    private final JsonArray<Template> templates;
-    private       Template            selectedTemplate;
+    private       NewProjectWizardModel newProjectWizardModel;
+    private final JsonArray<Template>   templates;
 
     /** Create agent. */
     @Inject
-    protected TemplateAgentImpl() {
+    protected TemplateAgentImpl(NewProjectWizardModel newProjectWizardModel) {
+        this.newProjectWizardModel = newProjectWizardModel;
         this.templates = JsonCollections.createArray();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void registerTemplate(String title, ImageResource icon, JsonArray<String> projectTypes,
-                                 CreateProjectProvider createProjectProvider, Provider<? extends WizardPagePresenter> wizardPage) {
-        Template template = new Template(icon, title, createProjectProvider, wizardPage, projectTypes);
+    public void register(@NotNull String title, @Nullable ImageResource icon, @NotNull String primaryNature,
+                         @NotNull JsonArray<String> secondaryNatures, @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages) {
+        Template template = new Template(title, icon, primaryNature, secondaryNatures);
         templates.add(template);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Template getSelectedTemplate() {
-        return selectedTemplate;
-    }
-
-    /**
-     * Sets selected template for creating project.
-     *
-     * @param template
-     */
-    public void setSelectedTemplate(Template template) {
-        selectedTemplate = template;
+        newProjectWizardModel.addTemplatePages(template, wizardPages);
     }
 
     /**
      * Returns all available templates for creating project.
      *
-     * @param projectType
+     * @param primaryNature
+     * @param secondaryNatures
      * @return
      */
-    public JsonArray<Template> getTemplatesForProjectType(String projectType) {
+    // TODO javadoc
+    public JsonArray<Template> getTemplatesForProjectType(String primaryNature, JsonArray<String> secondaryNatures) {
         JsonArray<Template> templates = JsonCollections.createArray();
-
-        for (int i = 0; i < this.templates.size(); i++) {
-            Template template = this.templates.get(i);
-            if (template.getProjectTypes().contains(projectType)) {
+        for (Template template : templates.asIterable()) {
+            if (template.isAvailable(primaryNature, secondaryNatures)) {
                 templates.add(template);
             }
         }
-
         return templates;
     }
 }

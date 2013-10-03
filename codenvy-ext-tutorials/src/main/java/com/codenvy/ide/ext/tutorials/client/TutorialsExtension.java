@@ -30,7 +30,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
-import static com.codenvy.ide.json.JsonCollections.createArray;
 
 /**
  * Entry point for an extension that adds support to work with tutorial projects.
@@ -62,19 +61,20 @@ public class TutorialsExtension {
         actionManager.registerAction(localizationConstants.showTutorialGuideActionId(), showAction);
         windowMenuActionGroup.add(showAction);
 
-        // register project type
-        projectTypeAgent.registerProjectType(TUTORIAL_PROJECT_TYPE, "Codenvy tutorial",
-                                             resources.codenvyTutorialProject());
-
-        // register templates
-        templateAgent.registerTemplate("Tutorial project that illustrates examples of using DTO.",
-                                       resources.codenvyTutorialTemplate(), createArray(TUTORIAL_PROJECT_TYPE),
-                                       createDTOTutorialProjectPresenter, null);
-        templateAgent.registerTemplate("Tutorial project that illustrates examples of using Notification API.",
-                                       resources.codenvyTutorialTemplate(), createArray(TUTORIAL_PROJECT_TYPE),
-                                       createNotificationTutorialProjectPresenter, null);
-        templateAgent.registerTemplate("Tutorial project that illustrates examples of using Action API.",
-                                       resources.codenvyTutorialTemplate(), createArray(TUTORIAL_PROJECT_TYPE),
-                                       createActionTutorialProjectPresenter, null);
+// TODO
+//        // register project type
+//        projectTypeAgent.registerProjectType(TUTORIAL_PROJECT_TYPE, "Codenvy tutorial",
+//                                             resources.codenvyTutorialProject());
+//
+//        // register templates
+//        templateAgent.registerTemplate("Tutorial project that illustrates examples of using DTO.",
+//                                       resources.codenvyTutorialTemplate(), createArray(TUTORIAL_PROJECT_TYPE),
+//                                       createDTOTutorialProjectPresenter, null);
+//        templateAgent.registerTemplate("Tutorial project that illustrates examples of using Notification API.",
+//                                       resources.codenvyTutorialTemplate(), createArray(TUTORIAL_PROJECT_TYPE),
+//                                       createNotificationTutorialProjectPresenter, null);
+//        templateAgent.registerTemplate("Tutorial project that illustrates examples of using Action API.",
+//                                       resources.codenvyTutorialTemplate(), createArray(TUTORIAL_PROJECT_TYPE),
+//                                       createActionTutorialProjectPresenter, null);
     }
 }

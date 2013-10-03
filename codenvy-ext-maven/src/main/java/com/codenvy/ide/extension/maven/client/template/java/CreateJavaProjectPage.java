@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- *
- * [2012] - [2013] Codenvy, S.A.
+ * 
+ * [2012] - [2013] Codenvy, S.A. 
  * All Rights Reserved.
- *
+ * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -15,10 +15,12 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.maven.client.template;
+package com.codenvy.ide.extension.maven.client.template.java;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.template.CreateProjectProvider;
+import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.extension.maven.client.template.AbstractCreateProjectPage;
+import com.codenvy.ide.extension.maven.client.template.CreateProjectClientService;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
@@ -28,78 +30,58 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.ui.wizard.WizardKeys.PROJECT_NAME;
+import static com.codenvy.ide.ext.java.client.JavaExtension.JAVA_APPLICATION_PROJECT_TYPE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
-import static com.codenvy.ide.extension.maven.client.BuilderExtension.SPRING_APPLICATION_PROJECT_TYPE;
 import static com.codenvy.ide.json.JsonCollections.createArray;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
-/**
- * The implementation of {@link CreateProjectProvider}. Provides create web application.
- *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
- */
+/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
-public class CreateSpringProjectPresenter implements CreateProjectProvider {
-    private String                     projectName;
-    private CreateProjectClientService service;
-    private ResourceProvider           resourceProvider;
+public class CreateJavaProjectPage extends AbstractCreateProjectPage {
 
-    /**
-     * Create presenter.
-     *
-     * @param service
-     * @param resourceProvider
-     */
     @Inject
-    protected CreateSpringProjectPresenter(CreateProjectClientService service, ResourceProvider resourceProvider) {
-        this.service = service;
-        this.resourceProvider = resourceProvider;
+    public CreateJavaProjectPage(CreateProjectClientService service, ResourceProvider resourceProvider) {
+        super(service, resourceProvider);
     }
 
     /** {@inheritDoc} */
     @Override
-    public String getProjectName() {
-        return projectName;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void create(final AsyncCallback<Project> callback) {
-        JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
-                                                     new Property(PROPERTY_MIXIN_NATURES, SPRING_APPLICATION_PROJECT_TYPE),
-                                                     new Property(PROPERTY_SOURCE_FOLDERS, createArray("src/main/java")));
+    public void commit(final WizardPage.CommitCallback callback) {
+        JsonArray<Property> properties =
+                createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
+                            new Property(PROPERTY_MIXIN_NATURES, createArray(JAVA_APPLICATION_PROJECT_TYPE)),
+                            new Property(PROPERTY_SOURCE_FOLDERS, createArray("src/main/java", "src/test/java")));
+        final String projectName = wizardContext.getData(PROJECT_NAME);
         try {
-            service.createSpringProject(projectName, properties, new AsyncRequestCallback<Void>() {
+            service.createJavaProject(projectName, properties, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
                         @Override
                         public void onSuccess(Project result) {
-                            callback.onSuccess(result);
+                            callback.onSuccessful();
                         }
 
                         @Override
                         public void onFailure(Throwable caught) {
-                            callback.onFailure(caught);
+                            // TODO exception
+                            callback.onFailed();
                         }
                     });
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    callback.onFailure(exception);
+                    // TODO exception
+                    callback.onFailed();
                 }
             });
         } catch (RequestException e) {
-            callback.onFailure(e);
+            // TODO exception
+            callback.onFailed();
         }
     }
 }

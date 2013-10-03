@@ -22,7 +22,6 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.CreateProjectProvider;
-import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
@@ -37,7 +36,6 @@ import com.codenvy.ide.ext.openshift.client.marshaller.ApplicationInfoUnmarshall
 import com.codenvy.ide.ext.openshift.client.marshaller.ListUnmarshaller;
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.part.projectexplorer.ProjectExplorerPartPresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
@@ -175,9 +173,9 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
             }
         };
 
-        Template template = new Template(null, "OpenShift", createProjectProvider, wizardInstance, JsonCollections.createArray("War"));
-        createProjectProvider = template.getCreateProjectProvider();
-        createProjectProvider.setProjectName(templateAgent.getSelectedTemplate().getCreateProjectProvider().getProjectName());
+//        Template template = new Template(null, "OpenShift", createProjectProvider, wizardInstance, JsonCollections.createArray("War"));
+//        createProjectProvider = template.getCreateProjectProvider();
+//        createProjectProvider.setProjectName(templateAgent.getSelectedTemplate().getCreateProjectProvider().getProjectName());
         projectName = createProjectProvider.getProjectName();
 
         view.setName(projectName);

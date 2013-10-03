@@ -33,7 +33,6 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
-import static com.codenvy.ide.json.JsonCollections.createArray;
 
 /**
  * Entry point for an extension that adds support for running Codenvy-extensions in Codenvy.
@@ -67,20 +66,21 @@ public class ExtRuntimeExtension {
         actionManager.registerAction(localizationConstants.stopExtensionActionId(), stopAction);
         runMenuActionGroup.add(stopAction);
 
-        // register project type
-        projectTypeAgent.registerProjectType(CODENVY_EXTENSION_PROJECT_TYPE, "Codenvy extension",
-                                             resources.codenvyExtensionProject());
-
-        // register templates
-        templateAgent.registerTemplate("Empty Codenvy extension project.",
-                                       resources.codenvyExtensionTemplate(),
-                                       createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                                       createEmptyCodenvyExtensionProjectPresenter, null);
-
-        templateAgent
-                .registerTemplate("Sample Codenvy extension project. Illustrates simple example that uses Codenvy API.",
-                                  resources.codenvyExtensionTemplate(),
-                                  createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                                  createSampleCodenvyExtensionProjectPresenter, wizardPage);
+        // TODO
+//        // register project type
+//        projectTypeAgent.registerProjectType(CODENVY_EXTENSION_PROJECT_TYPE, "Codenvy extension",
+//                                             resources.codenvyExtensionProject());
+//
+//        // register templates
+//        templateAgent.registerTemplate("Empty Codenvy extension project.",
+//                                       resources.codenvyExtensionTemplate(),
+//                                       createArray(CODENVY_EXTENSION_PROJECT_TYPE),
+//                                       createEmptyCodenvyExtensionProjectPresenter, null);
+//
+//        templateAgent
+//                .registerTemplate("Sample Codenvy extension project. Illustrates simple example that uses Codenvy API.",
+//                                  resources.codenvyExtensionTemplate(),
+//                                  createArray(CODENVY_EXTENSION_PROJECT_TYPE),
+//                                  createSampleCodenvyExtensionProjectPresenter, wizardPage);
     }
 }

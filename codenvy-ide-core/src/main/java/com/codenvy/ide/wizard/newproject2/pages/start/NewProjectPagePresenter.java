@@ -15,22 +15,26 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.newproject;
+package com.codenvy.ide.wizard.newproject2.pages.start;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.wizard.template.TemplatePagePresenter;
+import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
+import com.codenvy.ide.wizard.newproject.ProjectTypeData;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+
+import static com.codenvy.ide.api.ui.wizard.WizardKeys.PROJECT_NAME;
+import static com.codenvy.ide.wizard.newproject2.NewProjectWizardModel.PAAS;
+import static com.codenvy.ide.wizard.newproject2.NewProjectWizardModel.PROJECT_TYPE;
 
 
 /**
@@ -38,13 +42,11 @@ import com.google.inject.Inject;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewProjectPagePresenter extends AbstractWizardPagePresenter implements NewProjectPageView.ActionDelegate {
+//public class NewProjectPagePresenter extends AbstractWizardPagePresenter implements NewProjectPageView.ActionDelegate {
+public class NewProjectPagePresenter extends AbstractWizardPage implements NewProjectPageView.ActionDelegate {
     private NewProjectPageView         view;
     private JsonArray<PaaS>            paases;
     private JsonArray<ProjectTypeData> projectTypes;
-    private ProjectTypeAgentImpl       projectTypeAgent;
-    private PaaSAgentImpl              paasAgent;
-    private TemplatePagePresenter      templatePage;
     private CoreLocalizationConstant   constant;
     private boolean                    hasProjectNameIncorrectSymbol;
     private boolean                    hasSameProject;
@@ -62,8 +64,8 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
      * @param resourceProvider
      */
     @Inject
-    protected NewProjectPagePresenter(ProjectTypeAgentImpl projectTypeAgent, Resources resources, NewProjectPageView view,
-                                      PaaSAgentImpl paasAgent, TemplatePagePresenter templatePage, ResourceProvider resourceProvider,
+    protected NewProjectPagePresenter(NewProjectPageView view, Resources resources, ProjectTypeAgentImpl projectTypeAgent,
+                                      PaaSAgentImpl paasAgent, ResourceProvider resourceProvider,
                                       CoreLocalizationConstant constant) {
 
         super("Select project type and paas", resources.newResourceIcon());
@@ -84,46 +86,32 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
         this.view = view;
         this.view.setDelegate(this);
 
-        this.paasAgent = paasAgent;
         this.paases = paasAgent.getPaaSes();
-        this.paasAgent.setSelectedPaaS(null);
-
-        this.projectTypeAgent = projectTypeAgent;
         this.projectTypes = projectTypeAgent.getProjectTypes();
-        this.projectTypeAgent.setSelectedProjectType(null);
-
-        this.templatePage = templatePage;
-        this.templatePage.setPrevious(this);
-
         this.constant = constant;
     }
 
     /** {@inheritDoc} */
     @Override
-    public WizardPagePresenter flipToNext() {
-        templatePage.setProjectName(view.getProjectName());
-        templatePage.setUpdateDelegate(delegate);
-
-        return templatePage;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean canFinish() {
-        return false;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean hasNext() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public boolean isCompleted() {
-        return paasAgent.getSelectedPaaS() != null && projectTypeAgent.getSelectedProjectType() != null &&
-               !view.getProjectName().isEmpty() && !hasProjectNameIncorrectSymbol && hasProjectList && !hasSameProject;
+        // TODO
+        return true;
+//        return paasAgent.getSelectedPaaS() != null && projectTypeAgent.getSelectedProjectType() != null &&
+//               !view.getProjectName().isEmpty() && !hasProjectNameIncorrectSymbol && hasProjectList && !hasSameProject;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void focusComponent() {
+        //TODO focus element
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void removeOptions() {
+        wizardContext.removeData(PROJECT_NAME);
+        wizardContext.removeData(PAAS);
+        wizardContext.removeData(PROJECT_TYPE);
     }
 
     /** {@inheritDoc} */
@@ -137,9 +125,9 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
             return "Project with this name already exists.";
         } else if (hasProjectNameIncorrectSymbol) {
             return "Incorrect project name.";
-        } else if (projectTypeAgent.getSelectedProjectType() == null) {
+        } else if (wizardContext.getData(PROJECT_TYPE) == null) {
             return constant.noTechnologyMessage();
-        } else if (paasAgent.getSelectedPaaS() == null) {
+        } else if (wizardContext.getData(PAAS) == null) {
             return "Please, choose PaaS";
         }
 
@@ -156,8 +144,10 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     @Override
     public void onProjectTypeSelected(int id) {
         ProjectTypeData projectType = projectTypes.get(id);
-        projectTypeAgent.setSelectedProjectType(projectType);
-        paasAgent.setSelectedPaaS(null);
+        wizardContext.putData(PROJECT_TYPE, projectType);
+
+        // TODO select none paas
+        // paasAgent.setSelectedPaaS(null);
 
         delegate.updateControls();
     }
@@ -166,7 +156,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     @Override
     public void onPaaSSelected(int id) {
         PaaS paas = paases.get(id);
-        paasAgent.setSelectedPaaS(paas);
+        wizardContext.putData(PAAS, paas);
 
         delegate.updateControls();
     }
@@ -181,6 +171,10 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
         for (int i = 0; i < projectList.size() && !hasSameProject; i++) {
             String name = projectList.get(i);
             hasSameProject = projectName.equals(name);
+        }
+
+        if (!hasProjectNameIncorrectSymbol && !hasSameProject) {
+            wizardContext.putData(PROJECT_NAME, view.getProjectName());
         }
 
         delegate.updateControls();

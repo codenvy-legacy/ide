@@ -49,9 +49,7 @@ public class GAEExtension {
     public static final String APP_ENGINE_SCOPE = "https://www.googleapis.com/auth/appengine.admin";
     public static final String CREATE_APP_URL   = "https://appengine.google.com/start/createapp";
 
-    /**
-     * Constructor for Google App Engine extension.
-     */
+    /** Constructor for Google App Engine extension. */
     @Inject
     public GAEExtension(PaaSAgent paasAgent, GAEResources resources, ActionManager actionManager,
                         LoginAction loginAction, CreateApplicationAction createApplicationAction,
@@ -61,7 +59,8 @@ public class GAEExtension {
         JsonArray<String> requiredProjectTypes =
                 JsonCollections.createArray("Python", "PHP", "War");
 
-        paasAgent.registerPaaS(ID, ID, resources.googleAppEngine48(), requiredProjectTypes, wizardPage, null);
+        // TODO
+//        paasAgent.registerPaaS(ID, ID, resources.googleAppEngine48(), requiredProjectTypes, wizardPage, null);
 
         actionManager.registerAction("gaeLoginAction", loginAction);
         actionManager.registerAction("gaeCreateAppAction", createApplicationAction);

@@ -95,7 +95,7 @@ public class WizardDialogPresenter implements WizardDialog, WizardModel.UpdateDe
     /** {@inheritDoc} */
     @Override
     public void show() {
-        setPage(wizardModel.getFirst());
+        setPage(wizardModel.flipToFirst());
         view.setTitle(wizardModel.getTitle());
         view.showDialog();
         view.setEnabledAnimation(true);

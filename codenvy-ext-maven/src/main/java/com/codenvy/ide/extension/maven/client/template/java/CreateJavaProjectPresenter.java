@@ -15,10 +15,11 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.maven.client.template;
+package com.codenvy.ide.extension.maven.client.template.java;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.CreateProjectProvider;
+import com.codenvy.ide.extension.maven.client.template.CreateProjectClientService;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
@@ -34,12 +35,12 @@ import static com.codenvy.ide.json.JsonCollections.createArray;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
 /**
- * The implementation of {@link CreateProjectProvider}. Provides create web application.
+ * The implementation of {@link CreateProjectProvider}. Provides create java application.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CreateWarProjectPresenter implements CreateProjectProvider {
+public class CreateJavaProjectPresenter implements CreateProjectProvider {
     private String                     projectName;
     private CreateProjectClientService service;
     private ResourceProvider           resourceProvider;
@@ -51,7 +52,7 @@ public class CreateWarProjectPresenter implements CreateProjectProvider {
      * @param resourceProvider
      */
     @Inject
-    protected CreateWarProjectPresenter(CreateProjectClientService service, ResourceProvider resourceProvider) {
+    protected CreateJavaProjectPresenter(CreateProjectClientService service, ResourceProvider resourceProvider) {
         this.service = service;
         this.resourceProvider = resourceProvider;
     }
@@ -73,9 +74,9 @@ public class CreateWarProjectPresenter implements CreateProjectProvider {
     public void create(final AsyncCallback<Project> callback) {
         JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
                                                      new Property(PROPERTY_SOURCE_FOLDERS,
-                                                                  createArray("src/main/java", "src/main/resources")));
+                                                                  createArray("src/main/java", "src/test/java")));
         try {
-            service.createWarProject(projectName, properties, new AsyncRequestCallback<Void>() {
+            service.createJavaProject(projectName, properties, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {

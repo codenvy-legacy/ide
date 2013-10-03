@@ -106,8 +106,6 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        createProjectProvider = templateAgent.getSelectedTemplate().getCreateProjectProvider();
-
         view.enableApplicationIdField(view.getAppIdRequired());
 
         isLoggedIn();

@@ -17,11 +17,13 @@
  */
 package com.codenvy.ide.preferences;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 
@@ -32,7 +34,7 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class PreferencesAgentImpl implements PreferencesAgent {
-    JsonArray<PreferencesPagePresenter> preferences;
+    JsonArray<Provider<? extends PreferencesPagePresenter>> preferences;
 
     /** Create PreferencesAgent. */
     @Inject
@@ -42,7 +44,7 @@ public class PreferencesAgentImpl implements PreferencesAgent {
 
     /** {@inheritDoc} */
     @Override
-    public void addPage(PreferencesPagePresenter page) {
+    public void addPage(@NotNull Provider<? extends PreferencesPagePresenter> page) {
         preferences.add(page);
     }
 
@@ -51,7 +53,7 @@ public class PreferencesAgentImpl implements PreferencesAgent {
      *
      * @return
      */
-    public JsonArray<PreferencesPagePresenter> getPreferences() {
+    public JsonArray<Provider<? extends PreferencesPagePresenter>> getPreferences() {
         return preferences;
     }
 }

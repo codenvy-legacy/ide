@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
@@ -32,7 +34,6 @@ import com.google.inject.Singleton;
 @Singleton
 public class ProjectTypeAgentImpl implements ProjectTypeAgent {
     private final JsonArray<ProjectTypeData> projectTypes;
-    private       ProjectTypeData            selectedProjectType;
 
     /** Create agent. */
     @Inject
@@ -42,24 +43,10 @@ public class ProjectTypeAgentImpl implements ProjectTypeAgent {
 
     /** {@inheritDoc} */
     @Override
-    public void registerProjectType(String typeName, String title, ImageResource icon) {
-        ProjectTypeData projectType = new ProjectTypeData(typeName, title, icon);
+    public void register(@NotNull String typeName, @NotNull String title, @Nullable ImageResource icon, @NotNull String primaryNature,
+                         @NotNull JsonArray<String> secondaryNature) {
+        ProjectTypeData projectType = new ProjectTypeData(typeName, title, icon, primaryNature, secondaryNature);
         projectTypes.add(projectType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getSelectedProjectType() {
-        return selectedProjectType != null ? selectedProjectType.getTypeName() : null;
-    }
-
-    /**
-     * Sets selected project type.
-     *
-     * @param projectType
-     */
-    public void setSelectedProjectType(ProjectTypeData projectType) {
-        selectedProjectType = projectType;
     }
 
     /**
