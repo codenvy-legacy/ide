@@ -47,6 +47,8 @@
       <crash.version>1.0.0-beta21</crash.version>
       <com.codenvy.commons.version>0.8.0</com.codenvy.commons.version>
       <com.codenvy.organization.version>0.7.0</com.codenvy.organization.version>
+      <com.codenvy.platform-api.version>1.0.0-SNAPSHOT</com.codenvy.platform-api.version>
+      <com.codenvy.factory.version>0.2.0-SNAPSHOT</com.codenvy.factory.version>
 
       <javax.annotation.version>1.0</javax.annotation.version>
       <javax.ws.version>1.0</javax.ws.version>
@@ -83,6 +85,22 @@
          <groupId>com.codenvy.organization</groupId>
          <artifactId>codenvy-organization-api-java-client</artifactId>
          <version>${com.codenvy.organization.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>com.codenvy.platform-api</groupId>
+         <artifactId>codenvy-api-factory</artifactId>
+         <version>${com.codenvy.platform-api.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>com.codenvy.factory</groupId>
+         <artifactId>codenvy-factory-services</artifactId>
+         <version>${com.codenvy.factory.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>codenvy-packaging-platform-api-war</artifactId>
+         <type>war</type>
+         <version>${project.version}</version>
       </dependency>
       <dependency>
          <groupId>com.codenvy.organization</groupId>
@@ -826,6 +844,7 @@
       <module>exo-ide-packaging-shell-war</module>
       <module>codenvy-application-war</module>
       <!--module>codenvy-api-war</module-->
+      <module>codenvy-packaging-platform-api-war</module>
       <module>codenvy-packaging-standalone-tomcat</module>
 
       <module>exo-ide-maven</module>

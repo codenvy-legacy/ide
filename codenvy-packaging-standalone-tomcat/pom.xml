@@ -55,6 +55,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
+			<artifactId>codenvy-packaging-platform-api-war</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-git-server</artifactId>
 			<type>war</type>
 		</dependency>
@@ -214,6 +219,8 @@
                               <move file="${project.build.directory}/packager-conf/jar/jul-to-slf4j.jar" tofile="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j.jar" />
                               <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war"
                                  tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true" />
+                              <copy file="${project.build.directory}/packager-conf/war/codenvy-packaging-platform-api-war-${project.version}.war"
+                                 tofile="${project.build.directory}/tomcat-ide/webapps/api.war" overwrite="true" />
                               <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war"
                                  overwrite="true" />
                               <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war"
