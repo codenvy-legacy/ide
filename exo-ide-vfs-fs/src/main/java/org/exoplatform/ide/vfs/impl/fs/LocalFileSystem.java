@@ -128,7 +128,15 @@ public class LocalFileSystem implements VirtualFileSystem {
         VirtualFile virtualFile = idToVirtualFile(itemId);
         if (searcherProvider != null) {
             try {
-                searcherProvider.getSearcher(mountPoint, true).add(virtualFile);
+                //Check to avoid adding to index twice:
+                if (searcherProvider.getSearcher(mountPoint, false) == null)
+                {
+                    // Item will be indexed on searcher creation, when whole workspace directory is added to index.
+                    searcherProvider.getSearcher(mountPoint, true);
+                } else
+                {
+                    searcherProvider.getSearcher(mountPoint, true).add(virtualFile);
+                }
             } catch (IOException e) {
                 throw new VirtualFileSystemException("Unable add to index. " + e.getMessage(), e);
             }
@@ -660,6 +668,7 @@ public class LocalFileSystem implements VirtualFileSystem {
             LOG.info("EVENT#project-created# PROJECT#{}# TYPE#{}#", parent.getName(),
                      parent.getPropertyValue("vfs:projectType"));
         }
+        addToIndex(parentId);
     }
 
     @Path("downloadfile/{id}")

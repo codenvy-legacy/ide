@@ -102,7 +102,8 @@ public class SearchResultsPresenter implements ViewVisibilityChangedHandler, Vie
                     return item1.getName().compareTo(item2.getName());
                 }
             });
-
+            //Clear previous results:
+            display.getSearchResultTree().setValue(null);
             display.getSearchResultTree().setValue(searchResult);
             display.selectItem(searchResult.getId());
         } else {
