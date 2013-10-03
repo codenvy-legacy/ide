@@ -43,4 +43,6 @@ public interface TemplatePageView extends View<TemplatePageView.ActionDelegate> 
      * @param templates
      */
     void setTemplates(JsonArray<Template> templates);
+
+    void selectItem(Template template);
 }

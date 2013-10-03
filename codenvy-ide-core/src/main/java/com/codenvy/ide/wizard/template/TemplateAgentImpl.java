@@ -65,12 +65,12 @@ public class TemplateAgentImpl implements TemplateAgent {
      */
     // TODO javadoc
     public JsonArray<Template> getTemplatesForProjectType(String primaryNature, JsonArray<String> secondaryNatures) {
-        JsonArray<Template> templates = JsonCollections.createArray();
+        JsonArray<Template> availableTemplates = JsonCollections.createArray();
         for (Template template : templates.asIterable()) {
             if (template.isAvailable(primaryNature, secondaryNatures)) {
-                templates.add(template);
+                availableTemplates.add(template);
             }
         }
-        return templates;
+        return availableTemplates;
     }
 }

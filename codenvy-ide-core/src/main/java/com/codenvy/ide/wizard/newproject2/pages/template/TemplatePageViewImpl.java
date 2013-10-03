@@ -86,7 +86,6 @@ public class TemplatePageViewImpl extends Composite implements TemplatePageView 
     };
     private SimpleList.ListEventDelegate<Template> listDelegate     = new SimpleList.ListEventDelegate<Template>() {
         public void onListItemClicked(Element itemElement, Template itemData) {
-            list.getSelectionModel().setSelectedItem(itemData);
             delegate.onTemplateSelected(itemData);
         }
 
@@ -120,5 +119,11 @@ public class TemplatePageViewImpl extends Composite implements TemplatePageView 
     @Override
     public void setTemplates(JsonArray<Template> templates) {
         list.render(templates);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void selectItem(Template template) {
+        list.getSelectionModel().setSelectedItem(template);
     }
 }

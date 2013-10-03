@@ -37,8 +37,9 @@ import static com.codenvy.ide.wizard.newproject2.NewProjectWizardModel.TEMPLATE;
  */
 //public class TemplatePagePresenter extends AbstractWizardPagePresenter implements TemplatePageView.ActionDelegate {
 public class TemplatePagePresenter extends AbstractWizardPage implements TemplatePageView.ActionDelegate {
-    private TemplatePageView  view;
-    private TemplateAgentImpl templateAgent;
+    private TemplatePageView    view;
+    private TemplateAgentImpl   templateAgent;
+    private JsonArray<Template> templates;
 
     /**
      * Create presenter.
@@ -47,7 +48,7 @@ public class TemplatePagePresenter extends AbstractWizardPage implements Templat
      * @param view
      */
     @Inject
-    protected TemplatePagePresenter(TemplatePageView view, WizardResource resources, TemplateAgentImpl templateAgent) {
+    public TemplatePagePresenter(TemplatePageView view, WizardResource resources, TemplateAgentImpl templateAgent) {
         super("Choose project template", resources.templateIcon());
 
         this.view = view;
@@ -64,38 +65,15 @@ public class TemplatePagePresenter extends AbstractWizardPage implements Templat
     /** {@inheritDoc} */
     @Override
     public boolean canSkip() {
-        return false;
+        return templates.size() == 1;
     }
 
     /** {@inheritDoc} */
     @Override
     public void focusComponent() {
-        //TODO focus element
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void commit(CommitCallback callback) {
-        // TODO
-//        CreateProjectProvider createProjectProvider = selectedTemplate.getCreateProjectProvider();
-//        createProjectProvider.setProjectName(projectName);
-//        createProjectProvider.create(new AsyncCallback<Project>() {
-//            @Override
-//            public void onSuccess(Project result) {
-//                //do nothing
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable caught) {
-//                Log.error(TemplatePagePresenter.class, caught);
-//            }
-//        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void storeOptions() {
-        // TODO not needed?
+        if (!templates.isEmpty()) {
+            onTemplateSelected(templates.get(0));
+        }
     }
 
     /** {@inheritDoc} */
@@ -116,12 +94,11 @@ public class TemplatePagePresenter extends AbstractWizardPage implements Templat
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        ProjectTypeData projectType = wizardContext.getData(PROJECT_TYPE);
-        JsonArray<Template> templates = templateAgent.getTemplatesForProjectType(projectType.getPrimaryNature(),
-                                                                                 projectType.getSecondaryNature());
-        view.setTemplates(templates);
-
-        delegate.updateControls();
+        if (templates == null) {
+            ProjectTypeData projectType = wizardContext.getData(PROJECT_TYPE);
+            templates = templateAgent.getTemplatesForProjectType(projectType.getPrimaryNature(), projectType.getSecondaryNature());
+            view.setTemplates(templates);
+        }
 
         container.setWidget(view);
     }
@@ -130,6 +107,7 @@ public class TemplatePagePresenter extends AbstractWizardPage implements Templat
     @Override
     public void onTemplateSelected(Template template) {
         wizardContext.putData(TEMPLATE, template);
+        view.selectItem(template);
         delegate.updateControls();
     }
 }
