@@ -25,4 +25,7 @@
     <component>
         <type>com.codenvy.ide.factory.server.FactoryApplication</type>
     </component>
+    <component>
+        <type>com.codenvy.ide.factory.server.CookieManagerInitializer</type>
+    </component>
 </configuration>

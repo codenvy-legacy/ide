@@ -40,6 +40,17 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs</artifactId>
         </dependency>
+        <dependency>
+            <groupId>picocontainer</groupId>
+            <artifactId>picocontainer</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>xstream</groupId>
+                    <artifactId>xstream</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
 <!--         <dependency> -->
 <!--             <groupId>com.codenvy.commons</groupId> -->
 <!--             <artifactId>codenvy-commons-mail-client</artifactId> -->
