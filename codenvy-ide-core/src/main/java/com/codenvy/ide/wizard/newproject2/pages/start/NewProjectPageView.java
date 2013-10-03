@@ -18,6 +18,9 @@
 package com.codenvy.ide.wizard.newproject2.pages.start;
 
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.api.paas.PaaS;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.wizard.newproject.ProjectTypeData;
 
 /**
  * Interface of new project page view.
@@ -73,6 +76,18 @@ public interface NewProjectPageView extends View<NewProjectPageView.ActionDelega
      * @return project's name
      */
     String getProjectName();
+
+    void setProjectTypes(JsonArray<ProjectTypeData> projectTypes);
+
+    void setPaases(JsonArray<PaaS> paases);
+
+    void selectProjectType(int id);
+
+    void selectPaas(int id);
+
+    void focusProjectName();
+
+    void setEnablePaas(int id, boolean isEnabled);
 
     /**
      * Show popup with some message.

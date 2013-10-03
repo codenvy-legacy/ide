@@ -21,9 +21,7 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.codenvy.ide.wizard.WizardResource;
-import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
 import com.codenvy.ide.wizard.newproject.ProjectTypeData;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
@@ -50,61 +48,56 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
     private static NewProjectViewImplUiBinder uiBinder = GWT.create(NewProjectViewImplUiBinder.class);
 
     @UiField
-    TextBox projectName;
-    @UiField(provided = true)
-    Grid    technologies;
-    @UiField(provided = true)
-    Grid    paases;
+    TextBox     projectName;
     @UiField
-    Image   chooseTechnologyTooltip;
+    Image       chooseTechnologyTooltip;
     @UiField
-    Image   choosePaaSTooltip;
+    Image       choosePaaSTooltip;
+    @UiField
+    SimplePanel paasPanel;
+    @UiField
+    SimplePanel techPanel;
     @UiField(provided = true)
     final   WizardResource           res;
     @UiField(provided = true)
     final   CoreLocalizationConstant locale;
     private ActionDelegate           delegate;
-    private ToggleButton             selectedProjectType;
-    private ToggleButton             selectedPaaS;
-    private JsonArray<ToggleButton> paasButton = JsonCollections.createArray();
-    private JsonArray<PaaS> availablePaaS;
+    private JsonArray<ToggleButton>  projectTypeButtons;
+    private JsonArray<ToggleButton>  paasButtons;
 
     /**
      * Create view.
      *
      * @param resource
      * @param locale
-     * @param projectTypeAgent
-     * @param paaSAgent
      */
     @Inject
-    protected NewProjectPageViewImpl(WizardResource resource, CoreLocalizationConstant locale, ProjectTypeAgentImpl projectTypeAgent,
-                                     PaaSAgentImpl paaSAgent) {
+    protected NewProjectPageViewImpl(WizardResource resource, CoreLocalizationConstant locale) {
         this.res = resource;
         this.locale = locale;
-
-
-        // TODO remove agents
-        JsonArray<ProjectTypeData> projectTypes = projectTypeAgent.getProjectTypes();
-        createTechnologiesTable(projectTypes);
-
-        JsonArray<PaaS> paases = paaSAgent.getPaaSes();
-        createPaasTable(paases);
-        availablePaaS = paases;
 
         initWidget(uiBinder.createAndBindUi(this));
     }
 
-    /**
-     * Create table with available technologies.
-     *
-     * @param projectTypes
-     *         available technologies
-     */
-    private void createTechnologiesTable(JsonArray<ProjectTypeData> projectTypes) {
+    /** {@inheritDoc} */
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getProjectName() {
+        return projectName.getText();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setProjectTypes(JsonArray<ProjectTypeData> projectTypes) {
+        projectTypeButtons = JsonCollections.createArray();
         //create table where contains kind of technology
-        technologies = new Grid(2, projectTypes.size());
-        HTMLTable.CellFormatter formatter = technologies.getCellFormatter();
+        Grid grid = new Grid(2, projectTypes.size());
+        techPanel.setWidget(grid);
+        HTMLTable.CellFormatter formatter = grid.getCellFormatter();
 
         //create button for each available wizard
         for (int i = 0; i < projectTypes.size(); i++) {
@@ -122,59 +115,28 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
             final int id = i;
             btn.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
-                    //if user click on other button (the button isn't selected) then new button changes to selected.
-                    //otherwise the button must be selected.
-                    if (selectedProjectType != btn) {
-                        if (selectedProjectType != null) {
-                            selectedProjectType.setDown(false);
-                        }
-                        selectedProjectType = btn;
-
-// TODO need to improve
-//                        String nature = projectTypeData.getTypeName();
-//                        for (int i = 0; i < availablePaaS.size(); i++) {
-//                            PaaS paas = availablePaaS.get(i);
-//                            JsonArray<String> paases = paas.getRequiredProjectTypes();
-//                            ToggleButton button = paasButton.get(i);
-//                            button.setEnabled(false);
-//                            button.setDown(false);
-//
-//                            // TODO constant
-//                            if (!paas.getId().equals("None")) {
-//                                if (paases.contains(nature)) {
-//                                    button.setEnabled(true);
-//                                }
-//                            } else {
-//                                button.setEnabled(true);
-//                            }
-//                        }
-
-                        selectedPaaS = null;
-
-                        delegate.onProjectTypeSelected(id);
-                    } else {
-                        selectedProjectType.setDown(true);
-                    }
+                    delegate.onProjectTypeSelected(id);
                 }
             });
-            technologies.setWidget(0, i, btn);
+            grid.setWidget(0, i, btn);
             formatter.setHorizontalAlignment(0, i, HasHorizontalAlignment.ALIGN_CENTER);
 
             Label title = new Label(projectTypeData.getTitle());
-            technologies.setWidget(1, i, title);
+            grid.setWidget(1, i, title);
             formatter.setHorizontalAlignment(1, i, HasHorizontalAlignment.ALIGN_CENTER);
+
+            projectTypeButtons.add(btn);
         }
     }
 
-    /**
-     * Create table with available paases.
-     *
-     * @param paases
-     *         available paases
-     */
-    private void createPaasTable(JsonArray<PaaS> paases) {
-        this.paases = new Grid(2, paases.size());
-        HTMLTable.CellFormatter formatter = this.paases.getCellFormatter();
+    /** {@inheritDoc} */
+    @Override
+    public void setPaases(JsonArray<PaaS> paases) {
+        paasButtons = JsonCollections.createArray();
+
+        Grid grid = new Grid(2, paases.size());
+        paasPanel.setWidget(grid);
+        HTMLTable.CellFormatter formatter = grid.getCellFormatter();
 
         //create button for each paas
         for (int i = 0; i < paases.size(); i++) {
@@ -193,40 +155,49 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
             final int id = i;
             btn.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
-                    //if user click on other button (the button isn't selected) then new button changes to selected.
-                    //otherwise the button must be selected.
-                    if (selectedPaaS != btn) {
-                        if (selectedPaaS != null) {
-                            selectedPaaS.setDown(false);
-                        }
-                        selectedPaaS = btn;
-
-                        delegate.onPaaSSelected(id);
-                    } else {
-                        selectedPaaS.setDown(true);
-                    }
+                    delegate.onPaaSSelected(id);
                 }
             });
-            this.paases.setWidget(0, i, btn);
+            grid.setWidget(0, i, btn);
             formatter.setHorizontalAlignment(0, i, HasHorizontalAlignment.ALIGN_CENTER);
 
             Label title = new Label(paas.getTitle());
-            this.paases.setWidget(1, i, title);
+            grid.setWidget(1, i, title);
             formatter.setHorizontalAlignment(1, i, HasHorizontalAlignment.ALIGN_CENTER);
 
-            paasButton.add(btn);
+            paasButtons.add(btn);
         }
     }
 
     /** {@inheritDoc} */
-    public void setDelegate(ActionDelegate delegate) {
-        this.delegate = delegate;
+    @Override
+    public void selectProjectType(int id) {
+        for (int i = 0; i < projectTypeButtons.size(); i++) {
+            ToggleButton button = projectTypeButtons.get(i);
+            button.setDown(i == id);
+        }
     }
 
     /** {@inheritDoc} */
     @Override
-    public String getProjectName() {
-        return projectName.getText();
+    public void selectPaas(int id) {
+        for (int i = 0; i < paasButtons.size(); i++) {
+            ToggleButton button = paasButtons.get(i);
+            button.setDown(i == id);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void focusProjectName() {
+        projectName.setFocus(true);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setEnablePaas(int id, boolean isEnabled) {
+        ToggleButton button = paasButtons.get(id);
+        button.setEnabled(isEnabled);
     }
 
     /** {@inheritDoc} */

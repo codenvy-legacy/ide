@@ -66,7 +66,7 @@ public class AppFogExtension {
 
         // TODO change hard code types
         JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
-        natures.put("Java", JsonCollections.<String>createArray("Servlet/JSP", "Spring", "War"));
+        natures.put("java", JsonCollections.<String>createArray("Servlet/JSP", "Spring", "War"));
         natures.put("Ruby", JsonCollections.<String>createArray("Rails"));
         natures.put("Python", JsonCollections.<String>createArray());
         natures.put("PHP", JsonCollections.<String>createArray());

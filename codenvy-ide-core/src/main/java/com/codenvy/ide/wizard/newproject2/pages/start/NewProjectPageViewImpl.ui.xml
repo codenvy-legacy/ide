@@ -86,8 +86,8 @@
                          addStyleNames="{style.title} {res.wizardCSS.mainBoldFont} {res.wizardCSS.greyFontColor} {style.alignLeft}"/>
                 <g:Image ui:field="chooseTechnologyTooltip" resource="{res.question}"
                          addStyleNames="{style.questionImage} {res.wizardCSS.cursorPointer} {style.alignLeft}"/>
-                <g:Grid ui:field="technologies"
-                        addStyleNames="{res.wizardCSS.mainFont} {style.clearLeft} {style.emptyBorder} {style.emptyBackground}"/>
+                <g:SimplePanel ui:field="techPanel"
+                               addStyleNames="{res.wizardCSS.mainFont} {style.clearLeft} {style.emptyBorder} {style.emptyBackground}"/>
             </g:FlowPanel>
         </g:north>
         <g:north size="140">
@@ -96,8 +96,8 @@
                          addStyleNames="{style.title} {res.wizardCSS.mainBoldFont} {res.wizardCSS.greyFontColor} {style.alignLeft}"/>
                 <g:Image ui:field="choosePaaSTooltip" resource="{res.question}"
                          addStyleNames="{style.questionImage} {res.wizardCSS.cursorPointer} {style.alignLeft}"/>
-                <g:Grid ui:field="paases"
-                        addStyleNames="{res.wizardCSS.mainFont} {style.clearLeft} {style.emptyBorder} {style.emptyBackground}"/>
+                <g:SimplePanel ui:field="paasPanel"
+                               addStyleNames="{res.wizardCSS.mainFont} {style.clearLeft} {style.emptyBorder} {style.emptyBackground}"/>
             </g:FlowPanel>
         </g:north>
     </g:DockLayoutPanel>

@@ -82,9 +82,8 @@ public class NewProjectWizardModel implements WizardModel {
     @Override
     public WizardPage flipToFirst() {
         flippedPages.clear();
-        WizardPage page = newProjectPage.get();
+        WizardPage page = getPage(newProjectPage);
         flippedPages.add(page);
-        page.setUpdateDelegate(delegate);
         index = 0;
 
         return page;
@@ -97,24 +96,31 @@ public class NewProjectWizardModel implements WizardModel {
         index++;
 
         if (index == 1) {
-            WizardPage page = templatePage.get();
-            page.setUpdateDelegate(delegate);
-            flippedPages.add(page);
+            flippedPages.add(getPage(templatePage));
         } else if (index == 2) {
-            // TODO can be NPE
             JsonArray<Provider<? extends WizardPage>> templatePageProviders = templatePages.get(wizardContext.getData(TEMPLATE));
-            for (Provider<? extends WizardPage> provider : templatePageProviders.asIterable()) {
-                flippedPages.add(provider.get());
+            if (templatePageProviders != null) {
+                for (Provider<? extends WizardPage> provider : templatePageProviders.asIterable()) {
+                    flippedPages.add(getPage(provider));
+                }
             }
 
-            // TODO can be NPE
-            JsonArray<Provider<? extends WizardPage>> paasPageProviders = templatePages.get(wizardContext.getData(PAAS));
-            for (Provider<? extends WizardPage> provider : paasPageProviders.asIterable()) {
-                flippedPages.add(provider.get());
+            JsonArray<Provider<? extends WizardPage>> paasPageProviders = paasPages.get(wizardContext.getData(PAAS));
+            if (paasPageProviders != null) {
+                for (Provider<? extends WizardPage> provider : paasPageProviders.asIterable()) {
+                    flippedPages.add(getPage(provider));
+                }
             }
         }
 
         return flippedPages.get(index);
+    }
+
+    private WizardPage getPage(Provider<? extends WizardPage> provider) {
+        WizardPage page = provider.get();
+        page.setUpdateDelegate(delegate);
+        page.setContext(wizardContext);
+        return page;
     }
 
     /** {@inheritDoc} */

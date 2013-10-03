@@ -60,7 +60,6 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
      * @param resources
      * @param view
      * @param paasAgent
-     * @param templatePage
      * @param resourceProvider
      */
     @Inject
@@ -83,12 +82,14 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
             }
         });
 
-        this.view = view;
-        this.view.setDelegate(this);
-
         this.paases = paasAgent.getPaaSes();
         this.projectTypes = projectTypeAgent.getProjectTypes();
         this.constant = constant;
+
+        this.view = view;
+        this.view.setDelegate(this);
+        this.view.setProjectTypes(projectTypes);
+        this.view.setPaases(paases);
     }
 
     /** {@inheritDoc} */
@@ -103,7 +104,10 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     /** {@inheritDoc} */
     @Override
     public void focusComponent() {
-        //TODO focus element
+        if (!projectTypes.isEmpty()) {
+            onProjectTypeSelected(0);
+        }
+        view.focusProjectName();
     }
 
     /** {@inheritDoc} */
@@ -144,12 +148,23 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     @Override
     public void onProjectTypeSelected(int id) {
         ProjectTypeData projectType = projectTypes.get(id);
-        wizardContext.putData(PROJECT_TYPE, projectType);
 
-        // TODO select none paas
-        // paasAgent.setSelectedPaaS(null);
+        view.selectProjectType(id);
+
+        boolean isFirst = true;
+        for (int i = 0; i < paases.size(); i++) {
+            PaaS paas = paases.get(i);
+            boolean isAvailable = paas.isAvailable(projectType.getPrimaryNature(), projectType.getSecondaryNature());
+            view.setEnablePaas(i, isAvailable);
+            if (isAvailable && isFirst) {
+                onPaaSSelected(i);
+                isFirst = false;
+            }
+        }
 
         delegate.updateControls();
+
+        wizardContext.putData(PROJECT_TYPE, projectType);
     }
 
     /** {@inheritDoc} */
@@ -157,6 +172,8 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     public void onPaaSSelected(int id) {
         PaaS paas = paases.get(id);
         wizardContext.putData(PAAS, paas);
+
+        view.selectPaas(id);
 
         delegate.updateControls();
     }

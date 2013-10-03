@@ -56,7 +56,7 @@ public class CloudBeesExtension {
 
         // TODO change hard code types
         JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
-        natures.put("Java", JsonCollections.<String>createArray("Servlet/JSP", "War"));
+        natures.put("java", JsonCollections.<String>createArray("Servlet/JSP", "War"));
 
         JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);

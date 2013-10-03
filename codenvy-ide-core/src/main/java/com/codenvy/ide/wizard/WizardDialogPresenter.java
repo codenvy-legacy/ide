@@ -54,12 +54,15 @@ public class WizardDialogPresenter implements WizardDialog, WizardModel.UpdateDe
     /** {@inheritDoc} */
     @Override
     public void onNextClicked() {
+        currentPage.storeOptions();
         setPage(wizardModel.flipToNext());
+        currentPage.focusComponent();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onBackClicked() {
+        currentPage.removeOptions();
         setPage(wizardModel.flipToPrevious());
     }
 
@@ -96,6 +99,7 @@ public class WizardDialogPresenter implements WizardDialog, WizardModel.UpdateDe
     @Override
     public void show() {
         setPage(wizardModel.flipToFirst());
+        currentPage.focusComponent();
         view.setTitle(wizardModel.getTitle());
         view.showDialog();
         view.setEnabledAnimation(true);
