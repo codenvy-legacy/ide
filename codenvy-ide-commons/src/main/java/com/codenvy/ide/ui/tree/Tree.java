@@ -369,10 +369,6 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
                     super.handleEvent(evt);
                     evt.stopPropagation();
                     evt.preventDefault();
-
-                    MouseEvent mouseEvt = (MouseEvent)evt;
-                    // This is a click on the root.
-                    dispatchOnRootContextMenuEvent(mouseEvt.getClientX(), mouseEvt.getClientY());
                 }
 
                 @Override
