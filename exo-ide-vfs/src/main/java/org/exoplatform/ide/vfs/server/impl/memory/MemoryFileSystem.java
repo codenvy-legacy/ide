@@ -82,6 +82,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -114,7 +115,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
     private final MemoryFileSystemContext context;
     private final EventListenerList       listeners;
 
-    private VirtualFileSystemInfo vfsInfo;
+    private VirtualFileSystemInfo         vfsInfo;
 
     public MemoryFileSystem(URI baseUri,
                             EventListenerList listeners,
@@ -147,8 +148,8 @@ public class MemoryFileSystem implements VirtualFileSystem {
         Item copy = fromMemoryItem(objectCopy, false, PropertyFilter.ALL_FILTER);
         if (listeners != null) {
             listeners.notifyListeners(
-                    new ChangeEvent(this, copy.getId(), copy.getPath(), copy.getMimeType(), ChangeType.CREATED,
-                                    context.getCurrentVirtualFileSystemUser()));
+                     new ChangeEvent(this, copy.getId(), copy.getPath(), copy.getMimeType(), ChangeType.CREATED,
+                                     context.getCurrentVirtualFileSystemUser()));
         }
         return copy;
     }
@@ -180,8 +181,8 @@ public class MemoryFileSystem implements VirtualFileSystem {
         File file = (File)fromMemoryItem(memoryFile, false, PropertyFilter.ALL_FILTER);
         if (listeners != null) {
             listeners.notifyListeners(
-                    new ChangeEvent(this, file.getId(), file.getPath(), file.getMimeType(), ChangeType.CREATED,
-                                    context.getCurrentVirtualFileSystemUser()));
+                     new ChangeEvent(this, file.getId(), file.getPath(), file.getMimeType(), ChangeType.CREATED,
+                                     context.getCurrentVirtualFileSystemUser()));
         }
         return file;
     }
@@ -227,8 +228,8 @@ public class MemoryFileSystem implements VirtualFileSystem {
         Folder folder = (Folder)fromMemoryItem(memoryFolder, false, PropertyFilter.ALL_FILTER);
         if (listeners != null) {
             listeners.notifyListeners(
-                    new ChangeEvent(this, folder.getId(), folder.getPath(), folder.getMimeType(), ChangeType.CREATED,
-                                    context.getCurrentVirtualFileSystemUser()));
+                     new ChangeEvent(this, folder.getId(), folder.getPath(), folder.getMimeType(), ChangeType.CREATED,
+                                     context.getCurrentVirtualFileSystemUser()));
         }
         return folder;
     }
@@ -263,8 +264,8 @@ public class MemoryFileSystem implements VirtualFileSystem {
         ProjectImpl project = (ProjectImpl)fromMemoryItem(memoryProject, false, PropertyFilter.ALL_FILTER);
         if (listeners != null) {
             listeners.notifyListeners(
-                    new ChangeEvent(this, project.getId(), project.getPath(), project.getMimeType(), ChangeType.CREATED,
-                                    context.getCurrentVirtualFileSystemUser()));
+                     new ChangeEvent(this, project.getId(), project.getPath(), project.getMimeType(), ChangeType.CREATED,
+                                     context.getCurrentVirtualFileSystemUser()));
         }
         return project;
     }
@@ -324,8 +325,8 @@ public class MemoryFileSystem implements VirtualFileSystem {
         }
         if (listeners != null) {
             listeners.notifyListeners(
-                    new ChangeEvent(this, object.getId(), deletePath, object.getMediaType(), ChangeType.DELETED,
-                                    context.getCurrentVirtualFileSystemUser()));
+                     new ChangeEvent(this, object.getId(), deletePath, object.getMediaType(), ChangeType.DELETED,
+                                     context.getCurrentVirtualFileSystemUser()));
         }
     }
 
@@ -343,7 +344,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
                                       @QueryParam("itemType") String itemType, //
                                       @DefaultValue("false") @QueryParam("includePermissions") Boolean includePermissions,
                                       @DefaultValue(PropertyFilter.NONE) @QueryParam("propertyFilter") PropertyFilter propertyFilter)
-            throws VirtualFileSystemException {
+                                                                                                                                     throws VirtualFileSystemException {
         if (skipCount < 0) {
             throw new InvalidArgumentException("'skipCount' parameter is negative. ");
         }
@@ -367,7 +368,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
         MemoryFolder folder = (MemoryFolder)object;
         List<MemoryItem> children = folder.getChildren();
         // Remove all children we have not access before to do anything.
-        for (Iterator<MemoryItem> iterator = children.iterator(); iterator.hasNext(); ) {
+        for (Iterator<MemoryItem> iterator = children.iterator(); iterator.hasNext();) {
             MemoryItem child = iterator.next();
             if (!context.hasPermission(child, BasicPermissions.READ, false)) {
                 iterator.remove();
@@ -424,7 +425,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
                             @DefaultValue("-1") @QueryParam("depth") int depth,
                             @DefaultValue("false") @QueryParam("includePermissions") Boolean includePermissions,
                             @DefaultValue(PropertyFilter.NONE) @QueryParam("propertyFilter") PropertyFilter propertyFilter)
-            throws VirtualFileSystemException {
+                                                                                                                           throws VirtualFileSystemException {
         MemoryItem object = getItemById(folderId);
         if (!object.isFolder()) {
             throw new InvalidArgumentException("Unable get tree. Item '" + object.getName() + "' is not a folder. ");
@@ -434,7 +435,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
     }
 
     private List<ItemNode> getTreeLevel(MemoryItem object, int depth, boolean includePermissions, PropertyFilter propertyFilter)
-            throws VirtualFileSystemException {
+                                                                                                                                throws VirtualFileSystemException {
         if (depth == 0 || !object.isFolder()) {
             return null;
         }
@@ -443,7 +444,9 @@ public class MemoryFileSystem implements VirtualFileSystem {
         List<ItemNode> level = new ArrayList<ItemNode>();
         for (MemoryItem i : children) {
             level.add(new ItemNodeImpl(
-                    fromMemoryItem(i, includePermissions, propertyFilter), getTreeLevel(i, depth - 1, includePermissions, propertyFilter)));
+                                       fromMemoryItem(i, includePermissions, propertyFilter), getTreeLevel(i, depth - 1,
+                                                                                                           includePermissions,
+                                                                                                           propertyFilter)));
         }
         return level;
     }
@@ -500,7 +503,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
     public Item getItem(@PathParam("id") String id, //
                         @DefaultValue("false") @QueryParam("includePermissions") Boolean includePermissions,
                         @DefaultValue(PropertyFilter.ALL) @QueryParam("propertyFilter") PropertyFilter propertyFilter)
-            throws VirtualFileSystemException {
+                                                                                                                      throws VirtualFileSystemException {
         return fromMemoryItem(getItemById(id), includePermissions, propertyFilter);
     }
 
@@ -510,7 +513,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
                               @QueryParam("versionId") String versionId, //
                               @DefaultValue("false") @QueryParam("includePermissions") Boolean includePermissions,
                               @DefaultValue(PropertyFilter.ALL) @QueryParam("propertyFilter") PropertyFilter propertyFilter)
-            throws VirtualFileSystemException {
+                                                                                                                            throws VirtualFileSystemException {
         MemoryItem object = getItemByPath(path);
         if (object.isFile()) {
             if (!(versionId == null || versionId.equals(((MemoryFile)object).getVersionId()))) {
@@ -543,7 +546,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
                                       @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
                                       @QueryParam("skipCount") int skipCount, //
                                       @DefaultValue(PropertyFilter.ALL) @QueryParam("propertyFilter") PropertyFilter propertyFilter //
-                                     ) throws VirtualFileSystemException {
+    ) throws VirtualFileSystemException {
         if (skipCount < 0) {
             throw new InvalidArgumentException("'skipCount' parameter is negative. ");
         }
@@ -561,7 +564,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
             l = new ItemListImpl<File>(Collections.singletonList((File)fromMemoryItem(object, false, propertyFilter)));
             l.setHasMoreItems(false);
         } else {
-            l = new ItemListImpl<File>(Collections.<File>emptyList());
+            l = new ItemListImpl<File>(Collections.<File> emptyList());
             l.setHasMoreItems(false);
         }
         return l;
@@ -597,7 +600,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
             throw new InvalidArgumentException("Unable move item. Item specified as parent is not a folder. ");
         }
         if (!(context.hasPermission(parent, BasicPermissions.WRITE, true)
-              && context.hasPermission(object, BasicPermissions.WRITE, true))) {
+        && context.hasPermission(object, BasicPermissions.WRITE, true))) {
             throw new PermissionDeniedException("Unable move item '" + object.getPath() + "' to " + parent.getPath()
                                                 + ". Operation not permitted. ");
         }
@@ -646,8 +649,8 @@ public class MemoryFileSystem implements VirtualFileSystem {
         Item moved = fromMemoryItem(object, false, PropertyFilter.ALL_FILTER);
         if (listeners != null) {
             listeners.notifyListeners(
-                    new ChangeEvent(this, moved.getId(), moved.getPath(), oldPath, moved.getMimeType(), ChangeType.MOVED,
-                                    context.getCurrentVirtualFileSystemUser()));
+                     new ChangeEvent(this, moved.getId(), moved.getPath(), oldPath, moved.getMimeType(), ChangeType.MOVED,
+                                     context.getCurrentVirtualFileSystemUser()));
         }
         return moved;
     }
@@ -695,8 +698,8 @@ public class MemoryFileSystem implements VirtualFileSystem {
         Item renamed = fromMemoryItem(object, false, PropertyFilter.ALL_FILTER);
         if (listeners != null) {
             listeners.notifyListeners(
-                    new ChangeEvent(this, renamed.getId(), renamed.getPath(), oldPath, renamed.getMimeType(), ChangeType.RENAMED,
-                                    context.getCurrentVirtualFileSystemUser()));
+                     new ChangeEvent(this, renamed.getId(), renamed.getPath(), oldPath, renamed.getMimeType(), ChangeType.RENAMED,
+                                     context.getCurrentVirtualFileSystemUser()));
         }
         return renamed;
     }
@@ -707,7 +710,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
                                  @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
                                  @QueryParam("skipCount") int skipCount, //
                                  @DefaultValue(PropertyFilter.ALL) @QueryParam("propertyFilter") PropertyFilter propertyFilter //
-                                ) throws NotSupportedException, VirtualFileSystemException {
+    ) throws NotSupportedException, VirtualFileSystemException {
         throw new NotSupportedException("Not supported. ");
     }
 
@@ -715,7 +718,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
     public ItemList<Item> search(@QueryParam("statement") String statement, //
                                  @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
                                  @QueryParam("skipCount") int skipCount //
-                                ) throws NotSupportedException, VirtualFileSystemException {
+    ) throws NotSupportedException, VirtualFileSystemException {
         throw new NotSupportedException("Not supported. ");
     }
 
@@ -723,7 +726,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
     @Override
     public void unlock(@PathParam("id") String id, //
                        @QueryParam("lockToken") String lockToken //
-                      ) throws NotSupportedException, VirtualFileSystemException {
+    ) throws NotSupportedException, VirtualFileSystemException {
         MemoryItem object = getItemById(id);
         if (!context.hasPermission(object, BasicPermissions.WRITE, true)) {
             throw new PermissionDeniedException("Unable unlock item '" + object.getName() + "'. Operation not permitted. ");
@@ -740,7 +743,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
                           List<AccessControlEntry> acl, //
                           @DefaultValue("false") @QueryParam("override") Boolean override, //
                           @QueryParam("lockToken") String lockToken //
-                         ) throws NotSupportedException, VirtualFileSystemException {
+    ) throws NotSupportedException, VirtualFileSystemException {
         MemoryItem object = getItemById(id);
         if (object.isFile() && !((MemoryFile)object).isLockTokenMatched(lockToken)) {
             throw new LockException("Unable update ACL of item '" + object.getName() + "'. Item is locked. ");
@@ -754,10 +757,10 @@ public class MemoryFileSystem implements VirtualFileSystem {
     @Path("content/{id}")
     @Override
     public void updateContent(
-            @PathParam("id") String id, //
-            @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @HeaderParam("Content-Type") MediaType mediaType,
-            InputStream newContent, //
-            @QueryParam("lockToken") String lockToken) throws VirtualFileSystemException {
+                              @PathParam("id") String id, //
+                              @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @HeaderParam("Content-Type") MediaType mediaType,
+                              InputStream newContent, //
+                              @QueryParam("lockToken") String lockToken) throws VirtualFileSystemException {
         MemoryItem object = getItemById(id);
         if (!object.isFile()) {
             throw new InvalidArgumentException("Object " + object.getName() + " is not file. ");
@@ -776,8 +779,8 @@ public class MemoryFileSystem implements VirtualFileSystem {
         object.setMediaType(mediaType == null ? null : mediaType.toString());
         if (listeners != null) {
             listeners.notifyListeners(
-                    new ChangeEvent(this, object.getId(), object.getPath(), object.getMediaType(), ChangeType.CONTENT_UPDATED,
-                                    context.getCurrentVirtualFileSystemUser()));
+                     new ChangeEvent(this, object.getId(), object.getPath(), object.getMediaType(), ChangeType.CONTENT_UPDATED,
+                                     context.getCurrentVirtualFileSystemUser()));
         }
     }
 
@@ -799,8 +802,8 @@ public class MemoryFileSystem implements VirtualFileSystem {
         Item updated = fromMemoryItem(object, false, PropertyFilter.ALL_FILTER);
         if (listeners != null) {
             listeners.notifyListeners(
-                    new ChangeEvent(this, updated.getId(), updated.getPath(), updated.getMimeType(), ChangeType.PROPERTIES_UPDATED,
-                                    context.getCurrentVirtualFileSystemUser()));
+                     new ChangeEvent(this, updated.getId(), updated.getPath(), updated.getMimeType(), ChangeType.PROPERTIES_UPDATED,
+                                     context.getCurrentVirtualFileSystemUser()));
         }
         return updated;
     }
@@ -884,7 +887,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
     public void importZip(@PathParam("parentId") String parentId, //
                           InputStream in, //
                           @DefaultValue("false") @QueryParam("overwrite") Boolean overwrite //
-                         ) throws VirtualFileSystemException, IOException {
+    ) throws VirtualFileSystemException, IOException {
         ZipInputStream zip = null;
         try {
             MemoryItem object = getItemById(parentId);
@@ -941,7 +944,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
                         current.updateProperties(list);
                     } else {
                         current.updateProperties(
-                                Collections.<Property>singletonList(new PropertyImpl("vfs:mimeType", Project.PROJECT_MIME_TYPE)));
+                               Collections.<Property> singletonList(new PropertyImpl("vfs:mimeType", Project.PROJECT_MIME_TYPE)));
                     }
                 } else {
                     MemoryItem child = current.getChild(name);
@@ -976,18 +979,18 @@ public class MemoryFileSystem implements VirtualFileSystem {
     public Response downloadFile(@PathParam("id") String id) throws VirtualFileSystemException {
         ContentStream content = getContent(id);
         return Response //
-                .ok(content.getStream(), content.getMimeType()) //
-                .lastModified(content.getLastModificationDate()) //
-                .header(HttpHeaders.CONTENT_LENGTH, Long.toString(content.getLength())) //
-                .header("Content-Disposition", "attachment; filename=\"" + content.getFileName() + "\"") //
-                .build();
+        .ok(content.getStream(), content.getMimeType()) //
+                       .lastModified(content.getLastModificationDate()) //
+                       .header(HttpHeaders.CONTENT_LENGTH, Long.toString(content.getLength())) //
+                       .header("Content-Disposition", "attachment; filename=\"" + content.getFileName() + "\"") //
+                       .build();
     }
 
     @Path("uploadfile/{parentId}")
     @Override
     public Response uploadFile(@PathParam("parentId") String parentId, //
                                java.util.Iterator<FileItem> formData //
-                              ) throws VirtualFileSystemException, IOException {
+    ) throws VirtualFileSystemException, IOException {
         try {
             MemoryItem parent = getItemById(parentId);
             if (!parent.isFolder()) {
@@ -1040,8 +1043,8 @@ public class MemoryFileSystem implements VirtualFileSystem {
                 context.putItem(file);
                 if (listeners != null) {
                     listeners.notifyListeners(
-                            new ChangeEvent(this, file.getId(), file.getPath(), file.getMediaType(), ChangeType.CREATED,
-                                            context.getCurrentVirtualFileSystemUser()));
+                             new ChangeEvent(this, file.getId(), file.getPath(), file.getMediaType(), ChangeType.CREATED,
+                                             context.getCurrentVirtualFileSystemUser()));
                 }
             } catch (ItemAlreadyExistException e) {
                 if (!overwrite) {
@@ -1056,8 +1059,8 @@ public class MemoryFileSystem implements VirtualFileSystem {
                 file.setContent(contentItem.getInputStream());
                 if (listeners != null) {
                     listeners.notifyListeners(
-                            new ChangeEvent(this, file.getId(), file.getPath(), file.getMediaType(), ChangeType.CONTENT_UPDATED,
-                                            context.getCurrentVirtualFileSystemUser()));
+                             new ChangeEvent(this, file.getId(), file.getPath(), file.getMediaType(), ChangeType.CONTENT_UPDATED,
+                                             context.getCurrentVirtualFileSystemUser()));
                 }
             }
             return Response.ok("", MediaType.TEXT_HTML).build();
@@ -1077,11 +1080,11 @@ public class MemoryFileSystem implements VirtualFileSystem {
     public Response downloadZip(@PathParam("folderId") String folderId) throws IOException, VirtualFileSystemException {
         ContentStream zip = exportZip(folderId);
         return Response //
-                .ok(zip.getStream(), zip.getMimeType()) //
-                .lastModified(zip.getLastModificationDate()) //
-                .header(HttpHeaders.CONTENT_LENGTH, Long.toString(zip.getLength())) //
-                .header("Content-Disposition", "attachment; filename=\"" + zip.getFileName() + "\"") //
-                .build();
+        .ok(zip.getStream(), zip.getMimeType()) //
+                       .lastModified(zip.getLastModificationDate()) //
+                       .header(HttpHeaders.CONTENT_LENGTH, Long.toString(zip.getLength())) //
+                       .header("Content-Disposition", "attachment; filename=\"" + zip.getFileName() + "\"") //
+                       .build();
     }
 
     @Path("uploadzip/{parentId}")
@@ -1130,8 +1133,9 @@ public class MemoryFileSystem implements VirtualFileSystem {
             throw new InvalidArgumentException("Item is not a project. ");
         }
         if (listeners.addEventListener(
-                ProjectUpdateEventFilter.newFilter(vfsId, (MemoryFolder)object), new ProjectUpdateListener(projectId))) {
-            object.updateProperties(Arrays.<Property>asList(new PropertyImpl("vfs:lastUpdateTime", "0")));
+                                       ProjectUpdateEventFilter.newFilter(vfsId, (MemoryFolder)object),
+                                       new ProjectUpdateListener(projectId))) {
+            object.updateProperties(Arrays.<Property> asList(new PropertyImpl("vfs:lastUpdateTime", "0")));
         }
     }
 
@@ -1150,8 +1154,8 @@ public class MemoryFileSystem implements VirtualFileSystem {
         }
     }
 
-   /* =========================================================================== */
-   /* =========================================================================== */
+    /* =========================================================================== */
+    /* =========================================================================== */
 
     private MemoryItem getItemById(String id) throws VirtualFileSystemException {
         MemoryItem object = context.getItem(id);
@@ -1182,12 +1186,12 @@ public class MemoryFileSystem implements VirtualFileSystem {
     }
 
     private Item fromMemoryItem(MemoryItem memoryItem, boolean includePermissions, PropertyFilter propertyFilter)
-            throws VirtualFileSystemException {
+                                                                                                                 throws VirtualFileSystemException {
         return fromMemoryItem(memoryItem, includePermissions, propertyFilter, true);
     }
 
     private Item fromMemoryItem(MemoryItem object, boolean includePermissions, PropertyFilter propertyFilter, boolean addLinks)
-            throws VirtualFileSystemException {
+                                                                                                                               throws VirtualFileSystemException {
         final String id = object.getId();
         final String name = object.getName();
         final String path = object.getPath();
@@ -1203,10 +1207,15 @@ public class MemoryFileSystem implements VirtualFileSystem {
             final boolean locked = file.isLocked();
             final long length = file.getContent().getLength();
             final long modified = file.getLastModificationDate();
-            item = new FileImpl(vfsId, id, name, path, parentId, created, modified, versionId, mediaType, length,
+            item =
+                   new FileImpl(vfsId, id, name, path, parentId, created, modified, versionId, mediaType, length,
                                 locked, file.getProperties(propertyFilter),
                                 addLinks ? LinksHelper
-                                        .createFileLinks(baseUri, EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString(), id, latestVersionId, path, mediaType, locked, parentId) : null);
+                                                      .createFileLinks(baseUri,
+                                                                       EnvironmentContext.getCurrent()
+                                                                                         .getVariable(EnvironmentContext.WORKSPACE_NAME)
+                                                                                         .toString(), id, latestVersionId, path, mediaType,
+                                                                       locked, parentId) : null);
         } else {
             MemoryFolder folder = (MemoryFolder)object;
             if (folder.isProject()) {
@@ -1219,13 +1228,32 @@ public class MemoryFileSystem implements VirtualFileSystem {
                     }
                 }
 
-                item = new ProjectImpl(vfsId, id, name, mediaType, path, parentId, created, folder.getProperties(propertyFilter),
-                                       addLinks ? LinksHelper.createProjectLinks(baseUri, EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString(), id, parentId) : null, projectType);
+                item =
+                       new ProjectImpl(
+                                       vfsId,
+                                       id,
+                                       name,
+                                       mediaType,
+                                       path,
+                                       parentId,
+                                       created,
+                                       folder.getProperties(propertyFilter),
+                                       addLinks
+                                           ? LinksHelper.createProjectLinks(baseUri,
+                                                                            EnvironmentContext.getCurrent()
+                                                                                              .getVariable(EnvironmentContext.WORKSPACE_NAME)
+                                                                                              .toString(), id, parentId) : null,
+                                       projectType);
             } else {
 
-                item = new FolderImpl(vfsId, id, name, mediaType == null ? Folder.FOLDER_MIME_TYPE : mediaType, path, parentId, created,
+                item =
+                       new FolderImpl(vfsId, id, name, mediaType == null ? Folder.FOLDER_MIME_TYPE : mediaType, path, parentId, created,
                                       object.getProperties(propertyFilter),
-                                      addLinks ? LinksHelper.createFolderLinks(baseUri, EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString(), id, isRoot, parentId) : null);
+                                      addLinks
+                                          ? LinksHelper.createFolderLinks(baseUri,
+                                                                          EnvironmentContext.getCurrent()
+                                                                                            .getVariable(EnvironmentContext.WORKSPACE_NAME)
+                                                                                            .toString(), id, isRoot, parentId) : null);
             }
         }
 
@@ -1280,5 +1308,10 @@ public class MemoryFileSystem implements VirtualFileSystem {
                "vfsId='" + vfsId + '\'' +
                ", baseUri=" + baseUri +
                '}';
+    }
+
+    @Override
+    public void addToIndex(String itemId) throws ItemNotFoundException, NotSupportedException, VirtualFileSystemException {
+        throw new NotSupportedException("Not supported. ");
     }
 }

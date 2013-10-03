@@ -205,6 +205,7 @@ public class GitService {
         try {
             gitConnection.clone(request);
             setGitRepositoryProp();
+            addToIndex();
             return new RepoInfo(request.getRemoteUri());
         } finally {
             long end = System.currentTimeMillis();
@@ -227,12 +228,17 @@ public class GitService {
         }
     }
 
+    private void addToIndex() throws VirtualFileSystemException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        vfs.addToIndex(projectId);
+    }
+
     @Path("commit")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Revision commit(CommitRequest request) throws GitException, LocalPathResolveException,
-                                                         VirtualFileSystemException {
+                                                 VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             Revision revision = gitConnection.commit(request);
@@ -434,8 +440,8 @@ public class GitService {
     @POST
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Status status(@QueryParam("short") boolean shortFormat) throws GitException,
-                                                                 LocalPathResolveException,
-                                                                 VirtualFileSystemException {
+                                                                  LocalPathResolveException,
+                                                                  VirtualFileSystemException {
         if (!isGitRepository()) {
             throw new GitException("Not a git repository.");
         }
