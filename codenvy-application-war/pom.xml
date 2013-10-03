@@ -514,4 +514,24 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <!-- Used for GWT SuperDevMode -->
+            <id>dev</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>gwt-maven-plugin</artifactId>
+                        <configuration>
+                            <module>com.codenvy.ide.IDEdev</module>
+                            <logLevel>INFO</logLevel>
+                            <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
