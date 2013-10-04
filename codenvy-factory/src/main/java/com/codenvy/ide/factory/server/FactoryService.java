@@ -147,7 +147,8 @@ public class FactoryService {
                              @QueryParam("remoteuri") String remoteUri,
                              @QueryParam("idcommit") String idCommit,
                              @QueryParam("ptype") String projectType,
-                             @QueryParam("action") String action)
+                             @QueryParam("action") String action,
+                             @QueryParam("keepvcsinfo") boolean keepVcsInfo)
             throws VirtualFileSystemException, GitException,
                    URISyntaxException, IOException {
         GitConnection gitConnection = getGitConnection(projectId, vfsId);
@@ -158,12 +159,13 @@ public class FactoryService {
         checkoutRequest.setCreateNew(true);
         checkoutRequest.setStartPoint(idCommit);
         gitConnection.branchCheckout(checkoutRequest);
-        deleteRepository(vfsId, projectId);
-        return convertToProject(vfsId, projectId, remoteUri, projectType, action);
+        if (!keepVcsInfo)
+            deleteRepository(vfsId, projectId);
+        return convertToProject(vfsId, projectId, remoteUri, projectType, action, keepVcsInfo);
 
     }
 
-    private Item convertToProject(String vfsId, String projectId, String remoteUri, String projectType, String action)
+    private Item convertToProject(String vfsId, String projectId, String remoteUri, String projectType, String action, boolean keepVcsInfo)
             throws VirtualFileSystemException, IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         Item itemToUpdate = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
@@ -179,6 +181,8 @@ public class FactoryService {
             props.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
             props.add(new PropertyImpl("vfs:projectType", projectType));
             props.add(new PropertyImpl("codenow", remoteUri));
+            if (keepVcsInfo)
+                props.add(new PropertyImpl("isGitRepository", "true"));
             itemToUpdate = vfs.updateItem(itemToUpdate.getId(), props, null);
             if (ProjectType.GOOGLE_MBS_ANDROID.toString().equals(projectType)) {
                 File constJava = (File)vfs

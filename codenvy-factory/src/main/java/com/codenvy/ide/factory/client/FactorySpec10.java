@@ -63,4 +63,7 @@ public class FactorySpec10 {
     /** Optional parameter for opening specified file after cloning.  */
     public final static String FILE_TO_OPEN      = "openfile";
 
+    /** Optional parameter for keeping vcs information.  */
+    public final static String KEEP_VCS_INFO      = "keepvcsinfo";
+
 }
