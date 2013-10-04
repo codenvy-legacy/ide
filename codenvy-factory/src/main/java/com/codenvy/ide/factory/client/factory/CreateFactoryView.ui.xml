@@ -663,7 +663,7 @@
 				</div>
 			</div>
 			
-			<div class="{style.block}" style="height: 120px;">
+			<div class="{style.block}" style="height: 160px;">
 				<div class="{style.blockHeader}">Customize<hr noshade="noshade"></hr></div>					
 				<div class="{style.block-content}">
 					<div style="position: absolute; left:0px; top:0px; right: 350px; bottom: 0px; overflow:hidden;">
@@ -708,7 +708,7 @@
 					<div class="{style.label}" style="position: absolute; left:0px; top:0px;">Logo (200 x 200):</div>
 					<label class="{style.file-upload}" style="position: absolute; left:120px; top:0px;">
 						<span>Upload image (JPG, GIF or PNG)</span>
-						<input type="file" name="uploadfile3"></input>
+						<input type="file" name="uploadFile" ui:field="uploadFileField"></input>
 					</label>
 					<div class="{style.tooltip}" style="position: absolute; left: 335px; top: 0px;">
 						?
@@ -776,7 +776,7 @@
 				</div>
 			</div>
 				
-			<div class="{style.block}" style="height: 120px;">
+			<div class="{style.block}" style="height: 160px;">
 				<div class="{style.blockHeader}"><hr noshade="noshade"></hr></div>
 				<div class="{style.block-content}">
 					<div style="position: absolute; overflow: hidden; 

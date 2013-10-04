@@ -26,6 +26,8 @@ import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -74,15 +76,13 @@ public class CreateFactoryView extends ViewImpl
 
     public static final String    TITLE       = "Create and Publish a Factory";
     
-    public static final int       INITIAL_WIDTH       = 800;
+    public static final int       INITIAL_WIDTH         = 800;
     
-    public static final int       INITIAL_HEIGHT      = 270 + 35;
+    public static final int       INITIAL_HEIGHT        = 340;
 
-    public static final int       WIDTH       = 788;
+    public static final int       WIDTH                 = 788;
 
-    public static final int       HEIGHT      = 480 + 35;
-
-    public static final int       HEIGHT_MINI = 270 + 35;
+    public static final int       HEIGHT                = 550;
 
     @UiField
     DivElement                    wizard1, wizard2;
@@ -93,6 +93,9 @@ public class CreateFactoryView extends ViewImpl
     @UiField
     InputElement                  checkShowCounter, radioVertical, radioHorizontal, radioDark, radioWhite, openAfterLaunchField;
 
+    @UiField
+    InputElement                  uploadFileField;
+    
     @UiField
     ImageButton                   buttonCancel, buttonCreate, buttonBack, buttonFinish;
     
@@ -118,9 +121,11 @@ public class CreateFactoryView extends ViewImpl
 
     private StyleChangedHandler refreshCallback;
     
+    private ValueChangeHandler<String> uploadLogoValueChangeHandler;
+        
     private boolean advancedOptionsVisible = false;
     
-    private int previousHeight = HEIGHT_MINI;
+    private int previousHeight = INITIAL_HEIGHT;
     
     private int animationLeft;
 
@@ -141,6 +146,8 @@ public class CreateFactoryView extends ViewImpl
         addChangeListener(radioDark);
         addChangeListener(radioWhite);
         
+        addFileSelectedListener(uploadFileField);
+        
         snippetWebsites.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -148,6 +155,20 @@ public class CreateFactoryView extends ViewImpl
             }
         });
         
+        snippetGitHub.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                snippetWebsites.selectAll();
+            }
+        });
+        
+        snippetDirectSharing.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                snippetWebsites.selectAll();
+            }
+        });
+
         addClickHandler(advancedOptionsControl, new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -158,6 +179,70 @@ public class CreateFactoryView extends ViewImpl
         advancedOptions.getStyle().setDisplay(Display.NONE);
         advancedOptionsControl.setClassName(style.blockHeader() + " " + style.blockHeaderCollapsed());
     }
+    
+    public class UploadFieldChangeEvent extends ValueChangeEvent<String> {
+        public UploadFieldChangeEvent(String value) {
+            super(value);
+        }
+    };
+    
+    private void addFileSelectedListener(InputElement element) {
+        DOM.sinkEvents((com.google.gwt.user.client.Element)element.cast(), Event.ONCHANGE);        
+        DOM.setEventListener((com.google.gwt.user.client.Element)element.cast(), new EventListener() {
+            @Override
+            public void onBrowserEvent(Event event) {
+                if (uploadLogoValueChangeHandler != null) {
+                    uploadLogoValueChangeHandler.onValueChange(new UploadFieldChangeEvent(uploadFileField.getValue()));
+                }
+            }
+        });
+    }
+
+    /**
+     * Logo image becomes available only after rendering of iframe content.
+     */
+    private void loadLogoImage() {
+        new Timer() {
+            @Override
+            public void run() {
+                loadLogoImageData(previewFrame1);
+                loadLogoImageData(previewFrame2);
+            }
+        }.schedule(100);
+    }
+    
+    private native void loadLogoImageData(IFrameElement iframe) /*-{
+        try {
+            var frame = iframe;
+            frame = (frame.contentWindow) ? frame.contentWindow : (frame.contentDocument.document) ? frame.contentDocument.document : frame.contentDocument;
+            
+            var factory = frame.factory;
+            if (factory == undefined || factory == null) {
+                return;
+            }
+
+            if ("advanced" == factory.getType()) {
+                var image = factory.getLogoImage();
+                
+                var upload = this.@com.codenvy.ide.factory.client.factory.CreateFactoryView::uploadFileField;
+                var file = upload.files[0];
+                
+                var mask = "image/";
+                
+                if (!file.type.match("image/")) {
+                    return;
+                }
+                
+                image.file = file;
+
+                var reader = new FileReader();
+                reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(image);
+                reader.readAsDataURL(file);
+            }
+        } catch (e) {
+            $wnd.alert("ERROR: " + e.message);
+        }
+    }-*/;
     
     private void addChangeListener(InputElement element) {
         DOM.sinkEvents((com.google.gwt.user.client.Element)element.cast(), Event.ONCHANGE);        
@@ -209,15 +294,15 @@ public class CreateFactoryView extends ViewImpl
         setPopupWidth(WIDTH);
         
         if (currentPage == 0 && !advancedOptionsVisible) {
-            setPopupHeight(HEIGHT_MINI);
-            if (previousHeight != HEIGHT_MINI) {
-                shiftVertical((HEIGHT - HEIGHT_MINI) / 2);
-                previousHeight = HEIGHT_MINI;
+            setPopupHeight(INITIAL_HEIGHT);
+            if (previousHeight != INITIAL_HEIGHT) {
+                shiftVertical((HEIGHT - INITIAL_HEIGHT) / 2);
+                previousHeight = INITIAL_HEIGHT;
             }
         } else {
             setPopupHeight(HEIGHT);
             if (previousHeight != HEIGHT) {
-                shiftVertical((HEIGHT_MINI - HEIGHT) / 2);
+                shiftVertical((INITIAL_HEIGHT - HEIGHT) / 2);
                 previousHeight = HEIGHT;                
             }
         }
@@ -343,17 +428,18 @@ public class CreateFactoryView extends ViewImpl
         frame1.document.open();
         frame1.document.write(content);
         frame1.document.close();
-        
+
         var frame2 = this.@com.codenvy.ide.factory.client.factory.CreateFactoryView::previewFrame2;
         frame2 = (frame2.contentWindow) ? frame2.contentWindow : (frame2.contentDocument.document) ? frame2.contentDocument.document : frame2.contentDocument;
         frame2.document.open();
         frame2.document.write(content);
-        frame2.document.close();         
-                 
+        frame2.document.close();
+        
+        this.@com.codenvy.ide.factory.client.factory.CreateFactoryView::loadLogoImage()();
     }-*/;
 
     @Override
-    public boolean showCounter() {
+    public boolean isShowCounter() {
         return checkShowCounter.isChecked();
     }
 
@@ -415,7 +501,7 @@ public class CreateFactoryView extends ViewImpl
     }
 
     @Override
-    public void addOpenAfterLaunchClickHandler(final ClickHandler clickHandler) {
+    public void setOpenAfterLaunchClickHandler(final ClickHandler clickHandler) {
         DOM.sinkEvents((com.google.gwt.user.client.Element)openAfterLaunchField.cast(), Event.ONCLICK);        
         DOM.setEventListener((com.google.gwt.user.client.Element)openAfterLaunchField.cast(), new EventListener() {
             @Override
@@ -428,8 +514,35 @@ public class CreateFactoryView extends ViewImpl
     }
 
     @Override
-    public void setOpenAfterLaunch(String path) {
+    public void setOpenAfterLaunchValue(String path) {
         openAfterLaunchField.setValue(path);
+    }
+    
+    @Override
+    public void setUploadImageValueChangeHandler(ValueChangeHandler<String> handler) {
+        this.uploadLogoValueChangeHandler = handler;
+    }
+
+    @Override
+    public String getUploadImageFieldValue() {
+        return uploadFileField.getValue();
+    }
+
+    @Override
+    public void showButtonAdvanced(boolean showAdvanced) {
+        if (showAdvanced) {
+            checkShowCounter.setAttribute("disabled", "disabled");
+            radioVertical.setAttribute("disabled", "disabled");
+            radioHorizontal.setAttribute("disabled", "disabled");
+            radioWhite.setAttribute("disabled", "disabled");
+            radioDark.setAttribute("disabled", "disabled");
+        } else {
+            checkShowCounter.removeAttribute("disabled");
+            radioVertical.removeAttribute("disabled");
+            radioHorizontal.removeAttribute("disabled");
+            radioWhite.removeAttribute("disabled");
+            radioDark.removeAttribute("disabled");
+        }
     }
     
 }

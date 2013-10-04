@@ -27,6 +27,8 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.safehtml.shared.UriUtils;
@@ -117,7 +119,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
          * 
          * @return <b>true</b> if Show counter field selected, <b>false</b> otherwise
          */
-        boolean showCounter();
+        boolean isShowCounter();
         
         /**
          * Determines whether Vertical orientation field selected.
@@ -132,6 +134,33 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
          * @return <b>true</b> if White style field selected, <b>false</b> otherwise
          */
         boolean isWhiteStyle();
+        
+        void showButtonAdvanced(boolean showAdvanced);
+        
+        /**
+         * Adds Style changed handler of Factory button.
+         * 
+         * @param handler handler
+         */
+        void addStyleChangedHandler(StyleChangedHandler handler);
+        
+        void setUploadImageValueChangeHandler(ValueChangeHandler<String> handler);
+        
+        String getUploadImageFieldValue();
+        
+        /**
+         * Adds Click handler to Open after launch field.
+         * 
+         * @param clickHandler click handler
+         */
+        void setOpenAfterLaunchClickHandler(ClickHandler clickHandler);
+        
+        /**
+         * Sets Open after launch field value.
+         * 
+         * @param path
+         */
+        void setOpenAfterLaunchValue(String path);
         
         /**
          * Returns snippet with content for embedding on websites.
@@ -210,26 +239,8 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
          */
         HasClickHandlers getFinishButton();
         
-        /**
-         * Adds Style changed handler of Factory button.
-         * 
-         * @param handler handler
-         */
-        void addStyleChangedHandler(StyleChangedHandler handler);
         
-        /**
-         * Adds Click handler to Open after launch field.
-         * 
-         * @param clickHandler click handler
-         */
-        void addOpenAfterLaunchClickHandler(ClickHandler clickHandler);
         
-        /**
-         * Sets Open after launch field value.
-         * 
-         * @param path
-         */
-        void setOpenAfterLaunch(String path);
         
     }
     
@@ -454,9 +465,30 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         display.addStyleChangedHandler(new StyleChangedHandler() {
             @Override
             public void onRefresh() {
+                String uploadFile = display.getUploadImageFieldValue();
+                if (uploadFile != null && !uploadFile.isEmpty()) {
+                    display.showButtonAdvanced(true);
+                } else {
+                    display.showButtonAdvanced(false);
+                }
+                
                 generateWebsitesSnippet();
                 generateGitHubSnippet();
                 //generateDirectSharingSnippet();
+            }
+        });
+        
+        display.setUploadImageValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                String uploadFile = display.getUploadImageFieldValue();
+                if (uploadFile != null && !uploadFile.isEmpty()) {
+                    display.showButtonAdvanced(true);
+                } else {
+                    display.showButtonAdvanced(false);
+                }
+
+                generateWebsitesSnippet();
             }
         });
         
@@ -499,14 +531,14 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             }
         });
         
-        display.addOpenAfterLaunchClickHandler(new ClickHandler() {
+        display.setOpenAfterLaunchClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 IDE.fireEvent(new OpenResourceEvent(new ResourceSelectedCallback() {
                     @Override
                     public void onResourceSelected(Item resource) {
                         if (resource != null) {
-                            display.setOpenAfterLaunch(resource.getPath());
+                            display.setOpenAfterLaunchValue(resource.getPath());
                         }
                     }
                 }));
@@ -514,57 +546,102 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         });
     }
     
-    /**
-     * Generates spinnet content for embedding on websites.
-     */
-    private void generateWebsitesSnippet() {
+    private void generateWebsitesAdvancedButton() {
         String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
-        String style = display.isWhiteStyle() ? "white" : "dark";
-        boolean counter = display.showCounter();
-        boolean vertical = display.isVerticalOrientation();
-
-        String javascript = "" +
-        		"<script " +
+        
+        display.snippetWebsites().setValue(
+                    "<script " +
+                        "type=\"text/javascript\" " +
+                        "language=\"javascript\" " +
+                        "src=\"" + jsURL + "\" " +
+                        "style=\"advanced\" " +
+                        "target=\"" + factoryURL + "\" " +
+                        "img=\"\" " +
+                    "></script>");
+        
+        String blankImage = "images/blank.png";
+        
+        String javascriptPreview = "" +
+                "<script " +
                     "type=\"text/javascript\" " +
                     "language=\"javascript\" " +
                     "src=\"" + jsURL + "\" " +
-                    "style=\"" + style + "\" " +
-                    (counter ? (vertical ? "counter=\"vertical\" " : "counter=\"horizontal\" ") : "") + 
-                    "target=\"" + factoryURL + "\" " +
-                   "></script>";
-        
-        display.snippetWebsites().setValue(javascript);
+                    "style=\"advanced\" " +
+                    "img=\"" + blankImage + "\" " +
+                "></script>";
 
-        String javascriptPreview = "" +
+        display.setPreviewContent("" +
+            "<html>" +
+              "<head></head>" +
+              "<body style=\"margin: 0px; padding: 0px;\">" +
+                "<div style=\"position:absolute; left:94px; top:5px;\">" +
+                    javascriptPreview +
+                "</div>" +
+            "</body>" +
+            "</html>" +
+            "");
+    }
+    
+    private void generateWebsitesDefaultButtonWithCounter(String style, String counterType, int previewOffsetLeft, int previewOffsetTop) {
+        String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
+        
+        String script = "" +
             "<script " +
                 "type=\"text/javascript\" " +
                 "language=\"javascript\" " +
                 "src=\"" + jsURL + "\" " +
                 "style=\"" + style + "\" " +
-                (counter ? (vertical ? "counter=\"vertical\" " : " counter=\"horizontal\" ") : "") +
-                //"target=\"" + factoryURL + "\"" +
+                "counter=\"" + counterType + "\" " +
+                "target=\"" + factoryURL + "\" " +
                "></script>";
+    
+        display.snippetWebsites().setValue(script);
         
-        int top = 35;
-        if (display.showCounter() && display.isVerticalOrientation()) {
-            top = 12;
-        }
-        
-        int width = 77;
-        if (display.showCounter() && !display.isVerticalOrientation()) {
-            width = 118;
-        }
+        String preview = "" +
+            "<script " +
+                "type=\"text/javascript\" " +
+                "language=\"javascript\" " +
+                "src=\"" + jsURL + "\" " +
+                "style=\"" + style + "\" " +
+                "counter=\"" + counterType + "\" " +
+                "target=\"" + factoryURL + "\" " +
+               "></script>";
         
         display.setPreviewContent("" +
             "<html>" +
             "<head></head>" +
             "<body style=\"margin: 0px; padding: 0px;\">" +
-                "<div style=\"margin-left:auto; margin-right:auto; width:" + width + "px; height:21px; position:relative; top:" + top + "px;\">" +
-                javascriptPreview +
+                "<div style=\"position:absolute; left:" + previewOffsetLeft + "px; top:" + previewOffsetTop + "px; \">" +
+                preview +
                 "</div>" +
             "</body>" +
             "</html>" +
             "");
+    }
+    
+    /**
+     * Generates spinnet content for embedding on websites.
+     */
+    private void generateWebsitesSnippet() {
+        String uploadFile = display.getUploadImageFieldValue();
+        if (uploadFile != null && !uploadFile.isEmpty()) {
+            generateWebsitesAdvancedButton();
+            return;
+        }
+        
+        String style = display.isWhiteStyle() ? "white" : "dark";
+
+        if (display.isShowCounter() && display.isVerticalOrientation()) {
+            generateWebsitesDefaultButtonWithCounter(style, "vertical", 111, 31);
+            return;
+        }
+        
+        if (display.isShowCounter() && !display.isVerticalOrientation()) {
+            generateWebsitesDefaultButtonWithCounter(style, "horizontal", 91, 51);
+            return;
+        }
+        
+        generateWebsitesDefaultButtonWithCounter(style, "none", 111, 51);
     }
     
     /**
