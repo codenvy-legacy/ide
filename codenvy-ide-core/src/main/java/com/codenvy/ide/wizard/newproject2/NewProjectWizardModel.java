@@ -91,34 +91,33 @@ public class NewProjectWizardModel implements WizardModel {
     @Nullable
     @Override
     public WizardPage flipToNext() {
-        index++;
-
-        if (index == 1) {
+        if (index == 0) {
             TemplatePagePresenter page = templatePage.create(wizardContext);
             page.setUpdateDelegate(delegate);
             flippedPages.add(page);
-        } else if (index == 2) {
-            JsonArray<Provider<? extends WizardPage>> templatePageProviders = templatePages.get(wizardContext.getData(TEMPLATE));
-            if (templatePageProviders != null) {
-                for (Provider<? extends WizardPage> provider : templatePageProviders.asIterable()) {
-                    addPage(provider);
-                }
+            if (page.canSkip()) {
+                addPages(templatePages.get(wizardContext.getData(TEMPLATE)));
+                addPages(paasPages.get(wizardContext.getData(PAAS)));
             }
-
-            JsonArray<Provider<? extends WizardPage>> paasPageProviders = paasPages.get(wizardContext.getData(PAAS));
-            if (paasPageProviders != null) {
-                for (Provider<? extends WizardPage> provider : paasPageProviders.asIterable()) {
-                    addPage(provider);
-                }
-            }
+        } else if (index == 1) {
+            addPages(templatePages.get(wizardContext.getData(TEMPLATE)));
+            addPages(paasPages.get(wizardContext.getData(PAAS)));
         }
 
         WizardPage page;
         do {
-            page = flippedPages.get(index);
-        } while (index < flippedPages.size() && !page.canSkip());
+            page = flippedPages.get(++index);
+        } while (index < flippedPages.size() && page.canSkip());
 
         return page;
+    }
+
+    private void addPages(@Nullable JsonArray<Provider<? extends WizardPage>> pages) {
+        if (pages != null) {
+            for (Provider<? extends WizardPage> provider : pages.asIterable()) {
+                addPage(provider);
+            }
+        }
     }
 
     private WizardPage addPage(Provider<? extends WizardPage> provider) {
@@ -133,23 +132,23 @@ public class NewProjectWizardModel implements WizardModel {
     @Nullable
     @Override
     public WizardPage flipToPrevious() {
-        if (!flippedPages.isEmpty() && flippedPages.size() <= 2) {
-            flippedPages.remove(index);
-        } else if (flippedPages.size() == 3) {
-            for (int i = flippedPages.size() - 1; i >= 2; i--) {
+        WizardPage page;
+        do {
+            page = flippedPages.get(--index);
+        } while (index >= 0 && page.canSkip());
+
+        if (index <= 2) {
+            for (int i = flippedPages.size() - 1; i > index; i--) {
                 flippedPages.remove(i);
             }
         }
 
-        index--;
         return flippedPages.get(index);
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean hasNext() {
-        // TODO
-//        return isLastPage();
         return !isLastPage();
     }
 
@@ -173,6 +172,7 @@ public class NewProjectWizardModel implements WizardModel {
 
     private boolean isLastPage() {
         int pageCount = 0;
+        // TODO may be need to change to instance
         JsonArray<Provider<? extends WizardPage>> paasPages = this.paasPages.get(wizardContext.getData(PAAS));
         if (paasPages != null) {
             for (Provider<? extends WizardPage> provider : paasPages.asIterable()) {
@@ -181,6 +181,7 @@ public class NewProjectWizardModel implements WizardModel {
             }
         }
 
+        // TODO may be need to change to instance
         JsonArray<Provider<? extends WizardPage>> templatePages = this.templatePages.get(wizardContext.getData(TEMPLATE));
         if (templatePages != null) {
             for (Provider<? extends WizardPage> provider : templatePages.asIterable()) {
@@ -200,13 +201,15 @@ public class NewProjectWizardModel implements WizardModel {
     @Override
     public void onCancel() {
         // TODO may be not needed
+        // TODO check it
+        wizardContext.clear();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onFinish() {
-        // TODO
-
+        // TODO check it
+        wizardContext.clear();
     }
 
     public void addPaaSPages(@NotNull PaaS paas, @NotNull JsonArray<Provider<? extends WizardPage>> pages) {
