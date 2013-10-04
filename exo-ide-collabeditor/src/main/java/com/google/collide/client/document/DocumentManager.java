@@ -281,7 +281,7 @@ public class DocumentManager {
     }
 
     private void markAsActive(Document document) {
-        if (documents.peek() != document) {
+        if (!documents.isEmpty() && documents.peek() != document) {
             // Ensure it is at the top
             documents.remove(document);
             documents.add(document);
