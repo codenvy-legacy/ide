@@ -28,10 +28,10 @@ import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -279,5 +279,53 @@ public class ImportTest extends LocalFileSystemTest {
         // Exception must be thrown.
         assertEquals(500, response.getStatus());
         log.info(response.getEntity());
+    }
+
+    public void testIndexWhenImport() throws Exception {
+        CleanableSearcher searcher = prepareSearcher();
+        String path = SERVICE_URI + "import/" + folderId;
+        Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
+        headers.put("Content-Type", Arrays.asList("application/zip"));
+        ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, zipFolder, null, null);
+        assertEquals(204, response.getStatus());
+
+        // Check imported structure.
+        compareDirectories(srcFolderPath, folderPath);
+
+        QueryExpression q = new QueryExpression();
+        q.setText(DEFAULT_CONTENT);
+        q.setPath(folderPath + '/');
+        List<String> result = new ArrayList<String>();
+        java.util.Collections.addAll(result, searcher.search(q));
+
+        List<String> importedFiles = new ArrayList<String>();
+        for (String vfsPath : flattenDirectory(folderPath)) {
+            vfsPath = folderPath + '/' + vfsPath;
+            if (getIoFile(vfsPath).isFile()) {
+                importedFiles.add(vfsPath);
+            }
+        }
+
+        assertEquals(importedFiles.size(), result.size());
+        assertTrue(result.containsAll(importedFiles));
+    }
+
+    private CleanableSearcher prepareSearcher() throws Exception {
+        CleanableSearcherProvider searcherProvider = new CleanableSearcherProvider();
+        provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new EnvironmentContextLocalFSMountStrategy(), searcherProvider);
+        provider.mount(testFsIoRoot);
+        mountPoint = provider.getMountPoint();
+        virtualFileSystemRegistry.unregisterProvider(MY_WORKSPACE_ID);
+        virtualFileSystemRegistry.registerProvider(MY_WORKSPACE_ID, provider);
+
+        CleanableSearcher searcher = (CleanableSearcher)searcherProvider.getSearcher(mountPoint, true);
+        Throwable error;
+        while ((error = searcher.getInitError()) == null && !searcher.isInitDone()) {
+            Thread.sleep(100);
+        }
+        if (error != null) {
+            fail(error.getMessage());
+        }
+        return searcher;
     }
 }
