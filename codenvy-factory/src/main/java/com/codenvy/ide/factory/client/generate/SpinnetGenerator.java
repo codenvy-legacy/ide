@@ -29,31 +29,20 @@ import org.exoplatform.ide.client.framework.util.Utils;
  */
 public class SpinnetGenerator {
 
-//  /** URL to CodeNow button. */
-//  //private static final String CODE_NOW_BUTTON_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow-embed.html";
-//  private static final String CODE_NOW_BUTTON_URL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("factory/codenow-embed.html").buildString();
-//
-//  /** URL of image which will be used as link for CodeNow button for GitHub Pages. */
-//  private static final String CODE_NOW_BUTTON_FOR_GITHUB_IMAGE_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow_gh.png";
-
     /**
      * Returns URL to CodeNow button template
      * 
      * @return
      */
     public static String getCodeNowButtonJavascriptURL() {
-        String jsURL;
+//        //TODO Below block is needed only for development. Remove it when Factory 1.1 is done.
+//        if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0 || Location.getHost().indexOf("127.0.0.1:8080") >= 0) {
+//            return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+//                .setPath("ide/_app/factory/resources/factory.js").buildString();
+//        }
         
-        if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
-            jsURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("ide/_app/factory/resources/factory.js").buildString();
-        } else {
-            jsURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("factory/resources/factory.js").buildString();            
-        }
-        
-        //jsURL = jsURL.substring(jsURL.indexOf("//"));
-        return jsURL;
+        return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+            .setPath("factory/resources/factory.js").buildString();        
     }
 
     /**
@@ -64,13 +53,14 @@ public class SpinnetGenerator {
     public static String getCodeNowGitHubImageURL(boolean darkStyle) {
         String fileName = darkStyle ? "factory.png" : "factory-white.png";
         
-        if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0) {
-            return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("ide/" + Utils.getWorkspaceName() + "/_app/factory/resources/" + fileName).buildString();
-        } else {
-            return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("factory/resources/" + fileName).buildString();
-        }
+//        //TODO Below block is needed only for development. Remove it when Factory 1.1 is done.
+//        if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0 || Location.getHost().indexOf("127.0.0.1:8080") >= 0) {
+//            return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+//                .setPath("ide/" + Utils.getWorkspaceName() + "/_app/factory/resources/" + fileName).buildString();
+//        }
+        
+        return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+            .setPath("factory/resources/" + fileName).buildString();
     }
     
     /**

@@ -18,6 +18,7 @@
 package com.codenvy.ide.factory.client;
 
 import com.codenvy.ide.factory.client.copy.CopyProjectController;
+import com.codenvy.ide.factory.client.factory.CreateFactoryPresenter;
 import com.codenvy.ide.factory.client.generate.CommitChangesPresenter;
 import com.codenvy.ide.factory.client.generate.FactoryURLHandler;
 import com.codenvy.ide.factory.client.generate.FactoryUrlControl;
@@ -60,9 +61,11 @@ public class FactoryExtension extends Extension implements InitializeServicesHan
     public void initialize() {
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
         IDE.getInstance().addControl(new FactoryUrlControl());
+        
         new FactoryURLHandler();
         new FanctoryHandler();
-        new GetCodeNowButtonPresenter();
+        //new GetCodeNowButtonPresenter();
+        new CreateFactoryPresenter();
         new SendMailPresenter();
         new CommitChangesPresenter();
         new CopyProjectController();

@@ -28,6 +28,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -168,31 +169,23 @@ public class SendMailPresenter implements SendMailHandler, ViewClosedHandler {
             final String requestUrl = Utils.getAuthorizationContext() + "/private/organization/users?alias=" + IDE.user.getName();
 
             UserProfileUnmarshaller unmarshaller = new UserProfileUnmarshaller(new HashMap<String, String>());
-
+            
             AsyncRequestCallback<Map<String, String>> callback = new AsyncRequestCallback<Map<String, String>>(unmarshaller) {
                 @Override
-                protected void onSuccess(Map<String, String> result) {
-                    if (display == null) {
-                        display = GWT.create(Display.class);
-                        IDE.getInstance().openView(display.asView());
-                        bindDisplay();
-                    }
-
-                    String firstAndLastName = result.get("firstName") + " " + result.get("lastName");
-                    display.getSenderEmail().setValue(IDE.user.getName());
-                    display.getSenderName().setValue(firstAndLastName);
-
-                    String messageTemplate = FactoryExtension.LOCALIZATION_CONSTANTS.sendMailFieldMessageEntry(event.getProjectName(),
-                                                                                                               event.getFactoryUrl(),
-                                                                                                               firstAndLastName,
-                                                                                                               IDE.user.getName());
-
-                    display.getMessageField().setValue(messageTemplate);
-                    display.focusRecipientField();
+                protected void onSuccess(Map<String, String> result) {                    
+                    showPopup(event.getProjectName(), event.getFactoryUrl(), 
+                               IDE.user.getName(), result.get("firstName"), result.get("lastName"));
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
+                    //TODO remove this stub
+                    if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0 ||
+                        Location.getHost().indexOf("127.0.0.1:8080") >= 0) {                        
+                        showPopup(event.getProjectName(), event.getFactoryUrl(), "ide", "Vitaliy", "Guluy");
+                        return;
+                    }
+                    
                     Dialogs.getInstance().showError(FactoryExtension.LOCALIZATION_CONSTANTS.sendMailErrorGettingProfile());
                 }
             };
@@ -202,6 +195,22 @@ public class SendMailPresenter implements SendMailHandler, ViewClosedHandler {
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
+    }
+    
+    private void showPopup(String projectName, String factoryURL, String userName, String firstName, String lastName) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+        }        
+        
+        //String firstAndLastName = result.get("firstName") + " " + result.get("lastName");
+        String firstAndLastName = firstName + " " + lastName;
+        display.getSenderEmail().setValue(userName);
+        display.getSenderName().setValue(firstAndLastName);
+        String messageTemplate = FactoryExtension.LOCALIZATION_CONSTANTS.sendMailFieldMessageEntry(projectName, factoryURL, firstAndLastName, userName);
+        display.getMessageField().setValue(messageTemplate);
+        display.focusRecipientField();        
     }
 
     /**
