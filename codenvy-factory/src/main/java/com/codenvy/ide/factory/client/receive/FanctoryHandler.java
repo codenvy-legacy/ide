@@ -138,14 +138,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
             filePathToOpen = URL.decodeQueryString(parameterMap.get(FactorySpec10.FILE_TO_OPEN).get(0));
         }
 
-        String keepVcsInfo = null;
-
-        if (parameterMap.get(FactorySpec10.KEEP_VCS_INFO) != null
-            && !parameterMap.get(FactorySpec10.KEEP_VCS_INFO).isEmpty()) {
-            keepVcsInfo = URL.decodeQueryString(parameterMap.get(FactorySpec10.KEEP_VCS_INFO).get(0));
-        }
-
-        cloneProject(giturl, prjName, prjType, idCommit, action, keepVcsInfo);
+        cloneProject(giturl, prjName, prjType, idCommit, action);
     }
 
     /** @param initParam */
@@ -257,7 +250,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                parameterMap.get(CopySpec10.PROJECT_ID) != null;
     }
 
-    private void cloneProject(final String giturl, final String prjName, final String prjType, final String idCommit, final String action, final String keepVcsInfo) {
+    private void cloneProject(final String giturl, final String prjName, final String prjType, final String idCommit, final String action) {
         try {
 
             VirtualFileSystem.getInstance()
@@ -282,15 +275,15 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
 
                                                   if (itemExist) {
                                                       doClone(giturl, "origin",
-                                                              prjName + "-" + Random.nextInt(Integer.MAX_VALUE), prjType, idCommit, action, keepVcsInfo);
+                                                              prjName + "-" + Random.nextInt(Integer.MAX_VALUE), prjType, idCommit, action);
                                                   } else {
-                                                      doClone(giturl, "origin", prjName, prjType, idCommit, action, keepVcsInfo);
+                                                      doClone(giturl, "origin", prjName, prjType, idCommit, action);
                                                   }
                                               }
 
                                               @Override
                                               protected void onFailure(Throwable exception) {
-                                                  doClone(giturl, "origin", prjName, prjType, idCommit, action, keepVcsInfo);
+                                                  doClone(giturl, "origin", prjName, prjType, idCommit, action);
                                               }
                                           });
         } catch (RequestException e) {
@@ -312,7 +305,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
      *         - name of target folder
      */
     public void doClone(final String remoteUri, final String remoteName, final String workDir, final String prjType,
-                        final String idCommit, final String action, final String keepVcsInfo) {
+                        final String idCommit, final String action) {
         FolderModel folder = new FolderModel();
         folder.setName(workDir);
         try {
@@ -320,7 +313,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                                                          new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(folder)) {
                                                              @Override
                                                              protected void onSuccess(FolderModel result) {
-                                                                 cloneRepository(remoteUri, remoteName, prjType, result, idCommit, action, keepVcsInfo);
+                                                                 cloneRepository(remoteUri, remoteName, prjType, result, idCommit, action);
                                                              }
 
                                                              @Override
@@ -353,12 +346,12 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
      *         folder (root of GIT repository)
      */
     private void cloneRepository(final String remoteUri, final String remoteName, final String prjType, final FolderModel folder,
-                                 final String idCommit, final String action, final String keepVcsInfo) {
+                                 final String idCommit, final String action) {
         try {
             IDELoader.getInstance().setMessage("Cloning project ... ");
             IDELoader.getInstance().show();
             String uri = "/factory/clone?vfsid=" + vfs.getId() + "&projectid=" + folder.getId() + "&remoteuri=" + remoteUri + "&idcommit=" +
-                         idCommit + prjType + action + "&keepvcsinfo=" + keepVcsInfo;
+                         idCommit + prjType + action;
             RequestMessage message = RequestMessageBuilder.build(RequestBuilder.POST, restServiceContext + uri).getRequestMessage();
 
             IDE.messageBus().send(message, new RequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
@@ -377,17 +370,17 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                 }
             });
         } catch (WebSocketException e) {
-            cloneRepositoryREST(remoteUri, remoteName, prjType, folder, idCommit, action, keepVcsInfo);
+            cloneRepositoryREST(remoteUri, remoteName, prjType, folder, idCommit, action);
         }
     }
 
     /** Get the necessary parameters values and call the clone repository method (over HTTP). */
     private void cloneRepositoryREST(final String remoteUri, String remoteName, final String prjType, final FolderModel folder,
-                                     final String idCommit, final String action, final String keepVcsInfo) {
+                                     final String idCommit, final String action) {
 
         try {
             String uri = "/factory/clone?vfsid=" + vfs.getId() + "&projectid=" + folder.getId() + "&remoteuri=" + remoteUri + "&idcommit=" +
-                         idCommit + prjType + action + "&keepvcsinfo=" + keepVcsInfo;
+                         idCommit + prjType + action;
             AsyncRequest.build(RequestBuilder.POST, uri).send(new AsyncRequestCallback<Object>() {
                 @Override
                 protected void onSuccess(Object result) {
