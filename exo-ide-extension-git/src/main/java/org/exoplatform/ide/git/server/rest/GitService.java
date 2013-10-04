@@ -56,6 +56,7 @@ import org.exoplatform.ide.git.shared.Tag;
 import org.exoplatform.ide.git.shared.TagCreateRequest;
 import org.exoplatform.ide.git.shared.TagDeleteRequest;
 import org.exoplatform.ide.git.shared.TagListRequest;
+import org.exoplatform.ide.vfs.impl.fs.LocalFileSystem;
 import org.exoplatform.ide.vfs.server.GitUrlResolver;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -227,10 +228,14 @@ public class GitService {
             vfs.updateItem(projectId, propertiesList, null);
         }
     }
-
-    private void addToIndex() throws VirtualFileSystemException {
+    
+    private void addToIndex() throws VirtualFileSystemException
+    {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        vfs.addToIndex(projectId);
+        if (vfs instanceof LocalFileSystem)
+        {
+            ((LocalFileSystem)vfs).addToIndex(projectId);
+        }
     }
 
     @Path("commit")
@@ -238,7 +243,7 @@ public class GitService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Revision commit(CommitRequest request) throws GitException, LocalPathResolveException,
-                                                 VirtualFileSystemException {
+                                                         VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             Revision revision = gitConnection.commit(request);
@@ -440,8 +445,8 @@ public class GitService {
     @POST
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Status status(@QueryParam("short") boolean shortFormat) throws GitException,
-                                                                  LocalPathResolveException,
-                                                                  VirtualFileSystemException {
+                                                                 LocalPathResolveException,
+                                                                 VirtualFileSystemException {
         if (!isGitRepository()) {
             throw new GitException("Not a git repository.");
         }

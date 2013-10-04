@@ -1061,16 +1061,4 @@ public interface VirtualFileSystem {
     @GET
     @Path("watch/stop")
     void stopWatchUpdates(String projectId) throws ItemNotFoundException, InvalidArgumentException, VirtualFileSystemException;
-    
-    /**
-     * @param itemId id of the item to be added to index
-     * @throws ItemNotFoundException
-     *         if <code>id</code> does not exist     
-     * @throws NotSupportedException
-     * @throws VirtualFileSystemException
-     *         if any other errors occur 
-     */
-    @GET
-    @Path("index")
-    void addToIndex(String itemId) throws ItemNotFoundException, NotSupportedException, VirtualFileSystemException;
 }
