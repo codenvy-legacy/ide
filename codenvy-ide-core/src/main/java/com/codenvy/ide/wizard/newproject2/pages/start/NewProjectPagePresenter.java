@@ -95,10 +95,8 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     /** {@inheritDoc} */
     @Override
     public boolean isCompleted() {
-        // TODO
-        return true;
-//        return paasAgent.getSelectedPaaS() != null && projectTypeAgent.getSelectedProjectType() != null &&
-//               !view.getProjectName().isEmpty() && !hasProjectNameIncorrectSymbol && hasProjectList && !hasSameProject;
+        return wizardContext.getData(PROJECT_NAME) != null && wizardContext.getData(PAAS) != null &&
+               wizardContext.getData(PROJECT_TYPE) != null && !hasProjectNameIncorrectSymbol && hasProjectList && !hasSameProject;
     }
 
     /** {@inheritDoc} */
@@ -162,9 +160,9 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
             }
         }
 
-        delegate.updateControls();
-
         wizardContext.putData(PROJECT_TYPE, projectType);
+
+        delegate.updateControls();
     }
 
     /** {@inheritDoc} */
@@ -192,6 +190,8 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
 
         if (!hasProjectNameIncorrectSymbol && !hasSameProject) {
             wizardContext.putData(PROJECT_NAME, view.getProjectName());
+        } else {
+            wizardContext.removeData(PROJECT_NAME);
         }
 
         delegate.updateControls();

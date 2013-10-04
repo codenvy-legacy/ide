@@ -28,6 +28,7 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.wizard.newproject.ProjectTypeData;
 import com.codenvy.ide.wizard.newproject2.pages.start.NewProjectPagePresenter;
+import com.codenvy.ide.wizard.newproject2.pages.template.TemplatePageFactory;
 import com.codenvy.ide.wizard.newproject2.pages.template.TemplatePagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -44,7 +45,7 @@ public class NewProjectWizardModel implements WizardModel {
     public static final WizardContext.Key<ProjectTypeData> PROJECT_TYPE = new WizardContext.Key<ProjectTypeData>("Project type");
 
     private Provider<NewProjectPagePresenter>                        newProjectPage;
-    private Provider<TemplatePagePresenter>                          templatePage;
+    private TemplatePageFactory                                      templatePage;
     private UpdateDelegate                                           delegate;
     private Map<PaaS, JsonArray<Provider<? extends WizardPage>>>     paasPages;
     private Map<Template, JsonArray<Provider<? extends WizardPage>>> templatePages;
@@ -55,7 +56,7 @@ public class NewProjectWizardModel implements WizardModel {
 
     @Inject
     public NewProjectWizardModel(Provider<NewProjectPagePresenter> newProjectPage,
-                                 Provider<TemplatePagePresenter> templatePage) {
+                                 TemplatePageFactory templatePage) {
         this.newProjectPage = newProjectPage;
         this.templatePage = templatePage;
         this.paasPages = new HashMap<PaaS, JsonArray<Provider<? extends WizardPage>>>();
@@ -93,7 +94,9 @@ public class NewProjectWizardModel implements WizardModel {
         index++;
 
         if (index == 1) {
-            addPage(templatePage);
+            TemplatePagePresenter page = templatePage.create(wizardContext);
+            page.setUpdateDelegate(delegate);
+            flippedPages.add(page);
         } else if (index == 2) {
             JsonArray<Provider<? extends WizardPage>> templatePageProviders = templatePages.get(wizardContext.getData(TEMPLATE));
             if (templatePageProviders != null) {
@@ -110,7 +113,12 @@ public class NewProjectWizardModel implements WizardModel {
             }
         }
 
-        return flippedPages.get(index);
+        WizardPage page;
+        do {
+            page = flippedPages.get(index);
+        } while (index < flippedPages.size() && !page.canSkip());
+
+        return page;
     }
 
     private WizardPage addPage(Provider<? extends WizardPage> provider) {
@@ -141,7 +149,8 @@ public class NewProjectWizardModel implements WizardModel {
     @Override
     public boolean hasNext() {
         // TODO
-        return true;
+//        return isLastPage();
+        return !isLastPage();
     }
 
     /** {@inheritDoc} */
@@ -154,11 +163,37 @@ public class NewProjectWizardModel implements WizardModel {
     @Override
     public boolean canFinish() {
         // TODO need to check it
-        boolean isComplited = true;
+        boolean isCompleted = true;
         for (WizardPage page : flippedPages.asIterable()) {
-            isComplited &= page.isCompleted();
+            isCompleted &= page.isCompleted();
         }
-        return flippedPages.size() >= 2 && isComplited;
+
+        return isLastPage() && isCompleted;
+    }
+
+    private boolean isLastPage() {
+        int pageCount = 0;
+        JsonArray<Provider<? extends WizardPage>> paasPages = this.paasPages.get(wizardContext.getData(PAAS));
+        if (paasPages != null) {
+            for (Provider<? extends WizardPage> provider : paasPages.asIterable()) {
+                WizardPage page = provider.get();
+                pageCount += (page.canSkip() ? 0 : 1);
+            }
+        }
+
+        JsonArray<Provider<? extends WizardPage>> templatePages = this.templatePages.get(wizardContext.getData(TEMPLATE));
+        if (templatePages != null) {
+            for (Provider<? extends WizardPage> provider : templatePages.asIterable()) {
+                WizardPage page = provider.get();
+                pageCount += (page.canSkip() ? 0 : 1);
+            }
+        }
+
+        TemplatePagePresenter page = templatePage.create(wizardContext);
+
+        pageCount += (page.canSkip() ? 0 : 1);
+
+        return index == pageCount;
     }
 
     /** {@inheritDoc} */

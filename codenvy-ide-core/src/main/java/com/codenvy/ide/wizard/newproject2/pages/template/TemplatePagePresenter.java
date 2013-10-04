@@ -19,12 +19,14 @@ package com.codenvy.ide.wizard.newproject2.pages.template;
 
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
+import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.wizard.WizardResource;
 import com.codenvy.ide.wizard.newproject.ProjectTypeData;
 import com.codenvy.ide.wizard.template.TemplateAgentImpl;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import static com.codenvy.ide.wizard.newproject2.NewProjectWizardModel.PROJECT_TYPE;
 import static com.codenvy.ide.wizard.newproject2.NewProjectWizardModel.TEMPLATE;
@@ -38,7 +40,6 @@ import static com.codenvy.ide.wizard.newproject2.NewProjectWizardModel.TEMPLATE;
 //public class TemplatePagePresenter extends AbstractWizardPagePresenter implements TemplatePageView.ActionDelegate {
 public class TemplatePagePresenter extends AbstractWizardPage implements TemplatePageView.ActionDelegate {
     private TemplatePageView    view;
-    private TemplateAgentImpl   templateAgent;
     private JsonArray<Template> templates;
 
     /**
@@ -48,12 +49,20 @@ public class TemplatePagePresenter extends AbstractWizardPage implements Templat
      * @param view
      */
     @Inject
-    public TemplatePagePresenter(TemplatePageView view, WizardResource resources, TemplateAgentImpl templateAgent) {
+    public TemplatePagePresenter(TemplatePageView view, WizardResource resources, TemplateAgentImpl templateAgent,
+                                 @Assisted WizardContext wizardContext) {
         super("Choose project template", resources.templateIcon());
 
         this.view = view;
         this.view.setDelegate(this);
-        this.templateAgent = templateAgent;
+
+        this.wizardContext = wizardContext;
+        ProjectTypeData projectType = wizardContext.getData(PROJECT_TYPE);
+        if (projectType != null) {
+            templates = templateAgent.getTemplatesForProjectType(projectType.getPrimaryNature(), projectType.getSecondaryNature());
+            this.view.setTemplates(templates);
+            wizardContext.putData(TEMPLATE, templates.get(0));
+        }
     }
 
     /** {@inheritDoc} */
@@ -65,7 +74,7 @@ public class TemplatePagePresenter extends AbstractWizardPage implements Templat
     /** {@inheritDoc} */
     @Override
     public boolean canSkip() {
-        return templates.size() == 1;
+        return templates != null && templates.size() == 1;
     }
 
     /** {@inheritDoc} */
@@ -94,12 +103,6 @@ public class TemplatePagePresenter extends AbstractWizardPage implements Templat
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        if (templates == null) {
-            ProjectTypeData projectType = wizardContext.getData(PROJECT_TYPE);
-            templates = templateAgent.getTemplatesForProjectType(projectType.getPrimaryNature(), projectType.getSecondaryNature());
-            view.setTemplates(templates);
-        }
-
         container.setWidget(view);
     }
 
