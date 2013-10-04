@@ -347,6 +347,7 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.pull(request);
+            addToIndex();
         } finally {
             gitConnection.close();
         }

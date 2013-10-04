@@ -840,15 +840,7 @@ public class LocalFileSystem implements VirtualFileSystem {
         VirtualFile virtualFile = idToVirtualFile(id);
         if (searcherProvider != null) {
             try {
-                // Check to avoid adding to index twice:
-                if (searcherProvider.getSearcher(mountPoint, false) == null)
-                {
-                    // Item will be indexed on searcher creation, when whole workspace directory is added to index.
-                    searcherProvider.getSearcher(mountPoint, true);
-                } else
-                {
-                    searcherProvider.getSearcher(mountPoint, true).add(virtualFile);
-                }
+                searcherProvider.getSearcher(mountPoint, true).add(virtualFile);
             } catch (IOException e) {
                 throw new VirtualFileSystemException("Unable add to index. " + e.getMessage(), e);
             }
