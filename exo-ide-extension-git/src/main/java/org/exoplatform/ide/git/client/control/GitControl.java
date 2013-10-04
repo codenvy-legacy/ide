@@ -140,7 +140,8 @@ public abstract class GitControl extends SimpleControl implements IDEControl, Vf
                 setEnabled(false);
             }
         } else {
-            if (enableState == EnableState.BEFORE_INIT) {
+            if (enableState == EnableState.BEFORE_INIT || (IDE.currentWorkspace.isTemporary())
+                && super.getId().equals(GitExtension.MESSAGES.projectReadOnlyGitUrlId())) {
                 setEnabled(false);
             } else {
                 setEnabled(true);
