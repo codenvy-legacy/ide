@@ -299,7 +299,21 @@ public class Searcher {
     }
 
     protected void doUpdate(Term deleteTerm, VirtualFile virtualFile) throws IOException, VirtualFileSystemException {
-        addFile(virtualFile);
+        Reader fContentReader = null;
+        try {
+            fContentReader = new BufferedReader(new InputStreamReader(virtualFile.getContent().getStream()));
+            luceneIndexWriter.updateDocument(deleteTerm, createDocument(virtualFile, fContentReader));
+        } catch (OutOfMemoryError oome) {
+            close();
+            throw oome;
+        } finally {
+            if (fContentReader != null) {
+                try {
+                    fContentReader.close();
+                } catch (IOException ignored) {
+                }
+            }
+        }
     }
 
     public void close() {
