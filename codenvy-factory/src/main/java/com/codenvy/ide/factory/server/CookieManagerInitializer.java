@@ -41,6 +41,7 @@ public class CookieManagerInitializer implements Startable {
         CookieHandler handler = CookieHandler.getDefault();
         if (handler == null) {
             CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
+            System.setProperty("com.google.gdata.DisableCookieHandler", "true");
         } else {
             if (!(handler instanceof CookieManager)) {
                 LOG.error("Wrong instance of cookie handler found: {}", handler.getClass().getName());
