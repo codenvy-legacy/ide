@@ -36,6 +36,7 @@ import com.google.collide.client.disable.ProjectUsersChangedEvent;
 import com.google.collide.client.disable.ProjectUsersChangedHandler;
 import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.document.DocumentManager.LifecycleListener;
+import com.google.collide.client.document.DocumentManagerCleaner;
 import com.google.collide.client.document.DocumentMetadata;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.dto.DocumentSelection;
@@ -172,8 +173,9 @@ public class CollaborationManager implements DisableEnableCollaborationHandler, 
     private Map<String, FileModel>    openedFiles   = new HashMap<String, FileModel>();
 
     private HandlerRegistration handlerRegistration;
-    private int                 fileCount;
-    private int                 projectUsersCount;
+    private DocumentManagerCleaner documentManagerCleaner = new DocumentManagerCleaner();
+    private int fileCount;
+    private int projectUsersCount;
 
     private CollaborationManager(AppContext appContext, DocumentManager documentManager,
                                  IncomingDocOpDemultiplexer docOpRecipient, UsersModel usersModel,
