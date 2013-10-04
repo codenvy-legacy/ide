@@ -96,7 +96,7 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     @Override
     public boolean isCompleted() {
         return wizardContext.getData(PROJECT_NAME) != null && wizardContext.getData(PAAS) != null &&
-               wizardContext.getData(PROJECT_TYPE) != null && !hasProjectNameIncorrectSymbol && hasProjectList && !hasSameProject;
+               wizardContext.getData(PROJECT_TYPE) != null && hasProjectList;
     }
 
     /** {@inheritDoc} */
@@ -188,7 +188,7 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
             hasSameProject = projectName.equals(name);
         }
 
-        if (!hasProjectNameIncorrectSymbol && !hasSameProject) {
+        if (!projectName.isEmpty() && !hasProjectNameIncorrectSymbol && !hasSameProject) {
             wizardContext.putData(PROJECT_NAME, view.getProjectName());
         } else {
             wizardContext.removeData(PROJECT_NAME);
