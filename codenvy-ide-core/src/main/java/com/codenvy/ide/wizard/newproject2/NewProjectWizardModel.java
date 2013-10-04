@@ -19,6 +19,8 @@ package com.codenvy.ide.wizard.newproject2;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
@@ -39,7 +41,7 @@ import java.util.Map;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
-public class NewProjectWizardModel implements WizardModel {
+public class NewProjectWizardModel implements WizardModel, WizardPage.CommitCallback {
     public static final WizardContext.Key<PaaS>            PAAS         = new WizardContext.Key<PaaS>("PaaS");
     public static final WizardContext.Key<Template>        TEMPLATE     = new WizardContext.Key<Template>("Template");
     public static final WizardContext.Key<ProjectTypeData> PROJECT_TYPE = new WizardContext.Key<ProjectTypeData>("Project type");
@@ -51,14 +53,16 @@ public class NewProjectWizardModel implements WizardModel {
     private Map<Template, JsonArray<Provider<? extends WizardPage>>> templatePages;
     private JsonArray<WizardPage>                                    flippedPages;
     private WizardContext                                            wizardContext;
+    private NotificationManager                                      notificationManager;
 
     private int index;
 
     @Inject
     public NewProjectWizardModel(Provider<NewProjectPagePresenter> newProjectPage,
-                                 TemplatePageFactory templatePage) {
+                                 TemplatePageFactory templatePage, NotificationManager notificationManager) {
         this.newProjectPage = newProjectPage;
         this.templatePage = templatePage;
+        this.notificationManager = notificationManager;
         this.paasPages = new HashMap<PaaS, JsonArray<Provider<? extends WizardPage>>>();
         this.templatePages = new HashMap<Template, JsonArray<Provider<? extends WizardPage>>>();
         this.flippedPages = JsonCollections.createArray();
@@ -171,45 +175,62 @@ public class NewProjectWizardModel implements WizardModel {
     }
 
     private boolean isLastPage() {
-        int pageCount = 0;
-        // TODO may be need to change to instance
-        JsonArray<Provider<? extends WizardPage>> paasPages = this.paasPages.get(wizardContext.getData(PAAS));
-        if (paasPages != null) {
-            for (Provider<? extends WizardPage> provider : paasPages.asIterable()) {
-                WizardPage page = provider.get();
-                pageCount += (page.canSkip() ? 0 : 1);
+        if (index < 2) {
+            int pageCount = 0;
+            // TODO may be need to change to instance
+            JsonArray<Provider<? extends WizardPage>> paasPages = this.paasPages.get(wizardContext.getData(PAAS));
+            if (paasPages != null) {
+                // TODO move to method
+                for (Provider<? extends WizardPage> provider : paasPages.asIterable()) {
+                    WizardPage page = provider.get();
+                    pageCount += (page.canSkip() ? 0 : 1);
+                }
             }
-        }
 
-        // TODO may be need to change to instance
-        JsonArray<Provider<? extends WizardPage>> templatePages = this.templatePages.get(wizardContext.getData(TEMPLATE));
-        if (templatePages != null) {
-            for (Provider<? extends WizardPage> provider : templatePages.asIterable()) {
-                WizardPage page = provider.get();
-                pageCount += (page.canSkip() ? 0 : 1);
+            // TODO may be need to change to instance
+            JsonArray<Provider<? extends WizardPage>> templatePages = this.templatePages.get(wizardContext.getData(TEMPLATE));
+            if (templatePages != null) {
+                // TODO move to method
+                for (Provider<? extends WizardPage> provider : templatePages.asIterable()) {
+                    WizardPage page = provider.get();
+                    pageCount += (page.canSkip() ? 0 : 1);
+                }
             }
+
+            TemplatePagePresenter page = templatePage.create(wizardContext);
+
+            return page.canSkip() && pageCount == 0;
+        } else {
+            boolean isLastPage = true;
+            for (int i = index + 1; i < flippedPages.size(); i++) {
+                WizardPage page = flippedPages.get(i);
+                if (!page.canSkip()) {
+                    isLastPage = false;
+                    break;
+                }
+            }
+
+            return isLastPage;
         }
-
-        TemplatePagePresenter page = templatePage.create(wizardContext);
-
-        pageCount += (page.canSkip() ? 0 : 1);
-
-        return index == pageCount;
     }
 
     /** {@inheritDoc} */
     @Override
     public void onCancel() {
         // TODO may be not needed
-        // TODO check it
-        wizardContext.clear();
+        clear();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onFinish() {
-        // TODO check it
-        wizardContext.clear();
+        index = 0;
+        commit();
+    }
+
+    private void commit() {
+        WizardPage page = flippedPages.get(index);
+        page.commit(this);
     }
 
     public void addPaaSPages(@NotNull PaaS paas, @NotNull JsonArray<Provider<? extends WizardPage>> pages) {
@@ -218,5 +239,28 @@ public class NewProjectWizardModel implements WizardModel {
 
     public void addTemplatePages(@NotNull Template template, @NotNull JsonArray<Provider<? extends WizardPage>> pages) {
         templatePages.put(template, pages);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSuccessful() {
+        if (++index < flippedPages.size()) {
+            commit();
+        } else {
+            clear();
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onFailed() {
+        // TODO
+        Notification notification = new Notification("Error", Notification.Type.ERROR);
+        notificationManager.showNotification(notification);
+    }
+
+    private void clear() {
+        // TODO check it...
+        wizardContext.clear();
     }
 }
