@@ -835,14 +835,13 @@ public class LocalFileSystem implements VirtualFileSystem {
         }
     }
 
-    public void addToIndex(String id) throws VirtualFileSystemException
-    {
+    public void addToIndex(String id) throws VirtualFileSystemException {
         VirtualFile virtualFile = idToVirtualFile(id);
         if (searcherProvider != null) {
             try {
                 searcherProvider.getSearcher(mountPoint, true).add(virtualFile);
             } catch (IOException e) {
-                throw new VirtualFileSystemException("Unable add to index. " + e.getMessage(), e);
+                LOG.error("Unable add to index. " + e.getMessage(), e);
             }
         }
     }

@@ -229,11 +229,9 @@ public class GitService {
         }
     }
     
-    private void addToIndex() throws VirtualFileSystemException
-    {
+    private void addToIndex() throws VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        if (vfs instanceof LocalFileSystem)
-        {
+        if (vfs instanceof LocalFileSystem) {
             ((LocalFileSystem)vfs).addToIndex(projectId);
         }
     }
