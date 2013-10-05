@@ -24,7 +24,13 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
@@ -38,12 +44,16 @@ import org.exoplatform.ide.vfs.shared.Item;
 @RolesAllowed("developer")
 public class DebugAppControl extends SimpleControl implements IDEControl,
                                                   // ProjectClosedHandler, ProjectOpenedHandler,
-                                                  AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler {
-    public static final String  ID     = DebuggerExtension.LOCALIZATION_CONSTANT.debugAppControlId();
+                                                  AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler, ViewActivatedHandler {
+    public static final String  ID                = DebuggerExtension.LOCALIZATION_CONSTANT.debugAppControlId();
 
-    private static final String TITLE  = "Debug Application";
+    private static final String TITLE             = "Debug Application";
 
-    private static final String PROMPT = "Launch Debug";
+    private static final String PROMPT            = "Launch Debug";
+
+    private boolean             navigatorSelected = false;
+
+    private ProjectModel        currentProject    = null;
 
     public DebugAppControl() {
         super(ID);
@@ -65,6 +75,7 @@ public class DebugAppControl extends SimpleControl implements IDEControl,
         IDE.addHandler(AppStartedEvent.TYPE, this);
         IDE.addHandler(AppStoppedEvent.TYPE, this);
         IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        IDE.addHandler(ViewActivatedEvent.TYPE, this);
     }
 
     // /**
@@ -90,15 +101,16 @@ public class DebugAppControl extends SimpleControl implements IDEControl,
     // }
 
     /** @param event */
-    private void updateState(String projectType) {
-        boolean isJavaProject = ProjectResolver.SPRING.equals(projectType)
-                                || ProjectResolver.SERVLET_JSP.equals(projectType)
-                                || ProjectResolver.APP_ENGINE_JAVA.equals(projectType)
-                                || ProjectType.JAVA.value().equals(projectType)
-                                || ProjectType.WAR.value().equals(projectType)
-                                || ProjectType.JSP.value().equals(projectType);
+    private void updateState() {
+        String projectType = (currentProject != null) ? currentProject.getProjectType() : null;
+        boolean isJavaProject = projectType != null && (ProjectResolver.SPRING.equals(projectType)
+                                                        || ProjectResolver.SERVLET_JSP.equals(projectType)
+                                                        || ProjectResolver.APP_ENGINE_JAVA.equals(projectType)
+                                                        || ProjectType.JAVA.value().equals(projectType)
+                                                        || ProjectType.WAR.value().equals(projectType)
+                                                        || ProjectType.JSP.value().equals(projectType));
         // setVisible(isJavaProject);
-        setEnabled(isJavaProject);
+        setEnabled(isJavaProject && navigatorSelected);
         setShowInContextMenu(isJavaProject);
     }
 
@@ -121,19 +133,31 @@ public class DebugAppControl extends SimpleControl implements IDEControl,
             setVisible(true);
             Item selectedItem = event.getSelectedItems().get(0);
 
-            ProjectModel project = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem
+            currentProject = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem
                 : ((ItemContext)selectedItem).getProject();
-            if (ProjectType.MultiModule.value().equals(project.getProjectType())
-                || ProjectType.JAR.value().equals(project.getProjectType())
-                || ProjectType.JAVASCRIPT.value().equals(project.getProjectType())
-                || ProjectType.RUBY_ON_RAILS.value().equals(project.getProjectType())
-                || ProjectType.PYTHON.value().equals(project.getProjectType())
-                || ProjectType.PHP.value().equals(project.getProjectType())
-                || ProjectType.NODE_JS.value().equals(project.getProjectType())) {
+            if (currentProject == null || currentProject.getProjectType() == null
+                || ProjectType.MultiModule.value().equals(currentProject.getProjectType())
+                || ProjectType.JAR.value().equals(currentProject.getProjectType())
+                || ProjectType.JAVASCRIPT.value().equals(currentProject.getProjectType())
+                || ProjectType.RUBY_ON_RAILS.value().equals(currentProject.getProjectType())
+                || ProjectType.PYTHON.value().equals(currentProject.getProjectType())
+                || ProjectType.PHP.value().equals(currentProject.getProjectType())
+                || ProjectType.NODE_JS.value().equals(currentProject.getProjectType())) {
                 setVisible(false);
             }
-            updateState(project.getProjectType());
+            updateState();
         }
+    }
+
+    @Override
+    public void onViewActivated(ViewActivatedEvent event) {
+        View activeView = event.getView();
+
+        navigatorSelected =
+                            activeView instanceof NavigatorDisplay ||
+                                activeView instanceof ProjectExplorerDisplay ||
+                                activeView instanceof PackageExplorerDisplay;
+        updateState();
     }
 
 }

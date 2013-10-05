@@ -92,13 +92,13 @@ public class RunApplicationControl extends SimpleControl implements IDEControl,
      */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
-        String projectType = event.getProject().getProjectType();
-        updateStatus(projectType);
+        updateStatus(event.getProject());
     }
 
     /** @param projectType */
-    private void updateStatus(String projectType) {
-        boolean isNodeProject = ProjectType.NODE_JS.value().equals(projectType);
+    private void updateStatus(ProjectModel project) {
+        String projectType = (project != null) ? project.getProjectType() : null;
+        boolean isNodeProject = projectType != null && ProjectType.NODE_JS.value().equals(projectType);
         setVisible(isNodeProject);
         setEnabled(isNodeProject);
         setShowInContextMenu(isNodeProject);
@@ -127,7 +127,7 @@ public class RunApplicationControl extends SimpleControl implements IDEControl,
 
             ProjectModel project = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem
                 : ((ItemContext)selectedItem).getProject();
-            updateStatus(project.getProjectType());
+            updateStatus(project);
         }
     }
 }

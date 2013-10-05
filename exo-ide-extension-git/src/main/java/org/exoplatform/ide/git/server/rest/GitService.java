@@ -56,6 +56,7 @@ import org.exoplatform.ide.git.shared.Tag;
 import org.exoplatform.ide.git.shared.TagCreateRequest;
 import org.exoplatform.ide.git.shared.TagDeleteRequest;
 import org.exoplatform.ide.git.shared.TagListRequest;
+import org.exoplatform.ide.vfs.impl.fs.LocalFileSystem;
 import org.exoplatform.ide.vfs.server.GitUrlResolver;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -205,6 +206,7 @@ public class GitService {
         try {
             gitConnection.clone(request);
             setGitRepositoryProp();
+            addToIndex();
             return new RepoInfo(request.getRemoteUri());
         } finally {
             long end = System.currentTimeMillis();
@@ -224,6 +226,13 @@ public class GitService {
             List<Property> propertiesList = new ArrayList<Property>(1);
             propertiesList.add(isGitRepositoryProperty);
             vfs.updateItem(projectId, propertiesList, null);
+        }
+    }
+    
+    private void addToIndex() throws VirtualFileSystemException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        if (vfs instanceof LocalFileSystem) {
+            ((LocalFileSystem)vfs).addToIndex(projectId);
         }
     }
 
@@ -336,6 +345,7 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.pull(request);
+            addToIndex();
         } finally {
             gitConnection.close();
         }

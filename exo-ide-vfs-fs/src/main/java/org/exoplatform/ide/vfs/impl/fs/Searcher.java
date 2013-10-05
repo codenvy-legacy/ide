@@ -259,12 +259,12 @@ public class Searcher {
         LOG.debug("Indexed {} files from {}", indexedFiles, tree.getPath());
     }
 
-    private void addFile(VirtualFile file) throws IOException, VirtualFileSystemException {
-        if (file.exists()) {
+    private void addFile(VirtualFile virtualFile) throws IOException, VirtualFileSystemException {
+        if (virtualFile.exists()) {
             Reader fContentReader = null;
             try {
-                fContentReader = new BufferedReader(new InputStreamReader(file.getContent().getStream()));
-                luceneIndexWriter.addDocument(createDocument(file, fContentReader));
+                fContentReader = new BufferedReader(new InputStreamReader(virtualFile.getContent().getStream()));
+                luceneIndexWriter.updateDocument(new Term("path", virtualFile.getPath()), createDocument(virtualFile, fContentReader));
             } catch (OutOfMemoryError oome) {
                 close();
                 throw oome;
