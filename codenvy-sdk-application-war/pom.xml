@@ -34,6 +34,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
+        <gwt.module>com.codenvy.ide.IDE</gwt.module>
     </properties>
 
     <dependencies>
@@ -485,7 +486,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <module>com.codenvy.ide.IDE</module>
+                    <module>${gwt.module}</module>
                     <logLevel>INFO</logLevel>
                     <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
                 </configuration>
@@ -528,22 +529,12 @@
     </build>
 
     <profiles>
+        <!-- Used for GWT SuperDevMode. -->
         <profile>
-            <!-- Used for GWT SuperDevMode -->
             <id>dev</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>gwt-maven-plugin</artifactId>
-                        <configuration>
-                            <module>com.codenvy.ide.IDEdev</module>
-                            <logLevel>INFO</logLevel>
-                            <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
+            <properties>
+                <gwt.module>com.codenvy.ide.IDE_dev</gwt.module>
+            </properties>
         </profile>
     </profiles>
 
