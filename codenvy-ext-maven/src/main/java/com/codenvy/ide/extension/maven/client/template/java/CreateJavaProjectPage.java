@@ -62,13 +62,13 @@ public class CreateJavaProjectPage extends AbstractCreateProjectPage {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
                         @Override
                         public void onSuccess(Project result) {
-                            callback.onSuccessful();
+                            callback.onSuccess();
                         }
 
                         @Override
                         public void onFailure(Throwable caught) {
                             // TODO exception
-                            callback.onFailed();
+                            callback.onFailure(caught);
                         }
                     });
                 }
@@ -76,12 +76,12 @@ public class CreateJavaProjectPage extends AbstractCreateProjectPage {
                 @Override
                 protected void onFailure(Throwable exception) {
                     // TODO exception
-                    callback.onFailed();
+                    callback.onFailure(exception);
                 }
             });
         } catch (RequestException e) {
             // TODO exception
-            callback.onFailed();
+            callback.onFailure(e);
         }
     }
 }

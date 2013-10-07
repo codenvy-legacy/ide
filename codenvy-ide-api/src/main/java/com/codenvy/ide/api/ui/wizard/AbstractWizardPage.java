@@ -64,8 +64,7 @@ public abstract class AbstractWizardPage implements WizardPage {
     /** {@inheritDoc} */
     @Override
     public void storeOptions() {
-        // TODO not needed?
-
+        // do nothing
     }
 
     /** {@inheritDoc} */
@@ -77,6 +76,6 @@ public abstract class AbstractWizardPage implements WizardPage {
     /** {@inheritDoc} */
     @Override
     public void commit(@NotNull CommitCallback callback) {
-        callback.onSuccessful();
+        callback.onSuccess();
     }
 }

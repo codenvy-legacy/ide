@@ -243,7 +243,7 @@ public class NewProjectWizardModel implements WizardModel, WizardPage.CommitCall
 
     /** {@inheritDoc} */
     @Override
-    public void onSuccessful() {
+    public void onSuccess() {
         if (++index < flippedPages.size()) {
             commit();
         } else {
@@ -253,9 +253,8 @@ public class NewProjectWizardModel implements WizardModel, WizardPage.CommitCall
 
     /** {@inheritDoc} */
     @Override
-    public void onFailed() {
-        // TODO
-        Notification notification = new Notification("Error", Notification.Type.ERROR);
+    public void onFailure(Throwable exception) {
+        Notification notification = new Notification(exception.getMessage(), Notification.Type.ERROR);
         notificationManager.showNotification(notification);
     }
 

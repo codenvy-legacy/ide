@@ -221,7 +221,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPage implements CloudB
                 @Override
                 public void onFailure(Throwable caught) {
                     // TODO Exception
-                    CloudBeesPagePresenter.this.callback.onFailed();
+                    CloudBeesPagePresenter.this.callback.onFailure(caught);
                 }
             });
         }
@@ -260,7 +260,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPage implements CloudB
                                                         public void onFailure(Throwable caught) {
                                                             Log.error(CloudBeesPagePresenter.class, "Can not refresh properties", caught);
 
-                                                            callback.onFailed();
+                                                            callback.onFailure(caught);
                                                         }
                                                     });
                                                 }
@@ -272,7 +272,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPage implements CloudB
                                                     notification.setMessage(constant.deployApplicationFailureMessage());
                                                     super.onFailure(exception);
 
-                                                    callback.onFailed();
+                                                    callback.onFailure(exception);
                                                 }
                                             });
         } catch (WebSocketException e) {
@@ -301,7 +301,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPage implements CloudB
                                                       public void onFailure(Throwable caught) {
                                                           Log.error(CloudBeesPagePresenter.class, "Can not refresh properties", caught);
 
-                                                          callback.onFailed();
+                                                          callback.onFailure(caught);
                                                       }
                                                   });
                                               }
@@ -313,7 +313,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPage implements CloudB
                                                   notification.setMessage(constant.deployApplicationFailureMessage());
                                                   super.onFailure(exception);
 
-                                                  callback.onFailed();
+                                                  callback.onFailure(exception);
                                               }
                                           });
         } catch (RequestException e) {
@@ -321,7 +321,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPage implements CloudB
             notification.setStatus(FINISHED);
             notification.setMessage(constant.deployApplicationFailureMessage());
 
-            callback.onFailed();
+            callback.onFailure(e);
         }
     }
 
@@ -350,7 +350,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPage implements CloudB
         notification.setStatus(FINISHED);
         notification.setMessage(constant.deployApplicationSuccess());
 
-        callback.onSuccessful();
+        callback.onSuccess();
     }
 
     /** Gets deploy domains. */

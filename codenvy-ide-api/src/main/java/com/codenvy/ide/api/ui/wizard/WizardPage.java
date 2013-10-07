@@ -26,9 +26,9 @@ import static com.codenvy.ide.api.ui.wizard.WizardModel.UpdateDelegate;
 public interface WizardPage extends Presenter {
     public interface CommitCallback {
 
-        void onSuccessful();
+        void onSuccess();
 
-        void onFailed();
+        void onFailure(Throwable exception);
     }
 
     void setUpdateDelegate(UpdateDelegate delegate);

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.wizard;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardModel;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
@@ -84,11 +85,10 @@ public class WizardDialogPresenter implements WizardDialog, WizardModel.UpdateDe
     /** {@inheritDoc} */
     @Override
     public void updateControls() {
-        // read the state of the buttons from current page
+        // change state of buttons
         view.setBackButtonVisible(wizardModel.hasPrevious());
         view.setNextButtonVisible(wizardModel.hasNext());
         view.setNextButtonEnabled(currentPage.isCompleted());
-        // TODO showing finish button
         view.setFinishButtonEnabled(wizardModel.canFinish() && currentPage.isCompleted());
         view.setCaption(currentPage.getCaption());
         view.setNotice(currentPage.getNotice());
@@ -105,7 +105,7 @@ public class WizardDialogPresenter implements WizardDialog, WizardModel.UpdateDe
         view.setEnabledAnimation(true);
     }
 
-    private void setPage(WizardPage wizardPage) {
+    private void setPage(@NotNull WizardPage wizardPage) {
         currentPage = wizardPage;
         updateControls();
         currentPage.go(view.getContentPanel());

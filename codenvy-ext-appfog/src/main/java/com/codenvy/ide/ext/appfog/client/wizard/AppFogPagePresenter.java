@@ -261,7 +261,7 @@ public class AppFogPagePresenter extends AbstractWizardPage implements AppFogPag
                         @Override
                         public void onFailure(Throwable caught) {
                             Log.error(AppFogPagePresenter.class, "Can not refresh properties", caught);
-                            callback.onFailed();
+                            callback.onFailure(caught);
                         }
                     });
                 }
@@ -272,7 +272,7 @@ public class AppFogPagePresenter extends AbstractWizardPage implements AppFogPag
                     notification.setType(ERROR);
                     notification.setMessage(constant.applicationCreationFailed());
                     super.onFailure(exception);
-                    callback.onFailed();
+                    callback.onFailure(exception);
                 }
             });
         } catch (WebSocketException e) {
@@ -307,7 +307,7 @@ public class AppFogPagePresenter extends AbstractWizardPage implements AppFogPag
                         @Override
                         public void onFailure(Throwable caught) {
                             Log.error(AppFogPagePresenter.class, "Can not refresh properties", caught);
-                            callback.onFailed();
+                            callback.onFailure(caught);
                         }
                     });
                 }
@@ -318,7 +318,7 @@ public class AppFogPagePresenter extends AbstractWizardPage implements AppFogPag
                     notification.setType(ERROR);
                     notification.setMessage(constant.applicationCreationFailed());
                     super.onFailure(exception);
-                    callback.onFailed();
+                    callback.onFailure(exception);
                 }
             });
         } catch (RequestException e) {
@@ -326,7 +326,7 @@ public class AppFogPagePresenter extends AbstractWizardPage implements AppFogPag
             notification.setStatus(FINISHED);
             notification.setType(ERROR);
             notification.setMessage(constant.applicationCreationFailed());
-            callback.onFailed();
+            callback.onFailure(e);
         }
     }
 
@@ -351,7 +351,7 @@ public class AppFogPagePresenter extends AbstractWizardPage implements AppFogPag
         notification.setMessage(msg);
         console.print(msg);
         eventBus.fireEvent(new RefreshBrowserEvent(project));
-        callback.onSuccessful();
+        callback.onSuccess();
     }
 
     /**
@@ -502,8 +502,7 @@ public class AppFogPagePresenter extends AbstractWizardPage implements AppFogPag
 
                 @Override
                 public void onFailure(Throwable caught) {
-                    // TODO Exception
-                    AppFogPagePresenter.this.callback.onFailed();
+                    AppFogPagePresenter.this.callback.onFailure(caught);
                 }
             });
         }
