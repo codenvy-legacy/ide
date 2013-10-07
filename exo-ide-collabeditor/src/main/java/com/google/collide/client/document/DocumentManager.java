@@ -107,6 +107,11 @@ public class DocumentManager {
             garbageCollectDocument(documents.get(0));
         }
     }
+    
+    public void cleanupBeforeEnabledCollaboration() {
+        networkController.teardown();
+        documents.clear();
+    }
 
     public ListenerRegistrar<LifecycleListener> getLifecycleListenerRegistrar() {
         return lifecycleListenerManager;
