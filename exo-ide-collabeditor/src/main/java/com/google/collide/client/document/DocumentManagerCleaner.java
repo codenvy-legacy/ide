@@ -23,10 +23,11 @@ import org.exoplatform.ide.client.framework.event.CollaborationChangedEvent;
 import org.exoplatform.ide.client.framework.event.CollaborationChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 
-/*
+/**
 * Class is used to clean list of collaboration documents if collaboration mode is disabled.
 *
-* * @author <a href="mailto:vsvydenko@codenvy.com">Valeriy Svydenko</a> */
+* @author <a href="mailto:vsvydenko@codenvy.com">Valeriy Svydenko</a>
+*/
 public class DocumentManagerCleaner implements CollaborationChangedHandler {
 
     public DocumentManagerCleaner() {
