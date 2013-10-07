@@ -172,8 +172,8 @@ public class CollaborationManager implements DisableEnableCollaborationHandler, 
     private Map<String, FileModel>    openedFiles   = new HashMap<String, FileModel>();
 
     private HandlerRegistration handlerRegistration;
-    private int fileCount;
-    private int projectUsersCount;
+    private int                 fileCount;
+    private int                 projectUsersCount;
 
     private CollaborationManager(AppContext appContext, DocumentManager documentManager,
                                  IncomingDocOpDemultiplexer docOpRecipient, UsersModel usersModel,
