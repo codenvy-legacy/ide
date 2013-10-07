@@ -35,8 +35,8 @@ public class DocumentManagerCleaner implements CollaborationChangedHandler {
 
     @Override
     public void onCollaborationChanged(CollaborationChangedEvent event) {
-        if (!event.isEnabled()) {
-            CollabEditorExtension.get().getManager().cleanup();
+        if (event.isEnabled()) {
+           CollabEditorExtension.get().getManager().cleanupBeforeEnabledCollaboration();
         }
     }
 }
