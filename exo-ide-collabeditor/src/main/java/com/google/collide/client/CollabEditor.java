@@ -198,8 +198,6 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
                 editorDocument.putTag("IDocument", document);
                 TextListenerImpl textListener = new TextListenerImpl();
                 editorDocument.getTextListenerRegistrar().add(textListener);
-                //not need if collaboration mode is disabled
-                //CollabEditorExtension.get().getManager().addDocument(editorDocument);
                 editorBundle.setDocument(editorDocument, mimeType, "");
                 documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator(), textListener,
                                             CollabEditor.this);
