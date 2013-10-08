@@ -47,7 +47,7 @@ public class WizardDialogPresenterTest {
     public static final boolean HAS_NEXT     = true;
     public static final boolean HAS_PREVIOUS = true;
     public static final boolean CAN_FINISH   = true;
-    public static final boolean IS_COMPLITED = true;
+    public static final boolean COMPLETED    = true;
     @Mock
     private WizardDialogView      view;
     @Mock
@@ -121,7 +121,7 @@ public class WizardDialogPresenterTest {
         when(wizardModel.hasNext()).thenReturn(HAS_NEXT);
         when(wizardModel.hasPrevious()).thenReturn(HAS_PREVIOUS);
         when(wizardModel.canFinish()).thenReturn(CAN_FINISH);
-        when(firstPage.isCompleted()).thenReturn(IS_COMPLITED);
+        when(firstPage.isCompleted()).thenReturn(COMPLETED);
 
         presenter.updateControls();
 
@@ -136,7 +136,7 @@ public class WizardDialogPresenterTest {
 
         verify(view).setBackButtonVisible(eq(HAS_PREVIOUS));
         verify(view).setNextButtonVisible(eq(HAS_NEXT));
-        verify(view).setNextButtonEnabled(eq(IS_COMPLITED));
+        verify(view).setNextButtonEnabled(eq(COMPLETED));
         verify(view).setFinishButtonEnabled(eq(IS_SHOWN));
         verify(view).setCaption(anyString());
         verify(view).setNotice(anyString());

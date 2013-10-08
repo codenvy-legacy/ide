@@ -108,12 +108,14 @@ public class NewProjectWizardModel implements WizardModel, WizardPage.CommitCall
             addPages(paasPages.get(wizardContext.getData(PAAS)));
         }
 
-        WizardPage page;
-        do {
-            page = flippedPages.get(++index);
-        } while (index < flippedPages.size() && page.canSkip());
+        WizardPage page = null;
+        boolean canSkip = true;
+        while (canSkip && ++index < flippedPages.size()) {
+            page = flippedPages.get(index);
+            canSkip = page.canSkip();
+        }
 
-        return page;
+        return canSkip ? null : page;
     }
 
     private void addPages(@Nullable JsonArray<Provider<? extends WizardPage>> pages) {
@@ -136,18 +138,24 @@ public class NewProjectWizardModel implements WizardModel, WizardPage.CommitCall
     @Nullable
     @Override
     public WizardPage flipToPrevious() {
-        WizardPage page;
-        do {
-            page = flippedPages.get(--index);
-        } while (index >= 0 && page.canSkip());
-
-        if (index <= 2) {
-            for (int i = flippedPages.size() - 1; i > index; i--) {
-                flippedPages.remove(i);
+        if (index > 0) {
+            WizardPage page = null;
+            boolean canSkip = true;
+            while (canSkip && --index > 0) {
+                page = flippedPages.get(index);
+                canSkip = page.canSkip();
             }
+
+            if (index <= 2) {
+                for (int i = flippedPages.size() - 1; i > index; i--) {
+                    flippedPages.remove(i);
+                }
+            }
+
+            return flippedPages.get(index);
         }
 
-        return flippedPages.get(index);
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -217,7 +225,6 @@ public class NewProjectWizardModel implements WizardModel, WizardPage.CommitCall
     /** {@inheritDoc} */
     @Override
     public void onCancel() {
-        // TODO may be not needed
         clear();
     }
 
@@ -256,10 +263,10 @@ public class NewProjectWizardModel implements WizardModel, WizardPage.CommitCall
     public void onFailure(Throwable exception) {
         Notification notification = new Notification(exception.getMessage(), Notification.Type.ERROR);
         notificationManager.showNotification(notification);
+        clear();
     }
 
     private void clear() {
-        // TODO check it...
         wizardContext.clear();
     }
 }
