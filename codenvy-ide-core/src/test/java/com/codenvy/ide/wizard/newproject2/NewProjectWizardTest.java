@@ -55,7 +55,7 @@ import static org.mockito.Mockito.*;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @RunWith(MockitoJUnitRunner.class)
-public class NewProjectWizardModelTest {
+public class NewProjectWizardTest {
     public static final boolean CAN_SKIP         = true;
     public static final boolean CAN_NOT_SKIP     = false;
     public static final boolean HAS_NEXT         = true;
@@ -860,14 +860,25 @@ public class NewProjectWizardModelTest {
                 return null;
             }
         }).when(chooseTemplatePage).commit((CommitCallback)anyObject());
+        when(chooseTemplatePage.canSkip()).thenReturn(CAN_SKIP);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Object[] arguments = invocationOnMock.getArguments();
+                CommitCallback callback = (CommitCallback)arguments[0];
+                callback.onSuccess();
+                return null;
+            }
+        }).when(templatePage).commit((CommitCallback)anyObject());
+        addTemplatePages();
 
         model.flipToFirst();
-        flipPages(1);
         wizardContext.putData(TEMPLATE, template);
         model.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
         verify(chooseTemplatePage).commit((CommitCallback)anyObject());
+        verify(templatePage, times(2)).commit((CommitCallback)anyObject());
         assertNull(wizardContext.getData(TEMPLATE));
     }
 

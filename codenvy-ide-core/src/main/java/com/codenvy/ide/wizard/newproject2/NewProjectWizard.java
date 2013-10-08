@@ -39,7 +39,11 @@ import com.google.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The presenter for creating new project.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 @Singleton
 public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
     public static final WizardContext.Key<PaaS>            PAAS         = new WizardContext.Key<PaaS>("PaaS");
@@ -57,6 +61,13 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
 
     private int index;
 
+    /**
+     * Create presenter.
+     *
+     * @param newProjectPage
+     * @param templatePage
+     * @param notificationManager
+     */
     @Inject
     public NewProjectWizard(Provider<NewProjectPagePresenter> newProjectPage,
                             TemplatePageFactory templatePage,
@@ -174,7 +185,6 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
     /** {@inheritDoc} */
     @Override
     public boolean canFinish() {
-        // TODO need to check it
         boolean isCompleted = true;
         for (WizardPage page : flippedPages.asIterable()) {
             isCompleted &= page.isCompleted();
@@ -232,6 +242,16 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
     /** {@inheritDoc} */
     @Override
     public void onFinish() {
+        if (index == 0) {
+            TemplatePagePresenter page = templatePage.create(wizardContext);
+            page.setUpdateDelegate(delegate);
+            flippedPages.add(page);
+            if (page.canSkip()) {
+                addPages(templatePages.get(wizardContext.getData(TEMPLATE)));
+                addPages(paasPages.get(wizardContext.getData(PAAS)));
+            }
+        }
+
         index = 0;
         commit();
     }
