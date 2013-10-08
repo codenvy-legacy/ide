@@ -42,7 +42,6 @@ import static com.codenvy.ide.wizard.newproject2.NewProjectWizardModel.PROJECT_T
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-//public class NewProjectPagePresenter extends AbstractWizardPagePresenter implements NewProjectPageView.ActionDelegate {
 public class NewProjectPagePresenter extends AbstractWizardPage implements NewProjectPageView.ActionDelegate {
     private NewProjectPageView         view;
     private JsonArray<PaaS>            paases;
@@ -183,13 +182,15 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
         hasProjectNameIncorrectSymbol = !ResourceNameValidator.isProjectNameValid(projectName);
 
         hasSameProject = false;
-        for (int i = 0; i < projectList.size() && !hasSameProject; i++) {
-            String name = projectList.get(i);
-            hasSameProject = projectName.equals(name);
+        if (projectList != null) {
+            for (int i = 0; i < projectList.size() && !hasSameProject; i++) {
+                String name = projectList.get(i);
+                hasSameProject = projectName.equals(name);
+            }
         }
 
         if (!projectName.isEmpty() && !hasProjectNameIncorrectSymbol && !hasSameProject) {
-            wizardContext.putData(PROJECT_NAME, view.getProjectName());
+            wizardContext.putData(PROJECT_NAME, projectName);
         } else {
             wizardContext.removeData(PROJECT_NAME);
         }
