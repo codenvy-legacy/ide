@@ -23,8 +23,8 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.template.Template;
+import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
-import com.codenvy.ide.api.ui.wizard.WizardModel;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -41,7 +41,7 @@ import java.util.Map;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
-public class NewProjectWizardModel implements WizardModel, WizardPage.CommitCallback {
+public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
     public static final WizardContext.Key<PaaS>            PAAS         = new WizardContext.Key<PaaS>("PaaS");
     public static final WizardContext.Key<Template>        TEMPLATE     = new WizardContext.Key<Template>("Template");
     public static final WizardContext.Key<ProjectTypeData> PROJECT_TYPE = new WizardContext.Key<ProjectTypeData>("Project type");
@@ -58,8 +58,9 @@ public class NewProjectWizardModel implements WizardModel, WizardPage.CommitCall
     private int index;
 
     @Inject
-    public NewProjectWizardModel(Provider<NewProjectPagePresenter> newProjectPage,
-                                 TemplatePageFactory templatePage, NotificationManager notificationManager) {
+    public NewProjectWizard(Provider<NewProjectPagePresenter> newProjectPage,
+                            TemplatePageFactory templatePage,
+                            NotificationManager notificationManager) {
         this.newProjectPage = newProjectPage;
         this.templatePage = templatePage;
         this.notificationManager = notificationManager;

@@ -28,8 +28,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import static com.codenvy.ide.wizard.newproject2.NewProjectWizardModel.PROJECT_TYPE;
-import static com.codenvy.ide.wizard.newproject2.NewProjectWizardModel.TEMPLATE;
+import static com.codenvy.ide.wizard.newproject2.NewProjectWizard.PROJECT_TYPE;
+import static com.codenvy.ide.wizard.newproject2.NewProjectWizard.TEMPLATE;
 
 
 /**
@@ -37,7 +37,6 @@ import static com.codenvy.ide.wizard.newproject2.NewProjectWizardModel.TEMPLATE;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-//public class TemplatePagePresenter extends AbstractWizardPagePresenter implements TemplatePageView.ActionDelegate {
 public class TemplatePagePresenter extends AbstractWizardPage implements TemplatePageView.ActionDelegate {
     private TemplatePageView    view;
     private JsonArray<Template> templates;

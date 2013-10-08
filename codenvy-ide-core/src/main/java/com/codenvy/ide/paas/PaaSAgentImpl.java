@@ -27,7 +27,7 @@ import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.wizard.newproject2.NewProjectWizardModel;
+import com.codenvy.ide.wizard.newproject2.NewProjectWizard;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -53,14 +53,14 @@ public class PaaSAgentImpl implements PaaSAgent {
         }
     }
 
-    private       NewProjectWizardModel newProjectWizardModel;
-    private       PreferencesAgent      preferencesAgent;
-    private final JsonArray<PaaS>       registeredPaaS;
+    private       NewProjectWizard newProjectWizard;
+    private       PreferencesAgent preferencesAgent;
+    private final JsonArray<PaaS>  registeredPaaS;
 
     /** Create agent. */
     @Inject
-    protected PaaSAgentImpl(NewProjectWizardModel newProjectWizardModel, PreferencesAgent preferencesAgent) {
-        this.newProjectWizardModel = newProjectWizardModel;
+    protected PaaSAgentImpl(NewProjectWizard newProjectWizard, PreferencesAgent preferencesAgent) {
+        this.newProjectWizard = newProjectWizard;
         this.preferencesAgent = preferencesAgent;
         this.registeredPaaS = JsonCollections.createArray();
         registeredPaaS.add(new NonePaaS("None", "None", null));
@@ -73,7 +73,7 @@ public class PaaSAgentImpl implements PaaSAgent {
                          @Nullable Provider<PreferencesPagePresenter> preferencePage) {
         PaaS paas = new PaaS(id, title, image, natures);
         registeredPaaS.add(paas);
-        newProjectWizardModel.addPaaSPages(paas, wizardPages);
+        newProjectWizard.addPaaSPages(paas, wizardPages);
         if (preferencePage != null) {
             preferencesAgent.addPage(preferencePage);
         }

@@ -21,15 +21,25 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.google.gwt.resources.client.ImageResource;
 
-import static com.codenvy.ide.api.ui.wizard.WizardModel.UpdateDelegate;
+import static com.codenvy.ide.api.ui.wizard.Wizard.UpdateDelegate;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * This is an abstract base implementation of a {@link WizardPage}.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public abstract class AbstractWizardPage implements WizardPage {
     private final String         caption;
     private final ImageResource  image;
     protected     UpdateDelegate delegate;
     protected     WizardContext  wizardContext;
 
+    /**
+     * Create wizard page with given caption and image.
+     *
+     * @param caption
+     * @param image
+     */
     public AbstractWizardPage(@Nullable String caption, @Nullable ImageResource image) {
         this.caption = caption;
         this.image = image;

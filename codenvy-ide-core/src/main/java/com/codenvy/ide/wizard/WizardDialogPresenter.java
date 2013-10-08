@@ -18,45 +18,43 @@
 package com.codenvy.ide.wizard;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
-import com.codenvy.ide.api.ui.wizard.WizardModel;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Wizard presenter manages wizard pages. It's responsible for the
- * communication user and wizard page.
- * In typical usage, the client instantiates this class with a particular
- * wizard page. The wizard serves as the wizard page container and orchestrates the
- * presentation of its pages.
+ * Wizard dialog presenter manages wizard pages. It's responsible for the communication user and wizard page.
+ * In typical usage, the client instantiates this class with a particular wizard. The wizard dialog orchestrates the presentation of wizard
+ * pages.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class WizardDialogPresenter implements WizardDialog, WizardModel.UpdateDelegate, WizardDialogView.ActionDelegate {
-    private WizardModel      wizardModel;
+public class WizardDialogPresenter implements WizardDialog, Wizard.UpdateDelegate, WizardDialogView.ActionDelegate {
+    private Wizard           wizard;
     private WizardPage       currentPage;
     private WizardDialogView view;
 
     /**
-     * Creates WizardPresenter with given current wizard page and wizard's title
+     * Creates Wizard dialog with given view and wizard.
      *
      * @param view
-     * @param wizardModel
+     * @param wizard
      */
     @Inject
-    public WizardDialogPresenter(WizardDialogView view, @Assisted WizardModel wizardModel) {
+    public WizardDialogPresenter(WizardDialogView view, @Assisted Wizard wizard) {
         this.view = view;
         this.view.setDelegate(this);
-        this.wizardModel = wizardModel;
-        this.wizardModel.setUpdateDelegate(this);
+        this.wizard = wizard;
+        this.wizard.setUpdateDelegate(this);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onNextClicked() {
         currentPage.storeOptions();
-        setPage(wizardModel.flipToNext());
+        setPage(wizard.flipToNext());
         currentPage.focusComponent();
     }
 
@@ -64,21 +62,20 @@ public class WizardDialogPresenter implements WizardDialog, WizardModel.UpdateDe
     @Override
     public void onBackClicked() {
         currentPage.removeOptions();
-        setPage(wizardModel.flipToPrevious());
+        setPage(wizard.flipToPrevious());
     }
 
     /** {@inheritDoc} */
     @Override
     public void onFinishClicked() {
-        wizardModel.onFinish();
+        wizard.onFinish();
         view.close();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {
-        // TODO may be need to remove
-        wizardModel.onCancel();
+        wizard.onCancel();
         view.close();
     }
 
@@ -86,10 +83,10 @@ public class WizardDialogPresenter implements WizardDialog, WizardModel.UpdateDe
     @Override
     public void updateControls() {
         // change state of buttons
-        view.setBackButtonVisible(wizardModel.hasPrevious());
-        view.setNextButtonVisible(wizardModel.hasNext());
+        view.setBackButtonVisible(wizard.hasPrevious());
+        view.setNextButtonVisible(wizard.hasNext());
         view.setNextButtonEnabled(currentPage.isCompleted());
-        view.setFinishButtonEnabled(wizardModel.canFinish() && currentPage.isCompleted());
+        view.setFinishButtonEnabled(wizard.canFinish() && currentPage.isCompleted());
         view.setCaption(currentPage.getCaption());
         view.setNotice(currentPage.getNotice());
         view.setImage(currentPage.getImage());
@@ -98,13 +95,19 @@ public class WizardDialogPresenter implements WizardDialog, WizardModel.UpdateDe
     /** {@inheritDoc} */
     @Override
     public void show() {
-        setPage(wizardModel.flipToFirst());
+        setPage(wizard.flipToFirst());
         currentPage.focusComponent();
-        view.setTitle(wizardModel.getTitle());
+        view.setTitle(wizard.getTitle());
         view.showDialog();
         view.setEnabledAnimation(true);
     }
 
+    /**
+     * Change current page and responds other operation which needed for changing page.
+     *
+     * @param wizardPage
+     *         new current page
+     */
     private void setPage(@NotNull WizardPage wizardPage) {
         currentPage = wizardPage;
         updateControls();

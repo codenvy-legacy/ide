@@ -38,13 +38,19 @@ public interface PaaSAgent {
      * Registers new PaaS.
      *
      * @param id
+     *         id of PaaS for identification
      * @param title
+     *         title that will be shown on new project wizard page
      * @param image
-     * @param requiredTypes
-     * @param wizardPage
+     *         image that will be shown on new project wizard page
+     * @param natures
+     *         natures which support the PaaS
+     * @param wizardPages
+     *         pages which need add to new project wizard
      * @param preferencePage
+     *         page which need add preference menu
      */
-    // TODO javadoc
+    // TODO remove preference page?
     void register(@NotNull String id, @NotNull String title, @Nullable ImageResource image,
                   @NotNull JsonStringMap<JsonArray<String>> natures, @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages,
                   @Nullable Provider<PreferencesPagePresenter> preferencePage);

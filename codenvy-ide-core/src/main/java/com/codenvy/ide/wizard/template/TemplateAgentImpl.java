@@ -24,7 +24,7 @@ import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.wizard.newproject2.NewProjectWizardModel;
+import com.codenvy.ide.wizard.newproject2.NewProjectWizard;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -37,13 +37,13 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class TemplateAgentImpl implements TemplateAgent {
-    private       NewProjectWizardModel newProjectWizardModel;
-    private final JsonArray<Template>   templates;
+    private       NewProjectWizard    newProjectWizard;
+    private final JsonArray<Template> templates;
 
     /** Create agent. */
     @Inject
-    protected TemplateAgentImpl(NewProjectWizardModel newProjectWizardModel) {
-        this.newProjectWizardModel = newProjectWizardModel;
+    protected TemplateAgentImpl(NewProjectWizard newProjectWizard) {
+        this.newProjectWizard = newProjectWizard;
         this.templates = JsonCollections.createArray();
     }
 
@@ -53,18 +53,20 @@ public class TemplateAgentImpl implements TemplateAgent {
                          @NotNull JsonArray<String> secondaryNatures, @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages) {
         Template template = new Template(title, icon, primaryNature, secondaryNatures);
         templates.add(template);
-        newProjectWizardModel.addTemplatePages(template, wizardPages);
+        newProjectWizard.addTemplatePages(template, wizardPages);
     }
 
     /**
      * Returns all available templates for creating project.
      *
      * @param primaryNature
+     *         needed primary nature
      * @param secondaryNatures
-     * @return
+     *         needed secondary nature
+     * @return available project type
      */
-    // TODO javadoc
-    public JsonArray<Template> getTemplatesForProjectType(String primaryNature, JsonArray<String> secondaryNatures) {
+    @NotNull
+    public JsonArray<Template> getTemplatesForProjectType(@NotNull String primaryNature, @NotNull JsonArray<String> secondaryNatures) {
         JsonArray<Template> availableTemplates = JsonCollections.createArray();
         for (Template template : templates.asIterable()) {
             if (template.isAvailable(primaryNature, secondaryNatures)) {

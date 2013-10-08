@@ -33,8 +33,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import static com.codenvy.ide.api.ui.wizard.WizardKeys.PROJECT_NAME;
-import static com.codenvy.ide.wizard.newproject2.NewProjectWizardModel.PAAS;
-import static com.codenvy.ide.wizard.newproject2.NewProjectWizardModel.PROJECT_TYPE;
+import static com.codenvy.ide.wizard.newproject2.NewProjectWizard.PAAS;
+import static com.codenvy.ide.wizard.newproject2.NewProjectWizard.PROJECT_TYPE;
 
 
 /**

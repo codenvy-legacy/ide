@@ -34,9 +34,16 @@ public interface TemplateAgent {
      * Registers new template for creating project.
      *
      * @param title
+     *         title that will be shown on new project wizard page
      * @param icon
+     *         icon that will be shown on new project wizard page
+     * @param primaryNature
+     *         primary nature which support the template
+     * @param secondaryNatures
+     *         secondary natures which support the template
+     * @param wizardPages
+     *         pages which need add to new project wizard
      */
-    // TODO javadoc
     void register(@NotNull String title, @Nullable ImageResource icon, @NotNull String primaryNature,
                   @NotNull JsonArray<String> secondaryNatures, @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages);
 }

@@ -17,7 +17,12 @@
  */
 package com.codenvy.ide.api.ui.wizard;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The container of wizard keys. It contains keys which can be needed from different extension. These are just keys which using into
+ * internal logical. And someone should use it in case to use something from internal logical.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public interface WizardKeys {
     WizardContext.Key<String> PROJECT_NAME = new WizardContext.Key<String>("Project name");
 }

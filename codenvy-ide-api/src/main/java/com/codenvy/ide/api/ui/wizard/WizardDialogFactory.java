@@ -17,8 +17,21 @@
  */
 package com.codenvy.ide.api.ui.wizard;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
-public interface WizardDialogFactory {
+import com.codenvy.ide.annotations.NotNull;
 
-    WizardDialog create(WizardModel wizardModel);
+/**
+ * The factory for creating wizard dialog.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
+public interface WizardDialogFactory {
+    /**
+     * Create wizard with instance of wizard model.
+     *
+     * @param wizard
+     *         wizard model that must be used for creating wizard dialog.
+     * @return wizard dialog
+     */
+    @NotNull
+    WizardDialog create(@NotNull Wizard wizard);
 }

@@ -17,8 +17,12 @@
  */
 package com.codenvy.ide.api.ui.wizard;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The dialog that provides showing wizard.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public interface WizardDialog {
-
+    /** Show wizard dialog. */
     void show();
 }

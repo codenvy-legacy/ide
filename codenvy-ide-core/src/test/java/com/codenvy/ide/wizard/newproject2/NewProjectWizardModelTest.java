@@ -40,17 +40,17 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import static com.codenvy.ide.api.ui.wizard.WizardModel.UpdateDelegate;
+import static com.codenvy.ide.api.ui.wizard.Wizard.UpdateDelegate;
 import static com.codenvy.ide.api.ui.wizard.WizardPage.CommitCallback;
-import static com.codenvy.ide.wizard.newproject2.NewProjectWizardModel.PAAS;
-import static com.codenvy.ide.wizard.newproject2.NewProjectWizardModel.TEMPLATE;
+import static com.codenvy.ide.wizard.newproject2.NewProjectWizard.PAAS;
+import static com.codenvy.ide.wizard.newproject2.NewProjectWizard.TEMPLATE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.*;
 
 /**
- * Testing {@link NewProjectWizardModel functionality.
+ * Testing {@link NewProjectWizard} functionality.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -82,14 +82,14 @@ public class NewProjectWizardModelTest {
     private WizardContext                     wizardContext;
     private Template                          template;
     private PaaS                              paas;
-    private NewProjectWizardModel             model;
+    private NewProjectWizard                  model;
 
     @Before
     public void disarm() {
         // don't throw an exception if GWT.create() invoked
         GWTMockUtilities.disarm();
 
-        model = new NewProjectWizardModel(newProjectPageProvider, templatePageFactory, notificationManager);
+        model = new NewProjectWizard(newProjectPageProvider, templatePageFactory, notificationManager);
         model.setUpdateDelegate(mock(UpdateDelegate.class));
 
         when(newProjectPageProvider.get()).thenReturn(newProjectPage);

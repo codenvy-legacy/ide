@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.wizard;
 
-import com.codenvy.ide.api.ui.wizard.WizardModel;
+import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.resources.client.ImageResource;
@@ -51,7 +51,7 @@ public class WizardDialogPresenterTest {
     @Mock
     private WizardDialogView      view;
     @Mock
-    private WizardModel           wizardModel;
+    private Wizard                wizard;
     @Mock
     private WizardPage            firstPage;
     @Mock
@@ -63,9 +63,9 @@ public class WizardDialogPresenterTest {
         // don't throw an exception if GWT.create() invoked
         GWTMockUtilities.disarm();
 
-        presenter = new WizardDialogPresenter(view, wizardModel);
+        presenter = new WizardDialogPresenter(view, wizard);
 
-        when(wizardModel.flipToFirst()).thenReturn(firstPage);
+        when(wizard.flipToFirst()).thenReturn(firstPage);
     }
 
     @After
@@ -76,12 +76,12 @@ public class WizardDialogPresenterTest {
     @Test
     public void testOnNextClicked() throws Exception {
         preparePresenter();
-        when(wizardModel.flipToNext()).thenReturn(otherPage);
+        when(wizard.flipToNext()).thenReturn(otherPage);
 
         presenter.onNextClicked();
 
         verify(firstPage).storeOptions();
-        verify(wizardModel).flipToNext();
+        verify(wizard).flipToNext();
         updateControls(otherPage);
         verify(otherPage).focusComponent();
     }
@@ -89,12 +89,12 @@ public class WizardDialogPresenterTest {
     @Test
     public void testOnBackClicked() throws Exception {
         preparePresenter();
-        when(wizardModel.flipToPrevious()).thenReturn(otherPage);
+        when(wizard.flipToPrevious()).thenReturn(otherPage);
 
         presenter.onBackClicked();
 
         verify(firstPage).removeOptions();
-        verify(wizardModel).flipToPrevious();
+        verify(wizard).flipToPrevious();
         updateControls(otherPage);
     }
 
@@ -102,7 +102,7 @@ public class WizardDialogPresenterTest {
     public void testOnFinishClicked() throws Exception {
         presenter.onFinishClicked();
 
-        verify(wizardModel).onFinish();
+        verify(wizard).onFinish();
         verify(view).close();
     }
 
@@ -110,7 +110,7 @@ public class WizardDialogPresenterTest {
     public void testOnCancelClicked() throws Exception {
         presenter.onCancelClicked();
 
-        verify(wizardModel).onCancel();
+        verify(wizard).onCancel();
         verify(view).close();
     }
 
@@ -118,16 +118,16 @@ public class WizardDialogPresenterTest {
     public void testUpdateControls() throws Exception {
         preparePresenter();
 
-        when(wizardModel.hasNext()).thenReturn(HAS_NEXT);
-        when(wizardModel.hasPrevious()).thenReturn(HAS_PREVIOUS);
-        when(wizardModel.canFinish()).thenReturn(CAN_FINISH);
+        when(wizard.hasNext()).thenReturn(HAS_NEXT);
+        when(wizard.hasPrevious()).thenReturn(HAS_PREVIOUS);
+        when(wizard.canFinish()).thenReturn(CAN_FINISH);
         when(firstPage.isCompleted()).thenReturn(COMPLETED);
 
         presenter.updateControls();
 
-        verify(wizardModel).hasPrevious();
-        verify(wizardModel).hasNext();
-        verify(wizardModel).canFinish();
+        verify(wizard).hasPrevious();
+        verify(wizard).hasNext();
+        verify(wizard).canFinish();
 
         verify(firstPage, times(2)).isCompleted();
         verify(firstPage).getCaption();
@@ -164,7 +164,7 @@ public class WizardDialogPresenterTest {
 
         //clear information about using those components
         reset(view);
-        reset(wizardModel);
+        reset(wizard);
         reset(firstPage);
     }
 
@@ -183,9 +183,9 @@ public class WizardDialogPresenterTest {
         verify(view).setNotice(anyString());
         verify(view).setImage((ImageResource)anyObject());
 
-        verify(wizardModel).hasPrevious();
-        verify(wizardModel).hasNext();
-        verify(wizardModel).canFinish();
+        verify(wizard).hasPrevious();
+        verify(wizard).hasNext();
+        verify(wizard).canFinish();
 
         verify(wizardPage).isCompleted();
         verify(wizardPage).getCaption();
