@@ -175,6 +175,16 @@
                 <version>${com.codenvy.platform-api.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.codenvy.platform-api</groupId>
+                <artifactId>codenvy-api-builder</artifactId>
+                <version>${com.codenvy.platform-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.platform-api</groupId>
+                <artifactId>codenvy-builder-tools</artifactId>
+                <version>${com.codenvy.platform-api.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.codenvy.ide</groupId>
                 <artifactId>codenvy-ide-site-war</artifactId>
                 <version>${project.version}</version>
