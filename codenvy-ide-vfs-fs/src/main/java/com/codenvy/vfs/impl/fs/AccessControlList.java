@@ -17,11 +17,10 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.shared.AccessControlEntry;
-import com.codenvy.api.vfs.shared.AccessControlEntryImpl;
-import com.codenvy.api.vfs.shared.Principal;
-import com.codenvy.api.vfs.shared.PrincipalImpl;
-import com.codenvy.api.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import com.codenvy.api.vfs.shared.dto.AccessControlEntry;
+import com.codenvy.api.vfs.shared.dto.Principal;
+import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
+import com.codenvy.dto.server.DtoFactory;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -61,7 +59,7 @@ public class AccessControlList {
         Map<Principal, Set<BasicPermissions>> copy = new HashMap<>(source.size());
         for (Map.Entry<Principal, Set<BasicPermissions>> e : source.entrySet()) {
             if (!(e.getValue() == null || e.getValue().isEmpty())) {
-                copy.put(new PrincipalImpl(e.getKey()), EnumSet.copyOf(e.getValue()));
+                copy.put(DtoFactory.getInstance().clone(e.getKey()), EnumSet.copyOf(e.getValue()));
             }
         }
         return copy;
@@ -78,11 +76,14 @@ public class AccessControlList {
         List<AccessControlEntry> acl = new ArrayList<>(permissionMap.size());
         for (Map.Entry<Principal, Set<BasicPermissions>> e : permissionMap.entrySet()) {
             Set<BasicPermissions> basicPermissions = e.getValue();
-            Set<String> plainPermissions = new HashSet<>(basicPermissions.size());
+            List<String> plainPermissions = new ArrayList<>(basicPermissions.size());
             for (BasicPermissions permission : e.getValue()) {
                 plainPermissions.add(permission.value());
             }
-            acl.add(new AccessControlEntryImpl(new PrincipalImpl(e.getKey()), plainPermissions));
+            final AccessControlEntry ace = DtoFactory.getInstance().createDto(AccessControlEntry.class);
+            ace.setPrincipal(DtoFactory.getInstance().clone(e.getKey()));
+            ace.setPermissions(plainPermissions);
+            acl.add(ace);
         }
         return acl;
     }
@@ -114,8 +115,8 @@ public class AccessControlList {
         }
 
         for (AccessControlEntry ace : acl) {
-            final PrincipalImpl principal = new PrincipalImpl(ace.getPrincipal());
-            Set<String> plainPermissions = ace.getPermissions();
+            final Principal principal = DtoFactory.getInstance().clone(ace.getPrincipal());
+            List<String> plainPermissions = ace.getPermissions();
             if (plainPermissions == null || plainPermissions.isEmpty()) {
                 permissionMap.remove(principal);
             } else {
@@ -160,7 +161,10 @@ public class AccessControlList {
                     permissions.add(BasicPermissions.fromValue(input.readUTF()));
                     ++readPermissions;
                 }
-                permissionsMap.put(new PrincipalImpl(principalName, Principal.Type.valueOf(principalType)), permissions);
+                final Principal principal = DtoFactory.getInstance().createDto(Principal.class);
+                principal.setName(principalName);
+                principal.setType(Principal.Type.valueOf(principalType));
+                permissionsMap.put(principal, permissions);
             }
             ++readRecords;
         }

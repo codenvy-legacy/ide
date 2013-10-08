@@ -18,11 +18,12 @@
 package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.vfs.server.GitUrlResolver;
+import com.codenvy.api.vfs.server.MountPoint;
+import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileSystem;
+import com.codenvy.api.vfs.server.VirtualFileSystemImpl;
 import com.codenvy.api.vfs.server.exceptions.GitUrlResolveException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.api.vfs.shared.Item;
-import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.commons.env.EnvironmentContext;
 
 import javax.ws.rs.core.UriInfo;
@@ -46,12 +47,13 @@ public class GitUrlResolverFsImpl implements GitUrlResolver {
             if (id == null || id.length() == 0) {
                 throw new GitUrlResolveException("Can't resolve Git Url. Item path may not be null or empty");
             }
+            final MountPoint mountPoint = ((VirtualFileSystemImpl)vfs).getMountPoint();
+            final VirtualFile virtualFile = mountPoint.getVirtualFileById(id);
             final EnvironmentContext context = EnvironmentContext.getCurrent();
             final String rootPath = ((File)context.getVariable(EnvironmentContext.VFS_ROOT_DIR)).getAbsolutePath();
-            String path = mountStrategy.getMountPath().getAbsolutePath();
-            path = path.substring(rootPath.length());
+            String mountPointPath = mountStrategy.getMountPath().getAbsolutePath();
+            mountPointPath = mountPointPath.substring(rootPath.length());
 
-            final Item item = vfs.getItem(id, false, PropertyFilter.NONE_FILTER);
 
             StringBuilder result = new StringBuilder();
             // Set schema hardcode to "http",
@@ -62,7 +64,7 @@ public class GitUrlResolverFsImpl implements GitUrlResolver {
             if (port != 80 && port != 443 && port != -1) {
                 result.append(':').append(port);
             }
-            result.append('/').append("git").append(path).append(item.getPath());
+            result.append('/').append("git").append(mountPointPath).append(virtualFile.getPath());
 
             return result.toString();
         } catch (VirtualFileSystemException e) {

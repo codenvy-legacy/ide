@@ -21,9 +21,32 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/**
+ * Writes object to stream and restores object from stream. Implementation has full control over format of serialization.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ */
 public interface DataSerializer<T> {
+    /**
+     * Writes <code>value</code> to <code>output</code>.
+     *
+     * @param output
+     *         serialization stream
+     * @param value
+     *         instance for serialization
+     * @throws IOException
+     *         if an i/o error occurs
+     */
     void write(DataOutput output, T value) throws IOException;
 
+    /**
+     * Restores object from <code>input</code>.
+     *
+     * @param input
+     *         stream which contains serialized object
+     * @return restored instance
+     * @throws IOException
+     *         if an i/o error occurs
+     */
     T read(DataInput input) throws IOException;
 }

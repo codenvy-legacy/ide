@@ -23,7 +23,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/**
+ * Serializer for properties of VirtualFile.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ */
 public class FileMetadataSerializer implements DataSerializer<Map<String, String[]>> {
     @Override
     public void write(DataOutput output, Map<String, String[]> props) throws IOException {

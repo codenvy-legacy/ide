@@ -18,13 +18,13 @@
 package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.vfs.shared.ExitCodes;
-import com.codenvy.api.vfs.shared.Folder;
-import com.codenvy.api.vfs.shared.Item;
+import com.codenvy.api.vfs.shared.dto.Folder;
+import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.ItemType;
-import com.codenvy.api.vfs.shared.Principal;
-import com.codenvy.api.vfs.shared.PrincipalImpl;
-import com.codenvy.api.vfs.shared.Project;
-import com.codenvy.api.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import com.codenvy.api.vfs.shared.dto.Principal;
+import com.codenvy.api.vfs.shared.dto.Project;
+import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
+import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
@@ -93,8 +93,14 @@ public class RenameTest extends LocalFileSystemTest {
         createLock(lockedFilePath, lockToken, Long.MAX_VALUE);
 
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(2);
-        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
-        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
+        Principal user = DtoFactory.getInstance().createDto(Principal.class);
+        user.setName("andrew");
+        user.setType(Principal.Type.USER);
+        Principal admin = DtoFactory.getInstance().createDto(Principal.class);
+        admin.setName("admin");
+        admin.setType(Principal.Type.USER);
+        permissions.put(user, EnumSet.of(BasicPermissions.ALL));
+        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
         writePermissions(protectedFilePath, permissions);
         writePermissions(protectedFolderPath, permissions);
 
