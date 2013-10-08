@@ -112,7 +112,7 @@ public class ProjectPrepare {
                     props.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
                     props.add(new PropertyImpl("vfs:projectType", type.toString()));
 
-                    vfs.updateItem(node.getItem().getParentId(), props, null);
+                    vfs.updateItem(sourceFolderNode.getItem().getId(), props, null);
                     return;
                 }
             }
