@@ -26,7 +26,6 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.wizard.newproject2.pages.start.NewProjectPagePresenter;
-import com.codenvy.ide.wizard.newproject2.pages.template.TemplatePageFactory;
 import com.codenvy.ide.wizard.newproject2.pages.template.TemplatePagePresenter;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.inject.Provider;
@@ -70,7 +69,7 @@ public class NewProjectWizardTest {
     @Mock
     private NewProjectPagePresenter           newProjectPage;
     @Mock
-    private TemplatePageFactory               templatePageFactory;
+    private Provider<TemplatePagePresenter>   templatePageProvider;
     @Mock
     private TemplatePagePresenter             chooseTemplatePage;
     @Mock
@@ -89,7 +88,7 @@ public class NewProjectWizardTest {
         // don't throw an exception if GWT.create() invoked
         GWTMockUtilities.disarm();
 
-        model = new NewProjectWizard(newProjectPageProvider, templatePageFactory, notificationManager);
+        model = new NewProjectWizard(newProjectPageProvider, templatePageProvider, notificationManager);
         model.setUpdateDelegate(mock(UpdateDelegate.class));
 
         when(newProjectPageProvider.get()).thenReturn(newProjectPage);
@@ -102,7 +101,7 @@ public class NewProjectWizardTest {
             }
         }).when(newProjectPage).setContext((WizardContext)anyObject());
 
-        when(templatePageFactory.create((WizardContext)anyObject())).thenReturn(chooseTemplatePage);
+        when(templatePageProvider.get()).thenReturn(chooseTemplatePage);
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {

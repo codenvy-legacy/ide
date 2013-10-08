@@ -30,7 +30,6 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.wizard.newproject.ProjectTypeData;
 import com.codenvy.ide.wizard.newproject2.pages.start.NewProjectPagePresenter;
-import com.codenvy.ide.wizard.newproject2.pages.template.TemplatePageFactory;
 import com.codenvy.ide.wizard.newproject2.pages.template.TemplatePagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -51,7 +50,7 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
     public static final WizardContext.Key<ProjectTypeData> PROJECT_TYPE = new WizardContext.Key<ProjectTypeData>("Project type");
 
     private Provider<NewProjectPagePresenter>                        newProjectPage;
-    private TemplatePageFactory                                      templatePage;
+    private Provider<TemplatePagePresenter>                          templatePage;
     private UpdateDelegate                                           delegate;
     private Map<PaaS, JsonArray<Provider<? extends WizardPage>>>     paasPages;
     private Map<Template, JsonArray<Provider<? extends WizardPage>>> templatePages;
@@ -70,7 +69,7 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
      */
     @Inject
     public NewProjectWizard(Provider<NewProjectPagePresenter> newProjectPage,
-                            TemplatePageFactory templatePage,
+                            Provider<TemplatePagePresenter> templatePage,
                             NotificationManager notificationManager) {
         this.newProjectPage = newProjectPage;
         this.templatePage = templatePage;
@@ -108,7 +107,8 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
     @Override
     public WizardPage flipToNext() {
         if (index == 0) {
-            TemplatePagePresenter page = templatePage.create(wizardContext);
+            TemplatePagePresenter page = templatePage.get();
+            page.setContext(wizardContext);
             page.setUpdateDelegate(delegate);
             flippedPages.add(page);
             if (page.canSkip()) {
@@ -216,7 +216,9 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
                 }
             }
 
-            TemplatePagePresenter page = templatePage.create(wizardContext);
+            // TODO
+            TemplatePagePresenter page = templatePage.get();
+            page.setContext(wizardContext);
 
             return page.canSkip() && pageCount == 0;
         } else {
@@ -243,7 +245,9 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
     @Override
     public void onFinish() {
         if (index == 0) {
-            TemplatePagePresenter page = templatePage.create(wizardContext);
+            // TODO
+            TemplatePagePresenter page = templatePage.get();
+            page.setContext(wizardContext);
             page.setUpdateDelegate(delegate);
             flippedPages.add(page);
             if (page.canSkip()) {
