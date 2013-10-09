@@ -252,9 +252,9 @@
     -->
 
     <component>
-      <type>com.codenvy.commons.security.oauth.OAuthAuthenticationApplication</type>
+        <type>com.codenvy.commons.security.oauth.OAuthAuthenticationApplication</type>
     </component>
-  
+
     <component>
         <type>org.exoplatform.ide.security.oauth.ExoOAuthAuthenticatorProvider</type>
     </component>
@@ -265,6 +265,10 @@
 
     <component>
         <type>org.exoplatform.ide.security.oauth.ExoGitHubOAuthAuthenticator</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.security.oauth.ExoWSO2OAuthAuthenticator</type>
     </component>
 
     <!--

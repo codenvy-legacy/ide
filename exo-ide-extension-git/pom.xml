@@ -125,6 +125,12 @@
             <artifactId>exo-ide-vfs</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.codenvy.factory</groupId>
+            <artifactId>codenvy-factory-commons</artifactId>
+            <version>${com.codenvy.factory.version}</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

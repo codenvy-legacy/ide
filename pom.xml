@@ -47,6 +47,7 @@
       <crash.version>1.0.0-beta21</crash.version>
       <com.codenvy.commons.version>0.9.0-SNAPSHOT</com.codenvy.commons.version>
       <com.codenvy.organization.version>0.8.0-SNAPSHOT</com.codenvy.organization.version>
+       <com.codenvy.factory.version>0.2.0-SNAPSHOT</com.codenvy.factory.version>
 
       <javax.annotation.version>1.0</javax.annotation.version>
       <javax.ws.version>1.0</javax.ws.version>
@@ -217,7 +218,7 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-nodejs-runtime</artifactId>
             <version>${project.version}</version>
-         </dependency>  
+         </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -480,14 +481,14 @@
            <artifactId>exo-ide-shell</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
+
          <dependency>
            <groupId>org.exoplatform.ide</groupId>
            <artifactId>exo-ide-packaging-shell-war</artifactId>
            <type>war</type>
            <version>${project.version}</version>
         </dependency>
-        
+
          <dependency>
            <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-log-reader</artifactId>

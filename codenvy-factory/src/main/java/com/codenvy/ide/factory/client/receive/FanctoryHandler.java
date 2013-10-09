@@ -17,7 +17,10 @@
  */
 package com.codenvy.ide.factory.client.receive;
 
+
+import com.codenvy.factory.commons.CommonFactoryUrlFormat;
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.factory.client.FactoryExtension;
 import com.codenvy.ide.factory.client.FactorySpec10;
 import com.codenvy.ide.factory.client.copy.CopySpec10;
 import com.google.gwt.core.client.Scheduler;
@@ -28,10 +31,13 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Random;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -46,6 +52,7 @@ import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
@@ -257,7 +264,8 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                parameterMap.get(CopySpec10.PROJECT_ID) != null;
     }
 
-    private void cloneProject(final String giturl, final String prjName, final String prjType, final String idCommit, final String action, final String keepVcsInfo) {
+    private void cloneProject(final String giturl, final String prjName, final String prjType, final String idCommit, final String action,
+                              final String keepVcsInfo) {
         try {
 
             VirtualFileSystem.getInstance()
@@ -282,7 +290,8 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
 
                                                   if (itemExist) {
                                                       doClone(giturl, "origin",
-                                                              prjName + "-" + Random.nextInt(Integer.MAX_VALUE), prjType, idCommit, action, keepVcsInfo);
+                                                              prjName + "-" + Random.nextInt(Integer.MAX_VALUE), prjType, idCommit, action,
+                                                              keepVcsInfo);
                                                   } else {
                                                       doClone(giturl, "origin", prjName, prjType, idCommit, action, keepVcsInfo);
                                                   }
@@ -320,7 +329,8 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                                                          new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(folder)) {
                                                              @Override
                                                              protected void onSuccess(FolderModel result) {
-                                                                 cloneRepository(remoteUri, remoteName, prjType, result, idCommit, action, keepVcsInfo);
+                                                                 cloneRepository(remoteUri, remoteName, prjType, result, idCommit, action,
+                                                                                 keepVcsInfo);
                                                              }
 
                                                              @Override
@@ -340,6 +350,49 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                                                                             : GitExtension.MESSAGES.cloneFailed(remoteUri);
             IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
         }
+    }
+
+    /**
+     * Open native js popup window with wso2 authorization page.
+     *
+     * @param authorizeCallback
+     *         callback for authorization status.
+     */
+    private void openOauthPopupWindow(final AsyncCallback<Void> authorizeCallback) {
+        final JsPopUpOAuthWindow.JsPopUpOAuthWindowCallback authWindowCallback =
+                new JsPopUpOAuthWindow.JsPopUpOAuthWindowCallback() {
+                    @Override
+                    public void oAuthFinished(int authenticationStatus) {
+                        if (authenticationStatus == 2) { //means that auth was successful
+                            authorizeCallback.onSuccess(null);
+                        } else if (authenticationStatus == 1) { //means that auth was fail
+                            authorizeCallback.onFailure(new Exception(FactoryExtension.LOCALIZATION_CONSTANTS.privateRepoAuthFailed()));
+                        } else { //if user permit login
+                            authorizeCallback
+                                    .onFailure(new Exception(FactoryExtension.LOCALIZATION_CONSTANTS.privateRepoAuthPermitted()));
+                        }
+                    }
+                };
+
+        Dialogs.getInstance().ask(FactoryExtension.LOCALIZATION_CONSTANTS.privateRepoNeedAuthTitle(),
+                                  FactoryExtension.LOCALIZATION_CONSTANTS.privateRepoNeedAuthContent(),
+                                  new BooleanValueReceivedHandler() {
+                                      @Override
+                                      public void booleanValueReceived(Boolean value) {
+                                          if (value != null && value) {
+                                              String authUrl = Utils.getAuthorizationContext()
+                                                               + "/ide/oauth/authenticate?oauth_provider=wso2"
+                                                               + "&userId=" + IDE.user.getName() +
+                                                               "&redirect_after_login=/ide/" +
+                                                               Utils.getWorkspaceName();
+
+                                              JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl,
+                                                                                                     Utils.getAuthorizationErrorPageURL(),
+                                                                                                     950, 500, authWindowCallback);
+                                              authWindow.loginWithOAuth();
+                                          }
+                                      }
+                                  }, true);
     }
 
     /**
@@ -373,7 +426,22 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                 @Override
                 protected void onFailure(Throwable exception) {
                     IDELoader.getInstance().hide();
-                    handleError(exception, remoteUri);
+
+                    if (remoteUri.matches(CommonFactoryUrlFormat.WSO_2_URL_PATTERN_STRING) && exception.getMessage().contains("not authorized")) {
+                        openOauthPopupWindow(new AsyncCallback<Void>() {
+                            @Override
+                            public void onFailure(Throwable throwable) {
+                                IDE.fireEvent(new OutputEvent(throwable.getMessage(), Type.WARNING));
+                            }
+
+                            @Override
+                            public void onSuccess(Void var) {
+                                cloneRepository(remoteUri, remoteName, prjType, folder, idCommit, action, keepVcsInfo);
+                            }
+                        });
+                    } else {
+                        handleError(exception, remoteUri);
+                    }
                 }
             });
         } catch (WebSocketException e) {
@@ -382,7 +450,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
     }
 
     /** Get the necessary parameters values and call the clone repository method (over HTTP). */
-    private void cloneRepositoryREST(final String remoteUri, String remoteName, final String prjType, final FolderModel folder,
+    private void cloneRepositoryREST(final String remoteUri, final String remoteName, final String prjType, final FolderModel folder,
                                      final String idCommit, final String action, final String keepVcsInfo) {
 
         try {
@@ -397,6 +465,22 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                 @Override
                 protected void onFailure(Throwable exception) {
                     IDELoader.getInstance().hide();
+
+                    if (remoteUri.matches(CommonFactoryUrlFormat.WSO_2_URL_PATTERN_STRING) && exception.getMessage().contains("not authorized")) {
+                        openOauthPopupWindow(new AsyncCallback<Void>() {
+                            @Override
+                            public void onFailure(Throwable throwable) {
+                                IDE.fireEvent(new OutputEvent(throwable.getMessage()));
+                            }
+
+                            @Override
+                            public void onSuccess(Void var) {
+                                cloneRepositoryREST(remoteUri, remoteName, prjType, folder, idCommit, action, keepVcsInfo);
+                            }
+                        });
+                    } else {
+                        handleError(exception, remoteUri);
+                    }
                 }
             });
         } catch (RequestException e) {
