@@ -110,7 +110,6 @@ public class WizardDialogPresenterTest {
     public void testOnCancelClicked() throws Exception {
         presenter.onCancelClicked();
 
-        verify(wizard).onCancel();
         verify(view).close();
     }
 

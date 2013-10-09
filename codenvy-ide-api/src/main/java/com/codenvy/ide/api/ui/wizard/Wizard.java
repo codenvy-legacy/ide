@@ -93,9 +93,6 @@ public interface Wizard {
      */
     boolean canFinish();
 
-    /** Performs some actions in response to a user's click on Cancel button. */
-    void onCancel();
-
     /** Performs some actions in response to a user's click on Finish button. */
     void onFinish();
 }

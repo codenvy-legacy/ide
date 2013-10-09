@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The presenter for creating new project.
+ * The wizard for creating new project.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -48,17 +48,16 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
     public static final WizardContext.Key<PaaS>            PAAS         = new WizardContext.Key<PaaS>("PaaS");
     public static final WizardContext.Key<Template>        TEMPLATE     = new WizardContext.Key<Template>("Template");
     public static final WizardContext.Key<ProjectTypeData> PROJECT_TYPE = new WizardContext.Key<ProjectTypeData>("Project type");
-
     private Provider<NewProjectPagePresenter>                        newProjectPage;
     private Provider<TemplatePagePresenter>                          templatePage;
     private UpdateDelegate                                           delegate;
     private Map<PaaS, JsonArray<Provider<? extends WizardPage>>>     paasPages;
     private Map<Template, JsonArray<Provider<? extends WizardPage>>> templatePages;
+    private Map<Provider<? extends WizardPage>, WizardPage>          instancePages;
     private JsonArray<WizardPage>                                    flippedPages;
     private WizardContext                                            wizardContext;
     private NotificationManager                                      notificationManager;
-
-    private int index;
+    private int                                                      index;
 
     /**
      * Create presenter.
@@ -76,6 +75,7 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
         this.notificationManager = notificationManager;
         this.paasPages = new HashMap<PaaS, JsonArray<Provider<? extends WizardPage>>>();
         this.templatePages = new HashMap<Template, JsonArray<Provider<? extends WizardPage>>>();
+        this.instancePages = new HashMap<Provider<? extends WizardPage>, WizardPage>();
         this.flippedPages = JsonCollections.createArray();
         this.wizardContext = new WizardContext();
     }
@@ -97,7 +97,7 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
     @NotNull
     @Override
     public WizardPage flipToFirst() {
-        flippedPages.clear();
+        wizardContext.clear();
         index = 0;
         return addPage(newProjectPage);
     }
@@ -106,11 +106,22 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
     @Nullable
     @Override
     public WizardPage flipToNext() {
+        addNextPages();
+
+        while (++index < flippedPages.size()) {
+            WizardPage page = flippedPages.get(index);
+            if (!page.canSkip()) {
+                return page;
+            }
+        }
+
+        return null;
+    }
+
+    /** Add next pages if it is possible. */
+    private void addNextPages() {
         if (index == 0) {
-            TemplatePagePresenter page = templatePage.get();
-            page.setContext(wizardContext);
-            page.setUpdateDelegate(delegate);
-            flippedPages.add(page);
+            WizardPage page = addPage(templatePage);
             if (page.canSkip()) {
                 addPages(templatePages.get(wizardContext.getData(TEMPLATE)));
                 addPages(paasPages.get(wizardContext.getData(PAAS)));
@@ -119,17 +130,14 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
             addPages(templatePages.get(wizardContext.getData(TEMPLATE)));
             addPages(paasPages.get(wizardContext.getData(PAAS)));
         }
-
-        WizardPage page = null;
-        boolean canSkip = true;
-        while (canSkip && ++index < flippedPages.size()) {
-            page = flippedPages.get(index);
-            canSkip = page.canSkip();
-        }
-
-        return canSkip ? null : page;
     }
 
+    /**
+     * Add pages to list of available to flip pages.
+     *
+     * @param pages
+     *         pages that need to add to list
+     */
     private void addPages(@Nullable JsonArray<Provider<? extends WizardPage>> pages) {
         if (pages != null) {
             for (Provider<? extends WizardPage> provider : pages.asIterable()) {
@@ -138,10 +146,15 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
         }
     }
 
-    private WizardPage addPage(Provider<? extends WizardPage> provider) {
-        WizardPage page = provider.get();
-        page.setUpdateDelegate(delegate);
-        page.setContext(wizardContext);
+    /**
+     * Add page to list of available to flip pages.
+     *
+     * @param provider
+     *         provider of page that need to add
+     * @return wizard page that was added
+     */
+    private WizardPage addPage(@NotNull Provider<? extends WizardPage> provider) {
+        WizardPage page = getInstance(provider);
         flippedPages.add(page);
         return page;
     }
@@ -150,24 +163,23 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
     @Nullable
     @Override
     public WizardPage flipToPrevious() {
-        if (index > 0) {
-            WizardPage page = null;
-            boolean canSkip = true;
-            while (canSkip && --index > 0) {
-                page = flippedPages.get(index);
-                canSkip = page.canSkip();
-            }
-
-            if (index <= 2) {
-                for (int i = flippedPages.size() - 1; i > index; i--) {
-                    flippedPages.remove(i);
-                }
-            }
-
-            return flippedPages.get(index);
+        if (index <= 0) {
+            return null;
         }
 
-        return null;
+        boolean canSkip = true;
+        while (canSkip && --index > 0) {
+            WizardPage page = flippedPages.get(index);
+            canSkip = page.canSkip();
+        }
+
+        if (index < 2) {
+            for (int i = flippedPages.size() - 1; i > index; i--) {
+                flippedPages.remove(i);
+            }
+        }
+
+        return flippedPages.get(index);
     }
 
     /** {@inheritDoc} */
@@ -179,96 +191,117 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
     /** {@inheritDoc} */
     @Override
     public boolean hasPrevious() {
-        return flippedPages.size() > 1;
+        return index > 0;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean canFinish() {
-        boolean isCompleted = true;
         for (WizardPage page : flippedPages.asIterable()) {
-            isCompleted &= page.isCompleted();
+            if (!page.isCompleted()) {
+                return false;
+            }
         }
-
-        return isLastPage() && isCompleted;
+        return isLastPage();
     }
 
+    /**
+     * Returns whether the page is last page in the list or last enable page.
+     *
+     * @return <code>true</code> if the page is last, and <code>false</code> otherwise
+     */
     private boolean isLastPage() {
         if (index < 2) {
-            int pageCount = 0;
-            // TODO may be need to change to instance
-            JsonArray<Provider<? extends WizardPage>> paasPages = this.paasPages.get(wizardContext.getData(PAAS));
-            if (paasPages != null) {
-                // TODO move to method
-                for (Provider<? extends WizardPage> provider : paasPages.asIterable()) {
-                    WizardPage page = provider.get();
-                    pageCount += (page.canSkip() ? 0 : 1);
-                }
-            }
-
-            // TODO may be need to change to instance
-            JsonArray<Provider<? extends WizardPage>> templatePages = this.templatePages.get(wizardContext.getData(TEMPLATE));
-            if (templatePages != null) {
-                // TODO move to method
-                for (Provider<? extends WizardPage> provider : templatePages.asIterable()) {
-                    WizardPage page = provider.get();
-                    pageCount += (page.canSkip() ? 0 : 1);
-                }
-            }
-
-            // TODO
-            TemplatePagePresenter page = templatePage.get();
-            page.setContext(wizardContext);
-
-            return page.canSkip() && pageCount == 0;
+            return getInstance(templatePage).canSkip() &&
+                   !hasEnablePage(paasPages.get(wizardContext.getData(PAAS))) &&
+                   !hasEnablePage(templatePages.get(wizardContext.getData(TEMPLATE)));
         } else {
-            boolean isLastPage = true;
             for (int i = index + 1; i < flippedPages.size(); i++) {
                 WizardPage page = flippedPages.get(i);
                 if (!page.canSkip()) {
-                    isLastPage = false;
-                    break;
+                    return false;
                 }
             }
 
-            return isLastPage;
+            return true;
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onCancel() {
-        clear();
+    /**
+     * Returns whether the pages have enable pages.
+     *
+     * @param pages
+     *         pages that need to check
+     * @return <code>true</code> if the pages have enable pages, and <code>false</code> otherwise
+     */
+    private boolean hasEnablePage(@Nullable JsonArray<Provider<? extends WizardPage>> pages) {
+        if (pages == null) {
+            return false;
+        }
+
+        for (Provider<? extends WizardPage> provider : pages.asIterable()) {
+            WizardPage page = getInstance(provider);
+            if (!page.canSkip()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Return instance of wizard page and initialize page with wizard update delegate and wizard context.
+     *
+     * @param provider
+     *         provider of page that need to create
+     * @return wizard page
+     */
+    private WizardPage getInstance(@NotNull Provider<? extends WizardPage> provider) {
+        WizardPage page = instancePages.get(provider);
+        if (page == null) {
+            page = provider.get();
+            page.setUpdateDelegate(delegate);
+            page.setContext(wizardContext);
+            instancePages.put(provider, page);
+        }
+
+        return page;
     }
 
     /** {@inheritDoc} */
     @Override
     public void onFinish() {
-        if (index == 0) {
-            // TODO
-            TemplatePagePresenter page = templatePage.get();
-            page.setContext(wizardContext);
-            page.setUpdateDelegate(delegate);
-            flippedPages.add(page);
-            if (page.canSkip()) {
-                addPages(templatePages.get(wizardContext.getData(TEMPLATE)));
-                addPages(paasPages.get(wizardContext.getData(PAAS)));
-            }
-        }
-
+        addNextPages();
         index = 0;
         commit();
     }
 
+    /** Commit changes on current page. */
     private void commit() {
         WizardPage page = flippedPages.get(index);
         page.commit(this);
     }
 
+    /**
+     * Add available pages for PaaS.
+     *
+     * @param paas
+     *         PaaS that need given pages
+     * @param pages
+     *         pages for PaaS
+     */
     public void addPaaSPages(@NotNull PaaS paas, @NotNull JsonArray<Provider<? extends WizardPage>> pages) {
         paasPages.put(paas, pages);
     }
 
+    /**
+     * Add available pages for template.
+     *
+     * @param template
+     *         template that need given pages
+     * @param pages
+     *         pages for template
+     */
     public void addTemplatePages(@NotNull Template template, @NotNull JsonArray<Provider<? extends WizardPage>> pages) {
         templatePages.put(template, pages);
     }
@@ -278,20 +311,13 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
     public void onSuccess() {
         if (++index < flippedPages.size()) {
             commit();
-        } else {
-            clear();
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onFailure(Throwable exception) {
+    public void onFailure(@NotNull Throwable exception) {
         Notification notification = new Notification(exception.getMessage(), Notification.Type.ERROR);
         notificationManager.showNotification(notification);
-        clear();
-    }
-
-    private void clear() {
-        wizardContext.clear();
     }
 }

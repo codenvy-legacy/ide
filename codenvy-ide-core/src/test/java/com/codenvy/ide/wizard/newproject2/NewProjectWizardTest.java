@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.wizard.newproject2;
 
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.template.Template;
@@ -161,6 +162,18 @@ public class NewProjectWizardTest {
 
         verify(newProjectPage).setUpdateDelegate((UpdateDelegate)anyObject());
         verify(newProjectPage).setContext((WizardContext)anyObject());
+    }
+
+    @Test
+    public void testFlipToFirstWhenSecondTime() throws Exception {
+        model.flipToFirst();
+        wizardContext.putData(TEMPLATE, template);
+
+        assertEquals(model.flipToFirst(), newProjectPage);
+
+        verify(newProjectPage).setUpdateDelegate((UpdateDelegate)anyObject());
+        verify(newProjectPage).setContext((WizardContext)anyObject());
+        assertNull(wizardContext.getData(TEMPLATE));
     }
 
     @Test
@@ -832,14 +845,6 @@ public class NewProjectWizardTest {
     }
 
     @Test
-    public void testOnCancel() throws Exception {
-        model.flipToFirst();
-        wizardContext.putData(TEMPLATE, template);
-        model.onCancel();
-        assertNull(wizardContext.getData(TEMPLATE));
-    }
-
-    @Test
     public void testOnFinishWhenSuccess() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -878,7 +883,6 @@ public class NewProjectWizardTest {
         verify(newProjectPage).commit((CommitCallback)anyObject());
         verify(chooseTemplatePage).commit((CommitCallback)anyObject());
         verify(templatePage, times(2)).commit((CommitCallback)anyObject());
-        assertNull(wizardContext.getData(TEMPLATE));
     }
 
     @Test
@@ -895,10 +899,9 @@ public class NewProjectWizardTest {
 
         model.flipToFirst();
         flipPages(1);
-        wizardContext.putData(TEMPLATE, template);
         model.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
-        assertNull(wizardContext.getData(TEMPLATE));
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 }

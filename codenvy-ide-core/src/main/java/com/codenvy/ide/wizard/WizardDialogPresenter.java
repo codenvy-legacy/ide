@@ -75,7 +75,6 @@ public class WizardDialogPresenter implements WizardDialog, Wizard.UpdateDelegat
     /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {
-        wizard.onCancel();
         view.close();
     }
 
