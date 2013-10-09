@@ -438,22 +438,23 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
      * @param factoryURL
      */
     private void logFactoryCreated(String factoryURL) {
-        try {
-            FactoryClientService.getInstance().logFactoryCreated(vfs.getId(), openedProject.getId(), factoryURL,
-                   new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
-                       @Override
-                       protected void onSuccess(StringBuilder result) {
-                       }
-
-                       @Override
-                       protected void onFailure(Throwable exception) {
-                       }
-                   });
-        } catch (RequestException e) {
-            String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ?
-                e.getMessage() : GitExtension.MESSAGES.initFailed();
-            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-        }
+//TODO check is this code actual anymore 
+//        try {
+//            FactoryClientService.getInstance().logFactoryCreated(vfs.getId(), openedProject.getId(), factoryURL,
+//                   new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
+//                       @Override
+//                       protected void onSuccess(StringBuilder result) {
+//                       }
+//
+//                       @Override
+//                       protected void onFailure(Throwable exception) {
+//                       }
+//                   });
+//        } catch (RequestException e) {
+//            String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ?
+//                e.getMessage() : GitExtension.MESSAGES.initFailed();
+//            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+//        }
     }
     
     /**
