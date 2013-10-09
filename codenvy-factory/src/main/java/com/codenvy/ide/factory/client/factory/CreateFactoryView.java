@@ -20,9 +20,11 @@ package com.codenvy.ide.factory.client.factory;
 import com.codenvy.ide.factory.client.factory.CreateFactoryPresenter.StyleChangedHandler;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -35,6 +37,9 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
@@ -78,11 +83,11 @@ public class CreateFactoryView extends ViewImpl
     
     public static final int       INITIAL_WIDTH         = 800;
     
-    public static final int       INITIAL_HEIGHT        = 340;
+    public static final int       INITIAL_HEIGHT        = 340 + 30;
 
     public static final int       WIDTH                 = 788;
 
-    public static final int       HEIGHT                = 550;
+    public static final int       HEIGHT                = 550 + 30;
 
     @UiField
     DivElement                    wizard1, wizard2;
@@ -106,16 +111,31 @@ public class CreateFactoryView extends ViewImpl
     DivElement                    advancedOptionsControl, advancedOptions;
     
     @UiField
-    Image         shareFacebookButton;
+    FormElement                   createFactoryForm;
+    
+    @UiField
+    TextAreaElement               descriptionField;
+    
+    @UiField
+    InputElement                  emailField, authorField, companyIdField, affiliateIdField;
+    
+    @UiField
+    InputElement                  factoryUrlContent;
+    
+    @UiField
+    Image                         shareFacebookButton;
 
     @UiField
-    Image         shareGooglePlusButton;
+    Image                         shareGooglePlusButton;
 
     @UiField
-    Image         shareTwitterButton;
+    Image                         shareTwitterButton;
 
     @UiField
-    Image         shareEmailButton;    
+    Image                         shareEmailButton;
+    
+    @UiField
+    IFrameElement                 createFactoryIFrame;
 
     private int                   currentPage = 0;
 
@@ -158,14 +178,14 @@ public class CreateFactoryView extends ViewImpl
         snippetGitHub.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                snippetWebsites.selectAll();
+                snippetGitHub.selectAll();
             }
         });
         
         snippetDirectSharing.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                snippetWebsites.selectAll();
+                snippetDirectSharing.selectAll();
             }
         });
 
@@ -514,7 +534,7 @@ public class CreateFactoryView extends ViewImpl
     }
 
     @Override
-    public void setOpenAfterLaunchValue(String path) {
+    public void setOpenAfterLaunchFieldValue(String path) {
         openAfterLaunchField.setValue(path);
     }
     
@@ -543,6 +563,72 @@ public class CreateFactoryView extends ViewImpl
             radioWhite.removeAttribute("disabled");
             radioDark.removeAttribute("disabled");
         }
+    }
+    
+    @Override
+    public void setFactoryURLContent(String content) {
+        factoryUrlContent.setValue(content);
+    }
+    
+    private AsyncCallback<String> createFactoryCallback;
+    
+    @Override
+    public native void createFactory(final AsyncCallback<String> callback) /*-{
+        var instance = this;
+        instance.@com.codenvy.ide.factory.client.factory.CreateFactoryView::createFactoryCallback = callback;
+    
+        var ifr = instance.@com.codenvy.ide.factory.client.factory.CreateFactoryView::createFactoryIFrame;
+        
+        ifr.onload = function() {          
+            ifr = (ifr.contentWindow) ? ifr.contentWindow : (ifr.contentDocument.document) ? ifr.contentDocument.document : ifr.contentDocument;
+            instance.@com.codenvy.ide.factory.client.factory.CreateFactoryView::factoryCreationResultReceived(Ljava/lang/String;)(ifr.document.body.innerText);
+        };
+        
+        instance.@com.codenvy.ide.factory.client.factory.CreateFactoryView::submitForm()();
+    }-*/;
+    
+    private void submitForm() {
+        createFactoryForm.setMethod("post");
+        createFactoryForm.setEnctype("multipart/form-data");
+        createFactoryForm.setAction("/api/factory");
+        createFactoryForm.setTarget("createFactoryIFrame");
+        createFactoryForm.submit();
+    }
+    
+    private void factoryCreationResultReceived(String response) {
+        if (createFactoryCallback != null) {
+            createFactoryCallback.onSuccess(response);
+        }
+    }
+
+    @Override
+    public String getDescriptionFieldValue() {
+        return descriptionField.getValue();
+    }
+
+    @Override
+    public String getEmailFieldValue() {
+        return emailField.getValue();
+    }
+
+    @Override
+    public String getAuthorFieldValue() {
+        return authorField.getValue();
+    }
+
+    @Override
+    public String getOpenAfterLaunchFieldValue() {
+        return openAfterLaunchField.getValue();
+    }
+
+    @Override
+    public String getCompanyIdFieldValue() {
+        return companyIdField.getValue();
+    }
+
+    @Override
+    public String getAffiliateIdValue() {
+        return affiliateIdField.getValue();
     }
     
 }
