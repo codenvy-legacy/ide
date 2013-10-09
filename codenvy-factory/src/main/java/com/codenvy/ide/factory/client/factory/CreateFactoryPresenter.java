@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.factory.client.factory;
 
-import com.codenvy.ide.factory.client.FactoryClientService;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonEvent;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonHandler;
 import com.codenvy.ide.factory.client.generate.SendMailEvent;
@@ -31,7 +30,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -390,8 +388,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                      ACTION_PARAMETER + "=" + DEFAULT_ACTION +"&" +//
                      PROJECT_TYPE + "=" + URL.encodeQueryString(openedProject.getProjectType());
         
-        logFactoryCreated(UriUtils.fromString(factoryURL).asString());
-        
         display = new CreateFactoryView();
         IDE.getInstance().openView(display.asView());
         bindDisplay();
@@ -404,30 +400,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                 generateDirectSharingSnippet();
             }
         });
-    }
-    
-    /**
-     * Notify server just after factory created.
-     * 
-     * @param factoryURL
-     */
-    private void logFactoryCreated(String factoryURL) {
-        try {
-            FactoryClientService.getInstance().logFactoryCreated(vfs.getId(), openedProject.getId(), factoryURL,
-                   new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
-                       @Override
-                       protected void onSuccess(StringBuilder result) {
-                       }
-
-                       @Override
-                       protected void onFailure(Throwable exception) {
-                       }
-                   });
-        } catch (RequestException e) {
-            String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ?
-                e.getMessage() : GitExtension.MESSAGES.initFailed();
-            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-        }
     }
 
     /**
