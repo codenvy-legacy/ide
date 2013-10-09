@@ -17,7 +17,8 @@
  */
 package com.codenvy.factory;
 
-import com.codenvy.api.factory.store.FactoryStore;
+
+import com.codenvy.api.factory.FactoryStore;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
