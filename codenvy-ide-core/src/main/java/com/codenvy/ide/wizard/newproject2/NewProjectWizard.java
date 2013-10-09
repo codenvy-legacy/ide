@@ -211,9 +211,12 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
      * @return <code>true</code> if the page is last, and <code>false</code> otherwise
      */
     private boolean isLastPage() {
-        if (index < 2) {
+        if (index == 0) {
             return getInstance(templatePage).canSkip() &&
                    !hasEnablePage(paasPages.get(wizardContext.getData(PAAS))) &&
+                   !hasEnablePage(templatePages.get(wizardContext.getData(TEMPLATE)));
+        } else if (index == 1) {
+            return !hasEnablePage(paasPages.get(wizardContext.getData(PAAS))) &&
                    !hasEnablePage(templatePages.get(wizardContext.getData(TEMPLATE)));
         } else {
             for (int i = index + 1; i < flippedPages.size(); i++) {

@@ -28,12 +28,9 @@ import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
 import com.codenvy.ide.wizard.newproject.ProjectTypeData;
-import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -81,17 +78,6 @@ public class NewProjectPagePresenterTest {
     @Mock
     private UpdateDelegate           delegate;
     private NewProjectPagePresenter  presenter;
-
-    @Before
-    public void disarm() {
-        // don't throw an exception if GWT.create() invoked
-        GWTMockUtilities.disarm();
-    }
-
-    @After
-    public void restore() {
-        GWTMockUtilities.restore();
-    }
 
     /** Prepare test when project list is come. */
     private void setUpWithProjects() {
