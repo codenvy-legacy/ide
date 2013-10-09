@@ -499,13 +499,9 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                     display.showButtonAdvanced(false);
                 }
                 
-                
-                //generatePreviewWebsitesSnippet();
                 // show preview
                 previewCodeButton();
-                
                 generateGitHubSnippet();
-                //generateDirectSharingSnippet();
             }
         });
         
@@ -521,7 +517,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                     display.showButtonAdvanced(false);
                 }
 
-                //generateWebsitesSnippet();
                 previewCodeButton();
             }
         });
@@ -580,21 +575,8 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         });
     }
     
-    
-    
-    
     private void previewAdvancedButton() {
         String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
-        
-//        display.snippetWebsites().setValue(
-//                    "<script " +
-//                        "type=\"text/javascript\" " +
-//                        "language=\"javascript\" " +
-//                        "src=\"" + jsURL + "\" " +
-//                        "style=\"advanced\" " +
-//                        "target=\"" + factoryURL + "\" " +
-//                        "img=\"\" " +
-//                    "></script>");
         
         String blankImage = "images/blank.png";
         
@@ -621,18 +603,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
     
     private void previewDefaultButton(String style, String counterType, int previewOffsetLeft, int previewOffsetTop) {
         String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
-        
-//        String script = "" +
-//            "<script " +
-//                "type=\"text/javascript\" " +
-//                "language=\"javascript\" " +
-//                "src=\"" + jsURL + "\" " +
-//                "style=\"" + style + "\" " +
-//                "counter=\"" + counterType + "\" " +
-//                "target=\"" + factoryURL + "\" " +
-//               "></script>";
-//    
-//        display.snippetWebsites().setValue(script);
         
         String preview = "" +
             "<script " +
@@ -754,9 +724,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             public void onSuccess(String result) {
                 try {
                     createdFactoryJSON = JSONParser.parseStrict(result).isObject();
-
-                    //String id = createdFactoryJSON.get("id").isString().stringValue();
-
                     generateSpinnetsAfterFactoryCreation();
                 display.nextPage();
                 } catch (Exception e) {
