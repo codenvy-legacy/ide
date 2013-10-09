@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.factory.client.factory;
 
+import com.codenvy.ide.factory.client.FactoryClientService;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonEvent;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonHandler;
 import com.codenvy.ide.factory.client.generate.SendMailEvent;
@@ -30,9 +31,16 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.OpenResourceEvent;
 import org.exoplatform.ide.client.framework.application.ResourceSelectedCallback;
@@ -144,7 +152,23 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         
         void setUploadImageValueChangeHandler(ValueChangeHandler<String> handler);
         
+        void createFactory(AsyncCallback<String> callback);
+        
         String getUploadImageFieldValue();
+        
+        String getDescriptionFieldValue();
+        
+        String getEmailFieldValue();
+        
+        String getAuthorFieldValue();
+        
+        String getOpenAfterLaunchFieldValue();
+        
+        String getCompanyIdFieldValue();
+        
+        String getAffiliateIdValue();
+        
+        void setFactoryURLContent(String content);
         
         /**
          * Adds Click handler to Open after launch field.
@@ -158,7 +182,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
          * 
          * @param path
          */
-        void setOpenAfterLaunchValue(String path);
+        void setOpenAfterLaunchFieldValue(String path);
         
         /**
          * Returns snippet with content for embedding on websites.
@@ -237,9 +261,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
          */
         HasClickHandlers getFinishButton();
         
-        
-        
-        
     }
     
     /** Current virtual file system. */
@@ -260,6 +281,10 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
      * Display instance.
      */
     private Display display;
+    
+    private boolean isAdvanced = false;
+    
+    private JSONObject createdFactoryJSON;    
     
     /**
      * Creates new instance of this presenter.
@@ -388,6 +413,8 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                      ACTION_PARAMETER + "=" + DEFAULT_ACTION +"&" +//
                      PROJECT_TYPE + "=" + URL.encodeQueryString(openedProject.getProjectType());
         
+        logFactoryCreated(UriUtils.fromString(factoryURL).asString());
+        
         display = new CreateFactoryView();
         IDE.getInstance().openView(display.asView());
         bindDisplay();
@@ -395,13 +422,40 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {
-                generateWebsitesSnippet();
+                createdFactoryJSON = null;
+                previewCodeButton();
+                //generateWebsitesSnippet();
+                
                 generateGitHubSnippet();
                 generateDirectSharingSnippet();
             }
         });
     }
+    
+    /**
+     * Notify server just after factory created.
+     * 
+     * @param factoryURL
+     */
+    private void logFactoryCreated(String factoryURL) {
+        try {
+            FactoryClientService.getInstance().logFactoryCreated(vfs.getId(), openedProject.getId(), factoryURL,
+                   new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
+                       @Override
+                       protected void onSuccess(StringBuilder result) {
+                       }
 
+                       @Override
+                       protected void onFailure(Throwable exception) {
+                       }
+                   });
+        } catch (RequestException e) {
+            String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ?
+                e.getMessage() : GitExtension.MESSAGES.initFailed();
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+        }
+    }
+    
     /**
      * Binds display.
      */
@@ -409,7 +463,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         display.getCreateButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                display.nextPage();
+                createFactory();
             }
         });
         
@@ -423,6 +477,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         display.getBackButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
+                createdFactoryJSON = null;
                 display.previousPage();
             }
         });
@@ -444,9 +499,9 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                     display.showButtonAdvanced(false);
                 }
                 
-                generateWebsitesSnippet();
+                // show preview
+                previewCodeButton();
                 generateGitHubSnippet();
-                //generateDirectSharingSnippet();
             }
         });
         
@@ -455,12 +510,14 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             public void onValueChange(ValueChangeEvent<String> event) {
                 String uploadFile = display.getUploadImageFieldValue();
                 if (uploadFile != null && !uploadFile.isEmpty()) {
+                    isAdvanced = true;
                     display.showButtonAdvanced(true);
                 } else {
+                    isAdvanced = false;
                     display.showButtonAdvanced(false);
                 }
 
-                generateWebsitesSnippet();
+                previewCodeButton();
             }
         });
         
@@ -510,7 +567,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                     @Override
                     public void onResourceSelected(Item resource) {
                         if (resource != null) {
-                            display.setOpenAfterLaunchValue(resource.getPath());
+                            display.setOpenAfterLaunchFieldValue(resource.getPath());
                         }
                     }
                 }));
@@ -518,18 +575,8 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         });
     }
     
-    private void generateWebsitesAdvancedButton() {
+    private void previewAdvancedButton() {
         String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
-        
-        display.snippetWebsites().setValue(
-                    "<script " +
-                        "type=\"text/javascript\" " +
-                        "language=\"javascript\" " +
-                        "src=\"" + jsURL + "\" " +
-                        "style=\"advanced\" " +
-                        "target=\"" + factoryURL + "\" " +
-                        "img=\"\" " +
-                    "></script>");
         
         String blankImage = "images/blank.png";
         
@@ -554,20 +601,8 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             "");
     }
     
-    private void generateWebsitesDefaultButtonWithCounter(String style, String counterType, int previewOffsetLeft, int previewOffsetTop) {
+    private void previewDefaultButton(String style, String counterType, int previewOffsetLeft, int previewOffsetTop) {
         String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
-        
-        String script = "" +
-            "<script " +
-                "type=\"text/javascript\" " +
-                "language=\"javascript\" " +
-                "src=\"" + jsURL + "\" " +
-                "style=\"" + style + "\" " +
-                "counter=\"" + counterType + "\" " +
-                "target=\"" + factoryURL + "\" " +
-               "></script>";
-    
-        display.snippetWebsites().setValue(script);
         
         String preview = "" +
             "<script " +
@@ -576,7 +611,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                 "src=\"" + jsURL + "\" " +
                 "style=\"" + style + "\" " +
                 "counter=\"" + counterType + "\" " +
-                "target=\"" + factoryURL + "\" " +
                "></script>";
         
         display.setPreviewContent("" +
@@ -590,32 +624,32 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             "</html>" +
             "");
     }
-    
+
     /**
      * Generates spinnet content for embedding on websites.
      */
-    private void generateWebsitesSnippet() {
+    private void previewCodeButton() {
         String uploadFile = display.getUploadImageFieldValue();
         if (uploadFile != null && !uploadFile.isEmpty()) {
-            generateWebsitesAdvancedButton();
+            previewAdvancedButton();
             return;
         }
-        
+
         String style = display.isWhiteStyle() ? "white" : "dark";
 
         if (display.isShowCounter() && display.isVerticalOrientation()) {
-            generateWebsitesDefaultButtonWithCounter(style, "vertical", 111, 31);
+            previewDefaultButton(style, "vertical", 111, 31);
             return;
         }
         
         if (display.isShowCounter() && !display.isVerticalOrientation()) {
-            generateWebsitesDefaultButtonWithCounter(style, "horizontal", 91, 51);
+            previewDefaultButton(style, "horizontal", 91, 51);
             return;
         }
         
-        generateWebsitesDefaultButtonWithCounter(style, "none", 111, 51);
+        previewDefaultButton(style, "none", 111, 51);
     }
-    
+
     /**
      * Generates content for embedding on Github.
      */
@@ -632,4 +666,97 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         display.snippetDirectSharing().setValue(factoryURL);
     }
 
+    private void createFactory() {
+        createdFactoryJSON = null;
+        
+        JSONObject request = new JSONObject();
+        request.put("v", new JSONString("1.1"));
+        request.put("vcs", new JSONString("git"));
+        request.put("vcsurl", new JSONString(encodeQueryString(vcsURL)));
+        request.put("commitid", new JSONString(latestCommitId));
+        request.put("action", new JSONString("openproject"));
+        request.put("description", new JSONString(display.getDescriptionFieldValue()));
+        request.put("contactmail", new JSONString(display.getEmailFieldValue()));
+        request.put("author", new JSONString(display.getAuthorFieldValue()));
+        request.put("openfile", new JSONString(display.getOpenAfterLaunchFieldValue()));
+        request.put("orgid", new JSONString(display.getCompanyIdFieldValue()));
+        request.put("affiliateid", new JSONString(display.getAffiliateIdValue()));
+      
+        JSONObject projectAttributes = new JSONObject();
+        request.put("projectattributes", projectAttributes);
+        projectAttributes.put("pname", new JSONString(openedProject.getName()));
+        projectAttributes.put("ptype", new JSONString(openedProject.getProjectType()));
+
+        if (isAdvanced) {
+            request.put("style", new JSONString("Advanced"));
+        } else {
+            if (display.isShowCounter()) {
+                  if (display.isVerticalOrientation()) {
+                      if (display.isWhiteStyle()) {
+                          request.put("style", new JSONString("Vertical,White"));
+                      } else {
+                          request.put("style", new JSONString("Vertical,Dark"));
+                      }
+                  } else {
+                      if (display.isWhiteStyle()) {
+                          request.put("style", new JSONString("Horizontal,White"));
+                      } else {
+                          request.put("style", new JSONString("Horizontal,Dark"));
+                      }                      
+                  }
+            } else {
+                if (display.isWhiteStyle()) {
+                    request.put("style", new JSONString("White"));
+                } else {
+                    request.put("style", new JSONString("Dark"));
+                }                      
+            }
+        }
+        
+        display.setFactoryURLContent(request.toString());
+        display.createFactory(new AsyncCallback<String>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                IDE.fireEvent(new ExceptionThrownEvent(caught, "Factory cannot be created"));
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    createdFactoryJSON = JSONParser.parseStrict(result).isObject();
+                    generateSpinnetsAfterFactoryCreation();
+                display.nextPage();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    IDE.fireEvent(new ExceptionThrownEvent(e, "Factory cannot be created"));
+                }
+            }
+        });
+    }
+
+    private void generateSpinnetsAfterFactoryCreation() {
+        String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
+        
+        String self = null;
+        
+        JSONArray array = createdFactoryJSON.get("links").isArray();
+        for (int i = 0; i < array.size(); i++) {
+            JSONObject link = array.get(i).isObject();
+            String rel = link.get("rel").isString().stringValue();
+            if ("self".equals(rel)) {
+                self = link.get("href").isString().stringValue();
+            }
+        }
+        
+        String script = "" +
+            "<script " +
+            "type=\"text/javascript\" " +
+            "language=\"javascript\" " +
+            "src=\"" + jsURL + "\" " +
+            "factory=\"" + self + "\" " +
+            "></script>";
+
+        display.snippetWebsites().setValue(script);          
+    }
+    
 }
