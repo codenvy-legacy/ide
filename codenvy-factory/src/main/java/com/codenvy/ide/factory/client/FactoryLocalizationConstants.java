@@ -160,7 +160,7 @@ public interface FactoryLocalizationConstants extends Messages {
     String privateRepoNeedAuthTitle();
 
     @Key("privateRepo.needAuth.content")
-    String privateRepoNeedAuthContent();
+    String privateRepoNeedAuthContent(String gitProvider);
 
     @Key("privateRepo.Auth.Failed")
     String privateRepoAuthFailed();

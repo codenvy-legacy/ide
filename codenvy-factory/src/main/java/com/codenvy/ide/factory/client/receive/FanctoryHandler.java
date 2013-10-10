@@ -375,7 +375,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                 };
 
         Dialogs.getInstance().ask(FactoryExtension.LOCALIZATION_CONSTANTS.privateRepoNeedAuthTitle(),
-                                  FactoryExtension.LOCALIZATION_CONSTANTS.privateRepoNeedAuthContent(),
+                                  FactoryExtension.LOCALIZATION_CONSTANTS.privateRepoNeedAuthContent("wso2"),
                                   new BooleanValueReceivedHandler() {
                                       @Override
                                       public void booleanValueReceived(Boolean value) {
