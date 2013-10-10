@@ -35,8 +35,10 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -109,10 +111,37 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
         Item selectedItem = selectedItems.get(0);
 
         final Folder baseFolder = (selectedItem instanceof FileModel) ?
-                                  ((FileModel)selectedItem).getParent() : (Folder)selectedItem;
+            ((FileModel)selectedItem).getParent() : (Folder)selectedItem;
 
-        FolderModel newFolder = new FolderModel();
+        final FolderModel newFolder = new FolderModel();
         newFolder.setName(newFolderName);
+
+        if (baseFolder.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(baseFolder.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(baseFolder))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      baseFolder.setLinks(result.getItem().getLinks());
+                                                      performFolderCreation(baseFolder, newFolder);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            performFolderCreation(baseFolder, newFolder);
+        }
+    }
+    
+    private void performFolderCreation(final Folder baseFolder, FolderModel newFolder){
         try {
             VirtualFileSystem.getInstance().createFolder(baseFolder,
                                                          new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(newFolder)) {

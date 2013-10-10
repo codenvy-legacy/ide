@@ -55,34 +55,34 @@ import java.util.*;
  */
 
 public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorActiveFileChangedHandler,
-                                                ProjectOpenedHandler {
+                                    ProjectOpenedHandler {
 
-    public static final int SCHEDULE_START = 100;
+    public static final int        SCHEDULE_START         = 100;
 
-    private ApplicationSettings applicationSettings;
+    private ApplicationSettings    applicationSettings;
 
-    private List<String> filesToLoad;
+    private List<String>           filesToLoad;
 
-    private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
+    private Map<String, FileModel> openedFiles            = new LinkedHashMap<String, FileModel>();
 
-    private FileModel fileToLoad;
+    private FileModel              fileToLoad;
 
-    private List<String> filesToOpen;
+    private List<String>           filesToOpen;
 
-    private String activeFileURL;
+    private String                 activeFileURL;
 
-    private boolean isLoadingOpenedFiles = false;
+    private boolean                isLoadingOpenedFiles   = false;
 
-    private boolean isRestoringOpenedFiles = false;
+    private boolean                isRestoringOpenedFiles = false;
 
-    private ProjectModel restoredProject;
+    private ProjectModel           restoredProject;
 
 
-    private String initialOpenedProject;
+    private String                 initialOpenedProject;
 
-    private List<String> initialOpenedFiles;
+    private List<String>           initialOpenedFiles;
 
-    private String initialActiveFile;
+    private String                 initialActiveFile;
 
 
     public RestoreOpenedFilesPhase(ApplicationSettings applicationSettings, String initialOpenedProject, List<String> initialOpenedFiles,
@@ -111,11 +111,11 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
     }
 
     protected void execute() {
-        //String openedProjectId = applicationSettings.getValueAsString(Settings.OPENED_PROJECT);
+        // String openedProjectId = applicationSettings.getValueAsString(Settings.OPENED_PROJECT);
         String projectId = initialOpenedProject;
 
         if (projectId == null || projectId.isEmpty()) {
-            //lazyRestoreOpenedFiles();
+            // lazyRestoreOpenedFiles();
             loadComplete(null);
             return;
         }
@@ -128,32 +128,33 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
             final ProjectModel project = new ProjectModel();
             project.setId(projectId);
 
-            VirtualFileSystem.getInstance().getItemById(projectId,
-                                                        new AsyncRequestCallback<ItemWrapper>(
-                                                                new ItemUnmarshaller(new ItemWrapper(project))) {
-                                                            @Override
-                                                            protected void onSuccess(ItemWrapper result) {
-                                                                final ProjectModel project = (ProjectModel)result.getItem();
+            VirtualFileSystem.getInstance()
+                             .getItemById(projectId,
+                                          new AsyncRequestCallback<ItemWrapper>(
+                                                                                new ItemUnmarshaller(new ItemWrapper(project))) {
+                                              @Override
+                                              protected void onSuccess(ItemWrapper result) {
+                                                  final ProjectModel project = (ProjectModel)result.getItem();
 
-                                                                if (ProjectType.MultiModule.value().equals(project.getProjectType())) {
-                                                                    loadComplete(null);
-                                                                    return;
-                                                                }
+                                                  if (ProjectType.MultiModule.value().equals(project.getProjectType())) {
+                                                      loadComplete(null);
+                                                      return;
+                                                  }
 
-                                                                IDE.addHandler(ProjectOpenedEvent.TYPE, RestoreOpenedFilesPhase.this);
-                                                                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                                                                    @Override
-                                                                    public void execute() {
-                                                                        IDE.fireEvent(new OpenProjectEvent(project));
-                                                                    }
-                                                                });
-                                                            }
+                                                  IDE.addHandler(ProjectOpenedEvent.TYPE, RestoreOpenedFilesPhase.this);
+                                                  Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                                                      @Override
+                                                      public void execute() {
+                                                          IDE.fireEvent(new OpenProjectEvent(project));
+                                                      }
+                                                  });
+                                              }
 
-                                                            @Override
-                                                            protected void onFailure(Throwable exception) {
-                                                                loadComplete(null);
-                                                            }
-                                                        });
+                                              @Override
+                                              protected void onFailure(Throwable exception) {
+                                                  loadComplete(null);
+                                              }
+                                          });
 
         } catch (Exception e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
@@ -182,7 +183,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
         filesToLoad = new ArrayList<String>();
         filesToLoad.addAll(initialOpenedFiles);
-//      filesToLoad.addAll(applicationSettings.getValueAsList(Settings.OPENED_FILES));
+        // filesToLoad.addAll(applicationSettings.getValueAsList(Settings.OPENED_FILES));
 
         activeFileURL = applicationSettings.getValueAsString(Settings.ACTIVE_FILE);
         activeFileURL = initialActiveFile;
@@ -207,39 +208,42 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
         fileToLoad.setId(fileId);
         filesToLoad.remove(0);
         try {
-            VirtualFileSystem.getInstance().getItemById(fileId,
-                                                        new AsyncRequestCallback<ItemWrapper>(
-                                                                new ItemUnmarshaller(new ItemWrapper(fileToLoad))) {
-                                                            @Override
-                                                            protected void onFailure(Throwable exception) {
-                                                                preloadNextFile();
-                                                            }
+            VirtualFileSystem.getInstance()
+                             .getItemById(fileId,
+                                          new AsyncRequestCallback<ItemWrapper>(
+                                                                                new ItemUnmarshaller(new ItemWrapper(fileToLoad))) {
+                                              @Override
+                                              protected void onFailure(Throwable exception) {
+                                                  preloadNextFile();
+                                              }
 
-                                                            @Override
-                                                            protected void onSuccess(ItemWrapper result) {
-                                                                FileModel file = (FileModel)result.getItem();
-                                                                file.setContentChanged(false);
-                                                                try {
-                                                                    VirtualFileSystem.getInstance().getContent(
-                                                                            new AsyncRequestCallback<FileModel>(
-                                                                                    new FileContentUnmarshaller(file)) {
-                                                                                @Override
-                                                                                protected void onSuccess(FileModel result) {
-                                                                                    openedFiles.put(result.getId(), result);
-                                                                                    preloadNextFile();
-                                                                                }
+                                              @Override
+                                              protected void onSuccess(ItemWrapper result) {
+                                                  FileModel file = (FileModel)result.getItem();
+                                                  file.setContentChanged(false);
+                                                  try {
+                                                      VirtualFileSystem.getInstance()
+                                                                       .getContent(
+                                                                                   new AsyncRequestCallback<FileModel>(
+                                                                                                                       new FileContentUnmarshaller(
+                                                                                                                                                   file)) {
+                                                                                       @Override
+                                                                                       protected void onSuccess(FileModel result) {
+                                                                                           openedFiles.put(result.getId(), result);
+                                                                                           preloadNextFile();
+                                                                                       }
 
-                                                                                @Override
-                                                                                protected void onFailure(Throwable exception) {
-                                                                                    preloadNextFile();
-                                                                                }
-                                                                            });
-                                                                } catch (RequestException e) {
-                                                                    IDE.fireEvent(new ExceptionThrownEvent(e));
-                                                                }
-                                                            }
+                                                                                       @Override
+                                                                                       protected void onFailure(Throwable exception) {
+                                                                                           preloadNextFile();
+                                                                                       }
+                                                                                   });
+                                                  } catch (RequestException e) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(e));
+                                                  }
+                                              }
 
-                                                        });
+                                          });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
@@ -268,9 +272,32 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
         String fileURL = filesToOpen.get(0);
         filesToOpen.remove(0);
 
-        FileModel file = openedFiles.get(fileURL);
+        final FileModel file = openedFiles.get(fileURL);
         file.setProject(restoredProject);
-        IDE.fireEvent(new EditorOpenFileEvent(file));
+
+        if (file.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(file.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(file))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      file.setLinks(result.getItem().getLinks());
+                                                      IDE.fireEvent(new EditorOpenFileEvent(file));
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            IDE.fireEvent(new EditorOpenFileEvent(file));
+        }
     }
 
     private FileModel getFileByPath(String path) {

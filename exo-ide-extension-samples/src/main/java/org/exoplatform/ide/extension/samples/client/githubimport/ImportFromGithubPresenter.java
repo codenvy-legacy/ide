@@ -67,7 +67,9 @@ import org.exoplatform.ide.git.shared.GitHubRepository;
 import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
@@ -341,9 +343,34 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
         getUserRepos();
     }
 
-    private void deleteFolder(FolderModel path) {
+    private void revertProjectImport(FolderModel path) {
+        if (path.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(path.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(path))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      deleteFolder((FolderModel)result.getItem());
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            deleteFolder(path);
+        }
+    }
+
+    private void deleteFolder(FolderModel folder) {
         try {
-            VirtualFileSystem.getInstance().delete(path,
+            VirtualFileSystem.getInstance().delete(folder,
                                                    new AsyncRequestCallback<String>() {
                                                        @Override
                                                        protected void onSuccess(String result) {
@@ -405,7 +432,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
 
                                                                  @Override
                                                                  protected void onFailure(Throwable exception) {
-                                                                     deleteFolder(folder);
+                                                                     revertProjectImport(folder);
                                                                      handleError(exception, repo.getRepositoryUrl());
                                                                  }
                                                              });
@@ -426,7 +453,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
 
                                                                @Override
                                                                protected void onFailure(Throwable exception) {
-                                                                   deleteFolder(folder);
+                                                                   revertProjectImport(folder);
                                                                    handleError(exception, remoteUri);
                                                                }
                                                            });

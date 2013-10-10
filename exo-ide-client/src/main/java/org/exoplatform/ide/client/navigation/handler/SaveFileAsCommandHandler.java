@@ -41,12 +41,15 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.navigation.control.SaveFileAsControl;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Project;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -154,23 +157,57 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
     };
 
     private void saveFileAs(FileModel file, String name) {
-        final Folder folderToSave =
-                (selectedItems.get(0) instanceof FileModel) ? ((FileModel)selectedItems.get(0)).getParent()
-                                                            : (Folder)selectedItems.get(0);
-        FileModel newFile = new FileModel(name, file.getMimeType(), file.getContent(), new FolderModel(folderToSave));
-        final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+        FolderModel parent = new FolderModel();
+        Item item = selectedItems.get(0);
+        if (item instanceof FileModel) {
+            parent = ((FileModel)item).getParent();
+        } else if (item instanceof FolderModel) {
+            parent = (FolderModel)item;
+        } else if (item instanceof ProjectModel) {
+            parent = new FolderModel((Project)item);
+        }
+
+        final FileModel newFile = new FileModel(name, file.getMimeType(), file.getContent(), parent);
+        final ProjectModel project =
+                                     (selectedItems.get(0) instanceof ProjectModel) ? (ProjectModel)selectedItems.get(0)
+                                         : ((ItemContext)selectedItems.get(0)).getProject();
         if (file.isPersisted()) {
             newFile.getProperties().addAll(file.getProperties());
         }
 
+        if (parent.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(parent.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(parent))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      createFile(newFile, (FolderModel)result.getItem(), project);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            createFile(newFile, parent, project);
+        }
+    }
+    
+    private void createFile(FileModel newFile, final FolderModel parent, final ProjectModel project) {
         try {
-            VirtualFileSystem.getInstance().createFile(folderToSave,
+            VirtualFileSystem.getInstance().createFile(parent,
                                                        new AsyncRequestCallback<FileModel>(new FileUnmarshaller(newFile)) {
                                                            @Override
                                                            protected void onSuccess(FileModel result) {
                                                                result.setProject(project);
                                                                IDE.fireEvent(new FileSavedEvent(result, sourceId));
-                                                               IDE.fireEvent(new RefreshBrowserEvent(folderToSave));
+                                                               IDE.fireEvent(new RefreshBrowserEvent(parent));
                                                            }
 
                                                            @Override

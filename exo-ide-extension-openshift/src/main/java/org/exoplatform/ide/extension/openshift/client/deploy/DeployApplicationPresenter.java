@@ -536,22 +536,47 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
     }
 
     private void cleanUpFolder() {
-        if (project != null) {
+        if (project != null && project.getLinks().isEmpty()) {
             try {
-                VirtualFileSystem.getInstance().delete(project, new AsyncRequestCallback<String>() {
-                    @Override
-                    protected void onSuccess(String result) {
-                        // nothing to do
-                    }
+                VirtualFileSystem.getInstance()
+                                 .getItemById(project.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project))) {
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        // nothing to do
-                    }
-                });
-            } catch (RequestException exception) {
-                // ignore this exception
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      project.setLinks(result.getItem().getLinks());
+                                                      doDelete();
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
             }
+
+        } else if (project != null && project.getLinks().size() > 0) {
+            doDelete();
+        }
+    }
+    
+    private void doDelete() {
+        try {
+            VirtualFileSystem.getInstance().delete(project, new AsyncRequestCallback<String>() {
+                @Override
+                protected void onSuccess(String result) {
+                    // nothing to do
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    // nothing to do
+                }
+            });
+        } catch (RequestException exception) {
+            // ignore this exception
         }
     }
 

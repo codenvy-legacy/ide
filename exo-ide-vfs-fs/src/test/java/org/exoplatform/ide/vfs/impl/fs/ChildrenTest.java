@@ -86,7 +86,6 @@ public class ChildrenTest extends LocalFileSystemTest {
         ItemList<Item> children = (ItemList<Item>)response.getEntity();
         List<String> list = new ArrayList<String>(4);
         for (Item i : children.getItems()) {
-            validateLinks(i);
             list.add(i.getName());
         }
 
@@ -147,7 +146,6 @@ public class ChildrenTest extends LocalFileSystemTest {
         ItemList<Item> children = (ItemList<Item>)response.getEntity();
         List<String> list = new ArrayList<String>(3);
         for (Item i : children.getItems()) {
-            validateLinks(i);
             list.add(i.getName());
         }
 
