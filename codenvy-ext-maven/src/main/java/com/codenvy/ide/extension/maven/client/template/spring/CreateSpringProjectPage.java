@@ -38,10 +38,21 @@ import static com.codenvy.ide.json.JsonCollections.createArray;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The wizard page for creating spring project from template.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 @Singleton
 public class CreateSpringProjectPage extends AbstractCreateProjectPage {
 
+    /**
+     * Create page.
+     *
+     * @param service
+     *         service that provides create this kind of project
+     * @param resourceProvider
+     */
     @Inject
     public CreateSpringProjectPage(CreateProjectClientService service, ResourceProvider resourceProvider) {
         super(service, resourceProvider);
@@ -66,7 +77,6 @@ public class CreateSpringProjectPage extends AbstractCreateProjectPage {
 
                         @Override
                         public void onFailure(Throwable caught) {
-                            // TODO exception
                             callback.onFailure(caught);
                         }
                     });
@@ -74,12 +84,10 @@ public class CreateSpringProjectPage extends AbstractCreateProjectPage {
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    // TODO exception
                     callback.onFailure(exception);
                 }
             });
         } catch (RequestException e) {
-            // TODO exception
             callback.onFailure(e);
         }
     }

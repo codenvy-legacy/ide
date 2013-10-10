@@ -18,18 +18,20 @@
 package com.codenvy.ide.ext.tutorials.client;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.ui.wizard.WizardContext;
+import com.codenvy.ide.api.ui.wizard.WizardKeys;
 import com.codenvy.ide.resources.model.Project;
-import com.google.gwt.junit.GWTMockUtilities;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static com.codenvy.ide.api.ui.wizard.WizardPage.CommitCallback;
+import static org.mockito.Mockito.when;
+
 /**
- * Base test for create tutorial project presenter.
+ * Base test for creating tutorial project page.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -41,20 +43,16 @@ public abstract class BaseCreateTutorialTest {
     @Mock
     protected ResourceProvider       resourceProvider;
     @Mock
-    protected AsyncCallback<Project> callback;
+    protected CommitCallback         callback;
     @Mock
     protected Project                project;
+    @Mock
+    protected WizardContext          wizardContext;
     @Mock
     protected Throwable              throwable;
 
     @Before
-    public void disarm() {
-        // don't throw an exception if GWT.create() invoked
-        GWTMockUtilities.disarm();
-    }
-
-    @After
-    public void restore() {
-        GWTMockUtilities.restore();
+    public void setUp() {
+        when(wizardContext.getData(WizardKeys.PROJECT_NAME)).thenReturn(PROJECT_NAME);
     }
 }

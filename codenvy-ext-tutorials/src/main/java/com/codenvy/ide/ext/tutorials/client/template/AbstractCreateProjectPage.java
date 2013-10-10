@@ -15,10 +15,11 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.maven.client.template;
+package com.codenvy.ide.ext.tutorials.client.template;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
+import com.codenvy.ide.ext.tutorials.client.TutorialsClientService;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 /**
@@ -27,8 +28,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public abstract class AbstractCreateProjectPage extends AbstractWizardPage {
-    protected CreateProjectClientService service;
-    protected ResourceProvider           resourceProvider;
+    protected TutorialsClientService service;
+    protected ResourceProvider       resourceProvider;
 
     /**
      * Create page.
@@ -37,7 +38,7 @@ public abstract class AbstractCreateProjectPage extends AbstractWizardPage {
      *         service that provides create this kind of project
      * @param resourceProvider
      */
-    public AbstractCreateProjectPage(CreateProjectClientService service, ResourceProvider resourceProvider) {
+    public AbstractCreateProjectPage(TutorialsClientService service, ResourceProvider resourceProvider) {
         super(null, null);
         this.service = service;
         this.resourceProvider = resourceProvider;

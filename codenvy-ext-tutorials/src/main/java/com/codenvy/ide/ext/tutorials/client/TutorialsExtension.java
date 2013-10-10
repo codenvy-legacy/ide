@@ -21,15 +21,19 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.ext.tutorials.client.action.ShowTutorialGuideAction;
-import com.codenvy.ide.ext.tutorials.client.template.CreateActionTutorialProjectPresenter;
-import com.codenvy.ide.ext.tutorials.client.template.CreateDTOTutorialProjectPresenter;
-import com.codenvy.ide.ext.tutorials.client.template.CreateNotificationTutorialProjectPresenter;
+import com.codenvy.ide.ext.tutorials.client.template.action.CreateActionTutorialPage;
+import com.codenvy.ide.ext.tutorials.client.template.dto.CreateDTOTutorialPage;
+import com.codenvy.ide.ext.tutorials.client.template.notification.CreateNotificationTutorialPage;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 
 /**
  * Entry point for an extension that adds support to work with tutorial projects.
@@ -47,9 +51,9 @@ public class TutorialsExtension {
 
     @Inject
     public TutorialsExtension(TemplateAgent templateAgent,
-                              CreateDTOTutorialProjectPresenter createDTOTutorialProjectPresenter,
-                              CreateNotificationTutorialProjectPresenter createNotificationTutorialProjectPresenter,
-                              CreateActionTutorialProjectPresenter createActionTutorialProjectPresenter,
+                              Provider<CreateDTOTutorialPage> createDTOTutorialPage,
+                              Provider<CreateActionTutorialPage> createActionTutorialPage,
+                              Provider<CreateNotificationTutorialPage> createNotificationTutorialPage,
                               ProjectTypeAgent projectTypeAgent, TutorialsResources resources,
                               TutorialsLocalizationConstant localizationConstants,
                               ActionManager actionManager, ShowTutorialGuideAction showAction) {
@@ -61,20 +65,28 @@ public class TutorialsExtension {
         actionManager.registerAction(localizationConstants.showTutorialGuideActionId(), showAction);
         windowMenuActionGroup.add(showAction);
 
-// TODO
-//        // register project type
-//        projectTypeAgent.registerProjectType(TUTORIAL_PROJECT_TYPE, "Codenvy tutorial",
-//                                             resources.codenvyTutorialProject());
-//
-//        // register templates
-//        templateAgent.registerTemplate("Tutorial project that illustrates examples of using DTO.",
-//                                       resources.codenvyTutorialTemplate(), createArray(TUTORIAL_PROJECT_TYPE),
-//                                       createDTOTutorialProjectPresenter, null);
-//        templateAgent.registerTemplate("Tutorial project that illustrates examples of using Notification API.",
-//                                       resources.codenvyTutorialTemplate(), createArray(TUTORIAL_PROJECT_TYPE),
-//                                       createNotificationTutorialProjectPresenter, null);
-//        templateAgent.registerTemplate("Tutorial project that illustrates examples of using Action API.",
-//                                       resources.codenvyTutorialTemplate(), createArray(TUTORIAL_PROJECT_TYPE),
-//                                       createActionTutorialProjectPresenter, null);
+        // register project type
+        projectTypeAgent.register(TUTORIAL_PROJECT_TYPE,
+                                  "Codenvy tutorial",
+                                  resources.codenvyTutorialProject(),
+                                  PRIMARY_NATURE,
+                                  JsonCollections.<String>createArray(TUTORIAL_PROJECT_TYPE));
+
+        // register templates
+        templateAgent.register("Tutorial project that illustrates examples of using DTO.",
+                               resources.codenvyTutorialTemplate(),
+                               PRIMARY_NATURE,
+                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends WizardPage>>createArray(createDTOTutorialPage));
+        templateAgent.register("Tutorial project that illustrates examples of using Notification API.",
+                               resources.codenvyTutorialTemplate(),
+                               PRIMARY_NATURE,
+                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends WizardPage>>createArray(createNotificationTutorialPage));
+        templateAgent.register("Tutorial project that illustrates examples of using Action API.",
+                               resources.codenvyTutorialTemplate(),
+                               PRIMARY_NATURE,
+                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends WizardPage>>createArray(createActionTutorialPage));
     }
 }

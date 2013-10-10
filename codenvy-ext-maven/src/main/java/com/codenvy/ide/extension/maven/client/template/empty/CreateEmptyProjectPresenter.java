@@ -40,6 +40,7 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMAR
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+// TODO may be nned to remove
 @Singleton
 public class CreateEmptyProjectPresenter implements CreateProjectProvider {
     private String                     projectName;

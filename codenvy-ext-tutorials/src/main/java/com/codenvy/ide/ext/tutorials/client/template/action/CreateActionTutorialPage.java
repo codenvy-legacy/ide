@@ -2,8 +2,8 @@
  * CODENVY CONFIDENTIAL
  * __________________
  * 
- *  [2012] - [2013] Codenvy, S.A. 
- *  All Rights Reserved.
+ * [2012] - [2013] Codenvy, S.A. 
+ * All Rights Reserved.
  * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
@@ -15,11 +15,13 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.tutorials.client.template;
+package com.codenvy.ide.ext.tutorials.client.template.action;
 
+
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.template.CreateProjectProvider;
 import com.codenvy.ide.ext.tutorials.client.TutorialsClientService;
+import com.codenvy.ide.ext.tutorials.client.template.AbstractCreateProjectPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
@@ -29,6 +31,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.ui.wizard.WizardKeys.PROJECT_NAME;
 import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
@@ -38,56 +41,42 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
 /**
- * The implementation of {@link CreateProjectProvider} to create a project that contains notification tutorial.
+ * The wizard page for creating action tutorial template.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CreateNotificationTutorialProjectPresenter implements CreateProjectProvider {
-    private String                 projectName;
-    private TutorialsClientService service;
-    private ResourceProvider       resourceProvider;
+public class CreateActionTutorialPage extends AbstractCreateProjectPage {
 
     /**
-     * Create Presenter.
+     * Create page.
      *
      * @param service
+     *         service that provides create this kind of project
      * @param resourceProvider
      */
     @Inject
-    protected CreateNotificationTutorialProjectPresenter(TutorialsClientService service, ResourceProvider resourceProvider) {
-        this.service = service;
-        this.resourceProvider = resourceProvider;
+    public CreateActionTutorialPage(TutorialsClientService service, ResourceProvider resourceProvider) {
+        super(service, resourceProvider);
     }
 
     /** {@inheritDoc} */
     @Override
-    public String getProjectName() {
-        return projectName;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void create(final AsyncCallback<Project> callback) {
+    public void commit(@NotNull final CommitCallback callback) {
         JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
                                                      new Property(PROPERTY_MIXIN_NATURES,
                                                                   createArray(TUTORIAL_PROJECT_TYPE, CODENVY_EXTENSION_PROJECT_TYPE)),
                                                      new Property(PROPERTY_SOURCE_FOLDERS,
                                                                   createArray("src/main/java", "src/main/resources")));
+        final String projectName = wizardContext.getData(PROJECT_NAME);
         try {
-            service.createNotificationTutorialProject(projectName, properties, new AsyncRequestCallback<Void>() {
+            service.createActionTutorialProject(projectName, properties, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
                         @Override
                         public void onSuccess(Project result) {
-                            callback.onSuccess(result);
+                            callback.onSuccess();
                         }
 
                         @Override

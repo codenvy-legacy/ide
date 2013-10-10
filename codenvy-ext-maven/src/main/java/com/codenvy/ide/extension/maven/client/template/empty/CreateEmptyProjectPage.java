@@ -35,6 +35,7 @@ import static com.codenvy.ide.json.JsonCollections.createArray;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+// TODO may be nned to remove
 @Singleton
 public class CreateEmptyProjectPage extends AbstractCreateProjectPage {
 
@@ -61,7 +62,6 @@ public class CreateEmptyProjectPage extends AbstractCreateProjectPage {
 
                         @Override
                         public void onFailure(Throwable caught) {
-                            // TODO exception
                             callback.onFailure(caught);
                         }
                     });
@@ -69,12 +69,10 @@ public class CreateEmptyProjectPage extends AbstractCreateProjectPage {
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    // TODO exception
                     callback.onFailure(exception);
                 }
             });
         } catch (RequestException e) {
-            // TODO exception
             callback.onFailure(e);
         }
     }

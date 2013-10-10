@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.tutorials.client.template;
+package com.codenvy.ide.ext.tutorials.client.template.action;
 
 import com.codenvy.ide.ext.tutorials.client.BaseCreateTutorialTest;
 import com.codenvy.ide.json.JsonArray;
@@ -26,7 +26,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -39,20 +38,18 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 /**
- * Testing {@link com.codenvy.ide.ext.tutorials.client.template.CreateDTOTutorialProjectPresenter} functionality.
+ * Testing {@link CreateActionTutorialPage} functionality.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: TutorialsExtension.java Sep 19, 2013 4:14:56 PM azatsarynnyy $
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class CreateDTOTutorialProjectPresenterTest extends BaseCreateTutorialTest {
-    private CreateDTOTutorialProjectPresenter presenter;
+public class CreateActionTutorialPageTest extends BaseCreateTutorialTest {
+    private CreateActionTutorialPage page;
 
-    @Before
-    public void disarm() {
-        super.disarm();
-
-        presenter = new CreateDTOTutorialProjectPresenter(service, resourceProvider);
-        presenter.setProjectName(PROJECT_NAME);
+    @Override
+    public void setUp() {
+        super.setUp();
+        page = new CreateActionTutorialPage(service, resourceProvider);
+        page.setContext(wizardContext);
     }
 
     @Test
@@ -67,8 +64,7 @@ public class CreateDTOTutorialProjectPresenterTest extends BaseCreateTutorialTes
                 return callback;
             }
         }).when(service)
-                .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(),
-                                          (AsyncRequestCallback<Void>)anyObject());
+                .createActionTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -80,10 +76,10 @@ public class CreateDTOTutorialProjectPresenterTest extends BaseCreateTutorialTes
         }).when(resourceProvider)
                 .getProject(anyString(), (AsyncCallback<Project>)anyObject());
 
-        presenter.create(callback);
+        page.commit(callback);
 
         verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
-        verify(callback).onSuccess(eq(project));
+        verify(callback).onSuccess();
     }
 
     @Test
@@ -98,10 +94,9 @@ public class CreateDTOTutorialProjectPresenterTest extends BaseCreateTutorialTes
                 return callback;
             }
         }).when(service)
-                .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(),
-                                          (AsyncRequestCallback<Void>)anyObject());
+                .createActionTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
-        presenter.create(callback);
+        page.commit(callback);
 
         verify(callback).onFailure(eq(throwable));
     }
@@ -118,8 +113,7 @@ public class CreateDTOTutorialProjectPresenterTest extends BaseCreateTutorialTes
                 return callback;
             }
         }).when(service)
-                .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(),
-                                          (AsyncRequestCallback<Void>)anyObject());
+                .createActionTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -131,19 +125,18 @@ public class CreateDTOTutorialProjectPresenterTest extends BaseCreateTutorialTes
         }).when(resourceProvider)
                 .getProject(anyString(), (AsyncCallback<Project>)anyObject());
 
-        presenter.create(callback);
+        page.commit(callback);
 
         verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
         verify(callback).onFailure(eq(throwable));
     }
 
     @Test
-    public void testCreateWhenRequestExceptionHappened() throws Exception {
+    public void testCreateWhenREquestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
-                .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(),
-                                          (AsyncRequestCallback<Void>)anyObject());
+                .createActionTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
-        presenter.create(callback);
+        page.commit(callback);
 
         verify(callback).onFailure((Throwable)anyObject());
     }
