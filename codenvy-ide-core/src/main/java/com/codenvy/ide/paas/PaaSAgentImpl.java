@@ -21,8 +21,6 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.paas.PaaSAgent;
-import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
-import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -43,7 +41,7 @@ import com.google.inject.Singleton;
 public class PaaSAgentImpl implements PaaSAgent {
     private class NonePaaS extends PaaS {
         public NonePaaS(@NotNull String id, @NotNull String title, @Nullable ImageResource image) {
-            super(id, title, image, JsonCollections.<JsonArray<String>>createStringMap());
+            super(id, title, image, JsonCollections.<JsonArray<String>>createStringMap(), false);
         }
 
         /** {@inheritDoc} */
@@ -54,14 +52,12 @@ public class PaaSAgentImpl implements PaaSAgent {
     }
 
     private       NewProjectWizard newProjectWizard;
-    private       PreferencesAgent preferencesAgent;
     private final JsonArray<PaaS>  registeredPaaS;
 
     /** Create agent. */
     @Inject
-    protected PaaSAgentImpl(NewProjectWizard newProjectWizard, PreferencesAgent preferencesAgent) {
+    protected PaaSAgentImpl(NewProjectWizard newProjectWizard) {
         this.newProjectWizard = newProjectWizard;
-        this.preferencesAgent = preferencesAgent;
         this.registeredPaaS = JsonCollections.createArray();
         registeredPaaS.add(new NonePaaS("None", "None", null));
     }
@@ -70,13 +66,10 @@ public class PaaSAgentImpl implements PaaSAgent {
     @Override
     public void register(@NotNull String id, @NotNull String title, @Nullable ImageResource image,
                          @NotNull JsonStringMap<JsonArray<String>> natures, @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages,
-                         @Nullable Provider<PreferencesPagePresenter> preferencePage) {
-        PaaS paas = new PaaS(id, title, image, natures);
+                         boolean provideTemplate) {
+        PaaS paas = new PaaS(id, title, image, natures, provideTemplate);
         registeredPaaS.add(paas);
         newProjectWizard.addPaaSPages(paas, wizardPages);
-        if (preferencePage != null) {
-            preferencesAgent.addPage(preferencePage);
-        }
     }
 
     /** @return all available PaaSes. */

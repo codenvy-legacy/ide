@@ -61,7 +61,7 @@ public class CloudBeesExtension {
         JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
-        paasAgent.register(ID, ID, resources.cloudBees48(), natures, wizardPages, null);
+        paasAgent.register(ID, ID, resources.cloudBees48(), natures, wizardPages, false);
 
         actionManager.registerAction("cloudBeesShowProject", showCloudBeesProjectAction);
         actionManager.registerAction("showCloudBeesApplications", showApplicationsAction);

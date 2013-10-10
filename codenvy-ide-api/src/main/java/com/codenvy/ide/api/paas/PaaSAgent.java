@@ -20,7 +20,6 @@ package com.codenvy.ide.api.paas;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.extension.SDK;
-import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonStringMap;
@@ -47,11 +46,10 @@ public interface PaaSAgent {
      *         natures which support the PaaS
      * @param wizardPages
      *         pages which need add to new project wizard
-     * @param preferencePage
-     *         page which need add preference menu
+     * @param provideTemplate
+     *         <code>true</code> if the PaaS doesn't need general templates (it has own template), and <code>false</code> otherwise
      */
-    // TODO remove preference page?
     void register(@NotNull String id, @NotNull String title, @Nullable ImageResource image,
                   @NotNull JsonStringMap<JsonArray<String>> natures, @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages,
-                  @Nullable Provider<PreferencesPagePresenter> preferencePage);
+                  boolean provideTemplate);
 }

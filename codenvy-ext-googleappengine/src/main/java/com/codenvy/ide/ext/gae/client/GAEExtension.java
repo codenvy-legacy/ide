@@ -66,7 +66,7 @@ public class GAEExtension {
         JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
-        paasAgent.register(ID, ID, resources.googleAppEngine48(), natures, wizardPages, null);
+        paasAgent.register(ID, ID, resources.googleAppEngine48(), natures, wizardPages, false);
 
         actionManager.registerAction("gaeLoginAction", loginAction);
         actionManager.registerAction("gaeCreateAppAction", createApplicationAction);

@@ -18,7 +18,6 @@
 package com.codenvy.ide.ext.openshift.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.api.template.CreateProjectProvider;
 import com.codenvy.ide.ext.openshift.client.OpenShiftClientService;
 import com.codenvy.ide.ext.openshift.client.OpenShiftClientServiceImpl;
 import com.codenvy.ide.ext.openshift.client.cartridge.CreateCartridgeView;
@@ -35,7 +34,6 @@ import com.codenvy.ide.ext.openshift.client.project.ProjectView;
 import com.codenvy.ide.ext.openshift.client.project.ProjectViewImpl;
 import com.codenvy.ide.ext.openshift.client.wizard.OpenShiftPageView;
 import com.codenvy.ide.ext.openshift.client.wizard.OpenShiftPageViewImpl;
-import com.codenvy.ide.extension.maven.client.template.empty.CreateEmptyProjectPresenter;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -54,6 +52,5 @@ public class OpenShiftGinModule extends AbstractGinModule {
         bind(ApplicationListView.class).to(ApplicationListViewImpl.class).in(Singleton.class);
         bind(ProjectView.class).to(ProjectViewImpl.class).in(Singleton.class);
         bind(OpenShiftPageView.class).to(OpenShiftPageViewImpl.class).in(Singleton.class);
-        bind(CreateProjectProvider.class).to(CreateEmptyProjectPresenter.class).in(Singleton.class);
     }
 }

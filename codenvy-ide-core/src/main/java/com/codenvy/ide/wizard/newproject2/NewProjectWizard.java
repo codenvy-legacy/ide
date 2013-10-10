@@ -122,15 +122,18 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
 
     /** Add next pages if it is possible. */
     private void addNextPages() {
-        if (index == 0) {
+        PaaS paas = wizardContext.getData(PAAS);
+        if (index == 0 && paas != null && paas.isProvideTemplate()) {
+            addPages(paasPages.get(paas));
+        } else if (index == 0 && paas != null && !paas.isProvideTemplate()) {
             WizardPage page = addPage(templatePage);
             if (page.canSkip()) {
                 addPages(templatePages.get(wizardContext.getData(TEMPLATE)));
-                addPages(paasPages.get(wizardContext.getData(PAAS)));
+                addPages(paasPages.get(paas));
             }
-        } else if (index == 1) {
+        } else if (index == 1 && paas != null && !paas.isProvideTemplate()) {
             addPages(templatePages.get(wizardContext.getData(TEMPLATE)));
-            addPages(paasPages.get(wizardContext.getData(PAAS)));
+            addPages(paasPages.get(paas));
         }
     }
 
@@ -140,6 +143,7 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
      * @param pages
      *         pages that need to add to list
      */
+
     private void addPages(@Nullable JsonArray<Provider<? extends WizardPage>> pages) {
         if (pages != null) {
             for (Provider<? extends WizardPage> provider : pages.asIterable()) {
@@ -213,23 +217,32 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
      * @return <code>true</code> if the page is last, and <code>false</code> otherwise
      */
     private boolean isLastPage() {
-        if (index == 0) {
+        PaaS paas = wizardContext.getData(PAAS);
+        if (index == 0 && paas != null && paas.isProvideTemplate()) {
+            return !hasEnablePage(paasPages.get(paas));
+        } else if (index == 0 && paas != null && !paas.isProvideTemplate()) {
             return getInstance(templatePage).canSkip() &&
-                   !hasEnablePage(paasPages.get(wizardContext.getData(PAAS))) &&
+                   !hasEnablePage(paasPages.get(paas)) &&
                    !hasEnablePage(templatePages.get(wizardContext.getData(TEMPLATE)));
-        } else if (index == 1) {
-            return !hasEnablePage(paasPages.get(wizardContext.getData(PAAS))) &&
-                   !hasEnablePage(templatePages.get(wizardContext.getData(TEMPLATE)));
-        } else {
-            for (int i = index + 1; i < flippedPages.size(); i++) {
-                WizardPage page = flippedPages.get(i);
-                if (!page.canSkip()) {
-                    return false;
-                }
-            }
-
-            return true;
+        } else if (index == 1 && paas != null && !paas.isProvideTemplate()) {
+            return !hasEnablePage(paasPages.get(paas)) && !hasEnablePage(templatePages.get(wizardContext.getData(TEMPLATE)));
         }
+        return hasNextPage();
+    }
+
+    /**
+     * Returns whether the flipped pages list have next page. A next page must be not skipped.
+     *
+     * @return <code>true</code> if the next page is exist, and <code>false</code> otherwise
+     */
+    private boolean hasNextPage() {
+        for (int i = index + 1; i < flippedPages.size(); i++) {
+            WizardPage page = flippedPages.get(i);
+            if (!page.canSkip()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

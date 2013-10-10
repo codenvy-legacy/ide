@@ -69,7 +69,7 @@ public class AWSExtension {
         JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
-        paasAgent.register(ID, "Amazon Web Services", resource.elasticBeanstalk48(), natures, wizardPages, null);
+        paasAgent.register(ID, "Amazon Web Services", resource.elasticBeanstalk48(), natures, wizardPages, false);
 
         actionManager.registerAction("awsSwitchAccount", switchAccountAction);
         actionManager.registerAction("awsEc2Management", ec2ManagementAction);

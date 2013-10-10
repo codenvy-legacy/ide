@@ -96,7 +96,7 @@ public class CloudFoundryExtension {
         JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
-        paasAgent.register(ID, ID, resources.cloudFoundry48(), natures, wizardPages, null);
+        paasAgent.register(ID, ID, resources.cloudFoundry48(), natures, wizardPages, false);
 
         DefaultActionGroup projectPaas = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PROJECT_PAAS);
         actionManager.registerAction("showCloudfoundryProject", showCloudFoundryProjectAction);

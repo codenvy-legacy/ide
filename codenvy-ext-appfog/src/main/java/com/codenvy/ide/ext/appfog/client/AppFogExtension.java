@@ -74,7 +74,7 @@ public class AppFogExtension {
         JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
-        paasAgent.register(ID, ID, resources.appfog48(), natures, wizardPages, null);
+        paasAgent.register(ID, ID, resources.appfog48(), natures, wizardPages, false);
 
         actionManager.registerAction("appFogCreateApplication", createApplicationAction);
         actionManager.registerAction("appFogShowApplications", showApplicationsAction);

@@ -22,10 +22,12 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
+import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.ext.openshift.client.actions.*;
 import com.codenvy.ide.ext.openshift.client.wizard.OpenShiftPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -50,20 +52,30 @@ public class OpenShiftExtension {
      * @param actionManager
      */
     @Inject
-    public OpenShiftExtension(PaaSAgent paasAgent, OpenShiftResources resources,
-                              Provider<OpenShiftPagePresenter> wizardPage, ActionManager actionManager,
+    public OpenShiftExtension(PaaSAgent paasAgent,
+                              OpenShiftResources resources,
+                              Provider<OpenShiftPagePresenter> wizardPage,
+                              ActionManager actionManager,
                               ChangeDomainAction changeDomainAction,
                               SwitchAccountAction switchAccountAction,
                               ShowApplicationsAction showApplicationsAction,
                               UpdatePublicKeyAction updatePublicKeyAction,
-                              ShowProjectAction showProjectAction
-                             ) {
+                              ShowProjectAction showProjectAction) {
+
         resources.openShiftCSS().ensureInjected();
 
-        JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "nodejs", "War", "Python", "PHP", "Rails");
+        // TODO change hard code types
+        JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
+        natures.put("java", JsonCollections.<String>createArray("Servlet/JSP", "War"));
+        natures.put("javascript", JsonCollections.<String>createArray("nodejs"));
+        natures.put("Ruby", JsonCollections.<String>createArray("Rails"));
+        natures.put("Python", JsonCollections.<String>createArray());
+        natures.put("PHP", JsonCollections.<String>createArray());
 
-        // TODO
-//        paasAgent.registerPaaS(ID, ID, resources.openShift48(), requiredProjectTypes, wizardPage, null);
+        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
+        wizardPages.add(wizardPage);
+
+        paasAgent.register(ID, ID, resources.openShift48(), natures, wizardPages, true);
 
         actionManager.registerAction("openShiftChangeDomain", changeDomainAction);
         actionManager.registerAction("openShiftSwitchAccount", switchAccountAction);

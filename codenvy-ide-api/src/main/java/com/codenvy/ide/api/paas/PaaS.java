@@ -37,21 +37,29 @@ public class PaaS {
     /** PaaS image. */
     private ImageResource                    image;
     private JsonStringMap<JsonArray<String>> natures;
+    private boolean                          provideTemplate;
 
     /**
      * Create PaaS.
      *
      * @param id
+     *         PaaS identification
      * @param title
+     *         title that will be shown on new project wizard
      * @param image
+     *         image that will be shown on new project wizard
+     * @param natures
+     *         nature which the PaaS support
+     * @param provideTemplate
+     *         <code>true</code> if the PaaS doesn't need general templates (it has own template), and <code>false</code> otherwise
      */
-    // TODO javadoc
     public PaaS(@NotNull String id, @NotNull String title, @Nullable ImageResource image,
-                @NotNull JsonStringMap<JsonArray<String>> natures) {
+                @NotNull JsonStringMap<JsonArray<String>> natures, boolean provideTemplate) {
         this.id = id;
         this.title = title;
         this.image = image;
         this.natures = natures;
+        this.provideTemplate = provideTemplate;
     }
 
     /** @return {@link String} PaaS id */
@@ -67,6 +75,11 @@ public class PaaS {
     /** @return the image */
     public ImageResource getImage() {
         return image;
+    }
+
+    /** @return <code>true</code> if the PaaS doesn't need general templates (it has own template), and <code>false</code> otherwise */
+    public boolean isProvideTemplate() {
+        return provideTemplate;
     }
 
     public boolean isAvailable(@NotNull String primaryNature, @NotNull JsonArray<String> secondaryNature) {
