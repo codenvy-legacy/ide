@@ -25,9 +25,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Wizard dialog presenter manages wizard pages. It's responsible for the communication user and wizard page.
- * In typical usage, the client instantiates this class with a particular wizard. The wizard dialog orchestrates the presentation of wizard
- * pages.
+ * The implementation of {@link WizardDialog}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */

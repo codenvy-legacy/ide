@@ -18,7 +18,8 @@
 package com.codenvy.ide.api.ui.wizard;
 
 /**
- * The dialog that provides showing wizard.
+ * Wizard dialog manages wizard pages. It's responsible for communication user with the wizard page. In typical usage, the client
+ * instantiates this class with a particular wizard. The wizard dialog orchestrates the presentation of wizard pages.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */

@@ -21,16 +21,16 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 
 /**
- * The wizard contains wizard pages. It knows which page is next or previous. The wizard can disable some page if it is possible. It can
- * change next page in case change some parameters into {@link WizardContext}. Usually every wizard has own wizard context. This wizard
- * context contains all needed attribute.
+ * The wizard contains wizard pages. It has info on the next or previous page. The wizard can disable a page if it is possible. It can
+ * change the next page in case parameters for {@link WizardContext} has been changed. Usually every wizard has its own wizard context.
+ * This wizard context contains all required attributes.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public interface Wizard {
-    /** Required for delegating update function in wizard model. */
+    /** Required for delegating update function in a wizard model. */
     public interface UpdateDelegate {
-        /** Performs some actions in response to a user's update controls. */
+        /** Performs some actions in response to a user's updating controls. */
         void updateControls();
     }
 
@@ -46,7 +46,7 @@ public interface Wizard {
     String getTitle();
 
     /**
-     * Performs some actions which need for flipping to first page and return first page of wizard.
+     * Performs some actions requitred for flipping to first page and returning to the first page of a wizard.
      *
      * @return first page
      */
@@ -54,17 +54,17 @@ public interface Wizard {
     WizardPage flipToFirst();
 
     /**
-     * Performs some actions which need for flipping to next page and return next page of wizard.
+     * Performs actions required for flipping to next page and return next page of wizard.
      *
-     * @return if the wizard has next page return next page, otherwise return <code>null</code>.
+     * @return if the wizard has next page, it returns next page, otherwise returns <code>null</code>.
      */
     @Nullable
     WizardPage flipToNext();
 
     /**
-     * Performs some actions which need for flipping to previous page and return previous page of wizard.
+     * Performs some actions required for jumping to the previous page and returning to the previous page of a wizard.
      *
-     * @return if the wizard has previous page return previous page, otherwise return <code>null</code>.
+     * @return if the wizard has previous page, it returns to the previous page, otherwise return <code>null</code>.
      */
     @Nullable
     WizardPage flipToPrevious();

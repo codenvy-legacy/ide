@@ -18,8 +18,8 @@
 package com.codenvy.ide.api.ui.wizard;
 
 /**
- * The container of wizard keys. It contains keys which can be needed from different extension. These are just keys which using into
- * internal logical. And someone should use it in case to use something from internal logical.
+ * The container of wizard keys. It contains keys which may be needed from different extensions. These are the keys which are used in an
+ * internal logic (when a user needs something from an internal logic).
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
