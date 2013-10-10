@@ -18,6 +18,7 @@
 package com.codenvy.factory;
 
 
+import com.codenvy.api.factory.AdvancedFactoryUrlValidator;
 import com.codenvy.api.factory.FactoryStore;
 
 import javax.servlet.ServletContext;
@@ -32,11 +33,13 @@ public class CodenvyApiServletContextListener implements ServletContextListener 
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext sctx = sce.getServletContext();
         sctx.setAttribute(FactoryStore.class.getName(), new InMemoryFactoryStore());
+        sctx.setAttribute(AdvancedFactoryUrlValidator.class.getName(), new AdvancedFactoryUrlFormat());
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         ServletContext sctx = sce.getServletContext();
         sctx.removeAttribute(FactoryStore.class.getName());
+        sctx.removeAttribute(AdvancedFactoryUrlValidator.class.getName());
     }
 }
