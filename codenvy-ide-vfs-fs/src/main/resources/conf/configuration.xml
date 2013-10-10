@@ -38,7 +38,7 @@
     </component>
 
     <component>
-      <key>com.codenvy.vfs.impl.fs.SearcherProvider</key>
+      <key>com.codenvy.api.vfs.server.search.SearcherProvider</key>
       <type>com.codenvy.vfs.impl.fs.CleanableSearcherProvider</type>
     </component>
 </configuration>

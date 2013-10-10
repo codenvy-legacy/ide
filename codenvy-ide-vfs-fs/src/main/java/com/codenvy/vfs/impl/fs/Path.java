@@ -21,7 +21,11 @@ import com.codenvy.api.vfs.server.util.PathUtil;
 
 import java.util.Arrays;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/**
+ * Path of VirtualFile.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ */
 final class Path {
     static Path fromString(String path) {
         return new Path(PathUtil.parse(path));

@@ -17,12 +17,12 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.shared.Folder;
-import com.codenvy.api.vfs.shared.Item;
 import com.codenvy.api.vfs.shared.ItemType;
-import com.codenvy.api.vfs.shared.Principal;
-import com.codenvy.api.vfs.shared.PrincipalImpl;
-import com.codenvy.api.vfs.shared.Project;
+import com.codenvy.api.vfs.shared.dto.Folder;
+import com.codenvy.api.vfs.shared.dto.Item;
+import com.codenvy.api.vfs.shared.dto.Principal;
+import com.codenvy.api.vfs.shared.dto.Project;
+import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.codenvy.api.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import static com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
 
 public class UpdateTest extends LocalFileSystemTest {
     private final String lockToken = "01234567890abcdef";
@@ -63,8 +63,14 @@ public class UpdateTest extends LocalFileSystemTest {
         protectedFilePath = createFile(testRootPath, "UpdateTest_ProtectedFile", DEFAULT_CONTENT_BYTES);
 
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(2);
-        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
-        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
+        Principal user = DtoFactory.getInstance().createDto(Principal.class);
+        user.setName("andrew");
+        user.setType(Principal.Type.USER);
+        Principal admin = DtoFactory.getInstance().createDto(Principal.class);
+        admin.setName("admin");
+        admin.setType(Principal.Type.USER);
+        permissions.put(user, EnumSet.of(BasicPermissions.ALL));
+        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
 
         writePermissions(protectedFilePath, permissions);
         createLock(lockedFilePath, lockToken, Long.MAX_VALUE);
@@ -89,7 +95,7 @@ public class UpdateTest extends LocalFileSystemTest {
         validateProperties(filePath, expectedProperties);
 
         Item item = getItem(fileId);
-        assertEquals("MyValue", item.getPropertyValue("MyProperty"));
+        assertEquals("MyValue", getPropertyValue(item, "MyProperty"));
     }
 
     public void testUpdatePropertiesFile2() throws Exception {
@@ -117,10 +123,10 @@ public class UpdateTest extends LocalFileSystemTest {
         validateProperties(filePath, expectedProperties);
 
         Item item = getItem(fileId);
-        assertEquals("to be or not to be", item.getPropertyValue("a")); // not updated
-        assertEquals("TEST", item.getPropertyValue("b"));
-        assertEquals("TEST", item.getPropertyValue("c"));
-        assertEquals(Arrays.asList("TEST", "TEST"), item.getPropertyValues("d"));
+        assertEquals("to be or not to be", getPropertyValue(item, "a")); // not updated
+        assertEquals("TEST", getPropertyValue(item, "b"));
+        assertEquals("TEST", getPropertyValue(item, "c"));
+        assertEquals(Arrays.asList("TEST", "TEST"), getPropertyValues(item, "d"));
     }
 
     public void testUpdateLockedFile() throws Exception {
@@ -137,7 +143,7 @@ public class UpdateTest extends LocalFileSystemTest {
         validateProperties(lockedFilePath, expectedProperties);
 
         Item item = getItem(lockedFileId);
-        assertEquals("MyValue", item.getPropertyValue("MyProperty"));
+        assertEquals("MyValue", getPropertyValue(item, "MyProperty"));
     }
 
     public void testUpdateLockedFileNoLockToken() throws Exception {
@@ -154,7 +160,7 @@ public class UpdateTest extends LocalFileSystemTest {
         assertNull("Properties must not be updated. ", readProperties(lockedFilePath));
 
         Item item = getItem(lockedFileId);
-        assertNull(item.getPropertyValue("MyProperty"));
+        assertNull(getPropertyValue(item, "MyProperty"));
     }
 
     public void testUpdateFileHavePermissions() throws Exception {
@@ -176,7 +182,7 @@ public class UpdateTest extends LocalFileSystemTest {
         validateProperties(protectedFilePath, expectedProperties);
 
         Item item = getItem(protectedFileId);
-        assertEquals("MyValue", item.getPropertyValue("MyProperty"));
+        assertEquals("MyValue", getPropertyValue(item, "MyProperty"));
     }
 
     public void testUpdateFileNoPermissions() throws Exception {
@@ -193,7 +199,7 @@ public class UpdateTest extends LocalFileSystemTest {
         assertNull("Properties must not be updated.", readProperties(protectedFilePath));
 
         Item item = getItem(protectedFileId);
-        assertNull(item.getPropertyValue("MyProperty"));
+        assertNull(getPropertyValue(item, "MyProperty"));
     }
 
     public void testUpdatePropertiesAndChangeFolderType() throws Exception {

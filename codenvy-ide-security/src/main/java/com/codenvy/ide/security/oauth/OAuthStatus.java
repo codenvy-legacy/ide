@@ -22,7 +22,7 @@ package com.codenvy.ide.security.oauth;
  * @version $Id: $
  */
 public enum OAuthStatus {
-    /** If OAuth window manualy closed by user. */
+    /** If OAuth window manually closed by user. */
     NOT_PERFORMED(1),
 
     /** If some problem according while user try to login. */

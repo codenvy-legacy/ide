@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ CODENVY CONFIDENTIAL
-  ~ __________________
-  ~
-  ~ [2012] - [2013] Codenvy, S.A.
-  ~ All Rights Reserved.
-  ~
-  ~ NOTICE:  All information contained herein is, and remains
-  ~ the property of Codenvy S.A. and its suppliers,
-  ~ if any.  The intellectual and technical concepts contained
-  ~ herein are proprietary to Codenvy S.A.
-  ~ and its suppliers and may be covered by U.S. and Foreign Patents,
-  ~ patents in process, and are protected by trade secret or copyright law.
-  ~ Dissemination of this information or reproduction of this material
-  ~ is strictly forbidden unless prior written permission is obtained
-  ~ from Codenvy S.A..
-  -->
 
+    CODENVY CONFIDENTIAL
+    __________________
+
+     [2012] - [2013] Codenvy, S.A.
+     All Rights Reserved.
+
+    NOTICE:  All information contained herein is, and remains
+    the property of Codenvy S.A. and its suppliers,
+    if any.  The intellectual and technical concepts contained
+    herein are proprietary to Codenvy S.A.
+    and its suppliers and may be covered by U.S. and Foreign Patents,
+    patents in process, and are protected by trade secret or copyright law.
+    Dissemination of this information or reproduction of this material
+    is strictly forbidden unless prior written permission is obtained
+    from Codenvy S.A..
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <!-- POM file generated with GWT webAppCreator -->
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.codenvy.ide</groupId>
@@ -29,14 +29,12 @@
     </parent>
     <artifactId>codenvy-application-war</artifactId>
     <packaging>war</packaging>
-    <!--version>2.0-SNAPSHOT</version -->
     <name>Codenvy :: Packaging :: Application</name>
 
     <properties>
-        <!-- GWT needs at least java 1.5 -->
-        <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
+        <gwt.module>com.codenvy.ide.IDE</gwt.module>
     </properties>
 
     <dependencies>
@@ -60,7 +58,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <!-- needs extra dependencies: objenesis & hamcrest -->
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
@@ -82,7 +79,7 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-client</artifactId>
-            <!-- Next two dependencies is added to client module only to allow launching Codenvy SDK in GWT DevMode. -->
+            <!-- Next two dependencies are added to client module only to allow launching Codenvy SDK in GWT DevMode. -->
             <exclusions>
                 <exclusion>
                     <groupId>com.codenvy.ide</groupId>
@@ -98,7 +95,7 @@
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
         </dependency>
-        <!-- Serverside VFS -->
+        <!-- Server-side VFS -->
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs-fs</artifactId>
@@ -175,19 +172,16 @@
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit.http.server</artifactId>
-            <version>2.3.1.201302201838-r</version>
         </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
-            <version>0.9.9-RC1</version>
             <scope>compile</scope>
         </dependency>
 
@@ -475,22 +469,16 @@
                         <goals>
                             <goal>compile</goal>
                             <goal>test</goal>
-                            <goal>i18n</goal>
                         </goals>
                     </execution>
                 </executions>
-                <!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
                 <configuration>
-                    <module>com.codenvy.ide.IDE</module>
+                    <module>${gwt.module}</module>
                     <logLevel>INFO</logLevel>
                     <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
-                    <runTarget>ide/dev-monit</runTarget>
-                    <hostedWebapp>${webappDirectory}</hostedWebapp>
-                    <i18nMessagesBundle>com.codenvy.ide.client.Messages</i18nMessagesBundle>
                 </configuration>
             </plugin>
 
-            <!-- Copy static web files before executing gwt:run -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -526,5 +514,15 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- Used for GWT SuperDevMode. -->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <gwt.module>com.codenvy.ide.IDE_dev</gwt.module>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

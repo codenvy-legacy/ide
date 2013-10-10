@@ -45,17 +45,17 @@ public class ApplicationInstanceUnmarshallerWS implements Unmarshallable<Applica
         applicationInstance = DtoClientImpls.ApplicationInstanceImpl.deserialize(text);
 
         final String host = applicationInstance.getHost();
+        // If server doesn't provide host name where app was launched
+        // then assume that it was launched on the same host.
         if (host == null || host.isEmpty()) {
             applicationInstance.setHost(Window.Location.getHostName());
-        } else {
-            applicationInstance.setHost(host);
         }
 
+        // If server doesn't provide host name where GWT code server was launched
+        // then assume that it was launched on the same host.
         final String codeServerHost = applicationInstance.getCodeServerHost();
         if (codeServerHost == null || codeServerHost.isEmpty()) {
             applicationInstance.setCodeServerHost(Window.Location.getHostName());
-        } else {
-            applicationInstance.setCodeServerHost(codeServerHost);
         }
     }
 
