@@ -137,12 +137,12 @@ public class DefaultScheme extends InputScheme {
                     return true;
                 }
 
-                if (event.getAltKey()) {
+                if (event.getAltKey() && !isSpecialSymbol(event.getKeyCode())) {
                     // Don't process Alt+* combinations.
                     return false;
                 }
 
-                if (event.getCommandKey() || event.getKeySignalType() != SignalEvent.KeySignalType.INPUT) {
+                if ((event.getCommandKey() || event.getKeySignalType() != SignalEvent.KeySignalType.INPUT) && !event.getAltKey()) {
                     // Don't insert any Action+* / non-input combinations as text.
                     return false;
                 }
@@ -160,6 +160,12 @@ public class DefaultScheme extends InputScheme {
                 }
                 // let it fall through
                 return false;
+            }
+
+            //Input symbol is special or diacritic.
+            boolean isSpecialSymbol(int asciiCode) {
+                return (asciiCode >= 91 && asciiCode <= 96) || (asciiCode >= 33 && asciiCode <= 47) || (asciiCode >= 58 && asciiCode <= 64)
+                       || (asciiCode >= 123) ? true : false;
             }
 
             /**

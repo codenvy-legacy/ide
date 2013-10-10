@@ -260,7 +260,7 @@ public class InputController {
             public void handleEvent(Event event) {
                 try{
                 SignalEvent signalEvent = SignalEventUtils.create(event);
-                if (signalEvent == null) {
+                if (signalEvent == null || signalEvent.getKeyCode() == 17 || signalEvent.getKeyCode() == 18) {
                     return;
                 }
                 
