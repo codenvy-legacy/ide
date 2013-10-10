@@ -17,8 +17,8 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.shared.Item;
-import com.codenvy.api.vfs.shared.ItemList;
+import com.codenvy.api.vfs.shared.dto.Item;
+import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.commons.env.EnvironmentContext;
 
 import org.apache.lucene.analysis.SimpleAnalyzer;
@@ -140,7 +140,7 @@ public class SearcherTest extends LocalFileSystemTest {
         }
     }
 
-    public void testDelete() throws Exception {
+    public void testDeleteFile() throws Exception {
         IndexSearcher luceneSearcher = searcher.getLuceneSearcher();
         TopDocs topDocs = luceneSearcher.search(new TermQuery(new Term("path", file1)), 10);
         assertEquals(1, topDocs.totalHits);
@@ -153,7 +153,7 @@ public class SearcherTest extends LocalFileSystemTest {
         searcher.releaseLuceneSearcher(luceneSearcher);
     }
 
-    public void testDelete2() throws Exception {
+    public void testDeleteFolder() throws Exception {
         IndexSearcher luceneSearcher = searcher.getLuceneSearcher();
         TopDocs topDocs = luceneSearcher.search(new PrefixQuery(new Term("path", searchTestPath)), 10);
         assertEquals(3, topDocs.totalHits);

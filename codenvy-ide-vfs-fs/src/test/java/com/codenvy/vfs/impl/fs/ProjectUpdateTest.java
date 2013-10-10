@@ -17,7 +17,7 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.shared.Project;
+import com.codenvy.api.vfs.shared.dto.Project;
 
 import org.everrest.core.impl.ContainerResponse;
 
@@ -80,7 +80,7 @@ public class ProjectUpdateTest extends LocalFileSystemTest {
     }
 
     private long readUpdateTime() throws Exception {
-        String lastUpdateTime = getItem(projectId).getPropertyValue("vfs:lastUpdateTime");
+        String lastUpdateTime = getPropertyValue(getItem(projectId), "vfs:lastUpdateTime");
         assertNotNull(lastUpdateTime); // must be set
         return Long.parseLong(lastUpdateTime);
     }

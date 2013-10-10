@@ -44,7 +44,7 @@
         <!-- Codenvy -->
         <com.codenvy.commons.version>0.8.0</com.codenvy.commons.version>
         <com.codenvy.organization.version>0.7.0</com.codenvy.organization.version>
-        <com.codenvy.platform-api.version>1.0-SNAPSHOT</com.codenvy.platform-api.version>
+        <com.codenvy.platform-api.version>1.0.0-SNAPSHOT</com.codenvy.platform-api.version>
 
         <!-- eXo -->
         <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
@@ -171,6 +171,16 @@
             <dependency>
                 <groupId>com.codenvy.platform-api</groupId>
                 <artifactId>codenvy-api-vfs</artifactId>
+                <version>${com.codenvy.platform-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.platform-api</groupId>
+                <artifactId>codenvy-api-builder</artifactId>
+                <version>${com.codenvy.platform-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.platform-api</groupId>
+                <artifactId>codenvy-builder-tools</artifactId>
                 <version>${com.codenvy.platform-api.version}</version>
             </dependency>
             <dependency>

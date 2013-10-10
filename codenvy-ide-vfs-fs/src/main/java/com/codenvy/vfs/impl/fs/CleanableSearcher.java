@@ -33,7 +33,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
+
+/**
+ * Filesystem based LuceneSearcher which cleans index directory after call method {@link #close()}.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ */
 public class CleanableSearcher extends FSIndexSearcher {
     private static final Logger LOG = LoggerFactory.getLogger(CleanableSearcher.class);
     private final    CleanableSearcherProvider searcherService;
@@ -76,6 +82,7 @@ public class CleanableSearcher extends FSIndexSearcher {
 
     void doClose() {
         super.close();
+        deleteRecursive(getIndexDir());
     }
 
     @Override

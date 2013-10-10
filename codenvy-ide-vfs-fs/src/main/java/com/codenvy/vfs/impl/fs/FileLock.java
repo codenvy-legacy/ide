@@ -17,7 +17,11 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/**
+ * Lock of VirtualFile.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ */
 public class FileLock {
     private final String lockToken;
     private final long   expired;

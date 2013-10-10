@@ -18,10 +18,10 @@
 package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.vfs.server.VirtualFile;
-import com.codenvy.api.vfs.shared.File;
-import com.codenvy.api.vfs.shared.Lock;
-import com.codenvy.api.vfs.shared.Principal;
-import com.codenvy.api.vfs.shared.PrincipalImpl;
+import com.codenvy.api.vfs.shared.dto.File;
+import com.codenvy.api.vfs.shared.dto.Lock;
+import com.codenvy.api.vfs.shared.dto.Principal;
+import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static com.codenvy.api.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import static com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
 
 public class LockTest extends LocalFileSystemTest {
     private final String lockToken = "01234567890abcdef";
@@ -60,8 +60,14 @@ public class LockTest extends LocalFileSystemTest {
         createLock(lockedFilePath, lockToken, Long.MAX_VALUE);
 
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
-        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
-        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
+        Principal user = DtoFactory.getInstance().createDto(Principal.class);
+        user.setName("andrew");
+        user.setType(Principal.Type.USER);
+        Principal admin = DtoFactory.getInstance().createDto(Principal.class);
+        admin.setName("admin");
+        admin.setType(Principal.Type.USER);
+        permissions.put(user, EnumSet.of(BasicPermissions.ALL));
+        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
         writePermissions(protectedFilePath, permissions);
 
         fileId = pathToId(filePath);

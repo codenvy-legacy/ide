@@ -17,11 +17,11 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.shared.Principal;
-import com.codenvy.api.vfs.shared.PrincipalImpl;
-import com.codenvy.api.vfs.shared.Project;
-import com.codenvy.api.vfs.shared.Property;
-import com.codenvy.api.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import com.codenvy.api.vfs.shared.dto.Principal;
+import com.codenvy.api.vfs.shared.dto.Project;
+import com.codenvy.api.vfs.shared.dto.Property;
+import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
+import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.provider.json.JsonParser;
@@ -73,7 +73,10 @@ public class ExportTest extends LocalFileSystemTest {
         createTree(protectedFolderPath, 6, 4, null);
 
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
-        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
+        Principal principal = DtoFactory.getInstance().createDto(Principal.class);
+        principal.setName("andrew");
+        principal.setType(Principal.Type.USER);
+        permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedFolderPath, permissions);
 
         folderId = pathToId(folderPath);
@@ -119,7 +122,10 @@ public class ExportTest extends LocalFileSystemTest {
 
     public void testExportFolderNoPermissions2() throws Exception {
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
-        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
+        Principal principal = DtoFactory.getInstance().createDto(Principal.class);
+        principal.setName("andrew");
+        principal.setType(Principal.Type.USER);
+        permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
         List<String> l = flattenDirectory(folderPath);
         // Find one child in the list and remove write permission for 'admin'.
         String myProtectedItemPath = folderPath + '/' + l.get(new Random().nextInt(l.size()));
