@@ -17,13 +17,13 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.wizard;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.CreateProjectProvider;
 import com.codenvy.ide.api.template.TemplateAgent;
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.*;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
@@ -59,8 +59,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
-        implements CloudFoundryPageView.ActionDelegate, ProjectBuiltHandler {
+public class CloudFoundryPagePresenter extends AbstractWizardPage implements CloudFoundryPageView.ActionDelegate, ProjectBuiltHandler {
     private CloudFoundryPageView             view;
     private EventBus                         eventBus;
     private String                           server;
@@ -79,7 +78,8 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
     private TemplateAgent                    templateAgent;
     private CreateProjectProvider            createProjectProvider;
     private CloudFoundryExtension.PAAS_PROVIDER paasProvider = CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY;
-    private boolean isLogined;
+    private boolean        isLogined;
+    private CommitCallback callback;
 
     /**
      * Create presenter.
@@ -177,6 +177,7 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
                                          @Override
                                          public void onFailure(Throwable caught) {
                                              Log.error(CloudFoundryPagePresenter.class, "Can not refresh properties", caught);
+                                             callback.onFailure(caught);
                                          }
                                      });
                                  }
@@ -185,6 +186,7 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
                                  protected void onFailure(Throwable exception) {
                                      console.print(constant.applicationCreationFailed());
                                      super.onFailure(exception);
+                                     callback.onFailure(exception);
                                  }
                              });
         } catch (WebSocketException e) {
@@ -220,6 +222,7 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
                                        @Override
                                        public void onFailure(Throwable caught) {
                                            Log.error(CloudFoundryPagePresenter.class, "Can not refresh properties", caught);
+                                           callback.onFailure(caught);
                                        }
                                    });
                                }
@@ -228,11 +231,13 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
                                protected void onFailure(Throwable exception) {
                                    console.print(constant.applicationCreationFailed());
                                    super.onFailure(exception);
+                                   callback.onFailure(exception);
                                }
                            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
+            callback.onFailure(e);
         }
     }
 
@@ -255,6 +260,7 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
 
         console.print(msg);
         eventBus.fireEvent(new RefreshBrowserEvent(project));
+        callback.onSuccess();
     }
 
     /**
@@ -375,10 +381,7 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
 
     /** Checking entered information on view. */
     public boolean validate() {
-        if (isLogined) {
-            return view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty();
-        }
-        return true;
+        return !isLogined || view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty();
     }
 
     /** {@inheritDoc} */
@@ -393,26 +396,20 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
 
     /** {@inheritDoc} */
     @Override
-    public WizardPagePresenter flipToNext() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean canFinish() {
-        return validate();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean hasNext() {
-        return false;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public boolean isCompleted() {
         return validate();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void focusComponent() {
+        // do nothing
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void removeOptions() {
+        // do nothing
     }
 
     /** {@inheritDoc} */
@@ -478,18 +475,23 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
 
     /** {@inheritDoc} */
     @Override
-    public void doFinish() {
-        createProjectProvider.create(new AsyncCallback<Project>() {
+    public void commit(@NotNull CommitCallback callback) {
+        this.callback = callback;
+
+        if (!isLogined) {
+            return;
+        }
+
+        // TODO may be improve with getProject?
+        resourcesProvider.getProject(projectName, new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
-                if (isLogined) {
-                    deploy(result);
-                }
+                deploy(result);
             }
 
             @Override
             public void onFailure(Throwable caught) {
-                Log.error(CloudFoundryPagePresenter.class, caught);
+                CloudFoundryPagePresenter.this.callback.onFailure(caught);
             }
         });
     }

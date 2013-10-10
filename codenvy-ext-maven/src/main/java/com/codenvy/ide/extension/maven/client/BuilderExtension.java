@@ -55,8 +55,10 @@ public class BuilderExtension {
      * @param buildProjectPresenter
      * @param templateAgent
      * @param projectTypeAgent
+     * @param createJavaProjectPage
+     * @param createWarProjectPage
+     * @param createSpringProjectPage
      */
-    // TODO javadoc
     @Inject
     public BuilderExtension(BuildProjectPresenter buildProjectPresenter,
                             TemplateAgent templateAgent,

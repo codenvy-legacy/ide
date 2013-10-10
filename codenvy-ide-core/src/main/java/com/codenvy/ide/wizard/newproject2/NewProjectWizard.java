@@ -98,6 +98,8 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
     @Override
     public WizardPage flipToFirst() {
         wizardContext.clear();
+        flippedPages.clear();
+        instancePages.clear();
         index = 0;
         return addPage(newProjectPage);
     }

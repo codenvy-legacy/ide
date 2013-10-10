@@ -17,13 +17,11 @@
  */
 package com.codenvy.ide.ext.aws.client.beanstalk.wizard;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.template.CreateProjectProvider;
-import com.codenvy.ide.api.template.TemplateAgent;
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.ext.aws.client.AWSExtension;
@@ -63,6 +61,7 @@ import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+import static com.codenvy.ide.api.ui.wizard.WizardKeys.PROJECT_NAME;
 
 /**
  * Presenter to allow user create application via wizard.
@@ -71,7 +70,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  * @version $Id: $
  */
 @Singleton
-public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implements BeanstalkPageView.ActionDelegate, ProjectBuiltHandler {
+public class BeanstalkPagePresenter extends AbstractWizardPage implements BeanstalkPageView.ActionDelegate, ProjectBuiltHandler {
     private BeanstalkPageView       view;
     private EventBus                eventBus;
     private String                  environmentName;
@@ -81,14 +80,13 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
     private HandlerRegistration     projectBuildHandler;
     private LoginPresenter          loginPresenter;
     private BeanstalkClientService  service;
-    private TemplateAgent           templateAgent;
-    private CreateProjectProvider   createProjectProvider;
     private String                  warUrl;
     private String                  projectName;
     private Loader                  loader;
     private NotificationManager     notificationManager;
     private Notification            notification;
     private boolean                 isLogined;
+    private CommitCallback          callback;
 
     /**
      * Create presenter.
@@ -99,8 +97,6 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
      * @param constant
      * @param loginPresenter
      * @param service
-     * @param templateAgent
-     * @param createProjectProvider
      * @param resource
      * @param loader
      * @param notificationManager
@@ -108,8 +104,7 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
     @Inject
     public BeanstalkPagePresenter(BeanstalkPageView view, EventBus eventBus, ResourceProvider resourceProvider,
                                   AWSLocalizationConstant constant, LoginPresenter loginPresenter, BeanstalkClientService service,
-                                  TemplateAgent templateAgent, CreateProjectProvider createProjectProvider, AWSResource resource,
-                                  Loader loader, NotificationManager notificationManager) {
+                                  AWSResource resource, Loader loader, NotificationManager notificationManager) {
         super("Deploy project to Elastic Beanstalk", resource.elasticBeanstalk48());
 
         this.view = view;
@@ -118,8 +113,6 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
-        this.templateAgent = templateAgent;
-        this.createProjectProvider = createProjectProvider;
         this.loader = loader;
         this.notificationManager = notificationManager;
 
@@ -138,26 +131,20 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
 
     /** {@inheritDoc} */
     @Override
-    public WizardPagePresenter flipToNext() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean canFinish() {
-        return validate();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean hasNext() {
-        return false;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public boolean isCompleted() {
         return validate();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void focusComponent() {
+        //do nothing
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void removeOptions() {
+        //do nothing
     }
 
     /** {@inheritDoc} */
@@ -179,7 +166,7 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        projectName = createProjectProvider.getProjectName();
+        projectName = wizardContext.getData(PROJECT_NAME);
 
         view.setApplicationName(projectName);
         view.setEnvironmentName("");
@@ -239,6 +226,7 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
                                               notification.setStatus(FINISHED);
                                               notification.setMessage(message);
                                               notification.setType(ERROR);
+                                              callback.onFailure(exception);
                                           }
 
                                           @Override
@@ -253,6 +241,7 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
             notification.setStatus(FINISHED);
             notification.setMessage(e.getMessage());
             notification.setType(ERROR);
+            callback.onFailure(e);
         }
     }
 
@@ -295,6 +284,8 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
 
                                               Notification notification = new Notification(message, ERROR);
                                               notificationManager.showNotification(notification);
+
+                                              callback.onFailure(exception);
                                           }
 
                                           @Override
@@ -311,6 +302,8 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
                                               new EnvironmentStatusChecker(resourceProvider, project, result, true,
                                                                            environmentStatusHandler, eventBus, service,
                                                                            loginPresenter, constant, notificationManager).startChecking();
+
+                                              callback.onSuccess();
                                           }
                                       });
         } catch (RequestException e) {
@@ -318,23 +311,30 @@ public class BeanstalkPagePresenter extends AbstractWizardPagePresenter implemen
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             Notification notification = new Notification(e.getMessage(), ERROR);
             notificationManager.showNotification(notification);
+            callback.onFailure(e);
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void doFinish() {
-        createProjectProvider.create(new AsyncCallback<Project>() {
+    public void commit(@NotNull CommitCallback callback) {
+        if (!isLogined) {
+            callback.onSuccess();
+            return;
+        }
+
+        this.callback = callback;
+
+        // TODO may be improve without getProject?
+        resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
             @Override
-            public void onFailure(Throwable caught) {
-                eventBus.fireEvent(new ExceptionThrownEvent(caught));
+            public void onSuccess(Project result) {
+                deploy(result);
             }
 
             @Override
-            public void onSuccess(Project result) {
-                if (isLogined) {
-                    deploy(result);
-                }
+            public void onFailure(Throwable caught) {
+                BeanstalkPagePresenter.this.callback.onFailure(caught);
             }
         });
     }

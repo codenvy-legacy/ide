@@ -22,6 +22,7 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
+import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.extension.cloudfoundry.client.action.CreateApplicationAction;
 import com.codenvy.ide.extension.cloudfoundry.client.action.ShowApplicationsAction;
 import com.codenvy.ide.extension.cloudfoundry.client.action.ShowCloudFoundryProjectAction;
@@ -89,11 +90,14 @@ public class CloudFoundryExtension {
 
         // TODO change hard code types
         JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
-        natures.put("Java", JsonCollections.<String>createArray("Servlet/JSP", "Spring", "War"));
+        natures.put("java", JsonCollections.<String>createArray("Servlet/JSP", "Spring", "War"));
         natures.put("Ruby", JsonCollections.<String>createArray("Rails"));
 
-        // TODO
-//        paasAgent.register(ID, ID, resources.cloudFoundry48(), natures, JsonCollections.createArray(wizardPage), null);
+        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
+        wizardPages.add(wizardPage);
+
+        paasAgent.register(ID, ID, resources.cloudFoundry48(), natures, wizardPages, null);
+
         DefaultActionGroup projectPaas = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PROJECT_PAAS);
         actionManager.registerAction("showCloudfoundryProject", showCloudFoundryProjectAction);
         projectPaas.add(showCloudFoundryProjectAction);

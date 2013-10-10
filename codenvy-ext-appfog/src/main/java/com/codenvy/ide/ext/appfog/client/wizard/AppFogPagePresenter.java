@@ -82,8 +82,7 @@ public class AppFogPagePresenter extends AbstractWizardPage implements AppFogPag
     private Notification               notification;
     private JsonArray<InfraDetail>     infras;
     private boolean                    isLogined;
-
-    private CommitCallback callback;
+    private CommitCallback             callback;
 
     /**
      * Create presenter.
@@ -96,7 +95,6 @@ public class AppFogPagePresenter extends AbstractWizardPage implements AppFogPag
      * @param constant
      * @param loginPresenter
      * @param service
-     * @param templateAgent
      * @param notificationManager
      */
     @Inject
@@ -169,23 +167,22 @@ public class AppFogPagePresenter extends AbstractWizardPage implements AppFogPag
         return validate();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void focusComponent() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // do nothing
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removeOptions() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // do nothing
     }
 
     /** Checking entered information on view. */
     public boolean validate() {
-        if (isLogined) {
-            return view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty() &&
-                   currentInfra != null;
-        }
-        return true;
+        return !isLogined || view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty() &&
+                             currentInfra != null;
     }
 
     /** {@inheritDoc} */
@@ -492,19 +489,24 @@ public class AppFogPagePresenter extends AbstractWizardPage implements AppFogPag
 
     @Override
     public void commit(@NotNull CommitCallback callback) {
-        this.callback = callback;
-        if (isLogined) {
-            resourcesProvider.getProject(projectName, new AsyncCallback<Project>() {
-                @Override
-                public void onSuccess(Project result) {
-                    deploy(result);
-                }
-
-                @Override
-                public void onFailure(Throwable caught) {
-                    AppFogPagePresenter.this.callback.onFailure(caught);
-                }
-            });
+        if (!isLogined) {
+            callback.onSuccess();
+            return;
         }
+
+        this.callback = callback;
+
+        // TODO may be improve with getProject?
+        resourcesProvider.getProject(projectName, new AsyncCallback<Project>() {
+            @Override
+            public void onSuccess(Project result) {
+                deploy(result);
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                AppFogPagePresenter.this.callback.onFailure(caught);
+            }
+        });
     }
 }

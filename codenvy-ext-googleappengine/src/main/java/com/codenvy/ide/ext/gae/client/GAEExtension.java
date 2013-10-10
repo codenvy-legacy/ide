@@ -22,15 +22,17 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
+import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.ext.gae.client.actions.CreateApplicationAction;
 import com.codenvy.ide.ext.gae.client.actions.LoginAction;
 import com.codenvy.ide.ext.gae.client.actions.ManageApplicationAction;
 import com.codenvy.ide.ext.gae.client.actions.UpdateApplicationAction;
-import com.codenvy.ide.ext.gae.client.wizard.GAEWizardPresenter;
+import com.codenvy.ide.ext.gae.client.wizard.GAEWizardPagePresenter;
 import com.codenvy.ide.ext.gae.shared.Token;
 import com.codenvy.ide.ext.java.client.JavaExtension;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
@@ -53,14 +55,18 @@ public class GAEExtension {
     @Inject
     public GAEExtension(PaaSAgent paasAgent, GAEResources resources, ActionManager actionManager,
                         LoginAction loginAction, CreateApplicationAction createApplicationAction,
-                        Provider<GAEWizardPresenter> wizardPage, UpdateApplicationAction updateApplicationAction,
+                        Provider<GAEWizardPagePresenter> wizardPage, UpdateApplicationAction updateApplicationAction,
                         ManageApplicationAction manageApplicationAction) {
         // TODO change hard code types
-        JsonArray<String> requiredProjectTypes =
-                JsonCollections.createArray("Python", "PHP", "War");
+        JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
+        natures.put("java", JsonCollections.<String>createArray("War"));
+        natures.put("Python", JsonCollections.<String>createArray());
+        natures.put("PHP", JsonCollections.<String>createArray());
 
-        // TODO
-//        paasAgent.registerPaaS(ID, ID, resources.googleAppEngine48(), requiredProjectTypes, wizardPage, null);
+        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
+        wizardPages.add(wizardPage);
+
+        paasAgent.register(ID, ID, resources.googleAppEngine48(), natures, wizardPages, null);
 
         actionManager.registerAction("gaeLoginAction", loginAction);
         actionManager.registerAction("gaeCreateAppAction", createApplicationAction);

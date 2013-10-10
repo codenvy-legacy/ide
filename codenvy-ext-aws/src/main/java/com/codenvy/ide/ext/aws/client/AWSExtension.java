@@ -22,10 +22,12 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
+import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.ext.aws.client.beanstalk.wizard.BeanstalkPagePresenter;
 import com.codenvy.ide.ext.aws.client.command.*;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -60,9 +62,14 @@ public class AWSExtension {
                         BeanstalkManagementAction beanstalkManagementAction,
                         CreateApplicationManagementAction createApplicationManagementAction,
                         Provider<BeanstalkPagePresenter> wizardPage) {
-        JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Spring", "War");
-        // TODO
-//        paasAgent.registerPaaS(ID, "Amazon Web Services", resource.elasticBeanstalk48(), requiredProjectTypes, wizardPage, null);
+        // TODO change hard code types
+        JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
+        natures.put("java", JsonCollections.<String>createArray("Servlet/JSP", "Spring", "War"));
+
+        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
+        wizardPages.add(wizardPage);
+
+        paasAgent.register(ID, "Amazon Web Services", resource.elasticBeanstalk48(), natures, wizardPages, null);
 
         actionManager.registerAction("awsSwitchAccount", switchAccountAction);
         actionManager.registerAction("awsEc2Management", ec2ManagementAction);

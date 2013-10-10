@@ -18,13 +18,11 @@
 
 package com.codenvy.ide.ext.gae.client.wizard;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.template.CreateProjectProvider;
-import com.codenvy.ide.api.template.TemplateAgent;
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.UnauthorizedException;
 import com.codenvy.ide.ext.gae.client.*;
@@ -37,7 +35,6 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.MimeType;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
@@ -48,6 +45,7 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.ui.wizard.WizardKeys.PROJECT_NAME;
 
 /**
  * Presenter that allow user to use Create Project Wizard to configure deployment application on Google App Engine.
@@ -56,26 +54,24 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * @version $Id: $
  */
 @Singleton
-public class GAEWizardPresenter extends AbstractWizardPagePresenter implements GAEWizardView.ActionDelegate {
+public class GAEWizardPagePresenter extends AbstractWizardPage implements GAEWizardView.ActionDelegate {
     private GAEWizardView              view;
     private EventBus                   eventBus;
     private String                     existedAppId;
     private GAELocalization            constant;
     private LoginAction                loginAction;
     private GAEClientService           service;
-    private TemplateAgent              templateAgent;
     private CreateApplicationPresenter createApplicationPresenter;
     private ResourceProvider           resourceProvider;
-    private CreateProjectProvider      createProjectProvider;
     private NotificationManager        notificationManager;
     private boolean                    isLoggedIn;
+    private CommitCallback             callback;
 
     /** Constructor for Google App Engine Wizard page. */
     @Inject
-    public GAEWizardPresenter(EventBus eventBus, GAEWizardView view, GAELocalization constant, LoginAction loginAction,
-                              GAEClientService service, TemplateAgent templateAgent, GAEResources resources,
-                              CreateApplicationPresenter createApplicationPresenter, ResourceProvider resourceProvider,
-                              NotificationManager notificationManager) {
+    public GAEWizardPagePresenter(EventBus eventBus, GAEWizardView view, GAELocalization constant, LoginAction loginAction,
+                                  GAEClientService service, GAEResources resources, CreateApplicationPresenter createApplicationPresenter,
+                                  ResourceProvider resourceProvider, NotificationManager notificationManager) {
         super("Deploy project to Google App Engine", resources.googleAppEngine48());
 
         this.eventBus = eventBus;
@@ -83,7 +79,6 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
         this.constant = constant;
         this.loginAction = loginAction;
         this.service = service;
-        this.templateAgent = templateAgent;
         this.createApplicationPresenter = createApplicationPresenter;
         this.resourceProvider = resourceProvider;
         this.notificationManager = notificationManager;
@@ -114,40 +109,37 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
 
     /** {@inheritDoc} */
     @Override
-    public WizardPagePresenter flipToNext() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean canFinish() {
-        return validate();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean hasNext() {
-        return false;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public boolean isCompleted() {
         return validate();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void doFinish() {
-        createProjectProvider.create(new AsyncCallback<Project>() {
+    public void focusComponent() {
+        //do nothing
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void removeOptions() {
+        //do nothing
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void commit(@NotNull CommitCallback callback) {
+        this.callback = callback;
+
+        // TODO may be improve with getProject?
+        resourceProvider.getProject(wizardContext.getData(PROJECT_NAME), new AsyncCallback<Project>() {
             @Override
-            public void onFailure(Throwable throwable) {
-                Log.error(GAEWizardPresenter.class, throwable);
+            public void onSuccess(Project result) {
+                insertIntoProjectGaeConfig(result);
             }
 
             @Override
-            public void onSuccess(Project project) {
-                insertIntoProjectGaeConfig(project);
+            public void onFailure(Throwable caught) {
+                GAEWizardPagePresenter.this.callback.onFailure(caught);
             }
         });
     }
@@ -215,7 +207,7 @@ public class GAEWizardPresenter extends AbstractWizardPagePresenter implements G
             @Override
             public void execute() {
                 if (isLoggedIn) {
-                    createApplicationPresenter.showDialog(project);
+                    createApplicationPresenter.showDialog(project, callback);
                 }
             }
         });

@@ -174,8 +174,9 @@ public class NewProjectWizardTest {
 
         assertEquals(model.flipToFirst(), newProjectPage);
 
-        verify(newProjectPage).setUpdateDelegate((UpdateDelegate)anyObject());
-        verify(newProjectPage).setContext((WizardContext)anyObject());
+        verify(newProjectPageProvider, times(2)).get();
+        verify(newProjectPage, times(2)).setUpdateDelegate((UpdateDelegate)anyObject());
+        verify(newProjectPage, times(2)).setContext((WizardContext)anyObject());
         assertNull(wizardContext.getData(TEMPLATE));
     }
 
