@@ -17,10 +17,12 @@
  */
 package com.codenvy.ide.factory.server;
 
+import com.codenvy.commons.security.oauth.OAuthTokenProvider;
 import com.codenvy.ide.commons.shared.ProjectType;
 
 import org.apache.commons.io.IOUtils;
 import org.codenvy.mail.MailSenderClient;
+import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
@@ -43,6 +45,7 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
+import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -68,7 +71,10 @@ public class FactoryService {
     private       VirtualFileSystemRegistry vfsRegistry;
     private       LocalPathResolver         localPathResolver;
 
-    private static final Pattern PATTERN = Pattern.compile("public static final String PROJECT_ID = .*");
+    @Inject
+    private OAuthTokenProvider oauthTokenProvider;
+
+    private static final Pattern PATTERN        = Pattern.compile("public static final String PROJECT_ID = .*");
     private static final Pattern PATTERN_NUMBER = Pattern.compile("public static final String PROJECT_NUMBER = .*");
 
     /**
@@ -120,18 +126,24 @@ public class FactoryService {
                              @QueryParam("keepvcsinfo") boolean keepVcsInfo)
             throws VirtualFileSystemException, GitException,
                    URISyntaxException, IOException {
-        GitConnection gitConnection = getGitConnection(projectId, vfsId);
-        CloneRequest cloneRequest = new CloneRequest(remoteUri, null);
-        gitConnection.clone(cloneRequest);
-        BranchCheckoutRequest checkoutRequest = new BranchCheckoutRequest();
-        checkoutRequest.setName("temp");
-        checkoutRequest.setCreateNew(true);
-        checkoutRequest.setStartPoint(idCommit);
-        gitConnection.branchCheckout(checkoutRequest);
+        try {
+            GitConnection gitConnection = getGitConnection(projectId, vfsId);
+            CloneRequest cloneRequest = new CloneRequest(remoteUri, null);
+            gitConnection.clone(cloneRequest);
+            BranchCheckoutRequest checkoutRequest = new BranchCheckoutRequest();
+            checkoutRequest.setName("temp");
+            checkoutRequest.setCreateNew(true);
+            checkoutRequest.setStartPoint(idCommit);
+            gitConnection.branchCheckout(checkoutRequest);
         if (!keepVcsInfo)
             deleteRepository(vfsId, projectId);
-        return convertToProject(vfsId, projectId, remoteUri, projectType, action, keepVcsInfo);
+        } catch (JGitInternalException e) {
+            //clean failed clone repository
+            deleteRepository(vfsId, projectId);
+            throw new GitException(e);
+        }
 
+        return convertToProject(vfsId, projectId, remoteUri, projectType, action, keepVcsInfo);
     }
 
     private Item convertToProject(String vfsId, String projectId, String remoteUri, String projectType, String action, boolean keepVcsInfo)
@@ -139,9 +151,9 @@ public class FactoryService {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         Item itemToUpdate = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         try {
-            Item item = vfs.getItemByPath(itemToUpdate.getPath() + "/.project", null , false, null);
+            Item item = vfs.getItemByPath(itemToUpdate.getPath() + "/.project", null, false, null);
             vfs.delete(item.getId(), null);
-        }catch (ItemNotFoundException ignore){
+        } catch (ItemNotFoundException ignore) {
             // ignore
         }
         if (projectType != null && !projectType.isEmpty()) {
@@ -173,7 +185,8 @@ public class FactoryService {
                 }
 
                 String newContent = PATTERN.matcher(content).replaceFirst("public static final String PROJECT_ID = \"" + prjID + "\";");
-                newContent = PATTERN_NUMBER.matcher(newContent).replaceFirst("public static final String PROJECT_NUMBER = \"" + prjNum + "\";");
+                newContent =
+                        PATTERN_NUMBER.matcher(newContent).replaceFirst("public static final String PROJECT_NUMBER = \"" + prjNum + "\";");
                 vfs.updateContent(constJava.getId(), MediaType.valueOf(constJava.getMimeType()),
                                   new ByteArrayInputStream(newContent.getBytes()), null);
             }

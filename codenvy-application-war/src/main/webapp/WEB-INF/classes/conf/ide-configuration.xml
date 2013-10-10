@@ -267,6 +267,10 @@
         <type>org.exoplatform.ide.security.oauth.ExoGitHubOAuthAuthenticator</type>
     </component>
 
+    <component>
+        <type>org.exoplatform.ide.security.oauth.ExoWSO2OAuthAuthenticator</type>
+    </component>
+
     <!--
     ***************************************************************************************
     ********************************** Collaboration Editor *******************************
