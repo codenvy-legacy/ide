@@ -252,23 +252,98 @@
     -->
 
     <component>
-      <type>com.codenvy.commons.security.oauth.OAuthAuthenticationApplication</type>
+        <type>com.codenvy.commons.security.oauth.OAuthAuthenticationApplication</type>
     </component>
-  
+
+    <component>
+        <key>com.codenvy.commons.security.oauth.OAuthTokenProvider</key>
+        <type>com.codenvy.commons.security.oauth.OAuthAuthenticatorTokenProvider</type>
+    </component>
+
     <component>
         <type>org.exoplatform.ide.security.oauth.ExoOAuthAuthenticatorProvider</type>
     </component>
 
     <component>
         <type>org.exoplatform.ide.security.oauth.ExoGoogleOAuthAuthenticator</type>
+        <init-params>
+            <value-param>
+                <name>type</name>
+                <value>web</value>
+            </value-param>
+            <value-param>
+                <name>client-id</name>
+                <value>YOUR_CLIENT_ID</value>
+            </value-param>
+            <value-param>
+                <name>client-secret</name>
+                <value>YOUR_CLIENT_SECRET</value>
+            </value-param>
+            <values-param>
+                <name>redirect-uris</name>
+                <value>http://example.com/callback</value>
+            </values-param>
+        </init-params>
     </component>
 
     <component>
         <type>org.exoplatform.ide.security.oauth.ExoGitHubOAuthAuthenticator</type>
+        <init-params>
+            <value-param>
+                <name>type</name>
+                <value>web</value>
+            </value-param>
+            <value-param>
+                <name>client-id</name>
+                <value>YOUR_CLIENT_ID</value>
+            </value-param>
+            <value-param>
+                <name>client-secret</name>
+                <value>YOUR_CLIENT_SECRET</value>
+            </value-param>
+            <value-param>
+                <name>auth-uri</name>
+                <value>http://example.com/auth</value>
+            </value-param>
+            <value-param>
+                <name>token-uri</name>
+                <value>http://example.com/token</value>
+            </value-param>
+            <values-param>
+                <name>redirect-uris</name>
+                <value>http://example.com/callback</value>
+            </values-param>
+        </init-params>
     </component>
 
     <component>
         <type>org.exoplatform.ide.security.oauth.ExoWSO2OAuthAuthenticator</type>
+        <init-params>
+            <value-param>
+                <name>type</name>
+                <value>web</value>
+            </value-param>
+            <value-param>
+                <name>client-id</name>
+                <value>YOUR_CLIENT_ID</value>
+            </value-param>
+            <value-param>
+                <name>client-secret</name>
+                <value>YOUR_CLIENT_SECRET</value>
+            </value-param>
+            <value-param>
+                <name>auth-uri</name>
+                <value>http://example.com/auth</value>
+            </value-param>
+            <value-param>
+                <name>token-uri</name>
+                <value>http://example.com/token</value>
+            </value-param>
+            <values-param>
+                <name>redirect-uris</name>
+                <value>http://example.com/callback</value>
+            </values-param>
+        </init-params>
     </component>
 
     <!--
