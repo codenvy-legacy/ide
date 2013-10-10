@@ -27,14 +27,15 @@ import java.nio.file.Path;
  */
 public class GWTCodeServerConfiguration {
     /** GWT code server's bind address. */
-    private String bindAddress;
+    private       String bindAddress;
     /** GWT code server's port. */
-    private int    port;
+    private       int    port;
     /**
      * GWT code server's working directory for internal use. It's the root of the directory tree where the GWT code
      * server will write compiler output. If not supplied, a system temporary directory should be used.
      */
-    private Path   workDir;
+    private       Path   workDir;
+    private final String customModuleName;
 
     /**
      * Constructs new {@link GWTCodeServerConfiguration} with the specified parameters.
@@ -44,12 +45,13 @@ public class GWTCodeServerConfiguration {
      * @param port
      *         code server port
      * @param workDir
-     *         code server working directory
+     * @param customModuleName
      */
-    public GWTCodeServerConfiguration(String bindAddress, int port, Path workDir) {
+    public GWTCodeServerConfiguration(String bindAddress, int port, Path workDir, String customModuleName) {
         this.bindAddress = bindAddress;
         this.port = port;
         this.workDir = workDir;
+        this.customModuleName = customModuleName;
     }
 
     /**
@@ -107,5 +109,9 @@ public class GWTCodeServerConfiguration {
      */
     public void setWorkDir(Path workDir) {
         this.workDir = workDir;
+    }
+
+    public String getCustomModuleName() {
+        return customModuleName;
     }
 }

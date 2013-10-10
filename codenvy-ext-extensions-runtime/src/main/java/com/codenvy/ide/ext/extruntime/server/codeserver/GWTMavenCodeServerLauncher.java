@@ -21,9 +21,7 @@ import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.ide.ext.extruntime.server.ExtensionLauncherException;
 import com.codenvy.ide.ext.extruntime.server.Utils;
 
-import org.apache.maven.model.Build;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.Plugin;
+import org.apache.maven.model.*;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -40,9 +38,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.ext.extruntime.server.ExtensionLauncher.ADD_SOURCES_PROFILE;
 import static org.codehaus.plexus.util.xml.Xpp3DomBuilder.build;
 
 /**
@@ -52,21 +50,24 @@ import static org.codehaus.plexus.util.xml.Xpp3DomBuilder.build;
  * @version $Id: GWTMavenCodeServerLauncher.java Jul 26, 2013 3:15:52 PM azatsarynnyy $
  */
 public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
-    private static final Log LOG = ExoLogger.getLogger(GWTMavenCodeServerLauncher.class);
+    private static final Log    LOG                 = ExoLogger.getLogger(GWTMavenCodeServerLauncher.class);
+    /** Id of Maven profile that used to add (re)sources of custom's extension. */
+    public static final  String ADD_SOURCES_PROFILE = "customExtensionSources";
     /** Process that represents a started GWT code server. */
     private Process                    process;
-    /** Path to code server's log file. */
-    private Path                       logFilePath;
     private GWTCodeServerConfiguration configuration;
 
     /** {@inheritDoc} */
     @Override
     public void start(GWTCodeServerConfiguration configuration) throws GWTCodeServerException {
         this.configuration = configuration;
-        this.logFilePath = configuration.getWorkDir().resolve("code-server.log");
+        Path pom = configuration.getWorkDir().resolve("pom.xml");
         try {
-            setCodeServerConfiguration(configuration.getWorkDir().resolve("pom.xml"), configuration.getWorkDir(),
+            setCodeServerConfiguration(pom, configuration.getWorkDir(),
                                        configuration.getBindAddress(), configuration.getPort());
+
+            // Add sources from custom project to allow GWT code server access it.
+            fixMGWT332Bug(pom, configuration.getCustomModuleName());
         } catch (IOException e) {
             throw new GWTCodeServerException("Unable to launch GWT code server: " + e.getMessage(), e);
         }
@@ -80,7 +81,6 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
                 "-P" + ADD_SOURCES_PROFILE};
 
         ProcessBuilder processBuilder = new ProcessBuilder(command).directory(configuration.getWorkDir().toFile());
-        processBuilder.redirectOutput(logFilePath.toFile());
 
         try {
             this.process = processBuilder.start();
@@ -132,6 +132,49 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
         }
         final File m2Home = new File(m2HomeEnv);
         return m2Home.exists() ? m2Home : null;
+    }
+
+    /**
+     * It's a workaround for known bug in GWT Maven plug-in. See the https://jira.codehaus.org/browse/MGWT-332 for
+     * details.
+     *
+     * @throws java.io.IOException
+     *         error occurred while reading or writing content of file
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static void fixMGWT332Bug(Path pomPath, String extensionModuleName) throws IOException {
+        Model pom = Utils.readPom(pomPath);
+        List<Profile> profiles = pom.getProfiles();
+        Profile profile = null;
+        for (Profile curProfile : profiles) {
+            if (curProfile.getId().equals(ADD_SOURCES_PROFILE)) {
+                profile = curProfile;
+            }
+        }
+
+        if (profile == null) {
+            throw new IllegalStateException(String.format("Profile %s not found in %s.", ADD_SOURCES_PROFILE, pomPath));
+        }
+
+        Map<String, Plugin> plugins = profile.getBuild().getPluginsAsMap();
+        Plugin buildHelperPlugin = plugins.get("org.codehaus.mojo:build-helper-maven-plugin");
+        PluginExecution execution = buildHelperPlugin.getExecutionsAsMap().get("add-extension-sources");
+
+        final String confString = String.format("<configuration>" +
+                                                "  <sources>" +
+                                                "    <source>../%1$s/src/main/java</source>" +
+                                                "  </sources>" +
+                                                "</configuration>", extensionModuleName);
+
+        try {
+            Xpp3Dom configuration = build(new StringReader(confString));
+            execution.setConfiguration(configuration);
+            profile.getBuild().setPlugins(new ArrayList(plugins.values()));
+
+            Utils.writePom(pom, pomPath);
+        } catch (XmlPullParserException e) {
+            throw new IllegalStateException("Error occurred while parsing pom.xml :" + e.getMessage(), e);
+        }
     }
 
     /**

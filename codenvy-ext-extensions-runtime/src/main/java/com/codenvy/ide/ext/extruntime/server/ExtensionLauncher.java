@@ -58,7 +58,6 @@ import static com.codenvy.ide.commons.ZipUtils.unzip;
 import static com.codenvy.ide.commons.ZipUtils.zipDir;
 import static com.codenvy.ide.ext.extruntime.server.Utils.*;
 import static java.lang.Integer.parseInt;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
  * Class used to managing (creating/launching/getting logs/stopping) Codenvy with custom's extensions.
@@ -67,25 +66,20 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  * @version $Id: ExtensionLauncher.java Jul 7, 2013 3:17:41 PM azatsarynnyy $
  */
 public class ExtensionLauncher implements Startable {
-    private static final Log LOG = ExoLogger.getLogger(ExtensionLauncher.class);
-
-    /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
-    private static final int    DEFAULT_APPLICATION_LIFETIME     = 60;
-    /** Default address where GWT code server should bound . */
-    private static final String DEFAULT_CODE_SERVER_BIND_ADDRESS = "localhost";
+    private static final Log    LOG                                 = ExoLogger.getLogger(ExtensionLauncher.class);
     /** System property that contains build server URL. */
-    public static final  String BUILD_SERVER_BASE_URL            = "exo.ide.builder.build-server-base-url";
+    public static final  String BUILD_SERVER_BASE_URL               = "exo.ide.builder.build-server-base-url";
     /** Default name of the client module directory. */
-    public static final  String CLIENT_MODULE_DIR_NAME           = "codenvy-ide-client";
-    /** Id of Maven profile that used to add (re)sources of custom's extension. */
-    public static final  String ADD_SOURCES_PROFILE              = "customExtensionSources";
-
+    public static final  String CLIENT_MODULE_DIR_NAME              = "codenvy-ide-client";
+    public static final  String MAIN_GWT_MODULE_DESCRIPTOR_REL_PATH = "src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml";
+    /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
+    private static final int    DEFAULT_APPLICATION_LIFETIME        = 60;
+    /** Default address where GWT code server should bound . */
+    private static final String DEFAULT_CODE_SERVER_BIND_ADDRESS    = "localhost";
     /** Application lifetime (in milliseconds). */
-    private final int applicationLifetime;
-
+    private final int                                applicationLifetime;
     /** Base URL of build server. */
-    private final String buildServerBaseURL;
-
+    private final String                             buildServerBaseURL;
     /** Launched Codenvy applications with custom extension. */
     private final ConcurrentMap<String, Application> applications;
     /** Checks launched application's lifetime and terminate it if it's expired. */
@@ -191,8 +185,7 @@ public class ExtensionLauncher implements Startable {
             InputStream extPomContent = vfs.getContent(pomFile.getId()).getStream();
             Model extensionPom = readPom(extPomContent);
 
-            if (extensionPom.getGroupId() == null ||
-                extensionPom.getArtifactId() == null ||
+            if (extensionPom.getGroupId() == null || extensionPom.getArtifactId() == null ||
                 extensionPom.getVersion() == null) {
                 throw new Exception("Missing Maven artifact coordinates.");
             }
@@ -210,37 +203,22 @@ public class ExtensionLauncher implements Startable {
             Path customModulePath = codeServerDirPath.resolve(extensionPom.getArtifactId());
             unzip(vfs.exportZip(projectId).getStream(), customModulePath.toFile());
 
-            // Use special ide-configuration.xml without unnecessary components.
-            Files.copy(
-                    Thread.currentThread().getContextClassLoader().getResourceAsStream("tomcat/ide-configuration.xml"),
-                    clientModuleDirPath.resolve("src/main/webapp/WEB-INF/classes/conf/ide-configuration.xml"),
-                    REPLACE_EXISTING);
-
-            // Use special pom.xml to build 'clean' Codenvy Platform (without any deps on extensions).
-            Files.move(clientModuleDirPath.resolve("platform-pom.xml"), clientModulePomPath, REPLACE_EXISTING);
-
             addDependencyToPom(clientModulePomPath, extensionPom);
 
-            // Add sources from custom project to allow code server access it.
-            fixMGWT332Bug(clientModulePomPath, customModulePath.getFileName().toString(), ADD_SOURCES_PROFILE);
-
-            // Detect DTO usage and add an appropriate sections to the reactor pom.xml.
+            // Detect DTO usage and add an appropriate sections to the codenvy-ide-client/pom.xml.
             copyDtoGeneratorInvocations(extensionPom, clientModulePomPath);
 
-            Path mainGwtModuleDescriptor =
-                    clientModuleDirPath.resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
+            // Inherit custom GWT module.
+            Path mainGwtModuleDescriptor = clientModuleDirPath.resolve(MAIN_GWT_MODULE_DESCRIPTOR_REL_PATH);
             inheritGwtModule(mainGwtModuleDescriptor, detectGwtModuleLogicalName(customModulePath));
-            enableSuperDevMode(mainGwtModuleDescriptor);
 
-            // Replace src and pom.xml by symlinks to an appropriate src and pom.xml
-            // in 'fs-root' directory to allow GWT code server always get the actual sources.
+            // Replace src directory and pom.xml by symbolic links to an appropriate src and pom.xml
+            // in 'fs-root' directory to allow GWT code server always get an actual sources.
             Path extensionDirInFSRoot = Paths.get(wsMountPath + project.getPath());
             if (!extensionDirInFSRoot.isAbsolute()) {
                 extensionDirInFSRoot = extensionDirInFSRoot.toAbsolutePath();
             }
             extensionDirInFSRoot = extensionDirInFSRoot.normalize();
-
-            // Create symbolic links to project sources and pom.xml to allow code server get an actual sources.
             deleteRecursive(customModulePath.resolve("src").toFile());
             Files.createSymbolicLink(customModulePath.resolve("src"), extensionDirInFSRoot.resolve("src"));
             Files.delete(customModulePath.resolve("pom.xml"));
@@ -253,8 +231,7 @@ public class ExtensionLauncher implements Startable {
             zipDir(customModulePath.toString(), customModulePath.toFile(), zippedExtensionProjectFile, ANY_FILTER);
             String deployId = deploy(zippedExtensionProjectFile);
             final String deployStatusJson = startCheckingBuildStatus(deployId);
-            DtoServerImpls.BuildStatusImpl deployStatus =
-                    DtoServerImpls.BuildStatusImpl.fromJsonString(deployStatusJson);
+            DtoServerImpls.BuildStatusImpl deployStatus = DtoServerImpls.BuildStatusImpl.fromJsonString(deployStatusJson);
 
             if (deployStatus.getStatus() != Status.SUCCESSFUL) {
                 LOG.error("Unable to deploy maven artifact: " + deployStatus.getError());
@@ -268,8 +245,8 @@ public class ExtensionLauncher implements Startable {
 
             // Launch GWT code server while project is building.
             GWTCodeServerLauncher codeServer = new GWTMavenCodeServerLauncher();
-            codeServer
-                    .start(new GWTCodeServerConfiguration(codeServerBindAddress, codeServerPort, clientModuleDirPath));
+            codeServer.start(new GWTCodeServerConfiguration(codeServerBindAddress, codeServerPort, clientModuleDirPath,
+                                                            customModulePath.getFileName().toString()));
 
             final String buildStatusJson = startCheckingBuildStatus(buildId);
             DtoServerImpls.BuildStatusImpl buildStatus = DtoServerImpls.BuildStatusImpl.fromJsonString(buildStatusJson);
@@ -285,8 +262,7 @@ public class ExtensionLauncher implements Startable {
 
             final long expirationTime = System.currentTimeMillis() + applicationLifetime;
             applications.put(appId, new Application(appId, expirationTime, codeServer, tomcatProcess,
-                                                    shutdownPort, httpPort, ajpPort,
-                                                    tomcatDir, tempDir));
+                                                    shutdownPort, httpPort, ajpPort, tomcatDir, tempDir));
 
             LOG.debug("Start Codenvy extension {}", appId);
             return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort).setCodeServerPort(codeServerPort);

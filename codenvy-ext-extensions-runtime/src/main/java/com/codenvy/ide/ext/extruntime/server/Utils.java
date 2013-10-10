@@ -21,7 +21,6 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
-import org.apache.maven.model.Profile;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
@@ -39,37 +38,22 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.nio.file.FileSystems;
-import java.nio.file.FileVisitOption;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.TERMINATE;
-import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 
 /**
- * A collection of utility methods that simplify editing of Maven POM and GWT module descriptor (gwt.xml) files.
- * 
+ * A collection of utility methods.
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: Utils.java Jul 31, 2013 11:30:14 AM azatsarynnyy $
  */
@@ -81,10 +65,12 @@ public class Utils {
 
     /**
      * Read pom.xml.
-     * 
-     * @param path pom.xml path
+     *
+     * @param path
+     *         pom.xml path
      * @return a project object model
-     * @throws IOException error occurred while reading content of file
+     * @throws IOException
+     *         error occurred while reading content of file
      */
     public static Model readPom(Path path) throws IOException {
         return readPom(Files.newInputStream(path));
@@ -92,10 +78,12 @@ public class Utils {
 
     /**
      * Read pom.xml.
-     * 
-     * @param stream input stream that represents a pom.xml
+     *
+     * @param stream
+     *         input stream that represents a pom.xml
      * @return a project object model
-     * @throws IOException error occurred while reading content of file
+     * @throws IOException
+     *         error occurred while reading content of file
      */
     static Model readPom(InputStream stream) throws IOException {
         try {
@@ -107,10 +95,13 @@ public class Utils {
 
     /**
      * Write provided project object model to the specified path.
-     * 
-     * @param pom a project object model
-     * @param path path to pom.xml
-     * @throws IOException error occurred while writing content of file
+     *
+     * @param pom
+     *         a project object model
+     * @param path
+     *         path to pom.xml
+     * @throws IOException
+     *         error occurred while writing content of file
      */
     public static void writePom(Model pom, Path path) throws IOException {
         pomWriter.write(Files.newOutputStream(path), pom);
@@ -118,10 +109,13 @@ public class Utils {
 
     /**
      * Add dependency to the specified pom.xml.
-     * 
-     * @param path pom.xml path
-     * @param pom POM of artifact to add as dependency
-     * @throws IOException error occurred while reading or writing content of file
+     *
+     * @param path
+     *         pom.xml path
+     * @param pom
+     *         POM of artifact to add as dependency
+     * @throws IOException
+     *         error occurred while reading or writing content of file
      */
     static void addDependencyToPom(Path path, Model pom) throws IOException {
         addDependencyToPom(path, pom.getGroupId(), pom.getArtifactId(), pom.getVersion());
@@ -129,12 +123,17 @@ public class Utils {
 
     /**
      * Add dependency to the specified pom.xml.
-     * 
-     * @param path pom.xml path
-     * @param groupId groupId
-     * @param artifactId artifactId
-     * @param version artifact version
-     * @throws IOException error occurred while reading or writing content of file
+     *
+     * @param path
+     *         pom.xml path
+     * @param groupId
+     *         groupId
+     * @param artifactId
+     *         artifactId
+     * @param version
+     *         artifact version
+     * @throws IOException
+     *         error occurred while reading or writing content of file
      */
     static void addDependencyToPom(Path path, String groupId, String artifactId, String version) throws IOException {
         Dependency dep = new Dependency();
@@ -150,23 +149,31 @@ public class Utils {
 
     /**
      * Add the provided module to the specified reactor pom.xml.
-     * 
-     * @param path pom.xml path
-     * @param moduleRelativePath relative path of module to add
-     * @throws IOException error occurred while reading or writing content of file
+     *
+     * @param path
+     *         pom.xml path
+     * @param moduleRelativePath
+     *         relative path of module to add
+     * @throws IOException
+     *         error occurred while reading or writing content of file
      */
     static void addModuleToReactorPom(Path path, String moduleRelativePath) throws IOException {
         addModuleToReactorPom(path, moduleRelativePath, null);
     }
 
     /**
-     * Add the provided module to the specified reactor pom.xml. If <code>moduleAfter</code> isn't null - new module will be inserted before
+     * Add the provided module to the specified reactor pom.xml. If <code>moduleAfter</code> isn't null - new module
+     * will be inserted before
      * the <code>moduleAfter</code>.
-     * 
-     * @param path pom.xml path
-     * @param moduleRelativePath relative path of module to add
-     * @param moduleAfter relative path of module that should be after the inserted module
-     * @throws IOException error occurred while reading or writing content of file
+     *
+     * @param path
+     *         pom.xml path
+     * @param moduleRelativePath
+     *         relative path of module to add
+     * @param moduleAfter
+     *         relative path of module that should be after the inserted module
+     * @throws IOException
+     *         error occurred while reading or writing content of file
      */
     static void addModuleToReactorPom(Path path, String moduleRelativePath, String moduleAfter) throws IOException {
         Model pom = readPom(path);
@@ -187,36 +194,14 @@ public class Utils {
     }
 
     /**
-     * Enable SuperDevMode for the specified GWT module descriptor.
-     * 
-     * @param path GWT module descriptor path
-     * @throws IOException error occurred while reading or writing content of file
-     */
-    static void enableSuperDevMode(Path path) throws IOException {
-        // Directive for GWT-module descriptor to enable GWT SuperDevMode.
-        final String superDevModeDirective = "    <add-linker name='xsiframe'/>\n" +
-                                             "    <set-configuration-property name='devModeRedirectEnabled' value='true'/>\n" +
-                                             "    <set-property name='compiler.useSourceMaps' value='true'/>\n";
-
-        List<String> content = Files.readAllLines(path, UTF_8);
-        int penultimateLine = 0;
-        for (String str : content) {
-            penultimateLine++;
-            if (str.contains("</module>")) {
-                break;
-            }
-        }
-        content.add(penultimateLine - 1, superDevModeDirective);
-
-        Files.write(path, content, UTF_8);
-    }
-
-    /**
      * Add the specified module name as a dependency to the provided GWT module descriptor.
-     * 
-     * @param path GWT module descriptor
-     * @param inheritableModuleLogicalName logical name of the GWT module to inherit
-     * @throws IOException error occurred while reading or writing content of file
+     *
+     * @param path
+     *         GWT module descriptor
+     * @param inheritableModuleLogicalName
+     *         logical name of the GWT module to inherit
+     * @throws IOException
+     *         error occurred while reading or writing content of file
      */
     static void inheritGwtModule(Path path, String inheritableModuleLogicalName) throws IOException {
         final String inheritsString = "    <inherits name='" + inheritableModuleLogicalName + "'/>";
@@ -236,11 +221,14 @@ public class Utils {
 
     /**
      * Detects and returns GWT module logical name.
-     * 
-     * @param folder path to folder that contains project sources
+     *
+     * @param folder
+     *         path to folder that contains project sources
      * @return GWT module logical name
-     * @throws IOException if an I/O error is thrown while finding GWT module descriptor
-     * @throws IllegalArgumentException if GWT module descriptor not found
+     * @throws IOException
+     *         if an I/O error is thrown while finding GWT module descriptor
+     * @throws IllegalArgumentException
+     *         if GWT module descriptor not found
      */
     static String detectGwtModuleLogicalName(Path folder) throws IOException {
         final String fileExtension = ".gwt.xml";
@@ -259,54 +247,18 @@ public class Utils {
     }
 
     /**
-     * It's a workaround for known bug in GWT Maven plug-in. See the https://jira.codehaus.org/browse/MGWT-332 for details.
-     * 
-     * @throws IOException error occurred while reading or writing content of file
-     */
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    static void fixMGWT332Bug(Path pomPath, String extensionModuleName, String profileId) throws ExtensionLauncherException, IOException {
-        Model pom = readPom(pomPath);
-        List<Profile> profiles = pom.getProfiles();
-        Profile profile = null;
-        for (Profile curProfile : profiles) {
-            if (curProfile.getId().equals(profileId)) {
-                profile = curProfile;
-            }
-        }
-
-        if (profile == null) {
-            throw new IllegalStateException(String.format("Profile %s not found in %s.", profileId, pomPath));
-        }
-
-        Map<String, Plugin> plugins = profile.getBuild().getPluginsAsMap();
-        Plugin buildHelperPlugin = plugins.get("org.codehaus.mojo:build-helper-maven-plugin");
-        PluginExecution execution = buildHelperPlugin.getExecutionsAsMap().get("add-extension-sources");
-
-        final String confString = String.format("<configuration>" +
-                                                "  <sources>" +
-                                                "    <source>../%1$s/src/main/java</source>" +
-                                                "  </sources>" +
-                                                "</configuration>", extensionModuleName);
-
-        try {
-            Xpp3Dom configuration = Xpp3DomBuilder.build(new StringReader(confString));
-            execution.setConfiguration(configuration);
-            profile.getBuild().setPlugins(new ArrayList(plugins.values()));
-
-            writePom(pom, pomPath);
-        } catch (XmlPullParserException e) {
-            throw new IllegalStateException("Error occurred while parsing pom.xml :" + e.getMessage(), e);
-        }
-    }
-
-    /**
      * Change the default ports of Tomcat server.
-     * 
-     * @param tomcatRootPath Tomcat root path
-     * @param shutdownPort server shutdown port
-     * @param httpPort HTTP-connector port
-     * @param ajpPort AJP-connector port
-     * @throws IllegalStateException if any error occurred while reading or writing a file
+     *
+     * @param tomcatRootPath
+     *         Tomcat root path
+     * @param shutdownPort
+     *         server shutdown port
+     * @param httpPort
+     *         HTTP-connector port
+     * @param ajpPort
+     *         AJP-connector port
+     * @throws IllegalStateException
+     *         if any error occurred while reading or writing a file
      */
     static void configureTomcatPorts(Path tomcatRootPath, int shutdownPort, int httpPort, int ajpPort) {
         File serverXml = tomcatRootPath.resolve("conf/server.xml").toFile();
@@ -346,8 +298,9 @@ public class Utils {
             StreamResult result = new StreamResult(serverXml);
             transformer.transform(source, result);
         } catch (ParserConfigurationException | TransformerException | SAXException | IOException e) {
-            throw new IllegalStateException(String.format("Error occurred while reading or writing file: %s.", tomcatRootPath)
-                                            + e.getMessage(), e);
+            throw new IllegalStateException(
+                    String.format("Error occurred while reading or writing file: %s.", tomcatRootPath)
+                    + e.getMessage(), e);
         }
     }
 
@@ -355,9 +308,9 @@ public class Utils {
     static void copyDtoGeneratorInvocations(Model sourcePom, Path destPomPath) throws IOException {
         final String dtoGeneratorClassName = "DtoGenerator";
 
-        Model reactorPom = readPom(destPomPath);
-        Map<String, Plugin> reactorPlugins = reactorPom.getBuild().getPluginsAsMap();
-        Plugin reactorExecPlugin = reactorPlugins.get("org.codehaus.mojo:exec-maven-plugin");
+        Model destPom = readPom(destPomPath);
+        Map<String, Plugin> destPomPlugins = destPom.getBuild().getPluginsAsMap();
+        Plugin destPomExecPlugin = destPomPlugins.get("org.codehaus.mojo:exec-maven-plugin");
 
         Map<String, Plugin> plugins = sourcePom.getBuild().getPluginsAsMap();
         Plugin execPlugin = plugins.get("org.codehaus.mojo:exec-maven-plugin");
@@ -368,8 +321,8 @@ public class Utils {
         for (PluginExecution pluginExecution : execPlugin.getExecutions()) {
             Xpp3Dom pluginConfiguration = (Xpp3Dom)pluginExecution.getConfiguration();
             if (pluginConfiguration.getChild("mainClass").getValue().endsWith(dtoGeneratorClassName)) {
-                reactorExecPlugin.addExecution(pluginExecution);
-                writePom(reactorPom, destPomPath);
+                destPomExecPlugin.addExecution(pluginExecution);
+                writePom(destPom, destPomPath);
             }
         }
     }
@@ -377,7 +330,7 @@ public class Utils {
     /** A {@code FileVisitor} that finds first file that match the specified pattern. */
     private static class Finder extends SimpleFileVisitor<Path> {
         private final PathMatcher matcher;
-        private Path              firstMatchedFile;
+        private       Path        firstMatchedFile;
 
         Finder(String pattern) {
             matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);

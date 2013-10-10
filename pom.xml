@@ -97,7 +97,6 @@
         <buildNumber>${maven.build.timestamp}</buildNumber>
     </properties>
 
-
     <dependencyManagement>
         <dependencies>
             <!-- eXo Stuff -->
@@ -406,6 +405,11 @@
                 <artifactId>codenvy-ide-security</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.codenvy.ide</groupId>
+                <artifactId>codenvy-sdk-private-dependencies</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!--EverREST-->
             <dependency>
@@ -704,7 +708,6 @@
                 <artifactId>lucene-core</artifactId>
                 <version>2.9.4</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 
@@ -739,6 +742,7 @@
             </plugins>
         </pluginManagement>
     </build>
+
     <modules>
         <module>codenvy-ide-commons</module>
         <module>codenvy-ide-api</module>
@@ -757,12 +761,40 @@
         <module>codenvy-ext-git</module>
         <module>codenvy-ext-maven</module>
         <module>codenvy-ext-ssh</module>
-        <module>codenvy-ext-tutorials</module>
-        <module>codenvy-ext-extensions-runtime</module>
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
-        <module>codenvy-application-war</module>
         <module>codenvy-ide-site-war</module>
-        <module>codenvy-packaging-standalone-tomcat</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <!-- Used to build default-version (non-SDK) of Codenvy -->
+            <id>default-version</id>
+            <activation>
+                <property>
+                    <name>!sdk</name>
+                </property>
+            </activation>
+            <modules>
+                <module>codenvy-application-war</module>
+                <module>codenvy-packaging-standalone-tomcat</module>
+            </modules>
+        </profile>
+        <profile>
+            <!-- Used to build Codenvy Platform SDK -->
+            <id>sdk-version</id>
+            <activation>
+                <property>
+                    <name>sdk</name>
+                </property>
+            </activation>
+            <modules>
+                <module>codenvy-ext-tutorials</module>
+                <module>codenvy-ext-extensions-runtime</module>
+                <module>codenvy-sdk-application-war</module>
+                <module>codenvy-sdk-private-dependencies</module>
+                <module>codenvy-sdk-packaging-standalone-tomcat</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>
