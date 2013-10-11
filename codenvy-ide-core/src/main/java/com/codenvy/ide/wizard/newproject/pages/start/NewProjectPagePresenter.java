@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.newproject2.pages.start;
+package com.codenvy.ide.wizard.newproject.pages.start;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
@@ -33,8 +33,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import static com.codenvy.ide.api.ui.wizard.WizardKeys.PROJECT_NAME;
-import static com.codenvy.ide.wizard.newproject2.NewProjectWizard.PAAS;
-import static com.codenvy.ide.wizard.newproject2.NewProjectWizard.PROJECT_TYPE;
+import static com.codenvy.ide.wizard.newproject.NewProjectWizard.PAAS;
+import static com.codenvy.ide.wizard.newproject.NewProjectWizard.PROJECT_TYPE;
 
 
 /**

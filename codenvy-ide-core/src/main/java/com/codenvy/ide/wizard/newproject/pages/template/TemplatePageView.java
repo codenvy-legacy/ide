@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.newproject2.pages.template;
+package com.codenvy.ide.wizard.newproject.pages.template;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.template.Template;

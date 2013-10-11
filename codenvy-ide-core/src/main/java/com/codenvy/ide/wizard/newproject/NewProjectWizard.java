@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.newproject2;
+package com.codenvy.ide.wizard.newproject;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
@@ -29,8 +29,8 @@ import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.wizard.newproject.ProjectTypeData;
-import com.codenvy.ide.wizard.newproject2.pages.start.NewProjectPagePresenter;
-import com.codenvy.ide.wizard.newproject2.pages.template.TemplatePagePresenter;
+import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
+import com.codenvy.ide.wizard.newproject.pages.template.TemplatePagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;

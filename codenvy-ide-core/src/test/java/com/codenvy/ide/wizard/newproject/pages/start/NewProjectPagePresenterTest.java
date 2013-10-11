@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.newproject2.pages.start;
+package com.codenvy.ide.wizard.newproject.pages.start;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
@@ -39,8 +39,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import static com.codenvy.ide.api.ui.wizard.Wizard.UpdateDelegate;
-import static com.codenvy.ide.wizard.newproject2.NewProjectWizard.PAAS;
-import static com.codenvy.ide.wizard.newproject2.NewProjectWizard.PROJECT_TYPE;
+import static com.codenvy.ide.wizard.newproject.NewProjectWizard.PAAS;
+import static com.codenvy.ide.wizard.newproject.NewProjectWizard.PROJECT_TYPE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyObject;

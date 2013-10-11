@@ -22,7 +22,7 @@ import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
-import com.codenvy.ide.wizard.newproject2.NewProjectWizard;
+import com.codenvy.ide.wizard.newproject.NewProjectWizard;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

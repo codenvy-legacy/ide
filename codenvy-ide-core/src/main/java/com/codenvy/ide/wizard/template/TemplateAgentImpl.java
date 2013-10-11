@@ -24,7 +24,7 @@ import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.wizard.newproject2.NewProjectWizard;
+import com.codenvy.ide.wizard.newproject.NewProjectWizard;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Provider;

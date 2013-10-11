@@ -26,8 +26,9 @@ import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.wizard.newproject2.pages.start.NewProjectPagePresenter;
-import com.codenvy.ide.wizard.newproject2.pages.template.TemplatePagePresenter;
+import com.codenvy.ide.wizard.newproject.NewProjectWizard;
+import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
+import com.codenvy.ide.wizard.newproject.pages.template.TemplatePagePresenter;
 import com.google.inject.Provider;
 
 import org.junit.Before;
@@ -40,15 +41,15 @@ import org.mockito.stubbing.Answer;
 
 import static com.codenvy.ide.api.ui.wizard.Wizard.UpdateDelegate;
 import static com.codenvy.ide.api.ui.wizard.WizardPage.CommitCallback;
-import static com.codenvy.ide.wizard.newproject2.NewProjectWizard.PAAS;
-import static com.codenvy.ide.wizard.newproject2.NewProjectWizard.TEMPLATE;
+import static com.codenvy.ide.wizard.newproject.NewProjectWizard.PAAS;
+import static com.codenvy.ide.wizard.newproject.NewProjectWizard.TEMPLATE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.*;
 
 /**
- * Testing {@link NewProjectWizard} functionality.
+ * Testing {@link com.codenvy.ide.wizard.newproject.NewProjectWizard} functionality.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
