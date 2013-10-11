@@ -81,6 +81,7 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
                 "-P" + ADD_SOURCES_PROFILE};
 
         ProcessBuilder processBuilder = new ProcessBuilder(command).directory(configuration.getWorkDir().toFile());
+        processBuilder.redirectOutput(configuration.getWorkDir().resolve("code-server.log").toFile());
 
         try {
             this.process = processBuilder.start();
