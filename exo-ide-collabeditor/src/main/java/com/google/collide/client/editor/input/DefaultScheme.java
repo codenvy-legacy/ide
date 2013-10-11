@@ -162,8 +162,10 @@ public class DefaultScheme extends InputScheme {
                 return false;
             }
 
-            //Input symbol is special or diacritic.
-            boolean isSpecialSymbol(int asciiCode) {
+            /**
+             * Input symbol is special (for example: @{}[]€¹) or diacritic(for example: þđðł).
+             */
+            private boolean isSpecialSymbol(int asciiCode) {
                 return (asciiCode >= 91 && asciiCode <= 96) || (asciiCode >= 33 && asciiCode <= 47) || (asciiCode >= 58 && asciiCode <= 64)
                        || (asciiCode >= 123) ? true : false;
             }
