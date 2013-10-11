@@ -673,7 +673,12 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         JSONObject request = new JSONObject();
         request.put("v", new JSONString("1.1"));
         request.put("vcs", new JSONString("git"));
-        request.put("vcsurl", new JSONString(encodeQueryString(vcsURL)));
+        
+        /*
+         * To encode vcsURL use encodeQueryString(vcsURL)
+         */
+        request.put("vcsurl", new JSONString(vcsURL));
+        
         request.put("commitid", new JSONString(latestCommitId));
         request.put("action", new JSONString("openproject"));
         request.put("description", new JSONString(display.getDescriptionFieldValue()));
