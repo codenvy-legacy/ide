@@ -132,7 +132,7 @@ public class CreateNotificationTutorialPageTest extends BaseCreateTutorialTest {
     }
 
     @Test
-    public void testCreateWhenREquestExceptionHappened() throws Exception {
+    public void testCreateWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
                 .createNotificationTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 

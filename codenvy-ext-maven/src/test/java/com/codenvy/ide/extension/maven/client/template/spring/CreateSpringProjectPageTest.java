@@ -15,9 +15,9 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.tutorials.client.template.dto;
+package com.codenvy.ide.extension.maven.client.template.spring;
 
-import com.codenvy.ide.ext.tutorials.client.BaseCreateTutorialTest;
+import com.codenvy.ide.extension.maven.client.template.BaseCreateProjectTest;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
@@ -34,22 +34,20 @@ import java.lang.reflect.Method;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 /**
- * Testing {@link CreateDTOTutorialPage} functionality.
+ * Testing {@link CreateSpringProjectPage} functionality.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: TutorialsExtension.java Sep 19, 2013 4:14:56 PM azatsarynnyy $
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
-    private CreateDTOTutorialPage page;
+public class CreateSpringProjectPageTest extends BaseCreateProjectTest {
+    private CreateSpringProjectPage page;
 
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreateDTOTutorialPage(service, resourceProvider);
+        page = new CreateSpringProjectPage(service, resourceProvider);
         page.setContext(wizardContext);
     }
 
@@ -65,7 +63,7 @@ public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
                 return callback;
             }
         }).when(service)
-                .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createSpringProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -95,7 +93,7 @@ public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
                 return callback;
             }
         }).when(service)
-                .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createSpringProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         page.commit(callback);
 
@@ -114,7 +112,7 @@ public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
                 return callback;
             }
         }).when(service)
-                .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createSpringProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -135,7 +133,7 @@ public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
     @Test
     public void testCreateWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
-                .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createSpringProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         page.commit(callback);
 
