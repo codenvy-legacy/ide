@@ -21,18 +21,20 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.ext.extruntime.client.actions.GetLogsAction;
 import com.codenvy.ide.ext.extruntime.client.actions.LaunchAction;
 import com.codenvy.ide.ext.extruntime.client.actions.StopAction;
-import com.codenvy.ide.ext.extruntime.client.template.CreateEmptyCodenvyExtensionProjectPresenter;
-import com.codenvy.ide.ext.extruntime.client.template.CreateSampleCodenvyExtensionProjectPresenter;
-import com.codenvy.ide.ext.extruntime.client.wizard.ExtensionPagePresenter;
+import com.codenvy.ide.ext.extruntime.client.template.empty.CreateEmptyCodenvyExtensionPage;
+import com.codenvy.ide.ext.extruntime.client.template.sample.CreateSampleCodenvyExtensionPage;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 
 /**
  * Entry point for an extension that adds support for running Codenvy-extensions in Codenvy.
@@ -47,12 +49,14 @@ public class ExtRuntimeExtension {
 
     @Inject
     public ExtRuntimeExtension(TemplateAgent templateAgent,
-                               CreateEmptyCodenvyExtensionProjectPresenter createEmptyCodenvyExtensionProjectPresenter,
-                               CreateSampleCodenvyExtensionProjectPresenter
-                                       createSampleCodenvyExtensionProjectPresenter,
-                               Provider<ExtensionPagePresenter> wizardPage, ProjectTypeAgent projectTypeAgent,
-                               ExtRuntimeLocalizationConstant localizationConstants, ExtRuntimeResources resources,
-                               ActionManager actionManager, LaunchAction launchAction, GetLogsAction getLogsAction,
+                               Provider<CreateEmptyCodenvyExtensionPage> createEmptyCodenvyExtensionPage,
+                               Provider<CreateSampleCodenvyExtensionPage> createSampleCodenvyExtensionPage,
+                               ProjectTypeAgent projectTypeAgent,
+                               ExtRuntimeLocalizationConstant localizationConstants,
+                               ExtRuntimeResources resources,
+                               ActionManager actionManager,
+                               LaunchAction launchAction,
+                               GetLogsAction getLogsAction,
                                StopAction stopAction) {
         // register actions
         DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
@@ -66,21 +70,24 @@ public class ExtRuntimeExtension {
         actionManager.registerAction(localizationConstants.stopExtensionActionId(), stopAction);
         runMenuActionGroup.add(stopAction);
 
-        // TODO
-//        // register project type
-//        projectTypeAgent.registerProjectType(CODENVY_EXTENSION_PROJECT_TYPE, "Codenvy extension",
-//                                             resources.codenvyExtensionProject());
-//
-//        // register templates
-//        templateAgent.registerTemplate("Empty Codenvy extension project.",
-//                                       resources.codenvyExtensionTemplate(),
-//                                       createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-//                                       createEmptyCodenvyExtensionProjectPresenter, null);
-//
-//        templateAgent
-//                .registerTemplate("Sample Codenvy extension project. Illustrates simple example that uses Codenvy API.",
-//                                  resources.codenvyExtensionTemplate(),
-//                                  createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-//                                  createSampleCodenvyExtensionProjectPresenter, wizardPage);
+        // register project type
+        projectTypeAgent.register(CODENVY_EXTENSION_PROJECT_TYPE,
+                                  "Codenvy extension",
+                                  resources.codenvyExtensionProject(),
+                                  PRIMARY_NATURE,
+                                  JsonCollections.createArray(CODENVY_EXTENSION_PROJECT_TYPE));
+
+        // register templates
+        templateAgent.register("Empty Codenvy extension project.",
+                               resources.codenvyExtensionTemplate(),
+                               PRIMARY_NATURE,
+                               JsonCollections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends WizardPage>>createArray(createEmptyCodenvyExtensionPage));
+
+        templateAgent.register("Sample Codenvy extension project. Illustrates simple example that uses Codenvy API.",
+                               resources.codenvyExtensionTemplate(),
+                               PRIMARY_NATURE,
+                               JsonCollections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends WizardPage>>createArray(createSampleCodenvyExtensionPage));
     }
 }

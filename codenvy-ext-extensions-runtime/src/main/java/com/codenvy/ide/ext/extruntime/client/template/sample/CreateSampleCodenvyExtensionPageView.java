@@ -15,69 +15,69 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.extruntime.client.wizard;
+package com.codenvy.ide.ext.extruntime.client.template.sample;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 
 /**
- * The view of {@link ExtensionPagePresenter}.
- * 
+ * The view of {@link CreateSampleCodenvyExtensionPage}.
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ExtensionPageView.java Jul 8, 2013 4:07:39 PM azatsarynnyy $
+ * @version $Id: CreateSampleCodenvyExtensionPageView.java Jul 8, 2013 4:07:39 PM azatsarynnyy $
  */
-public interface ExtensionPageView extends View<ExtensionPageView.ActionDelegate> {
-    /** Needs for delegate some function into {@link ExtensionPageView}. */
+public interface CreateSampleCodenvyExtensionPageView extends View<CreateSampleCodenvyExtensionPageView.ActionDelegate> {
+    /** Needs for delegate some function into {@link CreateSampleCodenvyExtensionPageView}. */
     public interface ActionDelegate {
-        /** Performs any actions appropriate in response to the user having changed group id. */
-        void onGroupIdChanged();
-
-        /** Performs any actions appropriate in response to the user having changed artifact id. */
-        void onArtifactIdChanged();
-
-        /** Performs any actions appropriate in response to the user having changed artifact version. */
-        void onVersionChanged();
+        /** Performs any actions appropriate in response to the user having changed something. */
+        void onValueChanged();
     }
 
     /**
      * Returns group id.
-     * 
+     *
      * @return group id
      */
+    @NotNull
     String getGroupId();
 
     /**
      * Set group id.
-     * 
-     * @param group id
+     *
+     * @param groupId
+     *         group id
      */
-    void setGroupId(String groupId);
+    void setGroupId(@NotNull String groupId);
 
     /**
      * Returns artifact id.
-     * 
+     *
      * @return artifact id
      */
+    @NotNull
     String getArtifactId();
 
     /**
      * Set artifact id.
-     * 
-     * @param artifact id
+     *
+     * @param artifactId
+     *         artifact id
      */
-    void setArtifactId(String artifactId);
+    void setArtifactId(@NotNull String artifactId);
 
     /**
      * Returns artifact version.
-     * 
+     *
      * @return artifact version
      */
+    @NotNull
     String getVersion();
 
     /**
      * Set artifact version.
-     * 
-     * @param artifact version
+     *
+     * @param version
+     *         version
      */
-    void setVersion(String version);
-
+    void setVersion(@NotNull String version);
 }

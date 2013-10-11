@@ -15,11 +15,12 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.extruntime.client.template;
+package com.codenvy.ide.ext.extruntime.client.template.empty;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.template.CreateProjectProvider;
 import com.codenvy.ide.ext.extruntime.client.ExtRuntimeClientService;
+import com.codenvy.ide.ext.extruntime.client.template.AbstractCreateExtensionPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
@@ -29,6 +30,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.ui.wizard.WizardKeys.PROJECT_NAME;
 import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
@@ -37,58 +39,33 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
 /**
- * The implementation of {@link com.codenvy.ide.api.template.CreateProjectProvider} for creating empty Codenvy
- * extension
- * project.
+ * The wizard page for creating empty Codenvy extension project.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: CreateEmptyCodenvyExtensionProjectPresenter.java Sep 2, 2013 10:54:05 AM azatsarynnyy $
+ * @version $Id: CreateEmptyCodenvyExtensionPage.java Sep 2, 2013 10:54:05 AM azatsarynnyy $
  */
 @Singleton
-public class CreateEmptyCodenvyExtensionProjectPresenter implements CreateProjectProvider {
-    private String                  projectName;
-    private ExtRuntimeClientService service;
-    private ResourceProvider        resourceProvider;
+public class CreateEmptyCodenvyExtensionPage extends AbstractCreateExtensionPage {
 
     /**
-     * Create controller.
+     * Create page.
      *
      * @param service
      * @param resourceProvider
      */
     @Inject
-    protected CreateEmptyCodenvyExtensionProjectPresenter(ExtRuntimeClientService service,
-                                                          ResourceProvider resourceProvider) {
-        this.service = service;
-        this.resourceProvider = resourceProvider;
+    public CreateEmptyCodenvyExtensionPage(ExtRuntimeClientService service, ResourceProvider resourceProvider) {
+        super(service, resourceProvider);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
-    public String getProjectName() {
-        return projectName;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void create(final AsyncCallback<Project> callback) {
+    public void commit(@NotNull final CommitCallback callback) {
         JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
-                                                     new Property(PROPERTY_MIXIN_NATURES,
-                                                                  CODENVY_EXTENSION_PROJECT_TYPE),
+                                                     new Property(PROPERTY_MIXIN_NATURES, CODENVY_EXTENSION_PROJECT_TYPE),
                                                      new Property(PROPERTY_SOURCE_FOLDERS,
                                                                   createArray("src/main/java", "src/main/resources")));
+        final String projectName = wizardContext.getData(PROJECT_NAME);
         try {
             service.createEmptyCodenvyExtensionProject(projectName, properties, new AsyncRequestCallback<Void>() {
                 @Override
@@ -96,7 +73,7 @@ public class CreateEmptyCodenvyExtensionProjectPresenter implements CreateProjec
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
                         @Override
                         public void onSuccess(Project result) {
-                            callback.onSuccess(result);
+                            callback.onSuccess();
                         }
 
                         @Override
@@ -115,5 +92,4 @@ public class CreateEmptyCodenvyExtensionProjectPresenter implements CreateProjec
             callback.onFailure(e);
         }
     }
-
 }

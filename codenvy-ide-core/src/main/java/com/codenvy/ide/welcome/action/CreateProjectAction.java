@@ -19,11 +19,12 @@ package com.codenvy.ide.welcome.action;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.WelcomeItemAction;
+import com.codenvy.ide.api.ui.wizard.WizardDialog;
+import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
 import com.codenvy.ide.welcome.WelcomeLocalizationConstant;
-import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
+import com.codenvy.ide.wizard.newproject.NewProjectWizard;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -33,23 +34,28 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class CreateProjectAction implements WelcomeItemAction {
-    private WelcomeLocalizationConstant       constant;
-    private Resources                         resources;
-    private Provider<NewProjectPagePresenter> newProjectPage;
+    private WelcomeLocalizationConstant constant;
+    private Resources                   resources;
+    private WizardDialogFactory         wizardDialogFactory;
+    private NewProjectWizard            wizard;
 
     /**
      * Create action.
      *
      * @param constant
      * @param resources
-     * @param newProjectPage
+     * @param wizardDialogFactory
+     * @param wizard
      */
     @Inject
-    public CreateProjectAction(WelcomeLocalizationConstant constant, Resources resources,
-                               Provider<NewProjectPagePresenter> newProjectPage) {
+    public CreateProjectAction(WelcomeLocalizationConstant constant,
+                               Resources resources,
+                               WizardDialogFactory wizardDialogFactory,
+                               NewProjectWizard wizard) {
         this.constant = constant;
         this.resources = resources;
-        this.newProjectPage = newProjectPage;
+        this.wizardDialogFactory = wizardDialogFactory;
+        this.wizard = wizard;
     }
 
     /** {@inheritDoc} */
@@ -73,7 +79,7 @@ public class CreateProjectAction implements WelcomeItemAction {
     /** {@inheritDoc} */
     @Override
     public void execute() {
-//        WizardPresenter wizardDialog = new WizardPresenter(newProjectPage.get(), "Create project", resources);
-//        wizardDialog.showWizard();
+        WizardDialog wizardDialog = wizardDialogFactory.create(wizard);
+        wizardDialog.show();
     }
 }

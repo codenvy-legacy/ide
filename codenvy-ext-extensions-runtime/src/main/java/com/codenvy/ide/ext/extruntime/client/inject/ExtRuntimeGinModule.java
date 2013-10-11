@@ -20,8 +20,8 @@ package com.codenvy.ide.ext.extruntime.client.inject;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.ext.extruntime.client.ExtRuntimeClientService;
 import com.codenvy.ide.ext.extruntime.client.ExtRuntimeClientServiceImpl;
-import com.codenvy.ide.ext.extruntime.client.wizard.ExtensionPageView;
-import com.codenvy.ide.ext.extruntime.client.wizard.ExtensionPageViewImpl;
+import com.codenvy.ide.ext.extruntime.client.template.sample.CreateSampleCodenvyExtensionPageView;
+import com.codenvy.ide.ext.extruntime.client.template.sample.CreateSampleCodenvyExtensionPageViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -37,6 +37,6 @@ public class ExtRuntimeGinModule extends AbstractGinModule {
     @Override
     protected void configure() {
         bind(ExtRuntimeClientService.class).to(ExtRuntimeClientServiceImpl.class).in(Singleton.class);
-        bind(ExtensionPageView.class).to(ExtensionPageViewImpl.class).in(Singleton.class);
+        bind(CreateSampleCodenvyExtensionPageView.class).to(CreateSampleCodenvyExtensionPageViewImpl.class).in(Singleton.class);
     }
 }

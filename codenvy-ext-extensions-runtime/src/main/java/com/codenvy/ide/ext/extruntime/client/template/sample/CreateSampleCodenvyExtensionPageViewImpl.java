@@ -15,8 +15,9 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.extruntime.client.wizard;
+package com.codenvy.ide.ext.extruntime.client.template.sample;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.extruntime.client.ExtRuntimeResources;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -30,35 +31,35 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * The implementation of {@link ExtensionPageView}.
- * 
+ * The implementation of {@link CreateSampleCodenvyExtensionPageView}.
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ExtensionPageViewImpl.java Jul 8, 2013 4:07:57 PM azatsarynnyy $
+ * @version $Id: CreateSampleCodenvyExtensionPageViewImpl.java Jul 8, 2013 4:07:57 PM azatsarynnyy $
  */
 @Singleton
-public class ExtensionPageViewImpl extends Composite implements ExtensionPageView {
-    interface ExtensionPageViewImplUiBinder extends UiBinder<Widget, ExtensionPageViewImpl> {
+public class CreateSampleCodenvyExtensionPageViewImpl extends Composite implements CreateSampleCodenvyExtensionPageView {
+    interface ExtensionPageViewImplUiBinder extends UiBinder<Widget, CreateSampleCodenvyExtensionPageViewImpl> {
     }
 
     private static ExtensionPageViewImplUiBinder uiBinder = GWT.create(ExtensionPageViewImplUiBinder.class);
 
     @UiField
-    TextBox                                      groupIdField;
+    TextBox groupIdField;
     @UiField
-    TextBox                                      artifactIdField;
+    TextBox artifactIdField;
     @UiField
-    TextBox                                      versionField;
+    TextBox versionField;
     @UiField(provided = true)
-    final ExtRuntimeResources                    res;
-    private ActionDelegate                       delegate;
+    final   ExtRuntimeResources res;
+    private ActionDelegate      delegate;
 
     /**
      * Create view.
-     * 
+     *
      * @param resources
      */
     @Inject
-    protected ExtensionPageViewImpl(ExtRuntimeResources resources) {
+    protected CreateSampleCodenvyExtensionPageViewImpl(ExtRuntimeResources resources) {
         this.res = resources;
 
         initWidget(uiBinder.createAndBindUi(this));
@@ -78,7 +79,7 @@ public class ExtensionPageViewImpl extends Composite implements ExtensionPageVie
 
     /** {@inheritDoc} */
     @Override
-    public void setGroupId(String groupId) {
+    public void setGroupId(@NotNull String groupId) {
         groupIdField.setText(groupId);
     }
 
@@ -90,7 +91,7 @@ public class ExtensionPageViewImpl extends Composite implements ExtensionPageVie
 
     /** {@inheritDoc} */
     @Override
-    public void setArtifactId(String artifactId) {
+    public void setArtifactId(@NotNull String artifactId) {
         artifactIdField.setText(artifactId);
     }
 
@@ -102,22 +103,12 @@ public class ExtensionPageViewImpl extends Composite implements ExtensionPageVie
 
     /** {@inheritDoc} */
     @Override
-    public void setVersion(String version) {
+    public void setVersion(@NotNull String version) {
         versionField.setText(version);
     }
 
-    @UiHandler("groupIdField")
-    void onGroupIdFieldChange(KeyUpEvent event) {
-        delegate.onGroupIdChanged();
-    }
-
-    @UiHandler("artifactIdField")
-    void onArtifactIdFieldKeyUp(KeyUpEvent event) {
-        delegate.onArtifactIdChanged();
-    }
-
-    @UiHandler("versionField")
-    void onVersionFieldKeyUp(KeyUpEvent event) {
-        delegate.onVersionChanged();
+    @UiHandler(value = {"versionField", "artifactIdField", "groupIdField"})
+    void onValueChanged(KeyUpEvent event) {
+        delegate.onValueChanged();
     }
 }

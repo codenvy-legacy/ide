@@ -48,7 +48,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.*;
 
 /**
- * Testing {@link com.codenvy.ide.wizard.newproject.NewProjectWizard} functionality.
+ * Testing {@link NewProjectWizard} functionality.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
