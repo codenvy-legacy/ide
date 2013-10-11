@@ -152,4 +152,19 @@ public interface FactoryLocalizationConstants extends Messages {
 
     @Key("sendMail.error.get.profile")
     String sendMailErrorGettingProfile();
+
+    /**
+     * Private repositories
+     */
+    @Key("privateRepo.needAuth.title")
+    String privateRepoNeedAuthTitle();
+
+    @Key("privateRepo.needAuth.content")
+    String privateRepoNeedAuthContent(String gitProvider);
+
+    @Key("privateRepo.Auth.Failed")
+    String privateRepoAuthFailed();
+
+    @Key("privateRepo.Auth.Permitted")
+    String privateRepoAuthPermitted();
 }

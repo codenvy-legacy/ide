@@ -130,6 +130,11 @@
             <artifactId>exo-ide-vfs</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.codenvy.factory</groupId>
+            <artifactId>codenvy-factory-services</artifactId>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

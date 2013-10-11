@@ -21,6 +21,7 @@ import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 import com.codenvy.api.factory.FactoryService;
+import com.codenvy.api.factory.FactoryServiceExceptionMapper;
 
 /** Provide a set of factory REST services */
 public class CodenvyApiApplication extends Application {
@@ -32,6 +33,7 @@ public class CodenvyApiApplication extends Application {
     public CodenvyApiApplication() {
         classes = new HashSet<>();
         classes.add(FactoryService.class);
+        classes.add(FactoryServiceExceptionMapper.class);
         objects = new HashSet<>(0);
     }
 
