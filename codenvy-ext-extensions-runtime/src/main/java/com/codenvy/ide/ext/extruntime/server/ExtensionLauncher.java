@@ -300,7 +300,11 @@ public class ExtensionLauncher implements Startable {
                 logs.append(codeServerLogs);
                 logs.append("\n\n");
             }
+        } catch (GWTCodeServerException e) {
+            // do nothing
+        }
 
+        try {
             // read all catalina*.log files
             File logsDir = app.tomcatDir.toPath().resolve("logs").toFile();
             File[] catalinaLogFiles = logsDir.listFiles(new FilenameFilter() {
@@ -321,8 +325,8 @@ public class ExtensionLauncher implements Startable {
                     logs.append("\n\n");
                 }
             }
-        } catch (IOException | GWTCodeServerException e) {
-            throw new ExtensionLauncherException(e.getMessage(), e);
+        } catch (IOException e) {
+            // do nothing
         }
 
         return logs.toString();
