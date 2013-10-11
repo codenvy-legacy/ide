@@ -98,6 +98,7 @@ public class TemplatePagePresenter extends AbstractWizardPage implements Templat
         container.setWidget(view);
     }
 
+    /** Prepare list of templates available for a chosen project type and show this list on view. */
     private void prepareTemplates() {
         ProjectTypeData projectType = wizardContext.getData(PROJECT_TYPE);
         if (projectType != null) {
