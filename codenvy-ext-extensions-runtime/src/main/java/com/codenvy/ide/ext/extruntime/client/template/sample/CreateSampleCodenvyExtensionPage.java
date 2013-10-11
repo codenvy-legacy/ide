@@ -48,7 +48,7 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMAR
  */
 @Singleton
 public class CreateSampleCodenvyExtensionPage extends AbstractWizardPage implements CreateSampleCodenvyExtensionPageView.ActionDelegate {
-    private static final String DEFAULT_VERSION = "1.0-SNAPSHOT";
+    protected static final String DEFAULT_VERSION = "1.0-SNAPSHOT";
     private   CreateSampleCodenvyExtensionPageView view;
     protected ExtRuntimeClientService              service;
     protected ResourceProvider                     resourceProvider;
