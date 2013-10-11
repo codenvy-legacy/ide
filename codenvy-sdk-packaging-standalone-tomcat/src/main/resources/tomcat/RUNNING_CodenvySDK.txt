@@ -33,20 +33,20 @@ Requirements
 Installing
 ===========
 
-1. Download and install a Java SE Runtime Environment (JRE).
+1. Download and install Java SE Runtime Environment (JRE).
 
-1.1. Download a Java SE Runtime Environment (JRE), release version 7 or later, from
+1.1. Download Java SE Runtime Environment (JRE), release version 7 or later, from
      http://www.oracle.com/technetwork/java/javase/downloads/index.html.
 
-1.2. Install the JRE according to the instructions included with the release.
-     You may also use a full Java Development Kit (JDK) rather than just a JRE.
+1.2. Install JRE according to the instructions included with the release.
+     You may also use a full Java Development Kit (JDK) rather than just JRE.
 
-2. Download and install an Apache Maven.
+2. Download and install Apache Maven.
 
-2.1. Download an Apache Maven, release version 3 or later, from
+2.1. Download Apache Maven, release version 3 or later, from
      http://maven.apache.org/download.cgi.
 
-2.2. Install an Apache Maven according to the instructions included with the release.
+2.2. Install Apache Maven according to the instructions included with the release.
 
 3. Make sure JAVA_HOME is set to the location of your JRE.
    Make sure M2_HOME is set to the location of your Maven.
@@ -59,20 +59,20 @@ Installing
      A directory called "codenvy-platform-sdk-[version]" will be created.
 
 5. Codenvy Platform SDK requires some libraries in order to launch Codenvy-extensions that you develop.
-   You should to copy this libraries to your local Maven repository.
+   You should to copy these libraries to your local Maven repository.
 
 5.1. Execute the following command:
 
 On *nix:
       install.sh path
-      , where path - a path to your local Maven repository.
+      , where path is a path to your local Maven repository.
 
 
 ===================
 Running & Stopping
 ===================
 
-1. In order to launch a Codenvy Platform SDK, go to bin directory and start a Tomcat:
+1. In order to launch a Codenvy Platform SDK, go to bin directory and start Tomcat:
 
 On *nix:
       ./catalina.sh start
