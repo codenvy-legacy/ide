@@ -260,6 +260,7 @@ public class InputController {
             public void handleEvent(Event event) {
                 try{
                 SignalEvent signalEvent = SignalEventUtils.create(event);
+                //Ignoring symbols with ASCII codes 17 and 18. These codes can appear in Windows OS after pushing AltGr.
                 if (signalEvent == null || signalEvent.getKeyCode() == 17 || signalEvent.getKeyCode() == 18) {
                     return;
                 }
