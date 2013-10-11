@@ -19,7 +19,6 @@ package com.codenvy.ide.paas;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;

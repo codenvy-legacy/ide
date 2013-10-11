@@ -19,7 +19,7 @@ package com.codenvy.ide.wizard.newproject.pages.start;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.paas.PaaS;
+import com.codenvy.ide.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardKeys;

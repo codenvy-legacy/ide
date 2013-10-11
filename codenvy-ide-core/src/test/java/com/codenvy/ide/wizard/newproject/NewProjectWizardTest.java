@@ -19,8 +19,8 @@ package com.codenvy.ide.wizard.newproject;
 
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.paas.PaaS;
-import com.codenvy.ide.api.template.Template;
+import com.codenvy.ide.paas.PaaS;
+import com.codenvy.ide.template.Template;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;

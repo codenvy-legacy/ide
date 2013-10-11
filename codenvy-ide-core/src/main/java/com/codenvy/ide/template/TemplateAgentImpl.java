@@ -15,11 +15,10 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.template;
+package com.codenvy.ide.template;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;

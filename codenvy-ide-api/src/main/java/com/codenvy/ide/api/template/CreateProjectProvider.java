@@ -25,6 +25,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
+@Deprecated
 public interface CreateProjectProvider {
     /**
      * Creates project from template.

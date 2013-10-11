@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.api.paas;
+package com.codenvy.ide.paas;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
@@ -53,8 +53,11 @@ public class PaaS {
      * @param provideTemplate
      *         <code>true</code> if the PaaS doesn't need general templates (it has own template), and <code>false</code> otherwise
      */
-    public PaaS(@NotNull String id, @NotNull String title, @Nullable ImageResource image,
-                @NotNull JsonStringMap<JsonArray<String>> natures, boolean provideTemplate) {
+    public PaaS(@NotNull String id,
+                @NotNull String title,
+                @Nullable ImageResource image,
+                @NotNull JsonStringMap<JsonArray<String>> natures,
+                boolean provideTemplate) {
         this.id = id;
         this.title = title;
         this.image = image;
@@ -82,6 +85,15 @@ public class PaaS {
         return provideTemplate;
     }
 
+    /**
+     * Returns whether the PaaS is available for chosen primary and secondary natures.
+     *
+     * @param primaryNature
+     *         chosen primary nature
+     * @param secondaryNature
+     *         chosen secondary nature
+     * @return <code>true</code> if the PaaS is available, and <code>false</code> otherwise
+     */
     public boolean isAvailable(@NotNull String primaryNature, @NotNull JsonArray<String> secondaryNature) {
         JsonArray<String> secondary = natures.get(primaryNature);
         if (secondary != null) {

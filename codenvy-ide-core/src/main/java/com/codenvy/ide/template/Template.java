@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.api.template;
+package com.codenvy.ide.template;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
@@ -36,11 +36,18 @@ public class Template {
     /**
      * Create template.
      *
-     * @param icon
      * @param title
+     *         title that will be shown on new project wizard
+     * @param icon
+     *         image that will be shown on new project wizard
+     * @param primaryNature
+     *         primary nature that this template support
+     * @param secondaryNature
+     *         secondary nature which this template support
      */
-    // TODO javadoc
-    public Template(@NotNull String title, @Nullable ImageResource icon, @NotNull String primaryNature,
+    public Template(@NotNull String title,
+                    @Nullable ImageResource icon,
+                    @NotNull String primaryNature,
                     @NotNull JsonArray<String> secondaryNature) {
         this.icon = icon;
         this.title = title;
@@ -60,6 +67,15 @@ public class Template {
         return title;
     }
 
+    /**
+     * Returns whether the template is available for chosen primary and secondary natures.
+     *
+     * @param primaryNature
+     *         chosen primary nature
+     * @param secondaryNature
+     *         chosen secondary nature
+     * @return <code>true</code> if the template is available, and <code>false</code> otherwise
+     */
     public boolean isAvailable(@NotNull String primaryNature, @NotNull JsonArray<String> secondaryNature) {
         if (this.primaryNature.equals(primaryNature)) {
             for (String nature : secondaryNature.asIterable()) {

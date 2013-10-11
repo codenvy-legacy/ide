@@ -17,12 +17,12 @@
  */
 package com.codenvy.ide.wizard.newproject.pages.template;
 
-import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.template.Template;
+import com.codenvy.ide.template.TemplateAgentImpl;
 import com.codenvy.ide.wizard.WizardResource;
 import com.codenvy.ide.wizard.newproject.ProjectTypeData;
-import com.codenvy.ide.wizard.template.TemplateAgentImpl;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 

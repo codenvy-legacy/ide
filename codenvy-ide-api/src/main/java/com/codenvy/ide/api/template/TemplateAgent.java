@@ -44,6 +44,9 @@ public interface TemplateAgent {
      * @param wizardPages
      *         pages which need add to new project wizard
      */
-    void register(@NotNull String title, @Nullable ImageResource icon, @NotNull String primaryNature,
-                  @NotNull JsonArray<String> secondaryNatures, @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages);
+    void register(@NotNull String title,
+                  @Nullable ImageResource icon,
+                  @NotNull String primaryNature,
+                  @NotNull JsonArray<String> secondaryNatures,
+                  @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages);
 }

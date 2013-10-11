@@ -49,7 +49,10 @@ public interface PaaSAgent {
      * @param provideTemplate
      *         <code>true</code> if the PaaS doesn't need general templates (it has own template), and <code>false</code> otherwise
      */
-    void register(@NotNull String id, @NotNull String title, @Nullable ImageResource image,
-                  @NotNull JsonStringMap<JsonArray<String>> natures, @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages,
+    void register(@NotNull String id,
+                  @NotNull String title,
+                  @Nullable ImageResource image,
+                  @NotNull JsonStringMap<JsonArray<String>> natures,
+                  @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages,
                   boolean provideTemplate);
 }
