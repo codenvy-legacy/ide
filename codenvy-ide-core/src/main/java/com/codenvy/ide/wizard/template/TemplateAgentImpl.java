@@ -53,7 +53,9 @@ public class TemplateAgentImpl implements TemplateAgent {
                          @NotNull JsonArray<String> secondaryNatures, @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages) {
         Template template = new Template(title, icon, primaryNature, secondaryNatures);
         templates.add(template);
-        newProjectWizard.addTemplatePages(template, wizardPages);
+        if (wizardPages != null) {
+            newProjectWizard.addTemplatePages(template, wizardPages);
+        }
     }
 
     /**

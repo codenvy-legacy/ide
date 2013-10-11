@@ -69,7 +69,9 @@ public class PaaSAgentImpl implements PaaSAgent {
                          boolean provideTemplate) {
         PaaS paas = new PaaS(id, title, image, natures, provideTemplate);
         registeredPaaS.add(paas);
-        newProjectWizard.addPaaSPages(paas, wizardPages);
+        if (wizardPages != null) {
+            newProjectWizard.addPaaSPages(paas, wizardPages);
+        }
     }
 
     /** @return all available PaaSes. */
