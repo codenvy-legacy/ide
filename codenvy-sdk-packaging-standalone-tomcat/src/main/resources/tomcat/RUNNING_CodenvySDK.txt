@@ -25,7 +25,7 @@ from Codenvy S.A..
 Requirements
 =============
 
- *  Java Standard Edition Runtime Environment (JRE) version 7 or later;
+ *  Java Platform, Standard Edition 7 Development Kit (JDK 7) or later;
  *  Apache Maven version 3 or later.
 
 
@@ -33,13 +33,12 @@ Requirements
 Installing
 ===========
 
-1. Download and install Java SE Runtime Environment (JRE).
+1. Download and install JDK 7.
 
-1.1. Download Java SE Runtime Environment (JRE), release version 7 or later, from
+1.1. Download JDK, release version 7 or later, from
      http://www.oracle.com/technetwork/java/javase/downloads/index.html.
 
-1.2. Install JRE according to the instructions included with the release.
-     You may also use a full Java Development Kit (JDK) rather than just JRE.
+1.2. Install JDK according to the instructions included with the release.
 
 2. Download and install Apache Maven.
 
