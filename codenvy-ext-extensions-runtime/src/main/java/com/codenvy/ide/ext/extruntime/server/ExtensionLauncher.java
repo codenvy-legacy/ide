@@ -69,7 +69,7 @@ import static java.lang.Integer.parseInt;
  */
 public class ExtensionLauncher implements Startable {
     /** System property that contains build server URL. */
-    public static final  String BUILD_SERVER_BASE_URL               = "exo.ide.builderClient.build-server-base-url";
+    public static final  String BUILD_SERVER_BASE_URL               = "exo.ide.builder.build-server-base-url";
     /** Default name of the client module directory. */
     public static final  String CLIENT_MODULE_DIR_NAME              = "codenvy-ide-client";
     public static final  String MAIN_GWT_MODULE_DESCRIPTOR_REL_PATH =
