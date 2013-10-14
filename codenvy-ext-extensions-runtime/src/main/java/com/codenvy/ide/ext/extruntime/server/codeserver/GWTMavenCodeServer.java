@@ -44,17 +44,18 @@ import java.util.Map;
 import static org.codehaus.plexus.util.xml.Xpp3DomBuilder.build;
 
 /**
- * Implementation of {@link GWTCodeServerLauncher} interface that that uses GWT Maven plug-in.
+ * Implementation of {@link GWTCodeServer} interface that uses GWT Maven plug-in.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: GWTMavenCodeServerLauncher.java Jul 26, 2013 3:15:52 PM azatsarynnyy $
+ * @version $Id: GWTMavenCodeServer.java Jul 26, 2013 3:15:52 PM azatsarynnyy $
  */
-public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
-    private static final Log    LOG                 = ExoLogger.getLogger(GWTMavenCodeServerLauncher.class);
+public class GWTMavenCodeServer implements GWTCodeServer {
+    private static final Log    LOG                 = ExoLogger.getLogger(GWTMavenCodeServer.class);
     /** Id of Maven profile that used to add (re)sources of custom's extension. */
     public static final  String ADD_SOURCES_PROFILE = "customExtensionSources";
     /** Process that represents a started GWT code server. */
     private Process                    process;
+    /** Configuration for launching GWT code server. */
     private GWTCodeServerConfiguration configuration;
 
     /** {@inheritDoc} */
@@ -75,9 +76,8 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
         // Invoke 'generate-sources' phase to generate 'IDEInjector.java' and 'ExtensionManager.java'.
         // For details, see com.codenvy.util.IDEInjectorGenerator and com.codenvy.util.ExtensionManagerGenerator.
         final String[] command = new String[]{
-                getMavenExecCommand(),
-                "generate-sources",
-                "gwt:run-codeserver", // org.codehaus.mojo:gwt-maven-plugin should be described in a pom.xml
+                getMavenExecCommand(), "generate-sources",
+                "gwt:run-codeserver", // org.codehaus.mojo:gwt-maven-plugin should be already described in a pom.xml
                 "-P" + ADD_SOURCES_PROFILE};
 
         ProcessBuilder processBuilder = new ProcessBuilder(command).directory(configuration.getWorkDir().toFile());
@@ -92,11 +92,19 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
 
     /** {@inheritDoc} */
     @Override
-    public String getLogs() throws GWTCodeServerException {
+    public String getLogs() throws GWTCodeServerException, IOException {
         try {
             final String url = configuration.getBindAddress() + ':' + configuration.getPort() + "/log/_app";
-            return sendGet(new URL(url.startsWith("http://") ? url : "http://" + url));
-        } catch (IOException | ExtensionLauncherException e) {
+            final String logContent = sendGet(new URL(url.startsWith("http://") ? url : "http://" + url));
+
+            StringBuilder logs = new StringBuilder();;
+            logs.append("========> GWT-code-server.log <========");
+            logs.append("\n\n");
+            logs.append(logContent);
+            logs.append("\n\n");
+
+            return logs.toString();
+        } catch (ExtensionLauncherException e) {
             throw new GWTCodeServerException("Unable to get GWT code server's logs: " + e.getMessage(), e);
         }
     }
@@ -104,9 +112,9 @@ public class GWTMavenCodeServerLauncher implements GWTCodeServerLauncher {
     /** {@inheritDoc} */
     @Override
     public void stop() {
+        LOG.debug("Killing process tree");
         // Use ProcessUtil because java.lang.Process.destroy() method doesn't
         // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
-        LOG.debug("Killing process tree");
         ProcessUtil.kill(process);
     }
 

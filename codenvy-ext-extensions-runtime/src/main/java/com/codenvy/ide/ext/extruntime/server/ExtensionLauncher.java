@@ -17,13 +17,16 @@
  */
 package com.codenvy.ide.ext.extruntime.server;
 
-import com.codenvy.api.core.util.ProcessUtil;
+import com.codenvy.api.core.util.CustomPortService;
+import com.codenvy.api.core.util.Pair;
 import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls;
 import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls.ApplicationInstanceImpl;
+import com.codenvy.ide.ext.extruntime.server.codeserver.GWTCodeServer;
 import com.codenvy.ide.ext.extruntime.server.codeserver.GWTCodeServerConfiguration;
 import com.codenvy.ide.ext.extruntime.server.codeserver.GWTCodeServerException;
-import com.codenvy.ide.ext.extruntime.server.codeserver.GWTCodeServerLauncher;
-import com.codenvy.ide.ext.extruntime.server.codeserver.GWTMavenCodeServerLauncher;
+import com.codenvy.ide.ext.extruntime.server.codeserver.GWTMavenCodeServer;
+import com.codenvy.ide.ext.extruntime.server.tomcatServer.TomcatServer;
+import com.codenvy.ide.ext.extruntime.server.tomcatServer.TomcatServerConfiguration;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 import com.codenvy.ide.extension.maven.shared.BuildStatus.Status;
 
@@ -39,19 +42,18 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
 
-import java.io.*;
-import java.net.HttpURLConnection;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
 import static com.codenvy.ide.commons.ContainerUtils.readValueParam;
-import static com.codenvy.ide.commons.ContainerUtils.readValuesParam;
 import static com.codenvy.ide.commons.FileUtils.*;
 import static com.codenvy.ide.commons.NameGenerator.generate;
 import static com.codenvy.ide.commons.ZipUtils.unzip;
@@ -66,71 +68,56 @@ import static java.lang.Integer.parseInt;
  * @version $Id: ExtensionLauncher.java Jul 7, 2013 3:17:41 PM azatsarynnyy $
  */
 public class ExtensionLauncher implements Startable {
-    private static final Log    LOG                                 = ExoLogger.getLogger(ExtensionLauncher.class);
     /** System property that contains build server URL. */
-    public static final  String BUILD_SERVER_BASE_URL               = "exo.ide.builder.build-server-base-url";
+    public static final  String BUILD_SERVER_BASE_URL               = "exo.ide.builderClient.build-server-base-url";
     /** Default name of the client module directory. */
     public static final  String CLIENT_MODULE_DIR_NAME              = "codenvy-ide-client";
-    public static final  String MAIN_GWT_MODULE_DESCRIPTOR_REL_PATH = "src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml";
+    public static final  String MAIN_GWT_MODULE_DESCRIPTOR_REL_PATH =
+            "src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml";
+    private static final Log    LOG                                 = ExoLogger.getLogger(ExtensionLauncher.class);
     /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
     private static final int    DEFAULT_APPLICATION_LIFETIME        = 60;
     /** Default address where GWT code server should bound . */
     private static final String DEFAULT_CODE_SERVER_BIND_ADDRESS    = "localhost";
     /** Application lifetime (in milliseconds). */
     private final int                                applicationLifetime;
-    /** Base URL of build server. */
-    private final String                             buildServerBaseURL;
     /** Launched Codenvy applications with custom extension. */
     private final ConcurrentMap<String, Application> applications;
     /** Checks launched application's lifetime and terminate it if it's expired. */
     private final ScheduledExecutorService           applicationTerminator;
+    /** Maven build server client. */
+    private       MavenBuilderClient                 builderClient;
     /** GWT code server's bind address. */
     private       String                             codeServerBindAddress;
-
-    private PortManager portManager;
+    /** Service to find free ports for launching Tomcat servers. */
+    private       CustomPortService                  httpPortService;
+    /** Service to find free ports for launching GWT code servers. */
+    private       CustomPortService                  codeServerPortService;
 
     public ExtensionLauncher(InitParams initParams) {
         this(readValueParam(initParams, "build-server-base-url", System.getProperty(BUILD_SERVER_BASE_URL)),
-             parsePortRanges(readValuesParam(initParams, "catalina-shutdown-port-ranges")),
-             parsePortRanges(readValuesParam(initParams, "http-connector-port-ranges")),
-             parsePortRanges(readValuesParam(initParams, "ajp-connector-port-ranges")),
-             parsePortRanges(readValuesParam(initParams, "code-server-port-ranges")),
              readValueParam(initParams, "code-server-bind-address", DEFAULT_CODE_SERVER_BIND_ADDRESS),
+             parsePortRanges(readValueParam(initParams, "http-port-range")),
+             parsePortRanges(readValueParam(initParams, "code-server-port-range")),
              parseApplicationLifeTime(readValueParam(initParams, "sdk-app-lifetime")));
     }
 
     /** Constructs a new {@link ExtensionLauncher} with provided build server URL and server's port ranges. */
-    protected ExtensionLauncher(String buildServerBaseURL,
-                                List<Integer> catalinaShutdownPortList,
-                                List<Integer> httpConnectorPortList,
-                                List<Integer> ajpConnectorPortList,
-                                List<Integer> codeServerPortList,
-                                String codeServerBindAddress,
-                                int applicationLifetime) {
-        if (buildServerBaseURL == null || buildServerBaseURL.isEmpty()) {
-            throw new IllegalArgumentException("Base URL of build server may not be null or empty string.");
-        }
+    protected ExtensionLauncher(String buildServerBaseURL, String codeServerBindAddress,
+                                Pair<Integer, Integer> httpConnectorPortRange,
+                                Pair<Integer, Integer> codeServerPortRange, int applicationLifetime) {
         if (codeServerBindAddress == null || codeServerBindAddress.isEmpty()) {
             throw new IllegalArgumentException("Code server bind address may not be null or empty string.");
         }
-        if (httpConnectorPortList == null || httpConnectorPortList.isEmpty() ||
-            catalinaShutdownPortList == null || catalinaShutdownPortList.isEmpty() ||
-            ajpConnectorPortList == null || ajpConnectorPortList.isEmpty()) {
-            throw new IllegalArgumentException("Port range may not be null or empty list.");
-        }
-        if (applicationLifetime < 1) {
-            throw new IllegalArgumentException("Invalid application lifetime: " + 1);
-        }
 
-        this.buildServerBaseURL = buildServerBaseURL;
-        this.portManager = new PortManager(codeServerPortList,
-                                           catalinaShutdownPortList,
-                                           httpConnectorPortList,
-                                           ajpConnectorPortList);
+        this.builderClient = new MavenBuilderClient(buildServerBaseURL);
         this.codeServerBindAddress = codeServerBindAddress;
+        this.httpPortService = new CustomPortService(httpConnectorPortRange.first,
+                                                     httpConnectorPortRange.second);
+        this.codeServerPortService = new CustomPortService(codeServerPortRange.first, codeServerPortRange.second);
         this.applicationLifetime = applicationLifetime * 60 * 1000;
 
-        this.applications = new ConcurrentHashMap<String, Application>();
+        this.applications = new ConcurrentHashMap<>();
         this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
         this.applicationTerminator.scheduleAtFixedRate(new TerminateApplicationTask(), 1, 1, TimeUnit.MINUTES);
     }
@@ -138,7 +125,7 @@ public class ExtensionLauncher implements Startable {
     /**
      * Launch Codenvy with a custom extension. This need some preparatory operations, such as: </p>
      * <ul>
-     * <li>proper setup the Maven project setting, such as dependencies and module declaration;
+     * <li>proper setup the Maven project settings, such as dependencies and module declaration;
      * <li>add &lt;inherits&gt; to the IDEPlatform.gwt.xml in the Client project providing the logical name of
      * extension's GWT module.
      * </ul>
@@ -156,18 +143,16 @@ public class ExtensionLauncher implements Startable {
      *         if any error occurred while launching Codenvy app
      */
     public ApplicationInstance launch(VirtualFileSystem vfs, String projectId, String wsMountPath)
-            throws VirtualFileSystemException,
-                   ExtensionLauncherException {
+            throws VirtualFileSystemException, ExtensionLauncherException {
         if (projectId == null || projectId.isEmpty()) {
             throw new IllegalArgumentException("Project id required.");
         }
 
-        final int codeServerPort = portManager.nextCodeServerPort();
-        final int shutdownPort = portManager.nextShutdownPort();
-        final int httpPort = portManager.nextHttpPort();
-        final int ajpPort = portManager.nextAjpPort();
-        if (shutdownPort == -1 || httpPort == -1 || ajpPort == -1 || codeServerPort == -1) {
-            portManager.releasePorts(codeServerPort, shutdownPort, httpPort, ajpPort);
+        final int httpPort = httpPortService.acquire();
+        final int codeServerPort = codeServerPortService.acquire();
+        if (httpPort == -1 || codeServerPort == -1) {
+            httpPortService.release(httpPort);
+            codeServerPortService.release(codeServerPort);
             throw new IllegalStateException(
                     "Not enough resources to launch new application. Max number of applications was reached.");
         }
@@ -229,9 +214,10 @@ public class ExtensionLauncher implements Startable {
             // Deploy custom project to Maven repository.
             File zippedExtensionProjectFile = tempDir.toPath().resolve("extension-project.zip").toFile();
             zipDir(customModulePath.toString(), customModulePath.toFile(), zippedExtensionProjectFile, ANY_FILTER);
-            String deployId = deploy(zippedExtensionProjectFile);
-            final String deployStatusJson = startCheckingBuildStatus(deployId);
-            DtoServerImpls.BuildStatusImpl deployStatus = DtoServerImpls.BuildStatusImpl.fromJsonString(deployStatusJson);
+            String deployId = builderClient.deploy(zippedExtensionProjectFile);
+            final String deployStatusJson = builderClient.checkStatus(deployId);
+            DtoServerImpls.BuildStatusImpl deployStatus =
+                    DtoServerImpls.BuildStatusImpl.fromJsonString(deployStatusJson);
 
             if (deployStatus.getStatus() != Status.SUCCESSFUL) {
                 LOG.error("Unable to deploy maven artifact: " + deployStatus.getError());
@@ -241,14 +227,14 @@ public class ExtensionLauncher implements Startable {
             // Build Codenvy platform + custom project.
             File zippedProjectFile = tempDir.toPath().resolve("project.zip").toFile();
             zipDir(clientModuleDirPath.toString(), clientModuleDirPath.toFile(), zippedProjectFile, ANY_FILTER);
-            final String buildId = build(zippedProjectFile);
+            final String buildId = builderClient.build(zippedProjectFile);
 
             // Launch GWT code server while project is building.
-            GWTCodeServerLauncher codeServer = new GWTMavenCodeServerLauncher();
+            GWTCodeServer codeServer = new GWTMavenCodeServer();
             codeServer.start(new GWTCodeServerConfiguration(codeServerBindAddress, codeServerPort, clientModuleDirPath,
                                                             customModulePath.getFileName().toString()));
 
-            final String buildStatusJson = startCheckingBuildStatus(buildId);
+            final String buildStatusJson = builderClient.checkStatus(buildId);
             DtoServerImpls.BuildStatusImpl buildStatus = DtoServerImpls.BuildStatusImpl.fromJsonString(buildStatusJson);
             if (buildStatus.getStatus() != Status.SUCCESSFUL) {
                 LOG.error("Unable to build project: " + buildStatus.getError());
@@ -256,19 +242,22 @@ public class ExtensionLauncher implements Startable {
             }
 
             // Launch Tomcat.
-            File tomcatDir = createTempDirectory(tempDir, "tomcat-");
-            Process tomcatProcess = runTomcat(tomcatDir.toPath(), new URL(buildStatus.getDownloadUrl()),
-                                              shutdownPort, httpPort, ajpPort);
+            TomcatServerConfiguration tomcatConf =
+                    new TomcatServerConfiguration("tomcat/tomcat.zip", createTempDirectory(tempDir, "tomcat-").toPath(),
+                                                  httpPort, new URL(buildStatus.getDownloadUrl()));
+            TomcatServer tomcatServer = new TomcatServer();
+            tomcatServer.start(tomcatConf);
 
             final long expirationTime = System.currentTimeMillis() + applicationLifetime;
-            applications.put(appId, new Application(appId, expirationTime, codeServer, tomcatProcess,
-                                                    shutdownPort, httpPort, ajpPort, tomcatDir, tempDir));
+            applications.put(appId, new Application(appId, expirationTime, tomcatServer, codeServer, tempDir));
 
             LOG.debug("Start Codenvy extension {}", appId);
             return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort).setCodeServerPort(codeServerPort);
         } catch (Exception e) {
             LOG.warn("Codenvy extension {} failed to launch, cause: {}", appId, e);
-            portManager.releasePorts(codeServerPort, shutdownPort, httpPort, ajpPort);
+            // ensure that ports are released
+            httpPortService.release(httpPort);
+            codeServerPortService.release(codeServerPort);
             if (tempDir != null && tempDir.exists()) {
                 deleteRecursive(tempDir, false);
             }
@@ -283,7 +272,7 @@ public class ExtensionLauncher implements Startable {
      *         id of Codenvy application to get its logs
      * @return application's logs
      * @throws ExtensionLauncherException
-     *         if any error occurred while getting logs
+     *         if any error occurred while retrieving logs
      */
     public String getLogs(String appId) throws ExtensionLauncherException {
         Application app = applications.get(appId);
@@ -295,35 +284,16 @@ public class ExtensionLauncher implements Startable {
         try {
             final String codeServerLogs = app.codeServer.getLogs();
             if (!(codeServerLogs == null || codeServerLogs.isEmpty())) {
-                logs.append("========> GWT-code-server.log <========");
-                logs.append("\n\n");
                 logs.append(codeServerLogs);
-                logs.append("\n\n");
             }
-        } catch (GWTCodeServerException e) {
+        } catch (IOException | GWTCodeServerException e) {
             // do nothing
         }
 
         try {
-            // read all catalina*.log files
-            File logsDir = app.tomcatDir.toPath().resolve("logs").toFile();
-            File[] catalinaLogFiles = logsDir.listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return name.startsWith("catalina") && name.endsWith(".log");
-                }
-            });
-
-            for (File catalinaLogFile : catalinaLogFiles) {
-                final String catalinaLogs = new String(Files.readAllBytes(catalinaLogFile.toPath()));
-                if (!catalinaLogs.isEmpty()) {
-                    logs.append("========> ");
-                    logs.append(catalinaLogFile.getName());
-                    logs.append(" <========");
-                    logs.append("\n\n");
-                    logs.append(catalinaLogs);
-                    logs.append("\n\n");
-                }
+            final String tomcatLogs = app.tomcatServer.getLogs();
+            if (!(tomcatLogs == null || tomcatLogs.isEmpty())) {
+                logs.append(tomcatLogs);
             }
         } catch (IOException e) {
             // do nothing
@@ -347,13 +317,11 @@ public class ExtensionLauncher implements Startable {
                     String.format("Unable to stop Codenvy with extension %s. Application not found.", appId));
         }
 
-        // Use ProcessUtil because java.lang.Process.destroy() method doesn't
-        // kill all child processes (see http://bugs.sun.com/view_bug.do?bug_id=4770092).
-        LOG.debug("Killing process tree");
-        ProcessUtil.kill(extension.tomcatProcess);
-        portManager.releasePorts(extension.codeServer.getConfiguration().getPort(),
-                                 extension.shutdownPort, extension.httpPort, extension.ajpPort);
+        extension.tomcatServer.stop();
         extension.codeServer.stop();
+
+        httpPortService.release(extension.tomcatServer.getConfiguration().getPort());
+        codeServerPortService.release(extension.codeServer.getConfiguration().getPort());
 
         deleteRecursive(extension.tempDir, false);
         applications.remove(appId);
@@ -378,211 +346,40 @@ public class ExtensionLauncher implements Startable {
         }
     }
 
-    private static List<Integer> parsePortRanges(List<String> portRanges) {
-        List<Integer> portList = new ArrayList<Integer>(portRanges.size());
+    private static Pair<Integer, Integer> parsePortRanges(String portRange) {
+        Pair<Integer, Integer> portRangePair;
         try {
-            for (String portRange : portRanges) {
-                if (portRange.contains("-")) {
-                    final int hyphenIndex = portRange.indexOf('-');
-                    final int firstPortNumber = parseInt(portRange.substring(0, hyphenIndex));
-                    final int lastPortNumber = parseInt(portRange.substring(hyphenIndex + 1));
-                    if (firstPortNumber >= lastPortNumber) {
-                        throw new IllegalArgumentException("Port range is incorrect.");
-                    }
-                    for (int portNumber = firstPortNumber; portNumber <= lastPortNumber; portNumber++) {
-                        portList.add(portNumber);
-                    }
-                } else {
-                    portList.add(parseInt(portRange));
+            final int hyphenIndex = portRange.indexOf('-');
+            int firstPortNumber;
+            int lastPortNumber;
+            if (hyphenIndex != -1) {
+                firstPortNumber = parseInt(portRange.substring(0, hyphenIndex));
+                lastPortNumber = parseInt(portRange.substring(hyphenIndex + 1));
+                if (firstPortNumber >= lastPortNumber) {
+                    throw new IllegalArgumentException("Port range is incorrect.");
                 }
+            } else {
+                firstPortNumber = parseInt(portRange);
+                lastPortNumber = parseInt(portRange);
             }
+            portRangePair = Pair.of(firstPortNumber, lastPortNumber);
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
-        return portList;
+        return portRangePair;
     }
 
-    private static int parseApplicationLifeTime(String str) {
-        if (str != null) {
-            try {
-                return Integer.parseInt(str);
-            } catch (NumberFormatException ignored) {
-            }
+    private static int parseApplicationLifeTime(String lifeTime) {
+        if (lifeTime != null) {
+            return Integer.parseInt(lifeTime);
         }
         return DEFAULT_APPLICATION_LIFETIME;
-    }
-
-    private String startCheckingBuildStatus(String buildId) throws IOException, ExtensionLauncherException {
-        String status;
-        for (; ; ) {
-            status = status(buildId);
-            if (!status.contains("\"status\":\"IN_PROGRESS\"")) {
-                return status;
-            }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                // Do nothing. Continue executing.
-            }
-        }
-    }
-
-    /**
-     * Get result of build.
-     *
-     * @param buildID
-     *         ID of build need to check
-     * @return string that contains description of current status of build in JSON format
-     * @throws IOException
-     *         if any i/o errors occurs
-     * @throws ExtensionLauncherException
-     *         any other errors related to build server internal state or parameter of client request
-     */
-    private String status(String buildID) throws IOException, ExtensionLauncherException {
-        URL url = new URL(buildServerBaseURL + "/builder/maven/status/" + buildID);
-        HttpURLConnection http = null;
-        try {
-            http = (HttpURLConnection)url.openConnection();
-            http.setRequestMethod("GET");
-            int responseCode = http.getResponseCode();
-            if (responseCode != 200) {
-                responseFail(http);
-            }
-
-            try (InputStream data = http.getInputStream()) {
-                return readBody(data, http.getContentLength());
-            }
-        } finally {
-            if (http != null) {
-                http.disconnect();
-            }
-        }
-    }
-
-    private String build(File zippedProjectFile) throws ExtensionLauncherException {
-        try {
-            return run(new URL(buildServerBaseURL + "/builder/maven/build"), new FileInputStream(zippedProjectFile));
-        } catch (Exception e) {
-            throw new ExtensionLauncherException(String.format("Unable to build project."), e);
-        }
-    }
-
-    private String deploy(File zippedProjectFile) throws ExtensionLauncherException {
-        try {
-            return run(new URL(buildServerBaseURL + "/builder/maven/deploy"), new FileInputStream(zippedProjectFile));
-        } catch (Exception e) {
-            throw new ExtensionLauncherException(String.format("Unable to deploy project."), e);
-        }
-    }
-
-    private String run(URL url, InputStream zippedProject)
-            throws IOException, VirtualFileSystemException, ExtensionLauncherException {
-        HttpURLConnection http = null;
-        try {
-            http = (HttpURLConnection)url.openConnection();
-            http.setRequestMethod("POST");
-            http.setRequestProperty("content-type", "application/zip");
-            http.setDoOutput(true);
-            byte[] buff = new byte[8192];
-            InputStream data = null;
-            OutputStream out = null;
-            try {
-                data = zippedProject;
-                out = http.getOutputStream();
-                int r;
-                while ((r = data.read(buff)) != -1) {
-                    out.write(buff, 0, r);
-                }
-            } finally {
-                if (data != null) {
-                    data.close();
-                }
-                if (out != null) {
-                    out.close();
-                }
-            }
-            int responseCode = http.getResponseCode();
-            if (responseCode != 202) // 202 (Accepted) response is expected.
-            {
-                responseFail(http);
-            }
-            String location = http.getHeaderField("location");
-            return location.substring(location.lastIndexOf('/') + 1);
-        } finally {
-            if (http != null) {
-                http.disconnect();
-            }
-        }
-    }
-
-    private void responseFail(HttpURLConnection http) throws IOException, ExtensionLauncherException {
-        InputStream errorStream = null;
-        try {
-            int responseCode = http.getResponseCode();
-            int length = http.getContentLength();
-            errorStream = http.getErrorStream();
-            String body = null;
-            if (errorStream != null) {
-                body = readBody(errorStream, length);
-            }
-            throw new ExtensionLauncherException(responseCode, "Unable to build project. " + body == null ? "" : body);
-        } finally {
-            if (errorStream != null) {
-                errorStream.close();
-            }
-        }
-    }
-
-    private String readBody(InputStream input, int contentLength) throws IOException {
-        String body = null;
-        if (contentLength > 0) {
-            byte[] b = new byte[contentLength];
-            int off = 0;
-            int i;
-            while ((i = input.read(b, off, contentLength - off)) > 0) {
-                off += i;
-            }
-            body = new String(b);
-        } else if (contentLength < 0) {
-            ByteArrayOutputStream bout = new ByteArrayOutputStream();
-            byte[] buf = new byte[1024];
-            int i;
-            while ((i = input.read(buf)) != -1) {
-                bout.write(buf, 0, i);
-            }
-            body = bout.toString();
-        }
-        return body;
-    }
-
-    private Process runTomcat(Path tomcatDir, URL ideWarUrl, int shutdownPort, int httpPort, int ajpPort)
-            throws ExtensionLauncherException {
-        InputStream tomcatBundleStream =
-                Thread.currentThread().getContextClassLoader().getResourceAsStream("tomcat/tomcat.zip");
-        if (tomcatBundleStream == null) {
-            throw new ExtensionLauncherException("Unable to launch Codenvy with extension.");
-        }
-
-        try {
-            unzip(tomcatBundleStream, tomcatDir.toFile());
-            configureTomcatPorts(tomcatDir, shutdownPort, httpPort, ajpPort);
-
-            File ideWar = downloadFile(new File(tomcatDir + "/webapps"), "app-", ".war", ideWarUrl);
-            ideWar.renameTo(tomcatDir.resolve("webapps/ide.war").toFile());
-
-            final Path catalinaPath = tomcatDir.resolve("bin/catalina.sh");
-            Files.setPosixFilePermissions(catalinaPath, PosixFilePermissions.fromString("rwxr--r--"));
-
-            return new ProcessBuilder(catalinaPath.toString(), "run").start();
-        } catch (IOException e) {
-            throw new ExtensionLauncherException("Unable to launch Codenvy with extension.", e);
-        }
     }
 
     private class TerminateApplicationTask implements Runnable {
         @Override
         public void run() {
-            List<String> stopped = new ArrayList<String>();
+            List<String> stopped = new ArrayList<>();
             for (Application app : applications.values()) {
                 if (app.isExpired()) {
                     try {
@@ -600,28 +397,17 @@ public class ExtensionLauncher implements Startable {
 
     /** Stores application resources. */
     private class Application {
-        final   String id;
-        private long   expirationTime;
-        GWTCodeServerLauncher codeServer;
-        Process               tomcatProcess;
-        int                   shutdownPort;
-        int                   httpPort;
-        int                   ajpPort;
-        File                  tomcatDir;
-        File                  tempDir;
+        final String        id;
+        final File          tempDir;
+        final TomcatServer  tomcatServer;
+        final GWTCodeServer codeServer;
+        final long          expirationTime;
 
-        Application(String id, long expirationTime, GWTCodeServerLauncher codeServer,
-                    Process tomcatProcess,
-                    int shutdownPort, int httpPort, int ajpPort,
-                    File tomcatDir, File tempDir) {
+        Application(String id, long expirationTime, TomcatServer tomcatServer, GWTCodeServer codeServer, File tempDir) {
             this.id = id;
             this.expirationTime = expirationTime;
+            this.tomcatServer = tomcatServer;
             this.codeServer = codeServer;
-            this.tomcatProcess = tomcatProcess;
-            this.shutdownPort = shutdownPort;
-            this.httpPort = httpPort;
-            this.ajpPort = ajpPort;
-            this.tomcatDir = tomcatDir;
             this.tempDir = tempDir;
         }
 

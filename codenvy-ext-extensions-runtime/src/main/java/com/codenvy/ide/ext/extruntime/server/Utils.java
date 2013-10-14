@@ -25,20 +25,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
@@ -163,8 +150,7 @@ public class Utils {
 
     /**
      * Add the provided module to the specified reactor pom.xml. If <code>moduleAfter</code> isn't null - new module
-     * will be inserted before
-     * the <code>moduleAfter</code>.
+     * will be inserted before the <code>moduleAfter</code>.
      *
      * @param path
      *         pom.xml path
@@ -215,7 +201,6 @@ public class Utils {
             }
         }
         content.add(lastInheritsLine, inheritsString);
-
         Files.write(path, content, UTF_8);
     }
 
@@ -244,64 +229,6 @@ public class Utils {
         filePath = filePath.substring(filePath.indexOf(resourcesDir) + resourcesDir.length() + 1,
                                       filePath.length() - fileExtension.length());
         return filePath.replaceAll("/", ".");
-    }
-
-    /**
-     * Change the default ports of Tomcat server.
-     *
-     * @param tomcatRootPath
-     *         Tomcat root path
-     * @param shutdownPort
-     *         server shutdown port
-     * @param httpPort
-     *         HTTP-connector port
-     * @param ajpPort
-     *         AJP-connector port
-     * @throws IllegalStateException
-     *         if any error occurred while reading or writing a file
-     */
-    static void configureTomcatPorts(Path tomcatRootPath, int shutdownPort, int httpPort, int ajpPort) {
-        File serverXml = tomcatRootPath.resolve("conf/server.xml").toFile();
-
-        try {
-            DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = domFactory.newDocumentBuilder();
-            Document doc = builder.parse(serverXml);
-
-            Node serverElement = doc.getElementsByTagName("Server").item(0);
-            Node serverShutdownPortNode = serverElement.getAttributes().getNamedItem("port");
-            serverShutdownPortNode.setNodeValue(String.valueOf(shutdownPort));
-
-            NodeList serverChildNodes = serverElement.getChildNodes();
-            for (int i = 0; i < serverChildNodes.getLength(); i++) {
-                Node serverChildNode = serverChildNodes.item(i);
-                if ("Service".equals(serverChildNode.getNodeName())) {
-                    NodeList serviceChildNodes = serverChildNode.getChildNodes();
-                    for (int n = 0; n < serviceChildNodes.getLength(); n++) {
-                        Node serviceChildNode = serviceChildNodes.item(n);
-                        if ("Connector".equals(serviceChildNode.getNodeName())) {
-                            Node portNode = serviceChildNode.getAttributes().getNamedItem("port");
-                            if ("8080".equals(portNode.getNodeValue())) {
-                                portNode.setNodeValue(String.valueOf(httpPort));
-                            } else if ("8009".equals(portNode.getNodeValue())) {
-                                portNode.setNodeValue(String.valueOf(ajpPort));
-                            }
-                        }
-                    }
-
-                }
-            }
-
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(serverXml);
-            transformer.transform(source, result);
-        } catch (ParserConfigurationException | TransformerException | SAXException | IOException e) {
-            throw new IllegalStateException(
-                    String.format("Error occurred while reading or writing file: %s.", tomcatRootPath)
-                    + e.getMessage(), e);
-        }
     }
 
     /** Copy all DtoGenerator invocations from one pom.xml to another. */

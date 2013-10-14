@@ -28,25 +28,13 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.Project;
-import org.exoplatform.ide.vfs.shared.ProjectImpl;
-import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.*;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -64,25 +52,28 @@ import static org.exoplatform.ide.vfs.shared.PropertyFilter.ALL_FILTER;
 @Path("{ws-name}/extruntime")
 public class ExtensionRuntimeService {
     private static final Log LOG = ExoLogger.getLogger(ExtensionRuntimeService.class);
-
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
-
     @Inject
-    private LocalFSMountStrategy fsMountStrategy;
-
+    private LocalFSMountStrategy      fsMountStrategy;
     @Inject
-    private ExtensionLauncher launcher;
+    private ExtensionLauncher         launcher;
 
     /**
      * Create empty Codenvy extension project.
      *
-     * @param vfsId      identifier of virtual file system
-     * @param name       name of the newly created project
-     * @param rootId     identifier of parent folder for new project
-     * @param properties properties to set to project
-     * @throws VirtualFileSystemException if any error occurred in VFS
-     * @throws IOException                if any error occurred while input-output operations
+     * @param vfsId
+     *         identifier of virtual file system
+     * @param name
+     *         name of the newly created project
+     * @param rootId
+     *         identifier of parent folder for new project
+     * @param properties
+     *         properties to set to project
+     * @throws VirtualFileSystemException
+     *         if any error occurred in VFS
+     * @throws IOException
+     *         if any error occurred while input-output operations
      */
     @Path("createempty")
     @POST
@@ -90,7 +81,7 @@ public class ExtensionRuntimeService {
                                                    @QueryParam("name") String name,
                                                    @QueryParam("rootid") String rootId,
                                                    List<Property> properties) throws VirtualFileSystemException,
-            IOException {
+                                                                                     IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(
                 "templates/EmptyExtension.zip");
@@ -100,15 +91,24 @@ public class ExtensionRuntimeService {
     /**
      * Create sample Codenvy extension project.
      *
-     * @param vfsId      identifier of virtual file system
-     * @param name       name of the newly created project
-     * @param rootId     identifier of parent folder for new project
-     * @param properties properties to set to project
-     * @param groupId    project's groupID
-     * @param artifactId project's artifactId
-     * @param version    project's version
-     * @throws VirtualFileSystemException if any error occurred in VFS
-     * @throws IOException                if any error occurred while input-output operations
+     * @param vfsId
+     *         identifier of virtual file system
+     * @param name
+     *         name of the newly created project
+     * @param rootId
+     *         identifier of parent folder for new project
+     * @param properties
+     *         properties to set to project
+     * @param groupId
+     *         project's groupID
+     * @param artifactId
+     *         project's artifactId
+     * @param version
+     *         project's version
+     * @throws VirtualFileSystemException
+     *         if any error occurred in VFS
+     * @throws IOException
+     *         if any error occurred while input-output operations
      */
     @Path("createsample")
     @POST
@@ -118,8 +118,9 @@ public class ExtensionRuntimeService {
                                                     List<Property> properties,
                                                     @QueryParam("groupid") String groupId,
                                                     @QueryParam("artifactid") String artifactId,
-                                                    @QueryParam("version") String version) throws VirtualFileSystemException,
-            IOException {
+                                                    @QueryParam("version") String version)
+            throws VirtualFileSystemException,
+                   IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(
                 "templates/GistExtensionSample.zip");
@@ -128,7 +129,7 @@ public class ExtensionRuntimeService {
         MavenXpp3Reader pomReader = new MavenXpp3Reader();
         MavenXpp3Writer pomWriter = new MavenXpp3Writer();
 
-        File pomFile = (File) vfs.getItemByPath(name + "/pom.xml", null, false, PropertyFilter.NONE_FILTER);
+        File pomFile = (File)vfs.getItemByPath(name + "/pom.xml", null, false, PropertyFilter.NONE_FILTER);
         InputStream pomContent = vfs.getContent(pomFile.getId()).getStream();
         try {
             Model pom = pomReader.read(pomContent, false);
@@ -137,8 +138,9 @@ public class ExtensionRuntimeService {
             pom.setVersion(version);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             pomWriter.write(stream, pom);
-            vfs.updateContent(pomFile.getId(), MediaType.valueOf(pomFile.getMimeType()), new ByteArrayInputStream(stream.toByteArray()),
-                    null);
+            vfs.updateContent(pomFile.getId(), MediaType.valueOf(pomFile.getMimeType()),
+                              new ByteArrayInputStream(stream.toByteArray()),
+                              null);
         } catch (XmlPullParserException e) {
             LOG.warn("Error occurred while setting maven project coordinates.", e);
             throw new IllegalStateException(e.getMessage(), e);
@@ -148,18 +150,22 @@ public class ExtensionRuntimeService {
     /**
      * Launch Codenvy application with a custom extension.
      *
-     * @param vfsId     identifier of virtual file system
-     * @param projectId identifier of project we want to launch
+     * @param vfsId
+     *         identifier of virtual file system
+     * @param projectId
+     *         identifier of project we want to launch
      * @return launched application description
-     * @throws VirtualFileSystemException if any error occurred in VFS
-     * @throws ExtensionLauncherException if any error occurred while launching an extension
+     * @throws VirtualFileSystemException
+     *         if any error occurred in VFS
+     * @throws ExtensionLauncherException
+     *         if any error occurred while launching an extension
      */
     @Path("launch")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public ApplicationInstance launch(@QueryParam("vfsid") String vfsId,
                                       @QueryParam("projectid") String projectId) throws VirtualFileSystemException,
-            ExtensionLauncherException {
+                                                                                        ExtensionLauncherException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         return launcher.launch(vfs, projectId, fsMountStrategy.getMountPath().getPath());
     }
@@ -167,9 +173,11 @@ public class ExtensionRuntimeService {
     /**
      * Get logs of launched Codenvy application.
      *
-     * @param appId id of Codenvy application to get its logs
+     * @param appId
+     *         id of Codenvy application to get its logs
      * @return retrieved logs
-     * @throws ExtensionLauncherException if any error occurred while getting logs
+     * @throws ExtensionLauncherException
+     *         if any error occurred while getting logs
      */
     @Path("logs/{appid}")
     @GET
@@ -181,8 +189,10 @@ public class ExtensionRuntimeService {
     /**
      * Stop previously launched Codenvy application.
      *
-     * @param appId identifier of Codenvy application to stop
-     * @throws ExtensionLauncherException if error occurred while stopping an application
+     * @param appId
+     *         identifier of Codenvy application to stop
+     * @throws ExtensionLauncherException
+     *         if error occurred while stopping an application
      */
     @Path("stop/{appid}")
     @GET
@@ -190,7 +200,8 @@ public class ExtensionRuntimeService {
         launcher.stopApp(appId);
     }
 
-    private void createProject(VirtualFileSystem vfs, String name, String rootId, InputStream template, List<Property> properties) throws VirtualFileSystemException, IOException {
+    private void createProject(VirtualFileSystem vfs, String name, String rootId, InputStream template,
+                               List<Property> properties) throws VirtualFileSystemException, IOException {
         if (template == null) {
             throw new InvalidArgumentException("Can't find project template.");
         }
@@ -201,10 +212,11 @@ public class ExtensionRuntimeService {
         updateProperties(name, properties, vfs, projectFolder);
     }
 
-    private void updateProperties(String name, List<Property> properties, VirtualFileSystem vfs, Folder projectFolder) throws VirtualFileSystemException {
+    private void updateProperties(String name, List<Property> properties, VirtualFileSystem vfs, Folder projectFolder)
+            throws VirtualFileSystemException {
         Item projectItem = vfs.getItem(projectFolder.getId(), false, ALL_FILTER);
         if (projectItem instanceof ProjectImpl) {
-            Project project = (Project) projectItem;
+            Project project = (Project)projectItem;
             vfs.updateItem(project.getId(), properties, null);
         } else {
             throw new IllegalStateException("Something other than project was created on " + name);
