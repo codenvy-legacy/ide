@@ -66,4 +66,7 @@ public class FactorySpec10 {
     /** Optional parameter for keeping vcs information.  */
     public final static String KEEP_VCS_INFO      = "keepvcsinfo";
 
+    /** Optional parameter for checkout branches */
+    public final static String BRANCH_TO_CHECKOUT = "gitbranch";
+
 }
