@@ -145,4 +145,14 @@ public class TutorialsService {
                 Thread.currentThread().getContextClassLoader().getResourceAsStream("templates/ActionTutorial.zip");
         createProject(vfsId, templateStream, name, rootId, properties);
     }
+
+    @Path("wizard")
+    @POST
+    public void createWizardTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
+                                            @QueryParam("rootid") String rootId, List<Property> properties)
+            throws VirtualFileSystemException, IOException {
+        InputStream templateStream =
+                Thread.currentThread().getContextClassLoader().getResourceAsStream("templates/WizardTutorial.zip");
+        createProject(vfsId, templateStream, name, rootId, properties);
+    }
 }

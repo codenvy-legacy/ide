@@ -85,6 +85,12 @@ public abstract class AbstractWizardPage implements WizardPage {
 
     /** {@inheritDoc} */
     @Override
+    public boolean inContext() {
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void commit(@NotNull CommitCallback callback) {
         callback.onSuccess();
     }

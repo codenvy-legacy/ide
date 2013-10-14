@@ -26,6 +26,7 @@ import com.codenvy.ide.ext.tutorials.client.action.ShowTutorialGuideAction;
 import com.codenvy.ide.ext.tutorials.client.template.action.CreateActionTutorialPage;
 import com.codenvy.ide.ext.tutorials.client.template.dto.CreateDTOTutorialPage;
 import com.codenvy.ide.ext.tutorials.client.template.notification.CreateNotificationTutorialPage;
+import com.codenvy.ide.ext.tutorials.client.template.wizard.CreateWizardTutorialPage;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
@@ -54,9 +55,12 @@ public class TutorialsExtension {
                               Provider<CreateDTOTutorialPage> createDTOTutorialPage,
                               Provider<CreateActionTutorialPage> createActionTutorialPage,
                               Provider<CreateNotificationTutorialPage> createNotificationTutorialPage,
-                              ProjectTypeAgent projectTypeAgent, TutorialsResources resources,
+                              Provider<CreateWizardTutorialPage> createWizardTutorialPageProvider,
+                              ProjectTypeAgent projectTypeAgent,
+                              TutorialsResources resources,
                               TutorialsLocalizationConstant localizationConstants,
-                              ActionManager actionManager, ShowTutorialGuideAction showAction) {
+                              ActionManager actionManager,
+                              ShowTutorialGuideAction showAction) {
         resources.tutorialsCss().ensureInjected();
 
         // register actions
@@ -88,5 +92,10 @@ public class TutorialsExtension {
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
                                JsonCollections.<Provider<? extends WizardPage>>createArray(createActionTutorialPage));
+        templateAgent.register("Tutorial project that illustrates examples of using Wizard API.",
+                               resources.codenvyTutorialTemplate(),
+                               PRIMARY_NATURE,
+                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends WizardPage>>createArray(createWizardTutorialPageProvider));
     }
 }

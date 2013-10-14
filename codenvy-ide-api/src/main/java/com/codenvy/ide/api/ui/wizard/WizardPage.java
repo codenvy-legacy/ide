@@ -86,6 +86,14 @@ public interface WizardPage extends Presenter {
      */
     boolean canSkip();
 
+    /**
+     * Returns whether this page is in context.
+     * This option is usable in case a page is available for current parameters. This means commit operation will execute on this page.
+     *
+     * @return <code>true</code> if this page is in context, and <code>false</code> otherwise
+     */
+    boolean inContext();
+
     /** Focus components on view. This option is just for a better usability, i.e. selecting a field that needs to be filled etc. */
     void focusComponent();
 
