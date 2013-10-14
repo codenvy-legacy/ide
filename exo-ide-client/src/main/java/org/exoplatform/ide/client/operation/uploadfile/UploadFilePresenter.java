@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
@@ -32,6 +33,8 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
@@ -49,11 +52,12 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
-import org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFileCommand;
 import org.exoplatform.ide.client.operation.overwrite.ui.AbstarctOverwriteDialog;
 import org.exoplatform.ide.client.operation.uploadfile.UploadHelper.ErrorData;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.ExitCodes;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -257,15 +261,43 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
         }
 
         Item item = selectedItems.get(0);
-        String uploadUrl;
-        if (item instanceof FileModel) {
-            uploadUrl = ((FileModel)item).getParent().getLinkByRelation(Link.REL_UPLOAD_FILE).getHref();
-        } else {
-            uploadUrl = item.getLinkByRelation(Link.REL_UPLOAD_FILE).getHref();
-        }
-        display.getUploadForm().setAction(uploadUrl);
         display.setMimeTypeHiddedField(mimeType);
-        display.getUploadForm().submit();
+        
+        if (item instanceof FileModel) {
+            setLinkAndSubmit(((FileModel)item).getParent());
+        } else {
+            setLinkAndSubmit(item);
+        }
+        
+    }
+    
+    private void setLinkAndSubmit(final Item item) {
+        if (item.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(item.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(item))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      item.setLinks(result.getItem().getLinks());
+                                                      display.getUploadForm().setAction(item.getLinkByRelation(Link.REL_UPLOAD_FILE)
+                                                                                            .getHref());
+                                                      display.getUploadForm().submit();
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            display.getUploadForm().setAction(item.getLinkByRelation(Link.REL_UPLOAD_FILE).getHref());
+            display.getUploadForm().submit();
+        }
     }
 
     protected void submit(SubmitEvent event) {

@@ -37,6 +37,7 @@ import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.java.jdi.client.events.JRebelUserInfoEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.JRebelUserInfoHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Property;
@@ -198,6 +199,33 @@ public class JRebelUserInfoPresenter implements ViewClosedHandler, JRebelUserInf
                 }
             }
         }
+        
+        if (project.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(project.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      project.setLinks(result.getItem().getLinks());
+                                                      updateProjectProperties();
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            updateProjectProperties();
+        }
+    }
+    
+    private void updateProjectProperties(){
         try {
             VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
 
@@ -215,7 +243,7 @@ public class JRebelUserInfoPresenter implements ViewClosedHandler, JRebelUserInf
             // ignore this exception
         }
     }
-
+    
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         project = event.getProject();

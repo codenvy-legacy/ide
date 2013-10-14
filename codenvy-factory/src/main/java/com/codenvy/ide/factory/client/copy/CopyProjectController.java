@@ -23,6 +23,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Window;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -33,7 +34,9 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.workspaceinfo.WorkspaceInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -78,9 +81,7 @@ public class CopyProjectController implements CopyProjectHandler, EditorFileOpen
                                       }
                                       if (!projectIds.isEmpty()) {
                                           Item firstItem = result.get(0);
-                                          String projectsDownloadUrl = firstItem.getLinkByRelation(Link.REL_EXPORT).getHref();
-                                          projectsDownloadUrl = projectsDownloadUrl.substring(0, projectsDownloadUrl.length() - firstItem.getId().length());
-                                          doCopy(projectsDownloadUrl, projectIds);
+                                          getLinks(firstItem, projectIds);
                                       }
                                   }
 
@@ -91,6 +92,38 @@ public class CopyProjectController implements CopyProjectHandler, EditorFileOpen
                               });
         } catch (RequestException e) {
             Window.alert(e.getMessage());
+        }
+    }
+    
+    private void getLinks(final Item item, final List<String> projectIds){
+        if (item.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(item.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(item))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      item.setLinks(result.getItem().getLinks());
+                                                      String projectsDownloadUrl = item.getLinkByRelation(Link.REL_EXPORT).getHref();
+                                                      projectsDownloadUrl =
+                                                                            projectsDownloadUrl.substring(0, projectsDownloadUrl.length()
+                                                                                                             - item.getId().length());
+                                                      doCopy(projectsDownloadUrl, projectIds);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            String projectsDownloadUrl = item.getLinkByRelation(Link.REL_EXPORT).getHref();
+            projectsDownloadUrl = projectsDownloadUrl.substring(0, projectsDownloadUrl.length() - item.getId().length());
+            doCopy(projectsDownloadUrl, projectIds);
         }
     }
 
