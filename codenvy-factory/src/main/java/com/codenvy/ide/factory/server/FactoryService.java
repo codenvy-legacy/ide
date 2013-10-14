@@ -23,6 +23,8 @@ import com.codenvy.ide.commons.shared.ProjectType;
 import org.apache.commons.io.IOUtils;
 import org.codenvy.mail.MailSenderClient;
 import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.everrest.websockets.WSConnectionContext;
+import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
@@ -53,6 +55,7 @@ import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -123,7 +126,8 @@ public class FactoryService {
                              @QueryParam("idcommit") String idCommit,
                              @QueryParam("ptype") String projectType,
                              @QueryParam("action") String action,
-                             @QueryParam("keepvcsinfo") boolean keepVcsInfo)
+                             @QueryParam("keepvcsinfo") boolean keepVcsInfo,
+                             @QueryParam("gitbranch") String gitBranch)
             throws VirtualFileSystemException, GitException,
                    URISyntaxException, IOException {
         try {
@@ -131,19 +135,56 @@ public class FactoryService {
             CloneRequest cloneRequest = new CloneRequest(remoteUri, null);
             gitConnection.clone(cloneRequest);
             BranchCheckoutRequest checkoutRequest = new BranchCheckoutRequest();
-            checkoutRequest.setName("temp");
-            checkoutRequest.setCreateNew(true);
-            checkoutRequest.setStartPoint(idCommit);
+            if (gitBranch != null && !gitBranch.isEmpty()) {
+                String branch = URLDecoder.decode(gitBranch, "UTF_8");
+                //by default master branch already exist
+                checkoutRequest.setCreateNew(!(gitBranch.equals("master") || gitBranch.equals("origin/master")));
+                checkoutRequest.setName(branch);
+                checkoutRequest.setStartPoint(branch);
+            } else if (idCommit != null && !idCommit.isEmpty()) {
+                checkoutRequest.setName("temp");
+                checkoutRequest.setCreateNew(true);
+                checkoutRequest.setStartPoint(idCommit);
+            } else {
+                checkoutRequest.setName("origin/master");
+                checkoutRequest.setCreateNew(false);
+                checkoutRequest.setStartPoint("origin/master");
+            }
             gitConnection.branchCheckout(checkoutRequest);
-        if (!keepVcsInfo)
-            deleteRepository(vfsId, projectId);
+            if (!keepVcsInfo)
+                deleteRepository(vfsId, projectId);
         } catch (JGitInternalException e) {
             //clean failed clone repository
             deleteRepository(vfsId, projectId);
             throw new GitException(e);
+        } catch (IllegalArgumentException e) {
+            if (!e.getMessage().matches("Ref \\w+ can not be resolved")) {
+                throw new IllegalArgumentException(e);
+            } else {
+                publishWebsocketMessage("Branch <b>" + gitBranch + "</b> doesn't exist. Switching to default branch.");
+            }
         }
 
         return convertToProject(vfsId, projectId, remoteUri, projectType, action, keepVcsInfo);
+    }
+
+    /**
+     * Send message to socket to allow client make output to console.
+     *
+     * @param content
+     *         message content
+     */
+    private void publishWebsocketMessage(String content) {
+        ChannelBroadcastMessage message = new ChannelBroadcastMessage();
+        message.setChannel("factory-events");
+        message.setType(ChannelBroadcastMessage.Type.NONE);
+        message.setBody(content);
+
+        try {
+            WSConnectionContext.sendMessage(message);
+        } catch (Exception ex) {
+            LOG.error("Failed to send message over WebSocket.", ex);
+        }
     }
 
     private Item convertToProject(String vfsId, String projectId, String remoteUri, String projectType, String action, boolean keepVcsInfo)
