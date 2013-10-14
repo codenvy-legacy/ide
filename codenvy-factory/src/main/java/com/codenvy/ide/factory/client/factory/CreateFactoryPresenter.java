@@ -17,11 +17,12 @@
  */
 package com.codenvy.ide.factory.client.factory;
 
-import com.codenvy.ide.factory.client.FactoryClientService;
+import com.codenvy.ide.factory.client.FactoryExtension;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonEvent;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonHandler;
 import com.codenvy.ide.factory.client.generate.SendMailEvent;
 import com.codenvy.ide.factory.client.generate.SpinnetGenerator;
+import com.codenvy.ide.factory.client.marshaller.UserProfileUnmarshaller;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -29,6 +30,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONArray;
@@ -37,11 +39,16 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.OpenResourceEvent;
 import org.exoplatform.ide.client.framework.application.ResourceSelectedCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
@@ -66,6 +73,9 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.codenvy.ide.factory.client.FactorySpec10.ACTION_PARAMETER;
 import static com.codenvy.ide.factory.client.FactorySpec10.COMMIT_ID;
 import static com.codenvy.ide.factory.client.FactorySpec10.CURRENT_VERSION;
@@ -88,122 +98,202 @@ import static com.google.gwt.http.client.URL.encodeQueryString;
 public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClosedHandler,
     VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler {
     
-    public interface StyleChangedHandler {
+    /**
+     * Handler interface for handle changing of Button style.
+     */
+    public interface ButtonStyleChangedHandler {
         
-        void onRefresh();
+        void onButtonStyleChanged();
         
     }
     
     public interface Display extends IsView {
         
         /**
-         * Returns index of current page.
+         * Returns index of currently active page.
          * 
-         * @return current page index
+         * @return index of currently active page
          */
         int getPageIndex();
         
         /**
-         * Switches to next page.
+         * Switches to the next page.
          */
         void nextPage();
         
         /**
-         * Switches to previous page.
+         * Switches to the previous page.
          */
         void previousPage();
         
         /**
-         * Sets new content in preview area.
+         * Displays preview of Factory Button in preview area.
          * 
-         * @param content new content
+         * @param content HTML content to show Button preview
          */
-        void setPreviewContent(String content);
+        void previewFactoryButton(String content);
         
         /**
-         * Determines whether Show counter field selected.
+         * Determines whether Show Counter check box is currently checked.
          * 
-         * @return <b>true</b> if Show counter field selected, <b>false</b> otherwise
+         * @return <code>true</code> if the check box is checked, false otherwise
          */
-        boolean isShowCounter();
+        boolean showCounterChecked();
         
         /**
-         * Determines whether Vertical orientation field selected.
+         * Determines whether Vertical Orientation radio button is currently selected.
          * 
-         * @return <b>true</b> if Vertical orientation field selected, <b>false</b> otherwise
+         * @return <code>true</code> if the radio button is selected, false otherwise
          */
-        boolean isVerticalOrientation();
+        boolean verticalOrientationSelected();
         
         /**
-         * Determines whether White style field selected.
+         * Determines whether Horizontal Orientation radio button is currently selected.
          * 
-         * @return <b>true</b> if White style field selected, <b>false</b> otherwise
+         * @return <code>true</code> if the radio button is selected, false otherwise
          */
-        boolean isWhiteStyle();
-        
-        void showButtonAdvanced(boolean showAdvanced);
+        boolean horizontalOrientationSelected();
         
         /**
-         * Adds Style changed handler of Factory button.
+         * Determines whether White style radio button is currently selected.
          * 
-         * @param handler handler
+         * @return <code>true</code> if the radio button is selected, false otherwise
          */
-        void addStyleChangedHandler(StyleChangedHandler handler);
+        boolean whiteStyleSelected();
         
-        void setUploadImageValueChangeHandler(ValueChangeHandler<String> handler);
+        /**
+         * Determines whether Dark style radio button is currently selected.
+         * 
+         * @return <code>true</code> if the radio button is selected, false otherwise
+         */
+        boolean darkStyleSelected();
         
-        void createFactory(AsyncCallback<String> callback);
+        /**
+         * Enables or disables controls to customize default style of Code button.
+         * 
+         * @param enabled <b>true</b> or <b>false</b> to enable or disable controls
+         */
+        void enableDefaultStyleOptions(boolean enabled);
         
-        String getUploadImageFieldValue();
+        /**
+         * Sets the {@link ButtonStyleChangedHandler} to handle changes of Factory Button style.
+         * 
+         * @param handler handler to handle changes
+         */
+        void setButtonStyleChangedHandler(ButtonStyleChangedHandler handler);
+                
+        /**
+         * Returns value of Upload Image field.
+         * 
+         * @return value of Upload Image field
+         */
+        String getUploadImageFieldValue();        
         
+        /**
+         * Sets the {@link ValueChangeHandler} to receive value change events. 
+         * 
+         * @param handler handler to receive {@link ValueChangeEvent}
+         */
+        void setUploadImageFieldValueChangeHandler(ValueChangeHandler<String> handler);
+        
+        void cancelUploadFile();
+
+        /**
+         * Returns value of Description field.
+         * 
+         * @return value of Description field
+         */
         String getDescriptionFieldValue();
         
+        /**
+         * Returns value of Email field.
+         * 
+         * @return value of Email field
+         */
         String getEmailFieldValue();
         
+        void setEmailFieldValue(String email);
+        
+        /**
+         * Returns value of Author field.
+         * 
+         * @return value of Author field
+         */
         String getAuthorFieldValue();
         
+        void setAuthorFieldValue(String author);
+        
+        /**
+         * Returns value of Open After Launch field.
+         * 
+         * @return value of Open After Launch field
+         */
         String getOpenAfterLaunchFieldValue();
         
-        String getCompanyIdFieldValue();
-        
-        String getAffiliateIdValue();
-        
-        void setFactoryURLContent(String content);
+        /**
+         * Returns value of Organization ID field.
+         * 
+         * @return value of Organization ID field
+         */
+        String getOrganizationIdFieldValue();
         
         /**
-         * Adds Click handler to Open after launch field.
+         * Returns value of Affiliate ID field.
          * 
-         * @param clickHandler click handler
+         * @return value of Affiliate ID field
          */
-        void setOpenAfterLaunchClickHandler(ClickHandler clickHandler);
+        String getAffiliateIdFieldValue();
         
+        boolean keepGitInfoSelected();
+                
         /**
-         * Sets Open after launch field value.
+         * Sets new value of Open After Launch field.
          * 
-         * @param path
+         * @param value new value
          */
-        void setOpenAfterLaunchFieldValue(String path);
+        void setOpenAfterLaunchFieldValue(String value);
+
+        /**
+         * Sets {@link ClickHandler} to handle mouse clicking on Open After Launch field.
+         * 
+         * @param handler handler to receive {@link ClickEvent}
+         */
+        void setOpenAfterLaunchFieldClickHandler(ClickHandler handler);
+                
+        /**
+         * Sets JSON content for Create Factory request.
+         * 
+         * @param content JSON content
+         */
+        void setCreateFactoryRequestContent(String content);        
+
+        /**
+         * Creates a new Factory.
+         * 
+         * @param callback callback to receive the result
+         */
+        void createFactory(AsyncCallback<String> callback);
         
         /**
          * Returns snippet with content for embedding on websites.
          * 
          * @return snippet with content for embedding on websites
          */
-        HasValue<String> snippetWebsites();
+        HasValue<String> websitesSnippet();
         
         /**
          * Returns snippet with content for embedding on Github.
          * 
          * @return snippet with content for embedding on Github
          */
-        HasValue<String> snippetGitHub();
+        HasValue<String> gitHubSnippet();
         
         /**
          * Returns snippet with content for direct sharing.
          * 
          * @return snippet with content for direct sharing
          */
-        HasValue<String> snippetDirectSharing();
+        HasValue<String> directSharingSnippet();
         
         /**
          * Returns Share on Facebook button.
@@ -457,10 +547,51 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
 //        }
     }
     
+    private void loadUserDetails() {
+        try {
+            final String requestUrl = Utils.getAuthorizationContext() + "/private/organization/users?alias=" + IDE.user.getName();
+
+            UserProfileUnmarshaller unmarshaller = new UserProfileUnmarshaller(new HashMap<String, String>());
+            
+            AsyncRequestCallback<Map<String, String>> callback = new AsyncRequestCallback<Map<String, String>>(unmarshaller) {
+                @Override
+                protected void onSuccess(Map<String, String> result) {
+                    String email = IDE.user.getName();
+                    display.setEmailFieldValue(email);
+                    
+                    String author = result.get("firstName") + " " + result.get("lastName");
+                    display.setAuthorFieldValue(author);
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    //TODO remove this stub
+//                    if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0 ||
+//                        Location.getHost().indexOf("127.0.0.1:8080") >= 0) {
+//
+//                        display.setEmailFieldValue(IDE.user.getName());
+//                        display.setAuthorFieldValue(IDE.user.getName());
+//                        return;
+//                    }
+                    
+                    Dialogs.getInstance().showError(FactoryExtension.LOCALIZATION_CONSTANTS.sendMailErrorGettingProfile());
+                }
+            };
+
+            AsyncRequest.build(RequestBuilder.GET, requestUrl)
+                        .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+    
+    
     /**
      * Binds display.
      */
-    private void bindDisplay() {        
+    private void bindDisplay() {
+        loadUserDetails();
+        
         display.getCreateButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -490,14 +621,14 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             }
         });
         
-        display.addStyleChangedHandler(new StyleChangedHandler() {
+        display.setButtonStyleChangedHandler(new ButtonStyleChangedHandler() {
             @Override
-            public void onRefresh() {
+            public void onButtonStyleChanged() {
                 String uploadFile = display.getUploadImageFieldValue();
                 if (uploadFile != null && !uploadFile.isEmpty()) {
-                    display.showButtonAdvanced(true);
+                    display.enableDefaultStyleOptions(true);
                 } else {
-                    display.showButtonAdvanced(false);
+                    display.enableDefaultStyleOptions(false);
                 }
                 
                 // show preview
@@ -506,16 +637,17 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             }
         });
         
-        display.setUploadImageValueChangeHandler(new ValueChangeHandler<String>() {
+        display.setUploadImageFieldValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
-                String uploadFile = display.getUploadImageFieldValue();
-                if (uploadFile != null && !uploadFile.isEmpty()) {
+                String path = display.getUploadImageFieldValue();
+                
+                if (path != null && !path.trim().isEmpty()) {
                     isAdvanced = true;
-                    display.showButtonAdvanced(true);
+                    display.enableDefaultStyleOptions(true);
                 } else {
                     isAdvanced = false;
-                    display.showButtonAdvanced(false);
+                    display.enableDefaultStyleOptions(false);
                 }
 
                 previewCodeButton();
@@ -561,7 +693,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             }
         });
         
-        display.setOpenAfterLaunchClickHandler(new ClickHandler() {
+        display.setOpenAfterLaunchFieldClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 IDE.fireEvent(new OpenResourceEvent(new ResourceSelectedCallback() {
@@ -590,7 +722,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                     "img=\"" + blankImage + "\" " +
                 "></script>";
 
-        display.setPreviewContent("" +
+        display.previewFactoryButton("" +
             "<html>" +
               "<head></head>" +
               "<body style=\"margin: 0px; padding: 0px;\">" +
@@ -614,7 +746,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                 "counter=\"" + counterType + "\" " +
                "></script>";
         
-        display.setPreviewContent("" +
+        display.previewFactoryButton("" +
             "<html>" +
             "<head></head>" +
             "<body style=\"margin: 0px; padding: 0px;\">" +
@@ -636,14 +768,14 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             return;
         }
 
-        String style = display.isWhiteStyle() ? "white" : "dark";
+        String style = display.whiteStyleSelected() ? "white" : "dark";
 
-        if (display.isShowCounter() && display.isVerticalOrientation()) {
+        if (display.showCounterChecked() && display.verticalOrientationSelected()) {
             previewDefaultButton(style, "vertical", 111, 31);
             return;
         }
         
-        if (display.isShowCounter() && !display.isVerticalOrientation()) {
+        if (display.showCounterChecked() && !display.verticalOrientationSelected()) {
             previewDefaultButton(style, "horizontal", 91, 51);
             return;
         }
@@ -656,15 +788,15 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
      */
     private void generateGitHubSnippet() {
         String code = "[![alt](" + 
-            SpinnetGenerator.getCodeNowGitHubImageURL(!display.isWhiteStyle()) + ")](" + factoryURL + ")";
-        display.snippetGitHub().setValue(code);
+            SpinnetGenerator.getCodeNowGitHubImageURL(!display.whiteStyleSelected()) + ")](" + factoryURL + ")";
+        display.gitHubSnippet().setValue(code);
     }
     
     /**
      * Generates content for direct sharing.
      */
     private void generateDirectSharingSnippet() {
-        display.snippetDirectSharing().setValue(factoryURL);
+        display.directSharingSnippet().setValue(factoryURL);
     }
 
     private void createFactory() {
@@ -673,40 +805,41 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         JSONObject request = new JSONObject();
         request.put("v", new JSONString("1.1"));
         request.put("vcs", new JSONString("git"));
-        request.put("vcsurl", new JSONString(encodeQueryString(vcsURL)));
+        request.put("vcsurl", new JSONString(vcsURL));
         request.put("commitid", new JSONString(latestCommitId));
         request.put("action", new JSONString("openproject"));
         request.put("description", new JSONString(display.getDescriptionFieldValue()));
         request.put("contactmail", new JSONString(display.getEmailFieldValue()));
         request.put("author", new JSONString(display.getAuthorFieldValue()));
         request.put("openfile", new JSONString(display.getOpenAfterLaunchFieldValue()));
-        request.put("orgid", new JSONString(display.getCompanyIdFieldValue()));
-        request.put("affiliateid", new JSONString(display.getAffiliateIdValue()));
+        request.put("orgid", new JSONString(display.getOrganizationIdFieldValue()));
+        request.put("affiliateid", new JSONString(display.getAffiliateIdFieldValue()));
       
         JSONObject projectAttributes = new JSONObject();
         request.put("projectattributes", projectAttributes);
         projectAttributes.put("pname", new JSONString(openedProject.getName()));
-        projectAttributes.put("ptype", new JSONString(openedProject.getProjectType()));
+        projectAttributes.put("ptype", new JSONString(openedProject.getProjectType()));        
+        request.put("keepvcsinfo", new JSONString("" + display.keepGitInfoSelected()));
 
         if (isAdvanced) {
             request.put("style", new JSONString("Advanced"));
         } else {
-            if (display.isShowCounter()) {
-                  if (display.isVerticalOrientation()) {
-                      if (display.isWhiteStyle()) {
+            if (display.showCounterChecked()) {
+                  if (display.verticalOrientationSelected()) {
+                      if (display.whiteStyleSelected()) {
                           request.put("style", new JSONString("Vertical,White"));
                       } else {
                           request.put("style", new JSONString("Vertical,Dark"));
                       }
                   } else {
-                      if (display.isWhiteStyle()) {
+                      if (display.whiteStyleSelected()) {
                           request.put("style", new JSONString("Horizontal,White"));
                       } else {
                           request.put("style", new JSONString("Horizontal,Dark"));
                       }                      
                   }
             } else {
-                if (display.isWhiteStyle()) {
+                if (display.whiteStyleSelected()) {
                     request.put("style", new JSONString("White"));
                 } else {
                     request.put("style", new JSONString("Dark"));
@@ -714,7 +847,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             }
         }
         
-        display.setFactoryURLContent(request.toString());
+        display.setCreateFactoryRequestContent(request.toString());
         display.createFactory(new AsyncCallback<String>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -723,13 +856,17 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
 
             @Override
             public void onSuccess(String result) {
-                try {
+                try {                    
                     createdFactoryJSON = JSONParser.parseStrict(result).isObject();
                     generateSpinnetsAfterFactoryCreation();
-                display.nextPage();
+                    display.nextPage();
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    IDE.fireEvent(new ExceptionThrownEvent(e, "Factory cannot be created"));
+                    String response = result;
+                    while (response.indexOf(". ") > 0) {
+                        response = response.replace(". ", ".<br>");
+                    }
+                    
+                    Dialogs.getInstance().showError("IDE", "Factory cannot be created.<br><br>" + response);
                 }
             }
         });
@@ -757,7 +894,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             "factory=\"" + self + "\" " +
             "></script>";
 
-        display.snippetWebsites().setValue(script);          
+        display.websitesSnippet().setValue(script);          
     }
     
 }
