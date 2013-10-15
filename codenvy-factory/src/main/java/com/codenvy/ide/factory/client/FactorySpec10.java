@@ -64,9 +64,9 @@ public class FactorySpec10 {
     public final static String FILE_TO_OPEN      = "openfile";
 
     /** Optional parameter for keeping vcs information.  */
-    public final static String KEEP_VCS_INFO      = "keepvcsinfo";
+    public final static String KEEP_VCS_INFO      = "vscinfo";
 
     /** Optional parameter for checkout branches */
-    public final static String BRANCH_TO_CHECKOUT = "gitbranch";
+    public final static String BRANCH_TO_CHECKOUT = "vcsbranch";
 
 }
