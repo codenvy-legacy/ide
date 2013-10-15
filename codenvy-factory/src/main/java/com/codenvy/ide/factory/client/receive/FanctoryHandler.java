@@ -467,7 +467,33 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
         }
     }
 
-    private void writeUserPropertiesToProject(final ProjectModel projectModel) {
+    private void writeUserPropertiesToProject(final ProjectModel project) {
+        if (project.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(project.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      project.setLinks(result.getItem().getLinks());
+                                                      updateProjectProperties(project);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            updateProjectProperties(project);
+        }
+    }
+    
+    private void updateProjectProperties(final ProjectModel projectModel) {
         try {
             VirtualFileSystem.getInstance().updateItem(projectModel, null, new AsyncRequestCallback<ItemWrapper>() {
                 @Override

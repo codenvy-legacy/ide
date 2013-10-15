@@ -236,7 +236,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
         }
     }
 
-    private void getProjectContent(ProjectModel project) {
+    private void getProjectContent(final ProjectModel project) {
         try {
             VirtualFileSystem.getInstance()
                              .getChildren(project,

@@ -693,8 +693,35 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
      * @param project
      *         {@link ProjectModel}
      */
-    private void writeUseJRebelProperty(ProjectModel project) {
+    private void writeUseJRebelProperty(final ProjectModel project) {
         project.getProperties().add(new PropertyImpl(JREBEL, display.getUseJRebelPlugin().getValue().toString()));
+        
+        if (project.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(project.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      project.setLinks(result.getItem().getLinks());
+                                                      updateProjectProperties(project);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            updateProjectProperties(project);
+        }
+    }
+    
+    private void updateProjectProperties(ProjectModel project) {
         try {
             VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
 

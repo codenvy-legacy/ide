@@ -153,21 +153,23 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
 
     private void openFile(final FileModel file) {
         fileToOpen = file;
-        if (fileToOpen.getLinks().isEmpty()){
+        if (fileToOpen.getLinks().isEmpty()) {
             try {
-                VirtualFileSystem.getInstance().getItemById(file.getId(), new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(file))) {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(file.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(file))) {
 
-                    @Override
-                    protected void onSuccess(ItemWrapper result) {
-                        file.setLinks(result.getItem().getLinks());
-                        IDE.fireEvent(new EditorOpenFileEvent(file, cursorPosition));
-                    }
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      file.setLinks(result.getItem().getLinks());
+                                                      IDE.fireEvent(new EditorOpenFileEvent(file, cursorPosition));
+                                                  }
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        IDE.fireEvent(new ExceptionThrownEvent(exception));
-                    }
-                });
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
             } catch (RequestException e) {
                 IDE.fireEvent(new ExceptionThrownEvent(e));
             }

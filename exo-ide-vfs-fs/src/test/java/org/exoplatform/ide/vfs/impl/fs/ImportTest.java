@@ -311,13 +311,15 @@ public class ImportTest extends LocalFileSystemTest {
     }
 
     private CleanableSearcher prepareSearcher() throws Exception {
+        com.codenvy.commons.env.EnvironmentContext env = com.codenvy.commons.env.EnvironmentContext.getCurrent();
+        env.setVariable(com.codenvy.commons.env.EnvironmentContext.VFS_INDEX_DIR, root.getParentFile());
         CleanableSearcherProvider searcherProvider = new CleanableSearcherProvider();
         provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new EnvironmentContextLocalFSMountStrategy(), searcherProvider);
         provider.mount(testFsIoRoot);
         mountPoint = provider.getMountPoint();
         virtualFileSystemRegistry.unregisterProvider(MY_WORKSPACE_ID);
         virtualFileSystemRegistry.registerProvider(MY_WORKSPACE_ID, provider);
-
+        
         CleanableSearcher searcher = (CleanableSearcher)searcherProvider.getSearcher(mountPoint, true);
         Throwable error;
         while ((error = searcher.getInitError()) == null && !searcher.isInitDone()) {

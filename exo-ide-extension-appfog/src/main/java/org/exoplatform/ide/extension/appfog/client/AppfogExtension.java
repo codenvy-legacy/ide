@@ -21,6 +21,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Image;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -110,11 +111,38 @@ public class AppfogExtension extends Extension implements InitializeServicesHand
         return (targets != null && targets.contains(ID));
     }
 
-    public static void writeProperty(ProjectModel project, String propertyName, String propertyValue) {
+    public static void writeProperty(final ProjectModel project, String propertyName, String propertyValue) {
         Property p = new PropertyImpl(propertyName, propertyValue);
 
         project.getProperties().add(p);
 
+        if (project.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(project.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      project.setLinks(result.getItem().getLinks());
+                                                      updateProjectProperties(project);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            updateProjectProperties(project);
+        }
+
+    }
+    
+    private static void updateProjectProperties(ProjectModel project) {
         ItemWrapper item = new ItemWrapper(project);
         ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
         try {
@@ -122,16 +150,16 @@ public class AppfogExtension extends Extension implements InitializeServicesHand
 
                 @Override
                 protected void onSuccess(ItemWrapper result) {
-                    //nothing to do, only write property to project and it's all.
+                    // nothing to do, only write property to project and it's all.
                 }
 
                 @Override
                 protected void onFailure(Throwable e) {
-                    //IDE.fireEvent(new ExceptionThrownEvent(e));
+                    // IDE.fireEvent(new ExceptionThrownEvent(e));
                 }
             });
         } catch (RequestException e) {
-            //IDE.fireEvent(new ExceptionThrownEvent(e));
+            // IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
 }

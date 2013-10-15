@@ -449,31 +449,6 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         }
     }
 
-    /**
-     * Writes 'jrebel' property to the project properties.
-     * 
-     * @param project {@link ProjectModel}
-     */
-    private void writeUseJRebelProperty(ProjectModel project) {
-        project.getProperties().add(new PropertyImpl(JREBEL, String.valueOf(!IDE.user.isTemporary())));
-        try {
-            VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
-
-                @Override
-                protected void onSuccess(ItemWrapper result) {
-                    // nothing to do
-                }
-
-                @Override
-                protected void onFailure(Throwable ignore) {
-                    // ignore this exception
-                }
-            });
-        } catch (RequestException e) {
-            // ignore this exception
-        }
-    }
-
     private ProjectTemplate selectProjectTemplate(PaaS paaS) {
         String startWithName;
 

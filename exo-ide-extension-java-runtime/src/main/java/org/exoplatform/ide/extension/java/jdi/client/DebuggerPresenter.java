@@ -736,7 +736,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
      * @param project
      *         {@link ProjectModel}
      */
-    private boolean writeJRebelCountProperty(ProjectModel project) {
+    private boolean writeJRebelCountProperty(final ProjectModel project) {
         if (project.getPropertyValue(ProjectProperties.JREBEL_COUNT.value()) == null) {
             project.getProperties().add(new PropertyImpl(ProjectProperties.JREBEL_COUNT.value(), Integer.toString(1)));
         } else {
@@ -758,6 +758,35 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                 }
             }
         }
+        
+        if (project.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(project.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      project.setLinks(result.getItem().getLinks());
+                                                      updateProjectProperties(project);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            updateProjectProperties(project);
+        }
+        
+        return true;
+    }
+    
+    private void updateProjectProperties(ProjectModel project){
         try {
             VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
 
@@ -773,8 +802,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
             });
         } catch (RequestException e) {
             // ignore this exception
-        }
-        return true;
+        } 
     }
 
     private void startApplication(String url) {
