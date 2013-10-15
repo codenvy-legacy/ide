@@ -23,6 +23,8 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
@@ -48,7 +50,8 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
      * @param title
      *         title of wizard
      */
-    public DefaultWizard(NotificationManager notificationManager, String title) {
+    @Inject
+    public DefaultWizard(NotificationManager notificationManager, @Assisted String title) {
         this.notificationManager = notificationManager;
         this.title = title;
         wizardContext = new WizardContext();
@@ -63,6 +66,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
      */
     public void addPage(@NotNull WizardPage page) {
         page.setContext(wizardContext);
+        page.setUpdateDelegate(delegate);
         wizardPages.add(page);
     }
 
@@ -70,6 +74,9 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
     @Override
     public void setUpdateDelegate(@NotNull UpdateDelegate delegate) {
         this.delegate = delegate;
+        for (WizardPage page : wizardPages.asIterable()) {
+            page.setUpdateDelegate(delegate);
+        }
     }
 
     /** {@inheritDoc} */
@@ -98,7 +105,6 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
         while (++index < wizardPages.size()) {
             WizardPage page = wizardPages.get(index);
             if (page.inContext() && !page.canSkip()) {
-                page.setUpdateDelegate(delegate);
                 return page;
             }
         }
@@ -108,7 +114,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
     /** {@inheritDoc} */
     @Override
     public WizardPage flipToPrevious() {
-        for (int i = index; i > 0; i--) {
+        while (--index >= 0) {
             WizardPage page = wizardPages.get(index);
             if (page.inContext() && !page.canSkip()) {
                 return page;
@@ -120,7 +126,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
     /** {@inheritDoc} */
     @Override
     public boolean hasNext() {
-        for (int i = index; i < wizardPages.size(); i++) {
+        for (int i = index + 1; i < wizardPages.size(); i++) {
             WizardPage page = wizardPages.get(index);
             if (page.inContext() && !page.canSkip()) {
                 return true;

@@ -33,6 +33,7 @@ import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
+import com.codenvy.ide.api.ui.wizard.DefaultWizardFactory;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
@@ -162,6 +163,7 @@ public class CoreGinModule extends AbstractGinModule {
         // UI Model
         bind(EditorPartStack.class).to(EditorPartStackPresenter.class).in(Singleton.class);
         install(new GinFactoryModuleBuilder().implement(WizardDialog.class, WizardDialogPresenter.class).build(WizardDialogFactory.class));
+        install(new GinFactoryModuleBuilder().build(DefaultWizardFactory.class));
         bind(WizardDialogView.class).to(WizardDialogViewImpl.class);
         // Parts
         bind(ConsolePart.class).to(ConsolePartPresenter.class).in(Singleton.class);
