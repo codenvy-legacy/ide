@@ -161,8 +161,10 @@ public class FactoryService {
                              @QueryParam("gitbranch") String gitBranch)
             throws VirtualFileSystemException, GitException,
                    URISyntaxException, IOException {
+        GitConnection gitConnection = null;
+
         try {
-            GitConnection gitConnection = getGitConnection(projectId, vfsId);
+            gitConnection = getGitConnection(projectId, vfsId);
             CloneRequest cloneRequest = new CloneRequest(remoteUri, null);
             gitConnection.clone(cloneRequest);
             BranchCheckoutRequest checkoutRequest = new BranchCheckoutRequest();
@@ -184,11 +186,24 @@ public class FactoryService {
             if (!keepVcsInfo)
                 deleteRepository(vfsId, projectId);
         } catch (JGitInternalException e) {
-            //clean failed clone repository
-            deleteRepository(vfsId, projectId);
-            throw new GitException(e);
+            //if commit id doesn't exist, jgit produce exception like "Missing unknown <hashOfCommit>"
+            if (e.getMessage().contains("Missing unknown") && gitConnection != null) {
+                publishWebsocketMessage("Commit <b>" + idCommit + "</b> doesn't exist. Switching to default branch.");
+
+                //trying to switch to head of default branch
+                BranchCheckoutRequest checkoutRequest = new BranchCheckoutRequest();
+                checkoutRequest.setName("master");
+                checkoutRequest.setCreateNew(false);
+                checkoutRequest.setStartPoint("origin/master");
+                gitConnection.branchCheckout(checkoutRequest);
+                if (!keepVcsInfo)
+                    deleteRepository(vfsId, projectId);
+            } else {
+                deleteRepository(vfsId, projectId);
+                throw new GitException(e);
+            }
         } catch (IllegalArgumentException e) {
-            if (!e.getMessage().matches("Ref [\\w/]+ can not be resolved")) {
+            if (!e.getMessage().matches("Ref [\\w/-_]+ can not be resolved")) {
                 throw new IllegalArgumentException(e);
             } else {
                 publishWebsocketMessage("Branch <b>" + gitBranch + "</b> doesn't exist. Switching to default branch.");
