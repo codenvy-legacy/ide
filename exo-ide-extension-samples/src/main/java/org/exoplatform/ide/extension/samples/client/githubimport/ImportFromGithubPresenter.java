@@ -214,27 +214,27 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
         try {
             GitHubClientService.getInstance()
                                .getAllRepositories(
-                                                   new AsyncRequestCallback<Map<String, List<GitHubRepository>>>(
-                                                                                                                 new AllRepositoriesUnmarshaller(
-                                                                                                                                                 new HashMap<String, List<GitHubRepository>>())) {
-                                                       @Override
-                                                       protected void onSuccess(Map<String, List<GitHubRepository>> result) {
-                                                           onListLoaded(result);
-                                                       }
+                                       new AsyncRequestCallback<Map<String, List<GitHubRepository>>>(
+                                               new AllRepositoriesUnmarshaller(
+                                                       new HashMap<String, List<GitHubRepository>>())) {
+                                           @Override
+                                           protected void onSuccess(Map<String, List<GitHubRepository>> result) {
+                                               onListLoaded(result);
+                                           }
 
-                                                       @Override
-                                                       protected void onFailure(Throwable exception) {
-                                                           if (exception.getMessage().contains("Bad credentials"))
-                                                           {
-                                                               Dialogs.getInstance()
-                                                                      .showError("Bad credentials",
-                                                                                 "ooks like a problem with your SSH key.  Delete a GitHub key at Window > Preferences > SSH Keys, and try importing your GitHub projects again.");
-                                                           }
-                                                           else
-                                                               IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                           @Override
+                                           protected void onFailure(Throwable exception) {
+                                               if (exception.getMessage().contains("Bad credentials")) {
+                                                   Dialogs.getInstance()
+                                                          .showError("Bad credentials",
+                                                                     "Looks like a problem with your SSH key.<br>  Delete a GitHub key at" +
+                                                                     " Window > Preferences > SSH Keys," +
+                                                                     "<br>and try importing your GitHub projects again.");
+                                               } else
+                                                   IDE.fireEvent(new ExceptionThrownEvent(exception));
 
-                                                       }
-                                                   });
+                                           }
+                                       });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }

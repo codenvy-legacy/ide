@@ -345,7 +345,11 @@ public class GitHub {
             String body = readBody(errorStream, length);
 
             if (body != null) {
-                return new GitHubException(responseCode, body, http.getContentType());
+                if (http.getResponseCode() != 401) {
+                    return new GitHubException(http.getResponseCode(), body, http.getContentType());
+                } else {
+                    return new GitHubException(400, body, http.getContentType());
+                }
             }
 
             return new GitHubException(responseCode, null, null);
