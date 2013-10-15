@@ -166,18 +166,17 @@ public class FactoryService {
             CloneRequest cloneRequest = new CloneRequest(remoteUri, null);
             gitConnection.clone(cloneRequest);
             BranchCheckoutRequest checkoutRequest = new BranchCheckoutRequest();
-            if (gitBranch != null && !gitBranch.isEmpty()) {
-                String branch = URLDecoder.decode(gitBranch, "UTF_8");
-                //by default master branch already exist
-                checkoutRequest.setCreateNew(!(gitBranch.equals("master") || gitBranch.equals("origin/master")));
-                checkoutRequest.setName(branch);
-                checkoutRequest.setStartPoint(branch);
-            } else if (idCommit != null && !idCommit.isEmpty()) {
+            if (idCommit != null && !idCommit.isEmpty()) {
                 checkoutRequest.setName("temp");
                 checkoutRequest.setCreateNew(true);
                 checkoutRequest.setStartPoint(idCommit);
+            } else if (gitBranch != null && !gitBranch.isEmpty()) {
+                //by default master branch already exist
+                checkoutRequest.setCreateNew(!(gitBranch.equals("master") || gitBranch.equals("origin/master")));
+                checkoutRequest.setName(gitBranch);
+                checkoutRequest.setStartPoint("origin/" + gitBranch);
             } else {
-                checkoutRequest.setName("origin/master");
+                checkoutRequest.setName("master");
                 checkoutRequest.setCreateNew(false);
                 checkoutRequest.setStartPoint("origin/master");
             }
