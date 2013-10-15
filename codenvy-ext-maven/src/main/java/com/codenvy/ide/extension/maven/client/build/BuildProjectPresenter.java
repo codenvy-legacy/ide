@@ -57,7 +57,6 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -76,41 +75,80 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  * @version $Id: BuildProjectPresenter.java Feb 17, 2012 5:39:10 PM azatsarynnyy $
  */
 @Singleton
-public class BuildProjectPresenter extends BasePresenter
-        implements BuildProjectHandler, BuildProjectView.ActionDelegate, Notification.OpenNotificationHandler {
+public class BuildProjectPresenter extends BasePresenter implements BuildProjectHandler,
+                                                                    BuildProjectView.ActionDelegate,
+                                                                    Notification.OpenNotificationHandler {
     private final static String LAST_SUCCESS_BUILD    = "lastSuccessBuild";
     private final static String ARTIFACT_DOWNLOAD_URL = "artifactDownloadUrl";
     private final static String TITLE                 = "Output";
-    private BuildProjectView view;
-    /** Identifier of project we want to send for build. */
-    private              String  projectId         = null;
-    /** The builds identifier. */
-    private              String  buildID           = null;
     /** Delay in millisecond between requests for build job status. */
-    private static final int     delay             = 3000;
-    /** Status of previously build. */
-    private              Status  previousStatus    = null;
-    /** Build of another project is performed. */
-    private              boolean isBuildInProgress = false;
-    /** View closed flag. */
-    private              boolean isViewClosed      = true;
-    private              boolean publishAfterBuild = false;
-    /** Project for build. */
-    private       Project                          project;
-    private       RequestStatusHandler             statusHandler;
-    private       String                           buildStatusChannel;
-    private       EventBus                         eventBus;
-    private       ResourceProvider                 resourceProvider;
-    private       ConsolePart                      console;
-    private       BuilderClientService             service;
-    private       BuilderLocalizationConstant      constant;
-    private       BuilderResources                 resources;
-    private       WorkspaceAgent                   workspaceAgent;
-    private       MessageBus                       messageBus;
-    private       NotificationManager              notificationManager;
-    private       Notification                     notification;
+    private static final int    delay                 = 3000;
     /** Handler for processing Maven build status which is received over WebSocket connection. */
     private final SubscriptionHandler<BuildStatus> buildStatusHandler;
+    private       BuildProjectView                 view;
+    /** Identifier of project we want to send for build. */
+    private String  projectId         = null;
+    /** The builds identifier. */
+    private String  buildID           = null;
+    /** Status of previously build. */
+    private Status  previousStatus    = null;
+    /** Build of another project is performed. */
+    private boolean isBuildInProgress = false;
+    /** View closed flag. */
+    private boolean isViewClosed      = true;
+    private boolean publishAfterBuild = false;
+    /** Project for build. */
+    private Project                     projectToBuild;
+    private RequestStatusHandler        statusHandler;
+    private String                      buildStatusChannel;
+    private EventBus                    eventBus;
+    private ResourceProvider            resourceProvider;
+    private ConsolePart                 console;
+    private BuilderClientService        service;
+    private BuilderLocalizationConstant constant;
+    private BuilderResources            resources;
+    private WorkspaceAgent              workspaceAgent;
+    private MessageBus                  messageBus;
+    private NotificationManager         notificationManager;
+    private Notification                notification;
+
+    /** A timer for periodically sending request of build status. */
+    private Timer refreshBuildStatusTimer = new Timer() {
+        @Override
+        public void run() {
+            BuildStatusUnmarshaller unmarshaller = new BuildStatusUnmarshaller();
+
+            try {
+                service.status(buildID, new AsyncRequestCallback<BuildStatus>(unmarshaller) {
+                    @Override
+                    protected void onSuccess(BuildStatus response) {
+                        updateBuildStatus(response);
+
+                        Status status = response.getStatus();
+                        if (status == Status.IN_PROGRESS) {
+                            schedule(delay);
+                        }
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        setBuildInProgress(false);
+                        notification.setStatus(FINISHED);
+                        notification.setMessage(exception.getMessage());
+                        notification.setType(ERROR);
+
+                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                    }
+                });
+            } catch (RequestException e) {
+                setBuildInProgress(false);
+                notification.setStatus(FINISHED);
+                notification.setMessage(e.getMessage());
+                notification.setType(ERROR);
+                eventBus.fireEvent(new ExceptionThrownEvent(e));
+            }
+        }
+    };
 
     /**
      * Create presenter.
@@ -127,9 +165,11 @@ public class BuildProjectPresenter extends BasePresenter
      * @param notificationManager
      */
     @Inject
-    protected BuildProjectPresenter(BuildProjectView view, EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                    BuilderClientService service, BuilderLocalizationConstant constant, BuilderResources resources,
-                                    WorkspaceAgent workspaceAgent, MessageBus messageBus, NotificationManager notificationManager) {
+    protected BuildProjectPresenter(BuildProjectView view, EventBus eventBus, ResourceProvider resourceProvider,
+                                    ConsolePart console, BuilderClientService service,
+                                    BuilderLocalizationConstant constant, BuilderResources resources,
+                                    WorkspaceAgent workspaceAgent, MessageBus messageBus,
+                                    NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
         this.view.setTitle(TITLE);
@@ -175,40 +215,55 @@ public class BuildProjectPresenter extends BasePresenter
     /** {@inheritDoc} */
     @Override
     public void onBuildProject(BuildProjectEvent event) {
+        buildProject(event.getProject(), event.isPublish(), event.isForce());
+    }
+
+    /**
+     * Performs building of project.
+     *
+     * @param project
+     *         project to build. If <code>null</code> - active project will build.
+     * @param publish
+     *         if <code>true</code> - an artifact will be deployed to the public repository, <code>false</code> -
+     *         otherwise.
+     * @param force
+     *         if <code>true</code> - a project will build even if it doesn't changed from last build.
+     */
+    public void buildProject(Project project, boolean publish, boolean force) {
         if (isBuildInProgress) {
-            String message = constant.buildInProgress(project.getPath().substring(1));
+            String message = constant.buildInProgress(projectToBuild.getPath().substring(1));
             Notification notification = new Notification(message, ERROR);
             notificationManager.showNotification(notification);
             return;
         }
 
-        project = event.getProject();
-        if (project == null && makeSelectionCheck()) {
-            project = resourceProvider.getActiveProject();
+        if (project == null) {
+            projectToBuild = resourceProvider.getActiveProject();
+        } else {
+            projectToBuild = project;
         }
 
-        statusHandler = new BuildRequestStatusHandler(project.getPath().substring(1), eventBus, constant);
-
-        publishAfterBuild = event.isPublish();
-
-        buildApplicationIfNeed(event.isForce());
+        statusHandler = new BuildRequestStatusHandler(projectToBuild.getPath().substring(1), eventBus, constant);
+        publishAfterBuild = publish;
+        buildApplicationIfNeed(force);
     }
 
     /** Start the build of project. */
     private void doBuild() {
-        projectId = project.getId();
+        projectId = projectToBuild.getId();
         statusHandler.requestInProgress(projectId);
         StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
-            service.build(projectId, resourceProvider.getVfsId(), project.getName(),
-                          (String)project.getPropertyValue(ProjectDescription.PROPERTY_PRIMARY_NATURE),
+            service.build(projectId, resourceProvider.getVfsId(), projectToBuild.getName(),
+                          (String)projectToBuild.getPropertyValue(ProjectDescription.PROPERTY_PRIMARY_NATURE),
                           new AsyncRequestCallback<String>(unmarshaller) {
                               @Override
                               protected void onSuccess(String result) {
                                   buildID = result.substring(result.lastIndexOf("/") + 1);
                                   setBuildInProgress(true);
-                                  String message = "Building project <b>" + project.getPath().substring(1) + "</b>";
+                                  String message =
+                                          "Building project <b>" + projectToBuild.getPath().substring(1) + "</b>";
                                   notification = new Notification(message, PROGRESS, BuildProjectPresenter.this);
                                   notificationManager.showNotification(notification);
                                   previousStatus = null;
@@ -254,20 +309,23 @@ public class BuildProjectPresenter extends BasePresenter
 
     /** Start the build of project and publish it to public repository. */
     private void doBuildAndPublish() {
-        projectId = project.getId();
+        projectId = projectToBuild.getId();
         statusHandler.requestInProgress(projectId);
         StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
-            service.buildAndPublish(projectId, resourceProvider.getVfsId(), project.getName(),
-                                    (String)project.getPropertyValue(ProjectDescription.PROPERTY_PRIMARY_NATURE),
+            service.buildAndPublish(projectId, resourceProvider.getVfsId(), projectToBuild.getName(),
+                                    (String)projectToBuild.getPropertyValue(ProjectDescription.PROPERTY_PRIMARY_NATURE),
                                     new AsyncRequestCallback<String>(unmarshaller) {
                                         @Override
                                         protected void onSuccess(String result) {
                                             buildID = result.substring(result.lastIndexOf("/") + 1);
                                             setBuildInProgress(true);
-                                            String message = "Building project <b>" + project.getPath().substring(1) + "</b>";
-                                            notification = new Notification(message, PROGRESS, BuildProjectPresenter.this);
+                                            String message =
+                                                    "Building project <b>" + projectToBuild.getPath().substring(1) +
+                                                    "</b>";
+                                            notification =
+                                                    new Notification(message, PROGRESS, BuildProjectPresenter.this);
                                             notificationManager.showNotification(notification);
                                             previousStatus = null;
                                             refreshBuildStatusTimer.schedule(delay);
@@ -309,7 +367,7 @@ public class BuildProjectPresenter extends BasePresenter
         //Going to check is need built project.
         //Need compare to properties lastBuildTime and lastModificationTime
         //After check is artifact available for downloading
-        project.refreshProperties(new AsyncCallback<Project>() {
+        projectToBuild.refreshProperties(new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
                 Property downloadUrlProp = result.getProperty(ARTIFACT_DOWNLOAD_URL);
@@ -392,44 +450,6 @@ public class BuildProjectPresenter extends BasePresenter
         view.setClearOutputButtonEnabled(!buildInProgress);
     }
 
-    /** A timer for periodically sending request of build status. */
-    private Timer refreshBuildStatusTimer = new Timer() {
-        @Override
-        public void run() {
-            BuildStatusUnmarshaller unmarshaller = new BuildStatusUnmarshaller();
-
-            try {
-                service.status(buildID, new AsyncRequestCallback<BuildStatus>(unmarshaller) {
-                    @Override
-                    protected void onSuccess(BuildStatus response) {
-                        updateBuildStatus(response);
-
-                        Status status = response.getStatus();
-                        if (status == Status.IN_PROGRESS) {
-                            schedule(delay);
-                        }
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        setBuildInProgress(false);
-                        notification.setStatus(FINISHED);
-                        notification.setMessage(exception.getMessage());
-                        notification.setType(ERROR);
-
-                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    }
-                });
-            } catch (RequestException e) {
-                setBuildInProgress(false);
-                notification.setStatus(FINISHED);
-                notification.setMessage(e.getMessage());
-                notification.setType(ERROR);
-                eventBus.fireEvent(new ExceptionThrownEvent(e));
-            }
-        }
-    };
-
     /**
      * Check for status and display necessary messages.
      *
@@ -468,8 +488,9 @@ public class BuildProjectPresenter extends BasePresenter
         previousStatus = buildStatus.getStatus();
 
         StringBuilder message =
-                new StringBuilder("Finished building project <b>").append(project.getPath().substring(1))
-                                                                  .append("</b>.\r\nResult: ").append(buildStatus.getStatus().getValue());
+                new StringBuilder("Finished building project <b>").append(projectToBuild.getPath().substring(1))
+                                                                  .append("</b>.\r\nResult: ").append(
+                        buildStatus.getStatus().getValue());
 
         notification.setStatus(FINISHED);
         notification.setMessage(message.toString());
@@ -514,20 +535,17 @@ public class BuildProjectPresenter extends BasePresenter
                     JSONObject json = JSONParser.parseStrict((result)).isObject();
                     if (json.containsKey("artifactDownloadUrl")) {
                         String artifactUrl = json.get("artifactDownloadUrl").isString().stringValue();
-                        console.print(
-                                "You can download your artifact :<a href=" + artifactUrl + " target=\"_blank\">" + artifactUrl + "</a>");
+                        console.print(constant.downloadArtifact(artifactUrl));
                     }
                     if (json.containsKey("suggestDependency")) {
-                        String dep = json.get("suggestDependency").isString().stringValue();
-                        //format XML
-                        String res = formatDepXml(dep);
-                        console.print("Dependency for your pom:<br><span style=\"color:black;\">" + res + "</span>");
+                        final String dependency = json.get("suggestDependency").isString().stringValue();
+                        console.print(constant.dependencyForYourPom(formatDependencyXml(dependency)));
                     }
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    Log.error(BuildProjectPresenter.class, "Can not get build result", exception);
+                    Log.error(BuildProjectPresenter.class, constant.failGetBuildResult(), exception);
                 }
             });
         } catch (RequestException e) {
@@ -542,10 +560,10 @@ public class BuildProjectPresenter extends BasePresenter
      *         build status
      */
     private void writeBuildInfo(BuildStatus buildStatus) {
-        project.getProperties().add(new Property(LAST_SUCCESS_BUILD, buildStatus.getTime()));
-        project.getProperties().add(new Property(ARTIFACT_DOWNLOAD_URL, buildStatus.getDownloadUrl()));
+        projectToBuild.getProperties().add(new Property(LAST_SUCCESS_BUILD, buildStatus.getTime()));
+        projectToBuild.getProperties().add(new Property(ARTIFACT_DOWNLOAD_URL, buildStatus.getDownloadUrl()));
 
-        project.flushProjectProperties(new AsyncCallback<Project>() {
+        projectToBuild.flushProjectProperties(new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
                 //Nothing to do
@@ -560,7 +578,7 @@ public class BuildProjectPresenter extends BasePresenter
 
     /** Checks if project is under watching. */
     private void checkIfProjectIsUnderWatching() {
-        project.refreshProperties(new AsyncCallback<Project>() {
+        projectToBuild.refreshProperties(new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
                 JsonArray<Property> properties = result.getProperties();
@@ -597,28 +615,15 @@ public class BuildProjectPresenter extends BasePresenter
     }
 
     /**
-     * Checks if some project is opened/selected.
+     * Formats dependency string in xml.
      *
-     * @return <code>true</code> if some project is opened, and <code>true</code> otherwise.
+     * @param dependency
+     *         dependency string in xml format
+     * @return formatted xml
      */
-    private boolean makeSelectionCheck() {
-        if (resourceProvider.getActiveProject() == null) {
-            Window.alert("Project is not selected.");
-            return false;
-        }
+    private String formatDependencyXml(String dependency) {
 
-        return true;
-    }
-
-    /**
-     * Formats dependency xml.
-     *
-     * @param dep
-     * @return formated xml
-     */
-    private String formatDepXml(String dep) {
-
-        String formatStr = SafeHtmlUtils.htmlEscape(dep)//
+        String formatStr = SafeHtmlUtils.htmlEscape(dependency)//
                 .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;")//
                 .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;")//
                 .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;");

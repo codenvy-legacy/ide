@@ -21,13 +21,18 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
+ * Client resources.
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 3, 2012 3:03:35 PM anya $
  */
 public interface BuilderResources extends ClientBundle {
-    @Source("com/codenvy/ide/extension/maven/images/controls/build.png")
+    @Source("build.png")
     ImageResource build();
 
-    @Source("com/codenvy/ide/extension/maven/images/controls/clearOutput.png")
+    @Source("buildAndPublish.png")
+    ImageResource buildAndPublish();
+
+    @Source("clearOutput.png")
     ImageResource clearOutput();
 }
