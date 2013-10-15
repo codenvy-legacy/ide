@@ -44,10 +44,12 @@
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
             <scope>provided</scope>
+            <version>${gwt.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
+            <version>${gin.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -57,10 +59,12 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -71,6 +75,7 @@
                     <artifactId>javassist</artifactId>
                 </exclusion>
             </exclusions>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Server libraries -->
@@ -96,16 +101,19 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
+            <version>${junit.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
+            <version>${mockito.version}</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.gwt-test-utils</groupId>
             <artifactId>gwt-test-utils</artifactId>
             <scope>test</scope>
+            <version>${gwt-test-utils.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>
@@ -124,6 +132,7 @@
             <groupId>org.easytesting</groupId>
             <artifactId>fest-assert</artifactId>
             <scope>test</scope>
+            <version>${org.easytesting.fest-assert.version}</version>
         </dependency>
 
         <!-- Logging libraries -->
@@ -131,6 +140,7 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>test</scope>
+            <version>${ch.qos.logback.version}</version>
         </dependency>
     </dependencies>
 
