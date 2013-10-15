@@ -395,6 +395,12 @@
             </exclusions>
             <version>${org.exoplatform.ide.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>ide-codeassistant-lucene-index</artifactId>
+            <type>zip</type>
+            <version>${ide.codeassistant.lucene.index.version}</version>
+        </dependency>
 
         <!--GIT Server -->
         <dependency>
