@@ -42,6 +42,7 @@
                     <groupId>xstream</groupId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.core.version}</version>
         </dependency>
     </dependencies>
 

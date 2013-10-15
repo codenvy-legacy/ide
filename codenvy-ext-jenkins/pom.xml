@@ -41,14 +41,17 @@
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
             <scope>provided</scope>
+            <version>${gwt.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-git</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Server libraries -->
@@ -56,6 +59,7 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-jenkins</artifactId>
             <scope>runtime</scope>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <!-- Testing libraries -->
@@ -63,16 +67,19 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
+            <version>${junit.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
+            <version>${mockito.version}</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.gwt-test-utils</groupId>
             <artifactId>gwt-test-utils</artifactId>
             <scope>test</scope>
+            <version>${gwt-test-utils.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>
@@ -91,6 +98,7 @@
             <groupId>org.easytesting</groupId>
             <artifactId>fest-assert</artifactId>
             <scope>test</scope>
+            <version>${org.easytesting.fest-assert.version}</version>
         </dependency>
     </dependencies>
 

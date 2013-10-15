@@ -36,21 +36,15 @@
     <listener>
         <listener-class>org.everrest.websockets.WSConnectionTracker</listener-class>
     </listener>
+
     <filter>
         <filter-name>LoginFilter</filter-name>
         <filter-class>com.codenvy.ide.LoginFilter</filter-class>
     </filter>
-
     <filter>
-        <filter-name>SetCurrentIdentityFilter</filter-name>
-        <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
+        <filter-name>SetIdeUserFilter</filter-name>
+        <filter-class>com.codenvy.sdk.SetIdeUserFilter</filter-class>
     </filter>
-
-    <filter-mapping>
-        <filter-name>SetCurrentIdentityFilter</filter-name>
-        <url-pattern>/rest/*</url-pattern>
-    </filter-mapping>
-
     <filter>
         <filter-name>SetEnvironmentContextFilter</filter-name>
         <filter-class>com.codenvy.ide.SetEnvironmentContextFilter</filter-class>
@@ -66,11 +60,11 @@
     </filter-mapping>
 
     <filter-mapping>
-        <filter-name>SetCurrentIdentityFilter</filter-name>
+        <filter-name>SetIdeUserFilter</filter-name>
         <url-pattern>/rest/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
-        <filter-name>SetCurrentIdentityFilter</filter-name>
+        <filter-name>SetIdeUserFilter</filter-name>
         <url-pattern>/websocket/*</url-pattern>
     </filter-mapping>
 
@@ -78,7 +72,6 @@
         <filter-name>SetEnvironmentContextFilter</filter-name>
         <url-pattern>/rest/*</url-pattern>
     </filter-mapping>
-
     <filter-mapping>
         <filter-name>SetEnvironmentContextFilter</filter-name>
         <url-pattern>/websocket/*</url-pattern>

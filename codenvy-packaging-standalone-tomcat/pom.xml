@@ -51,36 +51,43 @@
                     <groupId>javax.servlet</groupId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-maven</artifactId>
             <type>war</type>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-storage</artifactId>
             <type>war</type>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-packaging-api-war</artifactId>
             <type>war</type>
+            <version>${com.codenvy.organization.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-asm</artifactId>
             <type>jar</type>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-site-war</artifactId>
             <type>war</type>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
             <type>jar</type>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -92,70 +99,43 @@
                 </exclusion>
             </exclusions>
             <type>jar</type>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-git-server</artifactId>
             <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform</groupId>
-            <artifactId>user-service</artifactId>
-            <version>1.0-Alpha02</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-collections</groupId>
-                    <artifactId>commons-collections</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.ws</groupId>
-                    <artifactId>exo.ws.rest.core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.portlet</groupId>
-                    <artifactId>portlet-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.ow2.spec.ee</groupId>
-                    <artifactId>ow2-jta-1.1-spec</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.faces</groupId>
-                    <artifactId>jsf-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>xstream</groupId>
-                    <artifactId>xstream</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs-fs</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
+            <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
+            <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
+            <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <version>${ch.qos.logback.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
+            <version>${ch.qos.logback.version}</version>
         </dependency>
 
         <dependency>
@@ -171,6 +151,7 @@
                     <artifactId>codenvy-gwtframework-commons</artifactId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
@@ -182,6 +163,7 @@
                     <groupId>org.apache.httpcomponents</groupId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
@@ -205,6 +187,7 @@
                     <groupId>org.slf4j</groupId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
@@ -220,6 +203,7 @@
                     <artifactId>codenvy-gwtframework-commons</artifactId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
@@ -239,6 +223,7 @@
                     <groupId>org.apache.httpcomponents</groupId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
@@ -254,6 +239,7 @@
                     <groupId>com.google.gwt</groupId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
@@ -269,6 +255,7 @@
                     <artifactId>codenvy-gwtframework-commons</artifactId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
@@ -296,6 +283,7 @@
                     <groupId>org.slf4j</groupId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
@@ -311,6 +299,7 @@
                     <artifactId>codenvy-gwtframework-commons</artifactId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
@@ -330,6 +319,7 @@
                     <groupId>com.google.gwt</groupId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
@@ -349,11 +339,13 @@
                     <groupId>com.google.gwt</groupId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-logreader</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
@@ -369,6 +361,7 @@
                     <artifactId>codenvy-gwtframework-commons</artifactId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
@@ -388,6 +381,7 @@
                     <groupId>com.google.gwt</groupId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
@@ -399,31 +393,43 @@
                     <artifactId>exo-ide-codeassistant-asm</artifactId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>ide-codeassistant-lucene-index</artifactId>
+            <type>zip</type>
+            <version>${ide.codeassistant.lucene.index.version}</version>
         </dependency>
 
         <!--GIT Server -->
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit.http.server</artifactId>
+            <version>${jgit.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
+            <version>${jgit.version}</version>
         </dependency>
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
+            <version>${jsch.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-java-sdk</artifactId>
             <type>zip</type>
+            <version>${appengine.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-python-sdk</artifactId>
             <type>zip</type>
+            <version>${appengine.version}</version>
         </dependency>
 
     </dependencies>

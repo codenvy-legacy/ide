@@ -43,15 +43,18 @@
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
             <scope>provided</scope>
+            <version>${gwt.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-dev</artifactId>
             <scope>provided</scope>
+            <version>${gwt.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
+            <version>${gin.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -61,6 +64,7 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-commons</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

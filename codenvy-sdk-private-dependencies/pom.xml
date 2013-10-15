@@ -35,11 +35,13 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs-fs</artifactId>
             <scope>runtime</scope>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -50,6 +52,7 @@
                     <artifactId>logback-classic</artifactId>
                 </exclusion>
             </exclusions>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
     </dependencies>
 

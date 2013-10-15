@@ -38,7 +38,7 @@ limitations under the License.
 
 <body>
 <%
-    String redirectURL = "../site/index.html";
+    String redirectURL = "../ide/dev-monit";
     response.sendRedirect(redirectURL);
 %>
 </body>
