@@ -59,7 +59,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
     }
 
     /**
-     * Add pages to wizard.
+     * Add page to wizard.
      *
      * @param page
      *         page that need to add
@@ -68,6 +68,39 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
         page.setContext(wizardContext);
         page.setUpdateDelegate(delegate);
         wizardPages.add(page);
+    }
+
+    /**
+     * Add page to wizard in place with index
+     *
+     * @param page
+     *         page that need to add
+     * @param index
+     *         place where need to insert page
+     * @param replace
+     *         <code>true</code> if need to replace page with given index, and <code>false</code> if need to insert page in given place
+     */
+    public void addPage(@NotNull WizardPage page, int index, boolean replace) {
+        if (index >= wizardPages.size()) {
+            return;
+        }
+
+        if (replace) {
+            wizardPages.set(index, page);
+        } else {
+            JsonArray<WizardPage> before = wizardPages.slice(0, index);
+            WizardPage currentPage = wizardPages.get(index);
+            JsonArray<WizardPage> after = wizardPages.slice(index + 1, wizardPages.size());
+
+            wizardPages.clear();
+            wizardPages.addAll(before);
+            wizardPages.add(page);
+            wizardPages.add(currentPage);
+            wizardPages.addAll(after);
+        }
+
+        page.setContext(wizardContext);
+        page.setUpdateDelegate(delegate);
     }
 
     /** {@inheritDoc} */
