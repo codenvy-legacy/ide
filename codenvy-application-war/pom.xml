@@ -455,9 +455,9 @@
                     <runTarget>org.exoplatform.ide.Application/Application.html</runTarget>
                     <logLevel>INFO</logLevel>
                     <skipTests>${gwt.test.skip}</skipTests>
-                    <extraJvmArgs>-Xmx3G</extraJvmArgs>
+                    <extraJvmArgs>${gwt.xmx}</extraJvmArgs>
                     <extra>${project.build.directory}/extra</extra>
-                    <style>OBF' -XenableClosureCompiler '-XenableClosureCompiler</style>
+                    <style>${gwt.compiler.additional.options}</style>
                 </configuration>
                 <executions>
                     <execution>

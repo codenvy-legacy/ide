@@ -56,6 +56,10 @@
       <javax.inject.version>1</javax.inject.version>
       <gin.version>1.5.0</gin.version>
 
+       <!-- GWT compiler options -->
+       <gwt.xmx>-Xmx2048m</gwt.xmx>
+       <gwt.compiler.additional.options>OBF</gwt.compiler.additional.options>
+
    </properties>
 
 
