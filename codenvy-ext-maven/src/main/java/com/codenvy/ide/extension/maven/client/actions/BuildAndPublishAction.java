@@ -23,7 +23,6 @@ import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.maven.client.BuilderLocalizationConstant;
 import com.codenvy.ide.extension.maven.client.BuilderResources;
 import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
-import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -56,15 +55,6 @@ public class BuildAndPublishAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
-        boolean isEnabled = false;
-        if (activeProject != null) {
-            if (activeProject.getDescription().getNatures().contains("CodenvyExtension")) {
-                e.getPresentation().setVisible(false);
-            } else {
-                isEnabled = true;
-            }
-        }
-        e.getPresentation().setEnabled(isEnabled);
+        e.getPresentation().setEnabled(resourceProvider.getActiveProject() != null);
     }
 }
