@@ -28,9 +28,7 @@ import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
-import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
-import org.exoplatform.ide.git.shared.CloneRequest;
-import org.exoplatform.ide.git.shared.GitUser;
+import org.exoplatform.ide.git.shared.*;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -130,41 +128,24 @@ public class FactoryService {
                              @QueryParam("gitbranch") String gitBranch)
             throws VirtualFileSystemException, GitException,
                    URISyntaxException, IOException {
-        GitConnection gitConnection = null;
+        GitConnection gitConnection = getGitConnection(projectId, vfsId);
 
         try {
-            gitConnection = getGitConnection(projectId, vfsId);
-            CloneRequest cloneRequest = new CloneRequest(remoteUri, null);
-            gitConnection.clone(cloneRequest);
-            BranchCheckoutRequest checkoutRequest = new BranchCheckoutRequest();
-            if (idCommit != null && !idCommit.isEmpty()) {
-                checkoutRequest.setName("temp");
-                checkoutRequest.setCreateNew(true);
-                checkoutRequest.setStartPoint(idCommit);
-            } else if (gitBranch != null && !gitBranch.isEmpty()) {
-                //by default master branch already exist
-                checkoutRequest.setCreateNew(!(gitBranch.equals("master") || gitBranch.equals("origin/master")));
-                checkoutRequest.setName(gitBranch);
-                checkoutRequest.setStartPoint("origin/" + gitBranch);
-            } else {
-                checkoutRequest.setName("master");
-                checkoutRequest.setCreateNew(false);
-                checkoutRequest.setStartPoint("origin/master");
+            gitConnection.clone(new CloneRequest(remoteUri, null));
+
+            if (idCommit != null && !idCommit.trim().isEmpty()) {
+                gitConnection.branchCheckout(new BranchCheckoutRequest("temp", idCommit, true));
+            } else if (gitBranch != null && !gitBranch.trim().isEmpty()) {
+                gitConnection.branchCheckout(new BranchCheckoutRequest(gitBranch, "origin/" + gitBranch, !gitBranch.equals("master")));
             }
-            gitConnection.branchCheckout(checkoutRequest);
+
             if (!keepVcsInfo)
                 deleteRepository(vfsId, projectId);
         } catch (JGitInternalException e) {
             //if commit id doesn't exist, jgit produce exception like "Missing unknown <hashOfCommit>"
-            if (e.getMessage().contains("Missing unknown") && gitConnection != null) {
+            if (e.getMessage().contains("Missing unknown")) {
                 publishWebsocketMessage("Commit <b>" + idCommit + "</b> doesn't exist. Switching to default branch.");
 
-                //trying to switch to head of default branch
-                BranchCheckoutRequest checkoutRequest = new BranchCheckoutRequest();
-                checkoutRequest.setName("master");
-                checkoutRequest.setCreateNew(false);
-                checkoutRequest.setStartPoint("origin/master");
-                gitConnection.branchCheckout(checkoutRequest);
                 if (!keepVcsInfo)
                     deleteRepository(vfsId, projectId);
             } else {
@@ -172,10 +153,17 @@ public class FactoryService {
                 throw new GitException(e);
             }
         } catch (IllegalArgumentException e) {
-            if (!e.getMessage().matches("Ref [a-zA-Z0-9-_]+ can not be resolved")) {
-                throw new IllegalArgumentException(e);
+            if (e.getMessage().matches("Ref .* can not be resolved")) {
+                if (idCommit != null && !idCommit.trim().isEmpty()) {
+                    publishWebsocketMessage("Commit <b>" + idCommit + "</b> doesn't exist. Switching to default branch.");
+                } else if (gitBranch != null && !gitBranch.trim().isEmpty()) {
+                    publishWebsocketMessage("Branch <b>" + gitBranch + "</b> doesn't exist. Switching to default branch.");
+                }
+
+                if (!keepVcsInfo)
+                    deleteRepository(vfsId, projectId);
             } else {
-                publishWebsocketMessage("Branch <b>" + gitBranch + "</b> doesn't exist. Switching to default branch.");
+                throw new IllegalArgumentException(e);
             }
         }
 
