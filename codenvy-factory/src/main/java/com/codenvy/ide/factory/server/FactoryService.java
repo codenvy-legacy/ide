@@ -172,7 +172,7 @@ public class FactoryService {
                 throw new GitException(e);
             }
         } catch (IllegalArgumentException e) {
-            if (!e.getMessage().matches("Ref [\\w/-_]+ can not be resolved")) {
+            if (!e.getMessage().matches("Ref [a-zA-Z0-9-_]+ can not be resolved")) {
                 throw new IllegalArgumentException(e);
             } else {
                 publishWebsocketMessage("Branch <b>" + gitBranch + "</b> doesn't exist. Switching to default branch.");
