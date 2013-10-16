@@ -377,7 +377,7 @@
 		 *
 		 **********************************************************************************************************/
 
-		.file-upload {
+		.fileUpload {
 			box-sizing: border-box;
 			-moz-box-sizing: border-box;
 			-webkit-box-sizing: border-box;
@@ -389,28 +389,14 @@
 			height: 22px;
 			overflow: hidden;
 			vertical-align: middle;
-			text-align: center;
+			
 			background-color: #EEE;
 			border-width: 1px;
 			border-style: solid;
 			border-radius: 2px;
 		}
-
-		.file-upload:hover {
-			background-color: #CCCCCC;
-		}
-		
-		.file-upload input {
-			position: absolute;
-			top: 0;
-			left: 0;
-			margin: 0;
-			font-size: 70px;
-			opacity: 0;
-			filter: alpha(opacity = 0);
-		}
-		
-		.file-upload span {
+				
+		.fileUpload span {
 			position: absolute;
 			top: 0;
 			left: 0;
@@ -420,8 +406,67 @@
 			font-size: 13px;
 			line-height: 22px;
 			color: #444;
+			text-align: center;
+			cursor: pointer;
+		}
+
+		.fileUpload input {
+			position: absolute;
+			top: 0;
+			left: 0;
+			margin: 0;
+			font-size: 70px;
+			opacity: 0;
+			filter: alpha(opacity = 0);
+			
+			visibility:hidden;
 		}
 		
+		.fileUpload:hover {
+			background-color: #CCCCCC;
+		}	
+		
+		.fileUploadSelected {
+			width: 185px;
+			background-color: transparent;
+			border-color: transparent;			
+		}
+
+		.fileUploadSelected span {
+			text-align: left;
+			font-weight: bold;
+			padding-left: 3px;
+			opacity: 0.7;
+			font-size: 12px;
+			cursor: default;
+		}
+		
+		.fileUploadSelected input {
+			display: none;
+			visibility: hidden;
+		}
+		
+		.fileUploadSelected:hover {
+			background-color: transparent;
+			border-color: transparent;
+		}		
+				
+		.resetUploadButton {
+			position: relative;
+			width: 18px;
+			height: 18px;
+			overflow: hidden;
+			background-color: transparent;
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAeElEQVR42mNgoDWYMWPG/66uLhQMEiPJkEePHoE1gmhkDBPDqfHly5coGs6cOYPTIJAcshhIL9wgdC+QiuEG7d279//y5cvJwiC9tIklkOmkegmkh/YGIccQIf6oQYPFIFLwunXrMA26desWSYZMmDDhP0gP1XMGABD0V9RPZm1DAAAAAElFTkSuQmCC);
+			cursor: pointer;
+			display:none;
+			opacity: 0.7;
+		}
+		
+		.resetUploadButton:hover {
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAd0lEQVR42mNgoDUoKir6n5KSgoJBYiQZsmfPHrBGEI2MYWI4NR4+fBhFw7Jly3AaBJJDFgPphRuE7gVSMdyg6dOn/29sbCQLg/TSJpZAppPqJZAe2huEHEOE+KMGDRaDSMEdHR2YBm3ZsoUkQ7Kysv6D9FA9ZwAAklb90dMYaJgAAAAASUVORK5CYII=);
+		}
+
 		/**********************************************************************************************************
 		 *
 		 *   INFO BUTTON ( the field with question )
@@ -623,7 +668,8 @@
     		
 			font-family: Arial Unicode MS, Arial, sans-serif;
 			font-size: 13px;
-			font-weight: normal;    		
+			font-weight: normal;
+			text-align: left;    		
     		
 			padding:10px 20px;
     		line-height:16px;
@@ -646,9 +692,6 @@
 		}
 				
 		.tooltip span div {
-			/*
-			background-image: url(data:image/gif;base64,R0lGODlhDAAWAJEAAP/68NK8jv///wAAACH5BAUUAAIALAAAAAAMABYAAAIrlI8SmQF83INyNoBtzPhyXXHb1ylkZp5dSBqs6KrIq6Xw/FG3V+M9DpkVAAA7);
-			*/
 			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAWCAYAAAD0OH0aAAAAU0lEQVR42p2Txw0AMAjE2H82dkqUT5RCNW9bohwijVLV0YJXteCScMKp8MKhYMGu4MGmEMGfkMGXUIG3UIW50G4JDY3Wig6HooHCh+KNHgi96ClNMVcA6aEHcjUAAAAASUVORK5CYII=);			
 			left:-12px;	
 		}
@@ -671,7 +714,7 @@
 				<div class="{style.block-content}">
 					<div style="position: absolute; left:0px; top:0px; right: 350px; bottom: 0px; overflow:hidden;">
 						<div class="{style.check}" style="position: absolute; left:0px; right:0px; top:0px;">
-							<input type="checkbox" name="show_counter" ui:field="checkShowCounter" value="true"></input>
+							<input type="checkbox" name="show_counter" ui:field="checkShowCounter" checked = "checked"></input>
 							<label for="checkShowCounter">Show number of projects created from your factory</label>
 						</div>
 						<div class="{style.label}" style="position: absolute; left:0px; right:0px; top:20px;">Configure your style:</div>
@@ -707,17 +750,19 @@
 			
 			<iframe ui:field="createFactoryIFrame" name="createFactoryIFrame" style="display:none; position:fixed; left:10px; top:10px; width:300px; height:100px; opacity:0.5; background:#FFEEAA; z-index:999999;"></iframe>
 			
-			<div class="{style.block}" style="height: 230px;">
+			<div class="{style.block}" style="height: 250px;">
 				<div class="{style.blockHeader} {style.blockHeaderExpanded}" ui:field="advancedOptionsControl" >Advanced Options<hr noshade="noshade"></hr></div>
 				<div class="{style.block-content}" ui:field="advancedOptions" style="top:40px;">
 										
 					<form ui:field="createFactoryForm">
 					
 					<div class="{style.label}" style="position: absolute; left:0px; top:0px;">Logo (100 x 100):</div>
-					<label class="{style.file-upload}" style="position: absolute; left:120px; top:0px;">
-						<span>Upload image (JPG, GIF or PNG)</span>
+					<label ui:field="uploadFilePanel" class="{style.fileUpload}" style="position: absolute; left:120px; top:0px;">
+						<span ui:field="selectedFileNameSpan">Upload image (JPG, GIF or PNG)</span>
 						<input type="file" name="image" ui:field="uploadFileField" accept=".gif,.jpg,.jpeg,.png,image/gif,image/jpeg,image/png"></input>
 					</label>
+					
+					<div class="{style.resetUploadButton}" ui:field="resetUploadButton" style="position: absolute; left:308px; top:2px;"></div>
 					
 					<input type="hidden" name="factoryUrl" ui:field="factoryUrlContent"></input>
 					
@@ -725,7 +770,7 @@
 					
 					<div class="{style.tooltip}" style="position: absolute; left: 335px; top: 0px;">
 						?
-						<span><div></div>Create and embed a custom Factory button with your own logo</span>	
+						<span style="margin-top: -18px;"><div></div>Create and embed a custom Factory<br/>button with your own logo</span>	
 					</div>
 					
 					<div class="{style.label}" style="position: absolute; left:0px; top:30px;">Description:</div>
@@ -733,21 +778,21 @@
 						style="position: absolute; left:120px; top:30px; height: 52px; right:22px;"></textarea>
 					<div class="{style.tooltip}" style="position: absolute; right:0px; top: 30px;">
 						?
-						<span><div></div>Specify a description of your Factory to all users</span>	
+						<span style="margin-top: -18px;"><div></div>Specify a description of your Factory<br/>to all users</span>	
 					</div>
 					
 					<div class="{style.label}" style="position: absolute; left:0px; top:90px;">Contact email:</div>					
 					<input ui:field="emailField" type="text" class="{style.textField}" style="position: absolute; left:120px; top:90px;"></input>
 					<div class="{style.tooltip}" style="position: absolute; left:335px; top:90px;">
 						?
-						<span><div></div>Include your email informations and let users able to contact you</span>	
+						<span style="margin-top: -18px;"><div></div>Include your email informations<br/>and let users able to contact you</span>	
 					</div>
 					
 					<div class="{style.label}" style="position: absolute; left:0px; top:120px;">Author:</div>
 					<input ui:field="authorField" type="text" class="{style.textField}" style="position: absolute; left:120px; top:120px;"></input>
 					<div class="{style.tooltip}" style="position: absolute; left:335px; top:120px;">
 						?
-						<span><div></div>Include your author informations and let everyone know that you originated this Factory</span>	
+						<span style="margin-top: -26px;"><div></div>Include your author informations<br/>and let everyone know that<br/>you originated this Factory</span>	
 					</div>
 					
 					<div class="{style.label}" style="position: absolute; left:0px; top:150px;">Open after launch:</div>
@@ -756,7 +801,7 @@
 						style="position: absolute; left:120px; top:150px;"></input>
 					<div class="{style.tooltip}" style="position: absolute; left:335px; top:150px;">
 						?
-						<span><div></div>Define the file to open once the project will be factory-created</span>	
+						<span style="margin-top: -18px;"><div></div>Define the file to open once<br/>the project will be factory-created</span>	
 					</div>
 					
 					
@@ -764,14 +809,23 @@
 					<input ui:field="companyIdField" type="text" class="{style.textField}" style="position: absolute; left:528px; top:90px;"></input>
 					<div class="{style.tooltip}" style="position: absolute; right:0px; top:90px;">
 						?
-						<span><div></div>Specify the Organisation ID that we provide you to include this factory in reports we generate for you</span>	
+						<span style="margin-top: -26px;"><div></div>Specify the Organisation ID<br/>that we provide you to include this factory<br/>in reports we generate for you</span>	
 					</div>
 					
 					<div class="{style.label}" style="position: absolute; left:408px; top:120px;">Affiliate ID:</div>
 					<input ui:field="affiliateIdField" type="text" class="{style.textField}" style="position: absolute; left:528px; top:120px;"></input>
 					<div class="{style.tooltip}" style="position: absolute; right:0px; top:120px;">
 						?
-						<span><div></div>Use your AffiliateID and earn up to 10% <br></br>on Codenvy sales from traffic that is sent to Codenvy <br></br>from embedded IDEs that you include on your site</span>	
+						<span style="margin-top: -26px;"><div></div>Use your AffiliateID and earn up to 10%<br/>on Codenvy sales from traffic that is sent to Codenvy<br/>from embedded IDEs that you include on your site</span>
+					</div>
+					
+					<div class="{style.check}" style="position: absolute; left:528px; right:23px; top:150px;">
+						<input type="checkbox" name="keep_git" ui:field="checkKeepGitInfo"></input>
+						<label for="checkKeepGitInfo">Keep Git Informations</label>
+					</div>
+					<div class="{style.tooltip}" style="position: absolute; right:0px; top:150px;">
+						?
+						<span style="margin-top: -34px;"><div></div>Define if the Factory you will create<br/>will keep informations from the root repository.<br/>If checked, factory users will be able<br/>to make push to your repository.</span>
 					</div>
 
 				</div>
