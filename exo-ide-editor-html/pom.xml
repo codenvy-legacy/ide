@@ -12,51 +12,70 @@
     <name>Codenvy IDE :: Editor :: HTML</name>
     <dependencies>
 
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <scope>provided</scope>
-        </dependency>
+      <dependency>
+         <groupId>com.google.gwt</groupId>
+         <artifactId>gwt-user</artifactId>
+         <version>${gwt.version}</version>
+         <scope>provided</scope>
+      </dependency>
+
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
+
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor</artifactId>
+            <version>${project.version}</version>
         </dependency>
+
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-javascript</artifactId>
+            <version>${project.version}</version>
         </dependency>
+
+
+
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-css</artifactId>
+            <version>${project.version}</version>
         </dependency>
+
+
+
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-xml</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-commons</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-ui</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-framework-client</artifactId>
+            <version>${project.version}</version>
         </dependency>
+
     </dependencies>
     <build>
         <resources>

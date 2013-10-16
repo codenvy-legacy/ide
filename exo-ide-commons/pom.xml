@@ -13,6 +13,7 @@
         <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.container</artifactId>
+            <version>${org.exoplatform.kernel.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>xstream</artifactId>
@@ -23,37 +24,36 @@
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-core</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-websockets</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>12.0.1</version>
+            <version>${guava.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.1</version>
+            <version>${gson.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <version>${org.slf4j.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -73,6 +73,6 @@
                 <directory>src/test/resources</directory>
             </testResource>
         </testResources>
-        <outputDirectory>target/classes</outputDirectory>
+        <outputDirectory>${project.build.directory}/classes</outputDirectory>
     </build>
 </project>

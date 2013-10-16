@@ -11,45 +11,53 @@
     <name>Codenvy IDE :: COLLABORATION</name>
 
     <dependencies>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <scope>provided</scope>
-        </dependency>
+      <dependency>
+         <groupId>com.google.gwt</groupId>
+         <artifactId>gwt-user</artifactId>
+         <version>${gwt.version}</version>
+         <scope>provided</scope>
+      </dependency>
+
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-framework-client</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-commons</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-collabeditor</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>12.0.1</version>
+            <version>${guava.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.1</version>
+            <version>${gson.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-websockets</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
     </dependencies>
     <profiles>
@@ -66,20 +74,22 @@
                 <dependency>
                     <groupId>com.google.guava</groupId>
                     <artifactId>guava</artifactId>
-                    <version>12.0.1</version>
+                    <version>${guava.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>com.google.code.gson</groupId>
                     <artifactId>gson</artifactId>
-                    <version>2.1</version>
+                    <version>${gson.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>org.exoplatform.ide</groupId>
                     <artifactId>exo-ide-commons</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>org.exoplatform.ide</groupId>
                     <artifactId>exo-ide-vfs</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
             </dependencies>
             <build>
@@ -98,7 +108,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-jar-plugin</artifactId>
-                        <version>2.4</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -117,7 +126,6 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                        <version>1.2.1</version>
                         <executions>
                             <execution>
                                 <id>dto-server</id>
@@ -166,13 +174,5 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
-        <sourceDirectory>src/main/java</sourceDirectory>
-
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-            </testResource>
-        </testResources>
-        <outputDirectory>target/classes</outputDirectory>
     </build>
 </project>

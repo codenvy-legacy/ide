@@ -17,28 +17,34 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-framework-client</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-json</artifactId>
+            <version>${codenvy.commons.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-lang</artifactId>
+            <version>${codenvy.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-maven</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
-
     <build>
+        <!-- DO NOT REMOVE NEED FOR GWT BUILD-->
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -47,7 +53,6 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <outputDirectory>target/classes</outputDirectory>
     </build>
+
 </project>

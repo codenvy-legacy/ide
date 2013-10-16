@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.exoplatform.ide</groupId>
@@ -14,44 +15,55 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
-        
+
+
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>12.0.1</version>
+            <version>${guava.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava-gwt</artifactId>
-            <version>12.0.1</version>
+            <version>${guava.version}</version>
             <scope>provided</scope>
         </dependency>
-       
+
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-shell</artifactId>
+            <version>${project.version}</version>
         </dependency>
+
+
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs</artifactId>
+            <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs-fs</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-framework-client</artifactId>
+            <version>${project.version}</version>
         </dependency>
+
     </dependencies>
     <build>
         <resources>
@@ -79,7 +91,8 @@
                         <phase>process-resources</phase>
                         <configuration>
                             <tasks>
-                                <unwar src="${project.build.directory}/dependency/exo-ide-shell-${project.version}.jar" dest="${project.build.directory}/share" />
+                                <unwar src="${project.build.directory}/dependency/exo-ide-shell-${project.version}.jar"
+                                       dest="${project.build.directory}/share"/>
                             </tasks>
                         </configuration>
                         <goals>
@@ -92,7 +105,7 @@
                         <configuration>
                             <tasks>
                                 <move todir="${project.build.directory}/${project.artifactId}-${project.version}">
-                                    <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/Shell" />
+                                    <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/Shell"/>
                                 </move>
                             </tasks>
                         </configuration>
@@ -117,6 +130,7 @@
                                 <artifactItem>
                                     <groupId>org.exoplatform.ide</groupId>
                                     <artifactId>exo-ide-shell</artifactId>
+                                    <version>${project.version}</version>
                                     <type>jar</type>
                                 </artifactItem>
                             </artifactItems>
@@ -134,6 +148,7 @@
                     <logLevel>INFO</logLevel>
                     <skipTests>${gwt.test.skip}</skipTests>
                     <style>${gwt.compiler.additional.options}</style>
+                    <extraJvmArgs>${gwt.xmx}</extraJvmArgs>
                 </configuration>
                 <executions>
                     <execution>
@@ -208,17 +223,6 @@
                             <targetPath>.</targetPath>
                         </resource>
                     </webResources>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <excludes>
-                        <exclude>**/IDEGadget.java</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

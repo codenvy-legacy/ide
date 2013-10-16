@@ -6,7 +6,6 @@
         <artifactId>exo-ide-parent</artifactId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
-    <groupId>org.exoplatform.ide</groupId>
     <artifactId>exo-ide-vfs</artifactId>
     <packaging>jar</packaging>
     <name>Codenvy IDE :: Virtual File System</name>
@@ -14,80 +13,98 @@
         <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-env</artifactId>
+            <version>${codenvy.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-lang</artifactId>
+            <version>${codenvy.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-commons</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.commons</artifactId>
+            <version>${org.exoplatform.kernel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.core</groupId>
             <artifactId>exo.core.component.security.core</artifactId>
+            <version>${org.exoplatform.core.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>jsr250-api</artifactId>
+            <version>${javax.annotation.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
+            <version>${commons-fileupload.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-commons</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-dev</artifactId>
+            <version>${gwt.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-core</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-test</artifactId>
+            <version>${everrest.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
+        <!-- DO NOT REMOVE NEED FOR GWT BUILD-->
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -96,78 +113,5 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
-        <testResources>
-            <testResource>
-                <directory>src/test/java</directory>
-            </testResource>
-            <testResource>
-                <directory>src/test/resources</directory>
-            </testResource>
-        </testResources>
-        <plugins>
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <archiveClasses>true</archiveClasses>
-                    <archive>
-                        <manifest>
-                            <addClasspath>false</addClasspath>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-prod-resources</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/www-test/WEB-INF/</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${basedir}/src/test/resources/webapp/WEB-INF</directory>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>**/GwtTest*.java</exclude>
-                        <exclude>**/*Gwt*Suite*.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>gwt-maven-plugin</artifactId>
-                <configuration>
-                    <module>org.exoplatform.ide.vfs.IDEVFS</module>
-                    <logLevel>ERROR</logLevel>
-                    <skipTests>${gwt.test.skip}</skipTests>
-                    <testTimeOut>500</testTimeOut>
-                    <mode>htmlunit</mode>
-                    <productionMode>false</productionMode>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
 </project>

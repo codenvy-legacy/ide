@@ -16,39 +16,50 @@
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-websockets</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor</artifactId>
+            <version>${project.version}</version>
         </dependency>
+
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-framework-client</artifactId>
+            <version>${project.version}</version>
         </dependency>
+
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-commons</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
+            <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
+
 
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
+
 
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -59,52 +70,55 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>12.0.1</version>
+            <version>${guava.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava-gwt</artifactId>
-            <version>12.0.1</version>
+            <version>${guava.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.1</version>
+            <version>${gson.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>2.4.1</version>
+            <version>${protobuf-java.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-env</artifactId>
+            <version>${codenvy.commons.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
+            <version>${jgit.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
-            <version>3.1</version>
+            <version>${easymock.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -123,20 +137,22 @@
                 <dependency>
                     <groupId>com.google.guava</groupId>
                     <artifactId>guava</artifactId>
-                    <version>12.0.1</version>
+                    <version>${guava.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>com.google.code.gson</groupId>
                     <artifactId>gson</artifactId>
-                    <version>2.1</version>
+                    <version>${gson.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>org.exoplatform.ide</groupId>
                     <artifactId>exo-ide-commons</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>org.exoplatform.ide</groupId>
                     <artifactId>exo-ide-vfs</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
             </dependencies>
             <build>
@@ -155,7 +171,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-jar-plugin</artifactId>
-                        <version>2.4</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -174,7 +189,6 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                        <version>1.2.1</version>
                         <executions>
                             <execution>
                                 <id>dto-server</id>
@@ -224,14 +238,6 @@
             </resource>
         </resources>
         <sourceDirectory>src/main/java</sourceDirectory>
-
-        <testSourceDirectory>src/test/java</testSourceDirectory>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-            </testResource>
-        </testResources>
-        <outputDirectory>target/classes</outputDirectory>
     </build>
 
 </project>

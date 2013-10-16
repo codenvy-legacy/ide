@@ -16,31 +16,28 @@
         <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-env</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.commons</groupId>
-            <artifactId>codenvy-commons-env</artifactId>
+            <version>${codenvy.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-commons</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-mail-client</artifactId>
+            <version>${codenvy.commons.version}</version>
         </dependency>
          <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-servlet</artifactId>
+             <version>${codenvy.commons.version}</version>
         </dependency>
         
         <dependency>
-          <groupId>com.codenvy.organization</groupId>
-          <artifactId>codenvy-organization-api-java-client</artifactId>
-       </dependency>
-        <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.container</artifactId>
+            <version>${org.exoplatform.kernel.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>bcel</groupId>
@@ -59,6 +56,7 @@
         <dependency>
             <groupId>org.exoplatform.core</groupId>
             <artifactId>exo.core.component.security.core</artifactId>
+            <version>${org.exoplatform.core.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.servlet</groupId>
@@ -69,6 +67,7 @@
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>jsr250-api</artifactId>
+            <version>${javax.annotation.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -78,82 +77,93 @@
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
+            <version>${commons-fileupload.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
+            <version>${commons-codec.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.commons</artifactId>
+            <version>${org.exoplatform.kernel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+            <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet-api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-integration-exo</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-httpclient</artifactId>
+            <version>${everrest.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-integration-exo</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-test</artifactId>
+            <version>${everrest.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-groovy</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-websockets</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>r09</version>
+            <version>${guava.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -172,7 +182,7 @@
             <groupId>org.openid4java</groupId>
             <artifactId>openid4java-consumer</artifactId>
             <type>pom</type>
-            <version>0.9.6</version>
+            <version>${openid4java.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>xerces</groupId>
@@ -196,6 +206,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-security</artifactId>
+            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>httpclient</artifactId>
@@ -206,54 +217,32 @@
         <dependency>
             <groupId>com.github.dcarter.gdata-java-client</groupId>
             <artifactId>gdata-core-1.0</artifactId>
-            <version>1.47.1</version>
+            <version>${gdata.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.dcarter.gdata-java-client</groupId>
             <artifactId>gdata-client-1.0</artifactId>
-            <version>1.47.1</version>
+            <version>${gdata.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.dcarter.gdata-java-client</groupId>
             <artifactId>gdata-contacts-3.0</artifactId>
-            <version>1.47.1</version>
+            <version>${gdata.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-api-java-client</artifactId>
+            <version>${codenvy.organization.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-api</artifactId>
+            <version>${codenvy.organization.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-invite</artifactId>
+            <version>${codenvy.organization.version}</version>
         </dependency>
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
-            </plugin>
-        </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <outputDirectory>target/classes</outputDirectory>
-
-    </build>
 </project>

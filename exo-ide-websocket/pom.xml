@@ -14,15 +14,18 @@
         <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.container</artifactId>
+            <version>${org.exoplatform.kernel.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-core</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-websockets</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
@@ -39,16 +42,9 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-server</artifactId>
+            <version>${project.version}</version>
         </dependency>
+
     </dependencies>
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
-    </build>
+
 </project>

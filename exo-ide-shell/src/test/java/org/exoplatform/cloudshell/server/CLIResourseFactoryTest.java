@@ -25,6 +25,7 @@ import org.everrest.core.impl.resource.AbstractResourceDescriptorImpl;
 import org.exoplatform.ide.shell.server.CLIResourceFactory;
 import org.exoplatform.ide.shell.shared.CLIResource;
 import org.exoplatform.ide.shell.shared.CLIResourceParameter;
+import org.junit.Ignore;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -38,6 +39,7 @@ import java.util.Set;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@Ignore
 public class CLIResourseFactoryTest extends TestCase {
     @Path("a/{b}")
     public static class Resource1 {

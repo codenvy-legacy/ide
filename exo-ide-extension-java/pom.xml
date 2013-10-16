@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.exoplatform.ide</groupId>
@@ -13,22 +14,29 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
-       <dependency>
+
+        <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>eclipse-jdt-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-maven</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.commons</artifactId>
+            <version>${org.exoplatform.kernel.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.tool</groupId>
@@ -39,6 +47,7 @@
         <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.container</artifactId>
+            <version>${org.exoplatform.kernel.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.tool</groupId>
@@ -53,81 +62,97 @@
         <dependency>
             <groupId>org.exoplatform.core</groupId>
             <artifactId>exo.core.component.security.core</artifactId>
+            <version>${org.exoplatform.core.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+            <version>${org.slf4j.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-commons</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+
+
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-framework-client</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-test</artifactId>
+            <version>${everrest.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-core</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-integration-exo</artifactId>
+            <version>${everrest.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-testframework</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.thoughtworks.qdox</groupId>
             <artifactId>qdox</artifactId>
-            <version>1.12-eXo01</version>
+            <version>${qdox-patched.version}</version>
         </dependency>
         <dependency>
             <groupId>org.easytesting</groupId>
             <artifactId>fest-assert</artifactId>
-            <version>1.4</version>
+            <version>${fest-assert.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.9.0</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
+            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.ide</groupId>
@@ -142,9 +167,19 @@
         <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-json</artifactId>
+            <version>${codenvy.commons.version}</version>
         </dependency>
     </dependencies>
     <build>
+        <!-- DO NOT REMOVE NEED FOR GWT BUILD-->
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -172,7 +207,7 @@
                                 <artifactItem>
                                     <groupId>org.exoplatform.ide</groupId>
                                     <artifactId>ide-codeassistant-lucene-index</artifactId>
-                                    <version>${ide.codeassistant.lucene.index.version}</version>
+                                    <version>${codenvy.ide-codeassistant-index.version}</version>
                                     <type>zip</type>
                                 </artifactItem>
                             </artifactItems>
@@ -192,23 +227,13 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}" />
+                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
+                                       dest="${project.build.directory}"/>
                             </tasks>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
-
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <outputDirectory>target/classes</outputDirectory>
     </build>
 </project>
