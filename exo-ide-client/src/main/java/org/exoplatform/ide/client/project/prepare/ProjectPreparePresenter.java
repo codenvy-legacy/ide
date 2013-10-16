@@ -50,6 +50,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
+
 import com.codenvy.ide.commons.shared.ProjectType;
 
 import java.util.ArrayList;
@@ -237,7 +238,33 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
         }
     }
 
-    private void writeUserPropertiesToProject(Item item) {
+    private void writeUserPropertiesToProject(final Item item) {
+        if (item.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(item.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(item))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      item.setLinks(result.getItem().getLinks());
+                                                      updateProjectProperties(item);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            updateProjectProperties(item);
+        }
+    }
+    
+    private void updateProjectProperties(Item item){
         try {
             ItemWrapper itemWrapper = new ItemWrapper(item);
             ItemUnmarshaller unmarshaller = new ItemUnmarshaller(itemWrapper);

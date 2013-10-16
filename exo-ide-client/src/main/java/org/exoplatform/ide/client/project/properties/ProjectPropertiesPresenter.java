@@ -126,7 +126,7 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
                                                                                       + " is not a project.");
                                                       return;
                                                   }
-
+                                                  currentProject.setLinks(result.getItem().getLinks());
                                                   currentProject.getProperties().clear();
                                                   currentProject.getProperties().addAll(result.getItem().getProperties());
 

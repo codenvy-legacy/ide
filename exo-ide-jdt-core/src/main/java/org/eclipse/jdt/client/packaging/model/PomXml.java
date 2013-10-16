@@ -17,15 +17,22 @@
  */
 package org.eclipse.jdt.client.packaging.model;
 
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.xml.client.*;
+import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.Element;
+import com.google.gwt.xml.client.Node;
+import com.google.gwt.xml.client.NodeList;
+import com.google.gwt.xml.client.XMLParser;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,10 +88,33 @@ public class PomXml {
         mavenDependencies.clear();
         modules.clear();
         sourceDirectories.clear();
+        
+        if (pomFile.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(pomFile.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(pomFile))) {
 
-        /*
-         * Load pom.xml file content.
-         */
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      pomFile.setLinks(result.getItem().getLinks());
+                                                      getPomContent(callback);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      callback.onFailure(exception);
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                callback.onFailure(e);
+            }
+        } else {
+            getPomContent(callback);
+        }
+    }
+    
+    private void getPomContent(final AsyncCallback<Boolean> callback){
         try {
             VirtualFileSystem.getInstance().getContent(
                new AsyncRequestCallback<FileModel>(new FileContentUnmarshaller(pomFile)) {

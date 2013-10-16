@@ -32,7 +32,9 @@ import org.exoplatform.ide.client.framework.event.SaveAllFilesEvent;
 import org.exoplatform.ide.client.framework.event.SaveAllFilesHandler;
 import org.exoplatform.ide.client.navigation.control.SaveAllFilesControl;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,6 +73,31 @@ public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFi
             return;
         }
 
+        if (fileToSave.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(fileToSave.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(fileToSave))) {
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      fileToSave.setLinks(result.getItem().getLinks());
+                                                      doSave(fileToSave);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            doSave(fileToSave);
+        }
+    }
+    
+    private void doSave(final FileModel fileToSave) {
         try {
             VirtualFileSystem.getInstance().updateContent(fileToSave, new AsyncRequestCallback<FileModel>() {
                 @Override
@@ -89,9 +116,8 @@ public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFi
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
         }
-
     }
-
+    
     private FileModel getUnsavedFile() {
         for (FileModel file : openedFiles.values()) {
             if (file.isContentChanged() && file.isPersisted()) {

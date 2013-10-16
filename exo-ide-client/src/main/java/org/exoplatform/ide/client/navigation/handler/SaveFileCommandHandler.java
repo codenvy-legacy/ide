@@ -68,7 +68,32 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
             IDE.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
             return;
         }
+        
+        if (file.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(file.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(file))) {
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      file.setLinks(result.getItem().getLinks());
+                                                      doSave(file);
+                                                  }
 
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            doSave(file);
+        }
+    }
+
+    private void doSave(final FileModel file) {
         if (file.isContentChanged()) {
             try {
                 VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<FileModel>() {
@@ -89,9 +114,8 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
         } else {
             IDE.fireEvent(new FileSavedEvent(file, null));
         }
-
     }
-
+    
     private void getProperties(final FileModel file) {
         // TODO
         try {

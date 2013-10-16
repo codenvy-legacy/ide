@@ -319,7 +319,7 @@ public class ImportTest extends LocalFileSystemTest {
         mountPoint = provider.getMountPoint();
         virtualFileSystemRegistry.unregisterProvider(MY_WORKSPACE_ID);
         virtualFileSystemRegistry.registerProvider(MY_WORKSPACE_ID, provider);
-
+        
         CleanableSearcher searcher = (CleanableSearcher)searcherProvider.getSearcher(mountPoint, true);
         Throwable error;
         while ((error = searcher.getInitError()) == null && !searcher.isInitDone()) {

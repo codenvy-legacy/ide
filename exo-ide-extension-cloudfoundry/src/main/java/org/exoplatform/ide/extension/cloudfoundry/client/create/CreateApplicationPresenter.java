@@ -56,6 +56,8 @@ import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
@@ -274,30 +276,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
     @Override
     public void onCreateApplication(CreateApplicationEvent event) {
         this.paasProvider = event.getPaasProvider();
-//      if (selectedItems == null || selectedItems.size() == 0)
-//      {
-//         String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.selectFolderToCreate();
-//         IDE.fireEvent(new ExceptionThrownEvent(msg));
-//         return;
-//      }
-//      if (selectedItems.get(0).getPath().isEmpty() || selectedItems.get(0).getPath().equals("/"))
-//      {
-//         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedWorkace());
-//         return;
-//      }
-//
-//      if ((selectedItems.get(0) instanceof ItemContext) && ((ItemContext)selectedItems.get(0)).getProject() != null)
-//      {
-//         checkIsProject(((ItemContext)selectedItems.get(0)).getProject());
-//      }
-//      else
-//      {
-//         String msg = lb.createApplicationNotFolder(selectedItems.get(0).getName());
-//         IDE.fireEvent(new ExceptionThrownEvent(msg));
-//         return;
-//      }
 
-        ProjectModel project = getSelectedProject();
+        final ProjectModel project = getSelectedProject();
 
         if (project == null) {
             String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.selectFolderToCreate();
@@ -305,7 +285,29 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
             return;
         }
 
-        checkIsProject(project);
+        if (project.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(project.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      project.setLinks(result.getItem().getLinks());
+                                                      checkIsProject(project);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            checkIsProject(project);
+        }
     }
 
     /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api

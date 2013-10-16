@@ -330,15 +330,41 @@ public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleSt
         }
     }
 
-    private void convertToProject(FolderModel folderModel) {
+    private void convertToProject(final FolderModel folderModel) {
         String projectType = data.getType();
         folderModel.getProperties().add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
         folderModel.getProperties().add(new PropertyImpl("vfs:projectType", projectType));
 
+        if (folderModel.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(folderModel.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(folderModel))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      folderModel.setLinks(result.getItem().getLinks());
+                                                      updateItem(folderModel);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            updateItem(folderModel);
+        }
+    }
+    
+    private void updateItem(FolderModel folder) {
         ItemWrapper item = new ItemWrapper(new ProjectModel());
         ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
         try {
-            VirtualFileSystem.getInstance().updateItem(folderModel, null,
+            VirtualFileSystem.getInstance().updateItem(folder, null,
                                                        new AsyncRequestCallback<ItemWrapper>(unmarshaller) {
 
                                                            @Override

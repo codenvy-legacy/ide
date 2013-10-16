@@ -280,13 +280,13 @@ public class LocalFileSystem implements VirtualFileSystem {
             list = new ArrayList<Item>();
             Iterator<VirtualFile> iterator = children.iterator();
             for (int count = 0; count < maxItems && iterator.hasNext(); count++) {
-                list.add(fromVirtualFile(iterator.next(), includePermissions, propertyFilter));
+                list.add(fromVirtualFile(iterator.next(), includePermissions, propertyFilter, false));
             }
             hasMoreItems = iterator.hasNext();
         } else {
             list = new ArrayList<Item>(children.size());
             for (VirtualFile aChildren : children) {
-                list.add(fromVirtualFile(aChildren, includePermissions, propertyFilter));
+                list.add(fromVirtualFile(aChildren, includePermissions, propertyFilter, false));
             }
             hasMoreItems = false;
         }
@@ -310,7 +310,7 @@ public class LocalFileSystem implements VirtualFileSystem {
             throw new InvalidArgumentException(
                     String.format("Unable get tree. Item '%s' is not a folder. ", virtualFile.getPath()));
         }
-        return new ItemNodeImpl(fromVirtualFile(virtualFile, includePermissions, propertyFilter),
+        return new ItemNodeImpl(fromVirtualFile(virtualFile, includePermissions, propertyFilter, false),
                                 getTreeLevel(virtualFile, depth, includePermissions, propertyFilter));
     }
 
@@ -322,7 +322,7 @@ public class LocalFileSystem implements VirtualFileSystem {
         final List<VirtualFile> children = virtualFile.getChildren();
         final List<ItemNode> level = new ArrayList<ItemNode>(children.size());
         for (VirtualFile i : children) {
-            level.add(new ItemNodeImpl(fromVirtualFile(i, includePermissions, propertyFilter),
+            level.add(new ItemNodeImpl(fromVirtualFile(i, includePermissions, propertyFilter, false),
                                        getTreeLevel(i, depth - 1, includePermissions, propertyFilter)));
         }
         return level;

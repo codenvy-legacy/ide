@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
@@ -61,17 +62,43 @@ public class ProjectUpdater {
      *
      * @param project
      */
-    public static void updateProject(ProjectModel project, final ProjectUpdatedHandler itemUpdatedHandler) {
+    public static void updateProject(final ProjectModel project, final ProjectUpdatedHandler itemUpdatedHandler) {
         ArrayList<String> targets = ProjectResolver.resolveProjectTarget(project.getProjectType());
         project.getProperties().add(new PropertyImpl(ProjectProperties.TARGET.value(), targets));
 
+        if (project.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(project.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      project.setLinks(result.getItem().getLinks());
+                                                      updateProjectProperties(project, itemUpdatedHandler);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            updateProjectProperties(project, itemUpdatedHandler);
+        }
+    }
+    
+    private static void updateProjectProperties(ProjectModel project, final ProjectUpdatedHandler itemUpdatedHandler) {
         try {
             VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
 
                 @Override
                 protected void onSuccess(ItemWrapper result) {
-                    //loadProject();
-                    //openProject();
+                    // loadProject();
+                    // openProject();
                     if (itemUpdatedHandler != null) {
                         itemUpdatedHandler.onProjectUpdated();
                     }

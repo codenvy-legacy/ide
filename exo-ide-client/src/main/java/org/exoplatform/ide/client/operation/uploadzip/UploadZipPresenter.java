@@ -52,8 +52,10 @@ import org.exoplatform.ide.client.operation.uploadfile.UploadHelper;
 import org.exoplatform.ide.client.operation.uploadfile.UploadHelper.ErrorData;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.ExitCodes;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -172,12 +174,37 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
             newFolderName = zipFileName.split("\\.")[0];
         }
 
-        Folder baseFolder =
+        final Folder baseFolder =
                 (selectedItems.get(0) instanceof FileModel) ? ((FileModel)selectedItems.get(0)).getParent()
                                                             : (Folder)selectedItems.get(0);
 
-        FolderModel newFolder = new FolderModel();
+        final FolderModel newFolder = new FolderModel();
         newFolder.setName(newFolderName);
+        
+        if (baseFolder.getLinks().isEmpty()){
+            try {
+                VirtualFileSystem.getInstance().getItemById(baseFolder.getId(), new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(baseFolder))) {
+
+                    @Override
+                    protected void onSuccess(ItemWrapper result) {
+                        baseFolder.setLinks(result.getItem().getLinks());
+                        createFolder(baseFolder, newFolder);
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        IDE.fireEvent(new ExceptionThrownEvent(exception));
+                    }
+                });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            createFolder(baseFolder, newFolder);
+        }
+    }
+    
+    private void createFolder(Folder baseFolder, FolderModel newFolder){
         try {
             VirtualFileSystem.getInstance().createFolder(baseFolder,
                                                          new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(newFolder)) {
@@ -197,21 +224,40 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
     }
 
     /** Do submit a zip file. */
-    private void doSubmit(Item parent) {
-        display.getUploadForm().setAction(getUploadUrl(parent));
+    private void doSubmit(Item item) {
         // server handle only hidden overwrite field, but not form check box item "Overwrite"
         display.setOverwriteHiddenField(display.getOverwriteAllField().getValue());
-        display.getUploadForm().submit();
-    }
-
-    private String getUploadUrl(Item item) {
         if (item instanceof FileModel) {
-            return ((FileModel)item).getParent().getLinkByRelation(Link.REL_UPLOAD_ZIP).getHref();
+            setLinks(((FileModel)item).getParent());
         } else {
-            return item.getLinkByRelation(Link.REL_UPLOAD_ZIP).getHref();
+            setLinks(item);
         }
     }
 
+    private void setLinks(final Item item){
+        if (item.getLinks().isEmpty()){
+            try {
+                VirtualFileSystem.getInstance().getItemById(item.getId(), new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(item))) {
+
+                    @Override
+                    protected void onSuccess(ItemWrapper result) {
+                        item.setLinks(result.getItem().getLinks());
+                        display.getUploadForm().setAction(item.getLinkByRelation(Link.REL_UPLOAD_ZIP).getHref());
+                        display.getUploadForm().submit();
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        IDE.fireEvent(new ExceptionThrownEvent(exception));
+                    }
+                });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        }
+    }
+    
+    
     private void submitComplete(String uploadServiceResponse) {
         IDELoader.hide();
 

@@ -27,7 +27,9 @@ import org.exoplatform.ide.shell.client.cli.Options;
 import org.exoplatform.ide.shell.client.model.ClientCommand;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.Folder;
 
 import java.util.HashSet;
@@ -61,13 +63,46 @@ public class MkdirCommand extends ClientCommand {
             return;
         }
         @SuppressWarnings("unchecked")
-        List<String> args = commandLine.getArgList();
+        final List<String> args = commandLine.getArgList();
         args.remove(0);
         if (args.isEmpty()) {
             CloudShell.console().println(CloudShell.messages.mkdirError());
             return;
         }
-        Folder parentFolder = Environment.get().getCurrentFolder();
+        final Folder parentFolder = Environment.get().getCurrentFolder();
+        
+        if (parentFolder.getLinks().isEmpty()){
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(parentFolder.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(
+                                                                                    new ItemUnmarshaller(
+                                                                                                         new ItemWrapper(parentFolder))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      parentFolder.setLinks(result.getItem().getLinks());
+                                                      performCreation(args, parentFolder);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      CloudShell.console().println(exception.getMessage());
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                CloudShell.console().println(e.getMessage());
+            }
+        } else {
+            performCreation(args, parentFolder);
+        }
+        
+        
+       
+
+    }
+    
+    private void performCreation(List<String> args, Folder parentFolder){
         for (String name : args) {
 
             FolderModel newFolder = new FolderModel();
@@ -92,7 +127,5 @@ public class MkdirCommand extends ClientCommand {
             }
 
         }
-
     }
-
 }

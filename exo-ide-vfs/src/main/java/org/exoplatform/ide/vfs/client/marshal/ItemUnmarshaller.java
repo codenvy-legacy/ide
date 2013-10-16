@@ -63,7 +63,14 @@ public class ItemUnmarshaller implements Unmarshallable<ItemWrapper> {
             if (type == ItemType.PROJECT) {
                 wrapper.setItem(new ProjectModel(object));
             } else if (type == ItemType.FOLDER) {
-                wrapper.setItem(new FolderModel(object));
+                FolderModel folder = new FolderModel(object);
+                if (wrapper.getItem() != null) {
+                    FolderModel parent = ((FolderModel)wrapper.getItem()).getParent();
+                    ProjectModel project = ((FolderModel)wrapper.getItem()).getProject();
+                    folder.setParent(parent);
+                    folder.setProject(project);
+                }
+                wrapper.setItem(folder);
             } else {
                 FileModel file = new FileModel(object);
                 if (wrapper.getItem() != null) {
