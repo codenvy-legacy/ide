@@ -66,9 +66,7 @@ public class GetItemTest extends LocalFileSystemTest {
         writeProperties(filePath, properties);
 
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
-        Principal principal = DtoFactory.getInstance().createDto(Principal.class);
-        principal.setName("andrew");
-        principal.setType(Principal.Type.USER);
+        Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
 
         permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedFilePath, permissions);

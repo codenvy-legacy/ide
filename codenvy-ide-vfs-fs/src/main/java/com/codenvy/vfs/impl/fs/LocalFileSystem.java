@@ -64,24 +64,22 @@ public class LocalFileSystem extends VirtualFileSystemImpl {
 
     @Override
     public VirtualFileSystemInfo getInfo() throws VirtualFileSystemException {
-        final VirtualFileSystemInfo vfsInfo = DtoFactory.getInstance().createDto(VirtualFileSystemInfo.class);
         final BasicPermissions[] basicPermissions = BasicPermissions.values();
         final List<String> permissions = new ArrayList<>(basicPermissions.length);
         for (BasicPermissions bp : basicPermissions) {
             permissions.add(bp.value());
         }
-        vfsInfo.setId(vfsId);
-        vfsInfo.setVersioningSupported(false);
-        vfsInfo.setLockSupported(true);
-        vfsInfo.setAnonymousPrincipal(VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL);
-        vfsInfo.setAnyPrincipal(VirtualFileSystemInfo.ANY_PRINCIPAL);
-        vfsInfo.setPermissions(permissions);
-        vfsInfo.setAclCapability(ACLCapability.MANAGE);
-        vfsInfo.setQueryCapability(searcherProvider == null ? QueryCapability.NONE : QueryCapability.FULLTEXT);
-        vfsInfo.setUrlTemplates(LinksHelper.createUrlTemplates(baseUri, (String)EnvironmentContext.getCurrent().getVariable(
-                EnvironmentContext.WORKSPACE_NAME)));
-        final Folder root = (Folder)fromVirtualFile(getMountPoint().getRoot(), true, PropertyFilter.ALL_FILTER);
-        vfsInfo.setRoot(root);
-        return vfsInfo;
+        return DtoFactory.getInstance().createDto(VirtualFileSystemInfo.class)
+                         .withId(vfsId)
+                         .withVersioningSupported(false)
+                         .withLockSupported(true)
+                         .withAnonymousPrincipal(VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL)
+                         .withAnyPrincipal(VirtualFileSystemInfo.ANY_PRINCIPAL)
+                         .withPermissions(permissions)
+                         .withAclCapability(ACLCapability.MANAGE)
+                         .withQueryCapability(searcherProvider == null ? QueryCapability.NONE : QueryCapability.FULLTEXT)
+                         .withUrlTemplates(LinksHelper.createUrlTemplates(baseUri, (String)EnvironmentContext.getCurrent().getVariable(
+                                 EnvironmentContext.WORKSPACE_NAME)))
+                         .withRoot((Folder)fromVirtualFile(getMountPoint().getRoot(), true, PropertyFilter.ALL_FILTER));
     }
 }

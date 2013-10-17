@@ -64,8 +64,8 @@ class MountPointCacheCleaner {
                         }
                     }
                 },
-                30,
-                30,
+                10,
+                10,
                 TimeUnit.SECONDS);
     }
 
