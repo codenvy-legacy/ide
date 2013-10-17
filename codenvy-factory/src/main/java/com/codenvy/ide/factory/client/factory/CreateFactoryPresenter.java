@@ -39,7 +39,6 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -243,8 +242,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
          * @return value of Affiliate ID field
          */
         String getAffiliateIdFieldValue();
-        
-        boolean keepGitInfoSelected();
                 
         /**
          * Sets new value of Open After Launch field.
@@ -819,7 +816,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         request.put("projectattributes", projectAttributes);
         projectAttributes.put("pname", new JSONString(openedProject.getName()));
         projectAttributes.put("ptype", new JSONString(openedProject.getProjectType()));        
-        request.put("keepvcsinfo", new JSONString("" + display.keepGitInfoSelected()));
 
         if (isAdvanced) {
             request.put("style", new JSONString("Advanced"));

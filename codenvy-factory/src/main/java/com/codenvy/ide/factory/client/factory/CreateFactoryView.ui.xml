@@ -362,7 +362,7 @@
 			background-position: 3px 3px;								
 			background-repeat: no-repeat;
 			padding-left:21px;
-			cursor: default;
+			cursor: pointer;
 			background-color: #EEE;
 		}
 		
@@ -428,18 +428,33 @@
 		
 		.fileUploadSelected {
 			width: 185px;
+			height: 24px;
 			background-color: transparent;
-			border-color: transparent;			
+			border-color: transparent;
+			
+			margin-left: -1px;
+			margin-top: -1px;			
 		}
 
 		.fileUploadSelected span {
 			text-align: left;
-			font-weight: bold;
-			padding-left: 3px;
-			opacity: 0.7;
-			font-size: 12px;
 			cursor: default;
-		}
+			
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			-webkit-appearance: textfield;
+			
+			background-color: #eee;
+			border-width: 1px;
+			border-color: #ccc;
+			border-style: solid;
+			border-radius: 2px;
+			height: 22px;
+			margin: 0;
+			/*
+			padding-left: 1px;
+			*/			
+		}		
 		
 		.fileUploadSelected input {
 			display: none;
@@ -818,16 +833,6 @@
 						?
 						<span style="margin-top: -26px;"><div></div>Use your AffiliateID and earn up to 10%<br/>on Codenvy sales from traffic that is sent to Codenvy<br/>from embedded IDEs that you include on your site</span>
 					</div>
-					
-					<div class="{style.check}" style="position: absolute; left:528px; right:23px; top:150px;">
-						<input type="checkbox" name="keep_git" ui:field="checkKeepGitInfo"></input>
-						<label for="checkKeepGitInfo">Keep Git Informations</label>
-					</div>
-					<div class="{style.tooltip}" style="position: absolute; right:0px; top:150px;">
-						?
-						<span style="margin-top: -34px;"><div></div>Define if the Factory you will create<br/>will keep informations from the root repository.<br/>If checked, factory users will be able<br/>to make push to your repository.</span>
-					</div>
-
 				</div>
 			</div>
 			

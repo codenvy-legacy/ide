@@ -101,7 +101,7 @@ public class CreateFactoryView extends ViewImpl
     IFrameElement                 previewFrame1, previewFrame2;
 
     @UiField
-    InputElement                  checkShowCounter, radioVertical, radioHorizontal, radioDark, radioWhite, openAfterLaunchField, checkKeepGitInfo;
+    InputElement                  checkShowCounter, radioVertical, radioHorizontal, radioDark, radioWhite, openAfterLaunchField;
 
     @UiField    LabelElement        uploadFilePanel;
     
@@ -251,7 +251,7 @@ public class CreateFactoryView extends ViewImpl
             } else {
                 name = name.substring(name.lastIndexOf("\\") + 1);
             }
-            if (name.length() > 22) {
+            if (name.length() > 28) {
                 name = name.substring(0, 22) + "...";
             }
             
@@ -833,14 +833,6 @@ public class CreateFactoryView extends ViewImpl
     @Override
     public String getAffiliateIdFieldValue() {
         return affiliateIdField.getValue();
-    }
-    
-    /**
-     * @see com.codenvy.ide.factory.client.factory.CreateFactoryPresenter.Display#keepGitInfoSelected()
-     */
-    @Override
-    public boolean keepGitInfoSelected() {
-        return checkKeepGitInfo.isChecked();
     }
 
 }
