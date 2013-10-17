@@ -56,6 +56,12 @@
             <type>war</type>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.factory</groupId>
+            <artifactId>codenvy-factory-packaging-war</artifactId>
+            <type>war</type>
+            <version>${codenvy.factory.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>codenvy-packaging-platform-api-war</artifactId>
             <version>${project.version}</version>
@@ -237,9 +243,10 @@
                                       overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>
-                                <copy
-                                        file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${codenvy.organization.version}.war"
-                                        tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${codenvy.organization.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-factory-packaging-war-${codenvy.factory.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/factory.war" overwrite="true" />
                                 <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
                                        dest="${project.build.directory}/tomcat-ide"/>
                                 <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip"
