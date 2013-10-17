@@ -28,6 +28,8 @@ import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
+import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.GitUser;
@@ -138,7 +140,17 @@ public class FactoryService {
             if (idCommit != null && !idCommit.trim().isEmpty()) {
                 gitConnection.branchCheckout(new BranchCheckoutRequest("temp", idCommit, true));
             } else if (gitBranch != null && !gitBranch.trim().isEmpty()) {
-                gitConnection.branchCheckout(new BranchCheckoutRequest(gitBranch, "origin/" + gitBranch, !gitBranch.equals("master")));
+                List<Branch> branches = gitConnection.branchList(new BranchListRequest(null));
+                boolean doCheckout = true;
+                for (Branch branch : branches) {
+                    if (branch.getDisplayName().equals(gitBranch) && branch.isActive()) {
+                        doCheckout = !doCheckout;
+                        break;
+                    }
+                }
+                if (doCheckout) {
+                    gitConnection.branchCheckout(new BranchCheckoutRequest(gitBranch, "origin/" + gitBranch, doCheckout));
+                }
             }
 
             if (!keepVcsInfo)
