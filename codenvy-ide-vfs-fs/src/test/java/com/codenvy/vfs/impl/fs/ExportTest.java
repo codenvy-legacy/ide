@@ -73,9 +73,7 @@ public class ExportTest extends LocalFileSystemTest {
         createTree(protectedFolderPath, 6, 4, null);
 
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
-        Principal principal = DtoFactory.getInstance().createDto(Principal.class);
-        principal.setName("andrew");
-        principal.setType(Principal.Type.USER);
+        Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedFolderPath, permissions);
 
@@ -122,9 +120,7 @@ public class ExportTest extends LocalFileSystemTest {
 
     public void testExportFolderNoPermissions2() throws Exception {
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
-        Principal principal = DtoFactory.getInstance().createDto(Principal.class);
-        principal.setName("andrew");
-        principal.setType(Principal.Type.USER);
+        Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
         List<String> l = flattenDirectory(folderPath);
         // Find one child in the list and remove write permission for 'admin'.

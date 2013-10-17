@@ -32,7 +32,7 @@ import java.util.List;
 public class GetAvailableFileSystemsTest extends LocalFileSystemTest {
     @SuppressWarnings("unchecked")
     public void testAvailableFS() throws Exception {
-        String requestPath = BASE_URI + "/api/my-ws/vfs";
+        String requestPath = BASE_URI + "/my-ws/vfs";
         ByteArrayContainerResponseWriter wr = new ByteArrayContainerResponseWriter();
         ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, wr, null);
         //log.info(new String(wr.getBody()));

@@ -75,12 +75,8 @@ public class ImportTest extends LocalFileSystemTest {
         protectedFolderPath = createDirectory(testRootPath, "ImportTest_Protected");
 
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
-        Principal admin = DtoFactory.getInstance().createDto(Principal.class);
-        admin.setName("admin");
-        admin.setType(Principal.Type.USER);
-        Principal user = DtoFactory.getInstance().createDto(Principal.class);
-        user.setName("andrew");
-        user.setType(Principal.Type.USER);
+        Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
+        Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         permissions.put(admin, EnumSet.of(BasicPermissions.READ));
         permissions.put(user, EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
         writePermissions(protectedFolderPath, permissions);
@@ -201,12 +197,8 @@ public class ImportTest extends LocalFileSystemTest {
 
     public void testImportFileExistsAndProtected() throws Exception {
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
-        Principal admin = DtoFactory.getInstance().createDto(Principal.class);
-        admin.setName("admin");
-        admin.setType(Principal.Type.USER);
-        Principal user = DtoFactory.getInstance().createDto(Principal.class);
-        user.setName("andrew");
-        user.setType(Principal.Type.USER);
+        Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
+        Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         permissions.put(admin, EnumSet.of(BasicPermissions.READ));
         permissions.put(user, EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
         writePermissions(existedFile, permissions);
@@ -298,7 +290,7 @@ public class ImportTest extends LocalFileSystemTest {
     public void testIndexWhenImport() throws Exception {
         CleanableSearcher searcher = prepareSearcher();
         String path = SERVICE_URI + "import/" + folderId;
-        Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
+        Map<String, List<String>> headers = new HashMap<>(1);
         headers.put("Content-Type", Arrays.asList("application/zip"));
         ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, zipFolder, null, null);
         assertEquals(204, response.getStatus());
@@ -309,10 +301,10 @@ public class ImportTest extends LocalFileSystemTest {
         QueryExpression q = new QueryExpression();
         q.setText(DEFAULT_CONTENT);
         q.setPath(folderPath + '/');
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         java.util.Collections.addAll(result, searcher.search(q));
 
-        List<String> importedFiles = new ArrayList<String>();
+        List<String> importedFiles = new ArrayList<>();
         for (String vfsPath : flattenDirectory(folderPath)) {
             vfsPath = folderPath + '/' + vfsPath;
             if (getIoFile(vfsPath).isFile()) {

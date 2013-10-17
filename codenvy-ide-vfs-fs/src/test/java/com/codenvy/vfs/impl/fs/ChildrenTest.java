@@ -75,9 +75,7 @@ public class ChildrenTest extends LocalFileSystemTest {
 
         String protectedFolderPath = createDirectory(testRootPath, "ChildrenTest_ProtectedFolder");
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
-        Principal principal = DtoFactory.getInstance().createDto(Principal.class);
-        principal.setName("andrew");
-        principal.setType(Principal.Type.USER);
+        Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedFolderPath, permissions);
 
@@ -144,9 +142,7 @@ public class ChildrenTest extends LocalFileSystemTest {
         String protectedItemName = childrenNames.iterator().next();
         String protectedItemPath = folderPath + '/' + protectedItemName;
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
-        Principal principal = DtoFactory.getInstance().createDto(Principal.class);
-        principal.setName("andrew");
-        principal.setType(Principal.Type.USER);
+        Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedItemPath, permissions);
         childrenNames.remove(protectedItemName); // this should not appears in result

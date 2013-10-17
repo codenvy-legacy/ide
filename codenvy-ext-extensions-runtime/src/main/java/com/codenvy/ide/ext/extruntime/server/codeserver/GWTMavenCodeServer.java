@@ -172,6 +172,7 @@ public class GWTMavenCodeServer implements GWTCodeServer {
         final String confString = String.format("<configuration>" +
                                                 "  <sources>" +
                                                 "    <source>../%1$s/src/main/java</source>" +
+                                                "    <source>../%1$s/src/main/resources</source>" +
                                                 "  </sources>" +
                                                 "</configuration>", extensionModuleName);
 

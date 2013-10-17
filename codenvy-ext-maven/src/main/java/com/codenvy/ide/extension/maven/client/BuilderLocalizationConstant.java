@@ -20,37 +20,33 @@ package com.codenvy.ide.extension.maven.client;
 import com.google.gwt.i18n.client.Messages;
 
 /**
- * Localization constants.
- * Interface to represent the constants contained in resource bundle: 'BuilderLocalizationConstant.properties'.
+ * Localization constants. Interface to represent the constants contained in resource bundle:
+ * 'BuilderLocalizationConstant.properties'.
  *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuilderLocalizationConstant.java Feb 21, 2012 3:06:29 PM azatsarynnyy $
  */
 public interface BuilderLocalizationConstant extends Messages {
-    /*
-     * Controls
-     */
+    /* Actions */
     @Key("control.buildProject.id")
     String buildProjectControlId();
 
-    @Key("control.buildProject.title")
+    @Key("control.buildProject.text")
     String buildProjectControlTitle();
 
-    @Key("control.buildProject.prompt")
-    String buildProjectControlPrompt();
+    @Key("control.buildProject.description")
+    String buildProjectControlDescription();
 
     @Key("control.buildAndPublishProject.id")
     String buildAndPublishProjectControlId();
 
-    @Key("control.buildAndPublishProject.title")
-    String buildAndPublishProjectControlTitle();
+    @Key("control.buildAndPublishProject.text")
+    String buildAndPublishProjectControlText();
 
-    @Key("control.buildAndPublishProject.prompt")
-    String buildAndPublishProjectControlPrompt();
+    @Key("control.buildAndPublishProject.description")
+    String buildAndPublishProjectControlDescription();
 
-    /*
-     * Messages
-     */
+    /* Messages */
     @Key("messages.buildInProgress")
     String buildInProgress(String project);
 
@@ -63,9 +59,16 @@ public interface BuilderLocalizationConstant extends Messages {
     @Key("messages.selectedItemsFail")
     String selectedItemsFail();
 
-    /*
-     * BuildProjectView
-     */
+    @Key("messages.downloadArtifact")
+    String downloadArtifact(String url);
+
+    @Key("messages.dependencyForYourPom")
+    String dependencyForYourPom(String dependency);
+
+    @Key("messages.failGetBuildResult")
+    String failGetBuildResult();
+
+    /* BuildProjectView */
     @Key("buildProject.id")
     String buildProjectId();
 
@@ -75,9 +78,7 @@ public interface BuilderLocalizationConstant extends Messages {
     @Key("buildProject.outputClear")
     String outputClear();
 
-    /*
-     * InitRequestHandler
-     */
+    /* InitRequestHandler */
     @Key("build.started")
     String buildStarted(String project);
 

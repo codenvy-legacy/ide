@@ -124,7 +124,7 @@ public class AntBuilder extends Builder {
 
     @Override
     public Configuration getDefaultConfiguration() {
-        final Configuration defaultConfiguration = super.getDefaultConfiguration();
+        final Configuration defaultConfiguration = new Configuration(super.getDefaultConfiguration());
         defaultConfiguration.setInt(ANT_LISTENER_MIN_PORT, 49152);
         defaultConfiguration.setInt(ANT_LISTENER_MAX_PORT, 65535);
         return defaultConfiguration;
