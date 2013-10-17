@@ -438,7 +438,9 @@
 
 		.fileUploadSelected span {
 			text-align: left;
+			/*
 			cursor: default;
+			*/
 			
 			box-sizing: border-box;
 			-webkit-box-sizing: border-box;
@@ -457,14 +459,20 @@
 		}		
 		
 		.fileUploadSelected input {
+	/*
 			display: none;
 			visibility: hidden;
+	*/
 		}
 		
 		.fileUploadSelected:hover {
 			background-color: transparent;
 			border-color: transparent;
-		}		
+		}
+		
+		.fileUploadSelected:hover span {
+			background-color: #CCCCCC;
+		}
 				
 		.resetUploadButton {
 			position: relative;

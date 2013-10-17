@@ -236,14 +236,14 @@ public class CreateFactoryView extends ViewImpl
             createFactoryForm.reset();
             
             uploadFilePanel.removeClassName(style.fileUploadSelected());
-            uploadFileField.removeAttribute("disabled");
+            //uploadFileField.removeAttribute("disabled");
             
             selectedFileNameSpan.setInnerText("Upload image (JPG, GIF or PNG)");
             
             resetUploadButton.getStyle().setDisplay(Display.NONE);        
         } else {
             uploadFilePanel.addClassName(style.fileUploadSelected());
-            uploadFileField.setAttribute("disabled", "disabled");
+            //uploadFileField.setAttribute("disabled", "disabled");
             
             String name = value;
             if (name.indexOf("/") >= 0) {
