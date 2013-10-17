@@ -138,46 +138,57 @@ public class FactoryService {
             gitConnection.clone(new CloneRequest(remoteUri, null));
 
             if (idCommit != null && !idCommit.trim().isEmpty()) {
+                //Try to checkout to new branch "temp" with HEAD of setted commit ID
                 gitConnection.branchCheckout(new BranchCheckoutRequest("temp", idCommit, true));
             } else if (gitBranch != null && !gitBranch.trim().isEmpty()) {
+                //Try to checkout to specified branch. For first we need to list all cloned local branches to
+                //find if specified branch already exist, if its true, we check if this this branch is active
                 List<Branch> branches = gitConnection.branchList(new BranchListRequest(null));
-                boolean doCheckout = true;
                 for (Branch branch : branches) {
-                    if (branch.getDisplayName().equals(gitBranch) && branch.isActive()) {
-                        doCheckout = !doCheckout;
+                    if (branch.getDisplayName().equals(gitBranch)) {
+                        gitConnection.branchCheckout(new BranchCheckoutRequest(gitBranch, "origin/" + gitBranch, false));
                         break;
                     }
                 }
-                if (doCheckout) {
-                    gitConnection.branchCheckout(new BranchCheckoutRequest(gitBranch, "origin/" + gitBranch, doCheckout));
-                }
             }
-
-            if (!keepVcsInfo)
-                deleteRepository(vfsId, projectId);
         } catch (JGitInternalException e) {
-            //if commit id doesn't exist, jgit produce exception like "Missing unknown <hashOfCommit>"
+            //Case: commit ID doesn't exist, if it happens JGit throw exception with message "Missing unknown #hash"
+            //We try to publish via websocket message to user that this commit doesn't exist and continue parsing
+            //our source directory into project with default cloned branch
             if (e.getMessage().contains("Missing unknown")) {
                 publishWebsocketMessage("Commit <b>" + idCommit + "</b> doesn't exist. Switching to default branch.");
-
-                if (!keepVcsInfo)
-                    deleteRepository(vfsId, projectId);
             } else {
+                //In other case we simple rethrown exception to client. It maybe "not authorized" exception from
+                //OAuthCredentialsProvider
                 deleteRepository(vfsId, projectId);
                 throw new GitException(e);
             }
         } catch (IllegalArgumentException e) {
+            //Case: branch doesn't exist, or user try to pass into param idcommit something unlike hash of
+            //commit then JGit will thrown GitAPIException which will be transformed into IllegalArgumentException in
+            //org.exoplatform.ide.git.server.jgit.JGitConnection.branchCheckout()
             if (e.getMessage().matches("Ref .* can not be resolved")) {
+                //And there is two cases, when user pass into commit ID parameter some strings unlike hash and when user
+                //pass into vcsbranch parameter non existed branch.
                 if (idCommit != null && !idCommit.trim().isEmpty()) {
                     publishWebsocketMessage("Commit <b>" + idCommit + "</b> doesn't exist. Switching to default branch.");
                 } else if (gitBranch != null && !gitBranch.trim().isEmpty()) {
                     publishWebsocketMessage("Branch <b>" + gitBranch + "</b> doesn't exist. Switching to default branch.");
                 }
-
-                if (!keepVcsInfo)
-                    deleteRepository(vfsId, projectId);
             } else {
+                //In other case we simple rethrown exception to client. It maybe "fatal: A branch named 'branchName' already exists."
+                //from org.exoplatform.ide.git.server.jgit.JGitConnection.branchCheckout()
+                deleteRepository(vfsId, projectId);
                 throw new IllegalArgumentException(e);
+            }
+        } finally {
+            //Finally if we found parameter vcsinfo we check that we should delete git repository after cloning.
+            if (!keepVcsInfo) {
+                try {
+                    deleteRepository(vfsId, projectId);
+                } catch (VirtualFileSystemException e) {
+                    //ignore, folder already deleted
+                }
             }
         }
 
