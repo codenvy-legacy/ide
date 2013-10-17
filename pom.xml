@@ -113,13 +113,6 @@
         <module>codenvy-ext-css</module>
         <module>codenvy-ext-java</module>
         <module>codenvy-ext-java-runtime</module>
-        <module>codenvy-ext-cloudfoundry</module>
-        <module>codenvy-ext-cloudbees</module>
-        <module>codenvy-ext-appfog</module>
-        <module>codenvy-ext-openshift</module>
-        <module>codenvy-ext-googleappengine</module>
-        <module>codenvy-ext-aws</module>
-        <module>codenvy-ext-jenkins</module>
         <module>codenvy-ext-git</module>
         <module>codenvy-ext-maven</module>
         <module>codenvy-ext-ssh</module>

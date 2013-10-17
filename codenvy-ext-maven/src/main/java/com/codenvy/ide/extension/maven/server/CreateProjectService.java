@@ -17,12 +17,14 @@
  */
 package com.codenvy.ide.extension.maven.server;
 
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.server.observation.EventListenerList;
-import org.exoplatform.ide.vfs.shared.*;
+import com.codenvy.api.vfs.server.MountPoint;
+import com.codenvy.api.vfs.server.VirtualFile;
+import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
+import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
+import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
+import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+import com.codenvy.api.vfs.shared.PropertyFilter;
+import com.codenvy.api.vfs.shared.dto.Property;
 
 import javax.inject.Inject;
 import javax.ws.rs.POST;
@@ -34,7 +36,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.exoplatform.ide.vfs.shared.PropertyFilter.ALL_FILTER;
+
 
 /**
  * Server service for creating projects.
@@ -45,38 +47,13 @@ import static org.exoplatform.ide.vfs.shared.PropertyFilter.ALL_FILTER;
 public class CreateProjectService {
     @Inject
     VirtualFileSystemRegistry registry;
-    @Inject
-    EventListenerList         eventListenerList;
 
     @Path("project/java")
     @POST
     @Produces(APPLICATION_JSON)
     public void createJavaProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, @QueryParam("rootId") String rootId,
                                   List<Property> properties) throws VirtualFileSystemException {
-        VirtualFileSystem vfs = registry.getProvider(vfsId).newInstance(null, eventListenerList);
-        Folder projectFolder = vfs.createFolder(rootId, name);
-
-        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("conf/Simple_jar.zip");
-        if (templateStream == null) {
-            throw new InvalidArgumentException("Can't find Simple_jar.zip");
-        }
-        try {
-            vfs.importZip(projectFolder.getId(), templateStream, true);
-            updateProperties(name, properties, vfs, projectFolder);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void updateProperties(String name, List<Property> properties, VirtualFileSystem vfs, Folder projectFolder)
-            throws VirtualFileSystemException {
-        Item projectItem = vfs.getItem(projectFolder.getId(), false, ALL_FILTER);
-        if (projectItem instanceof ProjectImpl) {
-            Project project = (Project)projectItem;
-            vfs.updateItem(project.getId(), properties, null);
-        } else {
-            throw new IllegalStateException("Something other than project was created on " + name);
-        }
+        createProject(vfsId, name, properties, "conf/Simple_jar.zip");
     }
 
     @Path("project/war")
@@ -84,19 +61,8 @@ public class CreateProjectService {
     @Produces(APPLICATION_JSON)
     public void createWarProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, @QueryParam("rootId") String rootId,
                                  List<Property> properties) throws VirtualFileSystemException {
-        VirtualFileSystem vfs = registry.getProvider(vfsId).newInstance(null, eventListenerList);
-        Folder projectFolder = vfs.createFolder(rootId, name);
 
-        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("conf/Simple_war.zip");
-        if (templateStream == null) {
-            throw new InvalidArgumentException("Can't find Simple_war.zip");
-        }
-        try {
-            vfs.importZip(projectFolder.getId(), templateStream, true);
-            updateProperties(name, properties, vfs, projectFolder);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        createProject(vfsId, name, properties, "conf/Simple_war.zip");
     }
 
     @Path("project/spring")
@@ -104,38 +70,41 @@ public class CreateProjectService {
     @Produces(APPLICATION_JSON)
     public void createSpringProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, @QueryParam("rootId") String rootId,
                                     List<Property> properties) throws VirtualFileSystemException {
-        VirtualFileSystem vfs = registry.getProvider(vfsId).newInstance(null, eventListenerList);
-        Folder projectFolder = vfs.createFolder(rootId, name);
-
-        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("conf/Simple_spring.zip");
-        if (templateStream == null) {
-            throw new InvalidArgumentException("Can't find Simple_spring.zip");
-        }
-        try {
-            vfs.importZip(projectFolder.getId(), templateStream, true);
-            updateProperties(name, properties, vfs, projectFolder);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        createProject(vfsId, name, properties, "conf/Simple_spring.zip");
     }
 
     @Path("project/empty")
     @POST
     @Produces(APPLICATION_JSON)
     public void createEmptyProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, @QueryParam("rootId") String rootId,
-                                 List<Property> properties) throws VirtualFileSystemException {
-        VirtualFileSystem vfs = registry.getProvider(vfsId).newInstance(null, eventListenerList);
-        Folder projectFolder = vfs.createFolder(rootId, name);
+                                   List<Property> properties) throws VirtualFileSystemException {
 
-        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("conf/Simple_empty.zip");
+        createProject(vfsId, name, properties, "conf/Simple_empty.zip");
+    }
+
+    private void createProject(String vfsId, String name, List<Property> properties, String templatePath) throws VirtualFileSystemException {
+        VirtualFileSystemProvider provider = registry.getProvider(vfsId);
+        MountPoint mountPoint = provider.getMountPoint(false);
+        VirtualFile root = mountPoint.getRoot();
+        VirtualFile projectFolder = root.createFolder(name);
+        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(templatePath);
         if (templateStream == null) {
-            throw new InvalidArgumentException("Can't find Simple_empty.zip");
+            throw new InvalidArgumentException("Can't find " + templatePath);
         }
         try {
-            vfs.importZip(projectFolder.getId(), templateStream, true);
-            updateProperties(name, properties, vfs, projectFolder);
+            projectFolder.unzip(templateStream, true);
+            updateProperties(name, properties, projectFolder);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    private void updateProperties(String name, List<Property> properties, VirtualFile projectFolder)
+            throws VirtualFileSystemException {
+        List<Property> propertyList = projectFolder.getProperties(PropertyFilter.ALL_FILTER);
+        propertyList.addAll(properties);
+        projectFolder.updateProperties(propertyList, null);
+    }
+
+
 }

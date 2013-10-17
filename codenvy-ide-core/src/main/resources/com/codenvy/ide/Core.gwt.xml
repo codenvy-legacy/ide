@@ -34,5 +34,7 @@
     <inherits name="com.google.gwt.inject.Inject"/>
 
     <source path="" excludes="dto"/>
+    <source path="" excludes="server"/>
+    <source path="" excludes="everrest"/>
     <source path="client"/>
 </module>

@@ -104,31 +104,31 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
         return codeAssistProcessor;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view) {
-
-        JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
-        map.put(Document.DEFAULT_CONTENT_TYPE, getOrCreateCodeAssistProcessor());
-        return map;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public QuickAssistProcessor getQuickAssistAssistant(TextEditorPartView view) {
-        JavaCorrectionAssistant assistant = new JavaCorrectionAssistant(javaEditor, reconcilerStrategy);
-        assistant.install(view);
-        ((TextEditorViewImpl)view).setQuickAssistAssistant(assistant);
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public OutlineModel getOutline(TextEditorPartView view) {
-        new OutlineModelUpdater(outlineModel, reconcilerStrategy);
-        return outlineModel;
-//        return super.getOutline(view);
-    }
+//    /** {@inheritDoc} */
+//    @Override
+//    public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view) {
+//
+//        JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
+//        map.put(Document.DEFAULT_CONTENT_TYPE, getOrCreateCodeAssistProcessor());
+//        return map;
+//    }
+//
+//    /** {@inheritDoc} */
+//    @Override
+//    public QuickAssistProcessor getQuickAssistAssistant(TextEditorPartView view) {
+//        JavaCorrectionAssistant assistant = new JavaCorrectionAssistant(javaEditor, reconcilerStrategy);
+//        assistant.install(view);
+//        ((TextEditorViewImpl)view).setQuickAssistAssistant(assistant);
+//        return null;
+//    }
+//
+//    /** {@inheritDoc} */
+//    @Override
+//    public OutlineModel getOutline(TextEditorPartView view) {
+//        new OutlineModelUpdater(outlineModel, reconcilerStrategy);
+//        return outlineModel;
+////        return super.getOutline(view);
+//    }
 
     @Override
     public String[] getConfiguredContentTypes(TextEditorPartView view) {
