@@ -29,7 +29,6 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -40,7 +39,7 @@ import com.google.inject.Singleton;
 @Singleton
 @Extension(title = "CloudBees Support.", version = "3.0.0")
 public class CloudBeesExtension {
-    private static final String ID = "CloudBees";
+    public static final String ID = "CloudBees";
 
     @Inject
     public CloudBeesExtension(PaaSAgent paasAgent,
@@ -51,14 +50,14 @@ public class CloudBeesExtension {
                               CreateApplicationAction createApplicationAction,
                               SwitchAccountAction switchAccountAction,
                               CreateAccountAction createAccountAction,
-                              Provider<CloudBeesPagePresenter> wizardPage) {
+                              CloudBeesPagePresenter wizardPage) {
         resources.cloudBeesCSS().ensureInjected();
 
         // TODO change hard code types
         JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
         natures.put("java", JsonCollections.<String>createArray("Servlet/JSP", "War"));
 
-        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
+        JsonArray<WizardPage> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
         paasAgent.register(ID, ID, resources.cloudBees48(), natures, wizardPages, false);

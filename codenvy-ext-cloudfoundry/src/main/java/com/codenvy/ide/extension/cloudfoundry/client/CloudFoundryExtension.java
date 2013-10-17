@@ -32,7 +32,6 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -66,10 +65,10 @@ public class CloudFoundryExtension {
     }
 
     /** Default CloudFoundry server. */
-    public static final  String DEFAULT_CF_SERVER = "http://api.cloudfoundry.com";
-    private static final String CF_ID             = "CloudFoundry";
-    private static final String WF_ID             = "Tier3WF";
-    public static final  String ID                = "CloudFoundry";
+    public static final String DEFAULT_CF_SERVER = "http://api.cloudfoundry.com";
+    public static final String CF_ID             = "CloudFoundry";
+    public static final String WF_ID             = "Tier3WF";
+    public static final String ID                = "CloudFoundry";
 
     /**
      * Create CloudFoundry extension.
@@ -84,7 +83,7 @@ public class CloudFoundryExtension {
                                  CreateApplicationAction createApplicationAction,
                                  ShowApplicationsAction showApplicationsAction,
                                  ShowLoginAction showLoginAction,
-                                 Provider<CloudFoundryPagePresenter> wizardPage) {
+                                 CloudFoundryPagePresenter wizardPage) {
 
         resources.cloudFoundryCss().ensureInjected();
 
@@ -93,7 +92,7 @@ public class CloudFoundryExtension {
         natures.put("java", JsonCollections.<String>createArray("Servlet/JSP", "Spring", "War"));
         natures.put("Ruby", JsonCollections.<String>createArray("Rails"));
 
-        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
+        JsonArray<WizardPage> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
         paasAgent.register(ID, ID, resources.cloudFoundry48(), natures, wizardPages, false);

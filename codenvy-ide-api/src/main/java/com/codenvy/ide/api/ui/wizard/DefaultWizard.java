@@ -160,7 +160,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
     @Override
     public boolean hasNext() {
         for (int i = index + 1; i < wizardPages.size(); i++) {
-            WizardPage page = wizardPages.get(index);
+            WizardPage page = wizardPages.get(i);
             if (page.inContext() && !page.canSkip()) {
                 return true;
             }
@@ -172,7 +172,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
     @Override
     public boolean hasPrevious() {
         for (int i = index; i > 0; i--) {
-            WizardPage page = wizardPages.get(index);
+            WizardPage page = wizardPages.get(i);
             if (page.inContext() && !page.canSkip()) {
                 return true;
             }

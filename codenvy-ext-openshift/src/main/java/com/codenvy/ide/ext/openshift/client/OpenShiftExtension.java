@@ -29,7 +29,6 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -41,7 +40,7 @@ import com.google.inject.Singleton;
 @Singleton
 @Extension(title = "OpenShift Support.", version = "3.0.0")
 public class OpenShiftExtension {
-    private static final String ID = "OpenShift";
+    public static final String ID = "OpenShift";
 
     /**
      * Create OpenShift extension.
@@ -54,7 +53,7 @@ public class OpenShiftExtension {
     @Inject
     public OpenShiftExtension(PaaSAgent paasAgent,
                               OpenShiftResources resources,
-                              Provider<OpenShiftPagePresenter> wizardPage,
+                              OpenShiftPagePresenter wizardPage,
                               ActionManager actionManager,
                               ChangeDomainAction changeDomainAction,
                               SwitchAccountAction switchAccountAction,
@@ -72,7 +71,7 @@ public class OpenShiftExtension {
         natures.put("Python", JsonCollections.<String>createArray());
         natures.put("PHP", JsonCollections.<String>createArray());
 
-        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
+        JsonArray<WizardPage> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
         paasAgent.register(ID, ID, resources.openShift48(), natures, wizardPages, true);

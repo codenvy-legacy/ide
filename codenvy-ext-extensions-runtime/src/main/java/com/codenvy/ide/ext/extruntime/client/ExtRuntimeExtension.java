@@ -25,12 +25,11 @@ import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.ext.extruntime.client.actions.GetLogsAction;
 import com.codenvy.ide.ext.extruntime.client.actions.LaunchAction;
 import com.codenvy.ide.ext.extruntime.client.actions.StopAction;
-import com.codenvy.ide.ext.extruntime.client.template.empty.CreateEmptyCodenvyExtensionPage;
+import com.codenvy.ide.ext.extruntime.client.template.CreateEmptyCodenvyExtensionPage;
 import com.codenvy.ide.ext.extruntime.client.template.sample.CreateSampleCodenvyExtensionPage;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
@@ -46,11 +45,13 @@ import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_N
 @Extension(title = "Codenvy extensions runtime support.", version = "3.0.0")
 public class ExtRuntimeExtension {
     public static final String CODENVY_EXTENSION_PROJECT_TYPE = "CodenvyExtension";
+    public static final String EMPTY_EXTENSION_ID             = "EmptyCodenvyExtension";
+    public static final String SAMPLE_EXTENSION_ID            = "SampleCodenvyExtension";
 
     @Inject
     public ExtRuntimeExtension(TemplateAgent templateAgent,
-                               Provider<CreateEmptyCodenvyExtensionPage> createEmptyCodenvyExtensionPage,
-                               Provider<CreateSampleCodenvyExtensionPage> createSampleCodenvyExtensionPage,
+                               CreateEmptyCodenvyExtensionPage createEmptyCodenvyExtensionPage,
+                               CreateSampleCodenvyExtensionPage createSampleCodenvyExtensionPage,
                                ProjectTypeAgent projectTypeAgent,
                                ExtRuntimeLocalizationConstant localizationConstants,
                                ExtRuntimeResources resources,
@@ -78,16 +79,18 @@ public class ExtRuntimeExtension {
                                   JsonCollections.createArray(CODENVY_EXTENSION_PROJECT_TYPE));
 
         // register templates
-        templateAgent.register("Empty Codenvy extension project.",
+        templateAgent.register(EMPTY_EXTENSION_ID,
+                               "Empty Codenvy extension project.",
                                resources.codenvyExtensionTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends WizardPage>>createArray(createEmptyCodenvyExtensionPage));
+                               JsonCollections.<WizardPage>createArray(createEmptyCodenvyExtensionPage));
 
-        templateAgent.register("Sample Codenvy extension project. Illustrates simple example that uses Codenvy API.",
+        templateAgent.register(SAMPLE_EXTENSION_ID,
+                               "Sample Codenvy extension project. Illustrates simple example that uses Codenvy API.",
                                resources.codenvyExtensionTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends WizardPage>>createArray(createSampleCodenvyExtensionPage));
+                               JsonCollections.<WizardPage>createArray(createSampleCodenvyExtensionPage));
     }
 }

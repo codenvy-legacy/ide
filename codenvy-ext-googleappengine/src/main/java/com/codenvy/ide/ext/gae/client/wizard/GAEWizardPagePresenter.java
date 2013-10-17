@@ -21,6 +21,7 @@ package com.codenvy.ide.ext.gae.client.wizard;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -46,6 +47,8 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.ui.wizard.WizardKeys.PROJECT_NAME;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard2.PAAS;
+import static com.codenvy.ide.ext.gae.client.GAEExtension.ID;
 
 /**
  * Presenter that allow user to use Create Project Wizard to configure deployment application on Google App Engine.
@@ -123,6 +126,13 @@ public class GAEWizardPagePresenter extends AbstractWizardPage implements GAEWiz
     @Override
     public void removeOptions() {
         //do nothing
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean inContext() {
+        PaaS paas = wizardContext.getData(PAAS);
+        return paas != null && paas.getId().equals(ID);
     }
 
     /** {@inheritDoc} */

@@ -21,6 +21,7 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
@@ -55,6 +56,8 @@ import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.api.ui.wizard.WizardKeys.PROJECT_NAME;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard2.PAAS;
+import static com.codenvy.ide.ext.appfog.client.AppFogExtension.ID;
 
 /**
  * Presenter for creating application on AppFog from New project wizard.
@@ -487,6 +490,14 @@ public class AppFogPagePresenter extends AbstractWizardPage implements AppFogPag
         buildApplication();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public boolean inContext() {
+        PaaS paas = wizardContext.getData(PAAS);
+        return paas != null && paas.getId().equals(ID);
+    }
+
+    /** {@inheritDoc} */
     @Override
     public void commit(@NotNull CommitCallback callback) {
         if (!isLogined) {

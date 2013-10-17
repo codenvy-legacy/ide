@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.aws.client.beanstalk.wizard;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -62,6 +63,8 @@ import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.api.ui.wizard.WizardKeys.PROJECT_NAME;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard2.PAAS;
+import static com.codenvy.ide.ext.aws.client.AWSExtension.ID;
 
 /**
  * Presenter to allow user create application via wizard.
@@ -313,6 +316,13 @@ public class BeanstalkPagePresenter extends AbstractWizardPage implements Beanst
             notificationManager.showNotification(notification);
             callback.onFailure(e);
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean inContext() {
+        PaaS paas = wizardContext.getData(PAAS);
+        return paas != null && paas.getId().equals(ID);
     }
 
     /** {@inheritDoc} */

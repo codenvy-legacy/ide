@@ -24,7 +24,6 @@ import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonStringMap;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.inject.Provider;
 
 /**
  * Provides a way to register a new PaaS Extension.
@@ -53,6 +52,6 @@ public interface PaaSAgent {
                   @NotNull String title,
                   @Nullable ImageResource image,
                   @NotNull JsonStringMap<JsonArray<String>> natures,
-                  @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages,
+                  @NotNull JsonArray<WizardPage> wizardPages,
                   boolean provideTemplate);
 }

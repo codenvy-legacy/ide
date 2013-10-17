@@ -19,7 +19,6 @@ package com.codenvy.ide.core;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.*;
-import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Constraints;
@@ -27,6 +26,7 @@ import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
+import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard2;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.welcome.WelcomeLocalizationConstant;
 import com.codenvy.ide.welcome.action.ConnectSupportAction;
@@ -36,6 +36,8 @@ import com.codenvy.ide.welcome.action.ShowDocumentationAction;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newfile.NewTextFilePagePresenter;
 import com.codenvy.ide.wizard.newfolder.NewFolderPagePresenter;
+import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
+import com.codenvy.ide.wizard.newproject.pages.template.TemplatePagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -66,9 +68,6 @@ public class StandardComponentInitializer {
 
     @Inject
     private EventBus eventBus;
-
-    @Inject
-    private PaaSAgent paasAgent;
 
     @Inject
     private ActionManager actionManager;
@@ -123,6 +122,17 @@ public class StandardComponentInitializer {
 
     @Inject
     private CloseProjectAction closeProjectAction;
+
+    @Inject
+    private NewProjectWizard2 newProjectWizard;
+
+    // TODO rename class
+    @Inject
+    private Provider<NewProjectPagePresenter> newProjectPagePresenter;
+
+    // TODO rename class
+    @Inject
+    private Provider<TemplatePagePresenter> templatePagePresenter;
 
     /** Instantiates {@link StandardComponentInitializer} an creates standard content */
     @Inject
@@ -208,5 +218,8 @@ public class StandardComponentInitializer {
         actionManager.registerAction("closeProjectGroup", closeProjectGroup);
         closeProjectGroup.add(closeProjectAction);
         contextMenuGroup.add(closeProjectGroup);
+
+        newProjectWizard.addPage(newProjectPagePresenter.get());
+        newProjectWizard.addPage(templatePagePresenter.get());
     }
 }

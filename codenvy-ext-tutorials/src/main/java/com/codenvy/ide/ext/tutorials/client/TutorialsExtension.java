@@ -23,14 +23,13 @@ import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.ext.tutorials.client.action.ShowTutorialGuideAction;
-import com.codenvy.ide.ext.tutorials.client.template.action.CreateActionTutorialPage;
-import com.codenvy.ide.ext.tutorials.client.template.dto.CreateDTOTutorialPage;
-import com.codenvy.ide.ext.tutorials.client.template.notification.CreateNotificationTutorialPage;
-import com.codenvy.ide.ext.tutorials.client.template.wizard.CreateWizardTutorialPage;
+import com.codenvy.ide.ext.tutorials.client.template.CreateActionTutorialPage;
+import com.codenvy.ide.ext.tutorials.client.template.CreateDTOTutorialPage;
+import com.codenvy.ide.ext.tutorials.client.template.CreateNotificationTutorialPage;
+import com.codenvy.ide.ext.tutorials.client.template.CreateWizardTutorialPage;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
@@ -49,13 +48,17 @@ public class TutorialsExtension {
     public static final String TUTORIAL_PROJECT_TYPE    = "CodenvyTutorial";
     /** Default name of the file that contains tutorial description. */
     public static final String DEFAULT_README_FILE_NAME = "guide.html";
+    public static final String DTO_TUTORIAL_ID          = "DTOTutorial";
+    public static final String ACTION_TUTORIAL_ID       = "ActionTutorial";
+    public static final String NOTIFICATION_TUTORIAL_ID = "NotificationTutorial";
+    public static final String WIZARD_TUTORIAL_ID       = "WizardTutorial";
 
     @Inject
     public TutorialsExtension(TemplateAgent templateAgent,
-                              Provider<CreateDTOTutorialPage> createDTOTutorialPage,
-                              Provider<CreateActionTutorialPage> createActionTutorialPage,
-                              Provider<CreateNotificationTutorialPage> createNotificationTutorialPage,
-                              Provider<CreateWizardTutorialPage> createWizardTutorialPageProvider,
+                              CreateDTOTutorialPage createDTOTutorialPage,
+                              CreateActionTutorialPage createActionTutorialPage,
+                              CreateNotificationTutorialPage createNotificationTutorialPage,
+                              CreateWizardTutorialPage createWizardTutorialPageProvider,
                               ProjectTypeAgent projectTypeAgent,
                               TutorialsResources resources,
                               TutorialsLocalizationConstant localizationConstants,
@@ -77,25 +80,29 @@ public class TutorialsExtension {
                                   JsonCollections.<String>createArray(TUTORIAL_PROJECT_TYPE));
 
         // register templates
-        templateAgent.register("Tutorial project that illustrates examples of using DTO.",
+        templateAgent.register(DTO_TUTORIAL_ID,
+                               "Tutorial project that illustrates examples of using DTO.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends WizardPage>>createArray(createDTOTutorialPage));
-        templateAgent.register("Tutorial project that illustrates examples of using Notification API.",
+                               JsonCollections.<WizardPage>createArray(createDTOTutorialPage));
+        templateAgent.register(NOTIFICATION_TUTORIAL_ID,
+                               "Tutorial project that illustrates examples of using Notification API.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends WizardPage>>createArray(createNotificationTutorialPage));
-        templateAgent.register("Tutorial project that illustrates examples of using Action API.",
+                               JsonCollections.<WizardPage>createArray(createNotificationTutorialPage));
+        templateAgent.register(ACTION_TUTORIAL_ID,
+                               "Tutorial project that illustrates examples of using Action API.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends WizardPage>>createArray(createActionTutorialPage));
-        templateAgent.register("Tutorial project that illustrates examples of using Wizard API.",
+                               JsonCollections.<WizardPage>createArray(createActionTutorialPage));
+        templateAgent.register(WIZARD_TUTORIAL_ID,
+                               "Tutorial project that illustrates examples of using Wizard API.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends WizardPage>>createArray(createWizardTutorialPageProvider));
+                               JsonCollections.<WizardPage>createArray(createWizardTutorialPageProvider));
     }
 }

@@ -19,14 +19,15 @@ package com.codenvy.ide.template;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
+import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard2;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.wizard.newproject.NewProjectWizard;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -36,25 +37,49 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class TemplateAgentImpl implements TemplateAgent {
-    private       NewProjectWizard    newProjectWizard;
+    private       NewProjectWizard2   newProjectWizard;
     private final JsonArray<Template> templates;
 
     /** Create agent. */
     @Inject
-    protected TemplateAgentImpl(NewProjectWizard newProjectWizard) {
+    protected TemplateAgentImpl(NewProjectWizard2 newProjectWizard) {
         this.newProjectWizard = newProjectWizard;
         this.templates = JsonCollections.createArray();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void register(@NotNull String title, @Nullable ImageResource icon, @NotNull String primaryNature,
-                         @NotNull JsonArray<String> secondaryNatures, @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages) {
-        Template template = new Template(title, icon, primaryNature, secondaryNatures);
+    public void register(@NotNull String id,
+                         @NotNull String title,
+                         @Nullable ImageResource icon,
+                         @NotNull String primaryNature,
+                         @NotNull JsonArray<String> secondaryNatures,
+                         @NotNull JsonArray<WizardPage> wizardPages) {
+        if (isIdExist(id)) {
+            Window.alert("Template with " + id + " id already exists");
+        }
+
+        Template template = new Template(id, title, icon, primaryNature, secondaryNatures);
         templates.add(template);
         if (wizardPages != null) {
-            newProjectWizard.addTemplatePages(template, wizardPages);
+            for (WizardPage page : wizardPages.asIterable()) {
+                newProjectWizard.addPageAfterChooseTemplate(page);
+            }
         }
+    }
+
+    /**
+     * Returns whether the template with this id already exists.
+     *
+     * @return <code>true</code> if the template already exists, and <code>false</code> if it doesn't
+     */
+    private boolean isIdExist(@NotNull String id) {
+        for (Template template : templates.asIterable()) {
+            if (template.getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

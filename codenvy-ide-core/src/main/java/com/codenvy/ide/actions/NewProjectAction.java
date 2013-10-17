@@ -22,7 +22,7 @@ import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
-import com.codenvy.ide.wizard.newproject.NewProjectWizard;
+import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard2;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -33,10 +33,10 @@ import com.google.inject.Singleton;
 @Singleton
 public class NewProjectAction extends Action {
     private WizardDialogFactory wizardDialogFactory;
-    private NewProjectWizard    wizard;
+    private NewProjectWizard2   wizard;
 
     @Inject
-    public NewProjectAction(Resources resources, WizardDialogFactory wizardDialogFactory, NewProjectWizard wizard) {
+    public NewProjectAction(Resources resources, WizardDialogFactory wizardDialogFactory, NewProjectWizard2 wizard) {
         super("Project", "Create new project", resources.project());
 
         this.wizardDialogFactory = wizardDialogFactory;

@@ -18,7 +18,7 @@
 package com.codenvy.ide.wizard.newproject.pages.start;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.paas.PaaS;
+import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.wizard.newproject.ProjectTypeData;
 

@@ -21,6 +21,7 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
@@ -50,6 +51,8 @@ import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.ui.wizard.WizardKeys.PROJECT_NAME;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard2.PAAS;
+import static com.codenvy.ide.ext.cloudbees.client.CloudBeesExtension.ID;
 
 /**
  * Presenter for creating application on CloudBees from New project wizard.
@@ -136,11 +139,13 @@ public class CloudBeesPagePresenter extends AbstractWizardPage implements CloudB
         return validate();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void focusComponent() {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removeOptions() {
         //To change body of implemented methods use File | Settings | File Templates.
@@ -204,6 +209,13 @@ public class CloudBeesPagePresenter extends AbstractWizardPage implements CloudB
             Notification notification = new Notification(e.getMessage(), ERROR);
             notificationManager.showNotification(notification);
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean inContext() {
+        PaaS paas = wizardContext.getData(PAAS);
+        return paas != null && paas.getId().equals(ID);
     }
 
     /** {@inheritDoc} */

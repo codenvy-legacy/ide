@@ -19,6 +19,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.wizard;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
+import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.CreateProjectProvider;
@@ -52,6 +53,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard2.PAAS;
+import static com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension.ID;
 
 /**
  * Presenter for creating application on CloudFoundry from New project wizard.
@@ -471,6 +475,13 @@ public class CloudFoundryPagePresenter extends AbstractWizardPage implements Clo
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean inContext() {
+        PaaS paas = wizardContext.getData(PAAS);
+        return paas != null && paas.getId().equals(ID);
     }
 
     /** {@inheritDoc} */

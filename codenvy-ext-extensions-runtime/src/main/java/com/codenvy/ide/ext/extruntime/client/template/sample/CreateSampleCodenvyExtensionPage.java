@@ -19,7 +19,7 @@ package com.codenvy.ide.ext.extruntime.client.template.sample;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
+import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.ext.extruntime.client.ExtRuntimeClientService;
 import com.codenvy.ide.ext.extruntime.client.ExtRuntimeResources;
 import com.codenvy.ide.json.JsonArray;
@@ -34,6 +34,7 @@ import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.wizard.WizardKeys.PROJECT_NAME;
 import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
+import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.EMPTY_EXTENSION_ID;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
 import static com.codenvy.ide.json.JsonCollections.createArray;
@@ -47,11 +48,11 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMAR
  * @version $Id: CreateSampleCodenvyExtensionPage.java Jul 8, 2013 4:24:17 PM azatsarynnyy $
  */
 @Singleton
-public class CreateSampleCodenvyExtensionPage extends AbstractWizardPage implements CreateSampleCodenvyExtensionPageView.ActionDelegate {
-    protected static final String DEFAULT_VERSION = "1.0-SNAPSHOT";
-    private   CreateSampleCodenvyExtensionPageView view;
-    protected ExtRuntimeClientService              service;
-    protected ResourceProvider                     resourceProvider;
+public class CreateSampleCodenvyExtensionPage extends AbstractTemplatePage implements CreateSampleCodenvyExtensionPageView.ActionDelegate {
+    public static final String DEFAULT_VERSION = "1.0-SNAPSHOT";
+    private CreateSampleCodenvyExtensionPageView view;
+    private ExtRuntimeClientService              service;
+    private ResourceProvider                     resourceProvider;
 
     /**
      * Create presenter.
@@ -66,7 +67,7 @@ public class CreateSampleCodenvyExtensionPage extends AbstractWizardPage impleme
                                             ExtRuntimeClientService service,
                                             ResourceProvider resourceProvider,
                                             ExtRuntimeResources resources) {
-        super("Define the properties of a new Maven module", resources.codenvyExtensionTemplate());
+        super("Define the properties of a new Maven module", resources.codenvyExtensionTemplate(), EMPTY_EXTENSION_ID);
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;

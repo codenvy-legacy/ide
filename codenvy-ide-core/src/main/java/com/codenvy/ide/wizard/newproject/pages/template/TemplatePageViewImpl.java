@@ -22,7 +22,7 @@ import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.template.Template;
+import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;

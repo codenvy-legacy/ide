@@ -19,15 +19,16 @@ package com.codenvy.ide.paas;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
+import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard2;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.wizard.newproject.NewProjectWizard;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 
@@ -50,12 +51,12 @@ public class PaaSAgentImpl implements PaaSAgent {
         }
     }
 
-    private       NewProjectWizard newProjectWizard;
-    private final JsonArray<PaaS>  registeredPaaS;
+    private       NewProjectWizard2 newProjectWizard;
+    private final JsonArray<PaaS>   registeredPaaS;
 
     /** Create agent. */
     @Inject
-    protected PaaSAgentImpl(NewProjectWizard newProjectWizard) {
+    protected PaaSAgentImpl(NewProjectWizard2 newProjectWizard) {
         this.newProjectWizard = newProjectWizard;
         this.registeredPaaS = JsonCollections.createArray();
         registeredPaaS.add(new NonePaaS("None", "None", null));
@@ -63,14 +64,37 @@ public class PaaSAgentImpl implements PaaSAgent {
 
     /** {@inheritDoc} */
     @Override
-    public void register(@NotNull String id, @NotNull String title, @Nullable ImageResource image,
-                         @NotNull JsonStringMap<JsonArray<String>> natures, @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages,
+    public void register(@NotNull String id,
+                         @NotNull String title,
+                         @Nullable ImageResource image,
+                         @NotNull JsonStringMap<JsonArray<String>> natures,
+                         @NotNull JsonArray<WizardPage> wizardPages,
                          boolean provideTemplate) {
+        if (isIdExist(id)) {
+            Window.alert("PaaS with " + id + " id already exists");
+        }
+
         PaaS paas = new PaaS(id, title, image, natures, provideTemplate);
         registeredPaaS.add(paas);
         if (wizardPages != null) {
-            newProjectWizard.addPaaSPages(paas, wizardPages);
+            for (WizardPage page : wizardPages.asIterable()) {
+                newProjectWizard.addPage(page);
+            }
         }
+    }
+
+    /**
+     * Returns whether the paas with this id already exists.
+     *
+     * @return <code>true</code> if the paas already exists, and <code>false</code> if it doesn't
+     */
+    private boolean isIdExist(@NotNull String id) {
+        for (PaaS paas : registeredPaaS.asIterable()) {
+            if (paas.getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** @return all available PaaSes. */

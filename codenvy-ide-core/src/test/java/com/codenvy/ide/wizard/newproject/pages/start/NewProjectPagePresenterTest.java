@@ -19,7 +19,7 @@ package com.codenvy.ide.wizard.newproject.pages.start;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.paas.PaaS;
+import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardKeys;
@@ -251,6 +251,10 @@ public class NewProjectPagePresenterTest {
         setUp();
         when(paas.isAvailable(anyString(), (JsonArray<String>)anyObject())).thenReturn(AVAILABLE);
 
+        presenter.focusComponent();
+        reset(view);
+        reset(delegate);
+        reset(wizardContext);
         presenter.onProjectTypeSelected(0);
 
         verify(view).selectProjectType(0);
@@ -264,6 +268,10 @@ public class NewProjectPagePresenterTest {
     public void testOnPaaSSelected() throws Exception {
         setUp();
 
+        presenter.focusComponent();
+        reset(view);
+        reset(delegate);
+        reset(wizardContext);
         presenter.onPaaSSelected(0);
 
         verify(view).selectPaas(0);

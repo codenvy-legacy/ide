@@ -17,11 +17,11 @@
  */
 package com.codenvy.ide.wizard.newproject.pages.template;
 
+import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.template.Template;
 import com.codenvy.ide.template.TemplateAgentImpl;
 import com.codenvy.ide.wizard.WizardResource;
 import com.codenvy.ide.wizard.newproject.ProjectTypeData;
@@ -68,7 +68,7 @@ public class TemplatePagePresenterTest {
 
     @Before
     public void setUp() {
-        template = new Template("title", null, "primaryNature", JsonCollections.createArray("secondaryNature"));
+        template = new Template("id", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"));
         projectType = new ProjectTypeData("typeName", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"));
 
         page = new TemplatePagePresenter(view, resources, templateAgent);

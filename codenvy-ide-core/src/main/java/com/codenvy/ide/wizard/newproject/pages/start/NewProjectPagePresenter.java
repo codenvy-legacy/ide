@@ -19,7 +19,7 @@ package com.codenvy.ide.wizard.newproject.pages.start;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.paas.PaaS;
+import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.json.JsonArray;
@@ -51,6 +51,8 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     private boolean                    hasSameProject;
     private boolean                    hasProjectList;
     private JsonArray<String>          projectList;
+    private ProjectTypeAgentImpl       projectTypeAgent;
+    private PaaSAgentImpl              paasAgent;
 
     /**
      * Create presenter.
@@ -81,14 +83,11 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
             }
         });
 
-        this.paases = paasAgent.getPaaSes();
-        this.projectTypes = projectTypeAgent.getProjectTypes();
         this.constant = constant;
-
         this.view = view;
         this.view.setDelegate(this);
-        this.view.setProjectTypes(projectTypes);
-        this.view.setPaases(paases);
+        this.projectTypeAgent = projectTypeAgent;
+        this.paasAgent = paasAgent;
     }
 
     /** {@inheritDoc} */
@@ -101,6 +100,11 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     /** {@inheritDoc} */
     @Override
     public void focusComponent() {
+        this.paases = paasAgent.getPaaSes();
+        this.projectTypes = projectTypeAgent.getProjectTypes();
+        this.view.setProjectTypes(projectTypes);
+        this.view.setPaases(paases);
+
         if (!projectTypes.isEmpty()) {
             onProjectTypeSelected(0);
         }

@@ -32,7 +32,6 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -43,8 +42,8 @@ import com.google.inject.Singleton;
 @Singleton
 @Extension(title = "AppFog Support.", version = "3.0.0")
 public class AppFogExtension {
-    public static final  String DEFAULT_SERVER = "https://api.appfog.com";
-    private static final String ID             = "AppFog";
+    public static final String DEFAULT_SERVER = "https://api.appfog.com";
+    public static final String ID             = "AppFog";
 
     /**
      * Create AppFog extension.
@@ -61,7 +60,7 @@ public class AppFogExtension {
                            ShowApplicationsAction showApplicationsAction,
                            SwitchAccountAction switchAccountAction,
                            ShowProjectAction showProjectAction,
-                           Provider<AppFogPagePresenter> wizardPage) {
+                           AppFogPagePresenter wizardPage) {
         resources.appFogCSS().ensureInjected();
 
         // TODO change hard code types
@@ -71,7 +70,7 @@ public class AppFogExtension {
         natures.put("Python", JsonCollections.<String>createArray());
         natures.put("PHP", JsonCollections.<String>createArray());
 
-        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
+        JsonArray<WizardPage> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
         paasAgent.register(ID, ID, resources.appfog48(), natures, wizardPages, false);

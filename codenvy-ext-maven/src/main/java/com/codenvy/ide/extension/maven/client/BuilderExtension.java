@@ -22,13 +22,12 @@ import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
-import com.codenvy.ide.extension.maven.client.template.java.CreateJavaProjectPage;
-import com.codenvy.ide.extension.maven.client.template.spring.CreateSpringProjectPage;
-import com.codenvy.ide.extension.maven.client.template.war.CreateWarProjectPage;
+import com.codenvy.ide.extension.maven.client.template.CreateJavaProjectPage;
+import com.codenvy.ide.extension.maven.client.template.CreateSpringProjectPage;
+import com.codenvy.ide.extension.maven.client.template.CreateWarProjectPage;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.ext.java.client.JavaExtension.JAVA_APPLICATION_PROJECT_TYPE;
@@ -48,6 +47,9 @@ public class BuilderExtension {
     /** Channel for the messages containing status of the Maven build job. */
     public static final String BUILD_STATUS_CHANNEL            = "maven:buildStatus:";
     public static final String SPRING_APPLICATION_PROJECT_TYPE = "Spring";
+    public static final String WAR_PROJECT_ID                  = "War";
+    public static final String SPRING_PROJECT_ID               = "Spring";
+    public static final String JAR_PROJECT_ID                  = "Jar";
 
     /**
      * Create extension.
@@ -63,25 +65,28 @@ public class BuilderExtension {
     public BuilderExtension(BuildProjectPresenter buildProjectPresenter,
                             TemplateAgent templateAgent,
                             ProjectTypeAgent projectTypeAgent,
-                            Provider<CreateJavaProjectPage> createJavaProjectPage,
-                            Provider<CreateWarProjectPage> createWarProjectPage,
-                            Provider<CreateSpringProjectPage> createSpringProjectPage) {
+                            CreateJavaProjectPage createJavaProjectPage,
+                            CreateWarProjectPage createWarProjectPage,
+                            CreateSpringProjectPage createSpringProjectPage) {
 
-        templateAgent.register("War project",
+        templateAgent.register(WAR_PROJECT_ID,
+                               "War project",
                                null,
                                PRIMARY_NATURE,
                                createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends WizardPage>>createArray(createWarProjectPage));
-        templateAgent.register("Java project",
+                               JsonCollections.<WizardPage>createArray(createWarProjectPage));
+        templateAgent.register(JAR_PROJECT_ID,
+                               "Java project",
                                JavaClientBundle.INSTANCE.javaProject(),
                                PRIMARY_NATURE,
                                createArray(JAVA_APPLICATION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends WizardPage>>createArray(createJavaProjectPage));
-        templateAgent.register("Spring project",
+                               JsonCollections.<WizardPage>createArray(createJavaProjectPage));
+        templateAgent.register(SPRING_PROJECT_ID,
+                               "Spring project",
                                JavaClientBundle.INSTANCE.javaProject(),
                                PRIMARY_NATURE,
                                createArray(SPRING_APPLICATION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends WizardPage>>createArray(createSpringProjectPage));
+                               JsonCollections.<WizardPage>createArray(createSpringProjectPage));
 
         projectTypeAgent.register(SPRING_APPLICATION_PROJECT_TYPE,
                                   "Spring application",
