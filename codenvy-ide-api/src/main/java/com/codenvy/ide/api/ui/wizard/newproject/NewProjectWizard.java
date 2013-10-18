@@ -35,10 +35,11 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class NewProjectWizard2 extends DefaultWizard {
-    public static final WizardContext.Key<PaaS>     PAAS     = new WizardContext.Key<PaaS>("PaaS");
-    public static final WizardContext.Key<Template> TEMPLATE = new WizardContext.Key<Template>("Template");
-
+public class NewProjectWizard extends DefaultWizard {
+    public static final WizardContext.Key<PaaS>            PAAS         = new WizardContext.Key<PaaS>("PaaS");
+    public static final WizardContext.Key<Template>        TEMPLATE     = new WizardContext.Key<Template>("Template");
+    public static final WizardContext.Key<String>          PROJECT_NAME = new WizardContext.Key<String>("Project name");
+    public static final WizardContext.Key<ProjectTypeData> PROJECT_TYPE = new WizardContext.Key<ProjectTypeData>("Project type");
     private int chooseTemplate;
     private int lastTemplatePage;
 
@@ -48,7 +49,7 @@ public class NewProjectWizard2 extends DefaultWizard {
      * @param notificationManager
      */
     @Inject
-    public NewProjectWizard2(NotificationManager notificationManager) {
+    public NewProjectWizard(NotificationManager notificationManager) {
         super(notificationManager, "New project");
         chooseTemplate = 1;
         lastTemplatePage = 1;
@@ -62,6 +63,7 @@ public class NewProjectWizard2 extends DefaultWizard {
      */
     public void addPageAfterFirst(@NotNull Provider<? extends WizardPage> wizardPage) {
         addPage(wizardPage, chooseTemplate++, false);
+        lastTemplatePage++;
     }
 
     /**

@@ -22,7 +22,7 @@ import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
-import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard2;
+import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
@@ -52,12 +52,12 @@ public class PaaSAgentImpl implements PaaSAgent {
         }
     }
 
-    private       NewProjectWizard2 newProjectWizard;
-    private final JsonArray<PaaS>   registeredPaaS;
+    private       NewProjectWizard newProjectWizard;
+    private final JsonArray<PaaS>  registeredPaaS;
 
     /** Create agent. */
     @Inject
-    protected PaaSAgentImpl(NewProjectWizard2 newProjectWizard) {
+    protected PaaSAgentImpl(NewProjectWizard newProjectWizard) {
         this.newProjectWizard = newProjectWizard;
         this.registeredPaaS = JsonCollections.createArray();
         registeredPaaS.add(new NonePaaS("None", "None", null));

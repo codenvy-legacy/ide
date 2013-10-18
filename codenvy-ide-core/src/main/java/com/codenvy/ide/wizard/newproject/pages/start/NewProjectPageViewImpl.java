@@ -22,7 +22,7 @@ import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.wizard.WizardResource;
-import com.codenvy.ide.wizard.newproject.ProjectTypeData;
+import com.codenvy.ide.api.ui.wizard.newproject.ProjectTypeData;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;

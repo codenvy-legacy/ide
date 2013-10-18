@@ -22,20 +22,17 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
+import com.codenvy.ide.api.ui.wizard.newproject.ProjectTypeData;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
-import com.codenvy.ide.wizard.newproject.ProjectTypeData;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
-import static com.codenvy.ide.api.ui.wizard.WizardKeys.PROJECT_NAME;
-import static com.codenvy.ide.wizard.newproject.NewProjectWizard.PAAS;
-import static com.codenvy.ide.wizard.newproject.NewProjectWizard.PROJECT_TYPE;
-
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.*;
 
 /**
  * Provides selecting kind of project which user wish to create.
@@ -65,8 +62,8 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
      */
     @Inject
     public NewProjectPagePresenter(NewProjectPageView view, Resources resources, ProjectTypeAgentImpl projectTypeAgent,
-                                      PaaSAgentImpl paasAgent, ResourceProvider resourceProvider,
-                                      CoreLocalizationConstant constant) {
+                                   PaaSAgentImpl paasAgent, ResourceProvider resourceProvider,
+                                   CoreLocalizationConstant constant) {
 
         super("Select project type and paas", resources.newResourceIcon());
 

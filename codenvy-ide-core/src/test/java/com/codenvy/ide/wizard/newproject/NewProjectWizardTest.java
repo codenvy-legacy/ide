@@ -23,6 +23,7 @@ import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
@@ -40,8 +41,8 @@ import org.mockito.stubbing.Answer;
 
 import static com.codenvy.ide.api.ui.wizard.Wizard.UpdateDelegate;
 import static com.codenvy.ide.api.ui.wizard.WizardPage.CommitCallback;
-import static com.codenvy.ide.wizard.newproject.NewProjectWizard.PAAS;
-import static com.codenvy.ide.wizard.newproject.NewProjectWizard.TEMPLATE;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyObject;
@@ -63,12 +64,14 @@ public class NewProjectWizardTest {
     public static final boolean CAN_FINISH       = true;
     public static final boolean CAN_NOT_FINISH   = false;
     public static final boolean COMPLETED        = true;
+    public static final boolean IN_CONTEXT       = true;
+    public static final boolean NOT_CONTEXT      = false;
     @Mock
     private Provider<NewProjectPagePresenter>     newProjectPageProvider;
     @Mock
     private NewProjectPagePresenter               newProjectPage;
     @Mock
-    private Provider<ChooseTemplatePagePresenter> templatePageProvider;
+    private Provider<ChooseTemplatePagePresenter> chooseTemplatePageProvider;
     @Mock
     private ChooseTemplatePagePresenter           chooseTemplatePage;
     @Mock
@@ -82,13 +85,13 @@ public class NewProjectWizardTest {
     private PaaS                                  paas;
     private PaaS                                  nonePaas;
     private PaaS                                  paasWithTemplate;
-    private NewProjectWizard                      model;
+    private NewProjectWizard                      wizard;
 
     @Before
     @SuppressWarnings("unchecked")
     public void setUp() {
-        model = new NewProjectWizard(newProjectPageProvider, templatePageProvider, notificationManager);
-        model.setUpdateDelegate(mock(UpdateDelegate.class));
+        wizard = new NewProjectWizard(notificationManager);
+        wizard.setUpdateDelegate(mock(UpdateDelegate.class));
 
         when(newProjectPageProvider.get()).thenReturn(newProjectPage);
         doAnswer(new Answer() {
@@ -99,8 +102,10 @@ public class NewProjectWizardTest {
                 return null;
             }
         }).when(newProjectPage).setContext((WizardContext)anyObject());
+        when(newProjectPage.canSkip()).thenReturn(CAN_NOT_SKIP);
+        when(newProjectPage.inContext()).thenReturn(IN_CONTEXT);
 
-        when(templatePageProvider.get()).thenReturn(chooseTemplatePage);
+        when(chooseTemplatePageProvider.get()).thenReturn(chooseTemplatePage);
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
@@ -110,6 +115,9 @@ public class NewProjectWizardTest {
             }
         }).when(chooseTemplatePage).setContext((WizardContext)anyObject());
 
+        wizard.addPage(newProjectPageProvider);
+        wizard.addPage(chooseTemplatePageProvider);
+
         template = new Template("id", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"));
 
         JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
@@ -118,31 +126,30 @@ public class NewProjectWizardTest {
         nonePaas = new PaaS("id", "title", null, natures, false);
         paasWithTemplate = new PaaS("id", "title", null, natures, true);
 
-        /** Add PaaS pages to model. */
-        Provider<? extends WizardPage> paasPageProvider = mock(Provider.class);
-        when(paasPageProvider.get()).thenReturn(paasPage);
-
-        JsonArray<Provider<? extends WizardPage>> paasPages = JsonCollections.createArray(paasPageProvider, paasPageProvider);
-        model.addPaaSPages(paas, paasPages);
-        model.addPaaSPages(paasWithTemplate, paasPages);
-
-        /** Add template pages to model. */
+        /** Add template pages to wizard. */
         Provider<? extends WizardPage> templatePageProvider = mock(Provider.class);
         when(templatePageProvider.get()).thenReturn(templatePage);
 
-        JsonArray<Provider<? extends WizardPage>> templatePages = JsonCollections.createArray(templatePageProvider, templatePageProvider);
-        model.addTemplatePages(template, templatePages);
+        wizard.addPageAfterChooseTemplate(templatePageProvider);
+        wizard.addPageAfterChooseTemplate(templatePageProvider);
+
+        /** Add PaaS pages to wizard. */
+        Provider<? extends WizardPage> paasPageProvider = mock(Provider.class);
+        when(paasPageProvider.get()).thenReturn(paasPage);
+
+        wizard.addPage(paasPageProvider);
+        wizard.addPage(paasPageProvider);
     }
 
     /**
-     * Flip pages into model.
+     * Flip pages into wizard.
      *
      * @param count
      *         count of pages how many need to flip
      */
     private void flipPages(int count) {
         for (int i = 0; i < count; i++) {
-            model.flipToNext();
+            wizard.flipToNext();
         }
     }
 
@@ -166,7 +173,7 @@ public class NewProjectWizardTest {
 
     @Test
     public void testFlipToFirst() throws Exception {
-        assertEquals(model.flipToFirst(), newProjectPage);
+        assertEquals(wizard.flipToFirst(), newProjectPage);
 
         verify(newProjectPage).setUpdateDelegate((UpdateDelegate)anyObject());
         verify(newProjectPage).setContext((WizardContext)anyObject());
@@ -174,10 +181,10 @@ public class NewProjectWizardTest {
 
     @Test
     public void testFlipToFirstWhenSecondTime() throws Exception {
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
 
-        assertEquals(model.flipToFirst(), newProjectPage);
+        assertEquals(wizard.flipToFirst(), newProjectPage);
 
         verify(newProjectPageProvider, times(2)).get();
         verify(newProjectPage, times(2)).setUpdateDelegate((UpdateDelegate)anyObject());
@@ -189,40 +196,40 @@ public class NewProjectWizardTest {
     public void testFlipToNextUseCase1() throws Exception {
         prepareTestCase1();
 
-        assertEquals(model.flipToFirst(), newProjectPage);
+        assertEquals(wizard.flipToFirst(), newProjectPage);
     }
 
     @Test
     public void testFlipToPreviousUseCase1() throws Exception {
         prepareTestCase1();
-        model.flipToFirst();
+        wizard.flipToFirst();
 
-        assertNull(model.flipToPrevious());
+        assertNull(wizard.flipToPrevious());
     }
 
     @Test
     public void testHasNextUseCase1() throws Exception {
         prepareTestCase1();
-        model.flipToFirst();
+        wizard.flipToFirst();
 
-        assertEquals(model.hasNext(), HAS_NOT_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
     @Test
     public void testHasPreviousUseCase1() throws Exception {
         prepareTestCase1();
-        model.flipToFirst();
+        wizard.flipToFirst();
 
-        assertEquals(model.hasPrevious(), HAS_NOT_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
     }
 
     @Test
     public void testCanFinishUseCase1() throws Exception {
         prepareTestCase1();
-        model.flipToFirst();
+        wizard.flipToFirst();
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
 
-        assertEquals(model.canFinish(), CAN_FINISH);
+        assertEquals(wizard.canFinish(), CAN_FINISH);
     }
 
     @Test
@@ -233,82 +240,87 @@ public class NewProjectWizardTest {
         prepareCommitCallback(chooseTemplatePage);
         prepareCommitCallback(templatePage);
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
-        model.onFinish();
+        wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
         verify(chooseTemplatePage).commit((CommitCallback)anyObject());
         verify(templatePage, times(2)).commit((CommitCallback)anyObject());
     }
 
-    /** In case the model has just one next page (main page). Other page are skipped or not exist. */
+    /** In case the wizard has just one next page (main page). Other page are skipped or not exist. */
     private void prepareTestCase1() {
         when(chooseTemplatePage.canSkip()).thenReturn(CAN_SKIP);
+        when(chooseTemplatePage.inContext()).thenReturn(IN_CONTEXT);
+
         when(templatePage.canSkip()).thenReturn(CAN_SKIP, CAN_SKIP);
+        when(templatePage.inContext()).thenReturn(IN_CONTEXT, IN_CONTEXT);
+
         when(paasPage.canSkip()).thenReturn(CAN_SKIP, CAN_SKIP);
+        when(paasPage.inContext()).thenReturn(NOT_CONTEXT, NOT_CONTEXT);
     }
 
     @Test
     public void testFlipToNextUseCase2() throws Exception {
         prepareTestCase2();
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
 
-        assertEquals(model.flipToNext(), chooseTemplatePage);
+        assertEquals(wizard.flipToNext(), chooseTemplatePage);
     }
 
     @Test
     public void testFlipToPreviousUseCase2() throws Exception {
         prepareTestCase2();
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
         flipPages(1);
 
-        assertEquals(model.flipToPrevious(), newProjectPage);
+        assertEquals(wizard.flipToPrevious(), newProjectPage);
     }
 
     @Test
     public void testHasNextUseCase2() throws Exception {
         prepareTestCase2();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NOT_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
     @Test
     public void testHasPreviousUseCase2() throws Exception {
         prepareTestCase2();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
-        assertEquals(model.hasPrevious(), HAS_NOT_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
     }
 
     @Test
     public void testCanFinishUseCase2() throws Exception {
         prepareTestCase2();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(chooseTemplatePage.isCompleted()).thenReturn(COMPLETED);
-        assertEquals(model.canFinish(), CAN_FINISH);
+        assertEquals(wizard.canFinish(), CAN_FINISH);
     }
 
     @Test
@@ -319,110 +331,116 @@ public class NewProjectWizardTest {
         prepareCommitCallback(chooseTemplatePage);
         prepareCommitCallback(templatePage);
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
         flipPages(1);
-        model.onFinish();
+        wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
         verify(chooseTemplatePage).commit((CommitCallback)anyObject());
         verify(templatePage, times(2)).commit((CommitCallback)anyObject());
     }
 
-    /** In case the model has following next pages: main page and choose template page. Other page are skipped or not exist. */
+    /** In case the wizard has following next pages: main page and choose template page. Other page are skipped or not exist. */
     private void prepareTestCase2() {
         when(chooseTemplatePage.canSkip()).thenReturn(CAN_NOT_SKIP);
+        when(chooseTemplatePage.inContext()).thenReturn(IN_CONTEXT);
+
         when(templatePage.canSkip()).thenReturn(CAN_SKIP, CAN_SKIP);
+        when(templatePage.inContext()).thenReturn(IN_CONTEXT, IN_CONTEXT);
+
+        when(paasPage.canSkip()).thenReturn(CAN_SKIP, CAN_SKIP);
+        when(paasPage.inContext()).thenReturn(NOT_CONTEXT, NOT_CONTEXT);
     }
 
     @Test
     public void testFlipToNextUseCase3() throws Exception {
         prepareTestCase3();
 
-        assertEquals(model.flipToFirst(), newProjectPage);
+        assertEquals(wizard.flipToFirst(), newProjectPage);
         wizardContext.putData(PAAS, nonePaas);
-        assertEquals(model.flipToNext(), chooseTemplatePage);
+        assertEquals(wizard.flipToNext(), chooseTemplatePage);
         wizardContext.putData(TEMPLATE, template);
-        assertEquals(model.flipToNext(), templatePage);
-        assertEquals(model.flipToNext(), templatePage);
-        assertNull(model.flipToNext());
+        assertEquals(wizard.flipToNext(), templatePage);
+        assertEquals(wizard.flipToNext(), templatePage);
+        assertNull(wizard.flipToNext());
     }
 
     @Test
     public void testFlipToPreviousUseCase3() throws Exception {
         prepareTestCase3();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         flipPages(1);
         wizardContext.putData(TEMPLATE, template);
         flipPages(2);
 
-        assertEquals(model.flipToPrevious(), templatePage);
-        assertEquals(model.flipToPrevious(), chooseTemplatePage);
-        assertEquals(model.flipToPrevious(), newProjectPage);
+        assertEquals(wizard.flipToPrevious(), templatePage);
+        assertEquals(wizard.flipToPrevious(), chooseTemplatePage);
+        assertEquals(wizard.flipToPrevious(), newProjectPage);
     }
 
     @Test
     public void testHasNextUseCase3() throws Exception {
         prepareTestCase3();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
         wizardContext.putData(TEMPLATE, template);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NOT_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
     @Test
     public void testHasPreviousUseCase3() throws Exception {
         prepareTestCase3();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
-        assertEquals(model.hasPrevious(), HAS_NOT_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
 
         flipPages(1);
         wizardContext.putData(TEMPLATE, template);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
     }
 
     @Test
     public void testCanFinishUseCase3() throws Exception {
         prepareTestCase3();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
         wizardContext.putData(TEMPLATE, template);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         when(templatePage.canSkip()).thenReturn(CAN_NOT_FINISH);
         flipPages(1);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(chooseTemplatePage.isCompleted()).thenReturn(COMPLETED);
         when(templatePage.isCompleted()).thenReturn(COMPLETED);
-        assertEquals(model.canFinish(), CAN_FINISH);
+        assertEquals(wizard.canFinish(), CAN_FINISH);
     }
 
     @Test
@@ -433,11 +451,11 @@ public class NewProjectWizardTest {
         prepareCommitCallback(chooseTemplatePage);
         prepareCommitCallback(templatePage);
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
         flipPages(3);
-        model.onFinish();
+        wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
         verify(chooseTemplatePage).commit((CommitCallback)anyObject());
@@ -445,88 +463,94 @@ public class NewProjectWizardTest {
     }
 
     /**
-     * In case the model has following next pages: main page, choose template page and template pages. Other page are skipped or not
+     * In case the wizard has following next pages: main page, choose template page and template pages. Other page are skipped or not
      * exist.
      */
     private void prepareTestCase3() {
         when(chooseTemplatePage.canSkip()).thenReturn(CAN_NOT_SKIP);
+        when(chooseTemplatePage.inContext()).thenReturn(IN_CONTEXT);
+
         when(templatePage.canSkip()).thenReturn(CAN_NOT_SKIP, CAN_NOT_SKIP);
+        when(templatePage.inContext()).thenReturn(IN_CONTEXT, IN_CONTEXT);
+
+        when(paasPage.canSkip()).thenReturn(CAN_SKIP, CAN_SKIP);
+        when(paasPage.inContext()).thenReturn(NOT_CONTEXT, NOT_CONTEXT);
     }
 
     @Test
     public void testFlipToNextUseCase4() throws Exception {
         prepareTestCase4();
 
-        assertEquals(model.flipToFirst(), newProjectPage);
+        assertEquals(wizard.flipToFirst(), newProjectPage);
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
-        assertEquals(model.flipToNext(), templatePage);
-        assertEquals(model.flipToNext(), templatePage);
-        assertNull(model.flipToNext());
+        assertEquals(wizard.flipToNext(), templatePage);
+        assertEquals(wizard.flipToNext(), templatePage);
+        assertNull(wizard.flipToNext());
     }
 
     @Test
     public void testFlipToPreviousUseCase4() throws Exception {
         prepareTestCase4();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
         flipPages(2);
 
-        assertEquals(model.flipToPrevious(), templatePage);
-        assertEquals(model.flipToPrevious(), newProjectPage);
+        assertEquals(wizard.flipToPrevious(), templatePage);
+        assertEquals(wizard.flipToPrevious(), newProjectPage);
     }
 
     @Test
     public void testHasNextUseCase4() throws Exception {
         prepareTestCase4();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NOT_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
     @Test
     public void testHasPreviousUseCase4() throws Exception {
         prepareTestCase4();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
-        assertEquals(model.hasPrevious(), HAS_NOT_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
     }
 
     @Test
     public void testCanFinishUseCase4() throws Exception {
         prepareTestCase4();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(chooseTemplatePage.isCompleted()).thenReturn(COMPLETED);
         when(templatePage.isCompleted()).thenReturn(COMPLETED);
-        assertEquals(model.canFinish(), CAN_FINISH);
+        assertEquals(wizard.canFinish(), CAN_FINISH);
     }
 
     @Test
@@ -537,131 +561,137 @@ public class NewProjectWizardTest {
         prepareCommitCallback(chooseTemplatePage);
         prepareCommitCallback(templatePage);
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
         flipPages(2);
-        model.onFinish();
+        wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
         verify(chooseTemplatePage).commit((CommitCallback)anyObject());
         verify(templatePage, times(2)).commit((CommitCallback)anyObject());
     }
 
-    /** In case the model has following next pages: main page and template pages. Other page are skipped or not exist. */
+    /** In case the wizard has following next pages: main page and template pages. Other page are skipped or not exist. */
     private void prepareTestCase4() {
         when(chooseTemplatePage.canSkip()).thenReturn(CAN_SKIP);
+        when(chooseTemplatePage.inContext()).thenReturn(IN_CONTEXT);
+
         when(templatePage.canSkip()).thenReturn(CAN_NOT_SKIP, CAN_NOT_SKIP);
+        when(templatePage.inContext()).thenReturn(IN_CONTEXT, IN_CONTEXT);
+
+        when(paasPage.canSkip()).thenReturn(CAN_SKIP, CAN_SKIP);
+        when(paasPage.inContext()).thenReturn(NOT_CONTEXT, NOT_CONTEXT);
     }
 
     @Test
     public void testFlipToNextUseCase5() throws Exception {
         prepareTestCase5();
 
-        assertEquals(model.flipToFirst(), newProjectPage);
+        assertEquals(wizard.flipToFirst(), newProjectPage);
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        assertEquals(model.flipToNext(), chooseTemplatePage);
-        assertEquals(model.flipToNext(), templatePage);
-        assertEquals(model.flipToNext(), templatePage);
-        assertEquals(model.flipToNext(), paasPage);
-        assertEquals(model.flipToNext(), paasPage);
-        assertNull(model.flipToNext());
+        assertEquals(wizard.flipToNext(), chooseTemplatePage);
+        assertEquals(wizard.flipToNext(), templatePage);
+        assertEquals(wizard.flipToNext(), templatePage);
+        assertEquals(wizard.flipToNext(), paasPage);
+        assertEquals(wizard.flipToNext(), paasPage);
+        assertNull(wizard.flipToNext());
     }
 
     @Test
     public void testFlipToPreviousUseCase5() throws Exception {
         prepareTestCase5();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
         flipPages(5);
 
-        assertEquals(model.flipToPrevious(), paasPage);
-        assertEquals(model.flipToPrevious(), templatePage);
-        assertEquals(model.flipToPrevious(), templatePage);
-        assertEquals(model.flipToPrevious(), chooseTemplatePage);
-        assertEquals(model.flipToPrevious(), newProjectPage);
+        assertEquals(wizard.flipToPrevious(), paasPage);
+        assertEquals(wizard.flipToPrevious(), templatePage);
+        assertEquals(wizard.flipToPrevious(), templatePage);
+        assertEquals(wizard.flipToPrevious(), chooseTemplatePage);
+        assertEquals(wizard.flipToPrevious(), newProjectPage);
     }
 
     @Test
     public void testHasNextUseCase5() throws Exception {
         prepareTestCase5();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NOT_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
     @Test
     public void testHasPreviousUseCase5() throws Exception {
         prepareTestCase5();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        assertEquals(model.hasPrevious(), HAS_NOT_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
     }
 
     @Test
     public void testCanFinishUseCase5() throws Exception {
         prepareTestCase5();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(chooseTemplatePage.isCompleted()).thenReturn(COMPLETED);
         when(paasPage.isCompleted()).thenReturn(COMPLETED);
         when(templatePage.isCompleted()).thenReturn(COMPLETED);
-        assertEquals(model.canFinish(), CAN_FINISH);
+        assertEquals(wizard.canFinish(), CAN_FINISH);
     }
 
     @Test
@@ -673,11 +703,11 @@ public class NewProjectWizardTest {
         prepareCommitCallback(templatePage);
         prepareCommitCallback(paasPage);
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
         flipPages(5);
-        model.onFinish();
+        wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
         verify(chooseTemplatePage).commit((CommitCallback)anyObject());
@@ -685,94 +715,99 @@ public class NewProjectWizardTest {
         verify(paasPage, times(2)).commit((CommitCallback)anyObject());
     }
 
-    /** In case the model has following next pages: main page, choose template page, template pages and paas pages. */
+    /** In case the wizard has following next pages: main page, choose template page, template pages and paas pages. */
     private void prepareTestCase5() {
         when(chooseTemplatePage.canSkip()).thenReturn(CAN_NOT_SKIP);
+        when(chooseTemplatePage.inContext()).thenReturn(IN_CONTEXT);
+
         when(templatePage.canSkip()).thenReturn(CAN_NOT_SKIP, CAN_NOT_SKIP);
+        when(templatePage.inContext()).thenReturn(IN_CONTEXT, IN_CONTEXT);
+
         when(paasPage.canSkip()).thenReturn(CAN_NOT_SKIP, CAN_NOT_SKIP);
+        when(paasPage.inContext()).thenReturn(IN_CONTEXT, IN_CONTEXT);
     }
 
     @Test
     public void testFlipToNextUseCase6() throws Exception {
         prepareTestCase6();
 
-        assertEquals(model.flipToFirst(), newProjectPage);
+        assertEquals(wizard.flipToFirst(), newProjectPage);
         wizardContext.putData(PAAS, paas);
-        assertEquals(model.flipToNext(), chooseTemplatePage);
-        assertEquals(model.flipToNext(), paasPage);
-        assertEquals(model.flipToNext(), paasPage);
-        assertNull(model.flipToNext());
+        assertEquals(wizard.flipToNext(), chooseTemplatePage);
+        assertEquals(wizard.flipToNext(), paasPage);
+        assertEquals(wizard.flipToNext(), paasPage);
+        assertNull(wizard.flipToNext());
     }
 
     @Test
     public void testFlipToPreviousUseCase6() throws Exception {
         prepareTestCase6();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, paas);
         flipPages(3);
 
-        assertEquals(model.flipToPrevious(), paasPage);
-        assertEquals(model.flipToPrevious(), chooseTemplatePage);
-        assertEquals(model.flipToPrevious(), newProjectPage);
+        assertEquals(wizard.flipToPrevious(), paasPage);
+        assertEquals(wizard.flipToPrevious(), chooseTemplatePage);
+        assertEquals(wizard.flipToPrevious(), newProjectPage);
     }
 
     @Test
     public void testHasNextUseCase6() throws Exception {
         prepareTestCase6();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, paas);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NOT_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
     @Test
     public void testHasPreviousUseCase6() throws Exception {
         prepareTestCase6();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, paas);
-        assertEquals(model.hasPrevious(), HAS_NOT_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
     }
 
     @Test
     public void testCanFinishUseCase6() throws Exception {
         prepareTestCase6();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, paas);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(chooseTemplatePage.isCompleted()).thenReturn(COMPLETED);
         when(paasPage.isCompleted()).thenReturn(COMPLETED);
         when(templatePage.isCompleted()).thenReturn(COMPLETED);
-        assertEquals(model.canFinish(), CAN_FINISH);
+        assertEquals(wizard.canFinish(), CAN_FINISH);
     }
 
     @Test
@@ -784,11 +819,11 @@ public class NewProjectWizardTest {
         prepareCommitCallback(templatePage);
         prepareCommitCallback(paasPage);
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
         flipPages(3);
-        model.onFinish();
+        wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
         verify(chooseTemplatePage).commit((CommitCallback)anyObject());
@@ -796,110 +831,115 @@ public class NewProjectWizardTest {
         verify(paasPage, times(2)).commit((CommitCallback)anyObject());
     }
 
-    /** In case the model has following next pages: main page,choose template page and paas pages. Template pages are skipped. */
+    /** In case the wizard has following next pages: main page,choose template page and paas pages. Template pages are skipped. */
     private void prepareTestCase6() {
         when(chooseTemplatePage.canSkip()).thenReturn(CAN_NOT_SKIP);
+        when(chooseTemplatePage.inContext()).thenReturn(IN_CONTEXT);
+
         when(templatePage.canSkip()).thenReturn(CAN_SKIP, CAN_SKIP);
+        when(templatePage.inContext()).thenReturn(IN_CONTEXT, IN_CONTEXT);
+
         when(paasPage.canSkip()).thenReturn(CAN_NOT_SKIP, CAN_NOT_SKIP);
+        when(paasPage.inContext()).thenReturn(IN_CONTEXT, IN_CONTEXT);
     }
 
     @Test
     public void testFlipToNextUseCase7() throws Exception {
         prepareTestCase7();
 
-        assertEquals(model.flipToFirst(), newProjectPage);
+        assertEquals(wizard.flipToFirst(), newProjectPage);
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        assertEquals(model.flipToNext(), templatePage);
-        assertEquals(model.flipToNext(), templatePage);
-        assertEquals(model.flipToNext(), paasPage);
-        assertEquals(model.flipToNext(), paasPage);
-        assertNull(model.flipToNext());
+        assertEquals(wizard.flipToNext(), templatePage);
+        assertEquals(wizard.flipToNext(), templatePage);
+        assertEquals(wizard.flipToNext(), paasPage);
+        assertEquals(wizard.flipToNext(), paasPage);
+        assertNull(wizard.flipToNext());
     }
 
     @Test
     public void testFlipToPreviousUseCase7() throws Exception {
         prepareTestCase7();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
         flipPages(4);
 
-        assertEquals(model.flipToPrevious(), paasPage);
-        assertEquals(model.flipToPrevious(), templatePage);
-        assertEquals(model.flipToPrevious(), templatePage);
-        assertEquals(model.flipToPrevious(), newProjectPage);
+        assertEquals(wizard.flipToPrevious(), paasPage);
+        assertEquals(wizard.flipToPrevious(), templatePage);
+        assertEquals(wizard.flipToPrevious(), templatePage);
+        assertEquals(wizard.flipToPrevious(), newProjectPage);
     }
 
     @Test
     public void testHasNextUseCase7() throws Exception {
         prepareTestCase7();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NOT_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
     @Test
     public void testHasPreviousUseCase7() throws Exception {
         prepareTestCase7();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        assertEquals(model.hasPrevious(), HAS_NOT_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
     }
 
     @Test
     public void testCanFinishUseCase7() throws Exception {
         prepareTestCase7();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(chooseTemplatePage.isCompleted()).thenReturn(COMPLETED);
         when(paasPage.isCompleted()).thenReturn(COMPLETED);
         when(templatePage.isCompleted()).thenReturn(COMPLETED);
-        assertEquals(model.canFinish(), CAN_FINISH);
+        assertEquals(wizard.canFinish(), CAN_FINISH);
     }
 
     @Test
@@ -911,11 +951,11 @@ public class NewProjectWizardTest {
         prepareCommitCallback(templatePage);
         prepareCommitCallback(paasPage);
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
         flipPages(4);
-        model.onFinish();
+        wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
         verify(chooseTemplatePage).commit((CommitCallback)anyObject());
@@ -923,88 +963,93 @@ public class NewProjectWizardTest {
         verify(paasPage, times(2)).commit((CommitCallback)anyObject());
     }
 
-    /** In case the model has following next pages: main page, template pages and paas pages. Choose template page is skipped. */
+    /** In case the wizard has following next pages: main page, template pages and paas pages. Choose template page is skipped. */
     private void prepareTestCase7() {
         when(chooseTemplatePage.canSkip()).thenReturn(CAN_SKIP);
+        when(chooseTemplatePage.inContext()).thenReturn(IN_CONTEXT);
+
         when(templatePage.canSkip()).thenReturn(CAN_NOT_SKIP, CAN_NOT_SKIP);
+        when(templatePage.inContext()).thenReturn(IN_CONTEXT, IN_CONTEXT);
+
         when(paasPage.canSkip()).thenReturn(CAN_NOT_SKIP, CAN_NOT_SKIP);
+        when(paasPage.inContext()).thenReturn(IN_CONTEXT, IN_CONTEXT);
     }
 
     @Test
     public void testFlipToNextUseCase8() throws Exception {
         prepareTestCase8();
 
-        assertEquals(model.flipToFirst(), newProjectPage);
+        assertEquals(wizard.flipToFirst(), newProjectPage);
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        assertEquals(model.flipToNext(), paasPage);
-        assertEquals(model.flipToNext(), paasPage);
-        assertNull(model.flipToNext());
+        assertEquals(wizard.flipToNext(), paasPage);
+        assertEquals(wizard.flipToNext(), paasPage);
+        assertNull(wizard.flipToNext());
     }
 
     @Test
     public void testFlipToPreviousUseCase8() throws Exception {
         prepareTestCase8();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
         flipPages(2);
 
-        assertEquals(model.flipToPrevious(), paasPage);
-        assertEquals(model.flipToPrevious(), newProjectPage);
+        assertEquals(wizard.flipToPrevious(), paasPage);
+        assertEquals(wizard.flipToPrevious(), newProjectPage);
     }
 
     @Test
     public void testHasNextUseCase8() throws Exception {
         prepareTestCase8();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NOT_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
     @Test
     public void testHasPreviousUseCase8() throws Exception {
         prepareTestCase8();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        assertEquals(model.hasPrevious(), HAS_NOT_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
     }
 
     @Test
     public void testCanFinishUseCase8() throws Exception {
         prepareTestCase8();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(chooseTemplatePage.isCompleted()).thenReturn(COMPLETED);
         when(paasPage.isCompleted()).thenReturn(COMPLETED);
         when(templatePage.isCompleted()).thenReturn(COMPLETED);
-        assertEquals(model.canFinish(), CAN_FINISH);
+        assertEquals(wizard.canFinish(), CAN_FINISH);
     }
 
     @Test
@@ -1016,11 +1061,11 @@ public class NewProjectWizardTest {
         prepareCommitCallback(templatePage);
         prepareCommitCallback(paasPage);
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
         flipPages(2);
-        model.onFinish();
+        wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
         verify(chooseTemplatePage).commit((CommitCallback)anyObject());
@@ -1028,83 +1073,88 @@ public class NewProjectWizardTest {
         verify(paasPage, times(2)).commit((CommitCallback)anyObject());
     }
 
-    /** In case the model has following next pages: main page, paas pages. Choose template page and template pages are skipped. */
+    /** In case the wizard has following next pages: main page, paas pages. Choose template page and template pages are skipped. */
     private void prepareTestCase8() {
         when(chooseTemplatePage.canSkip()).thenReturn(CAN_SKIP);
+        when(chooseTemplatePage.inContext()).thenReturn(IN_CONTEXT);
+
         when(templatePage.canSkip()).thenReturn(CAN_SKIP, CAN_SKIP);
+        when(templatePage.inContext()).thenReturn(IN_CONTEXT, IN_CONTEXT);
+
         when(paasPage.canSkip()).thenReturn(CAN_NOT_SKIP, CAN_NOT_SKIP);
+        when(paasPage.inContext()).thenReturn(IN_CONTEXT, IN_CONTEXT);
     }
 
     @Test
     public void testFlipToNextUseCase9() throws Exception {
         prepareTestCase9();
 
-        assertEquals(model.flipToFirst(), newProjectPage);
+        assertEquals(wizard.flipToFirst(), newProjectPage);
         wizardContext.putData(PAAS, paasWithTemplate);
-        assertEquals(model.flipToNext(), paasPage);
-        assertEquals(model.flipToNext(), paasPage);
-        assertNull(model.flipToNext());
+        assertEquals(wizard.flipToNext(), paasPage);
+        assertEquals(wizard.flipToNext(), paasPage);
+        assertNull(wizard.flipToNext());
     }
 
     @Test
     public void testFlipToPreviousUseCase9() throws Exception {
         prepareTestCase9();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, paasWithTemplate);
         flipPages(2);
 
-        assertEquals(model.flipToPrevious(), paasPage);
-        assertEquals(model.flipToPrevious(), newProjectPage);
+        assertEquals(wizard.flipToPrevious(), paasPage);
+        assertEquals(wizard.flipToPrevious(), newProjectPage);
     }
 
     @Test
     public void testHasNextUseCase9() throws Exception {
         prepareTestCase9();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, paasWithTemplate);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NEXT);
 
         flipPages(1);
-        assertEquals(model.hasNext(), HAS_NOT_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
     @Test
     public void testHasPreviousUseCase9() throws Exception {
         prepareTestCase9();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, paasWithTemplate);
-        assertEquals(model.hasPrevious(), HAS_NOT_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
         flipPages(1);
-        assertEquals(model.hasPrevious(), HAS_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
     }
 
     @Test
     public void testCanFinishUseCase9() throws Exception {
         prepareTestCase9();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, paasWithTemplate);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
-        assertEquals(model.canFinish(), CAN_NOT_FINISH);
+        assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         flipPages(1);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(chooseTemplatePage.isCompleted()).thenReturn(COMPLETED);
         when(paasPage.isCompleted()).thenReturn(COMPLETED);
         when(templatePage.isCompleted()).thenReturn(COMPLETED);
-        assertEquals(model.canFinish(), CAN_FINISH);
+        assertEquals(wizard.canFinish(), CAN_FINISH);
     }
 
     @Test
@@ -1114,66 +1164,70 @@ public class NewProjectWizardTest {
         prepareCommitCallback(newProjectPage);
         prepareCommitCallback(paasPage);
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, paasWithTemplate);
         flipPages(2);
-        model.onFinish();
+        wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
         verify(paasPage, times(2)).commit((CommitCallback)anyObject());
     }
 
-    /** In case the model has following next pages: main page, paas pages. Choose template page and template pages aren't exist. */
+    /** In case the wizard has following next pages: main page, paas pages. Choose template page and template pages aren't exist. */
     private void prepareTestCase9() {
+        when(chooseTemplatePage.inContext()).thenReturn(NOT_CONTEXT);
+        when(templatePage.inContext()).thenReturn(NOT_CONTEXT, NOT_CONTEXT);
+
         when(paasPage.canSkip()).thenReturn(CAN_NOT_SKIP, CAN_NOT_SKIP);
+        when(paasPage.inContext()).thenReturn(IN_CONTEXT, IN_CONTEXT);
     }
 
     @Test
     public void testFlipToNextUseCase10() throws Exception {
         prepareTestCase10();
 
-        assertEquals(model.flipToFirst(), newProjectPage);
+        assertEquals(wizard.flipToFirst(), newProjectPage);
         wizardContext.putData(PAAS, paasWithTemplate);
-        assertNull(model.flipToNext());
+        assertNull(wizard.flipToNext());
     }
 
     @Test
     public void testFlipToPreviousUseCase10() throws Exception {
         prepareTestCase10();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, paasWithTemplate);
 
-        assertNull(model.flipToPrevious());
+        assertNull(wizard.flipToPrevious());
     }
 
     @Test
     public void testHasNextUseCase10() throws Exception {
         prepareTestCase10();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, paasWithTemplate);
-        assertEquals(model.hasNext(), HAS_NOT_NEXT);
+        assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
     @Test
     public void testHasPreviousUseCase10() throws Exception {
         prepareTestCase10();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, paasWithTemplate);
-        assertEquals(model.hasPrevious(), HAS_NOT_PREVIOUS);
+        assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
     }
 
     @Test
     public void testCanFinishUseCase10() throws Exception {
         prepareTestCase10();
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, paasWithTemplate);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(paasPage.isCompleted()).thenReturn(COMPLETED);
-        assertEquals(model.canFinish(), CAN_FINISH);
+        assertEquals(wizard.canFinish(), CAN_FINISH);
     }
 
     @Test
@@ -1183,20 +1237,53 @@ public class NewProjectWizardTest {
         prepareCommitCallback(newProjectPage);
         prepareCommitCallback(paasPage);
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(PAAS, paasWithTemplate);
-        model.onFinish();
+        wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
         verify(paasPage, times(2)).commit((CommitCallback)anyObject());
     }
 
     /**
-     * In case the model has following next pages: main page. Choose template page and template pages aren't exist. PaaS pages are
+     * In case the wizard has following next pages: main page. Choose template page and template pages aren't exist. PaaS pages are
      * skipped.
      */
     private void prepareTestCase10() {
+        when(chooseTemplatePage.inContext()).thenReturn(NOT_CONTEXT);
+        when(templatePage.inContext()).thenReturn(NOT_CONTEXT, NOT_CONTEXT);
+
         when(paasPage.canSkip()).thenReturn(CAN_SKIP, CAN_SKIP);
+        when(paasPage.inContext()).thenReturn(IN_CONTEXT, IN_CONTEXT);
+    }
+
+    @Test
+    public void testNextPageWhenAddCustomPages() {
+        prepareTestCase5();
+
+        WizardPage page = mock(WizardPage.class);
+        when(page.inContext()).thenReturn(IN_CONTEXT);
+        Provider<? extends WizardPage> pageProvider = mock(Provider.class);
+        when(pageProvider.get()).thenReturn(page);
+
+        wizard.addPageAfterFirst(pageProvider);
+        wizard.addPageAfterChooseTemplate(pageProvider);
+        wizard.addPageBeforePaas(pageProvider);
+        wizard.addPage(pageProvider);
+
+        assertEquals(wizard.flipToFirst(), newProjectPage);
+        wizardContext.putData(TEMPLATE, template);
+        wizardContext.putData(PAAS, paas);
+        assertEquals(wizard.flipToNext(), page);
+        assertEquals(wizard.flipToNext(), chooseTemplatePage);
+        assertEquals(wizard.flipToNext(), page);
+        assertEquals(wizard.flipToNext(), templatePage);
+        assertEquals(wizard.flipToNext(), templatePage);
+        assertEquals(wizard.flipToNext(), page);
+        assertEquals(wizard.flipToNext(), paasPage);
+        assertEquals(wizard.flipToNext(), paasPage);
+        assertEquals(wizard.flipToNext(), page);
+        assertNull(wizard.flipToNext());
     }
 
     @Test
@@ -1211,11 +1298,11 @@ public class NewProjectWizardTest {
             }
         }).when(newProjectPage).commit((CommitCallback)anyObject());
 
-        model.flipToFirst();
+        wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
         flipPages(1);
-        model.onFinish();
+        wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
         verify(chooseTemplatePage, never()).commit((CommitCallback)anyObject());

@@ -17,18 +17,17 @@
  */
 package com.codenvy.ide.wizard.newproject.pages.template;
 
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.api.template.Template;
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
+import com.codenvy.ide.api.ui.wizard.newproject.ProjectTypeData;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.template.TemplateAgentImpl;
 import com.codenvy.ide.wizard.WizardResource;
-import com.codenvy.ide.wizard.newproject.ProjectTypeData;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
-import static com.codenvy.ide.wizard.newproject.NewProjectWizard.PROJECT_TYPE;
-import static com.codenvy.ide.wizard.newproject.NewProjectWizard.TEMPLATE;
-
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_TYPE;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
 
 /**
  * Provides selecting kind of templates which user wish to use for create new project.

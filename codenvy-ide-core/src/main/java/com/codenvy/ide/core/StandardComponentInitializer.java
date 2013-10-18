@@ -26,7 +26,7 @@ import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
-import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard2;
+import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.welcome.WelcomeLocalizationConstant;
 import com.codenvy.ide.welcome.action.ConnectSupportAction;
@@ -124,7 +124,7 @@ public class StandardComponentInitializer {
     private CloseProjectAction closeProjectAction;
 
     @Inject
-    private NewProjectWizard2 newProjectWizard;
+    private NewProjectWizard newProjectWizard;
 
     @Inject
     private Provider<NewProjectPagePresenter> newProjectPageProvider;

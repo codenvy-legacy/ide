@@ -22,12 +22,12 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
-import com.codenvy.ide.api.ui.wizard.WizardKeys;
+import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
+import com.codenvy.ide.api.ui.wizard.newproject.ProjectTypeData;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
-import com.codenvy.ide.wizard.newproject.ProjectTypeData;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageView;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -41,8 +41,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import static com.codenvy.ide.api.ui.wizard.Wizard.UpdateDelegate;
-import static com.codenvy.ide.wizard.newproject.NewProjectWizard.PAAS;
-import static com.codenvy.ide.wizard.newproject.NewProjectWizard.PROJECT_TYPE;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_TYPE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyObject;
@@ -113,7 +113,7 @@ public class NewProjectPagePresenterTest {
     @Test
     public void testIsCompletedWhenHaveNotProjectName() throws Exception {
         setUp();
-        when(wizardContext.getData(WizardKeys.PROJECT_NAME)).thenReturn(null);
+        when(wizardContext.getData(NewProjectWizard.PROJECT_NAME)).thenReturn(null);
 
         assertEquals(presenter.isCompleted(), IS_NOT_COMPLETED);
     }
@@ -121,7 +121,7 @@ public class NewProjectPagePresenterTest {
     @Test
     public void testIsCompletedWhenHaveNotProjectType() throws Exception {
         setUp();
-        wizardContext.putData(WizardKeys.PROJECT_NAME, PROJECT_NAME);
+        wizardContext.putData(NewProjectWizard.PROJECT_NAME, PROJECT_NAME);
 
         assertEquals(presenter.isCompleted(), IS_NOT_COMPLETED);
     }
@@ -129,7 +129,7 @@ public class NewProjectPagePresenterTest {
     @Test
     public void testIsCompletedWhenHaveNotPaaS() throws Exception {
         setUp();
-        when(wizardContext.getData(WizardKeys.PROJECT_NAME)).thenReturn(PROJECT_NAME);
+        when(wizardContext.getData(NewProjectWizard.PROJECT_NAME)).thenReturn(PROJECT_NAME);
         when(wizardContext.getData(PROJECT_TYPE)).thenReturn(mock(ProjectTypeData.class));
 
         assertEquals(presenter.isCompleted(), IS_NOT_COMPLETED);
@@ -138,7 +138,7 @@ public class NewProjectPagePresenterTest {
     @Test
     public void testIsCompleted() throws Exception {
         setUpWithProjects();
-        when(wizardContext.getData(WizardKeys.PROJECT_NAME)).thenReturn(PROJECT_NAME);
+        when(wizardContext.getData(NewProjectWizard.PROJECT_NAME)).thenReturn(PROJECT_NAME);
         when(wizardContext.getData(PROJECT_TYPE)).thenReturn(mock(ProjectTypeData.class));
         when(wizardContext.getData(PAAS)).thenReturn(mock(PaaS.class));
 
@@ -168,7 +168,7 @@ public class NewProjectPagePresenterTest {
 
         verify(wizardContext).removeData(eq(PROJECT_TYPE));
         verify(wizardContext).removeData(eq(PAAS));
-        verify(wizardContext).removeData(eq(WizardKeys.PROJECT_NAME));
+        verify(wizardContext).removeData(eq(NewProjectWizard.PROJECT_NAME));
     }
 
     @Test
@@ -288,7 +288,7 @@ public class NewProjectPagePresenterTest {
 
         presenter.checkProjectName();
 
-        verify(wizardContext).removeData(eq(WizardKeys.PROJECT_NAME));
+        verify(wizardContext).removeData(eq(NewProjectWizard.PROJECT_NAME));
         verify(delegate).updateControls();
     }
 
@@ -299,7 +299,7 @@ public class NewProjectPagePresenterTest {
 
         presenter.checkProjectName();
 
-        verify(wizardContext).removeData(eq(WizardKeys.PROJECT_NAME));
+        verify(wizardContext).removeData(eq(NewProjectWizard.PROJECT_NAME));
         verify(delegate).updateControls();
     }
 
@@ -310,7 +310,7 @@ public class NewProjectPagePresenterTest {
 
         presenter.checkProjectName();
 
-        verify(wizardContext).removeData(eq(WizardKeys.PROJECT_NAME));
+        verify(wizardContext).removeData(eq(NewProjectWizard.PROJECT_NAME));
         verify(delegate).updateControls();
     }
 
@@ -321,7 +321,7 @@ public class NewProjectPagePresenterTest {
 
         presenter.checkProjectName();
 
-        verify(wizardContext).removeData(eq(WizardKeys.PROJECT_NAME));
+        verify(wizardContext).removeData(eq(NewProjectWizard.PROJECT_NAME));
         verify(delegate).updateControls();
     }
 
@@ -333,7 +333,7 @@ public class NewProjectPagePresenterTest {
 
         presenter.checkProjectName();
 
-        verify(wizardContext).putData(eq(WizardKeys.PROJECT_NAME), eq(projectName));
+        verify(wizardContext).putData(eq(NewProjectWizard.PROJECT_NAME), eq(projectName));
         verify(delegate).updateControls();
     }
 

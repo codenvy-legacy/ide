@@ -21,7 +21,6 @@ import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
-import com.codenvy.ide.api.ui.wizard.WizardKeys;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.ext.tutorials.client.TutorialsClientService;
 import com.codenvy.ide.resources.model.Project;
@@ -36,8 +35,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import static com.codenvy.ide.api.ui.wizard.WizardPage.CommitCallback;
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard2.PAAS;
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard2.TEMPLATE;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;

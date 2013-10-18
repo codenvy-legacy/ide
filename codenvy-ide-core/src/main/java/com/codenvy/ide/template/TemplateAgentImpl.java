@@ -22,7 +22,7 @@ import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
-import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard2;
+import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.resources.client.ImageResource;
@@ -38,12 +38,12 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class TemplateAgentImpl implements TemplateAgent {
-    private       NewProjectWizard2   newProjectWizard;
+    private       NewProjectWizard    newProjectWizard;
     private final JsonArray<Template> templates;
 
     /** Create agent. */
     @Inject
-    protected TemplateAgentImpl(NewProjectWizard2 newProjectWizard) {
+    protected TemplateAgentImpl(NewProjectWizard newProjectWizard) {
         this.newProjectWizard = newProjectWizard;
         this.templates = JsonCollections.createArray();
     }

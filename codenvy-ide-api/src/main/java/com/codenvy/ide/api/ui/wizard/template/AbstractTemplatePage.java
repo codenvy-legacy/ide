@@ -24,8 +24,8 @@ import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard2.PAAS;
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard2.TEMPLATE;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
 
 /**
  * The abstract implementation of page that some template provides.

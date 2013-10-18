@@ -18,7 +18,6 @@
 package com.codenvy.ide.ext.extruntime.client.template;
 
 import com.codenvy.ide.api.ui.wizard.Wizard;
-import com.codenvy.ide.api.ui.wizard.WizardKeys;
 import com.codenvy.ide.ext.extruntime.client.ExtRuntimeResources;
 import com.codenvy.ide.ext.extruntime.client.template.sample.CreateSampleCodenvyExtensionPage;
 import com.codenvy.ide.ext.extruntime.client.template.sample.CreateSampleCodenvyExtensionPageView;

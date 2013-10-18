@@ -82,7 +82,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
      *         <code>true</code> if need to replace page with given index, and <code>false</code> if need to insert page in given place
      */
     public void addPage(@NotNull Provider<? extends WizardPage> page, int index, boolean replace) {
-        if (index >= wizardPages.size()) {
+        if (index >= wizardPageProviders.size()) {
             addPage(page);
             return;
         }
@@ -92,7 +92,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
         } else {
             JsonArray<Provider<? extends WizardPage>> before = wizardPageProviders.slice(0, index);
             Provider<? extends WizardPage> currentPage = wizardPageProviders.get(index);
-            JsonArray<Provider<? extends WizardPage>> after = wizardPageProviders.slice(index + 1, wizardPages.size());
+            JsonArray<Provider<? extends WizardPage>> after = wizardPageProviders.slice(index + 1, wizardPageProviders.size());
 
             wizardPageProviders.clear();
             wizardPageProviders.addAll(before);
