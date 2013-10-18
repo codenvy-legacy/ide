@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.newproject.pages.start;
+package com.codenvy.ide.wizard.newproject.pages;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
@@ -28,6 +28,8 @@ import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
 import com.codenvy.ide.wizard.newproject.ProjectTypeData;
+import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
+import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageView;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
@@ -47,7 +49,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.*;
 
 /**
- * Testing {@link NewProjectPagePresenter} functionality.
+ * Testing {@link com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter} functionality.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */

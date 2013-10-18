@@ -37,7 +37,7 @@ import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newfile.NewTextFilePagePresenter;
 import com.codenvy.ide.wizard.newfolder.NewFolderPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
-import com.codenvy.ide.wizard.newproject.pages.template.TemplatePagePresenter;
+import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -126,13 +126,11 @@ public class StandardComponentInitializer {
     @Inject
     private NewProjectWizard2 newProjectWizard;
 
-    // TODO rename class
     @Inject
-    private Provider<NewProjectPagePresenter> newProjectPagePresenter;
+    private Provider<NewProjectPagePresenter> newProjectPageProvider;
 
-    // TODO rename class
     @Inject
-    private Provider<TemplatePagePresenter> templatePagePresenter;
+    private Provider<ChooseTemplatePagePresenter> chooseTemplatePageProvider;
 
     /** Instantiates {@link StandardComponentInitializer} an creates standard content */
     @Inject
@@ -219,7 +217,8 @@ public class StandardComponentInitializer {
         closeProjectGroup.add(closeProjectAction);
         contextMenuGroup.add(closeProjectGroup);
 
-        newProjectWizard.addPage(newProjectPagePresenter.get());
-        newProjectWizard.addPage(templatePagePresenter.get());
+        // TODO provider?
+        newProjectWizard.addPage(newProjectPageProvider.get());
+        newProjectWizard.addPage(chooseTemplatePageProvider.get());
     }
 }

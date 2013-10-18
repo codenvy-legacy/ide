@@ -22,11 +22,11 @@ import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.json.JsonArray;
 
 /**
- * The view of {@link TemplatePagePresenter}.
+ * The view of {@link ChooseTemplatePagePresenter}.
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface TemplatePageView extends View<TemplatePageView.ActionDelegate> {
+public interface ChooseTemplatePageView extends View<ChooseTemplatePageView.ActionDelegate> {
     /** Needs for delegate some function into TemplatePage view. */
     public interface ActionDelegate {
         /**

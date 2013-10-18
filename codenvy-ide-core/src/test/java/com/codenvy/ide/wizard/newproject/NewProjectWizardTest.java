@@ -27,7 +27,7 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
-import com.codenvy.ide.wizard.newproject.pages.template.TemplatePagePresenter;
+import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
 import com.google.inject.Provider;
 
 import org.junit.Before;
@@ -64,25 +64,25 @@ public class NewProjectWizardTest {
     public static final boolean CAN_NOT_FINISH   = false;
     public static final boolean COMPLETED        = true;
     @Mock
-    private Provider<NewProjectPagePresenter> newProjectPageProvider;
+    private Provider<NewProjectPagePresenter>     newProjectPageProvider;
     @Mock
-    private NewProjectPagePresenter           newProjectPage;
+    private NewProjectPagePresenter               newProjectPage;
     @Mock
-    private Provider<TemplatePagePresenter>   templatePageProvider;
+    private Provider<ChooseTemplatePagePresenter> templatePageProvider;
     @Mock
-    private TemplatePagePresenter             chooseTemplatePage;
+    private ChooseTemplatePagePresenter           chooseTemplatePage;
     @Mock
-    private NotificationManager               notificationManager;
+    private NotificationManager                   notificationManager;
     @Mock
-    private WizardPage                        templatePage;
+    private WizardPage                            templatePage;
     @Mock
-    private WizardPage                        paasPage;
-    private WizardContext                     wizardContext;
-    private Template                          template;
-    private PaaS                              paas;
-    private PaaS                              nonePaas;
-    private PaaS                              paasWithTemplate;
-    private NewProjectWizard                  model;
+    private WizardPage                            paasPage;
+    private WizardContext                         wizardContext;
+    private Template                              template;
+    private PaaS                                  paas;
+    private PaaS                                  nonePaas;
+    private PaaS                                  paasWithTemplate;
+    private NewProjectWizard                      model;
 
     @Before
     @SuppressWarnings("unchecked")

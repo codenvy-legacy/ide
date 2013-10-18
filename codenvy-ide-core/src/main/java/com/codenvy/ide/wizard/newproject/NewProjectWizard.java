@@ -29,7 +29,7 @@ import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
-import com.codenvy.ide.wizard.newproject.pages.template.TemplatePagePresenter;
+import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -48,7 +48,7 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
     public static final WizardContext.Key<Template>        TEMPLATE     = new WizardContext.Key<Template>("Template");
     public static final WizardContext.Key<ProjectTypeData> PROJECT_TYPE = new WizardContext.Key<ProjectTypeData>("Project type");
     private Provider<NewProjectPagePresenter>                        newProjectPage;
-    private Provider<TemplatePagePresenter>                          templatePage;
+    private Provider<ChooseTemplatePagePresenter>                    templatePage;
     private UpdateDelegate                                           delegate;
     private Map<PaaS, JsonArray<Provider<? extends WizardPage>>>     paasPages;
     private Map<Template, JsonArray<Provider<? extends WizardPage>>> templatePages;
@@ -67,7 +67,7 @@ public class NewProjectWizard implements Wizard, WizardPage.CommitCallback {
      */
     @Inject
     public NewProjectWizard(Provider<NewProjectPagePresenter> newProjectPage,
-                            Provider<TemplatePagePresenter> templatePage,
+                            Provider<ChooseTemplatePagePresenter> templatePage,
                             NotificationManager notificationManager) {
         this.newProjectPage = newProjectPage;
         this.templatePage = templatePage;

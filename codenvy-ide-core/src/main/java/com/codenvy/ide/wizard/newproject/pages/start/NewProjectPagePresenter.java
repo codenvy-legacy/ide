@@ -64,7 +64,7 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
      * @param resourceProvider
      */
     @Inject
-    protected NewProjectPagePresenter(NewProjectPageView view, Resources resources, ProjectTypeAgentImpl projectTypeAgent,
+    public NewProjectPagePresenter(NewProjectPageView view, Resources resources, ProjectTypeAgentImpl projectTypeAgent,
                                       PaaSAgentImpl paasAgent, ResourceProvider resourceProvider,
                                       CoreLocalizationConstant constant) {
 

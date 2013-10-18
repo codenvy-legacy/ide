@@ -35,10 +35,10 @@ import static com.codenvy.ide.wizard.newproject.NewProjectWizard.TEMPLATE;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class TemplatePagePresenter extends AbstractWizardPage implements TemplatePageView.ActionDelegate {
-    private TemplatePageView    view;
-    private TemplateAgentImpl   templateAgent;
-    private JsonArray<Template> templates;
+public class ChooseTemplatePagePresenter extends AbstractWizardPage implements ChooseTemplatePageView.ActionDelegate {
+    private ChooseTemplatePageView view;
+    private TemplateAgentImpl      templateAgent;
+    private JsonArray<Template>    templates;
 
     /**
      * Create presenter.
@@ -47,7 +47,7 @@ public class TemplatePagePresenter extends AbstractWizardPage implements Templat
      * @param view
      */
     @Inject
-    public TemplatePagePresenter(TemplatePageView view, WizardResource resources, TemplateAgentImpl templateAgent) {
+    public ChooseTemplatePagePresenter(ChooseTemplatePageView view, WizardResource resources, TemplateAgentImpl templateAgent) {
         super("Choose project template", resources.templateIcon());
 
         this.view = view;

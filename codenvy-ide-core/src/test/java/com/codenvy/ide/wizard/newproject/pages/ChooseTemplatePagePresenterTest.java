@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.newproject.pages.template;
+package com.codenvy.ide.wizard.newproject.pages;
 
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.Wizard;
@@ -25,6 +25,8 @@ import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.template.TemplateAgentImpl;
 import com.codenvy.ide.wizard.WizardResource;
 import com.codenvy.ide.wizard.newproject.ProjectTypeData;
+import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
+import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageView;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import org.junit.Before;
@@ -43,35 +45,35 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 /**
- * Testing {@link TemplatePagePresenter} functionality.
+ * Testing {@link com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter} functionality.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TemplatePagePresenterTest {
+public class ChooseTemplatePagePresenterTest {
     public static final boolean COMPLETED    = true;
     public static final boolean CAN_SKIP     = true;
     public static final boolean CAN_NOT_SKIP = false;
     @Mock
-    private TemplatePageView      view;
+    private ChooseTemplatePageView      view;
     @Mock
-    private WizardResource        resources;
+    private WizardResource              resources;
     @Mock
-    private TemplateAgentImpl     templateAgent;
+    private TemplateAgentImpl           templateAgent;
     @Mock
-    private Wizard.UpdateDelegate delegate;
+    private Wizard.UpdateDelegate       delegate;
     @Mock
-    private WizardContext         wizardContext;
-    private Template              template;
-    private ProjectTypeData       projectType;
-    private TemplatePagePresenter page;
+    private WizardContext               wizardContext;
+    private Template                    template;
+    private ProjectTypeData             projectType;
+    private ChooseTemplatePagePresenter page;
 
     @Before
     public void setUp() {
         template = new Template("id", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"));
         projectType = new ProjectTypeData("typeName", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"));
 
-        page = new TemplatePagePresenter(view, resources, templateAgent);
+        page = new ChooseTemplatePagePresenter(view, resources, templateAgent);
         page.setContext(wizardContext);
         page.setUpdateDelegate(delegate);
     }

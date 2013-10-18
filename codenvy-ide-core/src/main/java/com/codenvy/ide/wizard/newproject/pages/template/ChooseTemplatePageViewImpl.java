@@ -39,12 +39,12 @@ import com.google.inject.Inject;
 
 
 /**
- * The implementation of {@link TemplatePageView}.
+ * The implementation of {@link ChooseTemplatePageView}.
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class TemplatePageViewImpl extends Composite implements TemplatePageView {
-    interface TemplateViewUiBinder extends UiBinder<Widget, TemplatePageViewImpl> {
+public class ChooseTemplatePageViewImpl extends Composite implements ChooseTemplatePageView {
+    interface TemplateViewUiBinder extends UiBinder<Widget, ChooseTemplatePageViewImpl> {
     }
 
     private static TemplateViewUiBinder uiBinder = GWT.create(TemplateViewUiBinder.class);
@@ -99,7 +99,7 @@ public class TemplatePageViewImpl extends Composite implements TemplatePageView 
      * @param resources
      */
     @Inject
-    protected TemplatePageViewImpl(Resources resources) {
+    protected ChooseTemplatePageViewImpl(Resources resources) {
         this.res = resources;
 
         initWidget(uiBinder.createAndBindUi(this));

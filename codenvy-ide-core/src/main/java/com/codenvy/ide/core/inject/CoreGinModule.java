@@ -106,8 +106,8 @@ import com.codenvy.ide.wizard.newfile.NewGenericFilePageViewImpl;
 import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageView;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageViewImpl;
-import com.codenvy.ide.wizard.newproject.pages.template.TemplatePageView;
-import com.codenvy.ide.wizard.newproject.pages.template.TemplatePageViewImpl;
+import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageView;
+import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageViewImpl;
 import com.codenvy.ide.wizard.newresource.NewResourcePageView;
 import com.codenvy.ide.wizard.newresource.NewResourcePageViewImpl;
 import com.codenvy.ide.workspace.*;
@@ -213,7 +213,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
         bind(SearchPartView.class).to(SearchPartViewImpl.class).in(Singleton.class);
 
-        bind(TemplatePageView.class).to(TemplatePageViewImpl.class);
+        bind(ChooseTemplatePageView.class).to(ChooseTemplatePageViewImpl.class);
         bind(NewResourcePageView.class).to(NewResourcePageViewImpl.class);
         bind(NewProjectPageView.class).to(NewProjectPageViewImpl.class);
         bind(OpenProjectView.class).to(OpenProjectViewImpl.class);
