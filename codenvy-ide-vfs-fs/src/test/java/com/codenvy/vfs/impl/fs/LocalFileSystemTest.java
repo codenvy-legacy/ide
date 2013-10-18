@@ -212,7 +212,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         java.io.File f = getIoFile(vfsPath);
         FileInputStream fIn = new FileInputStream(f);
         byte[] bytes = new byte[(int)f.length()];
-        fIn.read(bytes);
+        fIn.read(bytes); // ok for local files
         fIn.close();
         return bytes;
     }

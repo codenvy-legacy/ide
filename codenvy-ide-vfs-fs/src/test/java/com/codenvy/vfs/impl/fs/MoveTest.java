@@ -91,12 +91,8 @@ public class MoveTest extends LocalFileSystemTest {
         super.setUp();
 
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
-        Principal user = DtoFactory.getInstance().createDto(Principal.class);
-        user.setName("admin");
-        user.setType(Principal.Type.USER);
-        Principal admin = DtoFactory.getInstance().createDto(Principal.class);
-        admin.setName("admin");
-        admin.setType(Principal.Type.USER);
+        Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
+        Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
         permissions.put(user, EnumSet.of(BasicPermissions.ALL));
         permissions.put(admin, EnumSet.of(BasicPermissions.READ));
 

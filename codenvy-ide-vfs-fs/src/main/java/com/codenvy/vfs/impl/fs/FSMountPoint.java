@@ -228,12 +228,10 @@ public class FSMountPoint implements MountPoint {
                 // TODO : REMOVE!!! Temporary default ACL until will have client side for real manage
                 if (key.isRoot()) {
                     final Map<Principal, Set<BasicPermissions>> dummy = new HashMap<>(2);
-                    final Principal developer = DtoFactory.getInstance().createDto(Principal.class);
-                    developer.setName("workspace/developer");
-                    developer.setType(Principal.Type.GROUP);
-                    final Principal other = DtoFactory.getInstance().createDto(Principal.class);
-                    other.setName(VirtualFileSystemInfo.ANY_PRINCIPAL);
-                    other.setType(Principal.Type.USER);
+                    final Principal developer = DtoFactory.getInstance().createDto(Principal.class)
+                                                          .withName("workspace/developer").withType(Principal.Type.GROUP);
+                    final Principal other = DtoFactory.getInstance().createDto(Principal.class)
+                                                      .withName(VirtualFileSystemInfo.ANY_PRINCIPAL).withType(Principal.Type.USER);
                     dummy.put(developer, EnumSet.of(BasicPermissions.ALL));
                     dummy.put(other, EnumSet.of(BasicPermissions.READ));
                     return new AccessControlList(dummy);
@@ -1109,19 +1107,16 @@ public class FSMountPoint implements MountPoint {
                                 }
                             }
                             if (!hasMimeType) {
-                                final Property mimeTypeProperty = DtoFactory.getInstance().createDto(Property.class);
-                                mimeTypeProperty.setName("vfs:mimeType");
-                                mimeTypeProperty.setValue(Collections.singletonList(Project.PROJECT_MIME_TYPE));
-                                properties.add(mimeTypeProperty);
+                                properties.add(DtoFactory.getInstance().createDto(Property.class)
+                                                         .withName("vfs:mimeType")
+                                                         .withValue(Collections.singletonList(Project.PROJECT_MIME_TYPE)));
                             }
-
                             updateProperties(current, properties, null);
                         } else {
-                            final Property mimeTypeProperty = DtoFactory.getInstance().createDto(Property.class);
-                            mimeTypeProperty.setName("vfs:mimeType");
-                            mimeTypeProperty.setValue(Collections.singletonList(Project.PROJECT_MIME_TYPE));
-                            properties.add(mimeTypeProperty);
-                            updateProperties(current, Collections.<Property>singletonList(mimeTypeProperty), null);
+                            properties.add(DtoFactory.getInstance().createDto(Property.class)
+                                                     .withName("vfs:mimeType")
+                                                     .withValue(Collections.singletonList(Project.PROJECT_MIME_TYPE)));
+                            updateProperties(current, properties, null);
                         }
                     } else {
                         final VirtualFileImpl file =
@@ -1391,9 +1386,8 @@ public class FSMountPoint implements MountPoint {
         while (path != null) {
             final AccessControlList accessControlList = aclCache[path.hashCode() & MASK].get(path);
             if (!accessControlList.isEmpty()) {
-                final Principal userPrincipal = DtoFactory.getInstance().createDto(Principal.class);
-                userPrincipal.setName(user.getUserId());
-                userPrincipal.setType(Principal.Type.USER);
+                final Principal userPrincipal = DtoFactory.getInstance().createDto(Principal.class)
+                                                          .withName(user.getUserId()).withType(Principal.Type.USER);
                 Set<BasicPermissions> userPermissions = accessControlList.getPermissions(userPrincipal);
                 if (userPermissions != null) {
                     return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL);
@@ -1401,18 +1395,18 @@ public class FSMountPoint implements MountPoint {
                 Collection<String> groups = user.getGroups();
                 if (!groups.isEmpty()) {
                     for (String group : groups) {
-                        final Principal groupPrincipal = DtoFactory.getInstance().createDto(Principal.class);
-                        groupPrincipal.setName(group);
-                        groupPrincipal.setType(Principal.Type.GROUP);
+                        final Principal groupPrincipal = DtoFactory.getInstance().createDto(Principal.class)
+                                                                   .withName(group)
+                                                                   .withType(Principal.Type.GROUP);
                         userPermissions = accessControlList.getPermissions(groupPrincipal);
                         if (userPermissions != null) {
                             return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL);
                         }
                     }
                 }
-                final Principal anyPrincipal = DtoFactory.getInstance().createDto(Principal.class);
-                anyPrincipal.setName(VirtualFileSystemInfo.ANY_PRINCIPAL);
-                anyPrincipal.setType(Principal.Type.USER);
+                final Principal anyPrincipal = DtoFactory.getInstance().createDto(Principal.class)
+                                                         .withName(VirtualFileSystemInfo.ANY_PRINCIPAL)
+                                                         .withType(Principal.Type.USER);
                 userPermissions = accessControlList.getPermissions(anyPrincipal);
                 return userPermissions != null && (userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL));
             }
@@ -1444,8 +1438,7 @@ public class FSMountPoint implements MountPoint {
         for (Map.Entry<String, String[]> e : metadata.entrySet()) {
             final String name = e.getKey();
             if (filter.accept(name)) {
-                final Property property = DtoFactory.getInstance().createDto(Property.class);
-                property.setName(name);
+                final Property property = DtoFactory.getInstance().createDto(Property.class).withName(name);
                 if (e.getValue() != null) {
                     List<String> list = new ArrayList<>(e.getValue().length);
                     Collections.addAll(list, e.getValue());

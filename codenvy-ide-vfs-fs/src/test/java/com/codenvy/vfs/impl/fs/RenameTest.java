@@ -63,7 +63,7 @@ public class RenameTest extends LocalFileSystemTest {
     protected void setUp() throws Exception {
         super.setUp();
 
-        properties = new HashMap<String, String[]>(2);
+        properties = new HashMap<>(2);
         properties.put("MyProperty01", new String[]{"foo"});
         properties.put("MyProperty02", new String[]{"bar"});
 
@@ -86,19 +86,15 @@ public class RenameTest extends LocalFileSystemTest {
 
         projectPath = createDirectory(testRootPath, "RenameTest_Project");
         createTree(projectPath, 6, 4, properties);
-        Map<String, String[]> projectProperties = new HashMap<String, String[]>(1);
+        Map<String, String[]> projectProperties = new HashMap<>(1);
         projectProperties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
         writeProperties(projectPath, projectProperties);
 
         createLock(lockedFilePath, lockToken, Long.MAX_VALUE);
 
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(2);
-        Principal user = DtoFactory.getInstance().createDto(Principal.class);
-        user.setName("andrew");
-        user.setType(Principal.Type.USER);
-        Principal admin = DtoFactory.getInstance().createDto(Principal.class);
-        admin.setName("admin");
-        admin.setType(Principal.Type.USER);
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
+        Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
+        Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
         permissions.put(user, EnumSet.of(BasicPermissions.ALL));
         permissions.put(admin, EnumSet.of(BasicPermissions.READ));
         writePermissions(protectedFilePath, permissions);
@@ -127,7 +123,7 @@ public class RenameTest extends LocalFileSystemTest {
         String expectedPath = testRootPath + '/' + newName;
         assertTrue("Not found new file in expected location. ", exists(expectedPath));
         assertTrue(Arrays.equals(DEFAULT_CONTENT_BYTES, readFile(expectedPath)));
-        Map<String, String[]> expectedProperties = new HashMap<String, String[]>(properties);
+        Map<String, String[]> expectedProperties = new HashMap<>(properties);
         expectedProperties.put("vfs:mimeType", new String[]{newMediaType});
         validateProperties(expectedPath, expectedProperties);
     }
@@ -159,7 +155,7 @@ public class RenameTest extends LocalFileSystemTest {
         assertTrue("Not found new file in expected location. ", exists(expectedPath));
         assertTrue(Arrays.equals(DEFAULT_CONTENT_BYTES, readFile(expectedPath)));
 
-        Map<String, String[]> expectedProperties = new HashMap<String, String[]>(1);
+        Map<String, String[]> expectedProperties = new HashMap<>(1);
         expectedProperties.put("vfs:mimeType", new String[]{newMediaType});
         validateProperties(expectedPath, expectedProperties);
     }
@@ -237,7 +233,7 @@ public class RenameTest extends LocalFileSystemTest {
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
         String expectedPath = testRootPath + '/' + newName;
         assertTrue(exists(expectedPath));
-        Map<String, String[]> expectedProperties = new HashMap<String, String[]>(1);
+        Map<String, String[]> expectedProperties = new HashMap<>(1);
         expectedProperties.put("vfs:mimeType", new String[]{"text/directory+FOO"});
         validateProperties(expectedPath, expectedProperties, false); // media type updated only for current folder
         validateProperties(expectedPath, properties, true);
@@ -249,7 +245,7 @@ public class RenameTest extends LocalFileSystemTest {
         ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
         assertTrue(exists(folderPath));
-        Map<String, String[]> expectedProperties = new HashMap<String, String[]>(1);
+        Map<String, String[]> expectedProperties = new HashMap<>(1);
         expectedProperties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
         validateProperties(folderPath, expectedProperties, false); // media type updated only for current folder
         validateProperties(folderPath, properties, true);
@@ -265,7 +261,7 @@ public class RenameTest extends LocalFileSystemTest {
         ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
         assertTrue(exists(projectPath));
-        Map<String, String[]> expectedProperties = new HashMap<String, String[]>(1);
+        Map<String, String[]> expectedProperties = new HashMap<>(1);
         expectedProperties.put("vfs:mimeType", new String[]{Folder.FOLDER_MIME_TYPE});
         validateProperties(projectPath, expectedProperties, false); // media type updated only for current folder
 

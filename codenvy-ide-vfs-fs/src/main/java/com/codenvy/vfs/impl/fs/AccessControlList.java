@@ -80,10 +80,10 @@ public class AccessControlList {
             for (BasicPermissions permission : e.getValue()) {
                 plainPermissions.add(permission.value());
             }
-            final AccessControlEntry ace = DtoFactory.getInstance().createDto(AccessControlEntry.class);
-            ace.setPrincipal(DtoFactory.getInstance().clone(e.getKey()));
-            ace.setPermissions(plainPermissions);
-            acl.add(ace);
+            acl.add(DtoFactory.getInstance().createDto(AccessControlEntry.class)
+                              .withPrincipal(DtoFactory.getInstance().clone(e.getKey()))
+                              .withPermissions(plainPermissions)
+                   );
         }
         return acl;
     }
@@ -161,9 +161,9 @@ public class AccessControlList {
                     permissions.add(BasicPermissions.fromValue(input.readUTF()));
                     ++readPermissions;
                 }
-                final Principal principal = DtoFactory.getInstance().createDto(Principal.class);
-                principal.setName(principalName);
-                principal.setType(Principal.Type.valueOf(principalType));
+                final Principal principal = DtoFactory.getInstance().createDto(Principal.class)
+                                                      .withName(principalName)
+                                                      .withType(Principal.Type.valueOf(principalType));
                 permissionsMap.put(principal, permissions);
             }
             ++readRecords;

@@ -61,9 +61,7 @@ public class ContentTest extends LocalFileSystemTest {
         createLock(lockedFilePath, lockToken, Long.MAX_VALUE);
 
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
-        Principal principal = DtoFactory.getInstance().createDto(Principal.class);
-        principal.setName("andrew");
-        principal.setType(Principal.Type.USER);
+        Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedFilePath, permissions);
 
@@ -154,9 +152,7 @@ public class ContentTest extends LocalFileSystemTest {
         // Restore 'read' permission for 'admin'.
         // All requests in test use this principal by default.
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
-        Principal principal = DtoFactory.getInstance().createDto(Principal.class);
-        principal.setName("admin");
-        principal.setType(Principal.Type.USER);
+        Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
         permissions.put(principal, EnumSet.of(BasicPermissions.READ));
         writePermissions(protectedFilePath, permissions);
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
