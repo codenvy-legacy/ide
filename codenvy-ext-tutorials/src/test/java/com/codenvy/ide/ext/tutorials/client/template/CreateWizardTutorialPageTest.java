@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- * 
- * [2012] - [2013] Codenvy, S.A. 
+ *
+ * [2012] - [2013] Codenvy, S.A.
  * All Rights Reserved.
- * 
+ *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.maven.client.template;
+package com.codenvy.ide.ext.tutorials.client.template;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Property;
@@ -28,22 +28,22 @@ import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
 
-import static com.codenvy.ide.extension.maven.client.BuilderExtension.SPRING_PROJECT_ID;
+import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.WIZARD_TUTORIAL_ID;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 /**
- * Testing {@link com.codenvy.ide.extension.maven.client.template.CreateSpringProjectPage} functionality.
+ * Testing {@link com.codenvy.ide.ext.tutorials.client.template.CreateWizardTutorialPage} functionality.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class CreateSpringProjectPageTest extends BaseCreateProjectTest {
+public class CreateWizardTutorialPageTest extends BaseCreateTutorialTest {
 
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreateSpringProjectPage(service, resourceProvider);
+        page = new CreateWizardTutorialPage(service, resourceProvider);
         page.setContext(wizardContext);
     }
 
@@ -59,7 +59,7 @@ public class CreateSpringProjectPageTest extends BaseCreateProjectTest {
                 return callback;
             }
         }).when(service)
-                .createSpringProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createWizardTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsSuccessful();
     }
@@ -76,7 +76,7 @@ public class CreateSpringProjectPageTest extends BaseCreateProjectTest {
                 return callback;
             }
         }).when(service)
-                .createSpringProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createWizardTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenCreateTutorialRequestIsFailed();
     }
@@ -93,7 +93,7 @@ public class CreateSpringProjectPageTest extends BaseCreateProjectTest {
                 return callback;
             }
         }).when(service)
-                .createSpringProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createWizardTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsFailed();
     }
@@ -101,14 +101,14 @@ public class CreateSpringProjectPageTest extends BaseCreateProjectTest {
     @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
-                .createSpringProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createWizardTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();
     }
 
     @Override
     public void testInContext() {
-        when(template.getId()).thenReturn(SPRING_PROJECT_ID);
+        when(template.getId()).thenReturn(WIZARD_TUTORIAL_ID);
 
         super.testInContext();
     }

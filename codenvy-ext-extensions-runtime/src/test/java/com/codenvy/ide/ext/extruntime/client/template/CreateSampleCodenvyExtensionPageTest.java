@@ -23,11 +23,9 @@ import com.codenvy.ide.ext.extruntime.client.ExtRuntimeResources;
 import com.codenvy.ide.ext.extruntime.client.template.sample.CreateSampleCodenvyExtensionPage;
 import com.codenvy.ide.ext.extruntime.client.template.sample.CreateSampleCodenvyExtensionPageView;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -38,6 +36,7 @@ import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
 
+import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.SAMPLE_EXTENSION_ID;
 import static com.codenvy.ide.ext.extruntime.client.template.sample.CreateSampleCodenvyExtensionPage.DEFAULT_VERSION;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -58,7 +57,6 @@ public class CreateSampleCodenvyExtensionPageTest extends BaseCreateExtensionTes
     private CreateSampleCodenvyExtensionPageView view;
     @Mock
     private Wizard.UpdateDelegate                updateDelegate;
-    private CreateSampleCodenvyExtensionPage     page;
 
     @Override
     public void setUp() {
@@ -70,7 +68,7 @@ public class CreateSampleCodenvyExtensionPageTest extends BaseCreateExtensionTes
 
     @Test
     public void testOnValueChanged() throws Exception {
-        page.onValueChanged();
+        ((CreateSampleCodenvyExtensionPage)page).onValueChanged();
 
         verify(updateDelegate).updateControls();
     }
@@ -154,7 +152,7 @@ public class CreateSampleCodenvyExtensionPageTest extends BaseCreateExtensionTes
         verify(updateDelegate).updateControls();
     }
 
-    @Test
+    @Override
     public void testCreateWhenGetProjectRequestIsSuccessful() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -168,27 +166,15 @@ public class CreateSampleCodenvyExtensionPageTest extends BaseCreateExtensionTes
         }).when(service)
                 .createSampleCodenvyExtensionProject(anyString(), (JsonArray<Property>)anyObject(), anyString(), anyString(), anyString(),
                                                      (AsyncRequestCallback<Void>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
-                callback.onSuccess(project);
-                return callback;
-            }
-        }).when(resourceProvider)
-                .getProject(anyString(), (AsyncCallback<Project>)anyObject());
 
-        page.commit(callback);
+        super.testCreateWhenGetProjectRequestIsSuccessful();
 
         verify(view).getGroupId();
         verify(view).getArtifactId();
         verify(view).getVersion();
-        verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
-        verify(callback).onSuccess();
     }
 
-    @Test
+    @Override
     public void testCreateWhenCreateTutorialRequestIsFailed() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -203,15 +189,14 @@ public class CreateSampleCodenvyExtensionPageTest extends BaseCreateExtensionTes
                 .createSampleCodenvyExtensionProject(anyString(), (JsonArray<Property>)anyObject(), anyString(), anyString(), anyString(),
                                                      (AsyncRequestCallback<Void>)anyObject());
 
-        page.commit(callback);
+        super.testCreateWhenCreateTutorialRequestIsFailed();
 
         verify(view).getGroupId();
         verify(view).getArtifactId();
         verify(view).getVersion();
-        verify(callback).onFailure(eq(throwable));
     }
 
-    @Test
+    @Override
     public void testCreateWhenGetProjectRequestIsFailed() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -225,37 +210,31 @@ public class CreateSampleCodenvyExtensionPageTest extends BaseCreateExtensionTes
         }).when(service)
                 .createSampleCodenvyExtensionProject(anyString(), (JsonArray<Property>)anyObject(), anyString(), anyString(), anyString(),
                                                      (AsyncRequestCallback<Void>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
-                callback.onFailure(throwable);
-                return callback;
-            }
-        }).when(resourceProvider)
-                .getProject(anyString(), (AsyncCallback<Project>)anyObject());
 
-        page.commit(callback);
+        super.testCreateWhenGetProjectRequestIsFailed();
 
         verify(view).getGroupId();
         verify(view).getArtifactId();
         verify(view).getVersion();
-        verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
-        verify(callback).onFailure(eq(throwable));
     }
 
-    @Test
+    @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
                 .createSampleCodenvyExtensionProject(anyString(), (JsonArray<Property>)anyObject(), anyString(), anyString(), anyString(),
                                                      (AsyncRequestCallback<Void>)anyObject());
 
-        page.commit(callback);
+        super.testCreateWhenRequestExceptionHappened();
 
         verify(view).getGroupId();
         verify(view).getArtifactId();
         verify(view).getVersion();
-        verify(callback).onFailure((Throwable)anyObject());
+    }
+
+    @Override
+    public void testInContext() {
+        when(template.getId()).thenReturn(SAMPLE_EXTENSION_ID);
+
+        super.testInContext();
     }
 }

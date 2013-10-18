@@ -34,7 +34,7 @@ import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.wizard.WizardKeys.PROJECT_NAME;
 import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
-import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.EMPTY_EXTENSION_ID;
+import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.SAMPLE_EXTENSION_ID;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
 import static com.codenvy.ide.json.JsonCollections.createArray;
@@ -67,7 +67,7 @@ public class CreateSampleCodenvyExtensionPage extends AbstractTemplatePage imple
                                             ExtRuntimeClientService service,
                                             ResourceProvider resourceProvider,
                                             ExtRuntimeResources resources) {
-        super("Define the properties of a new Maven module", resources.codenvyExtensionTemplate(), EMPTY_EXTENSION_ID);
+        super("Define the properties of a new Maven module", resources.codenvyExtensionTemplate(), SAMPLE_EXTENSION_ID);
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;

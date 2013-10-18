@@ -17,22 +17,18 @@
  */
 package com.codenvy.ide.ext.extruntime.client.template;
 
-import com.codenvy.ide.ext.extruntime.client.template.BaseCreateExtensionTest;
-import com.codenvy.ide.ext.extruntime.client.template.CreateEmptyCodenvyExtensionPage;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
 
+import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.EMPTY_EXTENSION_ID;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -43,7 +39,6 @@ import static org.mockito.Mockito.*;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class CreateEmptyCodenvyExtensionPageTest extends BaseCreateExtensionTest {
-    private CreateEmptyCodenvyExtensionPage page;
 
     @Override
     public void setUp() {
@@ -52,7 +47,7 @@ public class CreateEmptyCodenvyExtensionPageTest extends BaseCreateExtensionTest
         page.setContext(wizardContext);
     }
 
-    @Test
+    @Override
     public void testCreateWhenGetProjectRequestIsSuccessful() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -65,24 +60,11 @@ public class CreateEmptyCodenvyExtensionPageTest extends BaseCreateExtensionTest
             }
         }).when(service)
                 .createEmptyCodenvyExtensionProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
-                callback.onSuccess(project);
-                return callback;
-            }
-        }).when(resourceProvider)
-                .getProject(anyString(), (AsyncCallback<Project>)anyObject());
 
-        page.commit(callback);
-
-        verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
-        verify(callback).onSuccess();
+        super.testCreateWhenGetProjectRequestIsSuccessful();
     }
 
-    @Test
+    @Override
     public void testCreateWhenCreateTutorialRequestIsFailed() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -96,12 +78,10 @@ public class CreateEmptyCodenvyExtensionPageTest extends BaseCreateExtensionTest
         }).when(service)
                 .createEmptyCodenvyExtensionProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
-        page.commit(callback);
-
-        verify(callback).onFailure(eq(throwable));
+        super.testCreateWhenCreateTutorialRequestIsFailed();
     }
 
-    @Test
+    @Override
     public void testCreateWhenGetProjectRequestIsFailed() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -114,30 +94,22 @@ public class CreateEmptyCodenvyExtensionPageTest extends BaseCreateExtensionTest
             }
         }).when(service)
                 .createEmptyCodenvyExtensionProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
-                callback.onFailure(throwable);
-                return callback;
-            }
-        }).when(resourceProvider)
-                .getProject(anyString(), (AsyncCallback<Project>)anyObject());
 
-        page.commit(callback);
-
-        verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
-        verify(callback).onFailure(eq(throwable));
+        super.testCreateWhenGetProjectRequestIsFailed();
     }
 
-    @Test
+    @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
                 .createEmptyCodenvyExtensionProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
-        page.commit(callback);
+        super.testCreateWhenRequestExceptionHappened();
+    }
 
-        verify(callback).onFailure((Throwable)anyObject());
+    @Override
+    public void testInContext() {
+        when(template.getId()).thenReturn(EMPTY_EXTENSION_ID);
+
+        super.testInContext();
     }
 }

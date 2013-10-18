@@ -40,7 +40,11 @@ import static com.codenvy.ide.json.JsonCollections.createArray;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The wizard page for creating Wizard API tutorial template.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 @Singleton
 public class CreateWizardTutorialPage extends AbstractTemplatePage {
     private TutorialsClientService service;

@@ -18,22 +18,19 @@
 package com.codenvy.ide.ext.tutorials.client.template;
 
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
 
+import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.DTO_TUTORIAL_ID;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 /**
@@ -43,7 +40,6 @@ import static org.mockito.Mockito.*;
  * @version $Id: TutorialsExtension.java Sep 19, 2013 4:14:56 PM azatsarynnyy $
  */
 public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
-    private CreateDTOTutorialPage page;
 
     @Override
     public void setUp() {
@@ -52,7 +48,7 @@ public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
         page.setContext(wizardContext);
     }
 
-    @Test
+    @Override
     public void testCreateWhenGetProjectRequestIsSuccessful() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -65,24 +61,11 @@ public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
             }
         }).when(service)
                 .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
-                callback.onSuccess(project);
-                return callback;
-            }
-        }).when(resourceProvider)
-                .getProject(anyString(), (AsyncCallback<Project>)anyObject());
 
-        page.commit(callback);
-
-        verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
-        verify(callback).onSuccess();
+        super.testCreateWhenGetProjectRequestIsSuccessful();
     }
 
-    @Test
+    @Override
     public void testCreateWhenCreateTutorialRequestIsFailed() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -96,12 +79,10 @@ public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
         }).when(service)
                 .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
-        page.commit(callback);
-
-        verify(callback).onFailure(eq(throwable));
+        super.testCreateWhenCreateTutorialRequestIsFailed();
     }
 
-    @Test
+    @Override
     public void testCreateWhenGetProjectRequestIsFailed() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -114,30 +95,22 @@ public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
             }
         }).when(service)
                 .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
-                callback.onFailure(throwable);
-                return callback;
-            }
-        }).when(resourceProvider)
-                .getProject(anyString(), (AsyncCallback<Project>)anyObject());
 
-        page.commit(callback);
-
-        verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
-        verify(callback).onFailure(eq(throwable));
+        super.testCreateWhenGetProjectRequestIsFailed();
     }
 
-    @Test
+    @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
                 .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
-        page.commit(callback);
+        super.testCreateWhenRequestExceptionHappened();
+    }
 
-        verify(callback).onFailure((Throwable)anyObject());
+    @Override
+    public void testInContext() {
+        when(template.getId()).thenReturn(DTO_TUTORIAL_ID);
+
+        super.testInContext();
     }
 }
