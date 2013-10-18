@@ -28,6 +28,7 @@ import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -54,7 +55,7 @@ public class TemplateAgentImpl implements TemplateAgent {
                          @Nullable ImageResource icon,
                          @NotNull String primaryNature,
                          @NotNull JsonArray<String> secondaryNatures,
-                         @NotNull JsonArray<WizardPage> wizardPages) {
+                         @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages) {
         if (isIdExist(id)) {
             Window.alert("Template with " + id + " id already exists");
         }
@@ -62,8 +63,8 @@ public class TemplateAgentImpl implements TemplateAgent {
         Template template = new Template(id, title, icon, primaryNature, secondaryNatures);
         templates.add(template);
         if (wizardPages != null) {
-            for (WizardPage page : wizardPages.asIterable()) {
-                newProjectWizard.addPageAfterChooseTemplate(page);
+            for (Provider<? extends WizardPage> provider : wizardPages.asIterable()) {
+                newProjectWizard.addPageAfterChooseTemplate(provider);
             }
         }
     }

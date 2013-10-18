@@ -30,6 +30,7 @@ import com.codenvy.ide.ext.tutorials.client.template.CreateWizardTutorialPage;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
@@ -55,10 +56,10 @@ public class TutorialsExtension {
 
     @Inject
     public TutorialsExtension(TemplateAgent templateAgent,
-                              CreateDTOTutorialPage createDTOTutorialPage,
-                              CreateActionTutorialPage createActionTutorialPage,
-                              CreateNotificationTutorialPage createNotificationTutorialPage,
-                              CreateWizardTutorialPage createWizardTutorialPageProvider,
+                              Provider<CreateDTOTutorialPage> createDTOTutorialPage,
+                              Provider<CreateActionTutorialPage> createActionTutorialPage,
+                              Provider<CreateNotificationTutorialPage> createNotificationTutorialPage,
+                              Provider<CreateWizardTutorialPage> createWizardTutorialPageProvider,
                               ProjectTypeAgent projectTypeAgent,
                               TutorialsResources resources,
                               TutorialsLocalizationConstant localizationConstants,
@@ -85,24 +86,24 @@ public class TutorialsExtension {
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<WizardPage>createArray(createDTOTutorialPage));
+                               JsonCollections.<Provider<? extends WizardPage>>createArray(createDTOTutorialPage));
         templateAgent.register(NOTIFICATION_TUTORIAL_ID,
                                "Tutorial project that illustrates examples of using Notification API.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<WizardPage>createArray(createNotificationTutorialPage));
+                               JsonCollections.<Provider<? extends WizardPage>>createArray(createNotificationTutorialPage));
         templateAgent.register(ACTION_TUTORIAL_ID,
                                "Tutorial project that illustrates examples of using Action API.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<WizardPage>createArray(createActionTutorialPage));
+                               JsonCollections.<Provider<? extends WizardPage>>createArray(createActionTutorialPage));
         templateAgent.register(WIZARD_TUTORIAL_ID,
                                "Tutorial project that illustrates examples of using Wizard API.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<WizardPage>createArray(createWizardTutorialPageProvider));
+                               JsonCollections.<Provider<? extends WizardPage>>createArray(createWizardTutorialPageProvider));
     }
 }

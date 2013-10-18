@@ -217,8 +217,7 @@ public class StandardComponentInitializer {
         closeProjectGroup.add(closeProjectAction);
         contextMenuGroup.add(closeProjectGroup);
 
-        // TODO provider?
-        newProjectWizard.addPage(newProjectPageProvider.get());
-        newProjectWizard.addPage(chooseTemplatePageProvider.get());
+        newProjectWizard.addPage(newProjectPageProvider);
+        newProjectWizard.addPage(chooseTemplatePageProvider);
     }
 }

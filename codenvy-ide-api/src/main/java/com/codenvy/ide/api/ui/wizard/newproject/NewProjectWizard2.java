@@ -25,6 +25,7 @@ import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -59,7 +60,7 @@ public class NewProjectWizard2 extends DefaultWizard {
      * @param wizardPage
      *         page that need to add
      */
-    public void addPageAfterFirst(@NotNull WizardPage wizardPage) {
+    public void addPageAfterFirst(@NotNull Provider<? extends WizardPage> wizardPage) {
         addPage(wizardPage, chooseTemplate++, false);
     }
 
@@ -69,7 +70,7 @@ public class NewProjectWizard2 extends DefaultWizard {
      * @param wizardPage
      *         page that need to add
      */
-    public void addPageAfterChooseTemplate(@NotNull WizardPage wizardPage) {
+    public void addPageAfterChooseTemplate(@NotNull Provider<? extends WizardPage> wizardPage) {
         addPage(wizardPage, chooseTemplate + 1, false);
         lastTemplatePage++;
     }
@@ -80,7 +81,7 @@ public class NewProjectWizard2 extends DefaultWizard {
      * @param wizardPage
      *         page that need to add
      */
-    public void addPageBeforePaas(@NotNull WizardPage wizardPage) {
+    public void addPageBeforePaas(@NotNull Provider<? extends WizardPage> wizardPage) {
         addPage(wizardPage, lastTemplatePage + 1, false);
     }
 }

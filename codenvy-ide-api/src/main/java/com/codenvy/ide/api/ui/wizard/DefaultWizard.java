@@ -24,6 +24,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
@@ -35,12 +36,13 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
-    private NotificationManager   notificationManager;
-    private String                title;
-    private UpdateDelegate        delegate;
-    private WizardContext         wizardContext;
-    private JsonArray<WizardPage> wizardPages;
-    private int                   index;
+    private NotificationManager                       notificationManager;
+    private String                                    title;
+    private UpdateDelegate                            delegate;
+    private WizardContext                             wizardContext;
+    private JsonArray<Provider<? extends WizardPage>> wizardPageProviders;
+    private JsonArray<WizardPage>                     wizardPages;
+    private int                                       index;
 
     /**
      * Create default wizard.
@@ -56,6 +58,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
         this.title = title;
         wizardContext = new WizardContext();
         wizardPages = JsonCollections.createArray();
+        wizardPageProviders = JsonCollections.createArray();
     }
 
     /**
@@ -64,10 +67,8 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
      * @param page
      *         page that need to add
      */
-    public void addPage(@NotNull WizardPage page) {
-        page.setContext(wizardContext);
-        page.setUpdateDelegate(delegate);
-        wizardPages.add(page);
+    public void addPage(@NotNull Provider<? extends WizardPage> page) {
+        wizardPageProviders.add(page);
     }
 
     /**
@@ -80,27 +81,25 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
      * @param replace
      *         <code>true</code> if need to replace page with given index, and <code>false</code> if need to insert page in given place
      */
-    public void addPage(@NotNull WizardPage page, int index, boolean replace) {
+    public void addPage(@NotNull Provider<? extends WizardPage> page, int index, boolean replace) {
         if (index >= wizardPages.size()) {
+            addPage(page);
             return;
         }
 
         if (replace) {
-            wizardPages.set(index, page);
+            wizardPageProviders.set(index, page);
         } else {
-            JsonArray<WizardPage> before = wizardPages.slice(0, index);
-            WizardPage currentPage = wizardPages.get(index);
-            JsonArray<WizardPage> after = wizardPages.slice(index + 1, wizardPages.size());
+            JsonArray<Provider<? extends WizardPage>> before = wizardPageProviders.slice(0, index);
+            Provider<? extends WizardPage> currentPage = wizardPageProviders.get(index);
+            JsonArray<Provider<? extends WizardPage>> after = wizardPageProviders.slice(index + 1, wizardPages.size());
 
-            wizardPages.clear();
-            wizardPages.addAll(before);
-            wizardPages.add(page);
-            wizardPages.add(currentPage);
-            wizardPages.addAll(after);
+            wizardPageProviders.clear();
+            wizardPageProviders.addAll(before);
+            wizardPageProviders.add(page);
+            wizardPageProviders.add(currentPage);
+            wizardPageProviders.addAll(after);
         }
-
-        page.setContext(wizardContext);
-        page.setUpdateDelegate(delegate);
     }
 
     /** {@inheritDoc} */
@@ -123,6 +122,13 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
     public WizardPage flipToFirst() {
         index = -1;
         wizardContext.clear();
+        wizardPages.clear();
+        for (Provider<? extends WizardPage> provider : wizardPageProviders.asIterable()) {
+            WizardPage page = provider.get();
+            page.setContext(wizardContext);
+            page.setUpdateDelegate(delegate);
+            wizardPages.add(page);
+        }
 
         return getNextEnablePage();
     }

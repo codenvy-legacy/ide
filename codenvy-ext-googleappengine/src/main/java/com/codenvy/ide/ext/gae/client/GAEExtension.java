@@ -36,6 +36,7 @@ import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -52,9 +53,13 @@ public class GAEExtension {
 
     /** Constructor for Google App Engine extension. */
     @Inject
-    public GAEExtension(PaaSAgent paasAgent, GAEResources resources, ActionManager actionManager,
-                        LoginAction loginAction, CreateApplicationAction createApplicationAction,
-                        GAEWizardPagePresenter wizardPage, UpdateApplicationAction updateApplicationAction,
+    public GAEExtension(PaaSAgent paasAgent,
+                        GAEResources resources,
+                        ActionManager actionManager,
+                        LoginAction loginAction,
+                        CreateApplicationAction createApplicationAction,
+                        Provider<GAEWizardPagePresenter> wizardPage,
+                        UpdateApplicationAction updateApplicationAction,
                         ManageApplicationAction manageApplicationAction) {
         // TODO change hard code types
         JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
@@ -62,7 +67,7 @@ public class GAEExtension {
         natures.put("Python", JsonCollections.<String>createArray());
         natures.put("PHP", JsonCollections.<String>createArray());
 
-        JsonArray<WizardPage> wizardPages = JsonCollections.createArray();
+        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
         paasAgent.register(ID, ID, resources.googleAppEngine48(), natures, wizardPages, false);

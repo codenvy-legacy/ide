@@ -30,6 +30,7 @@ import com.codenvy.ide.ext.extruntime.client.template.sample.CreateSampleCodenvy
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
@@ -50,8 +51,8 @@ public class ExtRuntimeExtension {
 
     @Inject
     public ExtRuntimeExtension(TemplateAgent templateAgent,
-                               CreateEmptyCodenvyExtensionPage createEmptyCodenvyExtensionPage,
-                               CreateSampleCodenvyExtensionPage createSampleCodenvyExtensionPage,
+                               Provider<CreateEmptyCodenvyExtensionPage> createEmptyCodenvyExtensionPage,
+                               Provider<CreateSampleCodenvyExtensionPage> createSampleCodenvyExtensionPage,
                                ProjectTypeAgent projectTypeAgent,
                                ExtRuntimeLocalizationConstant localizationConstants,
                                ExtRuntimeResources resources,
@@ -84,13 +85,13 @@ public class ExtRuntimeExtension {
                                resources.codenvyExtensionTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                               JsonCollections.<WizardPage>createArray(createEmptyCodenvyExtensionPage));
+                               JsonCollections.<Provider<? extends WizardPage>>createArray(createEmptyCodenvyExtensionPage));
 
         templateAgent.register(SAMPLE_EXTENSION_ID,
                                "Sample Codenvy extension project. Illustrates simple example that uses Codenvy API.",
                                resources.codenvyExtensionTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                               JsonCollections.<WizardPage>createArray(createSampleCodenvyExtensionPage));
+                               JsonCollections.<Provider<? extends WizardPage>>createArray(createSampleCodenvyExtensionPage));
     }
 }

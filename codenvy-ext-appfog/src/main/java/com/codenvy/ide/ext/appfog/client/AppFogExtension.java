@@ -32,6 +32,7 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -60,7 +61,7 @@ public class AppFogExtension {
                            ShowApplicationsAction showApplicationsAction,
                            SwitchAccountAction switchAccountAction,
                            ShowProjectAction showProjectAction,
-                           AppFogPagePresenter wizardPage) {
+                           Provider<AppFogPagePresenter> wizardPage) {
         resources.appFogCSS().ensureInjected();
 
         // TODO change hard code types
@@ -70,7 +71,7 @@ public class AppFogExtension {
         natures.put("Python", JsonCollections.<String>createArray());
         natures.put("PHP", JsonCollections.<String>createArray());
 
-        JsonArray<WizardPage> wizardPages = JsonCollections.createArray();
+        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
         paasAgent.register(ID, ID, resources.appfog48(), natures, wizardPages, false);

@@ -29,6 +29,7 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -56,16 +57,20 @@ public class AWSExtension {
      * @param wizardPage
      */
     @Inject
-    public AWSExtension(PaaSAgent paasAgent, AWSResource resource, ActionManager actionManager, SwitchAccountAction switchAccountAction,
-                        EC2ManagementAction ec2ManagementAction, S3ManagementAction s3ManagementAction,
+    public AWSExtension(PaaSAgent paasAgent,
+                        AWSResource resource,
+                        ActionManager actionManager,
+                        SwitchAccountAction switchAccountAction,
+                        EC2ManagementAction ec2ManagementAction,
+                        S3ManagementAction s3ManagementAction,
                         BeanstalkManagementAction beanstalkManagementAction,
                         CreateApplicationManagementAction createApplicationManagementAction,
-                        BeanstalkPagePresenter wizardPage) {
+                        Provider<BeanstalkPagePresenter> wizardPage) {
         // TODO change hard code types
         JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
         natures.put("java", JsonCollections.<String>createArray("Servlet/JSP", "Spring", "War"));
 
-        JsonArray<WizardPage> wizardPages = JsonCollections.createArray();
+        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
         paasAgent.register(ID, "Amazon Web Services", resource.elasticBeanstalk48(), natures, wizardPages, false);

@@ -29,6 +29,7 @@ import com.codenvy.ide.json.JsonStringMap;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 
@@ -68,7 +69,7 @@ public class PaaSAgentImpl implements PaaSAgent {
                          @NotNull String title,
                          @Nullable ImageResource image,
                          @NotNull JsonStringMap<JsonArray<String>> natures,
-                         @NotNull JsonArray<WizardPage> wizardPages,
+                         @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages,
                          boolean provideTemplate) {
         if (isIdExist(id)) {
             Window.alert("PaaS with " + id + " id already exists");
@@ -77,8 +78,8 @@ public class PaaSAgentImpl implements PaaSAgent {
         PaaS paas = new PaaS(id, title, image, natures, provideTemplate);
         registeredPaaS.add(paas);
         if (wizardPages != null) {
-            for (WizardPage page : wizardPages.asIterable()) {
-                newProjectWizard.addPage(page);
+            for (Provider<? extends WizardPage> provider : wizardPages.asIterable()) {
+                newProjectWizard.addPage(provider);
             }
         }
     }

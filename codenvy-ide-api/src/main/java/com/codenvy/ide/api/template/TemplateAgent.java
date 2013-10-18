@@ -22,6 +22,7 @@ import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.inject.Provider;
 
 /**
  * Provides a way to register a new template for creating project.
@@ -48,5 +49,5 @@ public interface TemplateAgent {
                   @Nullable ImageResource icon,
                   @NotNull String primaryNature,
                   @NotNull JsonArray<String> secondaryNatures,
-                  @NotNull JsonArray<WizardPage> wizardPages);
+                  @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages);
 }

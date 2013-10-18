@@ -32,6 +32,7 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -83,7 +84,7 @@ public class CloudFoundryExtension {
                                  CreateApplicationAction createApplicationAction,
                                  ShowApplicationsAction showApplicationsAction,
                                  ShowLoginAction showLoginAction,
-                                 CloudFoundryPagePresenter wizardPage) {
+                                 Provider<CloudFoundryPagePresenter> wizardPage) {
 
         resources.cloudFoundryCss().ensureInjected();
 
@@ -92,7 +93,7 @@ public class CloudFoundryExtension {
         natures.put("java", JsonCollections.<String>createArray("Servlet/JSP", "Spring", "War"));
         natures.put("Ruby", JsonCollections.<String>createArray("Rails"));
 
-        JsonArray<WizardPage> wizardPages = JsonCollections.createArray();
+        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
         paasAgent.register(ID, ID, resources.cloudFoundry48(), natures, wizardPages, false);

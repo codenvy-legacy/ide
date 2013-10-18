@@ -29,6 +29,7 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -50,14 +51,14 @@ public class CloudBeesExtension {
                               CreateApplicationAction createApplicationAction,
                               SwitchAccountAction switchAccountAction,
                               CreateAccountAction createAccountAction,
-                              CloudBeesPagePresenter wizardPage) {
+                              Provider<CloudBeesPagePresenter> wizardPage) {
         resources.cloudBeesCSS().ensureInjected();
 
         // TODO change hard code types
         JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
         natures.put("java", JsonCollections.<String>createArray("Servlet/JSP", "War"));
 
-        JsonArray<WizardPage> wizardPages = JsonCollections.createArray();
+        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
         paasAgent.register(ID, ID, resources.cloudBees48(), natures, wizardPages, false);
