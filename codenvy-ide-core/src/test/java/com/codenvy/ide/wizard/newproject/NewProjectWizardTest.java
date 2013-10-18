@@ -18,7 +18,6 @@
 package com.codenvy.ide.wizard.newproject;
 
 import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
@@ -27,16 +26,15 @@ import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.wizard.BaseWizardTest;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
 import com.google.inject.Provider;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import static com.codenvy.ide.api.ui.wizard.Wizard.UpdateDelegate;
@@ -53,19 +51,7 @@ import static org.mockito.Mockito.*;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@RunWith(MockitoJUnitRunner.class)
-public class NewProjectWizardTest {
-    public static final boolean CAN_SKIP         = true;
-    public static final boolean CAN_NOT_SKIP     = false;
-    public static final boolean HAS_NEXT         = true;
-    public static final boolean HAS_NOT_NEXT     = false;
-    public static final boolean HAS_PREVIOUS     = true;
-    public static final boolean HAS_NOT_PREVIOUS = false;
-    public static final boolean CAN_FINISH       = true;
-    public static final boolean CAN_NOT_FINISH   = false;
-    public static final boolean COMPLETED        = true;
-    public static final boolean IN_CONTEXT       = true;
-    public static final boolean NOT_CONTEXT      = false;
+public class NewProjectWizardTest extends BaseWizardTest {
     @Mock
     private Provider<NewProjectPagePresenter>     newProjectPageProvider;
     @Mock
@@ -74,8 +60,6 @@ public class NewProjectWizardTest {
     private Provider<ChooseTemplatePagePresenter> chooseTemplatePageProvider;
     @Mock
     private ChooseTemplatePagePresenter           chooseTemplatePage;
-    @Mock
-    private NotificationManager                   notificationManager;
     @Mock
     private WizardPage                            templatePage;
     @Mock
@@ -139,36 +123,6 @@ public class NewProjectWizardTest {
 
         wizard.addPage(paasPageProvider);
         wizard.addPage(paasPageProvider);
-    }
-
-    /**
-     * Flip pages into wizard.
-     *
-     * @param count
-     *         count of pages how many need to flip
-     */
-    private void flipPages(int count) {
-        for (int i = 0; i < count; i++) {
-            wizard.flipToNext();
-        }
-    }
-
-    /**
-     * Prepare commit callback on mock wizard page. Commit callback usually return success.
-     *
-     * @param page
-     *         page that need to prepare
-     */
-    private void prepareCommitCallback(WizardPage page) {
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Object[] arguments = invocationOnMock.getArguments();
-                CommitCallback callback = (CommitCallback)arguments[0];
-                callback.onSuccess();
-                return null;
-            }
-        }).when(page).commit((CommitCallback)anyObject());
     }
 
     @Test
@@ -236,9 +190,9 @@ public class NewProjectWizardTest {
     public void testOnFinishUseCase1() throws Exception {
         prepareTestCase1();
 
-        prepareCommitCallback(newProjectPage);
-        prepareCommitCallback(chooseTemplatePage);
-        prepareCommitCallback(templatePage);
+        prepareSuccessfulCommitCallback(newProjectPage);
+        prepareSuccessfulCommitCallback(chooseTemplatePage);
+        prepareSuccessfulCommitCallback(templatePage);
 
         wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
@@ -277,7 +231,7 @@ public class NewProjectWizardTest {
         wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
-        flipPages(1);
+        flipPages(wizard, 1);
 
         assertEquals(wizard.flipToPrevious(), newProjectPage);
     }
@@ -291,7 +245,7 @@ public class NewProjectWizardTest {
         wizardContext.putData(TEMPLATE, template);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
@@ -304,7 +258,7 @@ public class NewProjectWizardTest {
         wizardContext.putData(TEMPLATE, template);
         assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
     }
 
@@ -317,7 +271,7 @@ public class NewProjectWizardTest {
         wizardContext.putData(TEMPLATE, template);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(chooseTemplatePage.isCompleted()).thenReturn(COMPLETED);
         assertEquals(wizard.canFinish(), CAN_FINISH);
@@ -327,14 +281,14 @@ public class NewProjectWizardTest {
     public void testOnFinishUseCase2() throws Exception {
         prepareTestCase2();
 
-        prepareCommitCallback(newProjectPage);
-        prepareCommitCallback(chooseTemplatePage);
-        prepareCommitCallback(templatePage);
+        prepareSuccessfulCommitCallback(newProjectPage);
+        prepareSuccessfulCommitCallback(chooseTemplatePage);
+        prepareSuccessfulCommitCallback(templatePage);
 
         wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
-        flipPages(1);
+        flipPages(wizard, 1);
         wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
@@ -373,9 +327,9 @@ public class NewProjectWizardTest {
 
         wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
-        flipPages(1);
+        flipPages(wizard, 1);
         wizardContext.putData(TEMPLATE, template);
-        flipPages(2);
+        flipPages(wizard, 2);
 
         assertEquals(wizard.flipToPrevious(), templatePage);
         assertEquals(wizard.flipToPrevious(), chooseTemplatePage);
@@ -390,14 +344,14 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, nonePaas);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         wizardContext.putData(TEMPLATE, template);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
@@ -409,14 +363,14 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, nonePaas);
         assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         wizardContext.putData(TEMPLATE, template);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
     }
 
@@ -428,15 +382,15 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, nonePaas);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         wizardContext.putData(TEMPLATE, template);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
         when(templatePage.canSkip()).thenReturn(CAN_NOT_FINISH);
-        flipPages(1);
+        flipPages(wizard, 1);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(chooseTemplatePage.isCompleted()).thenReturn(COMPLETED);
         when(templatePage.isCompleted()).thenReturn(COMPLETED);
@@ -447,14 +401,14 @@ public class NewProjectWizardTest {
     public void testOnFinishUseCase3() throws Exception {
         prepareTestCase3();
 
-        prepareCommitCallback(newProjectPage);
-        prepareCommitCallback(chooseTemplatePage);
-        prepareCommitCallback(templatePage);
+        prepareSuccessfulCommitCallback(newProjectPage);
+        prepareSuccessfulCommitCallback(chooseTemplatePage);
+        prepareSuccessfulCommitCallback(templatePage);
 
         wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
-        flipPages(3);
+        flipPages(wizard, 3);
         wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
@@ -496,7 +450,7 @@ public class NewProjectWizardTest {
         wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
-        flipPages(2);
+        flipPages(wizard, 2);
 
         assertEquals(wizard.flipToPrevious(), templatePage);
         assertEquals(wizard.flipToPrevious(), newProjectPage);
@@ -511,10 +465,10 @@ public class NewProjectWizardTest {
         wizardContext.putData(TEMPLATE, template);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
@@ -527,10 +481,10 @@ public class NewProjectWizardTest {
         wizardContext.putData(TEMPLATE, template);
         assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
     }
 
@@ -543,10 +497,10 @@ public class NewProjectWizardTest {
         wizardContext.putData(TEMPLATE, template);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(chooseTemplatePage.isCompleted()).thenReturn(COMPLETED);
         when(templatePage.isCompleted()).thenReturn(COMPLETED);
@@ -557,14 +511,14 @@ public class NewProjectWizardTest {
     public void testOnFinishUseCase4() throws Exception {
         prepareTestCase4();
 
-        prepareCommitCallback(newProjectPage);
-        prepareCommitCallback(chooseTemplatePage);
-        prepareCommitCallback(templatePage);
+        prepareSuccessfulCommitCallback(newProjectPage);
+        prepareSuccessfulCommitCallback(chooseTemplatePage);
+        prepareSuccessfulCommitCallback(templatePage);
 
         wizard.flipToFirst();
         wizardContext.putData(PAAS, nonePaas);
         wizardContext.putData(TEMPLATE, template);
-        flipPages(2);
+        flipPages(wizard, 2);
         wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
@@ -606,7 +560,7 @@ public class NewProjectWizardTest {
         wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        flipPages(5);
+        flipPages(wizard, 5);
 
         assertEquals(wizard.flipToPrevious(), paasPage);
         assertEquals(wizard.flipToPrevious(), templatePage);
@@ -624,19 +578,19 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, paas);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
@@ -649,19 +603,19 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, paas);
         assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
     }
 
@@ -674,19 +628,19 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, paas);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(chooseTemplatePage.isCompleted()).thenReturn(COMPLETED);
         when(paasPage.isCompleted()).thenReturn(COMPLETED);
@@ -698,15 +652,15 @@ public class NewProjectWizardTest {
     public void testOnFinishUseCase5() throws Exception {
         prepareTestCase5();
 
-        prepareCommitCallback(newProjectPage);
-        prepareCommitCallback(chooseTemplatePage);
-        prepareCommitCallback(templatePage);
-        prepareCommitCallback(paasPage);
+        prepareSuccessfulCommitCallback(newProjectPage);
+        prepareSuccessfulCommitCallback(chooseTemplatePage);
+        prepareSuccessfulCommitCallback(templatePage);
+        prepareSuccessfulCommitCallback(paasPage);
 
         wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        flipPages(5);
+        flipPages(wizard, 5);
         wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
@@ -745,7 +699,7 @@ public class NewProjectWizardTest {
 
         wizard.flipToFirst();
         wizardContext.putData(PAAS, paas);
-        flipPages(3);
+        flipPages(wizard, 3);
 
         assertEquals(wizard.flipToPrevious(), paasPage);
         assertEquals(wizard.flipToPrevious(), chooseTemplatePage);
@@ -760,13 +714,13 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, paas);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
@@ -778,13 +732,13 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, paas);
         assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
     }
 
@@ -796,13 +750,13 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, paas);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(chooseTemplatePage.isCompleted()).thenReturn(COMPLETED);
         when(paasPage.isCompleted()).thenReturn(COMPLETED);
@@ -814,15 +768,15 @@ public class NewProjectWizardTest {
     public void testOnFinishUseCase6() throws Exception {
         prepareTestCase6();
 
-        prepareCommitCallback(newProjectPage);
-        prepareCommitCallback(chooseTemplatePage);
-        prepareCommitCallback(templatePage);
-        prepareCommitCallback(paasPage);
+        prepareSuccessfulCommitCallback(newProjectPage);
+        prepareSuccessfulCommitCallback(chooseTemplatePage);
+        prepareSuccessfulCommitCallback(templatePage);
+        prepareSuccessfulCommitCallback(paasPage);
 
         wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        flipPages(3);
+        flipPages(wizard, 3);
         wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
@@ -864,7 +818,7 @@ public class NewProjectWizardTest {
         wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        flipPages(4);
+        flipPages(wizard, 4);
 
         assertEquals(wizard.flipToPrevious(), paasPage);
         assertEquals(wizard.flipToPrevious(), templatePage);
@@ -881,16 +835,16 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, paas);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
@@ -903,16 +857,16 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, paas);
         assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
     }
 
@@ -925,16 +879,16 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, paas);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(chooseTemplatePage.isCompleted()).thenReturn(COMPLETED);
         when(paasPage.isCompleted()).thenReturn(COMPLETED);
@@ -946,15 +900,15 @@ public class NewProjectWizardTest {
     public void testOnFinishUseCase7() throws Exception {
         prepareTestCase7();
 
-        prepareCommitCallback(newProjectPage);
-        prepareCommitCallback(chooseTemplatePage);
-        prepareCommitCallback(templatePage);
-        prepareCommitCallback(paasPage);
+        prepareSuccessfulCommitCallback(newProjectPage);
+        prepareSuccessfulCommitCallback(chooseTemplatePage);
+        prepareSuccessfulCommitCallback(templatePage);
+        prepareSuccessfulCommitCallback(paasPage);
 
         wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        flipPages(4);
+        flipPages(wizard, 4);
         wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
@@ -994,7 +948,7 @@ public class NewProjectWizardTest {
         wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        flipPages(2);
+        flipPages(wizard, 2);
 
         assertEquals(wizard.flipToPrevious(), paasPage);
         assertEquals(wizard.flipToPrevious(), newProjectPage);
@@ -1009,10 +963,10 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, paas);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
@@ -1025,10 +979,10 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, paas);
         assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
     }
 
@@ -1041,10 +995,10 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, paas);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(chooseTemplatePage.isCompleted()).thenReturn(COMPLETED);
         when(paasPage.isCompleted()).thenReturn(COMPLETED);
@@ -1056,15 +1010,15 @@ public class NewProjectWizardTest {
     public void testOnFinishUseCase8() throws Exception {
         prepareTestCase8();
 
-        prepareCommitCallback(newProjectPage);
-        prepareCommitCallback(chooseTemplatePage);
-        prepareCommitCallback(templatePage);
-        prepareCommitCallback(paasPage);
+        prepareSuccessfulCommitCallback(newProjectPage);
+        prepareSuccessfulCommitCallback(chooseTemplatePage);
+        prepareSuccessfulCommitCallback(templatePage);
+        prepareSuccessfulCommitCallback(paasPage);
 
         wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        flipPages(2);
+        flipPages(wizard, 2);
         wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
@@ -1102,7 +1056,7 @@ public class NewProjectWizardTest {
 
         wizard.flipToFirst();
         wizardContext.putData(PAAS, paasWithTemplate);
-        flipPages(2);
+        flipPages(wizard, 2);
 
         assertEquals(wizard.flipToPrevious(), paasPage);
         assertEquals(wizard.flipToPrevious(), newProjectPage);
@@ -1116,10 +1070,10 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, paasWithTemplate);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NEXT);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasNext(), HAS_NOT_NEXT);
     }
 
@@ -1131,10 +1085,10 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, paasWithTemplate);
         assertEquals(wizard.hasPrevious(), HAS_NOT_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.hasPrevious(), HAS_PREVIOUS);
     }
 
@@ -1146,10 +1100,10 @@ public class NewProjectWizardTest {
         wizardContext.putData(PAAS, paasWithTemplate);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         assertEquals(wizard.canFinish(), CAN_NOT_FINISH);
 
-        flipPages(1);
+        flipPages(wizard, 1);
         when(newProjectPage.isCompleted()).thenReturn(COMPLETED);
         when(chooseTemplatePage.isCompleted()).thenReturn(COMPLETED);
         when(paasPage.isCompleted()).thenReturn(COMPLETED);
@@ -1161,12 +1115,12 @@ public class NewProjectWizardTest {
     public void testOnFinishUseCase9() throws Exception {
         prepareTestCase9();
 
-        prepareCommitCallback(newProjectPage);
-        prepareCommitCallback(paasPage);
+        prepareSuccessfulCommitCallback(newProjectPage);
+        prepareSuccessfulCommitCallback(paasPage);
 
         wizard.flipToFirst();
         wizardContext.putData(PAAS, paasWithTemplate);
-        flipPages(2);
+        flipPages(wizard, 2);
         wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
@@ -1234,8 +1188,8 @@ public class NewProjectWizardTest {
     public void testOnFinishUseCase10() throws Exception {
         prepareTestCase10();
 
-        prepareCommitCallback(newProjectPage);
-        prepareCommitCallback(paasPage);
+        prepareSuccessfulCommitCallback(newProjectPage);
+        prepareSuccessfulCommitCallback(paasPage);
 
         wizard.flipToFirst();
         wizardContext.putData(PAAS, paasWithTemplate);
@@ -1288,20 +1242,12 @@ public class NewProjectWizardTest {
 
     @Test
     public void testOnFinishWhenFailure() throws Exception {
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Object[] arguments = invocationOnMock.getArguments();
-                CommitCallback callback = (CommitCallback)arguments[0];
-                callback.onFailure(mock(Throwable.class));
-                return null;
-            }
-        }).when(newProjectPage).commit((CommitCallback)anyObject());
+        prepareFailureCommitCallback(newProjectPage);
 
         wizard.flipToFirst();
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
-        flipPages(1);
+        flipPages(wizard, 1);
         wizard.onFinish();
 
         verify(newProjectPage).commit((CommitCallback)anyObject());
