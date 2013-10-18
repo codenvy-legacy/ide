@@ -146,41 +146,6 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-cloudfoundry</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-appfog</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-cloudbees</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-openshift</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-googleappengine</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-aws</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-jenkins</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-git</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -257,72 +222,6 @@
                             </arguments>
                         </configuration>
                     </execution>
-
-                    <!-- DTO Generator invocations -->
-                    <execution>
-                        <id>appfog-dto</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
-                            <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.ext.appfog.shared</argument>
-                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/ext/appfog/dto/client/DtoClientImpls.java</argument>
-                                <argument>--impl=client</argument>
-                                <argument>--package_base=${generated.sources.directory}/</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>aws-dto</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
-                            <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.ext.aws.shared</argument>
-                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/ext/aws/dto/client/DtoClientImpls.java</argument>
-                                <argument>--impl=client</argument>
-                                <argument>--package_base=${generated.sources.directory}/</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>cloudbees-dto</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
-                            <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.ext.cloudbees.shared</argument>
-                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/ext/cloudbees/dto/client/DtoClientImpls.java</argument>
-                                <argument>--impl=client</argument>
-                                <argument>--package_base=${generated.sources.directory}/</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>cloudfoundry-dto</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
-                            <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.extension.cloudfoundry.shared</argument>
-                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/extension/cloudfoundry/dto/client/DtoClientImpls.java</argument>
-                                <argument>--impl=client</argument>
-                                <argument>--package_base=${generated.sources.directory}/</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>git-dto</id>
                         <phase>generate-sources</phase>
@@ -334,22 +233,6 @@
                             <arguments>
                                 <argument>--dto_packages=com.codenvy.ide.ext.git.shared</argument>
                                 <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/ext/git/dto/client/DtoClientImpls.java</argument>
-                                <argument>--impl=client</argument>
-                                <argument>--package_base=${generated.sources.directory}/</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>gae-dto</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
-                            <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.ext.gae.shared</argument>
-                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/ext/gae/dto/client/DtoClientImpls.java</argument>
                                 <argument>--impl=client</argument>
                                 <argument>--package_base=${generated.sources.directory}/</argument>
                             </arguments>
@@ -388,22 +271,6 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>jenkins-dto</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
-                            <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.ext.jenkins.shared</argument>
-                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/ext/jenkins/dto/client/DtoClientImpls.java</argument>
-                                <argument>--impl=client</argument>
-                                <argument>--package_base=${generated.sources.directory}/</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>maven-dto</id>
                         <phase>generate-sources</phase>
                         <goals>
@@ -414,22 +281,6 @@
                             <arguments>
                                 <argument>--dto_packages=com.codenvy.ide.extension.maven.shared</argument>
                                 <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/extension/maven/dto/client/DtoClientImpls.java</argument>
-                                <argument>--impl=client</argument>
-                                <argument>--package_base=${generated.sources.directory}/</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>openshift-dto</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
-                            <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.ext.openshift.shared</argument>
-                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/ext/openshift/dto/client/DtoClientImpls.java</argument>
                                 <argument>--impl=client</argument>
                                 <argument>--package_base=${generated.sources.directory}/</argument>
                             </arguments>

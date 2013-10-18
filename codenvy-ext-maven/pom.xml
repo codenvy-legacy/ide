@@ -55,12 +55,12 @@
         </dependency>
 
         <!-- Server libraries -->
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-maven</artifactId>
-            <scope>runtime</scope>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.exoplatform.ide</groupId>-->
+            <!--<artifactId>exo-ide-extension-maven</artifactId>-->
+            <!--<scope>runtime</scope>-->
+            <!--<version>${org.exoplatform.ide.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>

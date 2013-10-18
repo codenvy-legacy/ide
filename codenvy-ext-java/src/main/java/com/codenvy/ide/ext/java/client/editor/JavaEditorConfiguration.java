@@ -69,8 +69,8 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
         this.manager = manager;
         this.javaEditor = javaEditor;
         this.documentPartitioning = documentPartitioning;
-        outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
-        reconcilerStrategy = new JavaReconcilerStrategy(javaEditor);
+//        outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
+//        reconcilerStrategy = new JavaReconcilerStrategy(javaEditor);
     }
 
     private static native CmParser getParserForMime(String mime) /*-{
@@ -86,14 +86,14 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
         return parser;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public Reconciler getReconciler(TextEditorPartView view) {
-        BasicIncrementalScheduler scheduler = new BasicIncrementalScheduler(manager, 50, 100);
-        ReconcilerImpl reconciler = new ReconcilerImpl(Document.DEFAULT_PARTITIONING, scheduler);
-        reconciler.addReconcilingStrategy(Document.DEFAULT_CONTENT_TYPE, reconcilerStrategy);
-        return reconciler;
-    }
+//    /** {@inheritDoc} */
+//    @Override
+//    public Reconciler getReconciler(TextEditorPartView view) {
+//        BasicIncrementalScheduler scheduler = new BasicIncrementalScheduler(manager, 50, 100);
+//        ReconcilerImpl reconciler = new ReconcilerImpl(Document.DEFAULT_PARTITIONING, scheduler);
+//        reconciler.addReconcilingStrategy(Document.DEFAULT_CONTENT_TYPE, reconcilerStrategy);
+//        return reconciler;
+//    }
 
     private JavaCodeAssistProcessor getOrCreateCodeAssistProcessor() {
         if (codeAssistProcessor == null) {

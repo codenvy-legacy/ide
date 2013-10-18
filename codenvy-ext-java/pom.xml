@@ -79,22 +79,22 @@
         </dependency>
 
         <!-- Server libraries -->
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-java</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javassist</groupId>
-                    <artifactId>javassist</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>runtime</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.exoplatform.ide</groupId>-->
+            <!--<artifactId>exo-ide-extension-java</artifactId>-->
+            <!--<version>${org.exoplatform.ide.version}</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>javassist</groupId>-->
+                    <!--<artifactId>javassist</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>ch.qos.logback</groupId>-->
+                    <!--<artifactId>logback-classic</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+            <!--<scope>runtime</scope>-->
+        <!--</dependency>-->
 
         <!-- Testing libraries -->
         <dependency>

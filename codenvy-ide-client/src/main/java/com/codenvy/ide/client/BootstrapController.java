@@ -60,8 +60,19 @@ public class BootstrapController {
                                final PreferencesManagerImpl preferencesManager,
                                UserClientService userService, final ResourceProvider resourceProvider) {
         styleInjector.inject();
-        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW).inject();
-        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_parsers.js").setWindow(ScriptInjector.TOP_WINDOW).inject();
+        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW).setCallback(new Callback<Void, Exception>() {
+
+
+            @Override
+            public void onFailure(Exception reason) {
+            }
+
+            @Override
+            public void onSuccess(Void result) {
+                ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_parsers.js").setWindow(ScriptInjector.TOP_WINDOW).inject();
+            }
+        }).inject();
+
 
         try {
             UserUnmarshaller unmarshaller = new UserUnmarshaller();

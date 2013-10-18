@@ -22,20 +22,6 @@
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
     <component>
-        <type>org.exoplatform.ide.extension.maven.server.BuilderApplication</type>
-    </component>
-
-    <component>
-        <type>org.exoplatform.ide.extension.maven.server.BuilderClient</type>
-        <init-params>
-            <value-param>
-                <name>build-server-base-url</name>
-                <value>http://localhost:8080/builder</value>
-            </value-param>
-        </init-params>
-    </component>
-
-    <component>
         <type>com.codenvy.ide.extension.maven.server.CreateProjectApplication</type>
     </component>
 
