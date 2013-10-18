@@ -24,6 +24,7 @@ import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.resources.ProjectTypeData;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;

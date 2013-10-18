@@ -23,7 +23,7 @@ import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
-import com.codenvy.ide.api.ui.wizard.newproject.ProjectTypeData;
+import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.paas.PaaSAgentImpl;

@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.extruntime.client.template;
 
 import com.codenvy.ide.api.ui.wizard.Wizard;
+import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.ext.extruntime.client.ExtRuntimeResources;
 import com.codenvy.ide.ext.extruntime.client.template.sample.CreateSampleCodenvyExtensionPage;
 import com.codenvy.ide.ext.extruntime.client.template.sample.CreateSampleCodenvyExtensionPageView;
@@ -143,7 +144,7 @@ public class CreateSampleCodenvyExtensionPageTest extends BaseCreateExtensionTes
 
         page.go(container);
 
-        verify(wizardContext).getData(eq(WizardKeys.PROJECT_NAME));
+        verify(wizardContext).getData(eq(NewProjectWizard.PROJECT_NAME));
         verify(view).setGroupId(eq(PROJECT_NAME));
         verify(view).setArtifactId(eq(PROJECT_NAME));
         verify(view).setVersion(eq(DEFAULT_VERSION));

@@ -19,7 +19,7 @@ package com.codenvy.ide.wizard.newproject;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.api.ui.wizard.newproject.ProjectTypeData;
+import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;

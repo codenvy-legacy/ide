@@ -22,6 +22,7 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -73,7 +74,7 @@ public abstract class BaseCreateProjectTest {
 
     @Before
     public void setUp() {
-        when(wizardContext.getData(WizardKeys.PROJECT_NAME)).thenReturn(PROJECT_NAME);
+        when(wizardContext.getData(NewProjectWizard.PROJECT_NAME)).thenReturn(PROJECT_NAME);
         when(wizardContext.getData(PAAS)).thenReturn(paas);
         when(wizardContext.getData(TEMPLATE)).thenReturn(template);
         when(template.getId()).thenReturn(TEMPLATE_ID);

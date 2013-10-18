@@ -19,7 +19,7 @@ package com.codenvy.ide.wizard.newproject.pages.template;
 
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
-import com.codenvy.ide.api.ui.wizard.newproject.ProjectTypeData;
+import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.template.TemplateAgentImpl;
 import com.codenvy.ide.wizard.WizardResource;

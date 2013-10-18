@@ -50,8 +50,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.api.ui.wizard.WizardKeys.PROJECT_NAME;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.ext.cloudbees.client.CloudBeesExtension.ID;
 
 /**
@@ -92,15 +92,20 @@ public class CloudBeesPagePresenter extends AbstractWizardPage implements CloudB
      * @param constant
      * @param loginPresenter
      * @param service
-     * @param templateAgent
      * @param resources
      * @param buildApplicationPresenter
      */
     @Inject
-    protected CloudBeesPagePresenter(CloudBeesPageView view, EventBus eventBus, ResourceProvider resourcesProvider, ConsolePart console,
-                                     CloudBeesLocalizationConstant constant, LoginPresenter loginPresenter, CloudBeesClientService service,
+    protected CloudBeesPagePresenter(CloudBeesPageView view,
+                                     EventBus eventBus,
+                                     ResourceProvider resourcesProvider,
+                                     ConsolePart console,
+                                     CloudBeesLocalizationConstant constant,
+                                     LoginPresenter loginPresenter,
+                                     CloudBeesClientService service,
                                      CloudBeesResources resources,
-                                     BuildApplicationPresenter buildApplicationPresenter, NotificationManager notificationManager) {
+                                     BuildApplicationPresenter buildApplicationPresenter,
+                                     NotificationManager notificationManager) {
         super("Deploy project to CloudBees", resources.cloudBees48());
 
         this.view = view;
@@ -142,13 +147,13 @@ public class CloudBeesPagePresenter extends AbstractWizardPage implements CloudB
     /** {@inheritDoc} */
     @Override
     public void focusComponent() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // do nothing
     }
 
     /** {@inheritDoc} */
     @Override
     public void removeOptions() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // do nothing
     }
 
     /** {@inheritDoc} */
