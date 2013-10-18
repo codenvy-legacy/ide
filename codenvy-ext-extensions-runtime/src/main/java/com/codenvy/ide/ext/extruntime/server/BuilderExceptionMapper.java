@@ -17,21 +17,24 @@
  */
 package com.codenvy.ide.ext.extruntime.server;
 
+import com.codenvy.ide.ext.extruntime.server.builder.BuilderException;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 /**
- * Maps {@link ExtensionLauncherException} to {@link javax.ws.rs.core.Response}.
- * 
+ * Maps {@link com.codenvy.ide.ext.extruntime.server.builder.BuilderException} to {@link javax.ws.rs.core.Response}.
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ExtensionLauncherExceptionMapper.java Jul 19, 2013 4:11:26 PM azatsarynnyy $
+ * @version $Id: BuilderExceptionMapper.java Jul 19, 2013 4:11:26 PM azatsarynnyy $
  */
 @Provider
-public class ExtensionLauncherExceptionMapper implements ExceptionMapper<ExtensionLauncherException> {
+public class BuilderExceptionMapper implements ExceptionMapper<BuilderException> {
     @Override
-    public Response toResponse(ExtensionLauncherException exception) {
-        return Response.status(exception.getResponseStatus()).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN).build();
+    public Response toResponse(BuilderException exception) {
+        return Response.status(exception.getResponseStatus()).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+                       .build();
     }
 }

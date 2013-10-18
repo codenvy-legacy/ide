@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.extruntime.server.codeserver;
+package com.codenvy.ide.ext.extruntime.server.runner;
 
 import java.io.IOException;
 
@@ -33,21 +33,21 @@ public interface GWTCodeServer {
      *
      * @param configuration
      *         code server configuration
-     * @throws GWTCodeServerException
-     *         if any error has occurred while starting a code server
+     * @throws RunnerException
+     *         if any error has occurred while starting GWT code server
      */
-    void start(GWTCodeServerConfiguration configuration) throws GWTCodeServerException;
+    void start(GWTCodeServerConfiguration configuration) throws RunnerException;
 
     /**
      * Get GWT code server's logs.
      *
      * @return GWT code server's logs
-     * @throws GWTCodeServerException
-     *         if any error has occurred while getting code server logs
+     * @throws RunnerException
+     *         if any error has occurred while getting GWT code server's logs
      * @throws IOException
      *         if any error occurred while retrieving logs
      */
-    String getLogs() throws GWTCodeServerException, IOException;
+    String getLogs() throws RunnerException, IOException;
 
     /** Stop GWT code server. */
     void stop();

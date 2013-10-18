@@ -30,22 +30,22 @@ import com.google.inject.Singleton;
 import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
 
 /**
- * Action to get logs of previously launched Codenvy extension.
+ * Action to build Tomcat bundle with Codenvy application that will contains activated custom extension.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: GetLogsAction.java Jul 3, 2013 1:58:47 PM azatsarynnyy $
+ * @version $Id: BuildBundleAction.java Oct 16, 2013 1:58:47 PM azatsarynnyy $
  */
 @Singleton
-public class GetLogsAction extends Action {
+public class BuildBundleAction extends Action {
 
     private final ResourceProvider     resourceProvider;
     private       ExtensionsController controller;
 
     @Inject
-    public GetLogsAction(ExtensionsController controller, ExtRuntimeResources resources,
-                         ResourceProvider resourceProvider, ExtRuntimeLocalizationConstant localizationConstants) {
-        super(localizationConstants.getExtensionLogsActionText(),
-              localizationConstants.getExtensionLogsActionDescription(), resources.getAppLogs());
+    public BuildBundleAction(ExtensionsController controller, ExtRuntimeResources resources,
+                             ResourceProvider resourceProvider, ExtRuntimeLocalizationConstant localizationConstants) {
+        super(localizationConstants.buildBundleActionText(),
+              localizationConstants.buildBundleActionDescription(), resources.buildBundle());
         this.controller = controller;
         this.resourceProvider = resourceProvider;
     }
@@ -53,7 +53,7 @@ public class GetLogsAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        controller.getLogs();
+        controller.pack();
     }
 
     /** {@inheritDoc} */
@@ -63,7 +63,6 @@ public class GetLogsAction extends Action {
         if (activeProject != null) {
             e.getPresentation()
              .setVisible(activeProject.getDescription().getNatures().contains(CODENVY_EXTENSION_PROJECT_TYPE));
-            e.getPresentation().setEnabled(controller.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

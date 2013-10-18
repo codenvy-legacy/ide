@@ -15,26 +15,37 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.extruntime.server.codeserver;
+package com.codenvy.ide.ext.extruntime.server.runner;
+
+import java.net.URL;
+import java.nio.file.Path;
 
 /**
- * Signals that any error occurred with a GWT code server.
- * 
+ * Tomcat server configuration.
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: GWTCodeServerException.java Jul 31, 2013 4:51:25 PM azatsarynnyy $
+ * @version $Id: TomcatServerConfiguration.java Aug 8, 2013 5:35:00 PM azatsarynnyy $
  */
-@SuppressWarnings("serial")
-public class GWTCodeServerException extends Exception {
+public class TomcatServerConfiguration {
+    private Path   workDir;
+    private int    port;
+    private URL    ideWarUrl;
 
-    public GWTCodeServerException(String message) {
-        super(message);
+    public TomcatServerConfiguration(Path workDir, int port, URL ideWarUrl) {
+        this.workDir = workDir;
+        this.port = port;
+        this.ideWarUrl = ideWarUrl;
     }
 
-    public GWTCodeServerException(Throwable cause) {
-        super(cause);
+    public Path getWorkDir() {
+        return workDir;
     }
 
-    public GWTCodeServerException(String message, Throwable cause) {
-        super(message, cause);
+    public int getPort() {
+        return port;
+    }
+
+    public URL getIdeWarUrl() {
+        return ideWarUrl;
     }
 }

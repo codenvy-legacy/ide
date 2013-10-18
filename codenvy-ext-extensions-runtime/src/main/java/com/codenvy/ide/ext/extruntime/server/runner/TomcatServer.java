@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.extruntime.server.tomcatServer;
+package com.codenvy.ide.ext.extruntime.server.runner;
 
 import com.codenvy.api.core.util.ProcessUtil;
 
@@ -32,6 +32,7 @@ import java.nio.file.attribute.PosixFilePermissions;
 
 import static com.codenvy.ide.commons.FileUtils.downloadFile;
 import static com.codenvy.ide.commons.ZipUtils.unzip;
+import static com.codenvy.ide.ext.extruntime.server.Utils.getTomcatBinaryDistribution;
 
 /**
  * Class represents a Tomcat server.
@@ -56,12 +57,7 @@ public class TomcatServer {
      */
     public void start(TomcatServerConfiguration configuration) throws IOException {
         this.configuration = configuration;
-
-        InputStream tomcatDistribution =
-                Thread.currentThread().getContextClassLoader().getResourceAsStream(configuration.getDistRelativePath());
-        if (tomcatDistribution == null) {
-            throw new IllegalArgumentException("Unable to get Tomcat binary distribution.");
-        }
+        InputStream tomcatDistribution = getTomcatBinaryDistribution().openStream();
 
         unzip(tomcatDistribution, configuration.getWorkDir().toFile());
         generateServerXml(configuration.getWorkDir(), configuration.getPort());
@@ -72,7 +68,6 @@ public class TomcatServer {
 
         final Path catalinaPath = configuration.getWorkDir().resolve("bin/catalina.sh");
         Files.setPosixFilePermissions(catalinaPath, PosixFilePermissions.fromString("rwxr--r--"));
-
         process = new ProcessBuilder(catalinaPath.toString(), "run").start();
     }
 

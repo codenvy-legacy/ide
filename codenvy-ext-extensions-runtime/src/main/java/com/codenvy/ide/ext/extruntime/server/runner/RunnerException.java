@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.extruntime.server;
+package com.codenvy.ide.ext.extruntime.server.runner;
 
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 
@@ -23,31 +23,31 @@ import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
  * Signals that an error has occurred with Codenvy-extension.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ExtensionLauncherException.java Jul 19, 2013 4:03:36 PM azatsarynnyy $
+ * @version $Id: RunnerException.java Jul 19, 2013 4:03:36 PM azatsarynnyy $
  */
 @SuppressWarnings("serial")
-public class ExtensionLauncherException extends Exception {
+public class RunnerException extends Exception {
     private int responseStatus = INTERNAL_SERVER_ERROR.getStatusCode();
 
     /**
-     * Constructs a ExtensionLauncherException with the specified detail message.
+     * Constructs a RunnerException with the specified detail message.
      * 
      * @param message the detail message
      */
-    public ExtensionLauncherException(String message) {
+    public RunnerException(String message) {
         super(message);
     }
 
-    public ExtensionLauncherException(int responseStatus, String message) {
+    public RunnerException(int responseStatus, String message) {
         super(message);
         this.responseStatus = responseStatus;
     }
 
-    public ExtensionLauncherException(Throwable cause) {
+    public RunnerException(Throwable cause) {
         super(cause);
     }
 
-    public ExtensionLauncherException(String message, Throwable cause) {
+    public RunnerException(String message, Throwable cause) {
         super(message, cause);
     }
 

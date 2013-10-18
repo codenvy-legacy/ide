@@ -17,6 +17,10 @@
  */
 package com.codenvy.ide.ext.extruntime.server;
 
+import com.codenvy.ide.ext.extruntime.server.builder.BuilderException;
+import com.codenvy.ide.ext.extruntime.server.builder.ExtensionsBuilder;
+import com.codenvy.ide.ext.extruntime.server.runner.ExtensionsRunner;
+import com.codenvy.ide.ext.extruntime.server.runner.RunnerException;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 
 import org.apache.maven.model.Model;
@@ -44,20 +48,23 @@ import java.util.List;
 import static org.exoplatform.ide.vfs.shared.PropertyFilter.ALL_FILTER;
 
 /**
- * RESTful front-end for {@link ExtensionLauncher}.
+ * RESTful front-end for {@link com.codenvy.ide.ext.extruntime.server.builder.ExtensionsBuilder} and {@link
+ * com.codenvy.ide.ext.extruntime.server.runner.ExtensionsRunner}.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ExtensionRuntimeService.java Jul 3, 2013 3:21:23 PM azatsarynnyy $
+ * @version $Id: ExtensionsRuntimeService.java Jul 3, 2013 3:21:23 PM azatsarynnyy $
  */
 @Path("{ws-name}/extruntime")
-public class ExtensionRuntimeService {
-    private static final Log LOG = ExoLogger.getLogger(ExtensionRuntimeService.class);
+public class ExtensionsRuntimeService {
+    private static final Log LOG = ExoLogger.getLogger(ExtensionsRuntimeService.class);
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
     @Inject
-    private LocalFSMountStrategy      fsMountStrategy;
+    private ExtensionsRunner          runner;
     @Inject
-    private ExtensionLauncher         launcher;
+    private ExtensionsBuilder         builder;
+    @Inject
+    private LocalFSMountStrategy      fsMountStrategy;
 
     /**
      * Create empty Codenvy extension project.
@@ -148,26 +155,60 @@ public class ExtensionRuntimeService {
     }
 
     /**
-     * Launch Codenvy application with a custom extension.
+     * Build Codenvy extension project inside Codenvy Platform.
      *
      * @param vfsId
      *         identifier of virtual file system
      * @param projectId
-     *         identifier of project we want to launch
-     * @return launched application description
+     *         identifier of project we want to build
+     * @param tomcatBundle
+     *         whether to create Tomcat bundle or not
+     * @return
+     *         WAR download URL
      * @throws VirtualFileSystemException
-     *         if any error occurred in VFS
-     * @throws ExtensionLauncherException
-     *         if any error occurred while launching an extension
+     *         if an error occurs in VFS
+     * @throws BuilderException
+     *         if an error occurs while building an extension
      */
-    @Path("launch")
+    @Path("build")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public ApplicationInstance launch(@QueryParam("vfsid") String vfsId,
-                                      @QueryParam("projectid") String projectId) throws VirtualFileSystemException,
-                                                                                        ExtensionLauncherException {
+    public String build(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
+                        @QueryParam("bundle") boolean tomcatBundle)
+            throws VirtualFileSystemException, BuilderException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        return launcher.launch(vfs, projectId, fsMountStrategy.getMountPath().getPath());
+        return builder.build(vfs, projectId, tomcatBundle);
+    }
+
+    /**
+     * Run a specified WAR, that contains Codenvy Platform with (or without) any extension.
+     * <p/>
+     * Hot update ability is supported.
+     *
+     * @param warUrl
+     *         URL to Codenvy Platform WAR
+     * @param enableHotUpdate
+     *         whether to enable the ability hot update or not
+     * @param vfsId
+     *         identifier of virtual file system (makes sense only when hot update is enabled)
+     * @param projectId
+     *         identifier of project we want to launch (makes sense only when hot update is enabled)
+     * @return launched application description
+     * @throws VirtualFileSystemException
+     *         if an error occurs in VFS
+     * @throws RunnerException
+     *         if an error occurs while launching an extension
+     */
+    @Path("run")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public ApplicationInstance launch(@QueryParam("warUrl") String warUrl,
+                                      @QueryParam("hotupdate") boolean enableHotUpdate,
+                                      @QueryParam("vfsid") String vfsId,
+                                      @QueryParam("projectid") String projectId) throws VirtualFileSystemException,
+                                                                                        RunnerException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        return runner.run(warUrl, enableHotUpdate, vfs, projectId, fsMountStrategy.getMountPath().getPath());
     }
 
     /**
@@ -176,14 +217,14 @@ public class ExtensionRuntimeService {
      * @param appId
      *         id of Codenvy application to get its logs
      * @return retrieved logs
-     * @throws ExtensionLauncherException
-     *         if any error occurred while getting logs
+     * @throws RunnerException
+     *         if an error occurs while getting application's logs
      */
     @Path("logs/{appid}")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String logs(@PathParam("appid") String appId) throws ExtensionLauncherException {
-        return launcher.getLogs(appId);
+    public String logs(@PathParam("appid") String appId) throws RunnerException {
+        return runner.getLogs(appId);
     }
 
     /**
@@ -191,13 +232,13 @@ public class ExtensionRuntimeService {
      *
      * @param appId
      *         identifier of Codenvy application to stop
-     * @throws ExtensionLauncherException
-     *         if error occurred while stopping an application
+     * @throws RunnerException
+     *         if an error occurs while stopping an application
      */
     @Path("stop/{appid}")
     @GET
-    public void stop(@PathParam("appid") String appId) throws ExtensionLauncherException {
-        launcher.stopApp(appId);
+    public void stop(@PathParam("appid") String appId) throws RunnerException {
+        runner.stopApp(appId);
     }
 
     private void createProject(VirtualFileSystem vfs, String name, String rootId, InputStream template,
@@ -222,5 +263,4 @@ public class ExtensionRuntimeService {
             throw new IllegalStateException("Something other than project was created on " + name);
         }
     }
-
 }

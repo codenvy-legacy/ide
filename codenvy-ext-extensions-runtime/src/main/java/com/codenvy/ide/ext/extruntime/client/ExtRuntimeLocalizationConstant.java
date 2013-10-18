@@ -55,7 +55,28 @@ public interface ExtRuntimeLocalizationConstant extends Messages {
     @Key("control.stopExtension.description")
     String stopExtensionActionDescription();
 
+    @Key("control.buildBundle.id")
+    String buildBundleActionId();
+
+    @Key("control.buildBundle.text")
+    String buildBundleActionText();
+
+    @Key("control.buildBundle.description")
+    String buildBundleActionDescription();
+
     /* Messages */
+    @Key("appBuilding")
+    String applicationBuilding(String name);
+
+    @Key("appBuilt")
+    String applicationBuilt(String name);
+
+    @Key("getBundle")
+    String getBundle(String path);
+
+    @Key("buildAppFailed")
+    String buildApplicationFailed(String name);
+
     @Key("appStarting")
     String applicationStarting(String name);
 
@@ -63,7 +84,7 @@ public interface ExtRuntimeLocalizationConstant extends Messages {
     String applicationStartedOnUrls(String name, String uris);
 
     @Key("startAppFailed")
-    String startApplicationFailed();
+    String startApplicationFailed(String name);
 
     @Key("getAppLogsFailed")
     String getApplicationLogsFailed();
@@ -72,5 +93,5 @@ public interface ExtRuntimeLocalizationConstant extends Messages {
     String applicationStopped(String name);
 
     @Key("stopAppFailed")
-    String stopApplicationFailed();
+    String stopApplicationFailed(String name);
 }

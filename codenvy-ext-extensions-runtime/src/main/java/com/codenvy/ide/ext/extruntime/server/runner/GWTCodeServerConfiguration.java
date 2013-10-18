@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.extruntime.server.codeserver;
+package com.codenvy.ide.ext.extruntime.server.runner;
 
 import java.nio.file.Path;
 

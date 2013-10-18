@@ -29,12 +29,12 @@
     </parent>
     <artifactId>codenvy-ext-extensions-runtime</artifactId>
     <packaging>jar</packaging>
-    <name>Codenvy Extension :: Extensions :: Runtime</name>
+    <name>Codenvy SDK :: Runtime Environment</name>
 
     <properties>
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
-        <!-- Codenvy Platform version that should be used to launch custom extensions. -->
-        <!-- TODO should depend on tag version -->
+        <!-- Codenvy Platform version that should be used to build a custom extensions. -->
+        <!-- TODO should depend on a tag version -->
         <codenvyPlatform.version>3.0.0-SNAPSHOT</codenvyPlatform.version>
     </properties>
 
@@ -98,7 +98,6 @@
             <artifactId>maven-model</artifactId>
             <version>${maven-model.version}</version>
         </dependency>
-
 
         <!-- Testing libraries -->
         <dependency>

@@ -15,10 +15,9 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.extruntime.server.codeserver;
+package com.codenvy.ide.ext.extruntime.server.runner;
 
 import com.codenvy.api.core.util.ProcessUtil;
-import com.codenvy.ide.ext.extruntime.server.ExtensionLauncherException;
 import com.codenvy.ide.ext.extruntime.server.Utils;
 
 import org.apache.maven.model.*;
@@ -50,9 +49,9 @@ import static org.codehaus.plexus.util.xml.Xpp3DomBuilder.build;
  * @version $Id: GWTMavenCodeServer.java Jul 26, 2013 3:15:52 PM azatsarynnyy $
  */
 public class GWTMavenCodeServer implements GWTCodeServer {
-    private static final Log    LOG                 = ExoLogger.getLogger(GWTMavenCodeServer.class);
     /** Id of Maven profile that used to add (re)sources of custom's extension. */
     public static final  String ADD_SOURCES_PROFILE = "customExtensionSources";
+    private static final Log    LOG                 = ExoLogger.getLogger(GWTMavenCodeServer.class);
     /** Process that represents a started GWT code server. */
     private Process                    process;
     /** Configuration for launching GWT code server. */
@@ -60,7 +59,7 @@ public class GWTMavenCodeServer implements GWTCodeServer {
 
     /** {@inheritDoc} */
     @Override
-    public void start(GWTCodeServerConfiguration configuration) throws GWTCodeServerException {
+    public void start(GWTCodeServerConfiguration configuration) throws RunnerException {
         this.configuration = configuration;
         Path pom = configuration.getWorkDir().resolve("pom.xml");
         try {
@@ -70,7 +69,7 @@ public class GWTMavenCodeServer implements GWTCodeServer {
             // Add sources from custom project to allow GWT code server access it.
             fixMGWT332Bug(pom, configuration.getCustomModuleName());
         } catch (IOException e) {
-            throw new GWTCodeServerException("Unable to launch GWT code server: " + e.getMessage(), e);
+            throw new RunnerException("Unable to launch GWT code server: " + e.getMessage(), e);
         }
 
         // Invoke 'generate-sources' phase to generate 'IDEInjector.java' and 'ExtensionManager.java'.
@@ -86,26 +85,26 @@ public class GWTMavenCodeServer implements GWTCodeServer {
         try {
             this.process = processBuilder.start();
         } catch (IOException e) {
-            throw new GWTCodeServerException("Unable to launch GWT code server: " + e.getMessage(), e);
+            throw new RunnerException("Unable to launch GWT code server: " + e.getMessage(), e);
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public String getLogs() throws GWTCodeServerException, IOException {
+    public String getLogs() throws RunnerException, IOException {
         try {
             final String url = configuration.getBindAddress() + ':' + configuration.getPort() + "/log/_app";
             final String logContent = sendGet(new URL(url.startsWith("http://") ? url : "http://" + url));
 
-            StringBuilder logs = new StringBuilder();;
+            StringBuilder logs = new StringBuilder();
             logs.append("========> GWT-code-server.log <========");
             logs.append("\n\n");
             logs.append(logContent);
             logs.append("\n\n");
 
             return logs.toString();
-        } catch (ExtensionLauncherException e) {
-            throw new GWTCodeServerException("Unable to get GWT code server's logs: " + e.getMessage(), e);
+        } catch (RunnerException e) {
+            throw new RunnerException("Unable to get GWT code server's logs: " + e.getMessage(), e);
         }
     }
 
@@ -229,7 +228,7 @@ public class GWTMavenCodeServer implements GWTCodeServer {
         }
     }
 
-    private static String sendGet(URL url) throws IOException, ExtensionLauncherException {
+    private static String sendGet(URL url) throws IOException, RunnerException {
         HttpURLConnection http = null;
         try {
             http = (HttpURLConnection)url.openConnection();
@@ -274,7 +273,7 @@ public class GWTMavenCodeServer implements GWTCodeServer {
         return body;
     }
 
-    private static void responseFail(HttpURLConnection http) throws IOException, ExtensionLauncherException {
+    private static void responseFail(HttpURLConnection http) throws IOException, RunnerException {
         InputStream errorStream = null;
         try {
             int responseCode = http.getResponseCode();
@@ -284,7 +283,7 @@ public class GWTMavenCodeServer implements GWTCodeServer {
             if (errorStream != null) {
                 body = readBody(errorStream, length);
             }
-            throw new ExtensionLauncherException(responseCode, "Unable to get logs. " + body == null ? "" : body);
+            throw new RunnerException(responseCode, "Unable to get logs. " + body == null ? "" : body);
         } finally {
             if (errorStream != null) {
                 errorStream.close();
