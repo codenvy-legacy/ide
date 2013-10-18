@@ -42,7 +42,7 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
 /**
- * Presenter for creating Codenvy extension project from 'Create project wizard'.
+ * Presenter for creating Codenvy extension project from 'Create project wizard' template.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: CreateSampleCodenvyExtensionPage.java Jul 8, 2013 4:24:17 PM azatsarynnyy $

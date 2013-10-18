@@ -40,16 +40,16 @@ public class PaaS {
     private boolean                          provideTemplate;
 
     /**
-     * Create PaaS.
+     * Create the PaaS.
      *
      * @param id
      *         PaaS identification
      * @param title
-     *         title that will be shown on new project wizard
+     *         title that will be shown on a new project wizard
      * @param image
-     *         image that will be shown on new project wizard
+     *         image that will be shown on a new project wizard
      * @param natures
-     *         nature which the PaaS support
+     *         nature which the PaaS supports
      * @param provideTemplate
      *         <code>true</code> if the PaaS doesn't need general templates (it has own template), and <code>false</code> otherwise
      */

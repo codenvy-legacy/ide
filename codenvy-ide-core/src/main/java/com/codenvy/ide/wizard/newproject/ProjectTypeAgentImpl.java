@@ -19,10 +19,10 @@ package com.codenvy.ide.wizard.newproject;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
+import com.codenvy.ide.resources.ProjectTypeData;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -44,7 +44,10 @@ public class ProjectTypeAgentImpl implements ProjectTypeAgent {
 
     /** {@inheritDoc} */
     @Override
-    public void register(@NotNull String typeName, @NotNull String title, @Nullable ImageResource icon, @NotNull String primaryNature,
+    public void register(@NotNull String typeName,
+                         @NotNull String title,
+                         @Nullable ImageResource icon,
+                         @NotNull String primaryNature,
                          @NotNull JsonArray<String> secondaryNature) {
         ProjectTypeData projectType = new ProjectTypeData(typeName, title, icon, primaryNature, secondaryNature);
         projectTypes.add(projectType);

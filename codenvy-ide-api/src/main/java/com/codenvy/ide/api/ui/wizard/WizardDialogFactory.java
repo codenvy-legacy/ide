@@ -20,16 +20,16 @@ package com.codenvy.ide.api.ui.wizard;
 import com.codenvy.ide.annotations.NotNull;
 
 /**
- * The factory for creating wizard dialog.
+ * The factory for creating a wizard dialog.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public interface WizardDialogFactory {
     /**
-     * Create wizard with instance of wizard model.
+     * Create wizard dialog with an instance of wizard.
      *
      * @param wizard
-     *         wizard model that must be used for creating wizard dialog.
+     *         wizard that must be used for creating wizard dialog.
      * @return wizard dialog
      */
     @NotNull

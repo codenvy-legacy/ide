@@ -28,7 +28,7 @@ import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
 
 /**
- * The abstract implementation of page that some template provides.
+ * The abstract implementation of page that a template provides.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */

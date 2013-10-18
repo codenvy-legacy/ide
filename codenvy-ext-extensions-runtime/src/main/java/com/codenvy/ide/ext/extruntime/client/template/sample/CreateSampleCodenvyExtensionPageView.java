@@ -29,7 +29,7 @@ import com.codenvy.ide.api.mvp.View;
 public interface CreateSampleCodenvyExtensionPageView extends View<CreateSampleCodenvyExtensionPageView.ActionDelegate> {
     /** Needs for delegate some function into {@link CreateSampleCodenvyExtensionPageView}. */
     public interface ActionDelegate {
-        /** Performs any actions appropriate in response to the user having changed something. */
+        /** Performs any actions in response to user's introducing changes. */
         void onValueChanged();
     }
 

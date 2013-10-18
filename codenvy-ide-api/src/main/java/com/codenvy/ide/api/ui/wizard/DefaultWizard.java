@@ -30,8 +30,16 @@ import com.google.inject.assistedinject.Assisted;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
- * The default implementation of {@link Wizard}. This one can be usable for situation when user can control position of pages. Otherwise it
- * can provide different problem.
+ * This is our own implementation of {@link Wizard}. This model makes it possible to add page providers to the list of pages.  When a
+ * wizard is displayed, providers create pages. All added pages will have one wizard context. Also, this wizard makes it possible to add a
+ * page at a given position or replace an existing page with a new one, as well as check what next page will be shown, taking into account
+ * such methods as "can skip" and "in context". If the page context is unavailable or the page can be skipped it won't be displayed.
+ * <p/>
+ * Pages that can be skipped won't be displayed, but the operation that they provide will be executed. Pages that are not in context cannot
+ * be executed.
+ * <p/>
+ * This implementation relies on the list of pages, that is why the order in which pages are added is very important when analyzing the
+ * pages.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -72,14 +80,15 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
     }
 
     /**
-     * Add page to wizard in place with index
+     * Add page to a wizard in place with index
      *
      * @param page
-     *         page that need to add
+     *         page that needs to be added
      * @param index
-     *         place where need to insert page
+     *         place where the page needs to be inserted
      * @param replace
-     *         <code>true</code> if need to replace page with given index, and <code>false</code> if need to insert page in given place
+     *         <code>true</code> if one needs to replace a page with a given index, and <code>false</code> if a page needs to be inserted
+     *         at a given position
      */
     public void addPage(@NotNull Provider<? extends WizardPage> page, int index, boolean replace) {
         if (index >= wizardPageProviders.size()) {

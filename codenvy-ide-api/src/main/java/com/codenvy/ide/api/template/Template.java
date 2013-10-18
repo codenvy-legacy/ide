@@ -23,7 +23,7 @@ import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
- * Aggregate information about registered Template for creating project.
+ * Aggregate information about registered Template for creating a project.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -40,13 +40,13 @@ public class Template {
      * @param id
      *         template identification
      * @param title
-     *         title that will be shown on new project wizard
+     *         title that will be shown on a new project wizard
      * @param icon
-     *         image that will be shown on new project wizard
+     *         image that will be shown on a new project wizard
      * @param primaryNature
-     *         primary nature that this template support
+     *         primary nature that this template supports
      * @param secondaryNature
-     *         secondary nature which this template support
+     *         secondary nature which this template supports
      */
     public Template(@NotNull String id,
                     @NotNull String title,
@@ -79,13 +79,13 @@ public class Template {
     }
 
     /**
-     * Returns whether the template is available for chosen primary and secondary natures.
+     * Returns whether the template is available for a chosen primary and secondary natures.
      *
      * @param primaryNature
      *         chosen primary nature
      * @param secondaryNature
      *         chosen secondary nature
-     * @return <code>true</code> if the template is available, and <code>false</code> otherwise
+     * @return <code>true</code> if a template is available, and <code>false</code> otherwise
      */
     public boolean isAvailable(@NotNull String primaryNature, @NotNull JsonArray<String> secondaryNature) {
         if (this.primaryNature.equals(primaryNature)) {

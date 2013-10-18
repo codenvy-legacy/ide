@@ -34,18 +34,18 @@ import com.google.inject.Provider;
 @SDK(title = "ide.api.ui.paas")
 public interface PaaSAgent {
     /**
-     * Registers new PaaS.
+     * Registers a new PaaS.
      *
      * @param id
-     *         id of PaaS for identification
+     *         id for PaaS identification
      * @param title
-     *         title that will be shown on new project wizard page
+     *         title that will be shown on a new project wizard page
      * @param image
-     *         image that will be shown on new project wizard page
+     *         image that will be shown on a new project wizard page
      * @param natures
      *         natures which support the PaaS
      * @param wizardPages
-     *         pages which need add to new project wizard
+     *         pages which need to be added to a new project wizard
      * @param provideTemplate
      *         <code>true</code> if the PaaS doesn't need general templates (it has own template), and <code>false</code> otherwise
      */

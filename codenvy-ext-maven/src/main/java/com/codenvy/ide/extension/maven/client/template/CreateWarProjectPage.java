@@ -39,7 +39,7 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
 /**
- * The wizard page for creating war project from template.
+ * The wizard page for creating a War project from a template.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -52,7 +52,7 @@ public class CreateWarProjectPage extends AbstractTemplatePage {
      * Create page.
      *
      * @param service
-     *         service that provides create this kind of project
+     *         service that makes it possible to create this kind of project
      * @param resourceProvider
      */
     @Inject

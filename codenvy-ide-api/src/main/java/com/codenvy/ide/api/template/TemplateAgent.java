@@ -25,24 +25,24 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
 
 /**
- * Provides a way to register a new template for creating project.
+ * Provides a way to register a new template for creating a project.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public interface TemplateAgent {
     /**
-     * Registers new template for creating project.
+     * Registers a new template for creating a project.
      *
      * @param title
-     *         title that will be shown on new project wizard page
+     *         title that will be shown on a new project wizard page
      * @param icon
-     *         icon that will be shown on new project wizard page
+     *         icon that will be shown on a new project wizard page
      * @param primaryNature
-     *         primary nature which support the template
+     *         primary nature which supports the template
      * @param secondaryNatures
-     *         secondary natures which support the template
+     *         secondary natures which supports the template
      * @param wizardPages
-     *         pages which need add to new project wizard
+     *         pages which need to be added to a new project wizard
      */
     void register(@NotNull String id,
                   @NotNull String title,

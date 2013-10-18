@@ -30,9 +30,10 @@ import com.google.inject.Provider;
 @SDK(title = "ide.api.ui.preferences")
 public interface PreferencesAgent {
     /**
-     * Adds new preference page into preferences list.
+     * Adds a new preference page into preferences list.
      *
      * @param page
+     *         page that need to ne added
      */
     void addPage(@NotNull Provider<? extends PreferencesPagePresenter> page);
 }

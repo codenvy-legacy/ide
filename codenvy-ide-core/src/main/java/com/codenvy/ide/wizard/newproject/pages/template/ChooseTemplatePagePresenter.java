@@ -19,8 +19,8 @@ package com.codenvy.ide.wizard.newproject.pages.template;
 
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
-import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.template.TemplateAgentImpl;
 import com.codenvy.ide.wizard.WizardResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -30,7 +30,7 @@ import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
 
 /**
- * Provides selecting kind of templates which user wish to use for create new project.
+ * The presenter makes it possible to choose the kind of a template that a user needs to create a new project.
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */

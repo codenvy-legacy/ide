@@ -29,12 +29,22 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface ProjectTypeAgent {
     /**
-     * Registers new project type.
+     * Registers a new project type.
      *
      * @param typeName
+     *         project type name
      * @param title
+     *         title that will be shown on a new project wizard page
      * @param icon
+     *         icon that will be shown on a new project wizard page
+     * @param primaryNature
+     *         primary nature which supports the project type
+     * @param secondaryNature
+     *         secondary natures which supports the project type
      */
-    void register(@NotNull String typeName, @NotNull String title, @Nullable ImageResource icon, @NotNull String primaryNature,
+    void register(@NotNull String typeName,
+                  @NotNull String title,
+                  @Nullable ImageResource icon,
+                  @NotNull String primaryNature,
                   @NotNull JsonArray<String> secondaryNature);
 }

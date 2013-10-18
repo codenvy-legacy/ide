@@ -34,15 +34,24 @@ public class ProjectTypeData {
     private String            primaryNature;
     private JsonArray<String> secondaryNature;
 
-
     /**
-     * Create project type.
+     * Create a project type.
      *
      * @param typeName
+     *         project type name
      * @param title
+     *         title that will be shown on a new project wizard
      * @param icon
+     *         image that will be shown on a new project wizard
+     * @param primaryNature
+     *         primary nature that this project type supports
+     * @param secondaryNature
+     *         secondary nature which this project type supports
      */
-    public ProjectTypeData(@NotNull String typeName, @NotNull String title, @Nullable ImageResource icon, @NotNull String primaryNature,
+    public ProjectTypeData(@NotNull String typeName,
+                           @NotNull String title,
+                           @Nullable ImageResource icon,
+                           @NotNull String primaryNature,
                            @NotNull JsonArray<String> secondaryNature) {
         this.typeName = typeName;
         this.title = title;
@@ -69,11 +78,13 @@ public class ProjectTypeData {
         return icon;
     }
 
+    /** @return primary nature */
     @NotNull
     public String getPrimaryNature() {
         return primaryNature;
     }
 
+    /** @return secondary nature */
     @NotNull
     public JsonArray<String> getSecondaryNature() {
         return secondaryNature;

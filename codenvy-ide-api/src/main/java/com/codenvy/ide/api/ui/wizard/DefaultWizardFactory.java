@@ -17,8 +17,21 @@
  */
 package com.codenvy.ide.api.ui.wizard;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
-public interface DefaultWizardFactory {
+import com.codenvy.ide.annotations.NotNull;
 
-    DefaultWizard create(String title);
+/**
+ * The factory for creating an instance of default wizard.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
+public interface DefaultWizardFactory {
+    /**
+     * Create an instance of a default wizard with a given wizard title.
+     *
+     * @param title
+     *         wizard title
+     * @return {@link DefaultWizard}
+     */
+    @NotNull
+    DefaultWizard create(@NotNull String title);
 }
