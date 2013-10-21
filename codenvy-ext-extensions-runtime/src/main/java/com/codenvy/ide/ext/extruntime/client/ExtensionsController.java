@@ -19,6 +19,8 @@ package com.codenvy.ide.ext.extruntime.client;
 
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
@@ -38,6 +40,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
+import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /**
  * This class controls operations with a custom extension. Such as launching, stopping, getting logs, packaging into a
  * bundle.
@@ -54,6 +60,8 @@ public class ExtensionsController {
     private ConsolePart                    console;
     private ExtRuntimeClientService        service;
     private ExtRuntimeLocalizationConstant constant;
+    private NotificationManager            notificationManager;
+    private Notification                   notification;
     /** Launched app. */
     private ApplicationInstance            launchedApp;
     /** Is launching of any application in progress? */
@@ -72,15 +80,19 @@ public class ExtensionsController {
      *         {@link ExtRuntimeClientService}
      * @param constant
      *         {@link ExtRuntimeLocalizationConstant}
+     * @param notificationManager
+     *         {@link NotificationManager}
      */
     @Inject
     protected ExtensionsController(ResourceProvider resourceProvider, EventBus eventBus, ConsolePart console,
-                                   ExtRuntimeClientService service, ExtRuntimeLocalizationConstant constant) {
+                                   ExtRuntimeClientService service, ExtRuntimeLocalizationConstant constant,
+                                   NotificationManager notificationManager) {
         this.resourceProvider = resourceProvider;
         this.eventBus = eventBus;
         this.console = console;
         this.service = service;
         this.constant = constant;
+        this.notificationManager = notificationManager;
 
         init();
     }
@@ -129,13 +141,17 @@ public class ExtensionsController {
         }
 
         isLaunchingInProgress = true;
-        console.print(constant.applicationBuilding(currentProject.getName()));
+
+        notification = new Notification(constant.applicationBuilding(currentProject.getName()), PROGRESS);
+        notificationManager.showNotification(notification);
+
         try {
             service.build(resourceProvider.getVfsId(), currentProject.getId(), false,
                           new RequestCallback<String>(new StringUnmarshaller()) {
                               @Override
                               protected void onSuccess(String url) {
-                                  console.print(constant.applicationBuilt(currentProject.getName()));
+                                  notification.setStatus(FINISHED);
+                                  notification.setMessage(constant.applicationBuilt(currentProject.getName()));
                                   launch(url, currentProject);
                               }
 
@@ -149,7 +165,9 @@ public class ExtensionsController {
         } catch (WebSocketException e) {
             isLaunchingInProgress = false;
             launchedApp = null;
-            console.print(e.getMessage());
+            notification.setStatus(FINISHED);
+            notification.setType(ERROR);
+            notification.setMessage(e.getMessage());
         }
     }
 
@@ -177,7 +195,9 @@ public class ExtensionsController {
         } catch (WebSocketException e) {
             isLaunchingInProgress = false;
             launchedApp = null;
-            console.print(e.getMessage());
+            notification.setStatus(FINISHED);
+            notification.setType(ERROR);
+            notification.setMessage(e.getMessage());
         }
     }
 
@@ -198,7 +218,11 @@ public class ExtensionsController {
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    onFail(constant.getApplicationLogsFailed(), exception);
+                    String message = constant.getApplicationLogsFailed();
+                    if (exception != null && exception.getMessage() != null) {
+                        message += ": " + exception.getMessage();
+                    }
+                    console.print(message);
                 }
             });
         } catch (RequestException e) {
@@ -224,7 +248,11 @@ public class ExtensionsController {
 
                              @Override
                              protected void onFailure(Throwable exception) {
-                                 onFail(constant.stopApplicationFailed(currentProject.getName()), exception);
+                                 String message = constant.stopApplicationFailed(currentProject.getName());
+                                 if (exception != null && exception.getMessage() != null) {
+                                     message += ": " + exception.getMessage();
+                                 }
+                                 console.print(message);
                              }
                          });
         } catch (RequestException e) {
@@ -240,22 +268,33 @@ public class ExtensionsController {
             return;
         }
 
-        console.print(constant.applicationBuilding(currentProject.getName()));
+        final Notification packNotification =
+                new Notification(constant.applicationBuilding(currentProject.getName()), PROGRESS);
+        notificationManager.showNotification(packNotification);
         try {
             service.build(resourceProvider.getVfsId(), currentProject.getId(), true,
                           new RequestCallback<String>(new StringUnmarshaller()) {
                               protected void onSuccess(String url) {
-                                  console.print(constant.applicationBuilt(currentProject.getName()));
+                                  packNotification.setStatus(FINISHED);
+                                  packNotification.setMessage(constant.applicationBuilt(currentProject.getName()));
                                   console.print(constant.getBundle(url));
                               }
 
                               @Override
                               protected void onFailure(Throwable exception) {
-                                  onFail(constant.buildApplicationFailed(currentProject.getName()), exception);
+                                  String message = constant.buildApplicationFailed(currentProject.getName());
+                                  if (exception != null && exception.getMessage() != null) {
+                                      message += ": " + exception.getMessage();
+                                  }
+                                  packNotification.setStatus(FINISHED);
+                                  packNotification.setType(ERROR);
+                                  packNotification.setMessage(message);
                               }
                           });
         } catch (WebSocketException e) {
-            console.print(e.getMessage());
+            packNotification.setStatus(FINISHED);
+            packNotification.setType(ERROR);
+            packNotification.setMessage(e.getMessage());
         }
     }
 
@@ -269,13 +308,16 @@ public class ExtensionsController {
                                   .setParameter("p", String.valueOf(launchedApp.getCodeServerPort())).buildString();
         console.print(constant.applicationStartedOnUrls(currentProject.getName(),
                                                         "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
+        notification.setStatus(FINISHED);
     }
 
     private void onFail(String message, Throwable exception) {
         if (exception != null && exception.getMessage() != null) {
             message += ": " + exception.getMessage();
         }
-        console.print(message);
+        notification.setStatus(FINISHED);
+        notification.setType(ERROR);
+        notification.setMessage(message);
     }
 
     private class StringUnmarshaller implements Unmarshallable<String> {
