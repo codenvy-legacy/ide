@@ -22,7 +22,6 @@ import com.codenvy.ide.commons.shared.ProjectType;
 
 import org.apache.commons.io.IOUtils;
 import org.codenvy.mail.MailSenderClient;
-import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.everrest.websockets.WSConnectionContext;
 import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.git.server.GitConnection;
@@ -57,6 +56,7 @@ import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
