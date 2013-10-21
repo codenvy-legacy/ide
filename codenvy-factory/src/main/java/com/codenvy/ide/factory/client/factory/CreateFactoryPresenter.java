@@ -39,7 +39,6 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -624,6 +623,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         display.setButtonStyleChangedHandler(new ButtonStyleChangedHandler() {
             @Override
             public void onButtonStyleChanged() {
+                // TODO check for ability to remove this verification.
                 String uploadFile = display.getUploadImageFieldValue();
                 if (uploadFile != null && !uploadFile.isEmpty()) {
                     display.enableDefaultStyleOptions(true);
@@ -712,6 +712,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
         
         String blankImage = "images/blank.png";
+        String counter = display.showCounterChecked() ? "counter=\"visible\" " : "";
         
         String javascriptPreview = "" +
                 "<script " +
@@ -719,6 +720,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                     "language=\"javascript\" " +
                     "src=\"" + jsURL + "\" " +
                     "style=\"advanced\" " +
+                    counter +
                     "img=\"" + blankImage + "\" " +
                 "></script>";
 

@@ -96,6 +96,12 @@ function Factory() {
 	// Null means counter is not visible.
 	var _counter = null;
 	
+	// Counter value
+	var _counterValue = 0;
+
+	// Counter Element
+	var _counterElement = null;	
+	
 	// Deprecated. This variable and "target" attribute must be deleted when Factory 1.1 was fully used.
 	var _target = null;
 	
@@ -132,6 +138,8 @@ function Factory() {
 			_counter = "vertical";
 		} else if ("horizontal" == _script.getAttribute("counter")) {
 			_counter = "horizontal";
+		} else if ("visible" == _script.getAttribute("counter")) {
+			_counter = "visible";
 		}
 		
 		// Deprecated. Must be deleted when Factory 1.1 was fully used.
@@ -164,17 +172,9 @@ function Factory() {
 		head.appendChild(link);
 	}	
 	
-	function factoryButtonClickHandler() {
-		if (_target == null || "" == _target) {
-			return;
-		}
-		
-		window.open(_target, "_blank");
-	}	
-	
 	function embedDark() {
 		/*
-			<div class="codenow-dark" onclick="window.open('http://codenvy.com', '_blank');"></div>
+			<div class="codenow-dark"></div>
 		*/
 		
 		var _embed = document.createElement("div");
@@ -186,8 +186,8 @@ function Factory() {
 	function embedDarkCounterHorizontal() {
 		/*
 			<div class="codenow-horizontal">
-				<div class="codenow-dark codenow-bottom" onclick="window.open('http://codenvy.com', '_blank');"></div>
-				<div class="codenow-counter-horizontal">&nbsp;33</div>
+				<div class="codenow-dark codenow-bottom"></div>
+				<div class="codenow-counter-horizontal"><span>333</span></div>
 			</div>
 		*/
 		
@@ -200,19 +200,21 @@ function Factory() {
 	    _button.classList.add("codenow-bottom");
 	    _button.onclick = factoryButtonClickHandler;
 	    _embed.appendChild(_button);
-
+	    
 	    var _counter = document.createElement("div");
 	    _counter.classList.add("codenow-counter-horizontal");
-	    _counter.innerHTML = "&nbsp;33";
-	    _embed.appendChild(_counter);		
+	    _embed.appendChild(_counter);
+
+	    _counterElement = document.createElement("span");
+	    _counter.appendChild(_counterElement);
 	}
 
 	function embedDarkCounterVertical() {
 		/*
 			<div class="codenow-vertical">
-				<div class="codenow-counter-vertical">33</div>
-				<div class="codenow-dark codenow-bottom" onclick="window.open('http://codenvy.com', '_blank');"></div>
-			</div>		
+				<div class="codenow-counter-vertical"><span>333</span></div>
+				<div class="codenow-dark codenow-bottom"></div>
+			</div>
 		*/
 
 		var _embed = document.createElement("div");
@@ -221,8 +223,10 @@ function Factory() {
 
 	    var _counter = document.createElement("div");
 	    _counter.classList.add("codenow-counter-vertical");
-	    _counter.innerHTML = "33";
-	    _embed.appendChild(_counter);		
+	    _embed.appendChild(_counter);
+	    
+	    _counterElement = document.createElement("span");
+	    _counter.appendChild(_counterElement);	    
 	    
 	    var _button = document.createElement("div");
 	    _button.classList.add("codenow-dark");
@@ -233,7 +237,7 @@ function Factory() {
 	
 	function embedWhite() {
 		/*
-			<div class="codenow-white" onclick="window.open('http://codenvy.com', '_blank');"></div>
+			<div class="codenow-white"></div>
 		*/
 
 		var _embed = document.createElement("div");
@@ -245,9 +249,9 @@ function Factory() {
 	function embedWhiteCounterHorizontal() {
 		/*
 			<div class="codenow-horizontal">
-				<div class="codenow-white codenow-bottom" onclick="window.open('http://codenvy.com', '_blank');"></div>
-				<div class="codenow-counter-horizontal">&nbsp;33</div>
-			</div>	
+				<div class="codenow-white codenow-bottom"></div>
+				<div class="codenow-counter-horizontal"><span>333</span></div>
+			</div>
 		*/
 
 		var _embed = document.createElement("div");
@@ -262,15 +266,17 @@ function Factory() {
 	    
 	    var _counter = document.createElement("div");
 	    _counter.classList.add("codenow-counter-horizontal");
-	    _counter.innerHTML = "&nbsp;33";
 	    _embed.appendChild(_counter);
+	    
+	    _counterElement = document.createElement("span");
+	    _counter.appendChild(_counterElement);	    
 	}
 
 	function embedWhiteCounterVertical() {
 		/*
 			<div class="codenow-vertical">
-				<div class="codenow-counter-vertical">33</div>
-				<div class="codenow-white codenow-bottom" onclick="window.open('http://codenvy.com', '_blank');"></div>
+				<div class="codenow-counter-vertical"><span>333</span></div>
+				<div class="codenow-white codenow-bottom"></div>
 			</div>
 		*/
 		
@@ -280,8 +286,10 @@ function Factory() {
 	    
 	    var _counter = document.createElement("div");
 	    _counter.classList.add("codenow-counter-vertical");
-	    _counter.innerHTML = "33";
 	    _embed.appendChild(_counter);
+	    
+	    _counterElement = document.createElement("span");
+	    _counter.appendChild(_counterElement);	    
 	    
 	    var _button = document.createElement("div");
 	    _button.classList.add("codenow-white");
@@ -301,7 +309,7 @@ function Factory() {
 		
 	function embedAdvanced() {
 		/*
-			<div class="advanced-factory" style="position:absolute; left: 50px; top:420px;">
+			<div class="advanced-factory">
 				<img alt="" src="..." />
 				<div></div>
 			</div>
@@ -329,6 +337,58 @@ function Factory() {
 	    }	    
 	}
 	
+	function embedAdvancedWithCounter() {
+		/*
+			<div class="advanced-factory-noted">
+				<img alt="" src="..." />
+				<div></div>
+				<span>33</span>
+			</div>
+		*/
+
+		var _embed = document.createElement("div");
+	    _embed.classList.add("advanced-factory-noted");
+	    _parent.appendChild(_embed);
+	    
+	    _logoImage = document.createElement("img");
+	    _logoImage.src = _logoURL;
+	    _logoImage.onload = logoLoadComplete;
+	    _logoImage.onabort = logoLoadError;
+	    _logoImage.onerror = logoLoadError;
+	    _embed.appendChild(_logoImage);
+	    
+	    _logoImage.style.opacity = 0;
+	    	    
+	    var _button = document.createElement("div");
+	    _button.onclick = factoryButtonClickHandler;
+	    _embed.appendChild(_button);
+	    
+	    _counterElement = document.createElement("span");
+	    _embed.appendChild(_counterElement);
+
+	    if (_logoURL == null || "" == _logoURL) {	    	
+	    	logoLoadError();
+	    }	    
+	}
+	
+	function updateCounter() {
+		if (_counterElement == null || _counterElement == undefined) {
+			return;
+		}
+		
+		_counterElement.innerHTML = "" + _counterValue;
+	}
+	
+	function factoryButtonClickHandler() {
+		if (_target == null || "" == _target) {
+			_counterValue++;
+			updateCounter();
+			return;
+		}
+		
+		window.open(_target, "_blank");
+	}
+
 	// Prepare button's options
 	fetchButtonOptions();
 
@@ -351,9 +411,13 @@ function Factory() {
 		embedWhiteCounterHorizontal();
 	} else if (_type == "simple-white" && _counter == "vertical") {
 		embedWhiteCounterVertical();
-	} else if (_type == "advanced") {
+	} else if (_type == "advanced" && _counter == null) {
 		embedAdvanced();
+	} else if (_type == "advanced" && _counter == "visible") {
+		embedAdvancedWithCounter();
 	}
+	
+	updateCounter();
 }
 
 var factory = new Factory();
