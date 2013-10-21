@@ -686,7 +686,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         display.getShareEmailButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.fireEvent(new SendMailEvent(factoryURLEscaped, openedProject.getName()));
+                IDE.fireEvent(new SendMailEvent(factoryURL, openedProject.getName()));
             }
         });
         

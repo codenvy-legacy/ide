@@ -106,13 +106,14 @@ public class FactoryService {
      */
     @POST
     @Path("share")
-    public Response share(@QueryParam("recipient") String recipient, //
-                          @QueryParam("message") String message) {
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response share(@FormParam("recipient") String recipient, //
+                          @FormParam("message") String message) {
         final String sender = "Codenvy <noreply@codenvy.com>";
         final String subject = "Check out my Codenvy project";
-        final String mimeType = "text/html; charset=utf-8";
+        final String mimeType = "text/plain; charset=utf-8";
         try {
-            mailSenderClient.sendMail(sender, recipient, null, subject, mimeType, message);
+            mailSenderClient.sendMail(sender, recipient, null, subject, mimeType, URLDecoder.decode(message, "UTF-8"));
             return Response.ok().build();
         } catch (MessagingException | IOException e) {
             throw new WebApplicationException(e);
