@@ -20,7 +20,7 @@ package com.codenvy.ide.ext.extruntime.server.runner;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 
 /**
- * Signals that an error has occurred with Codenvy-extension.
+ * Signals that an error has occurred while running Codenvy extension.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: RunnerException.java Jul 19, 2013 4:03:36 PM azatsarynnyy $

@@ -25,7 +25,6 @@ import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 import org.apache.maven.model.Model;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Project;
@@ -163,15 +162,9 @@ public class ExtensionsRunner implements Startable {
                 throw new Exception("Missing Maven artifact coordinates.");
             }
 
-            // Unpack 'codenvy-ide-client' module sources and user's extension project into temporary directory.
-            InputStream codenvyClientSourcesStream = Thread.currentThread().getContextClassLoader()
-                                                           .getResourceAsStream("CodenvyClient.zip");
-            if (codenvyClientSourcesStream == null) {
-                throw new InvalidArgumentException("Can't find codenvy-ide-client module sources.");
-            }
-
             /*********************************** Preparing ******************************************/
 
+            InputStream codenvyClientSourcesStream = getCodenvyPlatformBinaryDistribution().openStream();
             unzip(codenvyClientSourcesStream, codeServerDirPath.toFile());
             Path customModulePath = codeServerDirPath.resolve(extensionPom.getArtifactId());
             unzip(vfs.exportZip(projectId).getStream(), customModulePath.toFile());

@@ -51,6 +51,9 @@ public class Utils {
     /** Maven POM writer. */
     private static MavenXpp3Writer pomWriter = new MavenXpp3Writer();
 
+    private Utils() {
+    }
+
     /**
      * Read pom.xml.
      *
@@ -255,13 +258,23 @@ public class Utils {
         }
     }
 
-    /** Returns URL to get Tomcat binary distribution zip. */
+    /** Returns URL to get Tomcat binary distribution. */
     public static URL getTomcatBinaryDistribution() throws IOException {
-        URL tomcatDistributionUrl = Thread.currentThread().getContextClassLoader().getResource("tomcat/tomcat.zip");
+        URL tomcatDistributionUrl = Thread.currentThread().getContextClassLoader().getResource("tomcat.zip");
         if (tomcatDistributionUrl == null) {
             throw new IOException("Unable to get Tomcat binary distribution.");
         }
         return tomcatDistributionUrl;
+    }
+
+    /** Returns URL to get Codenvy Platform binary distribution. */
+    public static URL getCodenvyPlatformBinaryDistribution() throws IOException {
+        URL codenvyPlatformDistributionUrl =
+                Thread.currentThread().getContextClassLoader().getResource("CodenvyPlatform.zip");
+        if (codenvyPlatformDistributionUrl == null) {
+            throw new IOException("Unable to get Codenvy Platform binary distribution.");
+        }
+        return codenvyPlatformDistributionUrl;
     }
 
     /** A {@code FileVisitor} that finds first file that match the specified pattern. */
@@ -288,8 +301,5 @@ public class Utils {
         Path getFirstMatchedFile() {
             return firstMatchedFile;
         }
-    }
-
-    private Utils() {
     }
 }

@@ -231,45 +231,64 @@
                                     <artifactId>tomcat</artifactId>
                                     <type>zip</type>
                                     <version>${tomcat.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
                                     <destFileName>tomcat.zip</destFileName>
+                                </artifactItem>
+
+                                <artifactItem>
+                                    <groupId>org.exoplatform.ide</groupId>
+                                    <artifactId>exo-ide-codeassistant-storage</artifactId>
+                                    <type>war</type>
+                                    <version>${org.exoplatform.ide.version}</version>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps</outputDirectory>
+                                    <destFileName>codeassistant-storage.war</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.exoplatform.ide</groupId>
+                                    <artifactId>exo-ide-maven</artifactId>
+                                    <type>war</type>
+                                    <version>${org.exoplatform.ide.version}</version>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps</outputDirectory>
+                                    <destFileName>builder.war</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>com.codenvy.organization</groupId>
                                     <artifactId>codenvy-organization-packaging-api-war</artifactId>
                                     <type>war</type>
                                     <version>${com.codenvy.organization.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps</outputDirectory>
                                     <destFileName>userdb.war</destFileName>
                                 </artifactItem>
+
                                 <artifactItem>
                                     <groupId>org.slf4j</groupId>
                                     <artifactId>slf4j-api</artifactId>
                                     <version>${org.slf4j.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat/lib</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
                                     <destFileName>slf4j-api.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.slf4j</groupId>
                                     <artifactId>jul-to-slf4j</artifactId>
                                     <version>${org.slf4j.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat/lib</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
                                     <destFileName>jul-to-slf4j.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>ch.qos.logback</groupId>
                                     <artifactId>logback-core</artifactId>
                                     <version>${ch.qos.logback.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat/lib</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
                                     <destFileName>logback-core.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>ch.qos.logback</groupId>
                                     <artifactId>logback-classic</artifactId>
                                     <version>${ch.qos.logback.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat/lib</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
                                     <destFileName>logback-classic.jar</destFileName>
                                 </artifactItem>
+
                                 <artifactItem>
                                     <groupId>com.codenvy.ide</groupId>
                                     <artifactId>codenvy-ide-client</artifactId>
@@ -298,8 +317,8 @@
                         <configuration>
                             <tasks>
                                 <!-- Unzip Tomcat package -->
-                                <unzip src="${project.build.directory}/classes/tomcat/tomcat.zip"
-                                       dest="${project.build.directory}/classes/tomcat/unzip">
+                                <unzip src="${project.build.directory}/classes/tomcat.zip"
+                                       dest="${project.build.directory}/classes">
                                     <patternset>
                                         <exclude name="**/ROOT/**"/>
                                         <exclude name="**/docs/**"/>
@@ -308,35 +327,29 @@
                                         <exclude name="**/host-manager/**"/>
                                     </patternset>
                                 </unzip>
-                                <move todir="${project.build.directory}/classes/tomcat/unzip">
-                                    <fileset dir="${project.build.directory}/classes/tomcat/unzip/apache-tomcat-${tomcat.version}"/>
+                                <move todir="${project.build.directory}/classes/tomcat-bundle">
+                                    <fileset dir="${project.build.directory}/classes/apache-tomcat-${tomcat.version}"/>
                                 </move>
-                                <delete file="${project.build.directory}/classes/tomcat/tomcat.zip"/>
-                                <delete dir="${project.build.directory}/classes/tomcat/unzip/apache-tomcat-${tomcat.version}"/>
+                                <delete file="${project.build.directory}/classes/tomcat.zip"/>
 
-                                <!-- Move additional libs for logging to lib directory -->
-                                <move todir="${project.build.directory}/classes/tomcat/unzip/lib">
-                                    <fileset dir="${project.build.directory}/classes/tomcat/lib"/>
+                                <!-- Move additional libraries and WAR's -->
+                                <move todir="${project.build.directory}/classes/tomcat-bundle">
+                                    <fileset dir="${project.build.directory}/classes/tomcat-resources"/>
                                 </move>
 
-                                <!-- Move pre-configured scripts and configuration files -->
-                                <copy todir="${project.build.directory}/classes/tomcat/unzip/bin">
-                                    <fileset dir="${project.build.directory}/classes/tomcat/bin"/>
-                                </copy>
-                                <copy todir="${project.build.directory}/classes/tomcat/unzip/conf">
-                                    <fileset dir="${project.build.directory}/classes/tomcat/conf"/>
+                                <!-- Copy pre-configured sh-scripts and configuration files -->
+                                <copy todir="${project.build.directory}/classes/tomcat-bundle" overwrite="true">
+                                    <fileset dir="${project.build.directory}/classes/tomcat">
+                                        <exclude name="**/server.xml"/>
+                                    </fileset>
                                 </copy>
 
-                                <!-- Move Codenvy Organization WAR to webapps directory -->
-                                <move file="${project.build.directory}/classes/tomcat/userdb.war"
-                                      tofile="${project.build.directory}/classes/tomcat/unzip/webapps/userdb.war"/>
+                                <!-- Zip prepared Tomcat binary distribution and remove temporary directory -->
+                                <zip basedir="${project.build.directory}/classes/tomcat-bundle"
+                                     destfile="${project.build.directory}/classes/tomcat.zip"/>
+                                <delete dir="${project.build.directory}/classes/tomcat-bundle"/>
 
-                                <!-- Zip prepared Tomcat package and remove temporary directory -->
-                                <zip basedir="${project.build.directory}/classes/tomcat/unzip"
-                                     destfile="${project.build.directory}/classes/tomcat/tomcat.zip"/>
-                                <delete dir="${project.build.directory}/classes/tomcat/unzip"/>
-
-                                <!-- Prepare codenvy-ide-client sources -->
+                                <!-- Prepare Codenvy Platform sources -->
                                 <unzip src="${project.build.directory}/classes/codenvy-ide-client.jar"
                                        dest="${project.build.directory}/classes/codenvy-ide-client-sources">
                                     <patternset>
@@ -345,17 +358,14 @@
                                         <exclude name="**/ExtensionManager.java"/>
                                     </patternset>
                                 </unzip>
-                                <unzip src="${project.build.directory}/classes/CodenvyClient.zip"
-                                       dest="${project.build.directory}/classes/CodenvyClient">
-                                </unzip>
-                                <copy todir="${project.build.directory}/classes/CodenvyClient/codenvy-ide-client/src/main/java">
+                                <copy todir="${project.build.directory}/classes/codenvyPlatform/codenvy-ide-client/src/main/java">
                                     <fileset dir="${project.build.directory}/classes/codenvy-ide-client-sources"/>
                                 </copy>
-                                <zip basedir="${project.build.directory}/classes/CodenvyClient"
-                                     destfile="${project.build.directory}/classes/CodenvyClient.zip"/>
+                                <zip basedir="${project.build.directory}/classes/codenvyPlatform"
+                                     destfile="${project.build.directory}/classes/CodenvyPlatform.zip"/>
                                 <delete file="${project.build.directory}/classes/codenvy-ide-client.jar"/>
                                 <delete dir="${project.build.directory}/classes/codenvy-ide-client-sources"/>
-                                <delete dir="${project.build.directory}/classes/CodenvyClient"/>
+                                <delete dir="${project.build.directory}/classes/codenvyPlatform"/>
                             </tasks>
                         </configuration>
                     </execution>

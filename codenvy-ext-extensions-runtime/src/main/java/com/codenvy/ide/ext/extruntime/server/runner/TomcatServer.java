@@ -33,6 +33,7 @@ import java.nio.file.attribute.PosixFilePermissions;
 import static com.codenvy.ide.commons.FileUtils.downloadFile;
 import static com.codenvy.ide.commons.ZipUtils.unzip;
 import static com.codenvy.ide.ext.extruntime.server.Utils.getTomcatBinaryDistribution;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
  * Class represents a Tomcat server.
@@ -57,18 +58,18 @@ public class TomcatServer {
      */
     public void start(TomcatServerConfiguration configuration) throws IOException {
         this.configuration = configuration;
-        InputStream tomcatDistribution = getTomcatBinaryDistribution().openStream();
 
+        InputStream tomcatDistribution = getTomcatBinaryDistribution().openStream();
         unzip(tomcatDistribution, configuration.getWorkDir().toFile());
         generateServerXml(configuration.getWorkDir(), configuration.getPort());
 
-        File ideWar = downloadFile(new File(configuration.getWorkDir() + "/webapps"), "app-", ".war",
-                                   configuration.getIdeWarUrl());
+        final File ideWar = downloadFile(new File(configuration.getWorkDir() + "/webapps"), "app-", ".war",
+                                         configuration.getIdeWarUrl());
         ideWar.renameTo(configuration.getWorkDir().resolve("webapps/ide.war").toFile());
 
-        final Path catalinaPath = configuration.getWorkDir().resolve("bin/catalina.sh");
-        Files.setPosixFilePermissions(catalinaPath, PosixFilePermissions.fromString("rwxr--r--"));
-        process = new ProcessBuilder(catalinaPath.toString(), "run").start();
+        final Path catalinaShPath = configuration.getWorkDir().resolve("bin/catalina.sh");
+        Files.setPosixFilePermissions(catalinaShPath, PosixFilePermissions.fromString("rwxr--r--"));
+        process = new ProcessBuilder(catalinaShPath.toString(), "run").start();
     }
 
     /**
@@ -119,6 +120,8 @@ public class TomcatServer {
 
     private void generateServerXml(Path tomcatDir, int httpPort) throws IOException {
         final Path serverXmlPath = tomcatDir.resolve("conf/server.xml");
+        Files.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("tomcat/conf/server.xml"),
+                   serverXmlPath, REPLACE_EXISTING);
         final String serverXmlContent = new String(Files.readAllBytes(serverXmlPath));
         Files.write(serverXmlPath, serverXmlContent.replace("${PORT}", Integer.toString(httpPort)).getBytes());
     }

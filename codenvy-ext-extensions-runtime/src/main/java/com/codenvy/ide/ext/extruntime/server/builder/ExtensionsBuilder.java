@@ -23,7 +23,6 @@ import com.codenvy.ide.extension.maven.shared.BuildStatus;
 import org.apache.maven.model.Model;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Project;
@@ -131,16 +130,10 @@ public class ExtensionsBuilder {
                 throw new BuilderException("Missing Maven artifact coordinates.");
             }
 
-            // Unpack 'codenvy-ide-client' module sources and user's extension project into temporary directory.
-            InputStream codenvyClientSourcesStream = Thread.currentThread().getContextClassLoader()
-                                                           .getResourceAsStream("CodenvyClient.zip");
-            if (codenvyClientSourcesStream == null) {
-                throw new InvalidArgumentException("Can't find codenvy-ide-client module sources.");
-            }
-
             /*********************************** Preparing *****************************************/
 
-            unzip(codenvyClientSourcesStream, buildDirPath.toFile());
+            InputStream codenvyPlatformDistribution = getCodenvyPlatformBinaryDistribution().openStream();
+            unzip(codenvyPlatformDistribution, buildDirPath.toFile());
             final Path customModulePath = buildDirPath.resolve(extensionPom.getArtifactId());
             unzip(vfs.exportZip(projectId).getStream(), customModulePath.toFile());
 
@@ -201,7 +194,7 @@ public class ExtensionsBuilder {
             Files.setPosixFilePermissions(catalinaShPath, PosixFilePermissions.fromString("rwxr--r--"));
 
             final File systemTempDir = new File(System.getProperty("java.io.tmpdir"));
-            final File zippedTomcatBundle = systemTempDir.toPath().resolve("tomcat.zip").toFile();
+            final File zippedTomcatBundle = systemTempDir.toPath().resolve("codenvy-sdk-tomcat-bundle.zip").toFile();
             zipDir(tempDir.toString(), tempDir, zippedTomcatBundle, ANY_FILTER);
             return zippedTomcatBundle.getAbsolutePath();
         } finally {
