@@ -186,7 +186,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
     /** {@inheritDoc} */
     @Override
     public boolean hasPrevious() {
-        for (int i = index; i > 0; i--) {
+        for (int i = index - 1; i >= 0; i--) {
             WizardPage page = wizardPages.get(i);
             if (page.inContext() && !page.canSkip()) {
                 return true;

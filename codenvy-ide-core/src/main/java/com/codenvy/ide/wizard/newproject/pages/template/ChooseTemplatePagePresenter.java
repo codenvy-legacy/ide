@@ -103,7 +103,9 @@ public class ChooseTemplatePagePresenter extends AbstractWizardPage implements C
         if (projectType != null) {
             templates = templateAgent.getTemplatesForProjectType(projectType.getPrimaryNature(), projectType.getSecondaryNature());
             view.setTemplates(templates);
-            wizardContext.putData(TEMPLATE, templates.get(0));
+            if (!templates.isEmpty()) {
+                wizardContext.putData(TEMPLATE, templates.get(0));
+            }
         }
     }
 
