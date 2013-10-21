@@ -469,6 +469,7 @@
                     <logLevel>INFO</logLevel>
                     <skipTests>${gwt.test.skip}</skipTests>
                     <extraJvmArgs>${gwt.xmx}</extraJvmArgs>
+                    <gwtSdkFirstInClasspath>true</gwtSdkFirstInClasspath>
                     <extra>${project.build.directory}/extra</extra>
                     <style>${gwt.compiler.additional.options}</style>
                 </configuration>
