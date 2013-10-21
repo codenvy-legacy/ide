@@ -183,7 +183,6 @@ public class CreateFactoryView extends ViewImpl
         addChangeListener(radioDark);
         addChangeListener(radioWhite);
         
-//        addFileSelectedListener(uploadFileField);
         handleFileUploadEvents();
         
         snippetWebsites.addClickHandler(new ClickHandler() {
@@ -707,13 +706,11 @@ public class CreateFactoryView extends ViewImpl
     @Override
     public void enableDefaultStyleOptions(boolean enabled) {
         if (enabled) {
-            checkShowCounter.setAttribute("disabled", "disabled");
             radioVertical.setAttribute("disabled", "disabled");
             radioHorizontal.setAttribute("disabled", "disabled");
             radioWhite.setAttribute("disabled", "disabled");
             radioDark.setAttribute("disabled", "disabled");
         } else {
-            checkShowCounter.removeAttribute("disabled");
             radioVertical.removeAttribute("disabled");
             radioHorizontal.removeAttribute("disabled");
             radioWhite.removeAttribute("disabled");
