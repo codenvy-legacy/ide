@@ -24,15 +24,15 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: CommitersBean.java Aug 3, 2012
+ * @version $Id: CommitersImpl.java Aug 3, 2012
  */
-public class CommitersBean implements Commiters {
+public class CommitersImpl implements Commiters {
     private List<GitUser> commiters;
 
-    public CommitersBean() {
+    public CommitersImpl() {
     }
 
-    public CommitersBean(List<GitUser> commiters) {
+    public CommitersImpl(List<GitUser> commiters) {
         this.commiters = commiters;
     }
 

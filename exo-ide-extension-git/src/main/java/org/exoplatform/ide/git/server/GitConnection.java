@@ -303,7 +303,7 @@ public interface GitConnection {
     /**
      * Get status of working tree.
      * 
-     * @param boolean shortFormat
+     * @param shortFormat shortFormat
      * @return status.
      * @throws GitException if any error occurs
      */

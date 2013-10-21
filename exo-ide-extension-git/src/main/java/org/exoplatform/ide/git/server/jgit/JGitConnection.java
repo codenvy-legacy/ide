@@ -121,7 +121,7 @@ public class JGitConnection implements GitConnection {
      * @param repository the JGit repository
      * @param user the user
      */
-    JGitConnection(Repository repository, GitUser user) {
+    public JGitConnection(Repository repository, GitUser user) {
         this.repository = repository;
         this.user = user;
     }
@@ -852,7 +852,6 @@ public class JGitConnection implements GitConnection {
                 }
             }
         }
-
         // Add URLs for pushing.
         tmp = request.getAddPushUrl();
         if (tmp != null) {

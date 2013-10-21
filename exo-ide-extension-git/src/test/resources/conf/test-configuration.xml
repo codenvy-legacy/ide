@@ -28,14 +28,6 @@
     </component>
 
     <component>
-        <type>org.exoplatform.ide.git.server.jgit.OAuthCredentialsProvider</type>
-    </component>
-
-    <component>
-        <type>org.exoplatform.ide.git.server.nativegit.CredentialsLoader</type>
-    </component>
-
-    <component>
         <type>org.exoplatform.ide.git.server.github.GitHub</type>
         <init-params>
             <value-param>
@@ -46,14 +38,33 @@
     </component>
 
     <component>
-        <type>org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory</type>
+        <type>com.codenvy.commons.security.oauth.OAuthAuthenticatorTokenProvider</type>
     </component>
 
-    
+    <component>
+        <type>org.exoplatform.ide.git.server.nativegit.OAuthCredentialsProvider</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.git.server.nativegit.CredentialsLoader</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.security.oauth.ExoOAuthAuthenticatorProvider</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory</type>
+    </component>
+    <component>
+        <key>org.exoplatform.ide.extension.ssh.server.SshKeyStore</key>
+        <type>org.exoplatform.ide.extension.ssh.server.DummySshKeyStore</type>
+    </component>
+
     <component>
         <type>org.exoplatform.ide.git.server.nativegit.SshKeysManager</type>
     </component>
-    
+
     <component>
         <key>org.exoplatform.ide.git.server.GitConnectionFactory</key>
         <type>org.exoplatform.ide.git.server.nativegit.NativeGitConnectionFactory</type>

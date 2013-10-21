@@ -15,6 +15,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>${jsch.version}</version>
@@ -93,7 +98,6 @@
             <version>${everrest.version}</version>
         </dependency>
 
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-security</artifactId>
@@ -156,12 +160,34 @@
             <artifactId>exo-ide-vfs</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>3.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.factory</groupId>
+            <artifactId>codenvy-factory-commons</artifactId>
+            <version>0.2.0-SNAPSHOT</version>
+        </dependency>
 
 
         <dependency>
             <groupId>com.codenvy.factory</groupId>
             <artifactId>codenvy-factory-services</artifactId>
             <version>${codenvy.factory.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${org.slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${ch.qos.logback.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

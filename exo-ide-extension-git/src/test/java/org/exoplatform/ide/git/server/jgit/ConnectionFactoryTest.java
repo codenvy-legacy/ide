@@ -32,7 +32,7 @@ import java.net.URL;
  */
 public class ConnectionFactoryTest extends BaseTest {
     public void testClientFactory() throws Exception {
-        GitConnectionFactory gitConnectionFactory = GitConnectionFactory.getInstance();
+        GitConnectionFactory gitConnectionFactory = new JGitConnectionFactory();
 
         URL testCls = Thread.currentThread().getContextClassLoader().getResource(".");
         File target = new File(testCls.toURI()).getParentFile();
