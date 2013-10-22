@@ -34,7 +34,7 @@
     <properties>
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
         <!-- Codenvy Platform version that should be used to build a custom extensions. -->
-        <codenvyPlatform.version>3.0.0-SNAPSHOT</codenvyPlatform.version>
+        <codenvyPlatform.version>${project.version}</codenvyPlatform.version>
     </properties>
 
     <dependencies>
