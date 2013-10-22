@@ -23,6 +23,7 @@ import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
@@ -63,7 +64,7 @@ public class NewProjectWizardTest extends BaseWizardTest {
     @Mock
     private WizardPage                            templatePage;
     @Mock
-    private WizardPage                            paasPage;
+    private AbstractPaasPage                      paasPage;
     private WizardContext                         wizardContext;
     private Template                              template;
     private PaaS                                  paas;
@@ -118,11 +119,11 @@ public class NewProjectWizardTest extends BaseWizardTest {
         wizard.addPageAfterChooseTemplate(templatePageProvider);
 
         /** Add PaaS pages to wizard. */
-        Provider<? extends WizardPage> paasPageProvider = mock(Provider.class);
+        Provider<? extends AbstractPaasPage> paasPageProvider = mock(Provider.class);
         when(paasPageProvider.get()).thenReturn(paasPage);
 
-        wizard.addPage(paasPageProvider);
-        wizard.addPage(paasPageProvider);
+        wizard.addPaaSPage(paasPageProvider);
+        wizard.addPaaSPage(paasPageProvider);
     }
 
     @Test

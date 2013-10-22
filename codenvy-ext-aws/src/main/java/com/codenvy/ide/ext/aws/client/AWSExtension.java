@@ -22,7 +22,7 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
-import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.ext.aws.client.beanstalk.wizard.BeanstalkPagePresenter;
 import com.codenvy.ide.ext.aws.client.command.*;
 import com.codenvy.ide.json.JsonArray;
@@ -70,7 +70,7 @@ public class AWSExtension {
         JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
         natures.put("java", JsonCollections.<String>createArray("Servlet/JSP", "Spring", "War"));
 
-        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
+        JsonArray<Provider<? extends AbstractPaasPage>> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
         paasAgent.register(ID, "Amazon Web Services", resource.elasticBeanstalk48(), natures, wizardPages, false);

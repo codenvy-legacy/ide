@@ -22,7 +22,7 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
-import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.ext.gae.client.actions.CreateApplicationAction;
 import com.codenvy.ide.ext.gae.client.actions.LoginAction;
 import com.codenvy.ide.ext.gae.client.actions.ManageApplicationAction;
@@ -67,7 +67,7 @@ public class GAEExtension {
         natures.put("Python", JsonCollections.<String>createArray());
         natures.put("PHP", JsonCollections.<String>createArray());
 
-        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
+        JsonArray<Provider<? extends AbstractPaasPage>> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
         paasAgent.register(ID, ID, resources.googleAppEngine48(), natures, wizardPages, false);

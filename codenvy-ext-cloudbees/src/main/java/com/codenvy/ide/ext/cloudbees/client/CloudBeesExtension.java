@@ -22,7 +22,7 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
-import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.ext.cloudbees.client.actions.*;
 import com.codenvy.ide.ext.cloudbees.client.wizard.CloudBeesPagePresenter;
 import com.codenvy.ide.json.JsonArray;
@@ -58,7 +58,7 @@ public class CloudBeesExtension {
         JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
         natures.put("java", JsonCollections.<String>createArray("Servlet/JSP", "War"));
 
-        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
+        JsonArray<Provider<? extends AbstractPaasPage>> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
         paasAgent.register(ID, ID, resources.cloudBees48(), natures, wizardPages, false);

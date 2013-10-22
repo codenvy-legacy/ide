@@ -22,7 +22,7 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
-import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.ext.appfog.client.actions.CreateApplicationAction;
 import com.codenvy.ide.ext.appfog.client.actions.ShowApplicationsAction;
 import com.codenvy.ide.ext.appfog.client.actions.ShowProjectAction;
@@ -71,7 +71,7 @@ public class AppFogExtension {
         natures.put("Python", JsonCollections.<String>createArray());
         natures.put("PHP", JsonCollections.<String>createArray());
 
-        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
+        JsonArray<Provider<? extends AbstractPaasPage>> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
         paasAgent.register(ID, ID, resources.appfog48(), natures, wizardPages, false);

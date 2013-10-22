@@ -22,7 +22,7 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
-import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.extension.cloudfoundry.client.action.CreateApplicationAction;
 import com.codenvy.ide.extension.cloudfoundry.client.action.ShowApplicationsAction;
 import com.codenvy.ide.extension.cloudfoundry.client.action.ShowCloudFoundryProjectAction;
@@ -93,7 +93,7 @@ public class CloudFoundryExtension {
         natures.put("java", JsonCollections.<String>createArray("Servlet/JSP", "Spring", "War"));
         natures.put("Ruby", JsonCollections.<String>createArray("Rails"));
 
-        JsonArray<Provider<? extends WizardPage>> wizardPages = JsonCollections.createArray();
+        JsonArray<Provider<? extends AbstractPaasPage>> wizardPages = JsonCollections.createArray();
         wizardPages.add(wizardPage);
 
         paasAgent.register(ID, ID, resources.cloudFoundry48(), natures, wizardPages, false);

@@ -24,6 +24,7 @@ import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.resources.ProjectTypeData;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -60,10 +61,11 @@ public class NewProjectWizard extends DefaultWizard {
      * Add a page after the first page in the wizard, namely between the start page and template choosing page.
      *
      * @param wizardPage
-     *         page that need to add
+     *         page that needs to be added
      */
     public void addPageAfterFirst(@NotNull Provider<? extends WizardPage> wizardPage) {
-        addPage(wizardPage, chooseTemplate++, false);
+        addPage(wizardPage, 1, false);
+        chooseTemplate++;
         lastTemplatePage++;
     }
 
@@ -71,7 +73,7 @@ public class NewProjectWizard extends DefaultWizard {
      * Add a page after 'choose template' page.
      *
      * @param wizardPage
-     *         page that need to add
+     *         page that needs to be added
      */
     public void addPageAfterChooseTemplate(@NotNull Provider<? extends WizardPage> wizardPage) {
         addPage(wizardPage, chooseTemplate + 1, false);
@@ -82,9 +84,26 @@ public class NewProjectWizard extends DefaultWizard {
      * Add a page before paas pages.
      *
      * @param wizardPage
-     *         page that need to add
+     *         page that needs to be added
      */
     public void addPageBeforePaas(@NotNull Provider<? extends WizardPage> wizardPage) {
         addPage(wizardPage, lastTemplatePage + 1, false);
+        lastTemplatePage++;
+    }
+
+    /**
+     * Add a PaaS page.
+     *
+     * @param paasPage
+     *         page that needs to be added
+     */
+    public void addPaaSPage(@NotNull Provider<? extends AbstractPaasPage> paasPage) {
+        addPage(paasPage, lastTemplatePage + 1, false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addPage(@NotNull Provider<? extends WizardPage> page, int index, boolean replace) {
+        super.addPage(page, index, replace);
     }
 }

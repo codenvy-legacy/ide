@@ -21,8 +21,8 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.paas.PaaSAgent;
-import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
@@ -69,7 +69,7 @@ public class PaaSAgentImpl implements PaaSAgent {
                          @NotNull String title,
                          @Nullable ImageResource image,
                          @NotNull JsonStringMap<JsonArray<String>> natures,
-                         @NotNull JsonArray<Provider<? extends WizardPage>> wizardPages,
+                         @NotNull JsonArray<Provider<? extends AbstractPaasPage>> wizardPages,
                          boolean provideTemplate) {
         if (isIdExist(id)) {
             Window.alert("PaaS with " + id + " id already exists");
@@ -78,8 +78,8 @@ public class PaaSAgentImpl implements PaaSAgent {
         PaaS paas = new PaaS(id, title, image, natures, provideTemplate);
         registeredPaaS.add(paas);
         if (wizardPages != null) {
-            for (Provider<? extends WizardPage> provider : wizardPages.asIterable()) {
-                newProjectWizard.addPage(provider);
+            for (Provider<? extends AbstractPaasPage> provider : wizardPages.asIterable()) {
+                newProjectWizard.addPaaSPage(provider);
             }
         }
     }
