@@ -31,6 +31,10 @@
         <type>com.codenvy.ide.server.IdeUserApplication</type>
     </component>
 
+    <component>
+        <type>com.codenvy.ide.StartBuilders</type>
+    </component>
+
 
     <!-- VirtualFileSystem -->
     <component>

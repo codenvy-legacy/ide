@@ -40,7 +40,7 @@ import com.google.inject.name.Named;
 @Singleton
 public class BuilderClientServiceImpl implements BuilderClientService {
     /** Base url. */
-    private static final String BASE_URL = '/' + Utils.getWorkspaceName() + "/maven";
+    private static final String BASE_URL = '/' + Utils.getWorkspaceName() + "/builder";
     /** Build project method's path. */
     private static final String BUILD    = BASE_URL + "/build";
     /** Build project method's path. */
@@ -78,9 +78,9 @@ public class BuilderClientServiceImpl implements BuilderClientService {
             throws RequestException {
         final String requesrUrl = restServiceContext + BUILD;
 
-        String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&name=" + projectName + "&type=" + projectType;
+        String params = "project=" + projectName;
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-        AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
+        AsyncRequest.build(RequestBuilder.POST, requesrUrl + "?" + params)
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 

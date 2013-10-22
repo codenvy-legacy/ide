@@ -29,12 +29,19 @@
         <param-name>everrest.exoplatform.standalone.config</param-name>
         <param-value>war:/WEB-INF/classes/conf/exo-configuration.xml</param-value>
     </context-param>
+     <context-param>
+        <param-name>javax.ws.rs.Application</param-name>
+        <param-value>com.codenvy.api.builder.ApiResourcesApplication</param-value>
+    </context-param>
 
     <listener>
         <listener-class>org.everrest.exoplatform.servlet.EverrestExoContextListener$StandaloneContainerStarter</listener-class>
     </listener>
     <listener>
         <listener-class>org.everrest.websockets.WSConnectionTracker</listener-class>
+    </listener>
+    <listener>
+        <listener-class>com.codenvy.ide.servlet.ServletListener</listener-class>
     </listener>
 
     <filter>
