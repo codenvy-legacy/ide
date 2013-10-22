@@ -33,8 +33,6 @@
 
     <properties>
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
-        <!-- Codenvy Platform version that should be used to build a custom extensions. -->
-        <codenvyPlatform.version>${project.version}</codenvyPlatform.version>
     </properties>
 
     <dependencies>
@@ -287,16 +285,6 @@
                                     <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
                                     <destFileName>logback-classic.jar</destFileName>
                                 </artifactItem>
-
-                                <artifactItem>
-                                    <groupId>com.codenvy.ide</groupId>
-                                    <artifactId>codenvy-ide-client</artifactId>
-                                    <version>${codenvyPlatform.version}</version>
-                                    <type>jar</type>
-                                    <classifier>sources</classifier>
-                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                                    <destFileName>codenvy-ide-client.jar</destFileName>
-                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -349,22 +337,8 @@
                                 <delete dir="${project.build.directory}/classes/tomcat-bundle"/>
 
                                 <!-- Prepare Codenvy Platform sources -->
-                                <unzip src="${project.build.directory}/classes/codenvy-ide-client.jar"
-                                       dest="${project.build.directory}/classes/codenvy-ide-client-sources">
-                                    <patternset>
-                                        <exclude name="**/META-INF/**"/>
-                                        <exclude name="**/IDEInjector.java"/>
-                                        <exclude name="**/ExtensionManager.java"/>
-                                    </patternset>
-                                </unzip>
-                                <copy todir="${project.build.directory}/classes/codenvyPlatform/codenvy-ide-client/src/main/java">
-                                    <fileset dir="${project.build.directory}/classes/codenvy-ide-client-sources"/>
-                                </copy>
                                 <zip basedir="${project.build.directory}/classes/codenvyPlatform"
                                      destfile="${project.build.directory}/classes/CodenvyPlatform.zip"/>
-                                <delete file="${project.build.directory}/classes/codenvy-ide-client.jar"/>
-                                <delete dir="${project.build.directory}/classes/codenvy-ide-client-sources"/>
-                                <delete dir="${project.build.directory}/classes/codenvyPlatform"/>
                             </tasks>
                         </configuration>
                     </execution>

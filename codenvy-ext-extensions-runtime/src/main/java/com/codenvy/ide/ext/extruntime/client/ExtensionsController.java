@@ -159,7 +159,13 @@ public class ExtensionsController {
                               protected void onFailure(Throwable exception) {
                                   isLaunchingInProgress = false;
                                   launchedApp = null;
-                                  onFail(constant.buildApplicationFailed(currentProject.getName()), exception);
+                                  notification.setStatus(FINISHED);
+                                  notification.setType(ERROR);
+                                  String message = constant.buildApplicationFailed(currentProject.getName());
+                                  if (exception != null && exception.getMessage() != null) {
+                                      message += ": " + exception.getMessage();
+                                  }
+                                  console.print(message);
                               }
                           });
         } catch (WebSocketException e) {
@@ -288,7 +294,7 @@ public class ExtensionsController {
                                   }
                                   packNotification.setStatus(FINISHED);
                                   packNotification.setType(ERROR);
-                                  packNotification.setMessage(message);
+                                  console.print(message);
                               }
                           });
         } catch (WebSocketException e) {
