@@ -40,6 +40,7 @@ public class SetConfigCommand extends GitCommand<Void> {
     public Void execute() throws GitException {
         clear();
         commandLine.add("config");
+        value = value == null || value.length() == 0 ? "\"\"" : value;
         commandLine.add(parameter, value);
         start();
         return null;

@@ -571,10 +571,10 @@ public class GitService {
             throws GitException, LocalPathResolveException, VirtualFileSystemException {
         GitUser gituser = null;
         ConversationState user = ConversationState.getCurrent();
+        //TODO add UserServiceConnector
         if (user != null) {
-            gituser = new GitUser(user.getIdentity().getUserId());
+            gituser = new GitUser(user.getIdentity().getUserId(), user.getIdentity().getUserId());
         }
         return gitConnectionFactory.getConnection(resolveLocalPath(projectId), gituser);
-//        return GitConnectionFactory.getInstance().getConnection(resolveLocalPath(projectId), gituser);
     }
 }
