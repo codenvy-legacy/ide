@@ -21,8 +21,8 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.wizard.WizardResource;
 import com.codenvy.ide.resources.ProjectTypeData;
+import com.codenvy.ide.wizard.WizardResource;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -103,10 +103,10 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
         for (int i = 0; i < projectTypes.size(); i++) {
             final ProjectTypeData projectTypeData = projectTypes.get(i);
 
-            Image icon = new Image(projectTypeData.getIcon());
+            ImageResource icon = projectTypeData.getIcon();
             final ToggleButton btn;
             if (icon != null) {
-                btn = new ToggleButton(icon);
+                btn = new ToggleButton(new Image(icon));
             } else {
                 btn = new ToggleButton();
             }

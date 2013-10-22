@@ -38,6 +38,7 @@ public class ChooseTemplatePagePresenter extends AbstractWizardPage implements C
     private ChooseTemplatePageView view;
     private TemplateAgentImpl      templateAgent;
     private JsonArray<Template>    templates;
+    private boolean                needToChange;
 
     /**
      * Create presenter.
@@ -52,6 +53,7 @@ public class ChooseTemplatePagePresenter extends AbstractWizardPage implements C
         this.view = view;
         this.view.setDelegate(this);
         this.templateAgent = templateAgent;
+        needToChange = true;
     }
 
     /** {@inheritDoc} */
@@ -95,6 +97,7 @@ public class ChooseTemplatePagePresenter extends AbstractWizardPage implements C
     public void go(AcceptsOneWidget container) {
         prepareTemplates();
         container.setWidget(view);
+        needToChange = !needToChange;
     }
 
     /** Prepare list of templates available for a chosen project type and show this list on view. */
@@ -103,8 +106,10 @@ public class ChooseTemplatePagePresenter extends AbstractWizardPage implements C
         if (projectType != null) {
             templates = templateAgent.getTemplatesForProjectType(projectType.getPrimaryNature(), projectType.getSecondaryNature());
             view.setTemplates(templates);
-            if (!templates.isEmpty()) {
-                wizardContext.putData(TEMPLATE, templates.get(0));
+            if (!templates.isEmpty() && needToChange) {
+                Template template = templates.get(0);
+                wizardContext.putData(TEMPLATE, template);
+                view.selectItem(template);
             }
         }
     }
