@@ -125,12 +125,20 @@
         <module>codenvy-ext-ssh</module>
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
+        <module>codenvy-ide-site-war</module>
+        <module>codenvy-application-war</module>
+        <module>codenvy-packaging-standalone-tomcat</module>
+        <module>codenvy-ext-tutorials</module>
+        <module>codenvy-ext-extensions-runtime</module>
+        <module>codenvy-sdk-application-war</module>
+        <module>codenvy-sdk-private-dependencies</module>
+        <module>codenvy-sdk-packaging-standalone-tomcat</module>
     </modules>
 
-    <profiles>
-        <profile>
+    <!--profiles>
+        <profile-->
             <!-- Used to build default-version (non-SDK) of Codenvy -->
-            <id>default-version</id>
+            <!--id>default-version</id>
             <activation>
                 <property>
                     <name>!sdk</name>
@@ -142,9 +150,9 @@
                 <module>codenvy-packaging-standalone-tomcat</module>
             </modules>
         </profile>
-        <profile>
+        <profile-->
             <!-- Used to build Codenvy Platform SDK -->
-            <id>sdk-version</id>
+            <!--id>sdk-version</id>
             <activation>
                 <property>
                     <name>sdk</name>
@@ -158,5 +166,5 @@
                 <module>codenvy-sdk-packaging-standalone-tomcat</module>
             </modules>
         </profile>
-    </profiles>
+    </profiles-->
 </project>
