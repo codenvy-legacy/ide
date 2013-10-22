@@ -54,6 +54,18 @@ public interface LocalizationConstant extends Messages {
     @Key("control.refactoringRename.prompt")
     String refactoringRenameControlPrompt();
 
+    @Key("control.disableEnableCodeAssistant.id")
+    String disableEnableCodeAssistantId();
+
+    @Key("control.disableCodeAssistant.title")
+    String disableCodeAssistantControlTitle();
+
+    @Key("control.enableCodeAssistant.title")
+    String enableCodeAssistantControlTitle();
+
+    @Key("control.disableEnableCodeAssistant.prompt")
+    String disableEnableCodeAssistantControlPrompt();
+
     /*
      * Messages
      */

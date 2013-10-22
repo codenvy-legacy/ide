@@ -198,7 +198,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
     public void initialize() {
         IDE.getInstance().addControl(new CreateJavaClassControl());
         new PackageExplorerPresenter();
-
+        DisableEnableCodeAssistantControl disableEnableCodeAssistantControl = new DisableEnableCodeAssistantControl();
         CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
         IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
@@ -207,13 +207,14 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         IDE.addHandler(ApplicationClosedEvent.TYPE, this);
         IDE.addHandler(VfsChangedEvent.TYPE, this);
 //      new CodeAssistantPresenter(this);
-        new JavaCodeController(Utils.getRestContext(), Utils.getWorkspaceName(), this);
+        new JavaCodeController(Utils.getRestContext(), Utils.getWorkspaceName(), disableEnableCodeAssistantControl, this);
         new OutlinePresenter();
         new TypeInfoUpdater();
         new JavaClasspathResolver(this);
         new OrganizeImportsPresenter(IDE.eventBus());
         new RefactoringRenamePresenter();
         IDE.getInstance().addControl(new CleanProjectControl());
+        IDE.getInstance().addControl(disableEnableCodeAssistantControl);
         IDE.getInstance().addControl(new OrganizeImportsControl());
         IDE.getInstance().addControl(new CreatePackageControl());
         IDE.getInstance().addControl(new QuickFixControl());

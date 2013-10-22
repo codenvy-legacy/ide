@@ -17,7 +17,6 @@
  */
 package org.eclipse.jdt.client;
 
-import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.http.client.RequestBuilder;
@@ -77,10 +76,11 @@ import java.util.Set;
  * @version $Id: Feb 6, 2012 10:26:58 AM anya $
  */
 public class JavaCodeController implements EditorFileContentChangedHandler, EditorActiveFileChangedHandler,
-                                           CancelParseHandler, EditorFileOpenedHandler, ReparseOpenedFilesHandler, EditorFileClosedHandler {
+                                           CancelParseHandler, EditorFileOpenedHandler, ReparseOpenedFilesHandler, EditorFileClosedHandler,
+                                           DisableEnableCodeAssistantHandler {
 
     /** Get build log method's path. */
-    private final String LOG ;
+    private final String LOG;
 
     /** Active file in editor. */
     private FileModel activeFile;
@@ -97,9 +97,15 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
     private final SupportedProjectResolver resolver;
 
-    public JavaCodeController(String restContest, String ws, SupportedProjectResolver resolver) {
+    private DisableEnableCodeAssistantControl disableEnableCodeAssistantControl;
+
+    private boolean isEnableCodeAssistant = false;
+
+    public JavaCodeController(String restContest, String ws, DisableEnableCodeAssistantControl disableEnableCodeAssistantControl,
+                              SupportedProjectResolver resolver) {
         this.LOG = restContest + ws + "/maven/log";
         this.resolver = resolver;
+        this.disableEnableCodeAssistantControl = disableEnableCodeAssistantControl;
         instance = this;
         IDE.addHandler(EditorFileContentChangedEvent.TYPE, this);
         IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
@@ -108,7 +114,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
         IDE.addHandler(ReparseOpenedFilesEvent.TYPE, this);
         IDE.addHandler(EditorFileClosedEvent.TYPE, this);
-
+        IDE.addHandler(DisableEnableCodeAssistantEvent.TYPE, this);
     }
 
     public static JavaCodeController get() {
@@ -130,8 +136,10 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         return unit;
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
-     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+     */
     @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         if (event.getFile() == null)
@@ -148,7 +156,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             NAME_ENVIRONMENT = new NameEnvironment(activeFile.getProject().getId());
             if (event.getEditor() instanceof Markable) {
                 editors.put(activeFile.getId(), (Markable)event.getEditor());
-                if (needReparse.contains(activeFile.getId())) {
+                if (isEnableCodeAssistant && needReparse.contains(activeFile.getId())) {
                     startParsing();
                 }
             }
@@ -284,8 +292,10 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client
-     * .framework.editor.event.EditorFileOpenedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client
+     *      .framework.editor.event.EditorFileOpenedEvent)
+     */
     @Override
     public void onEditorFileOpened(EditorFileOpenedEvent event) {
         if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA)) {
@@ -327,15 +337,17 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
     //      }
     //   };
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform
-     * .ide.client.framework.editor.event.EditorFileContentChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorFileContentChangedEvent)
+     */
     @Override
     public void onEditorFileContentChanged(EditorFileContentChangedEvent event) {
         if (activeFile == null)
             return;
         needReparse.remove(event.getFile().getId());
         finishJob(activeFile);
-        if (editors.containsKey(activeFile.getId())) {
+        if (isEnableCodeAssistant && editors.containsKey(activeFile.getId())) {
             startParsing();
         }
     }
@@ -344,15 +356,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
      *
      */
     private void startParsing() {
-        //TODO temporary solutions need do something smart.
-        //This need delay start parsing then dependency parsing is finish
-        new Timer() {
-            public void run() {
-                if (!JavaClasspathResolver.getInstance().isStillWork())
-                    cancel();
-            }
-        }.scheduleRepeating(1000);
-
+        checklInitializingWork();
 
         int time = 2000;
         if (workingParsers.containsKey(activeFile.getId())) {
@@ -387,7 +391,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         IDE.fireEvent(new JobChangeEvent(job));
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent) */
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client
+     * .framework.editor.event.EditorFileClosedEvent) */
     @Override
     public void onEditorFileClosed(EditorFileClosedEvent event) {
         String id = event.getFile().getId();
@@ -395,7 +400,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         workingParsers.remove(id);
     }
 
-    /** @see org.eclipse.jdt.client.event.ReparseOpenedFilesHandler#onPaerseActiveFile(org.eclipse.jdt.client.event.ReparseOpenedFilesEvent) */
+    /** @see org.eclipse.jdt.client.event.ReparseOpenedFilesHandler#onPaerseActiveFile(org.eclipse.jdt.client.event
+     * .ReparseOpenedFilesEvent) */
     @Override
     public void onReparseOpenedFiles(ReparseOpenedFilesEvent event) {
         if (editors.isEmpty())
@@ -404,7 +410,11 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             needReparse.add(id);
         }
         startJob(activeFile);
-        startParsing();
+        if (isEnableCodeAssistant) {
+            startParsing();
+        } else {
+            checklInitializingWork();
+        }
     }
 
     public FileModel getActiveFile() {
@@ -415,4 +425,23 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         return NAME_ENVIRONMENT;
     }
 
+    @Override
+    public void onDisableEnableCodeAssistant(DisableEnableCodeAssistantEvent event) {
+        disableEnableCodeAssistantControl.setState(event.isEnable());
+        isEnableCodeAssistant = !event.isEnable();
+        if (isEnableCodeAssistant) {
+            checklInitializingWork();
+            startParsing();
+        }
+    }
+
+    /** This need delay start parsing then dependency parsing is finish */
+    private void checklInitializingWork() {
+        new Timer() {
+            public void run() {
+                if (!JavaClasspathResolver.getInstance().isStillWork())
+                    cancel();
+            }
+        }.scheduleRepeating(1000);
+    }
 }
