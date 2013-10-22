@@ -21,9 +21,8 @@ package com.codenvy.ide.ext.gae.client.wizard;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.UnauthorizedException;
 import com.codenvy.ide.ext.gae.client.*;
@@ -46,7 +45,6 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.ext.gae.client.GAEExtension.ID;
 
@@ -57,7 +55,7 @@ import static com.codenvy.ide.ext.gae.client.GAEExtension.ID;
  * @version $Id: $
  */
 @Singleton
-public class GAEWizardPagePresenter extends AbstractWizardPage implements GAEWizardView.ActionDelegate {
+public class GAEWizardPagePresenter extends AbstractPaasPage implements GAEWizardView.ActionDelegate {
     private GAEWizardView              view;
     private EventBus                   eventBus;
     private String                     existedAppId;
@@ -75,7 +73,7 @@ public class GAEWizardPagePresenter extends AbstractWizardPage implements GAEWiz
     public GAEWizardPagePresenter(EventBus eventBus, GAEWizardView view, GAELocalization constant, LoginAction loginAction,
                                   GAEClientService service, GAEResources resources, CreateApplicationPresenter createApplicationPresenter,
                                   ResourceProvider resourceProvider, NotificationManager notificationManager) {
-        super("Deploy project to Google App Engine", resources.googleAppEngine48());
+        super("Deploy project to Google App Engine", resources.googleAppEngine48(), ID);
 
         this.eventBus = eventBus;
         this.view = view;
@@ -126,13 +124,6 @@ public class GAEWizardPagePresenter extends AbstractWizardPage implements GAEWiz
     @Override
     public void removeOptions() {
         //do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean inContext() {
-        PaaS paas = wizardContext.getData(PAAS);
-        return paas != null && paas.getId().equals(ID);
     }
 
     /** {@inheritDoc} */

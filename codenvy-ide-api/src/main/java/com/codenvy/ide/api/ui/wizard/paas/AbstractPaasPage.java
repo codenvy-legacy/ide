@@ -15,51 +15,34 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.api.ui.wizard.template;
+package com.codenvy.ide.api.ui.wizard.paas;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.paas.PaaS;
-import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
 
 /**
- * The abstract implementation of page that a template provides.
+ * The abstract implementation of page that the PaaS provides.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public abstract class AbstractTemplatePage extends AbstractWizardPage {
-    private String templateID;
+public abstract class AbstractPaasPage extends AbstractWizardPage {
+    private String paasID;
 
     /**
-     * Create wizard page.
+     * Create PaaS page.
      *
      * @param caption
      * @param image
-     * @param templateID
+     * @param paasID
      */
-    public AbstractTemplatePage(@Nullable String caption, @Nullable ImageResource image, @NotNull String templateID) {
+    public AbstractPaasPage(@Nullable String caption, @Nullable ImageResource image, @NotNull String paasID) {
         super(caption, image);
-        this.templateID = templateID;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean inContext() {
-        PaaS paas = wizardContext.getData(PAAS);
-        Template template = wizardContext.getData(TEMPLATE);
-        return paas != null && !paas.isProvideTemplate() && template != null && template.getId().equals(templateID);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean canSkip() {
-        return true;
+        this.paasID = paasID;
     }
 
     /** {@inheritDoc} */
@@ -88,7 +71,8 @@ public abstract class AbstractTemplatePage extends AbstractWizardPage {
 
     /** {@inheritDoc} */
     @Override
-    public void go(AcceptsOneWidget container) {
-        // do nothing
+    public boolean inContext() {
+        PaaS paas = wizardContext.getData(PAAS);
+        return paas != null && paas.getId().equals(paasID);
     }
 }

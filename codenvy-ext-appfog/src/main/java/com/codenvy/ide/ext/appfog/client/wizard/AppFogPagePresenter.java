@@ -21,10 +21,9 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.*;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
@@ -55,7 +54,6 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.ext.appfog.client.AppFogExtension.ID;
 
@@ -65,7 +63,7 @@ import static com.codenvy.ide.ext.appfog.client.AppFogExtension.ID;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class AppFogPagePresenter extends AbstractWizardPage implements AppFogPageView.ActionDelegate, ProjectBuiltHandler {
+public class AppFogPagePresenter extends AbstractPaasPage implements AppFogPageView.ActionDelegate, ProjectBuiltHandler {
     private AppFogPageView             view;
     private EventBus                   eventBus;
     private String                     server;
@@ -105,7 +103,7 @@ public class AppFogPagePresenter extends AbstractWizardPage implements AppFogPag
                                   AppfogResources resources, AppfogLocalizationConstant constant, LoginPresenter loginPresenter,
                                   AppfogClientService service, NotificationManager notificationManager) {
 
-        super("Deploy project to AppFog", resources.appfog48());
+        super("Deploy project to AppFog", resources.appfog48(), ID);
 
         this.view = view;
         this.view.setDelegate(this);
@@ -488,13 +486,6 @@ public class AppFogPagePresenter extends AbstractWizardPage implements AppFogPag
         this.project = project;
 
         buildApplication();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean inContext() {
-        PaaS paas = wizardContext.getData(PAAS);
-        return paas != null && paas.getId().equals(ID);
     }
 
     /** {@inheritDoc} */

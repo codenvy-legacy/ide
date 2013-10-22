@@ -19,12 +19,9 @@ package com.codenvy.ide.extension.cloudfoundry.client.wizard;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
-import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.template.CreateProjectProvider;
-import com.codenvy.ide.api.template.TemplateAgent;
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.*;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
@@ -54,7 +51,7 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension.ID;
 
 /**
@@ -63,7 +60,7 @@ import static com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtensio
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CloudFoundryPagePresenter extends AbstractWizardPage implements CloudFoundryPageView.ActionDelegate, ProjectBuiltHandler {
+public class CloudFoundryPagePresenter extends AbstractPaasPage implements CloudFoundryPageView.ActionDelegate, ProjectBuiltHandler {
     private CloudFoundryPageView             view;
     private EventBus                         eventBus;
     private String                           server;
@@ -79,8 +76,6 @@ public class CloudFoundryPagePresenter extends AbstractWizardPage implements Clo
     private HandlerRegistration              projectBuildHandler;
     private LoginPresenter                   loginPresenter;
     private CloudFoundryClientService        service;
-    private TemplateAgent                    templateAgent;
-    private CreateProjectProvider            createProjectProvider;
     private CloudFoundryExtension.PAAS_PROVIDER paasProvider = CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY;
     private boolean        isLogined;
     private CommitCallback callback;
@@ -100,8 +95,8 @@ public class CloudFoundryPagePresenter extends AbstractWizardPage implements Clo
     @Inject
     protected CloudFoundryPagePresenter(CloudFoundryPageView view, EventBus eventBus, ResourceProvider resourcesProvider,
                                         CloudFoundryResources resources, ConsolePart console, CloudFoundryLocalizationConstant constant,
-                                        LoginPresenter loginPresenter, CloudFoundryClientService service, TemplateAgent templateAgent) {
-        super("Deploy project to Cloud Foundry", resources.cloudFoundry48());
+                                        LoginPresenter loginPresenter, CloudFoundryClientService service) {
+        super("Deploy project to Cloud Foundry", resources.cloudFoundry48(), ID);
 
         this.view = view;
         this.view.setDelegate(this);
@@ -111,7 +106,6 @@ public class CloudFoundryPagePresenter extends AbstractWizardPage implements Clo
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
-        this.templateAgent = templateAgent;
     }
 
     /** {@inheritDoc} */
@@ -433,7 +427,7 @@ public class CloudFoundryPagePresenter extends AbstractWizardPage implements Clo
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        projectName = createProjectProvider.getProjectName();
+        projectName = wizardContext.getData(PROJECT_NAME);
         isLogined = true;
         getServers();
 
@@ -475,13 +469,6 @@ public class CloudFoundryPagePresenter extends AbstractWizardPage implements Clo
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean inContext() {
-        PaaS paas = wizardContext.getData(PAAS);
-        return paas != null && paas.getId().equals(ID);
     }
 
     /** {@inheritDoc} */

@@ -20,9 +20,8 @@ package com.codenvy.ide.ext.aws.client.beanstalk.wizard;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.ext.aws.client.AWSExtension;
@@ -62,7 +61,6 @@ import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.ext.aws.client.AWSExtension.ID;
 
@@ -73,7 +71,7 @@ import static com.codenvy.ide.ext.aws.client.AWSExtension.ID;
  * @version $Id: $
  */
 @Singleton
-public class BeanstalkPagePresenter extends AbstractWizardPage implements BeanstalkPageView.ActionDelegate, ProjectBuiltHandler {
+public class BeanstalkPagePresenter extends AbstractPaasPage implements BeanstalkPageView.ActionDelegate, ProjectBuiltHandler {
     private BeanstalkPageView       view;
     private EventBus                eventBus;
     private String                  environmentName;
@@ -108,7 +106,7 @@ public class BeanstalkPagePresenter extends AbstractWizardPage implements Beanst
     public BeanstalkPagePresenter(BeanstalkPageView view, EventBus eventBus, ResourceProvider resourceProvider,
                                   AWSLocalizationConstant constant, LoginPresenter loginPresenter, BeanstalkClientService service,
                                   AWSResource resource, Loader loader, NotificationManager notificationManager) {
-        super("Deploy project to Elastic Beanstalk", resource.elasticBeanstalk48());
+        super("Deploy project to Elastic Beanstalk", resource.elasticBeanstalk48(), ID);
 
         this.view = view;
         this.eventBus = eventBus;
@@ -316,13 +314,6 @@ public class BeanstalkPagePresenter extends AbstractWizardPage implements Beanst
             notificationManager.showNotification(notification);
             callback.onFailure(e);
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean inContext() {
-        PaaS paas = wizardContext.getData(PAAS);
-        return paas != null && paas.getId().equals(ID);
     }
 
     /** {@inheritDoc} */

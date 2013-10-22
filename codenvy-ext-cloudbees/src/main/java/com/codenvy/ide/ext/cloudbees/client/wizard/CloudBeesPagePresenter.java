@@ -21,10 +21,9 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.*;
 import com.codenvy.ide.ext.cloudbees.client.login.LoggedInHandler;
@@ -50,7 +49,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.ext.cloudbees.client.CloudBeesExtension.ID;
 
@@ -60,7 +58,7 @@ import static com.codenvy.ide.ext.cloudbees.client.CloudBeesExtension.ID;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CloudBeesPagePresenter extends AbstractWizardPage implements CloudBeesPageView.ActionDelegate {
+public class CloudBeesPagePresenter extends AbstractPaasPage implements CloudBeesPageView.ActionDelegate {
     private CloudBeesPageView             view;
     private EventBus                      eventBus;
     private ResourceProvider              resourcesProvider;
@@ -106,7 +104,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPage implements CloudB
                                      CloudBeesResources resources,
                                      BuildApplicationPresenter buildApplicationPresenter,
                                      NotificationManager notificationManager) {
-        super("Deploy project to CloudBees", resources.cloudBees48());
+        super("Deploy project to CloudBees", resources.cloudBees48(), ID);
 
         this.view = view;
         this.view.setDelegate(this);
@@ -214,13 +212,6 @@ public class CloudBeesPagePresenter extends AbstractWizardPage implements CloudB
             Notification notification = new Notification(e.getMessage(), ERROR);
             notificationManager.showNotification(notification);
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean inContext() {
-        PaaS paas = wizardContext.getData(PAAS);
-        return paas != null && paas.getId().equals(ID);
     }
 
     /** {@inheritDoc} */
