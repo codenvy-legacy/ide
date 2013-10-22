@@ -56,6 +56,10 @@ public class CodenvyApiServletContextListener implements ServletContextListener 
 
     private FactoryStore getFactoryStore() {
 
+        // For IDE Tomcat which has no properties
+        if (System.getProperty("cloud.admin.configuration.dir") == null)
+            return new InMemoryFactoryStore();
+
         File dbSettings =
                 new File(new File(System.getProperty("cloud.admin.configuration.dir")), "factory-storage.properties");
         if (!dbSettings.exists() || dbSettings.isDirectory()) {
@@ -68,9 +72,11 @@ public class CodenvyApiServletContextListener implements ServletContextListener 
                 int port = configuration.getInt("port");
                 String dbName = configuration.getString("database");
                 String collectionName = configuration.getString("collection");
+                String username = configuration.getString("username");
+                String password = configuration.getString("password");
                 if (host != null && !host.isEmpty() && port != 0 && dbName != null && !dbName.isEmpty() &&
                     collectionName != null && !collectionName.isEmpty())
-                    return new MongoDBFactoryStore(host, port, dbName, collectionName);
+                    return new MongoDBFactoryStore(host, port, dbName, collectionName, username, password);
                 else {
                     LOG.warn("Error while parsing MongoDB configuration file. Default settings will be used.");
                     return new MongoDBFactoryStore();
