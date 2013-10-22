@@ -18,14 +18,13 @@
     from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-sdk-packaging-standalone-tomcat</artifactId>
     <packaging>pom</packaging>
@@ -570,95 +569,77 @@
                         <phase>prepare-package</phase>
                         <configuration>
                             <tasks>
-                                <unzip src="${project.build.directory}/packager-conf/zip/tomcat.zip"
-                                       dest="${project.build.directory}">
+                                <unzip src="${project.build.directory}/packager-conf/zip/tomcat.zip" dest="${project.build.directory}">
                                     <patternset>
-                                        <exclude name="**/ROOT/**"/>
-                                        <exclude name="**/docs/**"/>
-                                        <exclude name="**/examples/**"/>
-                                        <exclude name="**/manager/**"/>
-                                        <exclude name="**/host-manager/**"/>
+                                        <exclude name="**/ROOT/**" />
+                                        <exclude name="**/docs/**" />
+                                        <exclude name="**/examples/**" />
+                                        <exclude name="**/manager/**" />
+                                        <exclude name="**/host-manager/**" />
                                     </patternset>
                                 </unzip>
-                                <move file="${project.build.directory}/apache-tomcat-${tomcat.version}"
-                                      tofile="${tomcat.output.dir}"/>
+                                <move file="${project.build.directory}/apache-tomcat-${tomcat.version}" tofile="${tomcat.output.dir}" />
                                 <copy todir="${tomcat.output.dir}" overwrite="true">
-                                    <fileset dir="${basedir}/src/main/resources/tomcat"/>
+                                    <fileset dir="${basedir}/src/main/resources/tomcat" />
                                 </copy>
-                                <chmod dir="${tomcat.output.dir}/bin" perm="+x" includes="**/*.sh"/>
-                                <move file="${tomcat.output.dir}/lib/log4j-over-slf4j-${org.slf4j.version}.jar"
-                                      tofile="${tomcat.output.dir}/lib/log4j-over-slf4j.jar"/>
-                                <move file="${tomcat.output.dir}/lib/logback-core-${ch.qos.logback.version}.jar"
-                                      tofile="${tomcat.output.dir}/lib/logback-core.jar"/>
-                                <move file="${tomcat.output.dir}/lib/logback-classic-${ch.qos.logback.version}.jar"
-                                      tofile="${tomcat.output.dir}/lib/logback-classic.jar"/>
-                                <move file="${tomcat.output.dir}/lib/slf4j-api-${org.slf4j.version}.jar"
-                                      tofile="${tomcat.output.dir}/lib/slf4j-api.jar"/>
-                                <move file="${tomcat.output.dir}/lib/jul-to-slf4j-${org.slf4j.version}.jar"
-                                      tofile="${tomcat.output.dir}/lib/jul-to-slf4j.jar"/>
+                                <chmod dir="${tomcat.output.dir}/bin" perm="+x" includes="**/*.sh" />
+                                <move file="${tomcat.output.dir}/lib/log4j-over-slf4j-${org.slf4j.version}.jar" tofile="${tomcat.output.dir}/lib/log4j-over-slf4j.jar" />
+                                <move file="${tomcat.output.dir}/lib/logback-core-${ch.qos.logback.version}.jar" tofile="${tomcat.output.dir}/lib/logback-core.jar" />
+                                <move file="${tomcat.output.dir}/lib/logback-classic-${ch.qos.logback.version}.jar" tofile="${tomcat.output.dir}/lib/logback-classic.jar" />
+                                <move file="${tomcat.output.dir}/lib/slf4j-api-${org.slf4j.version}.jar" tofile="${tomcat.output.dir}/lib/slf4j-api.jar" />
+                                <move file="${tomcat.output.dir}/lib/jul-to-slf4j-${org.slf4j.version}.jar" tofile="${tomcat.output.dir}/lib/jul-to-slf4j.jar" />
 
-                                <unwar src="${project.build.directory}/packager-conf/war/codenvy-sdk-application-war-${project.version}.war"
-                                       dest="${project.build.directory}/packager-conf/war/ide">
+                                <unwar src="${project.build.directory}/packager-conf/war/codenvy-sdk-application-war-${project.version}.war" dest="${project.build.directory}/packager-conf/war/ide">
                                     <patternset>
-                                        <exclude name="**/lib/**"/>
+                                        <exclude name="**/lib/**" />
                                     </patternset>
                                 </unwar>
 
                                 <move todir="${project.build.directory}/packager-conf/war/ide/_app">
-                                    <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/"/>
+                                    <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/" />
                                 </move>
 
                                 <war destfile="${tomcat.output.dir}/webapps/ide.war" needxmlfile="false">
-                                    <fileset dir="${project.build.directory}/packager-conf/war/ide"/>
+                                    <fileset dir="${project.build.directory}/packager-conf/war/ide" />
                                 </war>
 
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${org.exoplatform.ide.version}.war"
-                                      tofile="${tomcat.output.dir}/webapps/git.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${org.exoplatform.ide.version}.war"
-                                      tofile="${tomcat.output.dir}/webapps/builder.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war"
-                                      tofile="${tomcat.output.dir}/webapps/codeassistant-storage.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war"
-                                      tofile="${tomcat.output.dir}/webapps/userdb.war" overwrite="true"/>
-                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
-                                       dest="${tomcat.output.dir}"/>
-                                <unzip src="${project.build.directory}/repo.zip"
-                                       dest="${tomcat.output.dir}"/>
-                                <chmod dir="${tomcat.output.dir}" perm="+x" includes="install.sh"/>
-                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip"
-                                       dest="${tomcat.output.dir}">
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${org.exoplatform.ide.version}.war" tofile="${tomcat.output.dir}/webapps/git.war" overwrite="true" />
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${org.exoplatform.ide.version}.war" tofile="${tomcat.output.dir}/webapps/builder.war" overwrite="true" />
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war" tofile="${tomcat.output.dir}/webapps/codeassistant-storage.war" overwrite="true" />
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war" tofile="${tomcat.output.dir}/webapps/userdb.war" overwrite="true" />
+                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${tomcat.output.dir}" />
+                                <unzip src="${project.build.directory}/repo.zip" dest="${tomcat.output.dir}" />
+                                <chmod dir="${tomcat.output.dir}" perm="+x" includes="install.sh" />
+                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${tomcat.output.dir}">
                                     <patternset>
-                                        <exclude name="**/bin/**"/>
-                                        <exclude name="**/demos/**"/>
-                                        <exclude name="**/src/**"/>
-                                        <exclude name="**/docs/javadoc/**"/>
-                                        <exclude name="**/docs/remoteapi/**"/>
-                                        <exclude name="**/docs/testing/**"/>
-                                        <exclude name="**/docs/tools/**"/>
-                                        <exclude name="**/docs/javadoc/**"/>
-                                        <exclude name="**/ABOUT"/>
-                                        <exclude name="**/COPYING"/>
-                                        <exclude name="**/README"/>
-                                        <exclude name="**/README.ORM"/>
-                                        <exclude name="**/RELEASE_NOTES"/>
-                                        <exclude name="**/RELEASE_NOTES.ORM"/>
+                                        <exclude name="**/bin/**" />
+                                        <exclude name="**/demos/**" />
+                                        <exclude name="**/src/**" />
+                                        <exclude name="**/docs/javadoc/**" />
+                                        <exclude name="**/docs/remoteapi/**" />
+                                        <exclude name="**/docs/testing/**" />
+                                        <exclude name="**/docs/tools/**" />
+                                        <exclude name="**/docs/javadoc/**" />
+                                        <exclude name="**/ABOUT" />
+                                        <exclude name="**/COPYING" />
+                                        <exclude name="**/README" />
+                                        <exclude name="**/README.ORM" />
+                                        <exclude name="**/RELEASE_NOTES" />
+                                        <exclude name="**/RELEASE_NOTES.ORM" />
                                     </patternset>
                                 </unzip>
-                                <move file="${tomcat.output.dir}/appengine-java-sdk-${appengine.version}"
-                                      tofile="${tomcat.output.dir}/appengine-java-sdk"/>
-                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-python-sdk.zip"
-                                       dest="${tomcat.output.dir}">
+                                <move file="${tomcat.output.dir}/appengine-java-sdk-${appengine.version}" tofile="${tomcat.output.dir}/appengine-java-sdk" />
+                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-python-sdk.zip" dest="${tomcat.output.dir}">
                                     <patternset>
-                                        <exclude name="**/demos/**"/>
-                                        <exclude name="**/new_project_template/**"/>
-                                        <exclude name="**/BUGS"/>
-                                        <exclude name="**/LICENSE"/>
-                                        <exclude name="**/README"/>
-                                        <exclude name="**/RELEASE_NOTES"/>
+                                        <exclude name="**/demos/**" />
+                                        <exclude name="**/new_project_template/**" />
+                                        <exclude name="**/BUGS" />
+                                        <exclude name="**/LICENSE" />
+                                        <exclude name="**/README" />
+                                        <exclude name="**/RELEASE_NOTES" />
                                     </patternset>
                                 </unzip>
-                                <move file="${tomcat.output.dir}/google_appengine"
-                                      tofile="${tomcat.output.dir}/appengine-python-sdk"/>
+                                <move file="${tomcat.output.dir}/google_appengine" tofile="${tomcat.output.dir}/appengine-python-sdk" />
                             </tasks>
                         </configuration>
                         <goals>
