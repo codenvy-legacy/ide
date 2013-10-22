@@ -553,11 +553,32 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             AsyncRequestCallback<Map<String, String>> callback = new AsyncRequestCallback<Map<String, String>>(unmarshaller) {
                 @Override
                 protected void onSuccess(Map<String, String> result) {
-                    String email = IDE.user.getName();
-                    display.setEmailFieldValue(email);
-                    
-                    String author = result.get("firstName") + " " + result.get("lastName");
-                    display.setAuthorFieldValue(author);
+                    try {
+                        if (IDE.user != null && IDE.user.getName() != null) {
+                            String email = IDE.user.getName();
+                            display.setEmailFieldValue(email);                        
+                        }
+                        
+                        String author = "";
+                        if (result != null) {
+                            if (result.get("firstName") != null) {
+                                author += result.get("firstName");                            
+                            }
+                            
+                            if (result.get("lastName") != null) {
+                                if (!author.isEmpty()) {
+                                    author += " ";
+                                }
+                                
+                                author += result.get("lastName");
+                            }
+                        }
+                        
+                        display.setAuthorFieldValue(author);
+                        
+                    } catch (Exception e) {
+                        Dialogs.getInstance().showError(e.getMessage());
+                    }
                 }
 
                 @Override
@@ -581,7 +602,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
-    
     
     /**
      * Binds display.
@@ -745,7 +765,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                 "style=\"" + style + "\" " +
                 "counter=\"" + counterType + "\" " +
                "></script>";
-        
+
         display.previewFactoryButton("" +
             "<html>" +
             "<head></head>" +
@@ -821,7 +841,11 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         projectAttributes.put("ptype", new JSONString(openedProject.getProjectType()));        
 
         if (isAdvanced) {
-            request.put("style", new JSONString("Advanced"));
+            if (display.showCounterChecked()) {
+                request.put("style", new JSONString("Advanced with Counter"));
+            } else {
+                request.put("style", new JSONString("Advanced"));
+            }
         } else {
             if (display.showCounterChecked()) {
                   if (display.verticalOrientationSelected()) {
@@ -872,25 +896,25 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
     }
 
     private void generateSpinnetsAfterFactoryCreation() {
-        String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
+        //String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
+        String jsURL = SpinnetGenerator.getFactoryButtonEmbedJSURL() + "?" + createdFactoryJSON.get("id").isString().stringValue();
         
-        String self = null;
-        
-        JSONArray array = createdFactoryJSON.get("links").isArray();
-        for (int i = 0; i < array.size(); i++) {
-            JSONObject link = array.get(i).isObject();
-            String rel = link.get("rel").isString().stringValue();
-            if ("self".equals(rel)) {
-                self = link.get("href").isString().stringValue();
-            }
-        }
+//        String self = null;
+//        
+//        JSONArray array = createdFactoryJSON.get("links").isArray();
+//        for (int i = 0; i < array.size(); i++) {
+//            JSONObject link = array.get(i).isObject();
+//            String rel = link.get("rel").isString().stringValue();
+//            if ("self".equals(rel)) {
+//                self = link.get("href").isString().stringValue();
+//            }
+//        }
         
         String script = "" +
             "<script " +
             "type=\"text/javascript\" " +
             "language=\"javascript\" " +
             "src=\"" + jsURL + "\" " +
-            "factory=\"" + self + "\" " +
             "></script>";
 
         display.websitesSnippet().setValue(script);          
