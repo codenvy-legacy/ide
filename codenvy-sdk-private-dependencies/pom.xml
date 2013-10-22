@@ -60,6 +60,12 @@
             <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Extensions -->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
