@@ -190,6 +190,7 @@
             <scope>test</scope>
         </dependency>
 
+
     </dependencies>
     <build>
         <!-- DO NOT REMOVE NEED FOR GWT BUILD-->
@@ -201,42 +202,5 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <forkMode>never</forkMode>
-                    <excludes>
-                        <exclude>**/*Gwt*</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>gwt-maven-plugin</artifactId>
-                <configuration>
-                    <module>org.exoplatform.ide.git.GitTest</module>
-                    <logLevel>ERROR</logLevel>
-                    <!-- TODO -->
-                    <skipTests>true</skipTests>
-                    <forkMode>never</forkMode>
-                    <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
-                    <productionMode>false</productionMode>
-                    <testTimeOut>500</testTimeOut>
-                    <mode>htmlunit</mode>
-                    <htmlunit>FF3</htmlunit>
-                    <extraJvmArgs>-Xmx1048m -XX:MaxPermSize=256m -Xss35m</extraJvmArgs>
-                    <out>${project.build.directory}/www-test</out>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
 </project>
