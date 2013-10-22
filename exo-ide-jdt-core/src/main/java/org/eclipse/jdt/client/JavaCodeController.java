@@ -430,6 +430,11 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         disableEnableCodeAssistantControl.setState(event.isEnable());
         isEnableCodeAssistant = !event.isEnable();
         if (isEnableCodeAssistant) {
+            if (!editors.isEmpty()) {
+                for (String id : editors.keySet()) {
+                    needReparse.add(id);
+                }
+            }
             checklInitializingWork();
             startParsing();
         }
