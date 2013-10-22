@@ -22,10 +22,26 @@
             <version>${codenvy.factory.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.factory</groupId>
+            <artifactId>codenvy-factory-storage-mongo</artifactId>
+            <version>${codenvy.factory.version}</version>
+        </dependency>
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>${javax.servlet-api.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>${commons-configuration.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Logger -->
         <dependency>
