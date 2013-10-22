@@ -54,7 +54,7 @@ public class NewProjectWizard extends DefaultWizard {
     public NewProjectWizard(NotificationManager notificationManager) {
         super(notificationManager, "New project");
         chooseTemplate = 1;
-        lastTemplatePage = 1;
+        lastTemplatePage = 2;
     }
 
     /**
@@ -65,8 +65,6 @@ public class NewProjectWizard extends DefaultWizard {
      */
     public void addPageAfterFirst(@NotNull Provider<? extends WizardPage> wizardPage) {
         addPage(wizardPage, 1, false);
-        chooseTemplate++;
-        lastTemplatePage++;
     }
 
     /**
@@ -77,7 +75,6 @@ public class NewProjectWizard extends DefaultWizard {
      */
     public void addPageAfterChooseTemplate(@NotNull Provider<? extends WizardPage> wizardPage) {
         addPage(wizardPage, chooseTemplate + 1, false);
-        lastTemplatePage++;
     }
 
     /**
@@ -87,8 +84,7 @@ public class NewProjectWizard extends DefaultWizard {
      *         page that needs to be added
      */
     public void addPageBeforePaas(@NotNull Provider<? extends WizardPage> wizardPage) {
-        addPage(wizardPage, lastTemplatePage + 1, false);
-        lastTemplatePage++;
+        addPage(wizardPage, lastTemplatePage, false);
     }
 
     /**
@@ -105,5 +101,13 @@ public class NewProjectWizard extends DefaultWizard {
     @Override
     public void addPage(@NotNull Provider<? extends WizardPage> page, int index, boolean replace) {
         super.addPage(page, index, replace);
+
+        if (index <= chooseTemplate) {
+            chooseTemplate++;
+        }
+
+        if (index <= lastTemplatePage) {
+            lastTemplatePage++;
+        }
     }
 }

@@ -1225,15 +1225,21 @@ public class NewProjectWizardTest extends BaseWizardTest {
         wizard.addPageAfterChooseTemplate(pageProvider);
         wizard.addPageBeforePaas(pageProvider);
         wizard.addPage(pageProvider);
+        wizard.addPage(pageProvider, 2, false);
+        wizard.addPage(pageProvider, 4, false);
+        wizard.addPage(pageProvider, 8, false);
 
         assertEquals(wizard.flipToFirst(), newProjectPage);
         wizardContext.putData(TEMPLATE, template);
         wizardContext.putData(PAAS, paas);
         assertEquals(wizard.flipToNext(), page);
+        assertEquals(wizard.flipToNext(), page);
         assertEquals(wizard.flipToNext(), chooseTemplatePage);
+        assertEquals(wizard.flipToNext(), page);
         assertEquals(wizard.flipToNext(), page);
         assertEquals(wizard.flipToNext(), templatePage);
         assertEquals(wizard.flipToNext(), templatePage);
+        assertEquals(wizard.flipToNext(), page);
         assertEquals(wizard.flipToNext(), page);
         assertEquals(wizard.flipToNext(), paasPage);
         assertEquals(wizard.flipToNext(), paasPage);
