@@ -21,6 +21,8 @@ package org.exoplatform.gwtframework.ui.client.component;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.*;
@@ -34,6 +36,7 @@ import com.google.gwt.user.client.ui.SuggestBox.SuggestionCallback;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 
 import org.exoplatform.gwtframework.ui.client.SelectItemResource;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,7 +50,7 @@ import java.util.Collection;
  * @version $
  */
 
-public class ComboBoxField extends Composite implements HasValue<String> {
+public class ComboBoxField extends Composite implements TextFieldItem {
     private static ComboBoxUiBinder uiBinder = GWT.create(ComboBoxUiBinder.class);
 
     interface ComboBoxUiBinder extends UiBinder<Widget, ComboBoxField> {
@@ -391,5 +394,29 @@ public class ComboBoxField extends Composite implements HasValue<String> {
         public void onResize(ResizeEvent resizeEvent) {
             adjustSuggestingPopupSize();
         }
+    }
+
+    /**
+     * @see com.google.gwt.event.dom.client.HasKeyUpHandlers#addKeyUpHandler(com.google.gwt.event.dom.client.KeyUpHandler)
+     */
+    @Override
+    public HandlerRegistration addKeyUpHandler(KeyUpHandler handler) {
+        return suggestBox.addKeyUpHandler(handler);
+    }
+
+    /**
+     * @see com.google.gwt.event.dom.client.HasKeyDownHandlers#addKeyDownHandler(com.google.gwt.event.dom.client.KeyDownHandler)
+     */
+    @Override
+    public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
+        return suggestBox.addKeyDownHandler(handler);
+    }
+
+    /**
+     * @see com.google.gwt.event.dom.client.HasKeyPressHandlers#addKeyPressHandler(com.google.gwt.event.dom.client.KeyPressHandler)
+     */
+    @Override
+    public HandlerRegistration addKeyPressHandler(KeyPressHandler handler) {
+        return suggestBox.addKeyPressHandler(handler);
     }
 }
