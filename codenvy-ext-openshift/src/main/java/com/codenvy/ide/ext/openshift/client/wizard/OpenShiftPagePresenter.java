@@ -174,8 +174,7 @@ public class OpenShiftPagePresenter extends AbstractPaasPage implements OpenShif
 
         JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE));
 
-        // TODO IDEX-181
-        // TODO  Exception happens into createApplication. If this variant will work then need to remove empty template in maven extension
+        // TODO IDEX-181 Exception happens into createApplication
         resourceProvider.createProject(projectName, properties, new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
