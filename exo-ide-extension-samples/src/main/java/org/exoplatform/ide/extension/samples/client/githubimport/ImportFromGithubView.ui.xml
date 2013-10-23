@@ -48,6 +48,16 @@
 			margin-top: 3px;
 			margin-right: 10px;
 		}
+
+		.explainlabel {
+			color: #787878;
+			margin-top: 3px;
+		}
+
+		.errorlabel {
+			color: #D21A1A;
+			margin-top: 3px;
+		}
 		
 		.indents10 {
 			margin: 0 10px 10px;
@@ -59,22 +69,31 @@
 	</ui:style>
 
 	<g:LayoutPanel>
-		<g:layer left="0px" right="0" top="10px" height="30px">
+		<g:layer left="0px" right="0" top="10px" height="60px">
 			<g:FlowPanel stylePrimaryName="{style.indents10}">
 				<g:Label text="{locale.importFromGithubAccount}"
 					addStyleNames="{style.floatLeft} {style.label}"></g:Label>
-				<f:ComboBoxField ui:field="accountNameBox"
-					addStyleNames="{style.floatLeft}" height="20px" pickListHeight="100"
-					width="355px"></f:ComboBoxField>
+				<g:FlowPanel addStyleNames="{style.floatRight}" width="375px">
+					<f:Border ui:field="errorBorder" margin="0" borderColor="#D21A1A" height="20px">
+						<f:layer>
+							<f:ComboBoxField ui:field="accountNameBox"
+								addStyleNames="{style.floatLeft}" height="20px" pickListHeight="100"
+								width="375px"></f:ComboBoxField>
+						</f:layer>
+					</f:Border>
+					<g:Label ui:field="explanationLabel" text="{locale.importFromGitHubExplanationLabel}"
+						addStyleNames="{style.explainlabel}"></g:Label>
+					<g:Label ui:field="errorLabel" addStyleNames="{style.errorlabel}"></g:Label>
+				</g:FlowPanel>
 			</g:FlowPanel>
 		</g:layer>
-		<g:layer top="30px" bottom="55px">
+		<g:layer top="60px" bottom="55px">
 			<g:DockLayoutPanel ui:field="importStep" width="100%"
 				height="100%">
 				<g:center>
 					<f:Border margin="10">
 						<f:layer top="0px" bottom="0">
-							<g:ScrollPanel>
+							<g:ScrollPanel ui:field="scrollPanel">
 								<e:GitHubProjectsListGrid width="100%"
 									ui:field="repositoriesGrid" height="100%"></e:GitHubProjectsListGrid>
 							</g:ScrollPanel>
@@ -86,8 +105,8 @@
 		<g:layer left="0px" right="0" bottom="32px" height="25px">
 		   <g:FlowPanel stylePrimaryName="{style.indents10}">
 				<f:Label text="{locale.projectName}" addStyleNames="{style.floatLeft} {style.label}"></f:Label>
-				<f:TextInput ui:field="projectNameField" addStyleNames="{style.floatLeft} {style.border}"
-					width="367px" height="20px"></f:TextInput>
+				<f:TextInput ui:field="projectNameField" addStyleNames="{style.floatRight} {style.border}"
+					width="380px" height="20px"></f:TextInput>
 			</g:FlowPanel>
 		</g:layer>			
 		<g:layer height="22px" bottom="8">

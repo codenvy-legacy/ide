@@ -19,12 +19,18 @@ package org.exoplatform.ide.extension.samples.client.githubimport;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.ScrollEvent;
+import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
@@ -32,6 +38,10 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * View for importing projects from GitHub.
@@ -44,9 +54,9 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
 
     private static final String TITLE            = SamplesExtension.LOCALIZATION_CONSTANT.importFromGithubTitle();
 
-    private static final int    HEIGHT           = 365;
+    private static final int    HEIGHT           = 380;
 
-    private static final int    WIDTH            = 500;
+    private static final int    WIDTH            = 520;
 
     private static final String ACCOUNT_NAME     = "ideImportFromGithubViewAccountBox";
 
@@ -80,7 +90,52 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
     /** Account name box. */
     @UiField
     ComboBoxField                               accountNameBox;
+    
+    /**
+     * Scroll panel with grid.
+     */
+    @UiField
+    ScrollPanel                                 scrollPanel;
+    
+    /**
+     * Border to be shown on error.
+     */
+    @UiField
+    Border                                      errorBorder;
+    
+    /**
+     * Explanation label. 
+     */
+    @UiField
+    Label                                       explanationLabel;
 
+    /**
+     * Label with error message.
+     */
+    @UiField
+    Label                                       errorLabel;
+    
+    /**
+     * Handler for event, when scroll reaches end of the page.
+     */
+    ScrollEndHandler scrollEndHandler;
+    
+    /**
+     * The list of current values of the account field.
+     */
+    ArrayList<String>                           accountValues = new ArrayList<String>();
+    
+    /**
+     * Used to count scroll position.
+     */
+    private int incrementSize = 20;
+    
+    /**
+     * Used to count scroll position.
+     */
+    private int lastScrollPos = 0;
+    
+    
     public ImportFromGithubView() {
         super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT, false);
         add(uiBinder.createAndBindUi(this));
@@ -90,6 +145,29 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
 
         accountNameBox.setName(ACCOUNT_NAME);
         projectNameField.setName(NAME_FIELD_ID);
+        
+        scrollPanel.addScrollHandler(new ScrollHandler() {
+
+            @Override
+            public void onScroll(ScrollEvent event) {
+                int oldScrollPos = lastScrollPos;
+                lastScrollPos = scrollPanel.getVerticalScrollPosition();
+
+                // If scrolling up, ignore the event.
+                if (oldScrollPos >= lastScrollPos) {
+                    return;
+                }
+
+                // Height of grid contents (including outside the viewable area) - height of the scroll panel
+                int maxScrollTop = scrollPanel.getWidget().getOffsetHeight() -
+                                   scrollPanel.getOffsetHeight();
+
+                if (lastScrollPos >= maxScrollTop && scrollEndHandler != null) {
+                    scrollEndHandler.onScrollEnd();
+                }
+
+            }
+        });
     }
 
     /** @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getCancelButton() */
@@ -130,7 +208,7 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
 
     /** @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getAccountNameBox() */
     @Override
-    public HasValue<String> getAccountNameBox() {
+    public TextFieldItem getAccountNameBox() {
         return accountNameBox;
     }
 
@@ -139,9 +217,53 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
      */
     @Override
     public void setAccountNameValues(String[] values) {
+        accountValues = new ArrayList<String>(Arrays.asList(values));
         accountNameBox.setValueMap(values);
         if (accountNameBox.getValue().isEmpty()) {
-            accountNameBox.setValue(values[0]);
+            accountNameBox.setValue(values[0], true);
         }
+    }
+
+    /**
+     * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#addAccountNameValue(java.lang.String)
+     */
+    @Override
+    public void addAccountNameValue(String value) {
+        accountValues.add(value);
+        accountNameBox.setValueMap(accountValues.toArray(new String[accountValues.size()]));
+    }
+
+    /**
+     * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#setScrollEndHandler(org.exoplatform.ide.extension.samples.client.githubimport.ScrollEndHandler)
+     */
+    @Override
+    public void setScrollEndHandler(org.exoplatform.ide.extension.samples.client.githubimport.ScrollEndHandler handler) {
+        scrollEndHandler = handler;
+    }
+
+    /**
+     * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#addRepositories(java.util.List)
+     */
+    @Override
+    public void addRepositories(List<ProjectData> values) {
+        repositoriesGrid.addItems(values);
+    }
+
+    /**
+     * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#changeAccountFieldState(boolean)
+     */
+    @Override
+    public void changeAccountFieldState(boolean isError) {
+        errorLabel.setVisible(isError);
+        explanationLabel.setVisible(!isError);
+        errorBorder.setBorderSize(isError ? 1: 0);
+    }
+
+    /**
+     * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#setErrorMessage(java.lang.String)
+     */
+    @Override
+    public void setErrorMessage(String error) {
+        errorLabel.getElement().setInnerHTML(error);
     }
 }
