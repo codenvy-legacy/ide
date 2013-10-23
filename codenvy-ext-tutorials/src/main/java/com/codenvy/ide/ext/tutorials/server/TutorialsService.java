@@ -146,6 +146,22 @@ public class TutorialsService {
         createProject(vfsId, templateStream, name, rootId, properties);
     }
 
+    /**
+     * Create 'Wizard tutorial' project.
+     *
+     * @param vfsId
+     *         identifier of virtual file system
+     * @param name
+     *         name of the newly created project
+     * @param rootId
+     *         identifier of parent folder for the new project
+     * @param properties
+     *         properties to set to project
+     * @throws VirtualFileSystemException
+     *         if any error occurred in VFS
+     * @throws IOException
+     *         if any error occurred while input-output operations
+     */
     @Path("wizard")
     @POST
     public void createWizardTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
@@ -153,6 +169,32 @@ public class TutorialsService {
             throws VirtualFileSystemException, IOException {
         InputStream templateStream =
                 Thread.currentThread().getContextClassLoader().getResourceAsStream("templates/WizardTutorial.zip");
+        createProject(vfsId, templateStream, name, rootId, properties);
+    }
+
+    /**
+     * Create 'New project wizard tutorial' project.
+     *
+     * @param vfsId
+     *         identifier of virtual file system
+     * @param name
+     *         name of the newly created project
+     * @param rootId
+     *         identifier of parent folder for the new project
+     * @param properties
+     *         properties to set to project
+     * @throws VirtualFileSystemException
+     *         if any error occurred in VFS
+     * @throws IOException
+     *         if any error occurred while input-output operations
+     */
+    @Path("newproject")
+    @POST
+    public void createNewProjectWizardTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
+                                                      @QueryParam("rootid") String rootId, List<Property> properties)
+            throws VirtualFileSystemException, IOException {
+        InputStream templateStream =
+                Thread.currentThread().getContextClassLoader().getResourceAsStream("templates/NewProjectWizardTutorial.zip");
         createProject(vfsId, templateStream, name, rootId, properties);
     }
 }

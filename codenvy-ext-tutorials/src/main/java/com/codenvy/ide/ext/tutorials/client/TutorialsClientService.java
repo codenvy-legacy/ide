@@ -72,6 +72,31 @@ public interface TutorialsClientService {
     void createActionTutorialProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
             throws RequestException;
 
+    /**
+     * Create 'Wizard tutorial' project.
+     *
+     * @param projectName
+     *         name of the project to create
+     * @param properties
+     *         properties to set to a newly created project
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
     void createWizardTutorialProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
+            throws RequestException;
+
+    /**
+     * Create 'New project wizard tutorial' project.
+     *
+     * @param projectName
+     *         name of the project to create
+     * @param properties
+     *         properties to set to a newly created project
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    void createNewProjectWizardTutorialProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
             throws RequestException;
 }

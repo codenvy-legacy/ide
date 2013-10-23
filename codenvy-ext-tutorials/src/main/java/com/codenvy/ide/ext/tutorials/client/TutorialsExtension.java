@@ -23,10 +23,7 @@ import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.ext.tutorials.client.action.ShowTutorialGuideAction;
-import com.codenvy.ide.ext.tutorials.client.template.CreateActionTutorialPage;
-import com.codenvy.ide.ext.tutorials.client.template.CreateDTOTutorialPage;
-import com.codenvy.ide.ext.tutorials.client.template.CreateNotificationTutorialPage;
-import com.codenvy.ide.ext.tutorials.client.template.CreateWizardTutorialPage;
+import com.codenvy.ide.ext.tutorials.client.template.*;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
@@ -46,13 +43,14 @@ import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_N
 @Extension(title = "Codenvy tutorial projects support.", version = "3.0.0")
 public class TutorialsExtension {
     /** Default name of the tutorial project type. */
-    public static final String TUTORIAL_PROJECT_TYPE    = "CodenvyTutorial";
+    public static final String TUTORIAL_PROJECT_TYPE          = "CodenvyTutorial";
     /** Default name of the file that contains tutorial description. */
-    public static final String DEFAULT_README_FILE_NAME = "guide.html";
-    public static final String DTO_TUTORIAL_ID          = "DTOTutorial";
-    public static final String ACTION_TUTORIAL_ID       = "ActionTutorial";
-    public static final String NOTIFICATION_TUTORIAL_ID = "NotificationTutorial";
-    public static final String WIZARD_TUTORIAL_ID       = "WizardTutorial";
+    public static final String DEFAULT_README_FILE_NAME       = "guide.html";
+    public static final String DTO_TUTORIAL_ID                = "DTOTutorial";
+    public static final String ACTION_TUTORIAL_ID             = "ActionTutorial";
+    public static final String NOTIFICATION_TUTORIAL_ID       = "NotificationTutorial";
+    public static final String WIZARD_TUTORIAL_ID             = "WizardTutorial";
+    public static final String NEW_PROJECT_WIZARD_TUTORIAL_ID = "NewProjectWizardTutorial";
 
     @Inject
     public TutorialsExtension(TemplateAgent templateAgent,
@@ -60,6 +58,7 @@ public class TutorialsExtension {
                               Provider<CreateActionTutorialPage> createActionTutorialPage,
                               Provider<CreateNotificationTutorialPage> createNotificationTutorialPage,
                               Provider<CreateWizardTutorialPage> createWizardTutorialPageProvider,
+                              Provider<CreateNewProjectWizardTutorialPage> createNewProjectWizardTutorialPageProvider,
                               ProjectTypeAgent projectTypeAgent,
                               TutorialsResources resources,
                               TutorialsLocalizationConstant localizationConstants,
@@ -105,5 +104,12 @@ public class TutorialsExtension {
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
                                JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createWizardTutorialPageProvider));
+        templateAgent.register(NEW_PROJECT_WIZARD_TUTORIAL_ID,
+                               "Tutorial project that illustrates examples of using New project wizard.",
+                               resources.codenvyTutorialTemplate(),
+                               PRIMARY_NATURE,
+                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
+                               JsonCollections
+                                       .<Provider<? extends AbstractTemplatePage>>createArray(createNewProjectWizardTutorialPageProvider));
     }
 }

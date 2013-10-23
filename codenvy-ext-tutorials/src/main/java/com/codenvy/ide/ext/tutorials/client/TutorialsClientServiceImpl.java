@@ -42,12 +42,13 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
 @Singleton
 public class TutorialsClientServiceImpl implements TutorialsClientService {
     /** Base url. */
-    private static final String BASE_URL                     = '/' + Utils.getWorkspaceName() + "/tutorials";
+    private static final String BASE_URL                           = '/' + Utils.getWorkspaceName() + "/tutorials";
     /** Create sample project method's path. */
-    private static final String CREATE_DTO_TUTORIAL          = "/dto";
-    private static final String CREATE_NOTIFICATION_TUTORIAL = "/notification";
-    private static final String CREATE_ACTION_TUTORIAL       = "/action";
-    private static final String CREATE_WIZARD_TUTORIAL       = "/wizard";
+    private static final String CREATE_DTO_TUTORIAL                = "/dto";
+    private static final String CREATE_NOTIFICATION_TUTORIAL       = "/notification";
+    private static final String CREATE_ACTION_TUTORIAL             = "/action";
+    private static final String CREATE_WIZARD_TUTORIAL             = "/wizard";
+    private static final String CREATE_NEW_PROJECT_WIZARD_TUTORIAL = "/newproject";
     /** REST-service context. */
     private String           restContext;
     /** Loader to be displayed. */
@@ -78,8 +79,7 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     public void createDTOTutorialProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
             throws RequestException {
         final String requestUrl = restContext + BASE_URL + CREATE_DTO_TUTORIAL;
-        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" +
-                             resourceProvider.getRootId();
+        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" + resourceProvider.getRootId();
         loader.setMessage("Creating new project...");
         AsyncRequest.build(POST, requestUrl + param)
                     .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
@@ -91,8 +91,7 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     public void createNotificationTutorialProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
             throws RequestException {
         final String requestUrl = restContext + BASE_URL + CREATE_NOTIFICATION_TUTORIAL;
-        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" +
-                             resourceProvider.getRootId();
+        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" + resourceProvider.getRootId();
         loader.setMessage("Creating new project...");
         AsyncRequest.build(POST, requestUrl + param)
                     .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
@@ -104,8 +103,7 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     public void createActionTutorialProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
             throws RequestException {
         final String requestUrl = restContext + BASE_URL + CREATE_ACTION_TUTORIAL;
-        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" +
-                             resourceProvider.getRootId();
+        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" + resourceProvider.getRootId();
         loader.setMessage("Creating new project...");
         AsyncRequest.build(POST, requestUrl + param)
                     .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
@@ -117,8 +115,19 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     public void createWizardTutorialProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
             throws RequestException {
         final String requestUrl = restContext + BASE_URL + CREATE_WIZARD_TUTORIAL;
-        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" +
-                             resourceProvider.getRootId();
+        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" + resourceProvider.getRootId();
+        loader.setMessage("Creating new project...");
+        AsyncRequest.build(POST, requestUrl + param)
+                    .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
+                    .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void createNewProjectWizardTutorialProject(String projectName, JsonArray<Property> properties,
+                                                      AsyncRequestCallback<Void> callback) throws RequestException {
+        final String requestUrl = restContext + BASE_URL + CREATE_NEW_PROJECT_WIZARD_TUTORIAL;
+        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" + resourceProvider.getRootId();
         loader.setMessage("Creating new project...");
         AsyncRequest.build(POST, requestUrl + param)
                     .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
