@@ -21,7 +21,7 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.ext.extruntime.client.actions.GetLogsAction;
 import com.codenvy.ide.ext.extruntime.client.actions.LaunchAction;
 import com.codenvy.ide.ext.extruntime.client.actions.StopAction;
@@ -85,13 +85,13 @@ public class ExtRuntimeExtension {
                                resources.codenvyExtensionTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends WizardPage>>createArray(createEmptyCodenvyExtensionPage));
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createEmptyCodenvyExtensionPage));
 
         templateAgent.register(SAMPLE_EXTENSION_ID,
                                "Sample Codenvy extension project. Illustrates simple example that uses Codenvy API.",
                                resources.codenvyExtensionTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends WizardPage>>createArray(createSampleCodenvyExtensionPage));
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createSampleCodenvyExtensionPage));
     }
 }

@@ -21,7 +21,7 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.ext.tutorials.client.action.ShowTutorialGuideAction;
 import com.codenvy.ide.ext.tutorials.client.template.CreateActionTutorialPage;
 import com.codenvy.ide.ext.tutorials.client.template.CreateDTOTutorialPage;
@@ -86,24 +86,24 @@ public class TutorialsExtension {
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends WizardPage>>createArray(createDTOTutorialPage));
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createDTOTutorialPage));
         templateAgent.register(NOTIFICATION_TUTORIAL_ID,
                                "Tutorial project that illustrates examples of using Notification API.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends WizardPage>>createArray(createNotificationTutorialPage));
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createNotificationTutorialPage));
         templateAgent.register(ACTION_TUTORIAL_ID,
                                "Tutorial project that illustrates examples of using Action API.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends WizardPage>>createArray(createActionTutorialPage));
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createActionTutorialPage));
         templateAgent.register(WIZARD_TUTORIAL_ID,
                                "Tutorial project that illustrates examples of using Wizard API.",
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends WizardPage>>createArray(createWizardTutorialPageProvider));
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createWizardTutorialPageProvider));
     }
 }
