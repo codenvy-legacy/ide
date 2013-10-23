@@ -19,7 +19,6 @@ package org.exoplatform.ide.git.server.nativegit;
 
 import org.exoplatform.ide.git.server.DiffPage;
 import org.exoplatform.ide.git.shared.DiffRequest;
-import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 import org.junit.Test;
 
 import java.io.*;
@@ -39,14 +38,14 @@ public class DiffTest extends BaseTest {
         addFile(getDefaultRepository(), "aaa", "AAA\n");
         new File(getDefaultRepository(), "README.txt").delete();
         nativeGit = new NativeGit(getDefaultRepository());
+        nativeGit.createAddCommand().setFilePattern(new String[]{"."}).execute();
     }
 
     @Test
     public void testDiffNameStatus() throws Exception {
-        List<String> diff = readDiff(new DiffRequest(null, DiffType.NAME_STATUS, false, 0));
-        assertEquals(2, diff.size());
+        List<String> diff = readDiff(new DiffRequest(null, DiffRequest.DiffType.NAME_STATUS, false, 0));
+        assertEquals(1, diff.size());
         assertTrue(diff.contains("D\tREADME.txt"));
-        assertTrue(diff.contains("A\taaa"));
     }
 
     @Test
@@ -55,16 +54,9 @@ public class DiffTest extends BaseTest {
         nativeGit.createRemoveCommand().setListOfFiles(new String[]{"README.txt"}).execute();
         nativeGit.createCommitCommand().setMessage("testDiffNameStatusWithCommits")
                 .setAuthor(getDefaultUser()).execute();
-        List<String> diff = readDiff(new DiffRequest(null, DiffType.NAME_STATUS, false, 0, "HEAD^", "HEAD"));
+        List<String> diff = readDiff(new DiffRequest(null, DiffRequest.DiffType.NAME_STATUS, false, 0, "HEAD^", "HEAD"));
         assertEquals(2, diff.size());
         assertTrue(diff.contains("D\tREADME.txt"));
-        assertTrue(diff.contains("A\taaa"));
-    }
-
-    @Test
-    public void testDiffNameStatusWithFileFilter() throws Exception {
-        List<String> diff = readDiff(new DiffRequest(new String[]{"aaa"}, DiffType.NAME_STATUS, false, 0));
-        assertEquals(1, diff.size());
         assertTrue(diff.contains("A\taaa"));
     }
 
@@ -82,10 +74,9 @@ public class DiffTest extends BaseTest {
 
     @Test
     public void testDiffNameOnly() throws Exception {
-        List<String> diff = readDiff(new DiffRequest(null, DiffType.NAME_ONLY, false, 0));
-        assertEquals(2, diff.size());
+        List<String> diff = readDiff(new DiffRequest(null, DiffRequest.DiffType.NAME_ONLY, false, 0));
+        assertEquals(1, diff.size());
         assertTrue(diff.contains("README.txt"));
-        assertTrue(diff.contains("aaa"));
     }
 
     @Test
@@ -94,7 +85,7 @@ public class DiffTest extends BaseTest {
         nativeGit.createRemoveCommand().setListOfFiles(new String[]{"README.txt"}).execute();
         nativeGit.createCommitCommand().setMessage("testDiffNameStatusWithCommits")
                 .setAuthor(getDefaultUser()).execute();
-        List<String> diff = readDiff(new DiffRequest(null, DiffType.NAME_ONLY, false, 0, "HEAD^1", "HEAD"));
+        List<String> diff = readDiff(new DiffRequest(null, DiffRequest.DiffType.NAME_ONLY, false, 0, "HEAD^1", "HEAD"));
         assertEquals(2, diff.size());
         assertTrue(diff.contains("README.txt"));
         assertTrue(diff.contains("aaa"));
@@ -103,7 +94,7 @@ public class DiffTest extends BaseTest {
     @Test
     public void testDiffNameOnlyCached() throws Exception {
         nativeGit.createAddCommand().setFilePattern(new String[]{"aaa"}).execute();
-        List<String> diff = readDiff(new DiffRequest(null, DiffType.NAME_ONLY, false, 0, "HEAD", true));
+        List<String> diff = readDiff(new DiffRequest(null, DiffRequest.DiffType.NAME_ONLY, false, 0, "HEAD", true));
         assertEquals(1, diff.size());
         assertTrue(diff.contains("aaa"));
     }
@@ -111,14 +102,14 @@ public class DiffTest extends BaseTest {
     @Test
     public void testDiffNameOnlyCachedNoCommit() throws Exception {
         nativeGit.createAddCommand().setFilePattern(new String[]{"aaa"}).execute();
-        List<String> diff = readDiff(new DiffRequest(null, DiffType.NAME_ONLY, false, 0, null, true));
+        List<String> diff = readDiff(new DiffRequest(null, DiffRequest.DiffType.NAME_ONLY, false, 0, null, true));
         assertEquals(1, diff.size());
         assertTrue(diff.contains("aaa"));
     }
 
     @Test
     public void testDiffNameOnlyWorkingTree() throws Exception {
-        List<String> diff = readDiff(new DiffRequest(null, DiffType.NAME_ONLY, false, 0, "HEAD", false));
+        List<String> diff = readDiff(new DiffRequest(null, DiffRequest.DiffType.NAME_ONLY, false, 0, "HEAD", false));
         assertEquals(2, diff.size());
         assertTrue(diff.contains("README.txt"));
         assertTrue(diff.contains("aaa"));
@@ -126,9 +117,9 @@ public class DiffTest extends BaseTest {
 
     @Test
     public void testDiffNameOnlyWithFileFilter() throws Exception {
-        List<String> diff = readDiff(new DiffRequest(new String[]{"aaa"}, DiffType.NAME_ONLY, false, 0));
-        assertEquals(1, diff.size());
-        assertTrue(diff.contains("aaa"));
+        List<String> diff = readDiff(new DiffRequest(new String[]{"aaa"}, DiffRequest.DiffType.NAME_ONLY, false, 0));
+        assertEquals(0, diff.size());
+        assertFalse(diff.contains("aaa"));
     }
 
     @Test
@@ -138,14 +129,14 @@ public class DiffTest extends BaseTest {
         nativeGit.createCommitCommand().setMessage("testDiffNameStatusWithCommits")
                 .setAuthor(getDefaultUser()).execute();
         List<String> diff = readDiff(new DiffRequest(new String[]{"aaa"},
-                DiffType.NAME_ONLY, false, 0, "HEAD^1", "HEAD"));
+                DiffRequest.DiffType.NAME_ONLY, false, 0, "HEAD^1", "HEAD"));
         assertEquals(1, diff.size());
         assertTrue(diff.contains("aaa"));
     }
 
     @Test
     public void testDiffRaw() throws Exception {
-        DiffRequest request = new DiffRequest(null, DiffType.RAW, false, 0);
+        DiffRequest request = new DiffRequest(null, DiffRequest.DiffType.RAW, false, 0);
         DiffPage diffPage = getDefaultConnection().diff(request);
         diffPage.writeTo(System.out);
     }
@@ -155,7 +146,7 @@ public class DiffTest extends BaseTest {
         nativeGit.createAddCommand().setFilePattern(new String[]{"aaa"}).execute();
         nativeGit.createRemoveCommand().setListOfFiles(new String[]{"README.txt"}).execute();
         nativeGit.createCommitCommand().setMessage("testDiffNameStatusWithCommits").execute();
-        DiffRequest request = new DiffRequest(null, DiffType.RAW, false, 0, "HEAD^1", "HEAD");
+        DiffRequest request = new DiffRequest(null, DiffRequest.DiffType.RAW, false, 0, "HEAD^1", "HEAD");
         DiffPage diffPage = getDefaultConnection().diff(request);
         diffPage.writeTo(System.out);
     }

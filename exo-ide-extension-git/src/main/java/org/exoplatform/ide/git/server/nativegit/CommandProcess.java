@@ -113,18 +113,24 @@ public class CommandProcess {
      * @return filtered output as message
      */
     private static String searchErrorMessage(List<String> output) {
+        //check if troubles with ssh keys
         int i = 0;
         for (int length = output.size(); i < length && output.get(i).indexOf("fatal:") == -1; i++) ;
         StringBuilder builder = new StringBuilder();
         if (i == output.size()) {
             for (String line : output) {
-                if (!(line.startsWith("hint:") || line.startsWith("Warning:")))
+                if (!(line.startsWith("hint:") || line.startsWith("Warning:"))) {
                     builder.append(line).append('\n');
+                }
             }
         }
         for (; i < output.size(); i++) {
-            if (!(output.get(i).startsWith("hint:") || output.get(i).startsWith("Warning:")))
+            if (!(output.get(i).startsWith("hint:") || output.get(i).startsWith("Warning:"))) {
                 builder.append(output.get(i)).append('\n');
+            }
+        }
+        if (builder.toString().toLowerCase().contains("fatal: the remote end hung up unexpectedly")) {
+            builder.append("SSH key doesn't exists or it is not valid");
         }
         return builder.toString();
     }

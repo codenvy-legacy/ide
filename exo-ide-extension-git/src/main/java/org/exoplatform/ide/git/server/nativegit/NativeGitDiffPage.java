@@ -23,14 +23,9 @@ import org.exoplatform.ide.git.shared.DiffRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Contains information about difference between two commits, commit and working tree,
@@ -56,10 +51,8 @@ public class NativeGitDiffPage extends DiffPage {
     public void writeTo(OutputStream out) throws IOException {
         try (PrintWriter outWriter = new PrintWriter(out);){
             if (request.getCommitA() == null && request.getCommitB() == null && !request.isCached()) {
-                writeUntracked(outWriter);
                 workingTreeToIndex(outWriter);
             } else if (request.getCommitA() != null && request.getCommitB() == null && !request.isCached()) {
-                writeUntracked(outWriter);
                 commitToWorkingTree(request.getCommitA(), outWriter);
             } else if (request.getCommitB() == null && request.isCached()) {
                 commitToIndex(request.getCommitA(), outWriter);
@@ -131,60 +124,4 @@ public class NativeGitDiffPage extends DiffPage {
                  .setRenamesCount(request.getRenameLimit())
                  .execute());
     }
-
-
-    /**
-     * Just created files is in working tree and default git diff, doesn't
-     * show it, cause this files untracked. When need to show difference between working tree and
-     * something else, this files need to add, it is possible using difference between every untracked file
-     * and /dev/null.
-     *
-     * @return difference between untracked files and /dev/null
-     * @throws GitException when any error occurs
-     */
-    private void writeUntracked(PrintWriter outWriter) throws GitException {
-        List<String> untrackedFileNames = nativeGit.createListFilesCommand()
-                .setOthers(true).setExcludeStandard(true).execute();
-        //filter untracked files
-        if (request.getFileFilter() != null) {
-            Set<String> filtered = new HashSet<>();
-            for (String filterFile : request.getFileFilter()) {
-                for (String untFile : untrackedFileNames) {
-                    if (untFile.startsWith(filterFile)) {
-                        filtered.add(untFile);
-                    }
-                }
-            }
-            untrackedFileNames = new LinkedList<>(filtered);
-        }
-        if (untrackedFileNames.size() != 0) {
-            if (request.getType() == null || request.getType() == DiffRequest.DiffType.RAW) {
-                //make diff with /dev/null
-                String fileFilter[] = request.getFileFilter();
-                request.setFileFilter(null);
-                for (String fileName : untrackedFileNames) {
-                    try {
-                        commitToCommit("/dev/null", fileName, outWriter);
-                    } catch (GitException e) {
-                        //when it is diff with /dev/null exit value is 1
-                        outWriter.append(e.getMessage());
-                        if (request.getType() == DiffRequest.DiffType.RAW) {
-                            outWriter.println();
-                        }
-                    }
-                }
-                request.setFileFilter(fileFilter);
-            } else if (request.getType() == DiffRequest.DiffType.NAME_ONLY) {
-                for (String fileName : untrackedFileNames) {
-                    outWriter.println(fileName);
-                }
-            } else {
-                //untracked files status is A
-                for (String fileName : untrackedFileNames) {
-                    outWriter.println("A\t" + fileName);
-                }
-            }
-        }
-    }
-
 }
