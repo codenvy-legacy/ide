@@ -38,14 +38,11 @@ public class DisableSyntaxErrorHighlightingControl extends SimpleControl impleme
 
     private boolean isJavaProject = false;
 
-    private DisableSyntaxErrorHighlightingEvent showSyntaxErrorHighlighting = new DisableSyntaxErrorHighlightingEvent(true);
-    private DisableSyntaxErrorHighlightingEvent hideSyntaxErrorHighlighting = new DisableSyntaxErrorHighlightingEvent(false);
-
     public DisableSyntaxErrorHighlightingControl() {
         super(JdtExtension.LOCALIZATION_CONSTANT.disableSyntaxErrorHighlightingId());
         setTitle(JdtExtension.LOCALIZATION_CONSTANT.disableSyntaxErrorHighlightingControlTitle());
         setPrompt(JdtExtension.LOCALIZATION_CONSTANT.disableSyntaxErrorHighlightingControlPrompt());
-        setEvent(hideSyntaxErrorHighlighting);
+        setEvent(new DisableSyntaxErrorHighlightingEvent(false));
         //TODO need sam image
         setImages(JdtClientBundle.INSTANCE.quickFix(), JdtClientBundle.INSTANCE.quickFixDisabled());
     }
@@ -73,10 +70,10 @@ public class DisableSyntaxErrorHighlightingControl extends SimpleControl impleme
 
     public void setState(boolean codeAssistantEnabled) {
         if (codeAssistantEnabled) {
-            setEvent(hideSyntaxErrorHighlighting);
+            setEvent(new DisableSyntaxErrorHighlightingEvent(false));
             setTitle(JdtExtension.LOCALIZATION_CONSTANT.enableSyntaxErrorHighlightingControlTitle());
         } else {
-            setEvent(showSyntaxErrorHighlighting);
+            setEvent(new DisableSyntaxErrorHighlightingEvent(true));
             setTitle(JdtExtension.LOCALIZATION_CONSTANT.disableSyntaxErrorHighlightingControlTitle());
         }
     }
