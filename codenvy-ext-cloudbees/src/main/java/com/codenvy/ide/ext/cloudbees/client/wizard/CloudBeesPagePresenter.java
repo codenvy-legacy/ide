@@ -49,6 +49,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.ext.cloudbees.client.CloudBeesExtension.ID;
 
@@ -219,19 +220,8 @@ public class CloudBeesPagePresenter extends AbstractPaasPage implements CloudBee
     public void commit(@NotNull CommitCallback callback) {
         this.callback = callback;
         if (isLogined) {
-            resourcesProvider.getProject(projectName, new AsyncCallback<Project>() {
-                @Override
-                public void onSuccess(Project result) {
-                    project = result;
-                    getFirstDeployDomains();
-                }
-
-                @Override
-                public void onFailure(Throwable caught) {
-                    // TODO Exception
-                    CloudBeesPagePresenter.this.callback.onFailure(caught);
-                }
-            });
+            project = wizardContext.getData(PROJECT);
+            getFirstDeployDomains();
         }
     }
 

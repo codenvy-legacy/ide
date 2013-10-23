@@ -173,8 +173,6 @@ public class OpenShiftPagePresenter extends AbstractPaasPage implements OpenShif
         projectExplorer.setContent(null);
 
         JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE));
-
-        // TODO IDEX-181 Exception happens into createApplication
         resourceProvider.createProject(projectName, properties, new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {

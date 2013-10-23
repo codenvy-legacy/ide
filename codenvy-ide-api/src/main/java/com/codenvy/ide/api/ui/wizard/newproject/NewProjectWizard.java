@@ -26,6 +26,7 @@ import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.resources.ProjectTypeData;
+import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -42,6 +43,7 @@ public class NewProjectWizard extends DefaultWizard {
     public static final WizardContext.Key<Template>        TEMPLATE     = new WizardContext.Key<Template>("Template");
     public static final WizardContext.Key<String>          PROJECT_NAME = new WizardContext.Key<String>("Project name");
     public static final WizardContext.Key<ProjectTypeData> PROJECT_TYPE = new WizardContext.Key<ProjectTypeData>("Project type");
+    public static final WizardContext.Key<Project>         PROJECT      = new WizardContext.Key<Project>("Project");
     private int chooseTemplate;
     private int lastTemplatePage;
 

@@ -50,7 +50,6 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.RequestStatusHandler;
 import com.codenvy.ide.ui.loader.Loader;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -61,6 +60,7 @@ import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.ext.aws.client.AWSExtension.ID;
 
@@ -326,18 +326,8 @@ public class BeanstalkPagePresenter extends AbstractPaasPage implements Beanstal
 
         this.callback = callback;
 
-        // TODO may be improve without getProject?
-        resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
-            @Override
-            public void onSuccess(Project result) {
-                deploy(result);
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                BeanstalkPagePresenter.this.callback.onFailure(caught);
-            }
-        });
+        Project project = wizardContext.getData(PROJECT);
+        deploy(project);
     }
 
     /**

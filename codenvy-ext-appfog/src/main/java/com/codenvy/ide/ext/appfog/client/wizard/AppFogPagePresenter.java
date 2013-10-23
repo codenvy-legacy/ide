@@ -54,6 +54,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.ext.appfog.client.AppFogExtension.ID;
 
@@ -498,17 +499,7 @@ public class AppFogPagePresenter extends AbstractPaasPage implements AppFogPageV
 
         this.callback = callback;
 
-        // TODO may be improve with getProject?
-        resourcesProvider.getProject(projectName, new AsyncCallback<Project>() {
-            @Override
-            public void onSuccess(Project result) {
-                deploy(result);
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                AppFogPagePresenter.this.callback.onFailure(caught);
-            }
-        });
+        Project project = wizardContext.getData(PROJECT);
+        deploy(project);
     }
 }

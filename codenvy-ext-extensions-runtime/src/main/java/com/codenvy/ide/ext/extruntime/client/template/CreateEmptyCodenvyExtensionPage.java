@@ -30,6 +30,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
 import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.EMPTY_EXTENSION_ID;
@@ -78,6 +79,7 @@ public class CreateEmptyCodenvyExtensionPage extends AbstractTemplatePage {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
                         @Override
                         public void onSuccess(Project result) {
+                            wizardContext.putData(PROJECT, result);
                             callback.onSuccess();
                         }
 

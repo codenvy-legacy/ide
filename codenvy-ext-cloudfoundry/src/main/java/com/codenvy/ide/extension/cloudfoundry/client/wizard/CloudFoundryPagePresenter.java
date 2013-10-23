@@ -51,6 +51,7 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension.ID;
 
@@ -480,17 +481,7 @@ public class CloudFoundryPagePresenter extends AbstractPaasPage implements Cloud
             return;
         }
 
-        // TODO may be improve with getProject?
-        resourcesProvider.getProject(projectName, new AsyncCallback<Project>() {
-            @Override
-            public void onSuccess(Project result) {
-                deploy(result);
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                CloudFoundryPagePresenter.this.callback.onFailure(caught);
-            }
-        });
+        Project project = wizardContext.getData(PROJECT);
+        deploy(project);
     }
 }

@@ -45,7 +45,7 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.ext.gae.client.GAEExtension.ID;
 
 /**
@@ -131,18 +131,8 @@ public class GAEWizardPagePresenter extends AbstractPaasPage implements GAEWizar
     public void commit(@NotNull CommitCallback callback) {
         this.callback = callback;
 
-        // TODO may be improve with getProject?
-        resourceProvider.getProject(wizardContext.getData(PROJECT_NAME), new AsyncCallback<Project>() {
-            @Override
-            public void onSuccess(Project result) {
-                insertIntoProjectGaeConfig(result);
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                GAEWizardPagePresenter.this.callback.onFailure(caught);
-            }
-        });
+        Project project = wizardContext.getData(PROJECT);
+        insertIntoProjectGaeConfig(project);
     }
 
     /**
