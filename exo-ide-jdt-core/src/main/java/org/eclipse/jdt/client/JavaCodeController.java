@@ -17,7 +17,6 @@
  */
 package org.eclipse.jdt.client;
 
-import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.http.client.RequestBuilder;
@@ -29,6 +28,10 @@ import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.disable.DisableSyntaxErrorHighlightingControl;
+import org.eclipse.jdt.client.disable.DisableSyntaxErrorHighlightingEvent;
+import org.eclipse.jdt.client.disable.DisableSyntaxErrorHighlightingHandler;
+import org.eclipse.jdt.client.disable.SyntaxErrorHighlightingPropertiesUtil;
 import org.eclipse.jdt.client.event.CancelParseEvent;
 import org.eclipse.jdt.client.event.CancelParseHandler;
 import org.eclipse.jdt.client.event.ReparseOpenedFilesEvent;
@@ -53,6 +56,8 @@ import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.marking.Markable;
 import org.exoplatform.ide.editor.client.marking.Marker;
@@ -77,13 +82,17 @@ import java.util.Set;
  * @version $Id: Feb 6, 2012 10:26:58 AM anya $
  */
 public class JavaCodeController implements EditorFileContentChangedHandler, EditorActiveFileChangedHandler,
-                                           CancelParseHandler, EditorFileOpenedHandler, ReparseOpenedFilesHandler, EditorFileClosedHandler {
+                                           CancelParseHandler, EditorFileOpenedHandler, ReparseOpenedFilesHandler, EditorFileClosedHandler,
+                                           DisableSyntaxErrorHighlightingHandler, ProjectOpenedHandler {
 
     /** Get build log method's path. */
-    private final String LOG ;
+    private final String LOG;
 
     /** Active file in editor. */
     private FileModel activeFile;
+
+    /** Active project. */
+    private ProjectModel currentProject;
 
     private Set<String> needReparse = new HashSet<String>();
 
@@ -97,9 +106,13 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
     private final SupportedProjectResolver resolver;
 
-    public JavaCodeController(String restContest, String ws, SupportedProjectResolver resolver) {
+    private DisableSyntaxErrorHighlightingControl disableSyntaxErrorHighlightingControl;
+
+    public JavaCodeController(String restContest, String ws, DisableSyntaxErrorHighlightingControl disableSyntaxErrorHighlightingControl,
+                              SupportedProjectResolver resolver) {
         this.LOG = restContest + ws + "/maven/log";
         this.resolver = resolver;
+        this.disableSyntaxErrorHighlightingControl = disableSyntaxErrorHighlightingControl;
         instance = this;
         IDE.addHandler(EditorFileContentChangedEvent.TYPE, this);
         IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
@@ -108,7 +121,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
         IDE.addHandler(ReparseOpenedFilesEvent.TYPE, this);
         IDE.addHandler(EditorFileClosedEvent.TYPE, this);
-
+        IDE.addHandler(DisableSyntaxErrorHighlightingEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
     }
 
     public static JavaCodeController get() {
@@ -130,8 +144,10 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         return unit;
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
-     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+     */
     @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         if (event.getFile() == null)
@@ -148,7 +164,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             NAME_ENVIRONMENT = new NameEnvironment(activeFile.getProject().getId());
             if (event.getEditor() instanceof Markable) {
                 editors.put(activeFile.getId(), (Markable)event.getEditor());
-                if (needReparse.contains(activeFile.getId())) {
+                if (SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(activeFile.getProject()) &&
+                    needReparse.contains(activeFile.getId())) {
                     startParsing();
                 }
             }
@@ -284,8 +301,10 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client
-     * .framework.editor.event.EditorFileOpenedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client
+     *      .framework.editor.event.EditorFileOpenedEvent)
+     */
     @Override
     public void onEditorFileOpened(EditorFileOpenedEvent event) {
         if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA)) {
@@ -327,15 +346,17 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
     //      }
     //   };
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform
-     * .ide.client.framework.editor.event.EditorFileContentChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorFileContentChangedEvent)
+     */
     @Override
     public void onEditorFileContentChanged(EditorFileContentChangedEvent event) {
         if (activeFile == null)
             return;
         needReparse.remove(event.getFile().getId());
         finishJob(activeFile);
-        if (editors.containsKey(activeFile.getId())) {
+        if (SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(activeFile.getProject()) && editors.containsKey(activeFile.getId())) {
             startParsing();
         }
     }
@@ -344,15 +365,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
      *
      */
     private void startParsing() {
-        //TODO temporary solutions need do something smart.
-        //This need delay start parsing then dependency parsing is finish
-        new Timer() {
-            public void run() {
-                if (!JavaClasspathResolver.getInstance().isStillWork())
-                    cancel();
-            }
-        }.scheduleRepeating(1000);
-
+        checklInitializingWork();
 
         int time = 2000;
         if (workingParsers.containsKey(activeFile.getId())) {
@@ -387,7 +400,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         IDE.fireEvent(new JobChangeEvent(job));
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent) */
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client
+     * .framework.editor.event.EditorFileClosedEvent) */
     @Override
     public void onEditorFileClosed(EditorFileClosedEvent event) {
         String id = event.getFile().getId();
@@ -395,7 +409,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         workingParsers.remove(id);
     }
 
-    /** @see org.eclipse.jdt.client.event.ReparseOpenedFilesHandler#onPaerseActiveFile(org.eclipse.jdt.client.event.ReparseOpenedFilesEvent) */
+    /** @see org.eclipse.jdt.client.event.ReparseOpenedFilesHandler#onPaerseActiveFile(org.eclipse.jdt.client.event
+     * .ReparseOpenedFilesEvent) */
     @Override
     public void onReparseOpenedFiles(ReparseOpenedFilesEvent event) {
         if (editors.isEmpty())
@@ -404,7 +419,11 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             needReparse.add(id);
         }
         startJob(activeFile);
-        startParsing();
+        if (SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(activeFile.getProject())) {
+            startParsing();
+        } else {
+            checklInitializingWork();
+        }
     }
 
     public FileModel getActiveFile() {
@@ -415,4 +434,33 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         return NAME_ENVIRONMENT;
     }
 
+    @Override
+    public void onDisableSyntaxErrorHighlighting(DisableSyntaxErrorHighlightingEvent event) {
+        disableSyntaxErrorHighlightingControl.setState(event.isEnable());
+        SyntaxErrorHighlightingPropertiesUtil.updateSyntaxErrorHighlighting(currentProject, !event.isEnable());
+        if (SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(currentProject)) {
+            if (!editors.isEmpty()) {
+                for (String id : editors.keySet()) {
+                    needReparse.add(id);
+                }
+            }
+            checklInitializingWork();
+            startParsing();
+        }
+    }
+
+    /** This need delay start parsing then dependency parsing is finish */
+    private void checklInitializingWork() {
+        new Timer() {
+            public void run() {
+                if (!JavaClasspathResolver.getInstance().isStillWork())
+                    cancel();
+            }
+        }.scheduleRepeating(1000);
+    }
+
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        currentProject = event.getProject();
+    }
 }
