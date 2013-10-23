@@ -28,10 +28,10 @@ import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
-import org.eclipse.jdt.client.disable.CodeAssistantPropertiesUtil;
-import org.eclipse.jdt.client.disable.DisableEnableCodeAssistantControl;
-import org.eclipse.jdt.client.disable.DisableEnableCodeAssistantEvent;
-import org.eclipse.jdt.client.disable.DisableEnableCodeAssistantHandler;
+import org.eclipse.jdt.client.disable.DisableSyntaxErrorHighlightingControl;
+import org.eclipse.jdt.client.disable.DisableSyntaxErrorHighlightingEvent;
+import org.eclipse.jdt.client.disable.DisableSyntaxErrorHighlightingHandler;
+import org.eclipse.jdt.client.disable.SyntaxErrorHighlightingPropertiesUtil;
 import org.eclipse.jdt.client.event.CancelParseEvent;
 import org.eclipse.jdt.client.event.CancelParseHandler;
 import org.eclipse.jdt.client.event.ReparseOpenedFilesEvent;
@@ -83,7 +83,7 @@ import java.util.Set;
  */
 public class JavaCodeController implements EditorFileContentChangedHandler, EditorActiveFileChangedHandler,
                                            CancelParseHandler, EditorFileOpenedHandler, ReparseOpenedFilesHandler, EditorFileClosedHandler,
-                                           DisableEnableCodeAssistantHandler, ProjectOpenedHandler {
+                                           DisableSyntaxErrorHighlightingHandler, ProjectOpenedHandler {
 
     /** Get build log method's path. */
     private final String LOG;
@@ -106,13 +106,13 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
     private final SupportedProjectResolver resolver;
 
-    private DisableEnableCodeAssistantControl disableEnableCodeAssistantControl;
+    private DisableSyntaxErrorHighlightingControl disableSyntaxErrorHighlightingControl;
 
-    public JavaCodeController(String restContest, String ws, DisableEnableCodeAssistantControl disableEnableCodeAssistantControl,
+    public JavaCodeController(String restContest, String ws, DisableSyntaxErrorHighlightingControl disableSyntaxErrorHighlightingControl,
                               SupportedProjectResolver resolver) {
         this.LOG = restContest + ws + "/maven/log";
         this.resolver = resolver;
-        this.disableEnableCodeAssistantControl = disableEnableCodeAssistantControl;
+        this.disableSyntaxErrorHighlightingControl = disableSyntaxErrorHighlightingControl;
         instance = this;
         IDE.addHandler(EditorFileContentChangedEvent.TYPE, this);
         IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
@@ -121,7 +121,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
         IDE.addHandler(ReparseOpenedFilesEvent.TYPE, this);
         IDE.addHandler(EditorFileClosedEvent.TYPE, this);
-        IDE.addHandler(DisableEnableCodeAssistantEvent.TYPE, this);
+        IDE.addHandler(DisableSyntaxErrorHighlightingEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
     }
 
@@ -164,7 +164,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             NAME_ENVIRONMENT = new NameEnvironment(activeFile.getProject().getId());
             if (event.getEditor() instanceof Markable) {
                 editors.put(activeFile.getId(), (Markable)event.getEditor());
-                if (CodeAssistantPropertiesUtil.isCodeAssistantEnabled(activeFile.getProject()) &&
+                if (SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(activeFile.getProject()) &&
                     needReparse.contains(activeFile.getId())) {
                     startParsing();
                 }
@@ -356,7 +356,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             return;
         needReparse.remove(event.getFile().getId());
         finishJob(activeFile);
-        if (CodeAssistantPropertiesUtil.isCodeAssistantEnabled(activeFile.getProject()) && editors.containsKey(activeFile.getId())) {
+        if (SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(activeFile.getProject()) && editors.containsKey(activeFile.getId())) {
             startParsing();
         }
     }
@@ -419,7 +419,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             needReparse.add(id);
         }
         startJob(activeFile);
-        if (CodeAssistantPropertiesUtil.isCodeAssistantEnabled(activeFile.getProject())) {
+        if (SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(activeFile.getProject())) {
             startParsing();
         } else {
             checklInitializingWork();
@@ -435,10 +435,10 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
     }
 
     @Override
-    public void onDisableEnableCodeAssistant(DisableEnableCodeAssistantEvent event) {
-        disableEnableCodeAssistantControl.setState(event.isEnable());
-        CodeAssistantPropertiesUtil.updateCodeAssistant(currentProject, !event.isEnable());
-        if (CodeAssistantPropertiesUtil.isCodeAssistantEnabled(currentProject)) {
+    public void onDisableSyntaxErrorHighlighting(DisableSyntaxErrorHighlightingEvent event) {
+        disableSyntaxErrorHighlightingControl.setState(event.isEnable());
+        SyntaxErrorHighlightingPropertiesUtil.updateSyntaxErrorHighlighting(currentProject, !event.isEnable());
+        if (SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(currentProject)) {
             if (!editors.isEmpty()) {
                 for (String id : editors.keySet()) {
                     needReparse.add(id);

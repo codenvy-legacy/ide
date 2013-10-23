@@ -20,23 +20,29 @@ package org.eclipse.jdt.client.disable;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Event, occurs after pressing Show/Hide syntax error button.
+ *
  * @author <a href="mailto:vsvydenko@codenvy.com">Valeriy Svydenko</a>
  */
-public class DisableEnableCodeAssistantEvent extends GwtEvent<DisableEnableCodeAssistantHandler> {
-    public static GwtEvent.Type<DisableEnableCodeAssistantHandler> TYPE = new GwtEvent.Type<DisableEnableCodeAssistantHandler>();
+public class DisableSyntaxErrorHighlightingEvent extends GwtEvent<DisableSyntaxErrorHighlightingHandler> {
+    /** Type used to register this event. */
+    public static GwtEvent.Type<DisableSyntaxErrorHighlightingHandler> TYPE = new GwtEvent.Type<DisableSyntaxErrorHighlightingHandler>();
 
     private boolean enable;
 
-    public DisableEnableCodeAssistantEvent(boolean enable) {
+    /** @param enable */
+    public DisableSyntaxErrorHighlightingEvent(boolean enable) {
         this.enable = enable;
     }
 
-    public Type<DisableEnableCodeAssistantHandler> getAssociatedType() {
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    public Type<DisableSyntaxErrorHighlightingHandler> getAssociatedType() {
         return TYPE;
     }
 
-    protected void dispatch(DisableEnableCodeAssistantHandler handler) {
-        handler.onDisableEnableCodeAssistant(this);
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    protected void dispatch(DisableSyntaxErrorHighlightingHandler handler) {
+        handler.onDisableSyntaxErrorHighlighting(this);
     }
 
     public boolean isEnable() {

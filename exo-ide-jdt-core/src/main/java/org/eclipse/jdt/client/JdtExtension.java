@@ -30,7 +30,7 @@ import org.eclipse.jdt.client.create.CreateJavaClassControl;
 import org.eclipse.jdt.client.create.CreateJavaClassPresenter;
 import org.eclipse.jdt.client.create.CreatePackageControl;
 import org.eclipse.jdt.client.create.CreatePackagePresenter;
-import org.eclipse.jdt.client.disable.DisableEnableCodeAssistantControl;
+import org.eclipse.jdt.client.disable.DisableSyntaxErrorHighlightingControl;
 import org.eclipse.jdt.client.internal.codeassist.impl.AssistOptions;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterControl;
@@ -199,7 +199,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
     public void initialize() {
         IDE.getInstance().addControl(new CreateJavaClassControl());
         new PackageExplorerPresenter();
-        DisableEnableCodeAssistantControl disableEnableCodeAssistantControl = new DisableEnableCodeAssistantControl();
+        DisableSyntaxErrorHighlightingControl disableSyntaxErrorHighlightingControl = new DisableSyntaxErrorHighlightingControl();
         CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
         IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
@@ -208,14 +208,14 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         IDE.addHandler(ApplicationClosedEvent.TYPE, this);
         IDE.addHandler(VfsChangedEvent.TYPE, this);
 //      new CodeAssistantPresenter(this);
-        new JavaCodeController(Utils.getRestContext(), Utils.getWorkspaceName(), disableEnableCodeAssistantControl, this);
+        new JavaCodeController(Utils.getRestContext(), Utils.getWorkspaceName(), disableSyntaxErrorHighlightingControl, this);
         new OutlinePresenter();
         new TypeInfoUpdater();
         new JavaClasspathResolver(this);
         new OrganizeImportsPresenter(IDE.eventBus());
         new RefactoringRenamePresenter();
         IDE.getInstance().addControl(new CleanProjectControl());
-        IDE.getInstance().addControl(disableEnableCodeAssistantControl);
+        IDE.getInstance().addControl(disableSyntaxErrorHighlightingControl);
         IDE.getInstance().addControl(new OrganizeImportsControl());
         IDE.getInstance().addControl(new CreatePackageControl());
         IDE.getInstance().addControl(new QuickFixControl());

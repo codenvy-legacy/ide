@@ -34,15 +34,15 @@ import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import java.util.Collections;
 
 /**
- * Utils for operations with code assistant property.
+ * Utils for operations with syntax error highlighting property.
  *
  * @author <a href="mailto:vsvydenko@codenvy.com">Valeriy Svydenko</a>
  */
-public class CodeAssistantPropertiesUtil {
-    public static final String CODE_ASSISTANT_MODE = "codenvyCollaborationMode";
+public class SyntaxErrorHighlightingPropertiesUtil {
+    public static final String SYNTAX_ERROR_HIGHLIGHTING = "javaSyntaxErrorHighlighting";
 
-    public static boolean isCodeAssistantEnabled(ProjectModel project) {
-        String value = project.getPropertyValue(CODE_ASSISTANT_MODE);
+    public static boolean isSyntaxErrorHighlightingEnabled(ProjectModel project) {
+        String value = project.getPropertyValue(SYNTAX_ERROR_HIGHLIGHTING);
         if (value == null) {
             //by default code assistant disabled
             return false;
@@ -53,17 +53,17 @@ public class CodeAssistantPropertiesUtil {
     }
 
     /**
-     * Updating code assistant property.
+     * Updating syntax error highlighting property.
      *
      * @param project
      *         current project
      * @param isEnabled
-     *         flag of a code assistant property
+     *         flag of a syntax error highlighting property
      */
-    public static void updateCodeAssistant(final ProjectModel project, boolean isEnabled) {
-        Property property = project.getProperty(CODE_ASSISTANT_MODE);
+    public static void updateSyntaxErrorHighlighting(final ProjectModel project, boolean isEnabled) {
+        Property property = project.getProperty(SYNTAX_ERROR_HIGHLIGHTING);
         if (property == null) {
-            property = new PropertyImpl(CODE_ASSISTANT_MODE, "");
+            property = new PropertyImpl(SYNTAX_ERROR_HIGHLIGHTING, "");
             project.getProperties().add(property);
         }
 
@@ -111,7 +111,7 @@ public class CodeAssistantPropertiesUtil {
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    Log.debug(CodeAssistantPropertiesUtil.class, exception);
+                    Log.debug(SyntaxErrorHighlightingPropertiesUtil.class, exception);
                 }
             });
         } catch (RequestException e) {

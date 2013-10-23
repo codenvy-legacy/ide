@@ -29,23 +29,23 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 
 /**
- *  Control to get code assistant information.
+ * Control to get syntax error highlighting information.
  *
  * @author <a href="mailto:vsvydenko@codenvy.com">Valeriy Svydenko</a>
  */
 @RolesAllowed({"developer"})
-public class DisableEnableCodeAssistantControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler {
+public class DisableSyntaxErrorHighlightingControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler {
 
-    private boolean isJavaProject        = false;
+    private boolean isJavaProject = false;
 
-    private DisableEnableCodeAssistantEvent enableCodeAssistant  = new DisableEnableCodeAssistantEvent(true);
-    private DisableEnableCodeAssistantEvent disableCodeAssistant = new DisableEnableCodeAssistantEvent(false);
+    private DisableSyntaxErrorHighlightingEvent showSyntaxErrorHighlighting = new DisableSyntaxErrorHighlightingEvent(true);
+    private DisableSyntaxErrorHighlightingEvent hideSyntaxErrorHighlighting = new DisableSyntaxErrorHighlightingEvent(false);
 
-    public DisableEnableCodeAssistantControl() {
-        super(JdtExtension.LOCALIZATION_CONSTANT.disableEnableCodeAssistantId());
-        setTitle(JdtExtension.LOCALIZATION_CONSTANT.disableCodeAssistantControlTitle());
-        setPrompt(JdtExtension.LOCALIZATION_CONSTANT.disableEnableCodeAssistantControlPrompt());
-        setEvent(disableCodeAssistant);
+    public DisableSyntaxErrorHighlightingControl() {
+        super(JdtExtension.LOCALIZATION_CONSTANT.disableSyntaxErrorHighlightingId());
+        setTitle(JdtExtension.LOCALIZATION_CONSTANT.disableSyntaxErrorHighlightingControlTitle());
+        setPrompt(JdtExtension.LOCALIZATION_CONSTANT.disableSyntaxErrorHighlightingControlPrompt());
+        setEvent(hideSyntaxErrorHighlighting);
         //TODO need sam image
         setImages(JdtClientBundle.INSTANCE.quickFix(), JdtClientBundle.INSTANCE.quickFixDisabled());
     }
@@ -71,13 +71,13 @@ public class DisableEnableCodeAssistantControl extends SimpleControl implements 
         setVisible(isJavaProject);
     }
 
-    public void setState(boolean codeAssistantEnabled){
-        if(codeAssistantEnabled){
-            setEvent(disableCodeAssistant);
-            setTitle(JdtExtension.LOCALIZATION_CONSTANT.enableCodeAssistantControlTitle());
-        }else{
-            setEvent(enableCodeAssistant);
-            setTitle(JdtExtension.LOCALIZATION_CONSTANT.disableCodeAssistantControlTitle());
+    public void setState(boolean codeAssistantEnabled) {
+        if (codeAssistantEnabled) {
+            setEvent(hideSyntaxErrorHighlighting);
+            setTitle(JdtExtension.LOCALIZATION_CONSTANT.enableSyntaxErrorHighlightingControlTitle());
+        } else {
+            setEvent(showSyntaxErrorHighlighting);
+            setTitle(JdtExtension.LOCALIZATION_CONSTANT.disableSyntaxErrorHighlightingControlTitle());
         }
     }
 
