@@ -69,7 +69,7 @@ public class DiffCommand extends GitCommand<String> {
         }
         start();
         if (type == null || type.equals("--raw")) {
-            return getOutputMessage() + "\n\n";
+            return getOutputMessage() + "\n";
         } else {
             return getOutputMessage();
         }

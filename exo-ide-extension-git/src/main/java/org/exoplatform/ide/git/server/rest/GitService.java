@@ -17,39 +17,12 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
+import com.codenvy.organization.client.UserManager;
+import com.codenvy.organization.exception.OrganizationServiceException;
+import com.codenvy.organization.model.User;
+
 import org.exoplatform.ide.git.server.*;
-import org.exoplatform.ide.git.shared.AddRequest;
-import org.exoplatform.ide.git.shared.Branch;
-import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
-import org.exoplatform.ide.git.shared.BranchCreateRequest;
-import org.exoplatform.ide.git.shared.BranchDeleteRequest;
-import org.exoplatform.ide.git.shared.BranchListRequest;
-import org.exoplatform.ide.git.shared.CloneRequest;
-import org.exoplatform.ide.git.shared.CommitRequest;
-import org.exoplatform.ide.git.shared.Commiters;
-import org.exoplatform.ide.git.shared.DiffRequest;
-import org.exoplatform.ide.git.shared.FetchRequest;
-import org.exoplatform.ide.git.shared.GitUser;
-import org.exoplatform.ide.git.shared.InitRequest;
-import org.exoplatform.ide.git.shared.LogRequest;
-import org.exoplatform.ide.git.shared.MergeRequest;
-import org.exoplatform.ide.git.shared.MergeResult;
-import org.exoplatform.ide.git.shared.MoveRequest;
-import org.exoplatform.ide.git.shared.PullRequest;
-import org.exoplatform.ide.git.shared.PushRequest;
-import org.exoplatform.ide.git.shared.Remote;
-import org.exoplatform.ide.git.shared.RemoteAddRequest;
-import org.exoplatform.ide.git.shared.RemoteListRequest;
-import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
-import org.exoplatform.ide.git.shared.RepoInfo;
-import org.exoplatform.ide.git.shared.ResetRequest;
-import org.exoplatform.ide.git.shared.Revision;
-import org.exoplatform.ide.git.shared.RmRequest;
-import org.exoplatform.ide.git.shared.Status;
-import org.exoplatform.ide.git.shared.Tag;
-import org.exoplatform.ide.git.shared.TagCreateRequest;
-import org.exoplatform.ide.git.shared.TagDeleteRequest;
-import org.exoplatform.ide.git.shared.TagListRequest;
+import org.exoplatform.ide.git.shared.*;
 import org.exoplatform.ide.vfs.impl.fs.LocalFileSystem;
 import org.exoplatform.ide.vfs.server.GitUrlResolver;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
@@ -57,28 +30,17 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
-import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.ide.vfs.shared.*;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -101,6 +63,9 @@ public class GitService {
 
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
+
+    @Inject
+    private UserManager userManager;
 
     @Inject
     private GitConnectionFactory gitConnectionFactory;
@@ -570,10 +535,28 @@ public class GitService {
     protected GitConnection getGitConnection()
             throws GitException, LocalPathResolveException, VirtualFileSystemException {
         GitUser gituser = null;
-        ConversationState user = ConversationState.getCurrent();
-        //TODO add UserServiceConnector
-        if (user != null) {
-            gituser = new GitUser(user.getIdentity().getUserId(), user.getIdentity().getUserId());
+        ConversationState userState = ConversationState.getCurrent();
+        try {
+            if (userState != null) {
+                User user = userManager.getUserByAlias(userState.getIdentity().getUserId());
+                String firstName = user.getProfile().getAttribute("firstName");
+                String lastName = user.getProfile().getAttribute("lastName");
+                String username = "";
+                if (firstName != null && firstName.length() != 0) {
+                    username += firstName.concat(" ");
+                }
+                if (lastName != null && lastName.length() != 0) {
+                    username += lastName;
+                }
+                if (username.length() != 0) {
+                    gituser = new GitUser(username, userState.getIdentity().getUserId());
+                } else {
+                    gituser = new GitUser(userState.getIdentity().getUserId());
+                }
+            }
+        } catch (OrganizationServiceException e) {
+            LOG.error("It is not possible to get user", e);
+            throw new GitException("User not found");
         }
         return gitConnectionFactory.getConnection(resolveLocalPath(projectId), gituser);
     }
