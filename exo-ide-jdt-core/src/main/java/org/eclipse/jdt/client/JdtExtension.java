@@ -30,6 +30,7 @@ import org.eclipse.jdt.client.create.CreateJavaClassControl;
 import org.eclipse.jdt.client.create.CreateJavaClassPresenter;
 import org.eclipse.jdt.client.create.CreatePackageControl;
 import org.eclipse.jdt.client.create.CreatePackagePresenter;
+import org.eclipse.jdt.client.disable.DisableEnableCodeAssistantControl;
 import org.eclipse.jdt.client.internal.codeassist.impl.AssistOptions;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterControl;

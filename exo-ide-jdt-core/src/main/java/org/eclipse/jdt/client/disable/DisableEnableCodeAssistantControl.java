@@ -15,8 +15,10 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package org.eclipse.jdt.client;
+package org.eclipse.jdt.client.disable;
 
+import org.eclipse.jdt.client.JdtClientBundle;
+import org.eclipse.jdt.client.JdtExtension;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -27,6 +29,8 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 
 /**
+ *  Control to get code assistant information.
+ *
  * @author <a href="mailto:vsvydenko@codenvy.com">Valeriy Svydenko</a>
  */
 @RolesAllowed({"developer"})
@@ -42,7 +46,7 @@ public class DisableEnableCodeAssistantControl extends SimpleControl implements 
         setTitle(JdtExtension.LOCALIZATION_CONSTANT.disableCodeAssistantControlTitle());
         setPrompt(JdtExtension.LOCALIZATION_CONSTANT.disableEnableCodeAssistantControlPrompt());
         setEvent(disableCodeAssistant);
-        //TODO
+        //TODO need sam image
         setImages(JdtClientBundle.INSTANCE.quickFix(), JdtClientBundle.INSTANCE.quickFixDisabled());
     }
 

@@ -28,6 +28,10 @@ import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.disable.CodeAssistantPropertiesUtil;
+import org.eclipse.jdt.client.disable.DisableEnableCodeAssistantControl;
+import org.eclipse.jdt.client.disable.DisableEnableCodeAssistantEvent;
+import org.eclipse.jdt.client.disable.DisableEnableCodeAssistantHandler;
 import org.eclipse.jdt.client.event.CancelParseEvent;
 import org.eclipse.jdt.client.event.CancelParseHandler;
 import org.eclipse.jdt.client.event.ReparseOpenedFilesEvent;
@@ -52,6 +56,8 @@ import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.marking.Markable;
 import org.exoplatform.ide.editor.client.marking.Marker;
@@ -77,13 +83,16 @@ import java.util.Set;
  */
 public class JavaCodeController implements EditorFileContentChangedHandler, EditorActiveFileChangedHandler,
                                            CancelParseHandler, EditorFileOpenedHandler, ReparseOpenedFilesHandler, EditorFileClosedHandler,
-                                           DisableEnableCodeAssistantHandler {
+                                           DisableEnableCodeAssistantHandler, ProjectOpenedHandler {
 
     /** Get build log method's path. */
     private final String LOG;
 
     /** Active file in editor. */
     private FileModel activeFile;
+
+    /** Active project. */
+    private ProjectModel currentProject;
 
     private Set<String> needReparse = new HashSet<String>();
 
@@ -99,8 +108,6 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
     private DisableEnableCodeAssistantControl disableEnableCodeAssistantControl;
 
-    private boolean isEnableCodeAssistant = false;
-
     public JavaCodeController(String restContest, String ws, DisableEnableCodeAssistantControl disableEnableCodeAssistantControl,
                               SupportedProjectResolver resolver) {
         this.LOG = restContest + ws + "/maven/log";
@@ -115,6 +122,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         IDE.addHandler(ReparseOpenedFilesEvent.TYPE, this);
         IDE.addHandler(EditorFileClosedEvent.TYPE, this);
         IDE.addHandler(DisableEnableCodeAssistantEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
     }
 
     public static JavaCodeController get() {
@@ -156,7 +164,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             NAME_ENVIRONMENT = new NameEnvironment(activeFile.getProject().getId());
             if (event.getEditor() instanceof Markable) {
                 editors.put(activeFile.getId(), (Markable)event.getEditor());
-                if (isEnableCodeAssistant && needReparse.contains(activeFile.getId())) {
+                if (CodeAssistantPropertiesUtil.isCodeAssistantEnabled(activeFile.getProject()) &&
+                    needReparse.contains(activeFile.getId())) {
                     startParsing();
                 }
             }
@@ -347,7 +356,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             return;
         needReparse.remove(event.getFile().getId());
         finishJob(activeFile);
-        if (isEnableCodeAssistant && editors.containsKey(activeFile.getId())) {
+        if (CodeAssistantPropertiesUtil.isCodeAssistantEnabled(activeFile.getProject()) && editors.containsKey(activeFile.getId())) {
             startParsing();
         }
     }
@@ -410,7 +419,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             needReparse.add(id);
         }
         startJob(activeFile);
-        if (isEnableCodeAssistant) {
+        if (CodeAssistantPropertiesUtil.isCodeAssistantEnabled(activeFile.getProject())) {
             startParsing();
         } else {
             checklInitializingWork();
@@ -428,8 +437,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
     @Override
     public void onDisableEnableCodeAssistant(DisableEnableCodeAssistantEvent event) {
         disableEnableCodeAssistantControl.setState(event.isEnable());
-        isEnableCodeAssistant = !event.isEnable();
-        if (isEnableCodeAssistant) {
+        CodeAssistantPropertiesUtil.updateCodeAssistant(currentProject, !event.isEnable());
+        if (CodeAssistantPropertiesUtil.isCodeAssistantEnabled(currentProject)) {
             if (!editors.isEmpty()) {
                 for (String id : editors.keySet()) {
                     needReparse.add(id);
@@ -448,5 +457,10 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
                     cancel();
             }
         }.scheduleRepeating(1000);
+    }
+
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        currentProject = event.getProject();
     }
 }

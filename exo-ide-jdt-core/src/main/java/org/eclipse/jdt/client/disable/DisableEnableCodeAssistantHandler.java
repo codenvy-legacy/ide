@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package org.eclipse.jdt.client;
+package org.eclipse.jdt.client.disable;
 
 import com.google.gwt.event.shared.EventHandler;
 
