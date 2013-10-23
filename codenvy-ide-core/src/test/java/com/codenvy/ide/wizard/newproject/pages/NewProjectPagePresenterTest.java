@@ -23,10 +23,10 @@ import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
-import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.paas.PaaSAgentImpl;
+import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageView;
@@ -174,46 +174,54 @@ public class NewProjectPagePresenterTest {
     @Test
     public void testGetNoticeWhenProjectNameIsEmpty() throws Exception {
         setUp();
+        when(constant.enteringProjectName()).thenReturn(PROJECT_NAME);
         when(view.getProjectName()).thenReturn("");
 
-        assertEquals(presenter.getNotice(), "Please, enter a project name.");
+        assertEquals(presenter.getNotice(), PROJECT_NAME);
+        verify(constant).enteringProjectName();
     }
 
     @Test
     public void testGetNoticeWhenProjectListIsNotCome() throws Exception {
         setUp();
+        when(constant.checkingProjectsList()).thenReturn(PROJECT_NAME);
         when(view.getProjectName()).thenReturn(PROJECT_NAME);
 
-        assertEquals(presenter.getNotice(), "Please wait, checking project list");
+        assertEquals(presenter.getNotice(), PROJECT_NAME);
+        verify(constant).checkingProjectsList();
     }
 
     @Test
     public void testGetNoticeWhenProjectWithSameNameIsExist() throws Exception {
         setUpWithProjects();
+        when(constant.createProjectFromTemplateProjectExists(anyString())).thenReturn(PROJECT_NAME);
         when(view.getProjectName()).thenReturn(PROJECT_NAME);
+
         presenter.checkProjectName();
 
-        assertEquals(presenter.getNotice(), "Project with this name already exists.");
+        assertEquals(presenter.getNotice(), PROJECT_NAME);
+        verify(constant).createProjectFromTemplateProjectExists(anyString());
     }
 
     @Test
     public void testGetNoticeWhenProjectNameIsIncorrect() throws Exception {
         setUpWithProjects();
+        when(constant.noIncorrectProjectNameMessage()).thenReturn(PROJECT_NAME);
         when(view.getProjectName()).thenReturn("project!");
         presenter.checkProjectName();
 
-        assertEquals(presenter.getNotice(), "Incorrect project name.");
+        assertEquals(presenter.getNotice(), PROJECT_NAME);
+        verify(constant).noIncorrectProjectNameMessage();
     }
 
     @Test
     public void testGetNoticeWhenProjectTypeIsNotSelected() throws Exception {
-        String message = "message";
         setUpWithProjects();
         when(view.getProjectName()).thenReturn("projectName2");
-        when(constant.noTechnologyMessage()).thenReturn(message);
+        when(constant.noTechnologyMessage()).thenReturn(PROJECT_NAME);
         presenter.checkProjectName();
 
-        assertEquals(presenter.getNotice(), message);
+        assertEquals(presenter.getNotice(), PROJECT_NAME);
         verify(constant).noTechnologyMessage();
     }
 
@@ -221,10 +229,11 @@ public class NewProjectPagePresenterTest {
     public void testGetNoticeWhenPaasIsNotSelected() throws Exception {
         setUpWithProjects();
         when(view.getProjectName()).thenReturn("projectName2");
+        when(constant.choosePaaS()).thenReturn(PROJECT_NAME);
         when(wizardContext.getData(eq(PROJECT_TYPE))).thenReturn(projectType);
         presenter.checkProjectName();
 
-        assertEquals(presenter.getNotice(), "Please, choose PaaS");
+        assertEquals(presenter.getNotice(), PROJECT_NAME);
     }
 
     @Test

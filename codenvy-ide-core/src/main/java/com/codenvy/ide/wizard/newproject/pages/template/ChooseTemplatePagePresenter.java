@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.wizard.newproject.pages.template;
 
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
@@ -35,24 +36,31 @@ import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class ChooseTemplatePagePresenter extends AbstractWizardPage implements ChooseTemplatePageView.ActionDelegate {
-    private ChooseTemplatePageView view;
-    private TemplateAgentImpl      templateAgent;
-    private JsonArray<Template>    templates;
-    private boolean                needToChange;
+    private ChooseTemplatePageView   view;
+    private TemplateAgentImpl        templateAgent;
+    private CoreLocalizationConstant constant;
+    private JsonArray<Template>      templates;
+    private boolean                  needToChange;
 
     /**
      * Create presenter.
      *
      * @param resources
      * @param view
+     * @param templateAgent
+     * @param constant
      */
     @Inject
-    public ChooseTemplatePagePresenter(ChooseTemplatePageView view, Resources resources, TemplateAgentImpl templateAgent) {
+    public ChooseTemplatePagePresenter(ChooseTemplatePageView view,
+                                       Resources resources,
+                                       TemplateAgentImpl templateAgent,
+                                       CoreLocalizationConstant constant) {
         super("Choose project template", resources.templateIcon());
 
         this.view = view;
         this.view.setDelegate(this);
         this.templateAgent = templateAgent;
+        this.constant = constant;
         needToChange = true;
     }
 
@@ -86,7 +94,7 @@ public class ChooseTemplatePagePresenter extends AbstractWizardPage implements C
     /** {@inheritDoc} */
     public String getNotice() {
         if (wizardContext.getData(TEMPLATE) == null) {
-            return "Please, select template.";
+            return constant.createProjectFromTemplateSelectTemplate();
         }
 
         return null;

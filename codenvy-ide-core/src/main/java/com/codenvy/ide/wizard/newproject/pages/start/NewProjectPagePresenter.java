@@ -22,9 +22,9 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
-import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.paas.PaaSAgentImpl;
+import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
@@ -54,15 +54,19 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     /**
      * Create presenter.
      *
-     * @param projectTypeAgent
-     * @param resources
      * @param view
+     * @param resources
+     * @param projectTypeAgent
      * @param paasAgent
      * @param resourceProvider
+     * @param constant
      */
     @Inject
-    public NewProjectPagePresenter(NewProjectPageView view, Resources resources, ProjectTypeAgentImpl projectTypeAgent,
-                                   PaaSAgentImpl paasAgent, ResourceProvider resourceProvider,
+    public NewProjectPagePresenter(NewProjectPageView view,
+                                   Resources resources,
+                                   ProjectTypeAgentImpl projectTypeAgent,
+                                   PaaSAgentImpl paasAgent,
+                                   ResourceProvider resourceProvider,
                                    CoreLocalizationConstant constant) {
 
         super("Select project type and paas", resources.newResourceIcon());
@@ -120,17 +124,17 @@ public class NewProjectPagePresenter extends AbstractWizardPage implements NewPr
     @Override
     public String getNotice() {
         if (view.getProjectName().isEmpty()) {
-            return "Please, enter a project name.";
+            return constant.enteringProjectName();
         } else if (!hasProjectList) {
-            return "Please wait, checking project list";
+            return constant.checkingProjectsList();
         } else if (hasSameProject) {
-            return "Project with this name already exists.";
+            return constant.createProjectFromTemplateProjectExists(view.getProjectName());
         } else if (hasProjectNameIncorrectSymbol) {
-            return "Incorrect project name.";
+            return constant.noIncorrectProjectNameMessage();
         } else if (wizardContext.getData(PROJECT_TYPE) == null) {
             return constant.noTechnologyMessage();
         } else if (wizardContext.getData(PAAS) == null) {
-            return "Please, choose PaaS";
+            return constant.choosePaaS();
         }
 
         return null;

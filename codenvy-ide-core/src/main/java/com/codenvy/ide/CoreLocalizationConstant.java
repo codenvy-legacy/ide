@@ -24,11 +24,26 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("createProjectFromTemplate.nameField")
     String createProjectFromTemplateName();
 
+    @Key("createProjectFromTemplate.selectTemplate")
+    String createProjectFromTemplateSelectTemplate();
+
+    @Key("noIncorrectProjectNameMessage")
+    String noIncorrectProjectNameMessage();
+
+    @Key("createProjectFromTemplate.project.exists")
+    String createProjectFromTemplateProjectExists(String projectName);
+
     @Key("chooseTechnology")
     String chooseTechnology();
 
     @Key("chooseTechnologyTooltip")
     String chooseTechnologyTooltip();
+
+    @Key("enteringProjectName")
+    String enteringProjectName();
+
+    @Key("checkingProjectsList")
+    String checkingProjectsList();
 
     @Key("choosePaas")
     String choosePaaS();

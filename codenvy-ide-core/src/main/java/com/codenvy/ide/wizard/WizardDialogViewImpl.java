@@ -57,9 +57,9 @@ public class WizardDialogViewImpl extends DialogBox implements WizardDialogView 
     @UiField
     SimplePanel               imagePanel;
     @UiField
-    Label                     caption;
+    HTML                      caption;
     @UiField
-    Label                     notice;
+    HTML                      notice;
     @UiField
     DeckLayoutPanel           contentPanel;
     @UiField(provided = true)
@@ -118,13 +118,13 @@ public class WizardDialogViewImpl extends DialogBox implements WizardDialogView 
     /** {@inheritDoc} */
     @Override
     public void setCaption(@NotNull String caption) {
-        this.caption.setText(caption);
+        this.caption.setHTML(caption);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setNotice(@Nullable String notice) {
-        this.notice.setText(notice);
+        this.notice.setHTML(notice);
     }
 
     /** {@inheritDoc} */

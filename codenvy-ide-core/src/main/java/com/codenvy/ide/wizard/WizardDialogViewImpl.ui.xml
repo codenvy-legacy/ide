@@ -60,10 +60,10 @@
                     <g:SimplePanel width="100%" height="100%" ui:field="imagePanel"/>
                 </g:east>
                 <g:north size="20.0">
-                    <g:Label text="" ui:field="caption" width="100%" height="20px" addStyleNames="{res.coreCss.mainBoldFont}"/>
+                    <g:HTML ui:field="caption" width="100%" height="20px" addStyleNames="{res.coreCss.mainBoldFont}"/>
                 </g:north>
                 <g:center>
-                    <g:Label text="" width="100%" height="28px" ui:field="notice" addStyleNames="{res.coreCss.errorFont}"/>
+                    <g:HTML width="100%" height="28px" ui:field="notice" addStyleNames="{res.coreCss.errorFont}"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.wizard.newproject.pages;
 
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.Wizard;
@@ -61,6 +62,8 @@ public class ChooseTemplatePagePresenterTest {
     @Mock
     private TemplateAgentImpl           templateAgent;
     @Mock
+    private CoreLocalizationConstant    constant;
+    @Mock
     private Wizard.UpdateDelegate       delegate;
     @Mock
     private WizardContext               wizardContext;
@@ -73,7 +76,7 @@ public class ChooseTemplatePagePresenterTest {
         template = new Template("id", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"));
         projectType = new ProjectTypeData("typeName", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"));
 
-        page = new ChooseTemplatePagePresenter(view, resources, templateAgent);
+        page = new ChooseTemplatePagePresenter(view, resources, templateAgent, constant);
         page.setContext(wizardContext);
         page.setUpdateDelegate(delegate);
     }
@@ -137,7 +140,10 @@ public class ChooseTemplatePagePresenterTest {
 
     @Test
     public void testGetNoticeWhenTemplateIsNotChosen() throws Exception {
-        assertEquals(page.getNotice(), "Please, select template.");
+        String message = "message";
+        when(constant.createProjectFromTemplateSelectTemplate()).thenReturn(message);
+
+        assertEquals(page.getNotice(), message);
     }
 
     @Test
