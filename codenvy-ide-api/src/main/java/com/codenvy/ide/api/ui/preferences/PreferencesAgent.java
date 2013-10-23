@@ -33,7 +33,7 @@ public interface PreferencesAgent {
      * Adds a new preference page into preferences list.
      *
      * @param page
-     *         page that need to ne added
+     *         page that need to be added
      */
     void addPage(@NotNull Provider<? extends PreferencesPagePresenter> page);
 }

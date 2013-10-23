@@ -104,10 +104,7 @@ public interface WizardPage extends Presenter {
      */
     void commit(@NotNull CommitCallback callback);
 
-    // TODO a rollback may be add rollback method?...
-
     /** Store options which can add the page. */
-    // TODO may be not needed?...
     void storeOptions();
 
     /** Remove options which can provide the page. */
