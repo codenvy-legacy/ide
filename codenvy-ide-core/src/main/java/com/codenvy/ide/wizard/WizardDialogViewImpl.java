@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.wizard;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.google.gwt.core.client.GWT;
@@ -62,7 +63,7 @@ public class WizardDialogViewImpl extends DialogBox implements WizardDialogView 
     @UiField
     DeckLayoutPanel           contentPanel;
     @UiField(provided = true)
-    final   WizardResource res;
+    final   Resources      res;
     private ActionDelegate delegate;
 
     /**
@@ -71,7 +72,7 @@ public class WizardDialogViewImpl extends DialogBox implements WizardDialogView 
      * @param resource
      */
     @Inject
-    protected WizardDialogViewImpl(WizardResource resource) {
+    protected WizardDialogViewImpl(Resources resource) {
         this.res = resource;
 
         Widget widget = uiBinder.createAndBindUi(this);

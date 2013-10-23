@@ -19,7 +19,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    <ui:with field='res' type='com.codenvy.ide.wizard.WizardResource'/>
+    <ui:with field='res' type='com.codenvy.ide.Resources'/>
     <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
     <ui:style>
         .alignLeft {
@@ -62,12 +62,12 @@
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="100%" height="100%">
         <g:north size="50">
-            <g:FlowPanel addStyleNames="{res.wizardCSS.line}">
+            <g:FlowPanel addStyleNames="{res.coreCss.line}">
                 <g:DockLayoutPanel unit="PX" width="100%" height="100%">
                     <g:west size="100">
                         <g:FlowPanel>
                             <g:Label text="{locale.createProjectFromTemplateName}"
-                                     addStyleNames="{res.wizardCSS.mainBoldFont} {res.wizardCSS.greyFontColor} {style.projectNamePosition}"/>
+                                     addStyleNames="{res.coreCss.mainBoldFont} {res.coreCss.greyFontColor} {style.projectNamePosition}"/>
                         </g:FlowPanel>
                     </g:west>
                     <g:center>
@@ -81,23 +81,23 @@
             </g:FlowPanel>
         </g:north>
         <g:north size="140">
-            <g:FlowPanel addStyleNames="{res.wizardCSS.line}">
+            <g:FlowPanel addStyleNames="{res.coreCss.line}">
                 <g:Label text="{locale.chooseTechnology}"
-                         addStyleNames="{style.title} {res.wizardCSS.mainBoldFont} {res.wizardCSS.greyFontColor} {style.alignLeft}"/>
+                         addStyleNames="{style.title} {res.coreCss.mainBoldFont} {res.coreCss.greyFontColor} {style.alignLeft}"/>
                 <g:Image ui:field="chooseTechnologyTooltip" resource="{res.question}"
-                         addStyleNames="{style.questionImage} {res.wizardCSS.cursorPointer} {style.alignLeft}"/>
+                         addStyleNames="{style.questionImage} {res.coreCss.cursorPointer} {style.alignLeft}"/>
                 <g:SimplePanel ui:field="techPanel"
-                               addStyleNames="{res.wizardCSS.mainFont} {style.clearLeft} {style.emptyBorder} {style.emptyBackground}"/>
+                               addStyleNames="{res.coreCss.mainFont} {style.clearLeft} {style.emptyBorder} {style.emptyBackground}"/>
             </g:FlowPanel>
         </g:north>
         <g:north size="140">
-            <g:FlowPanel addStyleNames="{res.wizardCSS.line}">
+            <g:FlowPanel addStyleNames="{res.coreCss.line}">
                 <g:Label text="{locale.choosePaaS}"
-                         addStyleNames="{style.title} {res.wizardCSS.mainBoldFont} {res.wizardCSS.greyFontColor} {style.alignLeft}"/>
+                         addStyleNames="{style.title} {res.coreCss.mainBoldFont} {res.coreCss.greyFontColor} {style.alignLeft}"/>
                 <g:Image ui:field="choosePaaSTooltip" resource="{res.question}"
-                         addStyleNames="{style.questionImage} {res.wizardCSS.cursorPointer} {style.alignLeft}"/>
+                         addStyleNames="{style.questionImage} {res.coreCss.cursorPointer} {style.alignLeft}"/>
                 <g:SimplePanel ui:field="paasPanel"
-                               addStyleNames="{res.wizardCSS.mainFont} {style.clearLeft} {style.emptyBorder} {style.emptyBackground}"/>
+                               addStyleNames="{res.coreCss.mainFont} {style.clearLeft} {style.emptyBorder} {style.emptyBackground}"/>
             </g:FlowPanel>
         </g:north>
     </g:DockLayoutPanel>

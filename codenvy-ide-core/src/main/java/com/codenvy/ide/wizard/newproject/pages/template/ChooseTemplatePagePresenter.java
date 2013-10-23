@@ -17,12 +17,12 @@
  */
 package com.codenvy.ide.wizard.newproject.pages.template;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.template.TemplateAgentImpl;
-import com.codenvy.ide.wizard.WizardResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
@@ -47,7 +47,7 @@ public class ChooseTemplatePagePresenter extends AbstractWizardPage implements C
      * @param view
      */
     @Inject
-    public ChooseTemplatePagePresenter(ChooseTemplatePageView view, WizardResource resources, TemplateAgentImpl templateAgent) {
+    public ChooseTemplatePagePresenter(ChooseTemplatePageView view, Resources resources, TemplateAgentImpl templateAgent) {
         super("Choose project template", resources.templateIcon());
 
         this.view = view;

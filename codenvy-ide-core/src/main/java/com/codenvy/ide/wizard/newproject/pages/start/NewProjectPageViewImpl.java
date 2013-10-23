@@ -18,11 +18,11 @@
 package com.codenvy.ide.wizard.newproject.pages.start;
 
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeData;
-import com.codenvy.ide.wizard.WizardResource;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -58,7 +58,7 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
     @UiField
     SimplePanel techPanel;
     @UiField(provided = true)
-    final   WizardResource           res;
+    final   Resources                res;
     @UiField(provided = true)
     final   CoreLocalizationConstant locale;
     private ActionDelegate           delegate;
@@ -72,7 +72,7 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
      * @param locale
      */
     @Inject
-    protected NewProjectPageViewImpl(WizardResource resource, CoreLocalizationConstant locale) {
+    protected NewProjectPageViewImpl(Resources resource, CoreLocalizationConstant locale) {
         this.res = resource;
         this.locale = locale;
 

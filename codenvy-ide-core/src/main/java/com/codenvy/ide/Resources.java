@@ -25,7 +25,6 @@ import com.codenvy.ide.ui.DialogBoxResources;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.welcome.WelcomePageResources;
-import com.codenvy.ide.wizard.WizardResource;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.resources.client.ImageResource;
@@ -44,13 +43,26 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorViewImpl.Resources,
                                    LineNumberRenderer.Resources, EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources,
-                                   WizardResource, MenuResources, DialogBoxResources, WelcomePageResources, NotificationResources {
+                                   MenuResources, DialogBoxResources, WelcomePageResources, NotificationResources {
 
     /** Interface for css resources. */
     public interface CoreCss extends CssResource {
         String simpleListContainer();
 
         String mainText();
+
+        // wizard's styles
+        String mainFont();
+
+        String mainBoldFont();
+
+        String errorFont();
+
+        String greyFontColor();
+
+        String cursorPointer();
+
+        String line();
     }
 
     @Source({"Core.css", "com/codenvy/ide/common/constants.css", "com/codenvy/ide/api/ui/style.css"})
@@ -66,4 +78,28 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
 
     @Source("tree/project-closed.png")
     ImageResource projectClosed();
+
+    @Source("wizard/new_project_icon.png")
+    ImageResource newProjectIcon();
+
+    @Source("wizard/new_project_icon.png")
+    ImageResource newResourceIcon();
+
+    @Source("wizard/new_resource_icon.png")
+    ImageResource templateIcon();
+
+    @Source("wizard/back.png")
+    ImageResource back();
+
+    @Source("wizard/next.png")
+    ImageResource next();
+
+    @Source("wizard/cancel.png")
+    ImageResource cancel();
+
+    @Source("wizard/ok.png")
+    ImageResource ok();
+
+    @Source("wizard/question.png")
+    ImageResource question();
 }

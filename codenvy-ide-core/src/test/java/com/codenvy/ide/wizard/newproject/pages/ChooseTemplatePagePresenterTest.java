@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.wizard.newproject.pages;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
@@ -24,7 +25,6 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.template.TemplateAgentImpl;
-import com.codenvy.ide.wizard.WizardResource;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageView;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -57,7 +57,7 @@ public class ChooseTemplatePagePresenterTest {
     @Mock
     private ChooseTemplatePageView      view;
     @Mock
-    private WizardResource              resources;
+    private Resources                   resources;
     @Mock
     private TemplateAgentImpl           templateAgent;
     @Mock
