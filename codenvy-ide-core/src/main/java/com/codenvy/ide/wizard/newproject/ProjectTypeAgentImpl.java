@@ -21,9 +21,11 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.resources.ProjectTypeData;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -34,12 +36,12 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ProjectTypeAgentImpl implements ProjectTypeAgent {
-    private final JsonArray<ProjectTypeData> projectTypes;
+    private final JsonStringMap<ProjectTypeData> projectTypes;
 
     /** Create agent. */
     @Inject
     protected ProjectTypeAgentImpl() {
-        this.projectTypes = JsonCollections.createArray();
+        this.projectTypes = JsonCollections.createStringMap();
     }
 
     /** {@inheritDoc} */
@@ -49,8 +51,13 @@ public class ProjectTypeAgentImpl implements ProjectTypeAgent {
                          @Nullable ImageResource icon,
                          @NotNull String primaryNature,
                          @NotNull JsonArray<String> secondaryNature) {
+        if (projectTypes.containsKey(typeName)) {
+            Window.alert("Project type with " + typeName + " name already exists");
+            return;
+        }
+
         ProjectTypeData projectType = new ProjectTypeData(typeName, title, icon, primaryNature, secondaryNature);
-        projectTypes.add(projectType);
+        projectTypes.put(typeName, projectType);
     }
 
     /**
@@ -59,6 +66,6 @@ public class ProjectTypeAgentImpl implements ProjectTypeAgent {
      * @return project types
      */
     public JsonArray<ProjectTypeData> getProjectTypes() {
-        return projectTypes;
+        return projectTypes.getValues();
     }
 }

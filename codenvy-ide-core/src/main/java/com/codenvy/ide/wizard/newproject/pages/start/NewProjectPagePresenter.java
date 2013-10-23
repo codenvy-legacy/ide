@@ -23,7 +23,7 @@ import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.paas.PaaSAgentImpl;
+import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
 import com.codenvy.ide.resources.ProjectTypeData;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.util.loging.Log;

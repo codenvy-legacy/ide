@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.paas;
+package com.codenvy.ide.wizard.newproject;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
@@ -40,6 +40,8 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class PaaSAgentImpl implements PaaSAgent {
+    private static final String NONE_PAAS_ID = "None";
+
     private class NonePaaS extends PaaS {
         public NonePaaS(@NotNull String id, @NotNull String title, @Nullable ImageResource image) {
             super(id, title, image, JsonCollections.<JsonArray<String>>createStringMap(), false);
@@ -52,15 +54,15 @@ public class PaaSAgentImpl implements PaaSAgent {
         }
     }
 
-    private       NewProjectWizard newProjectWizard;
-    private final JsonArray<PaaS>  registeredPaaS;
+    private       NewProjectWizard    newProjectWizard;
+    private final JsonStringMap<PaaS> registeredPaaS;
 
     /** Create agent. */
     @Inject
     protected PaaSAgentImpl(NewProjectWizard newProjectWizard) {
         this.newProjectWizard = newProjectWizard;
-        this.registeredPaaS = JsonCollections.createArray();
-        registeredPaaS.add(new NonePaaS("None", "None", null));
+        this.registeredPaaS = JsonCollections.createStringMap();
+        registeredPaaS.put(NONE_PAAS_ID, new NonePaaS(NONE_PAAS_ID, NONE_PAAS_ID, null));
     }
 
     /** {@inheritDoc} */
@@ -71,12 +73,13 @@ public class PaaSAgentImpl implements PaaSAgent {
                          @NotNull JsonStringMap<JsonArray<String>> natures,
                          @NotNull JsonArray<Provider<? extends AbstractPaasPage>> wizardPages,
                          boolean provideTemplate) {
-        if (isIdExist(id)) {
+        if (registeredPaaS.containsKey(id)) {
             Window.alert("PaaS with " + id + " id already exists");
+            return;
         }
 
         PaaS paas = new PaaS(id, title, image, natures, provideTemplate);
-        registeredPaaS.add(paas);
+        registeredPaaS.put(id, paas);
         if (wizardPages != null) {
             for (Provider<? extends AbstractPaasPage> provider : wizardPages.asIterable()) {
                 newProjectWizard.addPaaSPage(provider);
@@ -84,22 +87,8 @@ public class PaaSAgentImpl implements PaaSAgent {
         }
     }
 
-    /**
-     * Returns whether the paas with this id already exists.
-     *
-     * @return <code>true</code> if the paas already exists, and <code>false</code> if it doesn't
-     */
-    private boolean isIdExist(@NotNull String id) {
-        for (PaaS paas : registeredPaaS.asIterable()) {
-            if (paas.getId().equals(id)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /** @return all available PaaSes. */
     public JsonArray<PaaS> getPaaSes() {
-        return registeredPaaS;
+        return registeredPaaS.getValues();
     }
 }

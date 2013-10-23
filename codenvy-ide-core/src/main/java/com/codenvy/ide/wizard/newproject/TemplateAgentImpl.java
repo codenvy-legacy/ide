@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.template;
+package com.codenvy.ide.wizard.newproject;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
@@ -25,6 +25,7 @@ import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -38,14 +39,14 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class TemplateAgentImpl implements TemplateAgent {
-    private       NewProjectWizard    newProjectWizard;
-    private final JsonArray<Template> templates;
+    private       NewProjectWizard        newProjectWizard;
+    private final JsonStringMap<Template> templates;
 
     /** Create agent. */
     @Inject
     protected TemplateAgentImpl(NewProjectWizard newProjectWizard) {
         this.newProjectWizard = newProjectWizard;
-        this.templates = JsonCollections.createArray();
+        this.templates = JsonCollections.createStringMap();
     }
 
     /** {@inheritDoc} */
@@ -56,31 +57,18 @@ public class TemplateAgentImpl implements TemplateAgent {
                          @NotNull String primaryNature,
                          @NotNull JsonArray<String> secondaryNatures,
                          @NotNull JsonArray<Provider<? extends AbstractTemplatePage>> wizardPages) {
-        if (isIdExist(id)) {
+        if (templates.containsKey(id)) {
             Window.alert("Template with " + id + " id already exists");
+            return;
         }
 
         Template template = new Template(id, title, icon, primaryNature, secondaryNatures);
-        templates.add(template);
+        templates.put(id, template);
         if (wizardPages != null) {
             for (Provider<? extends AbstractTemplatePage> provider : wizardPages.asIterable()) {
                 newProjectWizard.addPageAfterChooseTemplate(provider);
             }
         }
-    }
-
-    /**
-     * Returns whether the template with this id already exists.
-     *
-     * @return <code>true</code> if the template already exists, and <code>false</code> if it doesn't
-     */
-    private boolean isIdExist(@NotNull String id) {
-        for (Template template : templates.asIterable()) {
-            if (template.getId().equals(id)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -95,7 +83,7 @@ public class TemplateAgentImpl implements TemplateAgent {
     @NotNull
     public JsonArray<Template> getTemplatesForProjectType(@NotNull String primaryNature, @NotNull JsonArray<String> secondaryNatures) {
         JsonArray<Template> availableTemplates = JsonCollections.createArray();
-        for (Template template : templates.asIterable()) {
+        for (Template template : templates.getValues().asIterable()) {
             if (template.isAvailable(primaryNature, secondaryNatures)) {
                 availableTemplates.add(template);
             }

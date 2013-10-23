@@ -23,7 +23,7 @@ import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.ProjectTypeData;
-import com.codenvy.ide.template.TemplateAgentImpl;
+import com.codenvy.ide.wizard.newproject.TemplateAgentImpl;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
