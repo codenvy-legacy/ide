@@ -76,11 +76,11 @@ public class BuilderClientServiceImpl implements BuilderClientService {
     @Override
     public void build(String projectId, String vfsId, String projectName, String projectType, AsyncRequestCallback<String> callback)
             throws RequestException {
-        final String requesrUrl = restServiceContext + BUILD;
+        final String requestUrl = restServiceContext + BUILD;
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&name=" + projectName + "&type=" + projectType;
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-        AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
+        AsyncRequest.build(RequestBuilder.GET, requestUrl + "?" + params)
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
@@ -88,11 +88,11 @@ public class BuilderClientServiceImpl implements BuilderClientService {
     @Override
     public void buildAndPublish(String projectId, String vfsId, String projectName, String projectType,
                                 AsyncRequestCallback<String> callback) throws RequestException {
-        final String requesrUrl = restServiceContext + DEPLOY;
+        final String requestUrl = restServiceContext + DEPLOY;
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&name=" + projectName + "&type=" + projectType;
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-        AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
+        AsyncRequest.build(RequestBuilder.GET, requestUrl + "?" + params)
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 

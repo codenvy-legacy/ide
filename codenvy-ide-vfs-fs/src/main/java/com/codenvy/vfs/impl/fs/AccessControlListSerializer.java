@@ -21,7 +21,11 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/**
+ * Serializer for AccessControlList.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ */
 public class AccessControlListSerializer implements DataSerializer<AccessControlList> {
     @Override
     public void write(DataOutput output, AccessControlList value) throws IOException {

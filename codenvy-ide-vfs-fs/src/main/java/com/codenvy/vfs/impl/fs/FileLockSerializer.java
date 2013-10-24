@@ -22,7 +22,12 @@ import java.io.DataOutput;
 import java.io.EOFException;
 import java.io.IOException;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/**
+ * Serializer for locks of VirtualFile.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @see FileLock
+ */
 public class FileLockSerializer implements DataSerializer<FileLock> {
     @Override
     public void write(DataOutput output, FileLock lock) throws IOException {

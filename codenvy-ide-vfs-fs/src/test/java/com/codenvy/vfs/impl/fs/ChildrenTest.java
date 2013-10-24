@@ -17,12 +17,11 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.shared.Item;
-import com.codenvy.api.vfs.shared.ItemImpl;
-import com.codenvy.api.vfs.shared.ItemList;
 import com.codenvy.api.vfs.shared.ItemType;
-import com.codenvy.api.vfs.shared.Principal;
-import com.codenvy.api.vfs.shared.PrincipalImpl;
+import com.codenvy.api.vfs.shared.dto.Item;
+import com.codenvy.api.vfs.shared.dto.ItemList;
+import com.codenvy.api.vfs.shared.dto.Principal;
+import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
@@ -38,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.codenvy.api.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import static com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
 
 public class ChildrenTest extends LocalFileSystemTest {
     private Map<String, String[]> properties;
@@ -76,7 +75,8 @@ public class ChildrenTest extends LocalFileSystemTest {
 
         String protectedFolderPath = createDirectory(testRootPath, "ChildrenTest_ProtectedFolder");
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
-        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
+        Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
+        permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedFolderPath, permissions);
 
         fileId = pathToId(filePath);
@@ -142,7 +142,8 @@ public class ChildrenTest extends LocalFileSystemTest {
         String protectedItemName = childrenNames.iterator().next();
         String protectedItemPath = folderPath + '/' + protectedItemName;
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
-        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
+        Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
+        permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedItemPath, permissions);
         childrenNames.remove(protectedItemName); // this should not appears in result
 
@@ -185,7 +186,7 @@ public class ChildrenTest extends LocalFileSystemTest {
 
         // Skip first item in result.
         requestPath = SERVICE_URI + "children/" + folderId + '?' + "skipCount=" + 1;
-        checkPage(requestPath, "GET", ItemImpl.class.getMethod("getName"), all);
+        checkPage(requestPath, "GET", Item.class.getMethod("getName"), all);
     }
 
     public void testGetChildrenPagingMaxItems() throws Exception {
@@ -204,7 +205,7 @@ public class ChildrenTest extends LocalFileSystemTest {
 
         // Exclude last item from result.
         requestPath = SERVICE_URI + "children/" + folderId + '?' + "maxItems=" + 3;
-        checkPage(requestPath, "GET", ItemImpl.class.getMethod("getName"), all);
+        checkPage(requestPath, "GET", Item.class.getMethod("getName"), all);
     }
 
     public void testGetChildrenNoPropertyFilter() throws Exception {
@@ -219,8 +220,8 @@ public class ChildrenTest extends LocalFileSystemTest {
         assertEquals(4, children.getItems().size());
         for (Item i : children.getItems()) {
             // No properties without filter. 'none' filter is used if nothing set by client.
-            assertNull(i.getPropertyValue("MyProperty01"));
-            assertNull(i.getPropertyValue("MyProperty02"));
+            assertNull(getPropertyValue(i, "MyProperty01"));
+            assertNull(getPropertyValue(i, "MyProperty02"));
         }
     }
 
@@ -238,8 +239,8 @@ public class ChildrenTest extends LocalFileSystemTest {
         ItemList children = (ItemList)response.getEntity();
         assertEquals(4, children.getItems().size());
         for (Item i : children.getItems()) {
-            assertNull(i.getPropertyValue(e2.getKey()));
-            assertEquals(e1.getValue()[0], i.getPropertyValue(e1.getKey()));
+            assertNull(getPropertyValue(i, e2.getKey()));
+            assertEquals(e1.getValue()[0], getPropertyValue(i, e1.getKey()));
         }
     }
 

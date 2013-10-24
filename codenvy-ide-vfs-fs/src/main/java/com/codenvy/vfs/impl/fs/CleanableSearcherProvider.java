@@ -31,8 +31,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
-
 /**
  * Implementation of LuceneSearcherProvider which run LuceneSearcher initialization update tasks in ExecutorService.
  * <p/>
@@ -89,7 +87,6 @@ public class CleanableSearcherProvider extends LuceneSearcherProvider {
     void close(CleanableSearcher searcher) {
         instances.values().remove(searcher);
         searcher.doClose();
-        deleteRecursive(searcher.getIndexDir());
     }
 }
 

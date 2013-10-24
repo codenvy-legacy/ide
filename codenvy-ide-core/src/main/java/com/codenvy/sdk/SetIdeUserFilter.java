@@ -18,11 +18,14 @@
 
 package com.codenvy.sdk;
 
-import org.exoplatform.container.*;
-import org.exoplatform.container.web.AbstractFilter;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.security.*;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.MembershipEntry;
+import org.exoplatform.services.security.StateKey;
 import org.exoplatform.services.security.web.HttpSessionStateKey;
 
 import javax.servlet.*;
@@ -33,56 +36,35 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.web.AbstractFilter;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.security.Authenticator;
-import org.exoplatform.services.security.ConversationRegistry;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.security.IdentityConstants;
-import org.exoplatform.services.security.IdentityRegistry;
-import org.exoplatform.services.security.StateKey;
-
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-
 /**
- * Set current user as "ide" on all request.
- * This is need for avoiding unauthorized access? during launch extension in SDK."
+ * Filter that set current user as "ide" on all requests.
+ * This filter is needed in order to allow the user to be always logged on and
+ * to avoiding unauthorized access in launched extension in SDK.
  *
  * @author <a href="mailto:vparfonov@codenvy.com">Vitalii Parfonov</a>
  */
 public class SetIdeUserFilter implements Filter {
 
-    /**
-     * Logger.
-     */
+    /** Logger. */
     private static final Log LOG = ExoLogger.getLogger("com.codenvy.sdk.SetIdeUserFilter");
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     /**
      * Set current {@link org.exoplatform.services.security.ConversationState}, if it is not registered yet then
-     * create new one and register in {@link org.exoplatform.services.security.ConversationRegistry}. {@inheritDoc}
+     * create new one and register in {@link org.exoplatform.services.security.ConversationRegistry}.
      */
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-            ServletException {
-
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
+                                                                                                     ServletException {
+        HttpServletRequest httpRequest = (HttpServletRequest)request;
         ExoContainer container = getContainer();
 
         try {
             ExoContainerContext.setCurrentContainer(container);
-            ConversationState state = getCurrentState(container, httpRequest);
+            ConversationState state = getCurrentState(httpRequest);
             ConversationState.setCurrent(state);
             chain.doFilter(request, response);
         } finally {
@@ -99,40 +81,35 @@ public class SetIdeUserFilter implements Filter {
         }
     }
 
-    /**
-     * Gives the current state
-     */
-    private ConversationState getCurrentState(ExoContainer container, HttpServletRequest httpRequest) {
-        ConversationState state = null;
+    /** Gives the current state. */
+    private ConversationState getCurrentState(HttpServletRequest httpRequest) {
         String userId = httpRequest.getRemoteUser();
 
-        if (userId == null)
+        if (userId == null) {
             userId = "ide";
+        }
 
         HttpSession httpSession = httpRequest.getSession();
         StateKey stateKey = new HttpSessionStateKey(httpSession);
 
-        final Set<String> groups = new HashSet<String>(2);
+        final Set<String> groups = new HashSet<>(2);
         groups.add("developer");
         groups.add("admin");
-        Identity identity = new Identity(userId, Collections.<MembershipEntry>emptyList(),groups);
-        state = new ConversationState(identity);
+        Identity identity = new Identity(userId, Collections.<MembershipEntry>emptyList(), groups);
+        ConversationState state = new ConversationState(identity);
         state.setAttribute(ConversationState.SUBJECT, identity.getSubject());
 
         return state;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
+    @Override
     public void destroy() {
         // nothing to do.
     }
-
 
     protected final ExoContainer getContainer() {
         ExoContainer container = ExoContainerContext.getCurrentContainer();
         return container;
     }
-
 }

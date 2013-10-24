@@ -17,10 +17,10 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.shared.VirtualFileSystemInfo;
-import com.codenvy.api.vfs.shared.VirtualFileSystemInfo.ACLCapability;
-import com.codenvy.api.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
-import com.codenvy.api.vfs.shared.VirtualFileSystemInfo.QueryCapability;
+import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo;
+import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.ACLCapability;
+import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
+import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.QueryCapability;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
@@ -32,7 +32,7 @@ import java.util.List;
 public class GetAvailableFileSystemsTest extends LocalFileSystemTest {
     @SuppressWarnings("unchecked")
     public void testAvailableFS() throws Exception {
-        String requestPath = BASE_URI + "/api/my-ws/vfs";
+        String requestPath = BASE_URI + "/my-ws/vfs";
         ByteArrayContainerResponseWriter wr = new ByteArrayContainerResponseWriter();
         ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, wr, null);
         //log.info(new String(wr.getBody()));

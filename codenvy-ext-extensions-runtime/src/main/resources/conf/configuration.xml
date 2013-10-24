@@ -22,33 +22,30 @@
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
     <component>
-        <type>com.codenvy.ide.ext.extruntime.server.ExtensionLauncher</type>
+        <type>com.codenvy.ide.ext.extruntime.server.builder.ExtensionsBuilder</type>
         <init-params>
             <value-param>
                 <name>build-server-base-url</name>
                 <value>http://localhost:8080/builder</value>
             </value-param>
+        </init-params>
+    </component>
+
+    <component>
+        <type>com.codenvy.ide.ext.extruntime.server.runner.ExtensionsRunner</type>
+        <init-params>
             <value-param>
                 <name>code-server-bind-address</name>
                 <value>localhost</value>
             </value-param>
-
-            <values-param>
-                <name>catalina-shutdown-port-ranges</name>
+            <value-param>
+                <name>http-port-range</name>
                 <value>9100-9124</value>
-            </values-param>
-            <values-param>
-                <name>http-connector-port-ranges</name>
+            </value-param>
+            <value-param>
+                <name>code-server-port-range</name>
                 <value>9125-9149</value>
-            </values-param>
-            <values-param>
-                <name>ajp-connector-port-ranges</name>
-                <value>9150-9174</value>
-            </values-param>
-            <values-param>
-                <name>code-server-port-ranges</name>
-                <value>9175-9199</value>
-            </values-param>
+            </value-param>
         </init-params>
     </component>
 

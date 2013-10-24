@@ -19,6 +19,17 @@ package com.codenvy.ide.core;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.*;
+import com.codenvy.ide.actions.CloseProjectAction;
+import com.codenvy.ide.actions.DeleteResourceAction;
+import com.codenvy.ide.actions.NewFolderAction;
+import com.codenvy.ide.actions.NewProjectAction;
+import com.codenvy.ide.actions.NewResourceAction;
+import com.codenvy.ide.actions.OpenProjectAction;
+import com.codenvy.ide.actions.SaveAction;
+import com.codenvy.ide.actions.SaveAllAction;
+import com.codenvy.ide.actions.ShowPreferencesAction;
+import com.codenvy.ide.actions.UpdateExtensionAction;
+import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Constraints;
@@ -27,6 +38,10 @@ import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
+import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
+import com.codenvy.ide.extension.ExtensionManagerPresenter;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.welcome.WelcomeLocalizationConstant;
 import com.codenvy.ide.welcome.action.ConnectSupportAction;
@@ -97,6 +112,7 @@ public class StandardComponentInitializer {
     private UpdateExtensionAction updateExtensionAction;
 
     @Inject
+    @MainToolbar
     private ToolbarPresenter toolbarPresenter;
 
     @Inject
@@ -132,6 +148,12 @@ public class StandardComponentInitializer {
     @Inject
     private Provider<ChooseTemplatePagePresenter> chooseTemplatePageProvider;
 
+    @Inject
+    private PreferencesAgent preferencesAgent;
+
+    @Inject
+    private ExtensionManagerPresenter extensionManagerPresenter;
+
     /** Instantiates {@link StandardComponentInitializer} an creates standard content */
     @Inject
     public StandardComponentInitializer() {
@@ -142,6 +164,7 @@ public class StandardComponentInitializer {
         wizard.registerNewResourceWizard("General", "Folder", resources.folder(), newFolderProvider);
         wizard.registerNewResourceWizard("General", "Text file", resources.file(), newTextFileProvider);
 
+        preferencesAgent.addPage(extensionManagerPresenter);
 
         DefaultActionGroup window = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_WINDOW);
         actionManager.registerAction("showPreferences", showPreferencesAction);

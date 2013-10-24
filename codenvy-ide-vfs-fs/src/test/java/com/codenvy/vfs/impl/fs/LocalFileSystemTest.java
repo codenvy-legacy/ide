@@ -23,14 +23,15 @@ import com.codenvy.api.vfs.server.URLHandlerFactorySetup;
 import com.codenvy.api.vfs.server.VirtualFileSystemApplication;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.observation.EventListenerList;
-import com.codenvy.api.vfs.shared.File;
-import com.codenvy.api.vfs.shared.Item;
-import com.codenvy.api.vfs.shared.ItemList;
 import com.codenvy.api.vfs.shared.ItemType;
-import com.codenvy.api.vfs.shared.Link;
-import com.codenvy.api.vfs.shared.Principal;
-import com.codenvy.api.vfs.shared.Project;
-import com.codenvy.api.vfs.shared.VirtualFileSystemInfo;
+import com.codenvy.api.vfs.shared.dto.File;
+import com.codenvy.api.vfs.shared.dto.Item;
+import com.codenvy.api.vfs.shared.dto.ItemList;
+import com.codenvy.api.vfs.shared.dto.Link;
+import com.codenvy.api.vfs.shared.dto.Principal;
+import com.codenvy.api.vfs.shared.dto.Project;
+import com.codenvy.api.vfs.shared.dto.Property;
+import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo;
 import com.codenvy.commons.env.EnvironmentContext;
 
 import org.apache.commons.codec.binary.Base64;
@@ -75,7 +76,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.codenvy.api.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import static com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
 import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 import static com.codenvy.commons.lang.NameGenerator.generate;
 
@@ -106,7 +107,7 @@ public abstract class LocalFileSystemTest extends TestCase {
     };
 
     protected final String BASE_URI              = "http://localhost/service";
-    protected final String SERVICE_URI           = BASE_URI + "/api/my-ws/vfs/v2/";
+    protected final String SERVICE_URI           = BASE_URI + "/my-ws/vfs/v2/";
     protected final String DEFAULT_CONTENT       = "__TEST__";
     protected final byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
 
@@ -211,7 +212,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         java.io.File f = getIoFile(vfsPath);
         FileInputStream fIn = new FileInputStream(f);
         byte[] bytes = new byte[(int)f.length()];
-        fIn.read(bytes);
+        fIn.read(bytes); // ok for local files
         fIn.close();
         return bytes;
     }
@@ -517,6 +518,24 @@ public abstract class LocalFileSystemTest extends TestCase {
         }
         fail(String.format("Unable get %s.\nStatus: %d\nMessage: %s", id, response.getStatus(), response.getEntity()));
         //
+        return null;
+    }
+
+    protected String getPropertyValue(Item item, String propertyName) {
+        for (Property property : item.getProperties()) {
+            if (propertyName.equals(property.getName()) && !property.getValue().isEmpty()) {
+                return property.getValue().get(0);
+            }
+        }
+        return null;
+    }
+
+    protected List<String> getPropertyValues(Item item, String propertyName) {
+        for (Property property : item.getProperties()) {
+            if (propertyName.equals(property.getName())) {
+                return property.getValue();
+            }
+        }
         return null;
     }
 

@@ -50,63 +50,40 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 @Singleton
 public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
-    /**
-     * Base url.
-     */
-    private static final String BASE_URL = '/' + Utils.getWorkspaceName() + "/extruntime";
-
-    /**
-     * Create sample project method's path.
-     */
-    private static final String CREATE_EMPTY = "/createempty";
-
-    /**
-     * Create sample project method's path.
-     */
+    /** Base url. */
+    private static final String BASE_URL      = '/' + Utils.getWorkspaceName() + "/extruntime";
+    /** Create empty project method's path. */
+    private static final String CREATE_EMPTY  = "/createempty";
+    /** Create sample project method's path. */
     private static final String CREATE_SAMPLE = "/createsample";
-
-    /**
-     * Launch method's path.
-     */
-    private static final String LAUNCH = "/launch";
-
-    /**
-     * Get logs method's path.
-     */
-    private static final String LOGS = "/logs";
-
-    /**
-     * Stop method's path.
-     */
-    private static final String STOP = "/stop";
-
-    /**
-     * REST-service context.
-     */
-    private String restContext;
-
-    /**
-     * Loader to be displayed.
-     */
-    private Loader loader;
-
-    /**
-     * Provider of IDE resources.
-     */
+    /** Build method's path. */
+    private static final String BUILD         = "/build";
+    /** Run method's path. */
+    private static final String LAUNCH        = "/run";
+    /** Get logs method's path. */
+    private static final String LOGS          = "/logs";
+    /** Stop method's path. */
+    private static final String STOP          = "/stop";
+    /** REST-service context. */
+    private String           restContext;
+    /** Loader to be displayed. */
+    private Loader           loader;
+    /** Provider of IDE resources. */
     private ResourceProvider resourceProvider;
-
-    /**
-     * Message bus to communicate through WebSocket.
-     */
-    private MessageBus wsMessageBus;
+    /** Message bus to communicate through WebSocket. */
+    private MessageBus       wsMessageBus;
 
     /**
      * Create service.
      *
-     * @param wsMessageBus     message bus to communicate through WebSocket
-     * @param restContext      REST-service context
-     * @param loader           loader to show on server request
-     * @param resourceProvider provider of IDE resources
+     * @param wsMessageBus
+     *         message bus to communicate through WebSocket
+     * @param restContext
+     *         REST-service context
+     * @param loader
+     *         loader to show on server request
+     * @param resourceProvider
+     *         provider of IDE resources
      */
     @Inject
     protected ExtRuntimeClientServiceImpl(MessageBus wsMessageBus,
@@ -119,24 +96,21 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
         this.wsMessageBus = wsMessageBus;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void createEmptyCodenvyExtensionProject(String projectName,
                                                    JsonArray<Property> properties,
                                                    AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = restContext + BASE_URL + CREATE_EMPTY;
-        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" + resourceProvider.getRootId();
+        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" +
+                             resourceProvider.getRootId();
         loader.setMessage("Creating new project...");
         AsyncRequest.build(POST, requestUrl + param)
-                .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
-                .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
+                    .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
+                    .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void createSampleCodenvyExtensionProject(String projectName,
                                                     JsonArray<Property> properties,
@@ -145,39 +119,49 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
                                                     String version,
                                                     AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = restContext + BASE_URL + CREATE_SAMPLE;
-        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" + resourceProvider.getRootId()
-                + "&groupid=" + groupId + "&artifactid=" + artifactId + "&version=" + version;
+        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" +
+                             resourceProvider.getRootId()
+                             + "&groupid=" + groupId + "&artifactid=" + artifactId + "&version=" + version;
         loader.setMessage("Creating new project...");
         AsyncRequest.build(POST, requestUrl + param)
-                .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
-                .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
+                    .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
+                    .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
-    public void launch(String vfsId, String projectId, RequestCallback<ApplicationInstance> callback) throws WebSocketException {
-        final String params = "?vfsid=" + vfsId + "&projectid=" + projectId;
+    public void build(String vfsId, String projectId, boolean bundle, RequestCallback<String> callback)
+            throws WebSocketException {
+        final String params = "?vfsid=" + vfsId + "&projectid=" + projectId + "&bundle=" + bundle;
+        MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, BASE_URL + BUILD + params);
+        builder.header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON);
+        Message message = builder.build();
+        wsMessageBus.send(message, callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void launch(String warUrl, boolean enableHotUpdate, String vfsId, String projectId,
+                       RequestCallback<ApplicationInstance> callback)
+            throws WebSocketException {
+        final String params =
+                "?warUrl=" + warUrl + "&hotupdate=" + enableHotUpdate + "&vfsid=" + vfsId + "&projectid=" + projectId;
         MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, BASE_URL + LAUNCH + params);
         builder.header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON);
         Message message = builder.build();
         wsMessageBus.send(message, callback);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void getLogs(String appId, AsyncRequestCallback<String> callback) throws RequestException {
         final String url = restContext + BASE_URL + LOGS + "/" + appId;
         loader.setMessage("Retrieving logs...");
-        AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN).loader(loader).send(
+                callback);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void stop(String appId, AsyncRequestCallback<Void> callback) throws RequestException {
         final String url = restContext + BASE_URL + STOP + "/" + appId;

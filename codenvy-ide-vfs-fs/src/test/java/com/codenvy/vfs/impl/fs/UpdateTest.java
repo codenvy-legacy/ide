@@ -17,12 +17,12 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.shared.Folder;
-import com.codenvy.api.vfs.shared.Item;
 import com.codenvy.api.vfs.shared.ItemType;
-import com.codenvy.api.vfs.shared.Principal;
-import com.codenvy.api.vfs.shared.PrincipalImpl;
-import com.codenvy.api.vfs.shared.Project;
+import com.codenvy.api.vfs.shared.dto.Folder;
+import com.codenvy.api.vfs.shared.dto.Item;
+import com.codenvy.api.vfs.shared.dto.Principal;
+import com.codenvy.api.vfs.shared.dto.Project;
+import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.codenvy.api.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import static com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
 
 public class UpdateTest extends LocalFileSystemTest {
     private final String lockToken = "01234567890abcdef";
@@ -62,9 +62,11 @@ public class UpdateTest extends LocalFileSystemTest {
         lockedFilePath = createFile(testRootPath, "UpdateTest_LockedFile", DEFAULT_CONTENT_BYTES);
         protectedFilePath = createFile(testRootPath, "UpdateTest_ProtectedFile", DEFAULT_CONTENT_BYTES);
 
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(2);
-        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
-        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
+        Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
+        Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
+        permissions.put(user, EnumSet.of(BasicPermissions.ALL));
+        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
 
         writePermissions(protectedFilePath, permissions);
         createLock(lockedFilePath, lockToken, Long.MAX_VALUE);
@@ -79,21 +81,21 @@ public class UpdateTest extends LocalFileSystemTest {
         String update = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
 
         String requestPath = SERVICE_URI + "item/" + fileId;
-        Map<String, List<String>> h = new HashMap<String, List<String>>(1);
+        Map<String, List<String>> h = new HashMap<>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, update.getBytes(), null);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
 
-        Map<String, String[]> expectedProperties = new HashMap<String, String[]>(1);
+        Map<String, String[]> expectedProperties = new HashMap<>(1);
         expectedProperties.put("MyProperty", new String[]{"MyValue"});
         validateProperties(filePath, expectedProperties);
 
         Item item = getItem(fileId);
-        assertEquals("MyValue", item.getPropertyValue("MyProperty"));
+        assertEquals("MyValue", getPropertyValue(item, "MyProperty"));
     }
 
     public void testUpdatePropertiesFile2() throws Exception {
-        Map<String, String[]> props = new HashMap<String, String[]>(3);
+        Map<String, String[]> props = new HashMap<>(3);
         props.put("a", new String[]{"to be or not to be"});
         props.put("b", new String[]{"hello world"});
         props.put("c", new String[]{"test"});
@@ -104,12 +106,12 @@ public class UpdateTest extends LocalFileSystemTest {
                         + "{\"name\":\"d\", \"value\":[\"TEST\", \"TEST\"]}]";
 
         String requestPath = SERVICE_URI + "item/" + fileId;
-        Map<String, List<String>> h = new HashMap<String, List<String>>(1);
+        Map<String, List<String>> h = new HashMap<>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, update.getBytes(), null);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
 
-        Map<String, String[]> expectedProperties = new HashMap<String, String[]>(4);
+        Map<String, String[]> expectedProperties = new HashMap<>(4);
         expectedProperties.put("a", new String[]{"to be or not to be"});
         expectedProperties.put("b", new String[]{"TEST"});
         expectedProperties.put("c", new String[]{"TEST"});
@@ -117,34 +119,34 @@ public class UpdateTest extends LocalFileSystemTest {
         validateProperties(filePath, expectedProperties);
 
         Item item = getItem(fileId);
-        assertEquals("to be or not to be", item.getPropertyValue("a")); // not updated
-        assertEquals("TEST", item.getPropertyValue("b"));
-        assertEquals("TEST", item.getPropertyValue("c"));
-        assertEquals(Arrays.asList("TEST", "TEST"), item.getPropertyValues("d"));
+        assertEquals("to be or not to be", getPropertyValue(item, "a")); // not updated
+        assertEquals("TEST", getPropertyValue(item, "b"));
+        assertEquals("TEST", getPropertyValue(item, "c"));
+        assertEquals(Arrays.asList("TEST", "TEST"), getPropertyValues(item, "d"));
     }
 
     public void testUpdateLockedFile() throws Exception {
         String properties = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
 
         String requestPath = SERVICE_URI + "item/" + lockedFileId + '?' + "lockToken=" + lockToken;
-        Map<String, List<String>> h = new HashMap<String, List<String>>(1);
+        Map<String, List<String>> h = new HashMap<>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, properties.getBytes(), null);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
 
-        Map<String, String[]> expectedProperties = new HashMap<String, String[]>(1);
+        Map<String, String[]> expectedProperties = new HashMap<>(1);
         expectedProperties.put("MyProperty", new String[]{"MyValue"});
         validateProperties(lockedFilePath, expectedProperties);
 
         Item item = getItem(lockedFileId);
-        assertEquals("MyValue", item.getPropertyValue("MyProperty"));
+        assertEquals("MyValue", getPropertyValue(item, "MyProperty"));
     }
 
     public void testUpdateLockedFileNoLockToken() throws Exception {
         String properties = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
 
         String requestPath = SERVICE_URI + "item/" + lockedFileId;
-        Map<String, List<String>> h = new HashMap<String, List<String>>(1);
+        Map<String, List<String>> h = new HashMap<>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, properties.getBytes(), writer, null);
@@ -154,14 +156,14 @@ public class UpdateTest extends LocalFileSystemTest {
         assertNull("Properties must not be updated. ", readProperties(lockedFilePath));
 
         Item item = getItem(lockedFileId);
-        assertNull(item.getPropertyValue("MyProperty"));
+        assertNull(getPropertyValue(item, "MyProperty"));
     }
 
     public void testUpdateFileHavePermissions() throws Exception {
         String properties = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
 
         String requestPath = SERVICE_URI + "item/" + protectedFileId;
-        Map<String, List<String>> h = new HashMap<String, List<String>>(1);
+        Map<String, List<String>> h = new HashMap<>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         // File is protected and default principal 'admin' has not write permission.
@@ -171,19 +173,19 @@ public class UpdateTest extends LocalFileSystemTest {
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, properties.getBytes(), writer, null);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
 
-        Map<String, String[]> expectedProperties = new HashMap<String, String[]>(1);
+        Map<String, String[]> expectedProperties = new HashMap<>(1);
         expectedProperties.put("MyProperty", new String[]{"MyValue"});
         validateProperties(protectedFilePath, expectedProperties);
 
         Item item = getItem(protectedFileId);
-        assertEquals("MyValue", item.getPropertyValue("MyProperty"));
+        assertEquals("MyValue", getPropertyValue(item, "MyProperty"));
     }
 
     public void testUpdateFileNoPermissions() throws Exception {
         String properties = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
 
         String requestPath = SERVICE_URI + "item/" + protectedFileId;
-        Map<String, List<String>> h = new HashMap<String, List<String>>(1);
+        Map<String, List<String>> h = new HashMap<>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, properties.getBytes(), writer, null);
@@ -193,19 +195,19 @@ public class UpdateTest extends LocalFileSystemTest {
         assertNull("Properties must not be updated.", readProperties(protectedFilePath));
 
         Item item = getItem(protectedFileId);
-        assertNull(item.getPropertyValue("MyProperty"));
+        assertNull(getPropertyValue(item, "MyProperty"));
     }
 
     public void testUpdatePropertiesAndChangeFolderType() throws Exception {
         String requestPath = SERVICE_URI + "item/" + folderId;
         String properties = "[{\"name\":\"vfs:mimeType\", \"value\":[\"text/vnd.ideproject+directory\"]}]";
-        Map<String, List<String>> h = new HashMap<String, List<String>>(1);
+        Map<String, List<String>> h = new HashMap<>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, properties.getBytes(), writer, null);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
 
-        Map<String, String[]> expectedProperties = new HashMap<String, String[]>(1);
+        Map<String, String[]> expectedProperties = new HashMap<>(1);
         expectedProperties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
         validateProperties(folderPath, expectedProperties);
 
@@ -215,7 +217,7 @@ public class UpdateTest extends LocalFileSystemTest {
     }
 
     public void testUpdatePropertiesAndChangeFolderType2() throws Exception {
-        Map<String, String[]> props = new HashMap<String, String[]>(1);
+        Map<String, String[]> props = new HashMap<>(1);
         props.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
         writeProperties(folderPath, props);
         Item item = getItem(folderId);
@@ -224,13 +226,13 @@ public class UpdateTest extends LocalFileSystemTest {
 
         String requestPath = SERVICE_URI + "item/" + folderId;
         String properties = "[{\"name\":\"vfs:mimeType\", \"value\":[\"text/directory\"]}]";
-        Map<String, List<String>> h = new HashMap<String, List<String>>(1);
+        Map<String, List<String>> h = new HashMap<>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, properties.getBytes(), writer, null);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
 
-        Map<String, String[]> expectedProperties = new HashMap<String, String[]>(1);
+        Map<String, String[]> expectedProperties = new HashMap<>(1);
         expectedProperties.put("vfs:mimeType", new String[]{Folder.FOLDER_MIME_TYPE});
         validateProperties(folderPath, expectedProperties);
 

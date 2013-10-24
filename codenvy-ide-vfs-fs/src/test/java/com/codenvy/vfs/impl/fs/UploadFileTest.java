@@ -17,8 +17,8 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.shared.Principal;
-import com.codenvy.api.vfs.shared.PrincipalImpl;
+import com.codenvy.api.vfs.shared.dto.Principal;
+import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.codenvy.api.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import static com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
 
 public class UploadFileTest extends LocalFileSystemTest {
     private String folderId;
@@ -50,9 +50,12 @@ public class UploadFileTest extends LocalFileSystemTest {
         folderPath = createDirectory(testRootPath, "UploadTest");
         protectedFolderPath = createDirectory(testRootPath, "UploadTest_Protected");
 
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(2);
-        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
-        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
+        Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
+        Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
+
+        permissions.put(user, EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
+        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
         writePermissions(protectedFolderPath, permissions);
 
         folderId = pathToId(folderPath);
@@ -70,7 +73,7 @@ public class UploadFileTest extends LocalFileSystemTest {
         assertTrue("File was not created in expected location. ", exists(expectedPath));
         assertEquals(fileContent, new String(readFile(expectedPath)));
 
-        Map<String, String[]> expectedProperties = new HashMap<String, String[]>(1);
+        Map<String, String[]> expectedProperties = new HashMap<>(1);
         expectedProperties.put("vfs:mimeType", new String[]{fileMediaType});
         validateProperties(expectedPath, expectedProperties);
     }
@@ -97,7 +100,7 @@ public class UploadFileTest extends LocalFileSystemTest {
         String expectedPath = '/' + fileName;
         assertTrue("File was not created in expected location. ", exists(expectedPath));
         assertEquals(fileContent, new String(readFile(expectedPath)));
-        Map<String, String[]> expectedProperties = new HashMap<String, String[]>(1);
+        Map<String, String[]> expectedProperties = new HashMap<>(1);
         expectedProperties.put("vfs:mimeType", new String[]{fileMediaType});
         validateProperties(expectedPath, expectedProperties);
     }
@@ -114,7 +117,7 @@ public class UploadFileTest extends LocalFileSystemTest {
         String expectedPath = folderPath + '/' + formFileName;
         assertTrue("File was not created in expected location. ", exists(expectedPath));
         assertEquals(fileContent, new String(readFile(expectedPath)));
-        Map<String, String[]> expectedProperties = new HashMap<String, String[]>(1);
+        Map<String, String[]> expectedProperties = new HashMap<>(1);
         expectedProperties.put("vfs:mimeType", new String[]{fileMediaType});
         validateProperties(expectedPath, expectedProperties);
     }
@@ -133,7 +136,7 @@ public class UploadFileTest extends LocalFileSystemTest {
         assertTrue("File was not created in expected location. ", exists(expectedPath));
         assertEquals(fileContent, new String(readFile(expectedPath)));
 
-        Map<String, String[]> expectedProperties = new HashMap<String, String[]>(1);
+        Map<String, String[]> expectedProperties = new HashMap<>(1);
         expectedProperties.put("vfs:mimeType", new String[]{formMediaType});
         validateProperties(expectedPath, expectedProperties);
     }
@@ -154,9 +157,11 @@ public class UploadFileTest extends LocalFileSystemTest {
         final String fileMediaType = "application/octet-stream";
         final String fileContent = "existed protected file";
         String path = createFile(folderPath, fileName, fileContent.getBytes());
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(2);
-        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
-        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
+        Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
+        Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
+        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
+        permissions.put(user, EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
         writePermissions(path, permissions);
         // File is protected by ACL and may not be overwritten even if 'overwrite' parameter is 'true'
         ContainerResponse response = doUploadFile(folderId, fileName, fileMediaType, DEFAULT_CONTENT, "", "", true);
@@ -191,7 +196,7 @@ public class UploadFileTest extends LocalFileSystemTest {
         assertTrue("File was not created in expected location. ", exists(expectedPath));
         assertEquals(newFileContent, new String(readFile(expectedPath)));
 
-        Map<String, String[]> expectedProperties = new HashMap<String, String[]>(1);
+        Map<String, String[]> expectedProperties = new HashMap<>(1);
         expectedProperties.put("vfs:mimeType", new String[]{fileMediaType});
         validateProperties(expectedPath, expectedProperties);
     }
@@ -204,7 +209,7 @@ public class UploadFileTest extends LocalFileSystemTest {
                                            String formFileName,
                                            boolean formOverwrite) throws Exception {
         String requestPath = SERVICE_URI + "uploadfile/" + parentId;
-        Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
+        Map<String, List<String>> headers = new HashMap<>(1);
         headers.put("Content-Type", Arrays.asList("multipart/form-data; boundary=abcdef"));
         byte[] formData = String.format(uploadBodyPattern,
                                         fileName, fileMediaType, fileContent, formMediaType, formFileName, formOverwrite)

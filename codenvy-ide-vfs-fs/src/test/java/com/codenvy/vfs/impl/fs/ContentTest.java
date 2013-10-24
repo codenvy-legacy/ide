@@ -17,8 +17,8 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.shared.Principal;
-import com.codenvy.api.vfs.shared.PrincipalImpl;
+import com.codenvy.api.vfs.shared.dto.Principal;
+import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.codenvy.api.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import static com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
 
 public class ContentTest extends LocalFileSystemTest {
     private final String lockToken     = "1234567890abcdef";
@@ -61,7 +61,8 @@ public class ContentTest extends LocalFileSystemTest {
         createLock(lockedFilePath, lockToken, Long.MAX_VALUE);
 
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
-        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
+        Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
+        permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedFilePath, permissions);
 
         fileId = pathToId(filePath);
@@ -151,7 +152,8 @@ public class ContentTest extends LocalFileSystemTest {
         // Restore 'read' permission for 'admin'.
         // All requests in test use this principal by default.
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
-        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
+        Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
+        permissions.put(principal, EnumSet.of(BasicPermissions.READ));
         writePermissions(protectedFilePath, permissions);
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "content/" + protectedFileId;

@@ -17,10 +17,12 @@
  */
 package com.codenvy.ide.client;
 
+import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.extension.ExtensionDescription;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.json.JsonStringMap.IterationCallback;
+import com.codenvy.ide.json.js.Jso;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -35,28 +37,36 @@ import com.google.inject.Singleton;
 public class ExtensionInitializer {
     protected final ExtensionRegistry extensionRegistry;
 
-    private final ExtensionManager extensionManager;
+    private final ExtensionManager   extensionManager;
+    private       PreferencesManager preferencesManager;
 
     /**
      *
      */
     @Inject
-    public ExtensionInitializer(final ExtensionRegistry extensionRegistry, final ExtensionManager extensionManager) {
+    public ExtensionInitializer(final ExtensionRegistry extensionRegistry, final ExtensionManager extensionManager,
+                                PreferencesManager preferencesManager) {
         this.extensionRegistry = extensionRegistry;
         this.extensionManager = extensionManager;
+        this.preferencesManager = preferencesManager;
     }
 
     /** {@inheritDoc} */
     @SuppressWarnings("rawtypes")
     public void startExtensions() {
+        String value = preferencesManager.getValue("ExtensionsPreferences");
+        final Jso jso = Jso.deserialize(value == null ? "{}" : value);
         extensionManager.getExtensions().iterate(new IterationCallback<Provider>() {
             @Override
             public void onIteration(String extensionFqn, Provider extensionProvider) {
-                // this will instantiate extension so it's get enabled
-                // Order of startup is managed by GIN dependency injection framework
-                extensionProvider.get();
+                boolean enabled = !jso.hasOwnProperty(extensionFqn) || jso.getBooleanField(extensionFqn);
+                if (enabled) {
+                    // this will instantiate extension so it's get enabled
+                    // Order of startup is managed by GIN dependency injection framework
+                    extensionProvider.get();
+                }
                 // extension has been enabled
-                extensionRegistry.getExtensionDescriptions().get(extensionFqn).setEnabled(true);
+                extensionRegistry.getExtensionDescriptions().get(extensionFqn).setEnabled(enabled);
             }
         });
     }

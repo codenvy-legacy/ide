@@ -17,10 +17,10 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.shared.VirtualFileSystemInfo;
-import com.codenvy.api.vfs.shared.VirtualFileSystemInfo.ACLCapability;
-import com.codenvy.api.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
-import com.codenvy.api.vfs.shared.VirtualFileSystemInfo.QueryCapability;
+import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo;
+import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.ACLCapability;
+import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
+import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.QueryCapability;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
@@ -41,7 +41,9 @@ public class GetVFSInfoTest extends LocalFileSystemTest {
         assertEquals(false, vfsInfo.isVersioningSupported());
         assertEquals(true, vfsInfo.isLockSupported());
         assertEquals(ACLCapability.MANAGE, vfsInfo.getAclCapability());
-        assertEquals(QueryCapability.NONE, vfsInfo.getQueryCapability()); // TODO : update when implement search
+        // We have search capability but in regular tests this feature is off.
+        // We make it on just in special tests for search/index feature.
+        assertEquals(QueryCapability.NONE, vfsInfo.getQueryCapability());
         assertEquals(VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL, vfsInfo.getAnonymousPrincipal());
         assertEquals(VirtualFileSystemInfo.ANY_PRINCIPAL, vfsInfo.getAnyPrincipal());
         assertEquals(MY_WORKSPACE_ID, vfsInfo.getId());

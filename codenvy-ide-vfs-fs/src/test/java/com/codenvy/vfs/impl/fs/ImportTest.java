@@ -17,12 +17,13 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.shared.Item;
+import com.codenvy.api.vfs.server.search.QueryExpression;
 import com.codenvy.api.vfs.shared.ItemType;
-import com.codenvy.api.vfs.shared.Principal;
-import com.codenvy.api.vfs.shared.PrincipalImpl;
-import com.codenvy.api.vfs.shared.Project;
-import com.codenvy.api.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import com.codenvy.api.vfs.shared.dto.Item;
+import com.codenvy.api.vfs.shared.dto.Principal;
+import com.codenvy.api.vfs.shared.dto.Project;
+import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
+import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
@@ -32,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -73,8 +75,10 @@ public class ImportTest extends LocalFileSystemTest {
         protectedFolderPath = createDirectory(testRootPath, "ImportTest_Protected");
 
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
-        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
-        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
+        Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
+        Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
+        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
+        permissions.put(user, EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
         writePermissions(protectedFolderPath, permissions);
 
         srcFolderPath = createDirectory(testRootPath, "ImportTestFolderSource");
@@ -193,8 +197,10 @@ public class ImportTest extends LocalFileSystemTest {
 
     public void testImportFileExistsAndProtected() throws Exception {
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
-        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
-        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
+        Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
+        Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
+        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
+        permissions.put(user, EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
         writePermissions(existedFile, permissions);
 
         String path = SERVICE_URI + "import/" + folderWithFilesId + '?' + "overwrite=" + true;
@@ -279,5 +285,55 @@ public class ImportTest extends LocalFileSystemTest {
         // Exception must be thrown.
         assertEquals(500, response.getStatus());
         log.info(response.getEntity());
+    }
+
+    public void testIndexWhenImport() throws Exception {
+        CleanableSearcher searcher = prepareSearcher();
+        String path = SERVICE_URI + "import/" + folderId;
+        Map<String, List<String>> headers = new HashMap<>(1);
+        headers.put("Content-Type", Arrays.asList("application/zip"));
+        ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, zipFolder, null, null);
+        assertEquals(204, response.getStatus());
+
+        // Check imported structure.
+        compareDirectories(srcFolderPath, folderPath, false);
+
+        QueryExpression q = new QueryExpression();
+        q.setText(DEFAULT_CONTENT);
+        q.setPath(folderPath + '/');
+        List<String> result = new ArrayList<>();
+        java.util.Collections.addAll(result, searcher.search(q));
+
+        List<String> importedFiles = new ArrayList<>();
+        for (String vfsPath : flattenDirectory(folderPath)) {
+            vfsPath = folderPath + '/' + vfsPath;
+            if (getIoFile(vfsPath).isFile()) {
+                importedFiles.add(vfsPath);
+            }
+        }
+
+        assertEquals(importedFiles.size(), result.size());
+        assertTrue(result.containsAll(importedFiles));
+    }
+
+    private CleanableSearcher prepareSearcher() throws Exception {
+        com.codenvy.commons.env.EnvironmentContext env = com.codenvy.commons.env.EnvironmentContext.getCurrent();
+        env.setVariable(com.codenvy.commons.env.EnvironmentContext.VFS_INDEX_DIR, root.getParentFile());
+        CleanableSearcherProvider searcherProvider = new CleanableSearcherProvider();
+        provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new EnvironmentContextLocalFSMountStrategy(), searcherProvider);
+        provider.mount(testFsIoRoot);
+        mountPoint = provider.getMountPoint(true);
+        virtualFileSystemRegistry.unregisterProvider(MY_WORKSPACE_ID);
+        virtualFileSystemRegistry.registerProvider(MY_WORKSPACE_ID, provider);
+
+        CleanableSearcher searcher = (CleanableSearcher)searcherProvider.getSearcher(mountPoint, true);
+        Throwable error;
+        while ((error = searcher.getInitError()) == null && !searcher.isInitDone()) {
+            Thread.sleep(100);
+        }
+        if (error != null) {
+            fail(error.getMessage());
+        }
+        return searcher;
     }
 }

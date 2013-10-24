@@ -17,8 +17,8 @@
  */
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.shared.Principal;
-import com.codenvy.api.vfs.shared.PrincipalImpl;
+import com.codenvy.api.vfs.shared.dto.Principal;
+import com.codenvy.dto.server.DtoFactory;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import static com.codenvy.api.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import static com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
 
 public class DeleteTest extends LocalFileSystemTest {
     private final String lockToken = "01234567890abcdef";
@@ -66,8 +66,10 @@ public class DeleteTest extends LocalFileSystemTest {
         super.setUp();
 
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
-        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
-        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
+        Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
+        Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
+        permissions.put(user, EnumSet.of(BasicPermissions.ALL));
+        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
 
         filePath = createFile(testRootPath, "DeleteTest_File", DEFAULT_CONTENT_BYTES);
         lockedFilePath = createFile(testRootPath, "DeleteTest_LockedFile", DEFAULT_CONTENT_BYTES);

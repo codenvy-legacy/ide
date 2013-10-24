@@ -36,21 +36,19 @@ import com.codenvy.api.vfs.server.search.SearcherProvider;
 import com.codenvy.api.vfs.server.util.DeleteOnCloseFileInputStream;
 import com.codenvy.api.vfs.server.util.NotClosableInputStream;
 import com.codenvy.api.vfs.server.util.ZipContent;
-import com.codenvy.api.vfs.shared.AccessControlEntry;
-import com.codenvy.api.vfs.shared.Principal;
-import com.codenvy.api.vfs.shared.PrincipalImpl;
-import com.codenvy.api.vfs.shared.Project;
-import com.codenvy.api.vfs.shared.Property;
 import com.codenvy.api.vfs.shared.PropertyFilter;
-import com.codenvy.api.vfs.shared.PropertyImpl;
-import com.codenvy.api.vfs.shared.VirtualFileSystemInfo;
-import com.codenvy.api.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import com.codenvy.api.vfs.shared.dto.AccessControlEntry;
+import com.codenvy.api.vfs.shared.dto.Principal;
+import com.codenvy.api.vfs.shared.dto.Project;
+import com.codenvy.api.vfs.shared.dto.Property;
+import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo;
+import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
 import com.codenvy.commons.json.JsonHelper;
-import com.codenvy.commons.json.JsonParseException;
 import com.codenvy.commons.lang.NameGenerator;
 import com.codenvy.commons.lang.cache.Cache;
 import com.codenvy.commons.lang.cache.LoadingValueSLRUCache;
 import com.codenvy.commons.lang.cache.SynchronizedCache;
+import com.codenvy.dto.server.DtoFactory;
 
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -86,7 +84,11 @@ import static com.codenvy.commons.lang.IoUtil.GIT_FILTER;
 import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 import static com.codenvy.commons.lang.IoUtil.nioCopy;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/**
+ * Local filesystem implementation of MountPoint.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ */
 public class FSMountPoint implements MountPoint {
     private static final Logger LOG = LoggerFactory.getLogger(FSMountPoint.class);
 
@@ -226,9 +228,12 @@ public class FSMountPoint implements MountPoint {
                 // TODO : REMOVE!!! Temporary default ACL until will have client side for real manage
                 if (key.isRoot()) {
                     final Map<Principal, Set<BasicPermissions>> dummy = new HashMap<>(2);
-                    dummy.put(new PrincipalImpl("workspace/developer", Principal.Type.GROUP), EnumSet.of(BasicPermissions.ALL));
-                    dummy.put(new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER),
-                              EnumSet.of(BasicPermissions.READ));
+                    final Principal developer = DtoFactory.getInstance().createDto(Principal.class)
+                                                          .withName("workspace/developer").withType(Principal.Type.GROUP);
+                    final Principal other = DtoFactory.getInstance().createDto(Principal.class)
+                                                      .withName(VirtualFileSystemInfo.ANY_PRINCIPAL).withType(Principal.Type.USER);
+                    dummy.put(developer, EnumSet.of(BasicPermissions.ALL));
+                    dummy.put(other, EnumSet.of(BasicPermissions.READ));
                     return new AccessControlList(dummy);
                 }
                 return new AccessControlList();
@@ -1091,29 +1096,27 @@ public class FSMountPoint implements MountPoint {
                             throw new VirtualFileSystemException(String.format("Unable create directory '%s' ", newPath));
                         }
                     } else if (".project".equals(name)) {
-                        final Property[] array = JsonHelper.fromJson(noCloseZip, PropertyImpl[].class, null);
-                        if (array.length > 0) {
-                            List<Property> list = new ArrayList<>(array.length);
-                            Collections.addAll(list, array);
+                        final List<Property> properties = DtoFactory.getInstance().createListDtoFromJson(noCloseZip, Property.class);
+                        if (!properties.isEmpty()) {
                             boolean hasMimeType = false;
-                            for (int i = 0, size = list.size(); i < size && !hasMimeType; i++) {
-                                Property property = list.get(i);
-                                if ("vfs:mimeType".equals(property.getName())
-                                    && !(property.getValue() == null || property.getValue().isEmpty())) {
+                            for (int i = 0, size = properties.size(); i < size && !hasMimeType; i++) {
+                                Property property = properties.get(i);
+                                if ("vfs:mimeType".equals(property.getName()) &&
+                                    !(property.getValue() == null || property.getValue().isEmpty())) {
                                     hasMimeType = true;
                                 }
                             }
-
                             if (!hasMimeType) {
-                                list.add(new PropertyImpl("vfs:mimeType", Project.PROJECT_MIME_TYPE));
+                                properties.add(DtoFactory.getInstance().createDto(Property.class)
+                                                         .withName("vfs:mimeType")
+                                                         .withValue(Collections.singletonList(Project.PROJECT_MIME_TYPE)));
                             }
-
-                            updateProperties(current, list, null);
+                            updateProperties(current, properties, null);
                         } else {
-                            updateProperties(
-                                    current,
-                                    Collections.<Property>singletonList(new PropertyImpl("vfs:mimeType", Project.PROJECT_MIME_TYPE)),
-                                    null);
+                            properties.add(DtoFactory.getInstance().createDto(Property.class)
+                                                     .withName("vfs:mimeType")
+                                                     .withValue(Collections.singletonList(Project.PROJECT_MIME_TYPE)));
+                            updateProperties(current, properties, null);
                         }
                     } else {
                         final VirtualFileImpl file =
@@ -1146,7 +1149,14 @@ public class FSMountPoint implements MountPoint {
                     }
                     zip.closeEntry();
                 }
-            } catch (JsonParseException e) {
+                if (searcherProvider != null) {
+                    try {
+                        searcherProvider.getSearcher(this, true).add(parent);
+                    } catch (VirtualFileSystemException e) {
+                        LOG.error(e.getMessage(), e);
+                    }
+                }
+            } catch (RuntimeException e) {
                 throw new VirtualFileSystemException(e.getMessage(), e);
             } finally {
                 closeQuietly(zip);
@@ -1369,39 +1379,35 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    private static final PrincipalImpl ANY = new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER);
-
     // under lock
     private boolean hasPermission(VirtualFileImpl virtualFile, BasicPermissions p, boolean checkParent) throws VirtualFileSystemException {
         final VirtualFileSystemUser user = userContext.getVirtualFileSystemUser();
-        final PrincipalImpl userPrincipal = new PrincipalImpl(user.getUserId(), Principal.Type.USER);
-        final Collection<String> userGroups = user.getGroups();
-        final List<PrincipalImpl> groupPrincipals;
-        if (!userGroups.isEmpty()) {
-            groupPrincipals = new ArrayList<>(userGroups.size());
-            for (String group : userGroups) {
-                groupPrincipals.add(new PrincipalImpl(group, Principal.Type.GROUP));
-            }
-        } else {
-            groupPrincipals = Collections.emptyList();
-        }
         Path path = virtualFile.getInternalPath();
         while (path != null) {
             final AccessControlList accessControlList = aclCache[path.hashCode() & MASK].get(path);
             if (!accessControlList.isEmpty()) {
+                final Principal userPrincipal = DtoFactory.getInstance().createDto(Principal.class)
+                                                          .withName(user.getUserId()).withType(Principal.Type.USER);
                 Set<BasicPermissions> userPermissions = accessControlList.getPermissions(userPrincipal);
                 if (userPermissions != null) {
                     return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL);
                 }
-                if (!groupPrincipals.isEmpty()) {
-                    for (PrincipalImpl groupPrincipal : groupPrincipals) {
+                Collection<String> groups = user.getGroups();
+                if (!groups.isEmpty()) {
+                    for (String group : groups) {
+                        final Principal groupPrincipal = DtoFactory.getInstance().createDto(Principal.class)
+                                                                   .withName(group)
+                                                                   .withType(Principal.Type.GROUP);
                         userPermissions = accessControlList.getPermissions(groupPrincipal);
                         if (userPermissions != null) {
                             return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL);
                         }
                     }
                 }
-                userPermissions = accessControlList.getPermissions(ANY);
+                final Principal anyPrincipal = DtoFactory.getInstance().createDto(Principal.class)
+                                                         .withName(VirtualFileSystemInfo.ANY_PRINCIPAL)
+                                                         .withType(Principal.Type.USER);
+                userPermissions = accessControlList.getPermissions(anyPrincipal);
                 return userPermissions != null && (userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL));
             }
             if (checkParent) {
@@ -1430,15 +1436,15 @@ public class FSMountPoint implements MountPoint {
         final Map<String, String[]> metadata = getFileMetadata(virtualFile);
         final List<Property> result = new ArrayList<>(metadata.size());
         for (Map.Entry<String, String[]> e : metadata.entrySet()) {
-            String name = e.getKey();
+            final String name = e.getKey();
             if (filter.accept(name)) {
+                final Property property = DtoFactory.getInstance().createDto(Property.class).withName(name);
                 if (e.getValue() != null) {
                     List<String> list = new ArrayList<>(e.getValue().length);
                     Collections.addAll(list, e.getValue());
-                    result.add(new PropertyImpl(name, list));
-                } else {
-                    result.add(new PropertyImpl(name, (String)null));
+                    property.setValue(list);
                 }
+                result.add(property);
             }
         }
         return result;

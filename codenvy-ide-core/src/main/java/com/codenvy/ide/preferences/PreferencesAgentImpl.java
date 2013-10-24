@@ -48,11 +48,7 @@ public class PreferencesAgentImpl implements PreferencesAgent {
         preferences.add(page);
     }
 
-    /**
-     * Returns all available preferences.
-     *
-     * @return
-     */
+    /** @return all available preferences */
     public JsonArray<Provider<? extends PreferencesPagePresenter>> getPreferences() {
         return preferences;
     }

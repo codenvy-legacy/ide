@@ -76,6 +76,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
             @Override
             public void onNodeContextMenu(int mouseX, int mouseY, TreeNodeElement<Resource> node) {
+                delegate.onContextMenu(mouseX, mouseY);
             }
 
             @Override
