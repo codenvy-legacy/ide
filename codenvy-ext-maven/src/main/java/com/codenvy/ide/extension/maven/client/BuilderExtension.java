@@ -19,27 +19,24 @@ package com.codenvy.ide.extension.maven.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.template.TemplateAgent;
-import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
+import com.codenvy.ide.extension.maven.client.actions.BuildAction;
+import com.codenvy.ide.extension.maven.client.actions.BuildAndPublishAction;
 import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
 import com.codenvy.ide.extension.maven.client.template.CreateJavaProjectPage;
 import com.codenvy.ide.extension.maven.client.template.CreateSpringProjectPage;
 import com.codenvy.ide.extension.maven.client.template.CreateWarProjectPage;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.extension.maven.client.actions.BuildAction;
-import com.codenvy.ide.extension.maven.client.actions.BuildAndPublishAction;
-import com.codenvy.ide.extension.maven.client.template.CreateJavaProjectPresenter;
-import com.codenvy.ide.extension.maven.client.template.CreateSpringProjectPresenter;
-import com.codenvy.ide.extension.maven.client.template.CreateWarProjectPresenter;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
 import static com.codenvy.ide.ext.java.client.JavaExtension.JAVA_APPLICATION_PROJECT_TYPE;
-import static com.codenvy.ide.api.ui.action.IdeActions.*;
 import static com.codenvy.ide.ext.java.client.JavaExtension.JAVA_WEB_APPLICATION_PROJECT_TYPE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.json.JsonCollections.createArray;
@@ -79,7 +76,7 @@ public class BuilderExtension {
                             Provider<CreateWarProjectPage> createWarProjectPage,
                             Provider<CreateSpringProjectPage> createSpringProjectPage,
                             BuilderLocalizationConstant localizationConstants,
-                            ActionManager actionManager, 
+                            ActionManager actionManager,
                             BuildAction buildAction,
                             BuildAndPublishAction buildAndPublishAction) {
         // register actions
@@ -95,7 +92,7 @@ public class BuilderExtension {
         DefaultActionGroup projectMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_PROJECT);
         projectMenuActionGroup.addSeparator();
         projectMenuActionGroup.add(buildGroup);
-        
+
         templateAgent.register(WAR_PROJECT_ID,
                                "War project",
                                null,
