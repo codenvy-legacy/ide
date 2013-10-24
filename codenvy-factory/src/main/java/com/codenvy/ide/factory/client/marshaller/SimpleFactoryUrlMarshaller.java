@@ -27,6 +27,8 @@ import com.google.gwt.json.client.JSONString;
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
 
 /**
+ * Marshaller for Simple factory url. To allow server to clone repository.
+ *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 23.10.13 vlad $
  */
