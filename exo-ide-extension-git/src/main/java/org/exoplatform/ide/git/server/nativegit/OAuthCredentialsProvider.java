@@ -19,8 +19,7 @@ package org.exoplatform.ide.git.server.nativegit;
 
 import com.codenvy.commons.security.oauth.OAuthTokenProvider;
 import com.codenvy.commons.security.shared.Token;
-import com.codenvy.factory.SimpleFactoryUrlFormat;
-import com.codenvy.factory.commons.CommonFactoryUrlFormat;
+import com.codenvy.factory.FactoryServlet;
 
 import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.services.security.ConversationState;
@@ -45,7 +44,7 @@ public class OAuthCredentialsProvider implements CredentialsProvider {
 
     @Override
     public boolean get(String url, CredentialItem... items) throws GitException {
-        if (!SimpleFactoryUrlFormat.WSO_2_URL_PATTERN.matcher(url).matches()) {
+        if (!FactoryServlet.WSO_2_URL_PATTERN.matcher(url).matches()) {
             return false;
         }
         Token token;
