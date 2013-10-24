@@ -55,10 +55,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * Contains methods for retrieving data from GitHub and processing it before sending to client side.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Github.java Sep 5, 2011 12:08:04 PM vereshchaka $
  */
 public class GitHub {
+    
     /** Predefined name of GitHub user. Use it to make possible for users to clone repositories with samples. */
     private final String             myGitHubUser;
     private final SshKeyStore        sshKeyStore;
