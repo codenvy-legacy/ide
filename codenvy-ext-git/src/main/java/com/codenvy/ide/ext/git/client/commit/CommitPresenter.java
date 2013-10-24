@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.marshaller.RevisionUnmarshaller;
 import com.codenvy.ide.ext.git.client.marshaller.RevisionUnmarshallerWS;
-import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -100,9 +99,6 @@ public class CommitPresenter implements CommitView.ActionDelegate {
         String message = view.getMessage();
         boolean all = view.isAllFilesInclued();
         boolean amend = view.isAmend();
-        DtoClientImpls.RevisionImpl revision = DtoClientImpls.RevisionImpl.make();
-        revision.setMessage(message);
-        revision.setCommitTime(0);
         RevisionUnmarshallerWS unmarshaller = new RevisionUnmarshallerWS();
 
         try {
@@ -130,9 +126,6 @@ public class CommitPresenter implements CommitView.ActionDelegate {
 
     /** Perform the commit to repository and process the response (sends request over HTTP). */
     private void doCommitREST(@NotNull Project project, @NotNull String message, boolean all, boolean amend) {
-        DtoClientImpls.RevisionImpl revision = DtoClientImpls.RevisionImpl.make();
-        revision.setMessage(message);
-        revision.setCommitTime(0);
         RevisionUnmarshaller unmarshaller = new RevisionUnmarshaller();
 
         try {

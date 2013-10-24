@@ -156,6 +156,14 @@
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-ssh</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-extensions-runtime</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-tutorials</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.eclipse.jgit</groupId>

@@ -152,11 +152,14 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                + "\n\t- view project's tree" + "\n\t- select and open project's file";
     }
 
+    @Override
+    public void onResourceSelected(Resource resource) {
+        setSelection(new Selection<Resource>(resource));
+    }
+
     /** {@inheritDoc} */
     @Override
     public void onResourceAction(Resource resource) {
-        // set selection
-        setSelection(new Selection<Resource>(resource));
         // open file
         if (resource.isFile()) {
             eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));

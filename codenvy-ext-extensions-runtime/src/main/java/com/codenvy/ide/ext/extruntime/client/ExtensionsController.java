@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.extruntime.client;
 
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.extruntime.client.marshaller.ApplicationInstanceUnmarshallerWS;
@@ -32,40 +34,68 @@ import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * Controller for launching Codenvy extension.
+ * This class controls launching, stopping, getting logs of custom extension.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: LaunchExtensionController.java Jul 3, 2013 3:07:52 PM azatsarynnyy $
+ * @version $Id: ExtensionsController.java Jul 3, 2013 3:07:52 PM azatsarynnyy $
  */
 @Singleton
-public class LaunchExtensionController {
+public class ExtensionsController {
     /** Project to launch. */
     private Project                        project;
     private ResourceProvider               resourceProvider;
+    private EventBus                       eventBus;
     private ConsolePart                    console;
     private ExtRuntimeClientService        service;
     private ExtRuntimeLocalizationConstant constant;
+    /** Launched app. */
     private ApplicationInstance            launchedApp;
+    /** Is launching of any application in progress? */
+    private boolean                        isLaunchingInProgress;
 
     /**
      * Create controller.
      *
-     * @param resourceProvider
-     * @param console
-     * @param service
-     * @param constant
+     * @param resourceProvider {@link ResourceProvider}
+     * @param eventBus {@link EventBus}
+     * @param console {@link ConsolePart}
+     * @param service {@link ExtRuntimeClientService}
+     * @param constant {@link ExtRuntimeLocalizationConstant}
      */
     @Inject
-    protected LaunchExtensionController(ResourceProvider resourceProvider,
-                                        ConsolePart console,
-                                        ExtRuntimeClientService service,
-                                        ExtRuntimeLocalizationConstant constant) {
+    protected ExtensionsController(ResourceProvider resourceProvider, EventBus eventBus, ConsolePart console,
+                                   ExtRuntimeClientService service, ExtRuntimeLocalizationConstant constant) {
         this.resourceProvider = resourceProvider;
+        this.eventBus = eventBus;
         this.console = console;
         this.service = service;
         this.constant = constant;
+
+        init();
+    }
+
+    private void init() {
+        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
+            @Override
+            public void onProjectOpened(ProjectActionEvent event) {
+                isLaunchingInProgress = false;
+                launchedApp = null;
+            }
+
+            @Override
+            public void onProjectClosed(ProjectActionEvent event) {
+                isLaunchingInProgress = false;
+                launchedApp = null;
+            }
+
+            @Override
+            public void onProjectDescriptionChanged(ProjectActionEvent event) {
+                // do nothing
+            }
+        });
     }
 
     /**
@@ -77,8 +107,13 @@ public class LaunchExtensionController {
         return launchedApp != null;
     }
 
-    /** Launch the Codenvy application with custom extesnion. */
+    /** Launch the Codenvy application with custom extension. */
     public void launch() {
+        if (isLaunchingInProgress) {
+            Window.alert("Launching of another app is in progress now.");
+            return;
+        }
+
         project = resourceProvider.getActiveProject();
         if (project == null) {
             Window.alert("Project is not opened.");
@@ -86,28 +121,31 @@ public class LaunchExtensionController {
         }
 
         ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS();
-
         try {
-            beforeApplicationStart();
+            isLaunchingInProgress = true;
+            beforeApplicationLaunch();
             service.launch(resourceProvider.getVfsId(), project.getId(),
                            new RequestCallback<ApplicationInstance>(unmarshaller) {
                                @Override
                                protected void onSuccess(ApplicationInstance result) {
+                                   isLaunchingInProgress = false;
                                    launchedApp = result;
                                    afterApplicationLaunched();
                                }
 
                                @Override
                                protected void onFailure(Throwable exception) {
+                                   isLaunchingInProgress = false;
                                    onFail(constant.startApplicationFailed(), exception);
                                }
                            });
         } catch (WebSocketException e) {
+            isLaunchingInProgress = false;
             console.print(e.getMessage());
         }
     }
 
-    /** Get logs of launched application. */
+    /** Get logs of the currently launched application. */
     public void getLogs() {
         if (project == null) {
             Window.alert("Project is not opened.");
@@ -131,7 +169,7 @@ public class LaunchExtensionController {
         }
     }
 
-    /** Stop the Codenvy application. */
+    /** Stop the currently launched application. */
     public void stop() {
         if (project == null) {
             Window.alert("Project is not opened.");
@@ -157,8 +195,8 @@ public class LaunchExtensionController {
         }
     }
 
-    /** Performs actions before starting application. */
-    private void beforeApplicationStart() {
+    /** Performs actions before launching an application. */
+    private void beforeApplicationLaunch() {
         final String message = constant.applicationStarting(project.getName());
         console.print(message);
     }
@@ -171,7 +209,8 @@ public class LaunchExtensionController {
                                   .setPath("ide" + '/' + Utils.getWorkspaceName())
                                   .setParameter("h", launchedApp.getCodeServerHost())
                                   .setParameter("p", String.valueOf(launchedApp.getCodeServerPort())).buildString();
-        console.print(constant.applicationStartedOnUrls(project.getName(), "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
+        console.print(constant.applicationStartedOnUrls(project.getName(),
+                                                        "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
     }
 
     private void onFail(String message, Throwable exception) {

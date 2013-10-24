@@ -30,7 +30,6 @@ import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -233,8 +232,6 @@ public class PushToRemotePresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnPushClickedWhenPushWSRequestIsSuccessful() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -263,8 +260,6 @@ public class PushToRemotePresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnPushClickedWhenPushWSRequestIsFailed() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -293,8 +288,6 @@ public class PushToRemotePresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnPushClickedWhenPushRequestIsSuccessful() throws Exception {
         doThrow(WebSocketException.class).when(service)
                 .pushWS(anyString(), (Project)anyObject(), (JsonArray<String>)anyObject(), anyString(), anyBoolean(),
@@ -326,8 +319,6 @@ public class PushToRemotePresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnPushClickedWhenPushRequestIsFailed() throws Exception {
         doThrow(WebSocketException.class).when(service)
                 .pushWS(anyString(), (Project)anyObject(), (JsonArray<String>)anyObject(), anyString(), anyBoolean(),
@@ -359,8 +350,6 @@ public class PushToRemotePresenterTest extends BaseTest {
     }
 
     @Test
-    @Ignore
-    // TODO problem with JsoArray native method
     public void testOnPushClickedRestRequestWhenExceptionHappened() throws Exception {
         doThrow(WebSocketException.class).when(service)
                 .pushWS(anyString(), (Project)anyObject(), (JsonArray<String>)anyObject(), anyString(), anyBoolean(),

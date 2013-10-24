@@ -160,6 +160,14 @@
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-ssh</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-tutorials</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-extensions-runtime</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
@@ -284,6 +292,22 @@
                             <arguments>
                                 <argument>--dto_packages=com.codenvy.ide.extension.cloudfoundry.shared</argument>
                                 <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/extension/cloudfoundry/dto/client/DtoClientImpls.java</argument>
+                                <argument>--impl=client</argument>
+                                <argument>--package_base=${generated.sources.directory}/</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>ext-runtime-dto</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
+                            <arguments>
+                                <argument>--dto_packages=com.codenvy.ide.ext.extruntime.shared</argument>
+                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/ext/extruntime/dto/client/DtoClientImpls.java</argument>
                                 <argument>--impl=client</argument>
                                 <argument>--package_base=${generated.sources.directory}/</argument>
                             </arguments>

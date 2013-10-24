@@ -33,16 +33,16 @@ import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.DEFAULT_RE
  * Displays a page that contains a tutorial guide.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: TutorialGuidePage.java Sep 13, 2013 12:48:08 PM azatsarynnyy $
+ * @version $Id: GuidePage.java Sep 13, 2013 12:48:08 PM azatsarynnyy $
  */
 @Singleton
-public class TutorialGuidePage extends AbstractPartPresenter {
+public class GuidePage extends AbstractPartPresenter {
 
     private final ResourceProvider   resourceProvider;
     private       TutorialsResources resources;
 
     @Inject
-    public TutorialGuidePage(ResourceProvider resourceProvider, TutorialsResources resources) {
+    public GuidePage(ResourceProvider resourceProvider, TutorialsResources resources) {
         this.resourceProvider = resourceProvider;
         this.resources = resources;
     }
@@ -52,7 +52,8 @@ public class TutorialGuidePage extends AbstractPartPresenter {
     public void go(final AcceptsOneWidget container) {
         final StringBuilder builder = new StringBuilder();
 
-        File resource = (File)resourceProvider.getActiveProject().findResourceByName(DEFAULT_README_FILE_NAME, File.TYPE);
+        File resource =
+                (File)resourceProvider.getActiveProject().findResourceByName(DEFAULT_README_FILE_NAME, File.TYPE);
         resourceProvider.getActiveProject().getContent(resource, new AsyncCallback<File>() {
             @Override
             public void onSuccess(File result) {

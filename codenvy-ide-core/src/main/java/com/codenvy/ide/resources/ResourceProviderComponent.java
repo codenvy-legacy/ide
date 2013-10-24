@@ -457,7 +457,10 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     public void delete(final Resource item, final AsyncCallback<String> callback) {
         String url = item.getLinkByRelation(Link.REL_DELETE).getHref();
         if (item instanceof File) {
-            url = URL.decode(url).replace("[lockToken]", ((File)item).getLock().getLockToken());
+            Lock lock = ((File)item).getLock();
+            if (lock != null) {
+                url = URL.decode(url).replace("[lockToken]", lock.getLockToken());
+            }
         }
 
         StringUnmarshaller unmarshaller = new StringUnmarshaller();

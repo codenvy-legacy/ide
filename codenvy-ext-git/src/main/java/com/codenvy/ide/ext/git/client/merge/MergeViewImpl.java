@@ -28,6 +28,7 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
+import com.codenvy.ide.util.input.SignalEvent;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -93,7 +94,6 @@ public class MergeViewImpl extends DialogBox implements MergeView {
         this.references.setTreeEventHandler(new Tree.Listener<Reference>() {
             @Override
             public void onNodeAction(TreeNodeElement<Reference> node) {
-                delegate.onReferenceSelected(node.getData());
             }
 
             @Override
@@ -118,6 +118,11 @@ public class MergeViewImpl extends DialogBox implements MergeView {
 
             @Override
             public void onNodeExpanded(final TreeNodeElement<Reference> node) {
+                delegate.onReferenceSelected(node.getData());
+            }
+
+            @Override
+            public void onNodeSelected(TreeNodeElement<Reference> node, SignalEvent event) {
                 delegate.onReferenceSelected(node.getData());
             }
 

@@ -37,6 +37,7 @@ import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.util.dom.Elements;
+import com.codenvy.ide.util.input.SignalEvent;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.ImageResource;
@@ -162,8 +163,6 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
         this.variables.setTreeEventHandler(new Tree.Listener<Variable>() {
             @Override
             public void onNodeAction(TreeNodeElement<Variable> node) {
-                selectedVariable = node;
-                delegate.onSelectedTreeElementClicked(selectedVariable.getData());
             }
 
             @Override
@@ -191,6 +190,12 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
                 selectedVariable = node;
                 delegate.onSelectedTreeElementClicked(selectedVariable.getData());
                 delegate.onExpandTreeClicked();
+            }
+
+            @Override
+            public void onNodeSelected(TreeNodeElement<Variable> node, SignalEvent event) {
+                selectedVariable = node;
+                delegate.onSelectedTreeElementClicked(selectedVariable.getData());
             }
 
             @Override

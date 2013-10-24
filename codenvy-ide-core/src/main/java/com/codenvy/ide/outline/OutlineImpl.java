@@ -35,6 +35,7 @@ import com.codenvy.ide.texteditor.selection.SelectionModel.CursorListener;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.Tree.Listener;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
+import com.codenvy.ide.util.input.SignalEvent;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -110,9 +111,6 @@ public class OutlineImpl implements OutlinePresenter {
 
             @Override
             public void onNodeAction(TreeNodeElement<CodeBlock> node) {
-                thisCursorMove = true;
-                CodeBlock data = node.getData();
-                editor.getSelection().setCursorPosition(data.getOffset());
             }
 
             @Override
@@ -133,6 +131,13 @@ public class OutlineImpl implements OutlinePresenter {
 
             @Override
             public void onNodeExpanded(TreeNodeElement<CodeBlock> node) {
+            }
+
+            @Override
+            public void onNodeSelected(TreeNodeElement<CodeBlock> node, SignalEvent event) {
+                thisCursorMove = true;
+                CodeBlock data = node.getData();
+                editor.getSelection().setCursorPosition(data.getOffset());
             }
 
             @Override

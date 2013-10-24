@@ -195,7 +195,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ModelProvider.class).to(GenericModelProvider.class).in(Singleton.class);
     }
 
-    /** Configure Core UI components, resouces and views */
+    /** Configure Core UI components, resources and views */
     protected void coreUiConfigure() {
         // Resources
 

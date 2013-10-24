@@ -30,15 +30,15 @@ public interface ApplicationInstance {
     /** Returns application id. */
     String getId();
 
-    /** Returns the domain name or IP-address of host on which application was started. */
+    /** Returns the domain name or IP-address of the host on which application was started. */
     String getHost();
 
-    /** Returns the port number of host on which application was started. */
+    /** Returns the port number of the host on which application was started. */
     int getPort();
 
-    /** Returns the domain name or IP-address of host on which code server was started. */
+    /** Returns the domain name or IP-address of the host on which code server was started. */
     String getCodeServerHost();
 
-    /** Returns the port number of host on which code server was started. */
+    /** Returns the port number of the host on which code server was started. */
     int getCodeServerPort();
 }
