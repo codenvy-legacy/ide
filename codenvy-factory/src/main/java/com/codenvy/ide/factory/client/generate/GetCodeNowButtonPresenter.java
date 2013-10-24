@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.factory.client.generate;
 
+import com.codenvy.ide.factory.shared.FactorySpec10;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -52,16 +53,15 @@ import org.exoplatform.ide.git.client.marshaller.LogResponseUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import static com.codenvy.ide.factory.client.FactorySpec10.ACTION_PARAMETER;
-import static com.codenvy.ide.factory.client.FactorySpec10.COMMIT_ID;
-import static com.codenvy.ide.factory.client.FactorySpec10.CURRENT_VERSION;
-import static com.codenvy.ide.factory.client.FactorySpec10.DEFAULT_ACTION;
-import static com.codenvy.ide.factory.client.FactorySpec10.PROJECT_NAME;
-import static com.codenvy.ide.factory.client.FactorySpec10.PROJECT_TYPE;
-import static com.codenvy.ide.factory.client.FactorySpec10.VCS;
-import static com.codenvy.ide.factory.client.FactorySpec10.VCS_URL;
-import static com.codenvy.ide.factory.client.FactorySpec10.VERSION_PARAMETER;
-import static com.codenvy.ide.factory.client.FactorySpec10.WORKSPACE_NAME;
+import static com.codenvy.ide.factory.shared.FactorySpec10.ACTION;
+import static com.codenvy.ide.factory.shared.FactorySpec10.COMMIT_ID;
+import static com.codenvy.ide.factory.shared.FactorySpec10.CURRENT_VERSION;
+import static com.codenvy.ide.factory.shared.FactorySpec10.PROJECT_NAME;
+import static com.codenvy.ide.factory.shared.FactorySpec10.PROJECT_TYPE;
+import static com.codenvy.ide.factory.shared.FactorySpec10.VCS_TYPE;
+import static com.codenvy.ide.factory.shared.FactorySpec10.VCS_URL;
+import static com.codenvy.ide.factory.shared.FactorySpec10.FACTORY_VERSION;
+import static com.codenvy.ide.factory.shared.FactorySpec10.WORKSPACE;
 import static com.google.gwt.http.client.URL.encodeQueryString;
 
 /**
@@ -379,13 +379,13 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
 
     private void generateSnippetsAndOpenView() {
         factoryURL = SpinnetGenerator.getBaseFactoryURL() + "?" + //
-                     VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
+                FACTORY_VERSION + "=" + CURRENT_VERSION + "&" + //
                      PROJECT_NAME + "=" + openedProject.getName() + "&" + //
-                     WORKSPACE_NAME + "=" + Utils.getWorkspaceName() + "&" + //
-                     VCS + "=git&" + //
+                WORKSPACE + "=" + Utils.getWorkspaceName() + "&" + //
+                VCS_TYPE + "=git&" + //
                      VCS_URL + "=" + encodeQueryString(vcsURL) + "&" + //
                      COMMIT_ID + "=" + latestCommitId + "&" + //
-                     ACTION_PARAMETER + "=" + DEFAULT_ACTION +"&" +//
+                ACTION + "=" + FactorySpec10.ACTION_VALUES.OPEN_PROJECT +"&" +//
                      PROJECT_TYPE + "=" + URL.encodeQueryString(openedProject.getProjectType());
         
         darkStyle = true;

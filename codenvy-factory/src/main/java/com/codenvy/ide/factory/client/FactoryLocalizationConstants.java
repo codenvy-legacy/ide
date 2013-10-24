@@ -51,6 +51,15 @@ public interface FactoryLocalizationConstants extends Messages {
     @Key("messages.saveAllChangesBeforeCopying")
     String saveAllChangesBeforeCopying();
 
+    @Key("messages.fileToOpenNotFound")
+    String fileToOpenIsNotFound(String fileToOpen);
+
+    @Key("messages.cloningProcess")
+    String cloningProcess();
+
+    @Key("messages.cloneSuccessful")
+    String cloneSuccessful(String vcsUrl);
+
     /*
      * Controls
      */

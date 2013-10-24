@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- *
- * [2012] - [2013] Codenvy, S.A.
+ * 
+ * [2012] - [2013] Codenvy, S.A. 
  * All Rights Reserved.
- *
+ * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -15,26 +15,20 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.factory.client.copy;
+
+package com.codenvy.ide.factory.shared;
 
 /**
- * Copy Project from temp workspace spec.
- * 
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * Describe parameters for Codenvy Factory feature. Version of specification Codenvy Factory 1.1
+ *
+ * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
+ * @version $Id: 22.10.13 vlad $
  */
-public interface CopySpec10 {
-
-    String DOWNLOAD_URL = "downloadurl";
-
-    /**
-     * Identifiers and names of projects to copy. String should be in the following format:
-     * <p/>
-     * 
-     * <pre>
-     * project1_id:project1_name;
-     * project2_id:project2_name;
-     * </pre>
-     */
-    String PROJECT_ID   = "projectid";
+public interface FactorySpec11 extends FactorySpec10 {
+    String ID           = "id";
+    String STYLE        = "style";
+    String DESCRIPTION  = "description";
+    String CONTACT_MAIL = "contactmail";
+    String AUTHOR       = "author";
+    String LINKS        = "links";
 }

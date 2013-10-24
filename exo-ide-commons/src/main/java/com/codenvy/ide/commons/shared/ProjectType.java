@@ -33,7 +33,8 @@ public enum ProjectType {
     DEFAULT("default"),
     NODE_JS("nodejs"),
     ANDROID("Android"),
-    GOOGLE_MBS_ANDROID("google-mbs-client-android");
+    GOOGLE_MBS_ANDROID("google-mbs-client-android"),
+    JSP("Servlet/JSP");
 
     private final String value;
 

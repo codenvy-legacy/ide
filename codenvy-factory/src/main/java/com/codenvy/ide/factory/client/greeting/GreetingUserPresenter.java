@@ -19,7 +19,7 @@ package com.codenvy.ide.factory.client.greeting;
 
 import com.codenvy.ide.factory.client.FactoryClientBundle;
 import com.codenvy.ide.factory.client.copy.CopyProjectEvent;
-import com.codenvy.ide.factory.client.copy.CopySpec10;
+import com.codenvy.ide.factory.shared.CopySpec10;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.Style;
