@@ -18,7 +18,7 @@
 package com.codenvy.ide.factory.client.receive;
 
 
-import com.codenvy.factory.SimpleFactoryUrlFormat;
+import com.codenvy.factory.FactoryServlet;
 import com.codenvy.ide.client.util.logging.Log;
 import com.codenvy.ide.factory.client.FactoryExtension;
 import com.codenvy.ide.factory.client.FactorySpec10;
@@ -459,7 +459,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                     eventBus.unsubscribe("factory-events", eventHandler);
                     IDELoader.getInstance().hide();
 
-                    if (remoteUri.matches(SimpleFactoryUrlFormat.WSO_2_URL_STRING) && exception.getMessage().contains("not authorized")) {
+                    if (remoteUri.matches(FactoryServlet.WSO_2_URL_STRING) && exception.getMessage().contains("not authorized")) {
                         openOauthPopupWindow(new AsyncCallback<Void>() {
                             @Override
                             public void onFailure(Throwable throwable) {
@@ -505,7 +505,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                 protected void onFailure(Throwable exception) {
                     IDELoader.getInstance().hide();
 
-                    if (remoteUri.matches(SimpleFactoryUrlFormat.WSO_2_URL_STRING) && exception.getMessage().contains("not authorized")) {
+                    if (remoteUri.matches(FactoryServlet.WSO_2_URL_STRING) && exception.getMessage().contains("not authorized")) {
                         openOauthPopupWindow(new AsyncCallback<Void>() {
                             @Override
                             public void onFailure(Throwable throwable) {
