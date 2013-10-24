@@ -36,9 +36,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 @RolesAllowed("developer")
-public class DebugAppControl extends SimpleControl implements IDEControl,
-        // ProjectClosedHandler, ProjectOpenedHandler,
-                                                              AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler {
+public class DebugAppControl extends SimpleControl implements IDEControl, AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler {
     public static final String  ID                = DebuggerExtension.LOCALIZATION_CONSTANT.debugAppControlId();
 
     private static final String TITLE             = "Debug Application";
