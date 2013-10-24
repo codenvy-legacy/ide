@@ -25,6 +25,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import org.eclipse.jdt.client.UpdateOutlineEvent;
 import org.eclipse.jdt.client.UpdateOutlineHandler;
 import org.eclipse.jdt.client.core.dom.*;
+import org.eclipse.jdt.client.disable.SyntaxErrorHighlightingPropertiesUtil;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.*;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -79,6 +80,9 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
 
         /** Give focus to the tree. */
         void focusInTree();
+
+        /** Set if syntax error highlighting enabled */
+        void setSyntaxErrorHighlighting(boolean enable);
 
         /**
          * Get root child nodes.
@@ -145,6 +149,7 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
 
     /** Bind display with presenter. */
     public void bindDisplay() {
+        display.setSyntaxErrorHighlighting(SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(activeFile.getProject()));
         display.getSingleSelectionModel().addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 
             @Override
