@@ -24,13 +24,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
-import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectType;
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
@@ -43,15 +37,13 @@ import org.exoplatform.ide.vfs.shared.Item;
 
 @RolesAllowed("developer")
 public class DebugAppControl extends SimpleControl implements IDEControl,
-                                                  // ProjectClosedHandler, ProjectOpenedHandler,
-                                                  AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler, ViewActivatedHandler {
+        // ProjectClosedHandler, ProjectOpenedHandler,
+                                                              AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler {
     public static final String  ID                = DebuggerExtension.LOCALIZATION_CONSTANT.debugAppControlId();
 
     private static final String TITLE             = "Debug Application";
 
     private static final String PROMPT            = "Launch Debug";
-
-    private boolean             navigatorSelected = false;
 
     private ProjectModel        currentProject    = null;
 
@@ -75,7 +67,6 @@ public class DebugAppControl extends SimpleControl implements IDEControl,
         IDE.addHandler(AppStartedEvent.TYPE, this);
         IDE.addHandler(AppStoppedEvent.TYPE, this);
         IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-        IDE.addHandler(ViewActivatedEvent.TYPE, this);
     }
 
     // /**
@@ -110,7 +101,7 @@ public class DebugAppControl extends SimpleControl implements IDEControl,
                                                         || ProjectType.WAR.value().equals(projectType)
                                                         || ProjectType.JSP.value().equals(projectType));
         // setVisible(isJavaProject);
-        setEnabled(isJavaProject && navigatorSelected);
+        setEnabled(isJavaProject);
         setShowInContextMenu(isJavaProject);
     }
 
@@ -134,7 +125,7 @@ public class DebugAppControl extends SimpleControl implements IDEControl,
             Item selectedItem = event.getSelectedItems().get(0);
 
             currentProject = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem
-                : ((ItemContext)selectedItem).getProject();
+                                                                  : ((ItemContext)selectedItem).getProject();
             if (currentProject == null || currentProject.getProjectType() == null
                 || ProjectType.MultiModule.value().equals(currentProject.getProjectType())
                 || ProjectType.JAR.value().equals(currentProject.getProjectType())
@@ -147,17 +138,6 @@ public class DebugAppControl extends SimpleControl implements IDEControl,
             }
             updateState();
         }
-    }
-
-    @Override
-    public void onViewActivated(ViewActivatedEvent event) {
-        View activeView = event.getView();
-
-        navigatorSelected =
-                            activeView instanceof NavigatorDisplay ||
-                                activeView instanceof ProjectExplorerDisplay ||
-                                activeView instanceof PackageExplorerDisplay;
-        updateState();
     }
 
 }

@@ -23,23 +23,18 @@ import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.*;
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.java.jdi.client.events.*;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 @RolesAllowed("developer")
 public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-                                                  AppStartedHandler, AppStoppedHandler, ViewActivatedHandler {
+                                                              AppStartedHandler, AppStoppedHandler {
     private static final String ID                = "Run/Java Logs";
 
     private static final String TITLE             = DebuggerExtension.LOCALIZATION_CONSTANT.showLogsControlTitle();
 
     private static final String PROMPT            = DebuggerExtension.LOCALIZATION_CONSTANT.showLogsControlPrompt();
-
-    private boolean             navigatorSelected = false;
 
     private ProjectModel        currentProject    = null;
 
@@ -80,7 +75,7 @@ public class ShowLogsControl extends SimpleControl implements IDEControl, Projec
                                  || ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
                                  || ProjectType.WAR.value().equals(projectType)
                                  || ProjectType.JSP.value().equals(projectType));
-        setVisible(isJavaProject && navigatorSelected);
+        setVisible(isJavaProject);
         setShowInContextMenu(isJavaProject);
     }
 
@@ -94,7 +89,6 @@ public class ShowLogsControl extends SimpleControl implements IDEControl, Projec
         IDE.addHandler(AppStoppedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-        IDE.addHandler(ViewActivatedEvent.TYPE, this);
     }
 
     @Override
@@ -107,14 +101,4 @@ public class ShowLogsControl extends SimpleControl implements IDEControl, Projec
         setEnabled(false);
     }
 
-    @Override
-    public void onViewActivated(ViewActivatedEvent event) {
-        View activeView = event.getView();
-
-        navigatorSelected =
-                            activeView instanceof NavigatorDisplay ||
-                                activeView instanceof ProjectExplorerDisplay ||
-                                activeView instanceof PackageExplorerDisplay;
-        updateState();
-    }
 }
