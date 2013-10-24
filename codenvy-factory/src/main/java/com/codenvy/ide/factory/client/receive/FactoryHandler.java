@@ -23,9 +23,9 @@ import com.codenvy.api.factory.SimpleFactoryUrl;
 import com.codenvy.factory.FactoryServlet;
 import com.codenvy.ide.factory.client.FactoryClientService;
 import com.codenvy.ide.factory.client.FactoryExtension;
+import com.codenvy.ide.factory.shared.AdvancedFactorySpec;
 import com.codenvy.ide.factory.shared.CopySpec10;
 import com.codenvy.ide.factory.client.marshaller.AdvancedFactoryUrlUnmarshaller;
-import com.codenvy.ide.factory.shared.FactorySpec11;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.RequestException;
@@ -89,7 +89,7 @@ import java.util.Map;
  */
 public class FactoryHandler
         implements VfsChangedHandler, StartWithInitParamsHandler, ProjectOpenedHandler, IDELoadCompleteHandler,
-                   FactorySpec11, CopySpec10 {
+                   AdvancedFactorySpec, CopySpec10 {
 
     /** Instance of virtual file system. */
     private VirtualFileSystemInfo vfs;

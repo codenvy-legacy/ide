@@ -19,6 +19,8 @@ package com.codenvy.ide.factory.shared;
 
 /**
  * Describe parameters for Codenvy Factory feature. Version of specification Codenvy Factory 1.0
+ * <p/>
+ * //TODO need to be removed after DTO will be implemented
  *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: CodenvyFactorySpec10.java Nov 30, 2012 vetal $

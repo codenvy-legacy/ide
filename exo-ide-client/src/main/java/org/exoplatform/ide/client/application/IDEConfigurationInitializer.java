@@ -18,10 +18,10 @@
 package org.exoplatform.ide.client.application;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.factory.shared.AdvancedFactorySpec;
 import com.codenvy.ide.factory.shared.FactorySpec10;
 import com.codenvy.ide.factory.shared.CopySpec10;
 import com.codenvy.ide.factory.client.receive.StartWithInitParamsEvent;
-import com.codenvy.ide.factory.shared.FactorySpec11;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -254,7 +254,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
         } else {
             Map<String, List<String>> parameterMap = buildListParamMap(Utils.getStartUpParams());
-            if (parameterMap != null && (parameterMap.get(FactorySpec10.FACTORY_VERSION) != null || parameterMap.get(FactorySpec11.ID) != null)) {
+            if (parameterMap != null && (parameterMap.get(FactorySpec10.FACTORY_VERSION) != null || parameterMap.get(AdvancedFactorySpec.ID) != null)) {
                 IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
             } else if (parameterMap != null && parameterMap.get(CopySpec10.DOWNLOAD_URL) != null
                        && parameterMap.get(CopySpec10.PROJECT_ID) != null) {

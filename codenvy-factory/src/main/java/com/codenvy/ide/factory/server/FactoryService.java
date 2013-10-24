@@ -50,6 +50,7 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.ws.rs.Consumes;
@@ -79,37 +80,19 @@ import java.util.regex.Pattern;
 public class FactoryService {
     private static final Log LOG = ExoLogger.getLogger(FactoryService.class);
 
-    private final MailSenderClient          mailSenderClient;
-    private final GitConnectionFactory      factory;
-    private       VirtualFileSystemRegistry vfsRegistry;
-    private       LocalPathResolver         localPathResolver;
-
-    @QueryParam("vfsid")
-    private String vfsId;
-
-    @QueryParam("projectid")
-    private String projectId;
-
     @Inject
-    private OAuthTokenProvider oauthTokenProvider;
+    private MailSenderClient          mailSenderClient;
+    @Inject
+    private GitConnectionFactory      factory;
+    @Inject
+    private VirtualFileSystemRegistry vfsRegistry;
+    @Inject
+    private LocalPathResolver         localPathResolver;
+    @Inject
+    private OAuthTokenProvider        oauthTokenProvider;
 
-    private static final Pattern PATTERN          = Pattern.compile("public static final String PROJECT_ID = .*");
-    private static final Pattern PATTERN_NUMBER   = Pattern.compile("public static final String PROJECT_NUMBER = .*");
-    private static final String  TEMPORARY_BRANCH = "temp";
-
-    /**
-     * Constructs a new {@link FactoryService}.
-     *
-     * @param mailSenderClient
-     *         client for sending messages over e-mail
-     */
-    public FactoryService(MailSenderClient mailSenderClient, VirtualFileSystemRegistry vfsRegistry,
-                          LocalPathResolver localPathResolver, GitConnectionFactory factory) {
-        this.mailSenderClient = mailSenderClient;
-        this.vfsRegistry = vfsRegistry;
-        this.localPathResolver = localPathResolver;
-        this.factory = factory;
-    }
+    private static final Pattern PATTERN        = Pattern.compile("public static final String PROJECT_ID = .*");
+    private static final Pattern PATTERN_NUMBER = Pattern.compile("public static final String PROJECT_NUMBER = .*");
 
     /**
      * Sends e-mail message to share Factory URL.
@@ -123,15 +106,19 @@ public class FactoryService {
     @POST
     @Path("share")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response share(@FormParam("recipient") String recipient, //
+    @RolesAllowed("developer")
+    public Response share(@FormParam("recipient") String recipient,
                           @FormParam("message") String message) {
-        final String sender = "Codenvy <noreply@codenvy.com>";
-        final String subject = "Check out my Codenvy project";
-        final String mimeType = "text/plain; charset=utf-8";
         try {
-            mailSenderClient.sendMail(sender, recipient, null, subject, mimeType, URLDecoder.decode(message, "UTF-8"));
+            mailSenderClient.sendMail("Codenvy <noreply@codenvy.com>",
+                                      recipient,
+                                      null,
+                                      "Check out my Codenvy project",
+                                      "text/plain; charset=utf-8",
+                                      URLDecoder.decode(message, "UTF-8"));
             return Response.ok().build();
         } catch (MessagingException | IOException e) {
+            LOG.warn(e.getLocalizedMessage(), e);
             throw new WebApplicationException(e);
         }
     }
@@ -151,15 +138,20 @@ public class FactoryService {
     @Path("clone")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Item cloneProject(SimpleFactoryUrl factoryUrl)
-            throws VirtualFileSystemException, GitException,
-                   URISyntaxException, IOException {
-        GitConnection gitConnection = getGitConnection();
+    @RolesAllowed("developer")
+    public Item cloneProject(SimpleFactoryUrl factoryUrl,
+                             @QueryParam("vfsid") String vfsId,
+                             @QueryParam("projectid") String projectId) throws VirtualFileSystemException, GitException,
+                                                                               URISyntaxException, IOException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+
+        GitConnection gitConnection = getGitConnection(vfs, projectId);
         try {
             gitConnection.clone(new CloneRequest(factoryUrl.getVcsurl(), null));
+
             if (factoryUrl.getCommitid() != null && !factoryUrl.getCommitid().trim().isEmpty()) {
                 //Try to checkout to new branch "temp" with HEAD of setted commit ID
-                gitConnection.branchCheckout(new BranchCheckoutRequest(TEMPORARY_BRANCH, factoryUrl.getCommitid(), true));
+                gitConnection.branchCheckout(new BranchCheckoutRequest("temp", factoryUrl.getCommitid(), true));
             } else if (factoryUrl.getVcsbranch() != null && !factoryUrl.getVcsbranch().trim().isEmpty()) {
                 //Try to checkout to specified branch. For first we need to list all cloned local branches to
                 //find if specified branch already exist, if its true, we check if this this branch is active
@@ -180,17 +172,18 @@ public class FactoryService {
                     publishWebsocketMessage("Branch <b>" + factoryUrl.getVcsbranch() + "</b> doesn't exist. Switching to default branch.");
                 }
             } else {
-                deleteRepository();
+                deleteRepository(vfs, projectId);
+                LOG.warn(e.getLocalizedMessage(), e);
                 throw e;
             }
         } finally {
             //Finally if we found parameter vcsinfo we check that we should delete git repository after cloning.
             if (!factoryUrl.getVcsinfo()) {
-                deleteRepository();
+                deleteRepository(vfs, projectId);
             }
         }
 
-        return convertToProject(factoryUrl);
+        return convertToProject(factoryUrl, vfsId, projectId);
     }
 
     /**
@@ -221,7 +214,7 @@ public class FactoryService {
      * @throws VirtualFileSystemException
      * @throws IOException
      */
-    private Item convertToProject(SimpleFactoryUrl factoryUrl)
+    private Item convertToProject(SimpleFactoryUrl factoryUrl, String vfsId, String projectId)
             throws VirtualFileSystemException, IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         Item itemToUpdate = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
@@ -293,15 +286,14 @@ public class FactoryService {
      *
      * @throws VirtualFileSystemException
      */
-    protected void deleteRepository() throws VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+    private void deleteRepository(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
         try {
-            Item project = getGitProject();
+            Item project = getGitProject(vfs, projectId);
             String path2gitFolder = project.getPath() + "/.git";
             Item gitItem = vfs.getItemByPath(path2gitFolder, null, false, PropertyFilter.NONE_FILTER);
             vfs.delete(gitItem.getId(), null);
         } catch (ItemNotFoundException e) {
-            //ignore
+            LOG.warn(e.getLocalizedMessage(), e);
         }
     }
 
@@ -312,29 +304,13 @@ public class FactoryService {
      * @throws GitException
      * @throws VirtualFileSystemException
      */
-    protected GitConnection getGitConnection() throws GitException, VirtualFileSystemException {
+    private GitConnection getGitConnection(VirtualFileSystem vfs, String projectId) throws GitException, VirtualFileSystemException {
         GitUser gituser = null;
         ConversationState user = ConversationState.getCurrent();
         if (user != null) {
             gituser = new GitUser(user.getIdentity().getUserId());
         }
-        return factory.getConnection(resolveLocalPath(), gituser);
-    }
-
-    /**
-     * Resolve path to project in file system.
-     *
-     * @return path to cloned project
-     * @throws VirtualFileSystemException
-     */
-    protected String resolveLocalPath() throws VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        if (vfs == null) {
-            throw new VirtualFileSystemException(
-                    "Can't resolve path on the Local File System : Virtual file system not initialized");
-        }
-        Item gitProject = getGitProject();
-        return localPathResolver.resolve(vfs, gitProject.getId());
+        return factory.getConnection(localPathResolver.resolve(vfs, getGitProject(vfs, projectId).getId()), gituser);
     }
 
     /**
@@ -343,8 +319,7 @@ public class FactoryService {
      * @return {@link ProjectModel} instance
      * @throws VirtualFileSystemException
      */
-    private Item getGitProject() throws VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+    private Item getGitProject(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
         Item project = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         Item parent = vfs.getItem(project.getParentId(), false, PropertyFilter.ALL_FILTER);
         if (parent.getItemType().equals(ItemType.PROJECT)) // MultiModule project

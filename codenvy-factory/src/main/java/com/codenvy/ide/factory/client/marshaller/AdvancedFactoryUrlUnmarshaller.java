@@ -19,7 +19,7 @@
 package com.codenvy.ide.factory.client.marshaller;
 
 import com.codenvy.api.factory.AdvancedFactoryUrl;
-import com.codenvy.ide.factory.shared.FactorySpec11;
+import com.codenvy.ide.factory.shared.AdvancedFactorySpec;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -38,7 +38,7 @@ import java.util.Map;
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladyslav Zhukovskii</a>
  * @version $Id: 22.10.13 vlad $
  */
-public class AdvancedFactoryUrlUnmarshaller implements Unmarshallable<AdvancedFactoryUrl>, FactorySpec11 {
+public class AdvancedFactoryUrlUnmarshaller implements Unmarshallable<AdvancedFactoryUrl>, AdvancedFactorySpec {
     private AdvancedFactoryUrl advancedFactoryUrl;
 
     /** Construct unmarshaller. */
