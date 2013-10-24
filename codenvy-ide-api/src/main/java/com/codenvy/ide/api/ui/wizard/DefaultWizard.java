@@ -129,9 +129,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
     /** {@inheritDoc} */
     @Override
     public WizardPage flipToFirst() {
-        index = -1;
-        wizardContext.clear();
-        wizardPages.clear();
+        clear();
         for (Provider<? extends WizardPage> provider : wizardPageProviders.asIterable()) {
             WizardPage page = provider.get();
             page.setContext(wizardContext);
@@ -142,12 +140,20 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
         return getNextEnablePage();
     }
 
+    /** Clear wizard values. */
+    private void clear() {
+        index = -1;
+        wizardContext.clear();
+        wizardPages.clear();
+    }
+
     /** {@inheritDoc} */
     @Override
     public WizardPage flipToNext() {
         return getNextEnablePage();
     }
 
+    /** @return a next enable page that need to be shown */
     @Nullable
     private WizardPage getNextEnablePage() {
         while (++index < wizardPages.size()) {
@@ -217,6 +223,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
         }
     }
 
+    /** @return a next available page that need to be committed */
     @Nullable
     private WizardPage getNextPage() {
         while (++index < wizardPages.size()) {
@@ -233,6 +240,8 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
     public void onSuccess() {
         if (index + 1 < wizardPages.size()) {
             commit();
+        } else {
+            clear();
         }
     }
 
@@ -241,5 +250,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
     public void onFailure(@NotNull Throwable exception) {
         Notification notification = new Notification(exception.getMessage(), ERROR);
         notificationManager.showNotification(notification);
+
+        clear();
     }
 }
