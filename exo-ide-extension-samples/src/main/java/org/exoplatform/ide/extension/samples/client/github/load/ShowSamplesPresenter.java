@@ -23,9 +23,13 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -39,6 +43,10 @@ import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
 import org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep;
+import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.git.client.github.GitHubClientService;
+import org.exoplatform.ide.git.shared.GitHubRepository;
+import org.exoplatform.ide.git.shared.GitHubRepositoryList;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
@@ -144,35 +152,43 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
      * .exoplatform.ide.client.GetCollboratorsEvent.samples.ShowGithubSamplesEvent) */
     @Override
     public void onShowSamples(ShowSamplesEvent event) {
-        /*try {
+        try {
+            AutoBean<GitHubRepositoryList> autoBean = GitExtension.AUTO_BEAN_FACTORY.gitHubRepositoryList();
+            AutoBeanUnmarshaller<GitHubRepositoryList> unmarshaller = new AutoBeanUnmarshaller<GitHubRepositoryList>(autoBean);
             // User's name will be taken from configuration:
             GitHubClientService.getInstance().getRepositoriesByUser(
-                    null,
-                    new AsyncRequestCallback<List<GitHubRepository>>(new RepositoriesUnmarshaller(
-                            new ArrayList<GitHubRepository>())) {
-                        @Override
-                        protected void onSuccess(List<GitHubRepository> result) {
-                            openView();
-                            List<ProjectData> projectDataList = new ArrayList<ProjectData>();
-                            for (GitHubRepository repo : result) {
-                                ProjectData projectData =
-                                        new ProjectData(repo.getName(), null, null, null, repo.getCloneUrl(), repo.getGitUrl());
-                                processDescription(projectData, repo.getDescription());
-                                projectDataList.add(projectData);
-                            }
-                            display.getSamplesListGrid().setValue(projectDataList);
-                            display.enableNextButton(false);
-                            display.focusInNameField();
-                        }
+                                                                    null,
+                                                                    new AsyncRequestCallback<GitHubRepositoryList>(unmarshaller) {
+                                                                        @Override
+                                                                        protected void onSuccess(GitHubRepositoryList result) {
+                                                                            openView();
+                                                                            List<ProjectData> projectDataList =
+                                                                                                                new ArrayList<ProjectData>();
+                                                                            for (GitHubRepository repo : result.getRepositories()) {
+                                                                                ProjectData projectData =
+                                                                                                          new ProjectData(
+                                                                                                                          repo.getName(),
+                                                                                                                          null,
+                                                                                                                          null,
+                                                                                                                          null,
+                                                                                                                          repo.getCloneUrl(),
+                                                                                                                          repo.getGitUrl());
+                                                                                processDescription(projectData, repo.getDescription());
+                                                                                projectDataList.add(projectData);
+                                                                            }
+                                                                            display.getSamplesListGrid().setValue(projectDataList);
+                                                                            display.enableNextButton(false);
+                                                                            display.focusInNameField();
+                                                                        }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            IDE.fireEvent(new ExceptionThrownEvent(exception));
-                        }
-                    });
+                                                                        @Override
+                                                                        protected void onFailure(Throwable exception) {
+                                                                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                                        }
+                                                                    });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
-        }*/
+        }
     }
 
     private void openView() {
@@ -265,34 +281,42 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
     /** @see org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep#onReturn() */
     @Override
     public void onReturn() {
-     /*   try {
+        try {
+            AutoBean<GitHubRepositoryList> autoBean = GitExtension.AUTO_BEAN_FACTORY.gitHubRepositoryList();
+            AutoBeanUnmarshaller<GitHubRepositoryList> unmarshaller = new AutoBeanUnmarshaller<GitHubRepositoryList>(autoBean);
             // User's name will be taken from configuration:
             GitHubClientService.getInstance().getRepositoriesByUser(
-                    null,
-                    new AsyncRequestCallback<List<GitHubRepository>>(new RepositoriesUnmarshaller(
-                            new ArrayList<GitHubRepository>())) {
-                        @Override
-                        protected void onSuccess(List<GitHubRepository> result) {
-                            openView();
-                            List<ProjectData> projectDataList = new ArrayList<ProjectData>();
-                            for (GitHubRepository repo : result) {
-                                ProjectData projectData =
-                                        new ProjectData(repo.getName(), null, null, null, repo.getCloneUrl(), repo.getGitUrl());
-                                processDescription(projectData, repo.getDescription());
-                                projectDataList.add(projectData);
-                            }
-                            display.getSamplesListGrid().setValue(projectDataList);
-                            display.enableNextButton(false);
-                        }
+                                                                    null,
+                                                                    new AsyncRequestCallback<GitHubRepositoryList>(unmarshaller) {
+                                                                        @Override
+                                                                        protected void onSuccess(GitHubRepositoryList result) {
+                                                                            openView();
+                                                                            List<ProjectData> projectDataList =
+                                                                                                                new ArrayList<ProjectData>();
+                                                                            for (GitHubRepository repo : result.getRepositories()) {
+                                                                                ProjectData projectData =
+                                                                                                          new ProjectData(
+                                                                                                                          repo.getName(),
+                                                                                                                          null,
+                                                                                                                          null,
+                                                                                                                          null,
+                                                                                                                          repo.getCloneUrl(),
+                                                                                                                          repo.getGitUrl());
+                                                                                processDescription(projectData, repo.getDescription());
+                                                                                projectDataList.add(projectData);
+                                                                            }
+                                                                            display.getSamplesListGrid().setValue(projectDataList);
+                                                                            display.enableNextButton(false);
+                                                                        }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            IDE.fireEvent(new ExceptionThrownEvent(exception));
-                        }
-                    });
+                                                                        @Override
+                                                                        protected void onFailure(Throwable exception) {
+                                                                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                                        }
+                                                                    });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
-        }*/
+        }
     }
 
     /** @see org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep#setNextStep(org.exoplatform.ide.extension.samples
