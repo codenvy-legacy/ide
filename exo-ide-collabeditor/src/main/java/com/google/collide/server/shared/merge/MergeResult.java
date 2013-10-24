@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 
 /**
- * Captures the result of a 3-way-merge with {@link JGitMerger}.
+ * Captures the result of a 3-way-merge with.
  * <p/>
  * <p>Note: This class uses identity semantics for equality.
  */

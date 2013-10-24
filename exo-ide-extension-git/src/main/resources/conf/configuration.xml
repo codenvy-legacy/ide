@@ -28,10 +28,6 @@
     </component>
 
     <component>
-        <type>org.exoplatform.ide.git.server.jgit.OAuthCredentialsProvider</type>
-    </component>
-
-    <component>
         <type>org.exoplatform.ide.git.server.nativegit.CredentialsLoader</type>
     </component>
 
@@ -44,11 +40,6 @@
             </value-param>
         </init-params>
     </component>
-
-    <component>
-        <type>org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory</type>
-    </component>
-
     
     <component>
         <type>org.exoplatform.ide.git.server.nativegit.SshKeysManager</type>

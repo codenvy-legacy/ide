@@ -18,10 +18,7 @@
 package org.exoplatform.ide.git.server.nativegit;
 
 
-import org.exoplatform.ide.git.server.DiffPage;
-import org.exoplatform.ide.git.server.GitConnection;
-import org.exoplatform.ide.git.server.GitException;
-import org.exoplatform.ide.git.server.LogPage;
+import org.exoplatform.ide.git.server.*;
 import org.exoplatform.ide.git.server.nativegit.commands.*;
 import org.exoplatform.ide.git.shared.*;
 
@@ -514,8 +511,7 @@ public class NativeGitConnection implements GitConnection {
                 } catch (GitException inner) {
                     //if not authorized again make runtime exception
                     if (inner.getMessage().toLowerCase().startsWith("fatal: authentication failed")) {
-                        //TODO replace with GitException
-                        throw new RuntimeException("not authorized");
+                        throw new NotAuthorizedGitException("not authorized");
                     } else {
                         throw inner;
                     }

@@ -54,9 +54,6 @@
     </component>
 
     <component>
-        <type>org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory</type>
-    </component>
-    <component>
         <key>org.exoplatform.ide.extension.ssh.server.SshKeyStore</key>
         <type>org.exoplatform.ide.extension.ssh.server.DummySshKeyStore</type>
     </component>
