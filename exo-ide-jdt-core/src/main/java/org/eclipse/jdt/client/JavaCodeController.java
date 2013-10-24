@@ -311,7 +311,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             if (event.getFile().getProject().getProject() != null)
                 return; //TODO: checking is multi module project
 
-            if (resolver.isProjectSupported(event.getFile().getProject().getProjectType())) {
+            if (SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(event.getFile().getProject()) &&
+                resolver.isProjectSupported(event.getFile().getProject().getProjectType())) {
                 needReparse.add(event.getFile().getId());
                 startJob(event.getFile());
             }
@@ -418,8 +419,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         for (String id : editors.keySet()) {
             needReparse.add(id);
         }
-        startJob(activeFile);
         if (SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(activeFile.getProject())) {
+            startJob(activeFile);
             startParsing();
         } else {
             checklInitializingWork();
