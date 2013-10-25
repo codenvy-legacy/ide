@@ -502,7 +502,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     /** {@inheritDoc} */
     @Override
     public void showListProjects() {
-        eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
+        if (activeProject != null) {
+            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
+        }
         activeProject = null;
 
         final Folder rootFolder = vfsInfo.getRoot();

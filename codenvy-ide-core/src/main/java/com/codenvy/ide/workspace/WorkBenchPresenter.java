@@ -17,22 +17,19 @@
  */
 package com.codenvy.ide.workspace;
 
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.parts.ConsolePart;
-import com.codenvy.ide.api.parts.OutlinePart;
-import com.codenvy.ide.api.parts.ProjectExplorerPart;
-import com.codenvy.ide.api.parts.SearchPart;
-import com.codenvy.ide.api.parts.WelcomePart;
-import com.codenvy.ide.api.ui.workspace.EditorPartStack;
-import com.codenvy.ide.api.ui.workspace.PartPresenter;
-import com.codenvy.ide.api.ui.workspace.PartStack;
-import com.codenvy.ide.api.ui.workspace.PartStackType;
-import com.codenvy.ide.api.ui.workspace.PartStackView;
+import com.codenvy.ide.api.parts.*;
+import com.codenvy.ide.api.ui.workspace.*;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 
 /**
@@ -49,6 +46,7 @@ public class WorkBenchPresenter implements Presenter {
 
     protected final JsonStringMap<PartStack> partStacks = JsonCollections.createStringMap();
     private WorkBenchViewImpl view;
+    protected final JsonArray<PartPresenter> editParts = JsonCollections.createArray();
 
     /**
      * Instantiates the Perspective
@@ -58,11 +56,38 @@ public class WorkBenchPresenter implements Presenter {
      * @param stackPresenterFactory
      */
     @Inject
-    public WorkBenchPresenter(WorkBenchViewImpl view, EditorPartStack editorPartStackPresenter,
-                              PartStackPresenterFactory stackPresenterFactory, PartStackViewFactory partViewFactory,
-                              OutlinePart outlinePart, ConsolePart consolePart,
-                              ProjectExplorerPart projectExplorerPart, WelcomePart welcomePart, SearchPart searchPart) {
+    public WorkBenchPresenter(WorkBenchViewImpl view,
+                              EditorPartStack editorPartStackPresenter,
+                              PartStackPresenterFactory stackPresenterFactory,
+                              PartStackViewFactory partViewFactory,
+                              OutlinePart outlinePart,
+                              ConsolePart consolePart,
+                              ProjectExplorerPart projectExplorerPart,
+                              WelcomePart welcomePart,
+                              SearchPart searchPart,
+                              EventBus eventBus) {
         this.view = view;
+
+        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
+            @Override
+            public void onProjectOpened(ProjectActionEvent event) {
+                //do nothing
+            }
+
+            @Override
+            public void onProjectClosed(ProjectActionEvent event) {
+                PartStack partStack = getPartStack(PartStackType.EDITING);
+                for (PartPresenter presenter : editParts.asIterable()) {
+                    partStack.removePart(presenter);
+                }
+                editParts.clear();
+            }
+
+            @Override
+            public void onProjectDescriptionChanged(ProjectActionEvent event) {
+                //do nothing
+            }
+        });
 
         partStacks.put(PartStackType.EDITING.toString(), editorPartStackPresenter);
 
@@ -144,6 +169,9 @@ public class WorkBenchPresenter implements Presenter {
     public void openPart(PartPresenter part, PartStackType type) {
         PartStack destPartStack = partStacks.get(type.toString());
         destPartStack.addPart(part);
+        if (type.equals(PartStackType.EDITING) && part instanceof TextEditorPresenter) {
+            editParts.add(part);
+        }
     }
 
     /** {@inheritDoc} */
