@@ -130,7 +130,7 @@ public class CommandProcess {
             }
         }
         if (builder.toString().toLowerCase().contains("fatal: the remote end hung up unexpectedly")) {
-            builder.append("SSH key doesn't exists or it is not valid");
+            builder.append("SSH key doesn't exist or it is not valid");
         }
         return builder.toString();
     }

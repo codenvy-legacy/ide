@@ -32,6 +32,10 @@
     </component>
 
     <component>
+        <type>org.exoplatform.ide.git.server.nativegit.OAuthCredentialsProvider</type>
+    </component>
+
+    <component>
         <type>org.exoplatform.ide.git.server.github.GitHub</type>
         <init-params>
             <value-param>

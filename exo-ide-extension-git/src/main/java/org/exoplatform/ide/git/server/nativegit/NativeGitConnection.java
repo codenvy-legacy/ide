@@ -21,6 +21,8 @@ package org.exoplatform.ide.git.server.nativegit;
 import org.exoplatform.ide.git.server.*;
 import org.exoplatform.ide.git.server.nativegit.commands.*;
 import org.exoplatform.ide.git.shared.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -34,6 +36,7 @@ import java.util.List;
  */
 public class NativeGitConnection implements GitConnection {
 
+    private final static Logger LOG = LoggerFactory.getLogger(NativeGitConnection.class);
     private final NativeGit         nativeGit;
     private final CredentialsLoader credentialsLoader;
     private       GitUser           user;
@@ -158,10 +161,6 @@ public class NativeGitConnection implements GitConnection {
         } else {
             clone = nativeGit.createCloneCommand();
         }
-        if (!nativeGit.getRepository().exists()) {
-            nativeGit.getRepository().mkdirs();
-        }
-
         clone.setUri(request.getRemoteUri());
         clone.setRemoteName(request.getRemoteName());
         if (clone.getTimeout() > 0) {
@@ -323,6 +322,9 @@ public class NativeGitConnection implements GitConnection {
         pullCommand.setRefSpec(request.getRefSpec())
                    .setTimeout(request.getTimeout());
         executeWithCredentials(pullCommand, url);
+        if (pullCommand.getOutputMessage().toLowerCase().contains("already up-to-date")) {
+            throw new AlreadyUpToDateException();
+        }
     }
 
     /** @see org.exoplatform.ide.git.server.GitConnection#push(org.exoplatform.ide.git.shared.PushRequest) */
@@ -351,6 +353,9 @@ public class NativeGitConnection implements GitConnection {
                    .setRefSpec(request.getRefSpec())
                    .setTimeout(request.getTimeout());
         executeWithCredentials(pushCommand, url);
+        if (pushCommand.getOutputMessage().toLowerCase().contains("everything up-to-date")) {
+            throw new AlreadyUpToDateException("Everything up-to-date");
+        }
     }
 
     /** @see org.exoplatform.ide.git.server.GitConnection#remoteAdd(org.exoplatform.ide.git.shared.RemoteAddRequest) */
@@ -500,6 +505,10 @@ public class NativeGitConnection implements GitConnection {
         //set up empty credentials
         command.setAskPassScriptPath(credentialsLoader.createGitAskPassScript(username, password).toString());
         try {
+            //after failed clone, git will remove directory
+            if (!nativeGit.getRepository().exists()) {
+                nativeGit.getRepository().mkdirs();
+            }
             command.execute();
         } catch (GitException e) {
             //if not authorized
@@ -507,11 +516,15 @@ public class NativeGitConnection implements GitConnection {
                 //try to search available credentials and execute command with it
                 command.setAskPassScriptPath(credentialsLoader.findCredentialsAndCreateGitAskPassScript(url).toString());
                 try {
+                    //after failed clone, git will remove directory
+                    if (!nativeGit.getRepository().exists()) {
+                        nativeGit.getRepository().mkdirs();
+                    }
                     command.execute();
                 } catch (GitException inner) {
                     //if not authorized again make runtime exception
                     if (inner.getMessage().toLowerCase().startsWith("fatal: authentication failed")) {
-                        throw new NotAuthorizedGitException("not authorized");
+                        throw new NotAuthorizedException("not authorized");
                     } else {
                         throw inner;
                     }

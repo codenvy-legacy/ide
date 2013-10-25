@@ -20,21 +20,18 @@ package org.exoplatform.ide.git.server;
 /**
  * @author <a href="mailto:evoevodin@codenvy.com">Eugene Voevodin</a>
  */
-public class NotAuthorizedGitException extends GitException {
-    protected NotAuthorizedGitException() {
-    }
-
+public class NotAuthorizedException extends GitException {
     /**
      * @param message error message
      */
-    public NotAuthorizedGitException(String message) {
+    public NotAuthorizedException(String message) {
         super(message);
     }
 
     /**
      * @param cause cause
      */
-    public NotAuthorizedGitException(Throwable cause) {
+    public NotAuthorizedException(Throwable cause) {
         super(cause);
     }
 
@@ -42,7 +39,7 @@ public class NotAuthorizedGitException extends GitException {
      * @param message error message
      * @param cause cause
      */
-    public NotAuthorizedGitException(String message, Throwable cause) {
+    public NotAuthorizedException(String message, Throwable cause) {
         super(message, cause);
     }
 }
