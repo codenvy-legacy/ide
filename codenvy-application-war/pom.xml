@@ -350,11 +350,6 @@
             <version>${jgit.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit</artifactId>
-            <version>${jgit.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>${jsch.version}</version>
@@ -469,6 +464,7 @@
                     <logLevel>INFO</logLevel>
                     <skipTests>${gwt.test.skip}</skipTests>
                     <extraJvmArgs>${gwt.xmx}</extraJvmArgs>
+                    <gwtSdkFirstInClasspath>true</gwtSdkFirstInClasspath>
                     <extra>${project.build.directory}/extra</extra>
                     <style>${gwt.compiler.additional.options}</style>
                 </configuration>

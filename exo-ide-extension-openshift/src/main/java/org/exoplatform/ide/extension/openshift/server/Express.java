@@ -113,6 +113,7 @@ public class Express {
     }
 
     private final CredentialStore                     credentialStore;
+    private final GitConnectionFactory factory;
     private final SshKeyStore                         sshKeyStore;
     private final OpenShiftConnectionFactory          openShiftConnectionFactory;
     // Provide cache for openshift-express connections.
@@ -121,10 +122,11 @@ public class Express {
     private final Cache<String, IOpenShiftConnection> connections;
     private final Lock                                lock;
 
-    public Express(CredentialStore credentialStore, SshKeyStore sshKeyStore) {
+    public Express(CredentialStore credentialStore, SshKeyStore sshKeyStore, GitConnectionFactory factory) {
         this.credentialStore = credentialStore;
         this.sshKeyStore = sshKeyStore;
         this.openShiftConnectionFactory = new OpenShiftConnectionFactory();
+        this.factory = factory;
         this.connections = new SLRUCache<String, IOpenShiftConnection>(20, 10) {
             @Override
             protected void evict(String key, IOpenShiftConnection value) {
@@ -257,7 +259,7 @@ public class Express {
         if (workDir != null) {
             GitConnection git = null;
             try {
-                git = GitConnectionFactory.getInstance().getConnection(workDir, null);
+                git = factory.getConnection(workDir, null);
                 git.init(new InitRequest());
                 git.remoteAdd(new RemoteAddRequest("express", gitUrl));
             } catch (GitException gite) {
@@ -686,7 +688,7 @@ public class Express {
             GitConnection git = null;
             List<Remote> remotes;
             try {
-                git = GitConnectionFactory.getInstance().getConnection(workDir, null);
+                git = factory.getConnection(workDir, null);
                 remotes = git.remoteList(new RemoteListRequest(null, true));
             } catch (GitException ge) {
                 throw new RuntimeException(ge.getMessage(), ge);

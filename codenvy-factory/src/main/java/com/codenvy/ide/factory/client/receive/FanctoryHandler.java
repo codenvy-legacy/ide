@@ -18,7 +18,7 @@
 package com.codenvy.ide.factory.client.receive;
 
 
-import com.codenvy.factory.SimpleFactoryUrlFormat;
+import com.codenvy.factory.FactoryServlet;
 import com.codenvy.ide.client.util.logging.Log;
 import com.codenvy.ide.factory.client.FactoryExtension;
 import com.codenvy.ide.factory.client.FactorySpec10;
@@ -55,7 +55,9 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.events.MessageHandler;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
@@ -133,7 +135,12 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
             prjType = URL.decodeQueryString(parameterMap.get(FactorySpec10.PROJECT_TYPE).get(0));
         }
 
-        String idCommit = parameterMap.get(FactorySpec10.COMMIT_ID).get(0);
+        String idCommit = null;
+
+        if (parameterMap.get(FactorySpec10.COMMIT_ID) != null
+            && !parameterMap.get(FactorySpec10.COMMIT_ID).isEmpty()) {
+            idCommit = URL.decodeQueryString(parameterMap.get(FactorySpec10.COMMIT_ID).get(0));
+        }
 
 
         String action = parameterMap.get(FactorySpec10.ACTION_PARAMETER).get(0);
@@ -152,7 +159,14 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
             keepVcsInfo = URL.decodeQueryString(parameterMap.get(FactorySpec10.KEEP_VCS_INFO).get(0));
         }
 
-        cloneProject(giturl, prjName, prjType, idCommit, action, keepVcsInfo);
+        String branch = null;
+
+        if (parameterMap.get(FactorySpec10.BRANCH_TO_CHECKOUT) != null
+            && !parameterMap.get(FactorySpec10.BRANCH_TO_CHECKOUT).isEmpty()) {
+            branch = URL.decodeQueryString(parameterMap.get(FactorySpec10.BRANCH_TO_CHECKOUT).get(0));
+        }
+
+        cloneProject(giturl, prjName, prjType, idCommit, action, keepVcsInfo, branch);
     }
 
     /** @param initParam */
@@ -265,7 +279,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
     }
 
     private void cloneProject(final String giturl, final String prjName, final String prjType, final String idCommit, final String action,
-                              final String keepVcsInfo) {
+                              final String keepVcsInfo, final String branch) {
         try {
 
             VirtualFileSystem.getInstance()
@@ -291,15 +305,15 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                                                   if (itemExist) {
                                                       doClone(giturl, "origin",
                                                               prjName + "-" + Random.nextInt(Integer.MAX_VALUE), prjType, idCommit, action,
-                                                              keepVcsInfo);
+                                                              keepVcsInfo, branch);
                                                   } else {
-                                                      doClone(giturl, "origin", prjName, prjType, idCommit, action, keepVcsInfo);
+                                                      doClone(giturl, "origin", prjName, prjType, idCommit, action, keepVcsInfo, branch);
                                                   }
                                               }
 
                                               @Override
                                               protected void onFailure(Throwable exception) {
-                                                  doClone(giturl, "origin", prjName, prjType, idCommit, action, keepVcsInfo);
+                                                  doClone(giturl, "origin", prjName, prjType, idCommit, action, keepVcsInfo, branch);
                                               }
                                           });
         } catch (RequestException e) {
@@ -321,7 +335,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
      *         - name of target folder
      */
     public void doClone(final String remoteUri, final String remoteName, final String workDir, final String prjType,
-                        final String idCommit, final String action, final String keepVcsInfo) {
+                        final String idCommit, final String action, final String keepVcsInfo, final String branch) {
         FolderModel folder = new FolderModel();
         folder.setName(workDir);
         try {
@@ -330,7 +344,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                                                              @Override
                                                              protected void onSuccess(FolderModel result) {
                                                                  cloneRepository(remoteUri, remoteName, prjType, result, idCommit, action,
-                                                                                 keepVcsInfo);
+                                                                                 keepVcsInfo, branch);
                                                              }
 
                                                              @Override
@@ -406,12 +420,28 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
      *         folder (root of GIT repository)
      */
     private void cloneRepository(final String remoteUri, final String remoteName, final String prjType, final FolderModel folder,
-                                 final String idCommit, final String action, final String keepVcsInfo) {
+                                 final String idCommit, final String action, final String keepVcsInfo, final String branch) {
+        final MessageBus eventBus = IDE.messageBus();
+        final MessageHandler eventHandler = new MessageHandler() {
+            @Override
+            public void onMessage(String message) {
+                IDE.fireEvent(new OutputEvent(message, Type.GIT));
+            }
+        };
+
         try {
+            eventBus.subscribe("factory-events", eventHandler);
+
             IDELoader.getInstance().setMessage("Cloning project ... ");
             IDELoader.getInstance().show();
-            String uri = "/factory/clone?vfsid=" + vfs.getId() + "&projectid=" + folder.getId() + "&remoteuri=" + remoteUri + "&idcommit=" +
-                         idCommit + prjType + action + "&keepvcsinfo=" + keepVcsInfo;
+            String uri = "/factory/clone?vfsid=" + vfs.getId() + "&projectid=" + folder.getId() + "&remoteuri=" + remoteUri +
+                         prjType + action + "&keepvcsinfo=" + keepVcsInfo;
+            if (idCommit != null) {
+                uri += "&idcommit=" + idCommit;
+            }
+            if (branch != null) {
+                uri += "&gitbranch=" + branch;
+            }
             RequestMessage message = RequestMessageBuilder.build(RequestBuilder.POST, restServiceContext + uri).getRequestMessage();
 
             IDE.messageBus().send(message, new RequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
@@ -421,13 +451,15 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                     Log.info(FanctoryHandler.class, result.toString());
                     JSONObject object = JSONParser.parseLenient(result.toString()).isObject();
                     onCloneSuccess(object, prjType, remoteUri);
+                    eventBus.unsubscribe("factory-events", eventHandler);
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
+                    eventBus.unsubscribe("factory-events", eventHandler);
                     IDELoader.getInstance().hide();
 
-                    if (remoteUri.matches(SimpleFactoryUrlFormat.WSO_2_URL_STRING) && exception.getMessage().contains("not authorized")) {
+                    if (remoteUri.matches(FactoryServlet.WSO_2_URL_STRING) && exception.getMessage().contains("not authorized")) {
                         openOauthPopupWindow(new AsyncCallback<Void>() {
                             @Override
                             public void onFailure(Throwable throwable) {
@@ -436,7 +468,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
 
                             @Override
                             public void onSuccess(Void var) {
-                                cloneRepository(remoteUri, remoteName, prjType, folder, idCommit, action, keepVcsInfo);
+                                cloneRepository(remoteUri, remoteName, prjType, folder, idCommit, action, keepVcsInfo, branch);
                             }
                         });
                     } else {
@@ -445,17 +477,24 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                 }
             });
         } catch (WebSocketException e) {
-            cloneRepositoryREST(remoteUri, remoteName, prjType, folder, idCommit, action, keepVcsInfo);
+            eventBus.unsubscribe("factory-events", eventHandler);
+            cloneRepositoryREST(remoteUri, remoteName, prjType, folder, idCommit, action, keepVcsInfo, branch);
         }
     }
 
     /** Get the necessary parameters values and call the clone repository method (over HTTP). */
     private void cloneRepositoryREST(final String remoteUri, final String remoteName, final String prjType, final FolderModel folder,
-                                     final String idCommit, final String action, final String keepVcsInfo) {
+                                     final String idCommit, final String action, final String keepVcsInfo, final String branch) {
 
         try {
-            String uri = "/factory/clone?vfsid=" + vfs.getId() + "&projectid=" + folder.getId() + "&remoteuri=" + remoteUri + "&idcommit=" +
-                         idCommit + prjType + action + "&keepvcsinfo=" + keepVcsInfo;
+            String uri = "/factory/clone?vfsid=" + vfs.getId() + "&projectid=" + folder.getId() + "&remoteuri=" + remoteUri +
+                         prjType + action + "&keepvcsinfo=" + keepVcsInfo;
+            if (idCommit != null) {
+                uri += "&idcommit=" + idCommit;
+            }
+            if (branch != null) {
+                uri += "&gitbranch=" + branch;
+            }
             AsyncRequest.build(RequestBuilder.POST, uri).send(new AsyncRequestCallback<Object>() {
                 @Override
                 protected void onSuccess(Object result) {
@@ -466,7 +505,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
                 protected void onFailure(Throwable exception) {
                     IDELoader.getInstance().hide();
 
-                    if (remoteUri.matches(SimpleFactoryUrlFormat.WSO_2_URL_STRING) && exception.getMessage().contains("not authorized")) {
+                    if (remoteUri.matches(FactoryServlet.WSO_2_URL_STRING) && exception.getMessage().contains("not authorized")) {
                         openOauthPopupWindow(new AsyncCallback<Void>() {
                             @Override
                             public void onFailure(Throwable throwable) {
@@ -475,7 +514,7 @@ public class FanctoryHandler implements VfsChangedHandler, StartWithInitParamsHa
 
                             @Override
                             public void onSuccess(Void var) {
-                                cloneRepositoryREST(remoteUri, remoteName, prjType, folder, idCommit, action, keepVcsInfo);
+                                cloneRepositoryREST(remoteUri, remoteName, prjType, folder, idCommit, action, keepVcsInfo, branch);
                             }
                         });
                     } else {

@@ -595,7 +595,11 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
             if (event.getItemToSelect() != null) {
                 display.selectItem(event.getItemToSelect());
             }
-
+            
+            if (openedProject.getId().equals(event.getFolder().getId())) {
+                display.asView().setTitle(openedProject.getName());
+            }
+            
             Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                 @Override
                 public void execute() {

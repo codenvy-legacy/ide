@@ -83,16 +83,19 @@ public class Heroku {
         }
     }};
 
+    private final GitConnectionFactory factory;
     private final HerokuAuthenticator authenticator;
     private final CredentialStore     credentialStore;
     private final SshKeyStore         sshKeyStore;
     private final String              demoLogin;
     private final String              demoPass;
 
-    public Heroku(HerokuAuthenticator authenticator, CredentialStore credentialStore, SshKeyStore sshKeyStore, InitParams initParams) {
+    public Heroku(HerokuAuthenticator authenticator, CredentialStore credentialStore, SshKeyStore sshKeyStore,
+                  InitParams initParams, GitConnectionFactory factory) {
         this.authenticator = authenticator;
         this.credentialStore = credentialStore;
         this.sshKeyStore = sshKeyStore;
+        this.factory = factory;
         this.demoLogin = ContainerUtils.readValueParam(initParams, "demoLogin");
         this.demoPass = ContainerUtils.readValueParam(initParams, "demoPass");
     }
@@ -406,7 +409,7 @@ public class Heroku {
             if (workDir != null) {
                 GitConnection git = null;
                 try {
-                    git = GitConnectionFactory.getInstance().getConnection(workDir, null);
+                    git = factory.getConnection(workDir, null);
                     if (!new File(workDir, ".git").exists()) {
                         git.init(new InitRequest());
                     }
@@ -649,7 +652,7 @@ public class Heroku {
             String gitUrl = info.get("gitUrl");
 
             RemoteListRequest listRequest = new RemoteListRequest(null, true);
-            git = GitConnectionFactory.getInstance().getConnection(workDir, null);
+            git = factory.getConnection(workDir, null);
             List<Remote> remoteList = git.remoteList(listRequest);
             for (Remote r : remoteList) {
                 // Update remote.
@@ -1179,13 +1182,13 @@ public class Heroku {
      *
      * @return application name or <code>null</code> if name can't be determined since command invoked outside of git repository
      */
-    private static String detectAppName(File workDir) {
+    private String detectAppName(File workDir) {
         String app = null;
         if (workDir != null && new File(workDir, ".git").exists()) {
             GitConnection git = null;
             List<Remote> remotes;
             try {
-                git = GitConnectionFactory.getInstance().getConnection(workDir, null);
+                git = factory.getConnection(workDir, null);
                 remotes = git.remoteList(new RemoteListRequest(null, true));
             } catch (GitException ge) {
                 throw new RuntimeException(ge.getMessage(), ge);

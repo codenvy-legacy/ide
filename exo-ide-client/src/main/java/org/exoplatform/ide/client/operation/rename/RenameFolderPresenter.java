@@ -58,17 +58,12 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Link;
-import org.exoplatform.ide.vfs.shared.Property;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Presenter for renaming folders and files form.
@@ -194,21 +189,11 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements
     }
 
     private void completeMove(FolderModel folder, String sourceId) {
-        if (openedProject != null)
-        {
-            if (openedProject.getId().equals(folder.getId())) {
-                IDE.fireEvent(new RefreshBrowserEvent(openedProject, openedProject));
-            } else {
-                IDE.fireEvent(new RefreshBrowserEvent(folder.getParent(), folder));
-            }
-        }
-        else
-        {
-//            if (folder instanceof ProjectModel) {
-//                IDE.fireEvent(new OpenProjectEvent((ProjectModel)folder));
-//            } else {
-//                IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)renamedItem).getParent(), renamedItem));
-//            }            
+        if (openedProject != null && openedProject.getId().equals(sourceId)) {
+            openedProject.setId(folder.getId());
+            IDE.fireEvent(new RefreshBrowserEvent(openedProject, openedProject));
+        } else if (folder.getParent() != null) {
+            IDE.fireEvent(new RefreshBrowserEvent(folder.getParent(), folder));
         }
 
         closeView();

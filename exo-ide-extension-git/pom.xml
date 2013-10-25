@@ -15,6 +15,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-core</artifactId>
+            <version>${codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>${jsch.version}</version>
@@ -34,11 +39,6 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-commons</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit</artifactId>
-            <version>${jgit.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -92,7 +92,6 @@
             <artifactId>everrest-core</artifactId>
             <version>${everrest.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -156,13 +155,35 @@
             <artifactId>exo-ide-vfs</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>${jna.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.factory</groupId>
+            <artifactId>codenvy-factory-services</artifactId>
+            <version>${codenvy.factory.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.codenvy.factory</groupId>
             <artifactId>codenvy-factory-services</artifactId>
             <version>${codenvy.factory.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${org.slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${ch.qos.logback.version}</version>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
     <build>
@@ -175,42 +196,5 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <forkMode>never</forkMode>
-                    <excludes>
-                        <exclude>**/*Gwt*</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>gwt-maven-plugin</artifactId>
-                <configuration>
-                    <module>org.exoplatform.ide.git.GitTest</module>
-                    <logLevel>ERROR</logLevel>
-                    <!-- TODO -->
-                    <skipTests>true</skipTests>
-                    <forkMode>never</forkMode>
-                    <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
-                    <productionMode>false</productionMode>
-                    <testTimeOut>500</testTimeOut>
-                    <mode>htmlunit</mode>
-                    <htmlunit>FF3</htmlunit>
-                    <extraJvmArgs>-Xmx1048m -XX:MaxPermSize=256m -Xss35m</extraJvmArgs>
-                    <out>${project.build.directory}/www-test</out>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
 </project>

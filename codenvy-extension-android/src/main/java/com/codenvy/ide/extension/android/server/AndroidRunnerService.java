@@ -17,14 +17,16 @@
  */
 package com.codenvy.ide.extension.android.server;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonNameConventions;
 import com.codenvy.commons.lang.IoUtil;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -35,17 +37,25 @@ import java.net.URL;
 /** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
 @Path("{ws-name}/android")
 public class AndroidRunnerService {
+    private static final Log    LOG                     = ExoLogger.getLogger(AndroidRunnerService.class);
     // TODO : add abstraction to be able run android application in more than one environment.
     private static final byte[] NEW_LINE                = "\r\n".getBytes();
     private static final byte[] HYPHENS                 = "--".getBytes();
     private static final byte[] CONTENT_DISPOSITION_APK = "Content-Disposition: form-data; name=\"app[apk]\"; filename=\"".getBytes();
 //    private static final String OAUTH_TOKEN             = "e6TnJdyN5vs4xsGUmwODeiq6iHO3lOR6ch1Q6PKe";
 
-    @GET
+    @POST
     @Path("run")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public String run(@QueryParam("apk") URL apk, @QueryParam("oauth_token") String oauthToken) throws Exception {
+    public String run(@FormParam("apk") URL apk, @FormParam("oauth_token") String oauthToken, @FormParam("projectname") String projectName,
+                      @FormParam("projecttype") String projectType) throws Exception {
         final ManymoApplication manymo = uploadApplication(apk, oauthToken);
+
+        LOG.info("EVENT#application-created# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
+                 + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + projectName + "# TYPE#" +
+                 projectType + "# PAAS#Manymo#");
+
         return "{\"applicationUrl\":\"" + "https://www.manymo.com/apps/" + manymo.getId() + "/emulators/83/connect?secret=" +
                manymo.getSecret() + "\"}";
     }

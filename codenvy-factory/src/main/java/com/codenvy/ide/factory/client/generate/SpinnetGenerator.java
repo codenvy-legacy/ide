@@ -28,6 +28,16 @@ import org.exoplatform.ide.client.framework.util.Utils;
  * 
  */
 public class SpinnetGenerator {
+    
+    /**
+     * Returns URL to CodeNow button template
+     * 
+     * @return
+     */
+    public static String getFactoryButtonEmbedJSURL() {
+        return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+            .setPath("factory/resources/embed.js").buildString();        
+    }
 
     /**
      * Returns URL to CodeNow button template
@@ -35,16 +45,11 @@ public class SpinnetGenerator {
      * @return
      */
     public static String getCodeNowButtonJavascriptURL() {
-//        //TODO Below block is needed only for development. Remove it when Factory 1.1 is done.
-//        if (Location.getHost().indexOf("gavrik.codenvy-dev.com") >= 0 || Location.getHost().indexOf("127.0.0.1:8080") >= 0) {
-//            return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-//                .setPath("ide/_app/factory/resources/factory.js").buildString();
-//        }
-        
         return new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
             .setPath("factory/resources/factory.js").buildString();        
     }
-
+    
+    
     /**
      * Returns URL of image which will be used as link for CodeNow button for GitHub Pages.
      * 

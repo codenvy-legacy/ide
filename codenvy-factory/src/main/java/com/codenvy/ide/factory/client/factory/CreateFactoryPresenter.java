@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.factory.client.factory;
 
-import com.codenvy.ide.factory.client.FactoryExtension;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonEvent;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonHandler;
 import com.codenvy.ide.factory.client.generate.SendMailEvent;
@@ -39,7 +38,6 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -243,8 +241,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
          * @return value of Affiliate ID field
          */
         String getAffiliateIdFieldValue();
-        
-        boolean keepGitInfoSelected();
                 
         /**
          * Sets new value of Open After Launch field.
@@ -516,8 +512,8 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                 previewCodeButton();
                 //generateWebsitesSnippet();
                 
-                generateGitHubSnippet();
-                generateDirectSharingSnippet();
+//                generateGitHubSnippet();
+//                generateDirectSharingSnippet();
             }
         });
     }
@@ -556,11 +552,32 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             AsyncRequestCallback<Map<String, String>> callback = new AsyncRequestCallback<Map<String, String>>(unmarshaller) {
                 @Override
                 protected void onSuccess(Map<String, String> result) {
-                    String email = IDE.user.getName();
-                    display.setEmailFieldValue(email);
-                    
-                    String author = result.get("firstName") + " " + result.get("lastName");
-                    display.setAuthorFieldValue(author);
+                    try {
+                        if (IDE.user != null && IDE.user.getName() != null) {
+                            String email = IDE.user.getName();
+                            display.setEmailFieldValue(email);                        
+                        }
+                        
+                        String author = "";
+                        if (result != null) {
+                            if (result.get("firstName") != null) {
+                                author += result.get("firstName");                            
+                            }
+                            
+                            if (result.get("lastName") != null) {
+                                if (!author.isEmpty()) {
+                                    author += " ";
+                                }
+                                
+                                author += result.get("lastName");
+                            }
+                        }
+                        
+                        display.setAuthorFieldValue(author);
+                        
+                    } catch (Exception e) {
+                        //Dialogs.getInstance().showError(e.getMessage());
+                    }
                 }
 
                 @Override
@@ -574,17 +591,15 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
 //                        return;
 //                    }
                     
-                    Dialogs.getInstance().showError(FactoryExtension.LOCALIZATION_CONSTANTS.sendMailErrorGettingProfile());
+//                    Dialogs.getInstance().showError(FactoryExtension.LOCALIZATION_CONSTANTS.sendMailErrorGettingProfile());
                 }
             };
 
-            AsyncRequest.build(RequestBuilder.GET, requestUrl)
-                        .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+            AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
-    
     
     /**
      * Binds display.
@@ -624,6 +639,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         display.setButtonStyleChangedHandler(new ButtonStyleChangedHandler() {
             @Override
             public void onButtonStyleChanged() {
+                // TODO check for ability to remove this verification.
                 String uploadFile = display.getUploadImageFieldValue();
                 if (uploadFile != null && !uploadFile.isEmpty()) {
                     display.enableDefaultStyleOptions(true);
@@ -633,7 +649,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                 
                 // show preview
                 previewCodeButton();
-                generateGitHubSnippet();
+                //generateGitHubSnippet();
             }
         });
         
@@ -689,7 +705,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         display.getShareEmailButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.fireEvent(new SendMailEvent(factoryURLEscaped, openedProject.getName()));
+                IDE.fireEvent(new SendMailEvent(factoryURL, openedProject.getName()));
             }
         });
         
@@ -712,6 +728,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
         
         String blankImage = "images/blank.png";
+        String counter = display.showCounterChecked() ? "counter=\"visible\" " : "";
         
         String javascriptPreview = "" +
                 "<script " +
@@ -719,6 +736,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                     "language=\"javascript\" " +
                     "src=\"" + jsURL + "\" " +
                     "style=\"advanced\" " +
+                    counter +
                     "img=\"" + blankImage + "\" " +
                 "></script>";
 
@@ -745,7 +763,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                 "style=\"" + style + "\" " +
                 "counter=\"" + counterType + "\" " +
                "></script>";
-        
+
         display.previewFactoryButton("" +
             "<html>" +
             "<head></head>" +
@@ -783,22 +801,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         previewDefaultButton(style, "none", 111, 51);
     }
 
-    /**
-     * Generates content for embedding on Github.
-     */
-    private void generateGitHubSnippet() {
-        String code = "[![alt](" + 
-            SpinnetGenerator.getCodeNowGitHubImageURL(!display.whiteStyleSelected()) + ")](" + factoryURL + ")";
-        display.gitHubSnippet().setValue(code);
-    }
-    
-    /**
-     * Generates content for direct sharing.
-     */
-    private void generateDirectSharingSnippet() {
-        display.directSharingSnippet().setValue(factoryURL);
-    }
-
     private void createFactory() {
         createdFactoryJSON = null;
         
@@ -819,10 +821,13 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         request.put("projectattributes", projectAttributes);
         projectAttributes.put("pname", new JSONString(openedProject.getName()));
         projectAttributes.put("ptype", new JSONString(openedProject.getProjectType()));        
-        request.put("keepvcsinfo", new JSONString("" + display.keepGitInfoSelected()));
 
         if (isAdvanced) {
-            request.put("style", new JSONString("Advanced"));
+            if (display.showCounterChecked()) {
+                request.put("style", new JSONString("Advanced with Counter"));
+            } else {
+                request.put("style", new JSONString("Advanced"));
+            }
         } else {
             if (display.showCounterChecked()) {
                   if (display.verticalOrientationSelected()) {
@@ -873,28 +878,48 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
     }
 
     private void generateSpinnetsAfterFactoryCreation() {
-        String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
-        
-        String self = null;
-        
-        JSONArray array = createdFactoryJSON.get("links").isArray();
-        for (int i = 0; i < array.size(); i++) {
-            JSONObject link = array.get(i).isObject();
-            String rel = link.get("rel").isString().stringValue();
-            if ("self".equals(rel)) {
-                self = link.get("href").isString().stringValue();
-            }
-        }
-        
+        //String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
+        String jsURL = SpinnetGenerator.getFactoryButtonEmbedJSURL() + "?" + createdFactoryJSON.get("id").isString().stringValue();
+
         String script = "" +
             "<script " +
             "type=\"text/javascript\" " +
             "language=\"javascript\" " +
             "src=\"" + jsURL + "\" " +
-            "factory=\"" + self + "\" " +
             "></script>";
 
-        display.websitesSnippet().setValue(script);          
+        display.websitesSnippet().setValue(script);
+
+        String createProjectURL = null;
+        JSONArray array = createdFactoryJSON.get("links").isArray();
+        for (int i = 0; i < array.size(); i++) {
+            JSONObject link = array.get(i).isObject();
+            String rel = link.get("rel").isString().stringValue();
+            if ("create-project".equals(rel)) {
+                createProjectURL = link.get("href").isString().stringValue();
+            }
+        }
+        
+        if (createProjectURL != null) {
+            updateGitHubSnippet(createProjectURL);
+            updateDirectSharingSnippet(createProjectURL);
+        }
+    }
+    
+    /**
+     * Generates content for embedding on Github.
+     */
+    private void updateGitHubSnippet(String createFactoryURL) {
+        String code = "[![alt](" + 
+            SpinnetGenerator.getCodeNowGitHubImageURL(!display.whiteStyleSelected()) + ")](" + createFactoryURL + ")";
+        display.gitHubSnippet().setValue(code);
+    }
+
+    /**
+     * Generates content for direct sharing.
+     */
+    private void updateDirectSharingSnippet(String createFactoryURL) {
+        display.directSharingSnippet().setValue(createFactoryURL);
     }
     
 }

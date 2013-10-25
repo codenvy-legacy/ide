@@ -20,6 +20,8 @@ package com.codenvy.factory.application;
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.codenvy.api.analytics.AnalyticsService;
 import com.codenvy.api.factory.FactoryService;
 import com.codenvy.api.factory.FactoryServiceExceptionMapper;
 
@@ -34,6 +36,7 @@ public class CodenvyApiApplication extends Application {
         classes = new HashSet<>();
         classes.add(FactoryService.class);
         classes.add(FactoryServiceExceptionMapper.class);
+        classes.add(AnalyticsService.class);
         objects = new HashSet<>(0);
     }
 

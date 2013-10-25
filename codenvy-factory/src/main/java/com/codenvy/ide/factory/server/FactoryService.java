@@ -22,10 +22,13 @@ import com.codenvy.ide.commons.shared.ProjectType;
 
 import org.apache.commons.io.IOUtils;
 import org.codenvy.mail.MailSenderClient;
-import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.everrest.websockets.WSConnectionContext;
+import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
+import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.GitUser;
@@ -53,6 +56,7 @@ import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -68,6 +72,7 @@ public class FactoryService {
     private static final Log LOG = ExoLogger.getLogger(FactoryService.class);
 
     private final MailSenderClient          mailSenderClient;
+    private final GitConnectionFactory      factory;
     private       VirtualFileSystemRegistry vfsRegistry;
     private       LocalPathResolver         localPathResolver;
 
@@ -84,10 +89,11 @@ public class FactoryService {
      *         client for sending messages over e-mail
      */
     public FactoryService(MailSenderClient mailSenderClient, VirtualFileSystemRegistry vfsRegistry,
-                          LocalPathResolver localPathResolver) {
+                          LocalPathResolver localPathResolver, GitConnectionFactory factory) {
         this.mailSenderClient = mailSenderClient;
         this.vfsRegistry = vfsRegistry;
         this.localPathResolver = localPathResolver;
+        this.factory = factory;
     }
 
     /**
@@ -101,13 +107,14 @@ public class FactoryService {
      */
     @POST
     @Path("share")
-    public Response share(@QueryParam("recipient") String recipient, //
-                          @QueryParam("message") String message) {
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response share(@FormParam("recipient") String recipient, //
+                          @FormParam("message") String message) {
         final String sender = "Codenvy <noreply@codenvy.com>";
         final String subject = "Check out my Codenvy project";
-        final String mimeType = "text/html; charset=utf-8";
+        final String mimeType = "text/plain; charset=utf-8";
         try {
-            mailSenderClient.sendMail(sender, recipient, null, subject, mimeType, message);
+            mailSenderClient.sendMail(sender, recipient, null, subject, mimeType, URLDecoder.decode(message, "UTF-8"));
             return Response.ok().build();
         } catch (MessagingException | IOException e) {
             throw new WebApplicationException(e);
@@ -123,30 +130,98 @@ public class FactoryService {
                              @QueryParam("idcommit") String idCommit,
                              @QueryParam("ptype") String projectType,
                              @QueryParam("action") String action,
-                             @QueryParam("keepvcsinfo") boolean keepVcsInfo)
+                             @QueryParam("keepvcsinfo") boolean keepVcsInfo,
+                             @QueryParam("gitbranch") String gitBranch)
             throws VirtualFileSystemException, GitException,
                    URISyntaxException, IOException {
+        GitConnection gitConnection = getGitConnection(projectId, vfsId);
+
         try {
-            GitConnection gitConnection = getGitConnection(projectId, vfsId);
-            CloneRequest cloneRequest = new CloneRequest(remoteUri, null);
-            gitConnection.clone(cloneRequest);
-            BranchCheckoutRequest checkoutRequest = new BranchCheckoutRequest();
-            checkoutRequest.setName("temp");
-            checkoutRequest.setCreateNew(true);
-            checkoutRequest.setStartPoint(idCommit);
-            gitConnection.branchCheckout(checkoutRequest);
-        if (!keepVcsInfo)
-            deleteRepository(vfsId, projectId);
-        } catch (JGitInternalException e) {
-            //clean failed clone repository
-            deleteRepository(vfsId, projectId);
-            throw new GitException(e);
+            gitConnection.clone(new CloneRequest(remoteUri, null));
+
+            if (idCommit != null && !idCommit.trim().isEmpty()) {
+                //Try to checkout to new branch "temp" with HEAD of setted commit ID
+                gitConnection.branchCheckout(new BranchCheckoutRequest("temp", idCommit, true));
+            } else if (gitBranch != null && !gitBranch.trim().isEmpty()) {
+                //Try to checkout to specified branch. For first we need to list all cloned local branches to
+                //find if specified branch already exist, if its true, we check if this this branch is active
+                List<Branch> branches = gitConnection.branchList(new BranchListRequest(null));
+                for (Branch branch : branches) {
+                    if (branch.getDisplayName().equals(gitBranch)) {
+                        gitConnection
+                                .branchCheckout(new BranchCheckoutRequest(gitBranch, "origin/" + gitBranch, false));
+                        break;
+                    }
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            //Case: branch doesn't exist, or user try to pass into param idcommit something unlike hash of
+            //commit then JGit will thrown GitAPIException which will be transformed into IllegalArgumentException in
+            //org.exoplatform.ide.git.server.jgit.JGitConnection.branchCheckout()
+            if (e.getMessage().matches("Ref .* can not be resolved")) {
+                //And there is two cases, when user pass into commit ID parameter some strings unlike hash and when user
+                //pass into vcsbranch parameter non existed branch.
+                if (idCommit != null && !idCommit.trim().isEmpty()) {
+                    publishWebsocketMessage(
+                            "Commit <b>" + idCommit + "</b> doesn't exist. Switching to default branch.");
+                } else if (gitBranch != null && !gitBranch.trim().isEmpty()) {
+                    publishWebsocketMessage(
+                            "Branch <b>" + gitBranch + "</b> doesn't exist. Switching to default branch.");
+                }
+            } else {
+                //In other case we simple rethrown exception to client. It maybe "fatal: A branch named 'branchName'
+                // already exists."
+                //from org.exoplatform.ide.git.server.jgit.JGitConnection.branchCheckout()
+                deleteRepository(vfsId, projectId);
+                throw new IllegalArgumentException(e);
+            }
+        } catch (RuntimeException e) {
+            //Case: commit ID doesn't exist, if it happens JGit throw exception with message "Missing unknown #hash"
+            //We try to publish via websocket message to user that this commit doesn't exist and continue parsing
+            //our source directory into project with default cloned branch
+            if (e.getMessage().contains("Missing unknown")) {
+                publishWebsocketMessage("Commit <b>" + idCommit + "</b> doesn't exist. Switching to default branch.");
+            } else {
+                //In other case we simple rethrown exception to client. It maybe "not authorized" exception from
+                //OAuthCredentialsProvider
+                deleteRepository(vfsId, projectId);
+                throw new GitException(e);
+            }
+        } finally {
+            //Finally if we found parameter vcsinfo we check that we should delete git repository after cloning.
+            if (!keepVcsInfo) {
+                try {
+                    deleteRepository(vfsId, projectId);
+                } catch (VirtualFileSystemException e) {
+                    //ignore, folder already deleted
+                }
+            }
         }
 
         return convertToProject(vfsId, projectId, remoteUri, projectType, action, keepVcsInfo);
     }
 
-    private Item convertToProject(String vfsId, String projectId, String remoteUri, String projectType, String action, boolean keepVcsInfo)
+    /**
+     * Send message to socket to allow client make output to console.
+     *
+     * @param content
+     *         message content
+     */
+    private void publishWebsocketMessage(String content) {
+        ChannelBroadcastMessage message = new ChannelBroadcastMessage();
+        message.setChannel("factory-events");
+        message.setType(ChannelBroadcastMessage.Type.NONE);
+        message.setBody(content);
+
+        try {
+            WSConnectionContext.sendMessage(message);
+        } catch (Exception ex) {
+            LOG.error("Failed to send message over WebSocket.", ex);
+        }
+    }
+
+    private Item convertToProject(String vfsId, String projectId, String remoteUri, String projectType, String action,
+                                  boolean keepVcsInfo)
             throws VirtualFileSystemException, IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         Item itemToUpdate = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
@@ -167,7 +242,8 @@ public class FactoryService {
             itemToUpdate = vfs.updateItem(itemToUpdate.getId(), props, null);
             if (ProjectType.GOOGLE_MBS_ANDROID.toString().equals(projectType)) {
                 File constJava = (File)vfs
-                        .getItemByPath(itemToUpdate.getPath() + "/src/com/google/cloud/backend/android/Consts.java", null, false,
+                        .getItemByPath(itemToUpdate.getPath() + "/src/com/google/cloud/backend/android/Consts.java",
+                                       null, false,
                                        PropertyFilter.NONE_FILTER);
                 String content = IOUtils.toString(vfs.getContent(constJava.getId()).getStream());
 
@@ -184,9 +260,11 @@ public class FactoryService {
                     }
                 }
 
-                String newContent = PATTERN.matcher(content).replaceFirst("public static final String PROJECT_ID = \"" + prjID + "\";");
+                String newContent = PATTERN.matcher(content)
+                                           .replaceFirst("public static final String PROJECT_ID = \"" + prjID + "\";");
                 newContent =
-                        PATTERN_NUMBER.matcher(newContent).replaceFirst("public static final String PROJECT_NUMBER = \"" + prjNum + "\";");
+                        PATTERN_NUMBER.matcher(newContent)
+                                      .replaceFirst("public static final String PROJECT_NUMBER = \"" + prjNum + "\";");
                 vfs.updateContent(constJava.getId(), MediaType.valueOf(constJava.getMimeType()),
                                   new ByteArrayInputStream(newContent.getBytes()), null);
             }
@@ -209,7 +287,7 @@ public class FactoryService {
         if (user != null) {
             gituser = new GitUser(user.getIdentity().getUserId());
         }
-        return GitConnectionFactory.getInstance().getConnection(resolveLocalPath(projectId, vfsId), gituser);
+        return factory.getConnection(resolveLocalPath(projectId, vfsId), gituser);
     }
 
     protected String resolveLocalPath(String projectId, String vfsId) throws VirtualFileSystemException {

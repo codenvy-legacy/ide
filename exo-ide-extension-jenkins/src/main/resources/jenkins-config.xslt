@@ -12,25 +12,6 @@
         </xs:copy>
     </xs:template>
 
-    <xs:template match="org.spearce.jgit.transport.RemoteConfig">
-        <xs:copy>
-            <xs:for-each select="*">
-                <xs:choose>
-                    <xs:when test=".='${git-repository}'">
-                        <xs:copy>
-                            <xs:value-of select="$git-repository"/>
-                        </xs:copy>
-                    </xs:when>
-                    <xs:otherwise>
-                        <xs:copy>
-                            <xs:apply-templates/>
-                        </xs:copy>
-                    </xs:otherwise>
-                </xs:choose>
-            </xs:for-each>
-        </xs:copy>
-    </xs:template>
-
     <xs:template match="mavenName">
         <xs:copy>
             <xs:value-of select="$mavenName"/>

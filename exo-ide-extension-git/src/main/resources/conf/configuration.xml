@@ -28,7 +28,7 @@
     </component>
 
     <component>
-        <type>org.exoplatform.ide.git.server.jgit.OAuthCredentialsProvider</type>
+        <type>org.exoplatform.ide.git.server.nativegit.CredentialsLoader</type>
     </component>
 
     <component>
@@ -42,15 +42,20 @@
     </component>
     
     <component>
-      <type>org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory</type>
-    </component>
-    
-     <component>
-        <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
+        <type>org.exoplatform.ide.git.server.nativegit.SshKeysManager</type>
     </component>
     
     <component>
-       <type>org.exoplatform.ide.git.server.GitIgnoreConfigChecker</type>
+        <key>org.exoplatform.ide.git.server.GitConnectionFactory</key>
+        <type>org.exoplatform.ide.git.server.nativegit.NativeGitConnectionFactory</type>
     </component>
-    
+
+    <component>
+        <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.git.server.GitIgnoreConfigChecker</type>
+    </component>
+
 </configuration>

@@ -22,6 +22,8 @@ import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -39,11 +41,14 @@ public class AndroidExtensionServiceImpl extends AndroidExtensionService {
     }
 
     @Override
-    public void start(String apkUrl, String oauthToken, ProjectModel project, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+    public void start(String apkUrl, String oauthToken, ProjectModel project, AsyncRequestCallback<StringBuilder> callback)
+            throws RequestException {
         String requestUrl = restContext + RUN_APPLICATION;
 
-        AsyncRequest.build(RequestBuilder.GET, requestUrl + "?apk=" + apkUrl +"&oauth_token=" +oauthToken, true)
+        String params = new StringBuilder().append("apk=").append(apkUrl).append("&oauth_token=").append(oauthToken).append("&projectname=")
+                                           .append(project.getName()).append("&projecttype=").append(project.getProjectType()).toString();
+        AsyncRequest.build(RequestBuilder.POST, requestUrl, true)
                     .requestStatusHandler(new StartApplicationStatusHandler(project.getName()))
-                    .send(callback);
+                    .data(params).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_FORM_URLENCODED).send(callback);
     }
 }

@@ -101,7 +101,7 @@ public class CreateFactoryView extends ViewImpl
     IFrameElement                 previewFrame1, previewFrame2;
 
     @UiField
-    InputElement                  checkShowCounter, radioVertical, radioHorizontal, radioDark, radioWhite, openAfterLaunchField, checkKeepGitInfo;
+    InputElement                  checkShowCounter, radioVertical, radioHorizontal, radioDark, radioWhite, openAfterLaunchField;
 
     @UiField    LabelElement        uploadFilePanel;
     
@@ -183,7 +183,6 @@ public class CreateFactoryView extends ViewImpl
         addChangeListener(radioDark);
         addChangeListener(radioWhite);
         
-//        addFileSelectedListener(uploadFileField);
         handleFileUploadEvents();
         
         snippetWebsites.addClickHandler(new ClickHandler() {
@@ -236,14 +235,14 @@ public class CreateFactoryView extends ViewImpl
             createFactoryForm.reset();
             
             uploadFilePanel.removeClassName(style.fileUploadSelected());
-            uploadFileField.removeAttribute("disabled");
+            //uploadFileField.removeAttribute("disabled");
             
             selectedFileNameSpan.setInnerText("Upload image (JPG, GIF or PNG)");
             
             resetUploadButton.getStyle().setDisplay(Display.NONE);        
         } else {
             uploadFilePanel.addClassName(style.fileUploadSelected());
-            uploadFileField.setAttribute("disabled", "disabled");
+            //uploadFileField.setAttribute("disabled", "disabled");
             
             String name = value;
             if (name.indexOf("/") >= 0) {
@@ -251,7 +250,7 @@ public class CreateFactoryView extends ViewImpl
             } else {
                 name = name.substring(name.lastIndexOf("\\") + 1);
             }
-            if (name.length() > 22) {
+            if (name.length() > 28) {
                 name = name.substring(0, 22) + "...";
             }
             
@@ -707,13 +706,11 @@ public class CreateFactoryView extends ViewImpl
     @Override
     public void enableDefaultStyleOptions(boolean enabled) {
         if (enabled) {
-            checkShowCounter.setAttribute("disabled", "disabled");
             radioVertical.setAttribute("disabled", "disabled");
             radioHorizontal.setAttribute("disabled", "disabled");
             radioWhite.setAttribute("disabled", "disabled");
             radioDark.setAttribute("disabled", "disabled");
         } else {
-            checkShowCounter.removeAttribute("disabled");
             radioVertical.removeAttribute("disabled");
             radioHorizontal.removeAttribute("disabled");
             radioWhite.removeAttribute("disabled");
@@ -833,14 +830,6 @@ public class CreateFactoryView extends ViewImpl
     @Override
     public String getAffiliateIdFieldValue() {
         return affiliateIdField.getValue();
-    }
-    
-    /**
-     * @see com.codenvy.ide.factory.client.factory.CreateFactoryPresenter.Display#keepGitInfoSelected()
-     */
-    @Override
-    public boolean keepGitInfoSelected() {
-        return checkKeepGitInfo.isChecked();
     }
 
 }

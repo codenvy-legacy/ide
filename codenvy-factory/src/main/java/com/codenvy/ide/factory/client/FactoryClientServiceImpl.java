@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.util.Utils;
+import static com.google.gwt.http.client.URL.encodeQueryString;
 
 /**
  * Implementation of {@link FactoryClientService}.
@@ -66,8 +67,8 @@ public class FactoryClientServiceImpl extends FactoryClientService {
                                                                                                      throws RequestException {
         final String requesrUrl = restServiceContext + SHARE;
 
-        String params = "recipient=" + recipient + "&message=" + message;
-        AsyncRequest.build(RequestBuilder.POST, requesrUrl + "?" + params)
-                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+        String params = "recipient=" + recipient + "&message=" + encodeQueryString(message);
+        AsyncRequest.build(RequestBuilder.POST, requesrUrl)
+                    .data(params).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_FORM_URLENCODED).send(callback);
     }
 }
