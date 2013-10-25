@@ -36,55 +36,16 @@ import org.slf4j.LoggerFactory;
  *  Factory Servlet Context Listener class.
  */
 public class CodenvyApiServletContextListener implements ServletContextListener {
-
     private static final Logger LOG = LoggerFactory.getLogger(CodenvyApiServletContextListener.class);
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext sctx = sce.getServletContext();
-        sctx.setAttribute(FactoryStore.class.getName(), getFactoryStore());
         sctx.setAttribute(AdvancedFactoryUrlValidator.class.getName(), new AdvancedFactoryUrlFormat());
     }
-
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         ServletContext sctx = sce.getServletContext();
-        sctx.removeAttribute(FactoryStore.class.getName());
         sctx.removeAttribute(AdvancedFactoryUrlValidator.class.getName());
-    }
-
-
-    private FactoryStore getFactoryStore() {
-
-        // For IDE Tomcat which has no properties
-        if (System.getProperty("cloud.admin.configuration.dir") == null)
-            return new InMemoryFactoryStore();
-
-        File dbSettings =
-                new File(new File(System.getProperty("cloud.admin.configuration.dir")), "factory-storage.properties");
-        if (!dbSettings.exists() || dbSettings.isDirectory()) {
-            return new InMemoryFactoryStore();
-        } else {
-            Configuration configuration;
-            try {
-                configuration = new PropertiesConfiguration(dbSettings);
-                String host = configuration.getString("host");
-                int port = configuration.getInt("port");
-                String dbName = configuration.getString("database");
-                String collectionName = configuration.getString("collection");
-                String username = configuration.getString("username");
-                String password = configuration.getString("password");
-                if (host != null && !host.isEmpty() && port != 0 && dbName != null && !dbName.isEmpty() &&
-                    collectionName != null && !collectionName.isEmpty())
-                    return new MongoDBFactoryStore(host, port, dbName, collectionName, username, password);
-                else {
-                    LOG.warn("Error while parsing MongoDB configuration file. Default settings will be used.");
-                    return new MongoDBFactoryStore();
-                }
-            } catch (ConfigurationException e) {
-                LOG.warn("Error while reading MongoDB configuration file. Default settings will be used.");
-                return new MongoDBFactoryStore();
-            }
-        }
     }
 }

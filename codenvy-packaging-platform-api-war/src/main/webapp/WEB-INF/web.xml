@@ -34,9 +34,11 @@
     <listener>
         <listener-class>org.everrest.core.servlet.EverrestInitializedListener</listener-class>
     </listener>
-
     <listener>
         <listener-class>com.codenvy.factory.CodenvyApiServletContextListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>com.codenvy.factory.FactoryServletContextListener</listener-class>
     </listener>
     <listener>
         <listener-class>com.codenvy.api.analytics.impl.MetricHandlerBootstrap</listener-class>
