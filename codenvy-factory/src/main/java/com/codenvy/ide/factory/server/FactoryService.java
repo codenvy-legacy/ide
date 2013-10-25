@@ -88,8 +88,6 @@ public class FactoryService {
     private VirtualFileSystemRegistry vfsRegistry;
     @Inject
     private LocalPathResolver         localPathResolver;
-    @Inject
-    private OAuthTokenProvider        oauthTokenProvider;
 
     private static final Pattern PATTERN        = Pattern.compile("public static final String PROJECT_ID = .*");
     private static final Pattern PATTERN_NUMBER = Pattern.compile("public static final String PROJECT_NUMBER = .*");
@@ -138,7 +136,7 @@ public class FactoryService {
     @Path("clone")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed("developer")
+    //@RolesAllowed("developer") TODO anonymouse user aren't able to use clone with this
     public Item cloneProject(SimpleFactoryUrl factoryUrl,
                              @QueryParam("vfsid") String vfsId,
                              @QueryParam("projectid") String projectId) throws VirtualFileSystemException, GitException,
