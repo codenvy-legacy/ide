@@ -57,9 +57,10 @@ public class DisableSyntaxErrorHighlightingControl extends SimpleControl impleme
 
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
+        boolean enabled = SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(event.getProject());
         isJavaProject = JdtExtension.get().isProjectSupported(event.getProject().getProjectType());
         setVisible(isJavaProject);
-        setState(isJavaProject);
+        setState(!enabled);
     }
 
     @Override
