@@ -33,8 +33,18 @@ public interface ConsolePartView extends View<ConsolePartView.ActionDelegate> {
      * Print message in console area.
      *
      * @param message
+     *         message that need to be shown
      */
-    public void print(String message);
+    void print(String message);
 
-    public void setTitle(String title);
+    /**
+     * Set title of console part.
+     *
+     * @param title
+     *         title that need to be set
+     */
+    void setTitle(String title);
+
+    /** Clear console. Remove all messages. */
+    void clear();
 }
