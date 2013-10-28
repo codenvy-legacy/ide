@@ -107,9 +107,11 @@ public class ExtensionsController {
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
                 isLaunchingInProgress = false;
-                stop();
+                if (currentProject != null) {
+                    stop();
+                    console.clear();
+                }
                 launchedApp = null;
-                console.clear();
             }
 
             @Override

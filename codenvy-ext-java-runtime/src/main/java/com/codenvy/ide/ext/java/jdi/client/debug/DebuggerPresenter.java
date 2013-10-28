@@ -21,6 +21,8 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
@@ -206,13 +208,23 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * @param notificationManager
      */
     @Inject
-    protected DebuggerPresenter(DebuggerView view, JavaRuntimeResources resources, DebuggerClientService service, EventBus eventBus,
-                                ConsolePart console, MessageBus messageBus, JavaRuntimeLocalizationConstant constant,
-                                ResourceProvider resourceProvider, WorkspaceAgent workspaceAgent,
-                                ApplicationRunnerClientService applicationRunnerClientService, @Named("restContext") String restContext,
-                                BreakpointGutterManager gutterManager, FqnResolverFactory resolverFactory, EditorAgent editorAgent,
+    protected DebuggerPresenter(DebuggerView view,
+                                JavaRuntimeResources resources,
+                                DebuggerClientService service,
+                                EventBus eventBus,
+                                ConsolePart console,
+                                MessageBus messageBus,
+                                JavaRuntimeLocalizationConstant constant,
+                                ResourceProvider resourceProvider,
+                                WorkspaceAgent workspaceAgent,
+                                ApplicationRunnerClientService applicationRunnerClientService,
+                                @Named("restContext") String restContext,
+                                BreakpointGutterManager gutterManager,
+                                FqnResolverFactory resolverFactory,
+                                EditorAgent editorAgent,
                                 ReLaunchDebuggerPresenter reLaunchDebuggerPresenter,
-                                EvaluateExpressionPresenter evaluateExpressionPresenter, ChangeValuePresenter changeValuePresenter,
+                                EvaluateExpressionPresenter evaluateExpressionPresenter,
+                                ChangeValuePresenter changeValuePresenter,
                                 NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
@@ -329,6 +341,23 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 }
             }
         };
+
+        this.eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
+            @Override
+            public void onProjectOpened(ProjectActionEvent event) {
+                // do nothing
+            }
+
+            @Override
+            public void onProjectClosed(ProjectActionEvent event) {
+                doDisconnectDebugger();
+            }
+
+            @Override
+            public void onProjectDescriptionChanged(ProjectActionEvent event) {
+                // do nothing
+            }
+        });
     }
 
     /**
@@ -626,6 +655,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         String msg = constant.applicationStoped(appName);
         Notification notification = new Notification(msg, INFO);
         notificationManager.showNotification(notification);
+        console.clear();
         runningApp = null;
     }
 

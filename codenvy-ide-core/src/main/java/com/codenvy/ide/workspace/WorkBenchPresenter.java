@@ -17,19 +17,14 @@
  */
 package com.codenvy.ide.workspace;
 
-import com.codenvy.ide.api.event.ProjectActionEvent;
-import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.parts.*;
 import com.codenvy.ide.api.ui.workspace.*;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 
 /**
@@ -46,7 +41,6 @@ public class WorkBenchPresenter implements Presenter {
 
     protected final JsonStringMap<PartStack> partStacks = JsonCollections.createStringMap();
     private WorkBenchViewImpl view;
-    protected final JsonArray<PartPresenter> editParts = JsonCollections.createArray();
 
     /**
      * Instantiates the Perspective
@@ -64,30 +58,8 @@ public class WorkBenchPresenter implements Presenter {
                               ConsolePart consolePart,
                               ProjectExplorerPart projectExplorerPart,
                               WelcomePart welcomePart,
-                              SearchPart searchPart,
-                              EventBus eventBus) {
+                              SearchPart searchPart) {
         this.view = view;
-
-        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
-            @Override
-            public void onProjectOpened(ProjectActionEvent event) {
-                //do nothing
-            }
-
-            @Override
-            public void onProjectClosed(ProjectActionEvent event) {
-                PartStack partStack = getPartStack(PartStackType.EDITING);
-                for (PartPresenter presenter : editParts.asIterable()) {
-                    partStack.removePart(presenter);
-                }
-                editParts.clear();
-            }
-
-            @Override
-            public void onProjectDescriptionChanged(ProjectActionEvent event) {
-                //do nothing
-            }
-        });
 
         partStacks.put(PartStackType.EDITING.toString(), editorPartStackPresenter);
 
@@ -169,9 +141,6 @@ public class WorkBenchPresenter implements Presenter {
     public void openPart(PartPresenter part, PartStackType type) {
         PartStack destPartStack = partStacks.get(type.toString());
         destPartStack.addPart(part);
-        if (type.equals(PartStackType.EDITING) && part instanceof TextEditorPresenter) {
-            editParts.add(part);
-        }
     }
 
     /** {@inheritDoc} */
@@ -194,5 +163,4 @@ public class WorkBenchPresenter implements Presenter {
     protected PartStack getPartStack(PartStackType type) {
         return partStacks.get(type.toString());
     }
-
 }
