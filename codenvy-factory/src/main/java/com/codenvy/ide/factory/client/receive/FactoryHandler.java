@@ -41,8 +41,6 @@ import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent;
-import org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -76,9 +74,7 @@ import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,17 +84,13 @@ import java.util.Map;
  * properties or simply copy project from temporary workspace into permanent.
  */
 public class FactoryHandler
-        implements VfsChangedHandler, StartWithInitParamsHandler, ProjectOpenedHandler, IDELoadCompleteHandler,
-                   AdvancedFactorySpec, CopySpec10 {
+        implements VfsChangedHandler, StartWithInitParamsHandler, ProjectOpenedHandler, AdvancedFactorySpec, CopySpec10 {
 
     /** Instance of virtual file system. */
     private VirtualFileSystemInfo vfs;
 
     /** Instance of {@link SimpleFactoryUrl} factory url. */
     private SimpleFactoryUrl factoryUrl;
-
-    /** Name of copied project which need to be opened. */
-    private String copiedProjectIdToOpen;
 
     /** Construct factory handler. */
     public FactoryHandler() {
@@ -197,42 +189,21 @@ public class FactoryHandler
     /**
      * Handle user factory url, which contains two parameter: download link and projects ids
      * to start copying projects from temporary workspace into permanent.
-     * <p/>
-     * //TODO need to find better method to parse PROJECT_ID parameter, cause value of this param is
-     * //TODO ...&projectid="idPfProject:projectName;idOfProject2:projectName"&...
      *
      * @param parameterMap
      *         map, which contains all query parameters given by user
      */
     private void handleCopyProjects(Map<String, List<String>> parameterMap) {
         final String downloadUrl = getParamValue(DOWNLOAD_URL, parameterMap);
-        final String projectId = getParamValue(PROJECT_ID, parameterMap);
-
-        IDE.addHandler(IDELoadCompleteEvent.TYPE, this);
-
-        //Lets the magic begin. need to rework.
-        List<String> projectsToCopy = Collections.emptyList();
-        for (String project : projectId.split(";")) {
-            String[] dividedIdAndName = project.split(":");
-            if (dividedIdAndName.length > 1) {
-                projectsToCopy.add(dividedIdAndName[0]);
-            }
-        }
-        if (projectsToCopy.size() == 1) {
-            copiedProjectIdToOpen = projectsToCopy.get(0);
-        }
-        projectsToCopy.clear();
+        final List<String> projects = parameterMap.get(PROJECT_ID);
 
         try {
-            FactoryClientService.getInstance().copyProject(downloadUrl, projectId, new RequestCallback<Void>() {
+            FactoryClientService.getInstance().copyProjects(downloadUrl, projects, new RequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
-                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                        @Override
-                        public void execute() {
-                            IDE.fireEvent(new IDELoadCompleteEvent());
-                        }
-                    });
+                    if (projects.size() == 1) {
+                        openCopiedProject(projects.get(0).split(":")[0]);
+                    }
                 }
 
                 @Override
@@ -245,42 +216,31 @@ public class FactoryHandler
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onIDELoadComplete(IDELoadCompleteEvent event) {
+    private void openCopiedProject(final String projectId) {
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {
-                if (copiedProjectIdToOpen != null && !copiedProjectIdToOpen.isEmpty()) {
-                    try {
-                        VirtualFileSystem.getInstance()
-                                         .getItemById(copiedProjectIdToOpen,
-                                                      new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {
-                                                          @Override
-                                                          protected void onSuccess(ItemWrapper result) {
-                                                              if (result.getItem() instanceof ProjectModel) {
-                                                                  IDE.fireEvent(new OpenProjectEvent((ProjectModel)result.getItem()));
-                                                              }
-                                                              copiedProjectIdToOpen = null;
-                                                              removeIDELoadCompleteHandler();
+                try {
+                    VirtualFileSystem.getInstance()
+                                     .getItemById(projectId,
+                                                  new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {
+                                                      @Override
+                                                      protected void onSuccess(ItemWrapper result) {
+                                                          if (result.getItem() instanceof ProjectModel) {
+                                                              IDE.fireEvent(new OpenProjectEvent((ProjectModel)result.getItem()));
                                                           }
+                                                      }
 
-                                                          @Override
-                                                          protected void onFailure(Throwable exception) {
-                                                              removeIDELoadCompleteHandler();
-                                                          }
-                                                      });
-                    } catch (RequestException e) {
-                        removeIDELoadCompleteHandler();
-                    }
+                                                      @Override
+                                                      protected void onFailure(Throwable e) {
+                                                          handleError(e);
+                                                      }
+                                                  });
+                } catch (RequestException e) {
+                    handleError(e);
                 }
             }
         });
-    }
-
-    /** Remove {@link IDELoadCompleteEvent} from event handler. */
-    private void removeIDELoadCompleteHandler() {
-        IDE.removeHandler(IDELoadCompleteEvent.TYPE, this);
     }
 
     /**

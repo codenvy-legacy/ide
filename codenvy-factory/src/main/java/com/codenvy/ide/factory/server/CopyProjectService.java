@@ -38,11 +38,9 @@ import javax.ws.rs.QueryParam;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -74,7 +72,7 @@ public class CopyProjectService {
      */
     @POST
     @Path("projects")
-    public void copyProjects(@QueryParam("downloadurl") String baseDownloadUrl, @QueryParam("projectid") String projectIds)
+    public void copyProjects(@QueryParam("downloadurl") String baseDownloadUrl, List<String> projects)
             throws VirtualFileSystemException,
                    IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID)
@@ -83,8 +81,7 @@ public class CopyProjectService {
         String tmpWorkspace = baseDownloadUrl.substring(baseDownloadUrl.indexOf("tmp")).substring(0, baseDownloadUrl
                 .substring(baseDownloadUrl.indexOf("tmp")).indexOf("/"));
 
-        final String[] projectIdArray = projectIds.split(";");
-        for (String projectInfo : projectIdArray) {
+        for (String projectInfo : projects) {
             String[] projectIdAndName = projectInfo.split(":");
             final String projectId = projectIdAndName[0];
             final String projectName = getNextItemName(vfs, projectIdAndName[1]);

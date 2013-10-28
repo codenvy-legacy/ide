@@ -21,6 +21,8 @@ import com.codenvy.api.factory.AdvancedFactoryUrl;
 import com.codenvy.api.factory.SimpleFactoryUrl;
 import com.codenvy.ide.factory.shared.CopySpec10;
 import com.codenvy.ide.factory.client.marshaller.SimpleFactoryUrlMarshaller;
+import com.codenvy.ide.json.client.Jso;
+import com.codenvy.ide.json.client.JsoArray;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 
@@ -37,6 +39,8 @@ import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 
+import java.util.List;
+
 import static com.google.gwt.http.client.URL.encodeQueryString;
 
 /** Implementation of {@link FactoryClientService}. */
@@ -47,7 +51,7 @@ public class FactoryClientServiceImpl extends FactoryClientService implements Co
 
     private static final String SHARE       = BASE_URL + "/share";
     private static final String CLONE       = BASE_URL + "/clone";
-    private static final String COPY        = BASE_URL + "/copy/projects";
+    private static final String COPY        = Utils.getWorkspaceName() + "/copy/projects";
     private static final String GET_FACTORY = "/api/factory";
 
     /** REST-service context. */
@@ -133,11 +137,15 @@ public class FactoryClientServiceImpl extends FactoryClientService implements Co
 
     /** {@inheritDoc} */
     @Override
-    public void copyProject(String downloadUrl, String projectId, RequestCallback<Void> callback) throws WebSocketException {
-        final String uri = restServiceContext + COPY;
-        final String params = DOWNLOAD_URL + "=" + downloadUrl + "&" + PROJECT_ID + "=" + projectId;
+    public void copyProjects(String downloadUrl, List<String> projects, RequestCallback<Void> callback) throws WebSocketException {
+        final String uri = COPY;
+        final String params = DOWNLOAD_URL + "=" + downloadUrl;
+
+        JsoArray<String> jso = JsoArray.from(projects);
 
         RequestMessage message = RequestMessageBuilder.build(RequestBuilder.POST, uri + "?" + params)
+                                                      .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                                                      .data(Jso.serialize(jso))
                                                       .getRequestMessage();
 
         eventBus.send(message, callback);
