@@ -19,6 +19,7 @@ package com.codenvy.ide.factory.client.copy;
 
 import com.codenvy.ide.client.util.logging.Log;
 import com.codenvy.ide.factory.client.FactoryExtension;
+import com.codenvy.ide.factory.shared.CopySpec10;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Window;

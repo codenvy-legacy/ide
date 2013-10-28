@@ -18,8 +18,9 @@
 package org.exoplatform.ide.client.application;
 
 import com.codenvy.ide.client.util.logging.Log;
-import com.codenvy.ide.factory.client.FactorySpec10;
-import com.codenvy.ide.factory.client.copy.CopySpec10;
+import com.codenvy.ide.factory.shared.AdvancedFactorySpec;
+import com.codenvy.ide.factory.shared.FactorySpec10;
+import com.codenvy.ide.factory.shared.CopySpec10;
 import com.codenvy.ide.factory.client.receive.StartWithInitParamsEvent;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -28,7 +29,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -254,8 +254,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
         } else {
             Map<String, List<String>> parameterMap = buildListParamMap(Utils.getStartUpParams());
-            if (parameterMap != null && parameterMap.get(FactorySpec10.VERSION_PARAMETER) != null
-                && parameterMap.get(FactorySpec10.VERSION_PARAMETER).get(0).equals(FactorySpec10.CURRENT_VERSION)) {
+            if (parameterMap != null && (parameterMap.get(FactorySpec10.FACTORY_VERSION) != null || parameterMap.get(AdvancedFactorySpec.ID) != null)) {
                 IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
             } else if (parameterMap != null && parameterMap.get(CopySpec10.DOWNLOAD_URL) != null
                        && parameterMap.get(CopySpec10.PROJECT_ID) != null) {

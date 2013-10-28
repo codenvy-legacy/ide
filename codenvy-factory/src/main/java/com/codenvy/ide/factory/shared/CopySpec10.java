@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.factory.client.copy;
+package com.codenvy.ide.factory.shared;
 
 /**
  * Copy Project from temp workspace spec.

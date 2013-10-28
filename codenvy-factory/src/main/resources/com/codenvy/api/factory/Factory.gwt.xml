@@ -3,8 +3,8 @@
     CODENVY CONFIDENTIAL
     __________________
 
-    [2012] - [2013] Codenvy, S.A.
-    All Rights Reserved.
+     [2012] - [2013] Codenvy, S.A.
+     All Rights Reserved.
 
     NOTICE:  All information contained herein is, and remains
     the property of Codenvy S.A. and its suppliers,
@@ -17,16 +17,6 @@
     from Codenvy S.A..
 
 -->
-
 <module>
-    <inherits name="com.google.gwt.user.User"/>
-    <inherits name='com.google.gwt.user.Debug'/>
-    <inherits name='com.google.gwt.xml.XML'/>
-    <inherits name='com.google.gwt.json.JSON'/>
-    <inherits name='org.exoplatform.gwtframework.commons.Commons'/>
-    <inherits name='com.codenvy.api.factory.Factory'/>
-    <inherits name='com.codenvy.ide.factory.Views'/>
-
-    <source path="client"/>
-    <entry-point class='com.codenvy.ide.factory.client.FactoryExtension'/>
+    <source path=""/>
 </module>
