@@ -25,6 +25,8 @@ import org.exoplatform.ide.git.server.github.GitHub;
 import org.exoplatform.ide.git.server.github.GitHubException;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubRepository;
+import org.exoplatform.ide.git.shared.GitHubRepositoryList;
+import org.exoplatform.ide.git.shared.GitHubUser;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -63,19 +65,50 @@ public class GitHubService {
     @Path("list/user")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public GitHubRepository[] listRepositoriesByUser(
-                                                     @QueryParam("username") String userName) throws IOException,
-                                                                                             GitHubException,
-                                                                                             ParsingResponseException {
+    public GitHubRepositoryList listRepositoriesByUser(
+                                                       @QueryParam("username") String userName) throws IOException,
+                                                                                               GitHubException,
+                                                                                               ParsingResponseException {
         return github.listUserPublicRepositories(userName);
+    }
+    
+    @Path("list/org")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public GitHubRepositoryList listRepositoriesByOrganization(
+                                                               @QueryParam("organization") String organization) throws IOException,
+                                                                                                               GitHubException,
+                                                                                                               ParsingResponseException {
+        return github.listAllOrganizationRepositories(organization);
+    }
+    
+    @Path("list/account")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public GitHubRepositoryList listRepositoriesByAccount(
+                                                          @QueryParam("account") String account) throws IOException,
+                                                                                                GitHubException,
+                                                                                                ParsingResponseException {
+        try {
+            //First, try to retrieve organization repositories:
+            return github.listAllOrganizationRepositories(account);
+        } catch (GitHubException ghe) {
+            //If account is not organization, then try by user name:
+            if (ghe.getResponseStatus() == 404) {
+                return github.listUserPublicRepositories(account);
+            } else {
+                throw ghe;
+            }
+        }
     }
 
     @Path("list")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public GitHubRepository[] listRepositories() throws IOException, GitHubException, ParsingResponseException {
+    public GitHubRepositoryList listRepositories() throws IOException, GitHubException, ParsingResponseException {
         return github.listCurrentUserRepositories();
     }
+    
 
     @Path("list/available")
     @GET
@@ -83,6 +116,29 @@ public class GitHubService {
     public Map<String, List<GitHubRepository>> availableRepositories() throws IOException, GitHubException, ParsingResponseException
     {
         return github.availableRepositoriesList();
+    }
+    
+    @Path("page")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public GitHubRepositoryList getPage(@QueryParam("url") String url) throws IOException, GitHubException, ParsingResponseException {
+        return github.getPage(url);
+    }
+    
+    @Path("orgs")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<String> listOrganizations() throws IOException, GitHubException, ParsingResponseException
+    {
+        return github.listOrganizations();
+    }
+    
+    @Path("user")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public GitHubUser getUserInfo() throws IOException, GitHubException, ParsingResponseException
+    {
+        return github.getGithubUser();
     }
 
     @GET

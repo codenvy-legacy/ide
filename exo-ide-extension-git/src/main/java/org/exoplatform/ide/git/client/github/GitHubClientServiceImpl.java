@@ -32,6 +32,8 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.Credentials;
 import org.exoplatform.ide.git.shared.GitHubRepository;
+import org.exoplatform.ide.git.shared.GitHubRepositoryList;
+import org.exoplatform.ide.git.shared.GitHubUser;
 
 import java.util.List;
 import java.util.Map;
@@ -49,13 +51,23 @@ public class GitHubClientServiceImpl extends GitHubClientService {
 
     private static final String LOGIN         = BASE_URL + "/login";
 
+    private static final String LIST_ACOUNT     = BASE_URL + "/list/account";
+    
+    private static final String LIST_ORG     = BASE_URL + "/list/org";
+    
     private static final String LIST_USER     = BASE_URL + "/list/user";
 
     private static final String LIST_ALL      = BASE_URL + "/list/available";
 
     private static final String COLLABORATORS = BASE_URL + "/collaborators";
+    
+    private static final String ORGANIZATIONS = BASE_URL + "/orgs";
+
+    private static final String PAGE          = BASE_URL + "/page";
 
     private static final String TOKEN         = BASE_URL + "/token";
+    
+    private static final String USER         = BASE_URL + "/user";
 
     /** REST service context. */
     private String              restServiceContext;
@@ -76,7 +88,7 @@ public class GitHubClientServiceImpl extends GitHubClientService {
      *      .AsyncRequestCallback)
      */
     @Override
-    public void getRepositoriesList(AsyncRequestCallback<List<GitHubRepository>> callback) throws RequestException {
+    public void getRepositoriesList(AsyncRequestCallback<GitHubRepositoryList> callback) throws RequestException {
         String url = restServiceContext + LIST;
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
@@ -87,7 +99,7 @@ public class GitHubClientServiceImpl extends GitHubClientService {
      *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
      */
     @Override
-    public void getRepositoriesByUser(String userName, AsyncRequestCallback<List<GitHubRepository>> callback)
+    public void getRepositoriesByUser(String userName, AsyncRequestCallback<GitHubRepositoryList> callback)
                                                                                                              throws RequestException {
         String params = (userName != null) ? "?username=" + userName : "";
         String url = restServiceContext + LIST_USER;
@@ -140,5 +152,50 @@ public class GitHubClientServiceImpl extends GitHubClientService {
     public void getUserToken(String user, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
         String url = restServiceContext + TOKEN + "/" + user;
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+    }
+
+    @Override
+    public void getOrganizations(AsyncRequestCallback<List<String>> callback) throws RequestException {
+        String url = restServiceContext + ORGANIZATIONS;
+        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+    }
+
+    /**
+     * @see org.exoplatform.ide.git.client.github.GitHubClientService#getUserInfo(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    @Override
+    public void getUserInfo(AsyncRequestCallback<GitHubUser> callback) throws RequestException {
+        String url = restServiceContext + USER;
+        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+    }
+
+    /**
+     * @see org.exoplatform.ide.git.client.github.GitHubClientService#getRepositoriesByOrganization(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    @Override
+    public void getRepositoriesByOrganization(String organization, AsyncRequestCallback<GitHubRepositoryList> callback) throws RequestException {
+        String params = (organization != null) ? "?organization=" + organization : "";
+        String url = restServiceContext + LIST_ORG;
+        AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
+    }
+
+    /**
+     * @see org.exoplatform.ide.git.client.github.GitHubClientService#getRepositoriesByAccount(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    @Override
+    public void getRepositoriesByAccount(String account, AsyncRequestCallback<GitHubRepositoryList> callback) throws RequestException {
+        String params = (account != null) ? "?account=" + account : "";
+        String url = restServiceContext + LIST_ACOUNT;
+        AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
+    }
+
+    /**
+     * @see org.exoplatform.ide.git.client.github.GitHubClientService#getPage(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    @Override
+    public void getPage(String pageLocation, AsyncRequestCallback<GitHubRepositoryList> callback) throws RequestException {
+        String params = (pageLocation != null) ? "?url=" + pageLocation : "";
+        String url = restServiceContext + PAGE;
+        AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
     }
 }

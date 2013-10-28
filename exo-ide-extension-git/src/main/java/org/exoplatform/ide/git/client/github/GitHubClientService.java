@@ -22,6 +22,8 @@ import com.google.gwt.http.client.RequestException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubRepository;
+import org.exoplatform.ide.git.shared.GitHubRepositoryList;
+import org.exoplatform.ide.git.shared.GitHubUser;
 
 import java.util.List;
 import java.util.Map;
@@ -48,7 +50,7 @@ public abstract class GitHubClientService {
      * 
      * @param callback the callback client has to implement
      */
-    public abstract void getRepositoriesList(AsyncRequestCallback<List<GitHubRepository>> callback)
+    public abstract void getRepositoriesList(AsyncRequestCallback<GitHubRepositoryList> callback)
                                                                                                    throws RequestException;
 
     /**
@@ -57,9 +59,36 @@ public abstract class GitHubClientService {
      * @param userName Name of GitHub User
      * @param callback the callback client has to implement
      */
-    public abstract void getRepositoriesByUser(String userName, AsyncRequestCallback<List<GitHubRepository>> callback)
+    public abstract void getRepositoriesByUser(String userName, AsyncRequestCallback<GitHubRepositoryList> callback)
                                                                                                                       throws RequestException;
-
+    
+    /**
+     * Get the page with GitHub repositories.
+     * 
+     * @param pageLocation page location
+     * @param callback
+     * @throws RequestException
+     */
+    public abstract void getPage(String pageLocation, AsyncRequestCallback<GitHubRepositoryList> callback)
+                                                                                                 throws RequestException;
+    
+    /**
+     * Get the list of available repositories by GitHub organization.
+     * 
+     * @param organization Name of GitHub organization
+     * @param callback the callback client has to implement
+     */
+    public abstract void getRepositoriesByOrganization(String organization, AsyncRequestCallback<GitHubRepositoryList> callback)
+                                                                                                                      throws RequestException;
+    /**
+     * Get the list of available public repositories from GitHub account.
+     * 
+     * @param account Name of GitHub Account
+     * @param callback the callback client has to implement
+     */
+    public abstract void getRepositoriesByAccount(String account, AsyncRequestCallback<GitHubRepositoryList> callback)
+                                                                                                                      throws RequestException;
+    
     /**
      * Log in GitHub account.
      * 
@@ -96,4 +125,20 @@ public abstract class GitHubClientService {
      * @param callback the callback client has to implement
      */
     public abstract void getAllRepositories(AsyncRequestCallback<Map<String, List<GitHubRepository>>> callback) throws RequestException;
+    
+    /**
+     * Get the list of the organizations, where authorized user is a member.
+     * 
+     * @param callback
+     * @throws RequestException
+     */
+    public abstract void getOrganizations(AsyncRequestCallback<List<String>> callback) throws RequestException;
+    
+    /**
+     * Get authorized user information.
+     * 
+     * @param callback
+     * @throws RequestException
+     */
+    public abstract void getUserInfo(AsyncRequestCallback<GitHubUser> callback) throws RequestException;
 }

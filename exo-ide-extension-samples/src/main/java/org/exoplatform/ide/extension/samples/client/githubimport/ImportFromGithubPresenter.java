@@ -23,16 +23,24 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -51,7 +59,7 @@ import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
-import org.exoplatform.ide.extension.samples.client.marshal.AllRepositoriesUnmarshaller;
+import org.exoplatform.ide.extension.samples.client.marshal.OrganizationsUnmarshaller;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.GenerateGitHubKeyEvent;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.GitHubKeyGeneratedEvent;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.GitHubKeyGeneratedHandler;
@@ -64,6 +72,8 @@ import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshallerWS;
 import org.exoplatform.ide.git.client.marshaller.StringUnmarshaller;
 import org.exoplatform.ide.git.shared.GitHubRepository;
+import org.exoplatform.ide.git.shared.GitHubRepositoryList;
+import org.exoplatform.ide.git.shared.GitHubUser;
 import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
@@ -84,7 +94,7 @@ import java.util.Map;
  * @version $Id: ImportFromGithubPresenter.java Dec 7, 2011 3:37:11 PM vereshchaka $
  */
 public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewClosedHandler, GitHubKeyGeneratedHandler,
-                                      UserInfoReceivedHandler, VfsChangedHandler {
+                                      UserInfoReceivedHandler, VfsChangedHandler, ScrollEndHandler {
     public interface Display extends IsView {
         /**
          * Returns project's name field.
@@ -113,6 +123,13 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
          * @return {@link ListGridItem} repositories list grid
          */
         ListGridItem<ProjectData> getRepositoriesGrid();
+        
+        /**
+         * Add repositories to the grid.
+         * 
+         * @param values repositories to be added
+         */
+        void addRepositories(List<ProjectData> values);
 
         /**
          * Set the enabled state of the next button.
@@ -126,22 +143,66 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
          * 
          * @return {@link HasValue} user's name field
          */
-        HasValue<String> getAccountNameBox();
+        TextFieldItem getAccountNameBox();
 
         /**
          * Sets up data in user's name field.
          */
         void setAccountNameValues(String[] values);
+        
+        /**
+         * Add account name to the list of proposed.
+         * 
+         * @param value
+         */
+        void addAccountNameValue(String value);
 
         /**
          * Clears repositories grid.
          */
         void refreshRepositoriesGrid();
+        
+        /**
+         * Set handler for scroll eto the end event.
+         * 
+         * @param handler
+         */
+        void setScrollEndHandler(ScrollEndHandler handler);
+        
+        /**
+         * Set the error state of account field.
+         * 
+         * @param isError
+         */
+        void changeAccountFieldState(boolean isError);
+        
+        /**
+         * Set error message to display.
+         * 
+         * @param error
+         */
+        void setErrorMessage(String error);
     }
 
+    /**
+     * Current user information.
+     */
     private UserInfo                            userInfo;
+    
+    /**
+     * Authorized to GitHub user's information.
+     */
+    private GitHubUser                          githubUser;
 
-    private Map<String, List<GitHubRepository>> repositories;
+    /**
+     * All loaded repositories for each account.
+     */
+    private Map<String, GitHubRepositoryList> repositories = new HashMap<String, GitHubRepositoryList>();
+    
+    /**
+     * List of organizations, where authorized user is a member.
+     */
+    private List<String>                      organizations = new ArrayList<String>();
 
     /** Presenter's display. */
     private Display                             display;
@@ -152,6 +213,21 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
     private ProjectData                         data;
 
     private VirtualFileSystemInfo               vfs;
+    
+    /**
+     * Flag for user's typing operation.
+     */
+    private boolean                           isTyping           = false;
+    
+    /**
+     * Timer is used for delay typing.
+     */
+    private Timer                             typingAccountTimer = new Timer() {
+                                                                     @Override
+                                                                     public void run() {
+                                                                         isTyping = false;
+                                                                     }
+                                                                 };
 
     public ImportFromGithubPresenter() {
         IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -168,7 +244,8 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
                 IDE.getInstance().closeView(display.asView().getId());
             }
         });
-
+        
+        
         display.getRepositoriesGrid().addSelectionHandler(new SelectionHandler<ProjectData>() {
 
             @Override
@@ -180,7 +257,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
                 }
             }
         });
-
+        
         display.getFinishButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -201,45 +278,41 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
                 }
             }
         });
+        
 
         display.getAccountNameBox().addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
-                refreshProjectList();
-                display.refreshRepositoriesGrid();
+                display.changeAccountFieldState(false);
+                
+                //Ignore the event, when user is typing:
+                if (isTyping){
+                    return;
+                }
+                
+                if (event.getValue() != null & event.getValue().length() > 0) {
+                    loadRepositories(event.getValue());
+                }
             }
         });
-    }
-
-    /** Get the list of all authorized user's repositories. */
-    private void getUserRepos() {
-        try {
-            GitHubClientService.getInstance()
-                               .getAllRepositories(
-                                       new AsyncRequestCallback<Map<String, List<GitHubRepository>>>(
-                                               new AllRepositoriesUnmarshaller(
-                                                       new HashMap<String, List<GitHubRepository>>())) {
-                                           @Override
-                                           protected void onSuccess(Map<String, List<GitHubRepository>> result) {
-                                               onListLoaded(result);
-                                           }
-
-                                           @Override
-                                           protected void onFailure(Throwable exception) {
-                                               if (exception.getMessage().contains("Bad credentials")) {
-                                                   Dialogs.getInstance()
-                                                          .showError("Bad credentials",
-                                                                     "Looks like a problem with your SSH key.<br>  Delete a GitHub key at" +
-                                                                     " Window > Preferences > SSH Keys," +
-                                                                     "<br>and try importing your GitHub projects again.");
-                                               } else
-                                                   IDE.fireEvent(new ExceptionThrownEvent(exception));
-
-                                           }
-                                       });
-        } catch (RequestException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-        }
+        
+        display.getAccountNameBox().addKeyUpHandler(new KeyUpHandler() {
+            
+            @Override
+            public void onKeyUp(KeyUpEvent event) {
+                if (event.getNativeKeyCode() == 13) {
+                    isTyping = false;
+                    typingAccountTimer.cancel();
+                } else {
+                    isTyping = true;
+                    typingAccountTimer.cancel();
+                    typingAccountTimer.schedule(2000);
+                }
+            }
+        });
+        
+        display.setScrollEndHandler(this);
+        
     }
 
     /** Open view. */
@@ -253,18 +326,162 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
         }
     }
 
-    private void onListLoaded(final Map<String, List<GitHubRepository>> repositories) {
-        this.repositories = repositories;
-        openView();
-        display.setAccountNameValues(repositories.keySet().toArray(new String[0]));
+    /**
+     * Load repositories.
+     * 
+     * @param account
+     */
+    private void loadRepositories(String account) {
         display.setFinishButtonEnabled(false);
-        refreshProjectList();
+        display.getProjectNameField().setValue("");
+        if (repositories.containsKey(account)) {
+            refreshProjectList(account);
+        } else {
+            if (organizations.contains(account)) {
+                loadOrganizationRepositories(account);
+            } else if (githubUser.getLogin().equals(account)) {
+                loadCurrentUserRepositories();
+            } else {
+                loadUnknownAccountRepositories(account);
+            }
+        }
     }
+    
+    /**
+     * Load repositories of the authorized user.
+     */
+    private void loadCurrentUserRepositories() {
+        AutoBean<GitHubRepositoryList> autoBean = GitExtension.AUTO_BEAN_FACTORY.gitHubRepositoryList();
+        AutoBeanUnmarshaller<GitHubRepositoryList> unmarshaller = new AutoBeanUnmarshaller<GitHubRepositoryList>(autoBean);
+        try {
+            GitHubClientService.getInstance().getRepositoriesList(new AsyncRequestCallback<GitHubRepositoryList>(unmarshaller) {
 
-    private void refreshProjectList() {
+                @Override
+                protected void onSuccess(GitHubRepositoryList result) {
+                    repositories.put(githubUser.getLogin(), result);
+                    refreshProjectList(githubUser.getLogin());
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+    
+    /**
+     * Load repositories by organization name.
+     * 
+     * @param organization
+     */
+    private void loadOrganizationRepositories(final String organization) {
+        AutoBean<GitHubRepositoryList> autoBean = GitExtension.AUTO_BEAN_FACTORY.gitHubRepositoryList();
+        AutoBeanUnmarshaller<GitHubRepositoryList> unmarshaller = new AutoBeanUnmarshaller<GitHubRepositoryList>(autoBean);
+        try {
+            GitHubClientService.getInstance().getRepositoriesByOrganization(organization,
+                                                                            new AsyncRequestCallback<GitHubRepositoryList>(unmarshaller) {
+
+                                                                                @Override
+                                                                                protected void onSuccess(GitHubRepositoryList result) {
+                                                                                    repositories.put(organization, result);
+                                                                                    refreshProjectList(organization);
+                                                                                }
+
+                                                                                @Override
+                                                                                protected void onFailure(Throwable exception) {
+                                                                                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                                                }
+                                                                            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+    
+    /**
+     * Load repositories by account : user name, organization or may not be found.
+     * 
+     * @param account
+     */
+    private void loadUnknownAccountRepositories(final String account) {
+        AutoBean<GitHubRepositoryList> autoBean = GitExtension.AUTO_BEAN_FACTORY.gitHubRepositoryList();
+        AutoBeanUnmarshaller<GitHubRepositoryList> unmarshaller = new AutoBeanUnmarshaller<GitHubRepositoryList>(autoBean);
+        try {
+            GitHubClientService.getInstance().getRepositoriesByAccount(account,
+                                                                       new AsyncRequestCallback<GitHubRepositoryList>(unmarshaller) {
+
+                                                                           @Override
+                                                                           protected void onSuccess(GitHubRepositoryList result) {
+                                                                               display.addAccountNameValue(account);
+                                                                               repositories.put(account, result);
+                                                                               refreshProjectList(account);
+                                                                           }
+
+                                                                           @Override
+                                                                           protected void onFailure(Throwable exception) {
+                                                                               if (exception instanceof ServerException
+                                                                                   && ((ServerException)exception).getHTTPStatus() == HTTPStatus.NOT_FOUND) {
+                                                                                   display.changeAccountFieldState(true);
+                                                                                   display.setErrorMessage(SamplesExtension.LOCALIZATION_CONSTANT.importFromGitHubErrorLabel(account));
+                                                                                   display.getRepositoriesGrid().setValue(new ArrayList<ProjectData>(), true);
+                                                                               } else {
+                                                                                   IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                                               }
+                                                                           }
+                                                                       });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+    
+    /**
+     * Get next page of repositories.
+     * 
+     * @param account name of the GitHub account
+     * @param repositoryList
+     */
+    private void getNextPage(final String account, final GitHubRepositoryList repositoryList) {
+        if (repositoryList.getNextPage() != null) {
+            AutoBean<GitHubRepositoryList> autoBean = GitExtension.AUTO_BEAN_FACTORY.gitHubRepositoryList();
+            AutoBeanUnmarshaller<GitHubRepositoryList> unmarshaller = new AutoBeanUnmarshaller<GitHubRepositoryList>(autoBean);
+            try {
+                GitHubClientService.getInstance().getPage(repositoryList.getNextPage(),
+                                                          new AsyncRequestCallback<GitHubRepositoryList>(unmarshaller) {
+
+                                                              @Override
+                                                              protected void onSuccess(GitHubRepositoryList result) {
+                                                                  ArrayList<GitHubRepository> repositoriesToAdd =
+                                                                                                                  new ArrayList<GitHubRepository>(
+                                                                                                                                                  result.getRepositories());
+                                                                  ArrayList<GitHubRepository> temp =
+                                                                                                     new ArrayList<GitHubRepository>(
+                                                                                                                                     repositoryList.getRepositories());
+                                                                  temp.addAll(result.getRepositories());
+                                                                  result.setRepositories(temp);
+                                                                  repositories.put(account, result);
+                                                                  addProjectList(repositoriesToAdd);
+                                                              }
+
+                                                              @Override
+                                                              protected void onFailure(Throwable exception) {
+                                                                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                              }
+                                                          });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        }
+    }
+    
+    /**
+     * @param account
+     */
+    private void refreshProjectList(String account) {
         List<ProjectData> projectDataList = new ArrayList<ProjectData>();
         readonlyUrls.clear();
-        for (GitHubRepository repo : repositories.get(display.getAccountNameBox().getValue())) {
+        for (GitHubRepository repo : repositories.get(account).getRepositories()) {
             projectDataList.add(new ProjectData(repo.getName(), repo.getDescription(), null,
                                                 null, repo.getSshUrl(), repo.getGitUrl()));
             readonlyUrls.put(repo.getSshUrl(), repo.getGitUrl());
@@ -276,6 +493,23 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
             data = projectDataList.get(0);
         }
     }
+    
+    /**
+     * Add more repositories to the list.
+     * 
+     * @param repositories
+     */
+    private void addProjectList(ArrayList<GitHubRepository> repositories) {
+        List<ProjectData> projectDataList = new ArrayList<ProjectData>();
+        for (GitHubRepository repo : repositories) {
+            projectDataList.add(new ProjectData(repo.getName(), repo.getDescription(), null,
+                                                null, repo.getSshUrl(), repo.getGitUrl()));
+            readonlyUrls.put(repo.getSshUrl(), repo.getGitUrl());
+        }
+        display.addRepositories(projectDataList);
+    }
+    
+    
 
     /**
      * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
@@ -285,6 +519,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
             display = null;
+            organizations.clear();
         }
     }
 
@@ -340,9 +575,63 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
     @Override
     public void onGithubKeyGenerated(GitHubKeyGeneratedEvent event) {
         IDE.removeHandler(GitHubKeyGeneratedEvent.TYPE, this);
-        getUserRepos();
+        getUserInfo();
     }
 
+    /**
+     * Get the list of authorized user's organizations.
+     */
+    private void getUserOrganizations() {
+        organizations.clear();
+        try {
+            GitHubClientService.getInstance()
+                               .getOrganizations(new AsyncRequestCallback<List<String>>(
+                                                                                        new OrganizationsUnmarshaller(
+                                                                                                                      new ArrayList<String>())) {
+
+                                                     @Override
+                                                     protected void onSuccess(List<String> result) {
+                                                         organizations.addAll(result);
+                                                         result.add(0, githubUser.getLogin());
+                                                         openView();
+                                                         display.setAccountNameValues(result.toArray(new String[result.size()]));
+                                                     }
+
+                                                     @Override
+                                                     protected void onFailure(Throwable exception) {
+                                                         IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                     }
+                                                 });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+    
+    /**
+     * Get the authorized GitHub user's information.
+     */
+    private void getUserInfo() {
+        try {
+            AutoBean<GitHubUser> autoBean = GitExtension.AUTO_BEAN_FACTORY.gitHubUser();
+            AutoBeanUnmarshaller<GitHubUser> unmarshaller = new AutoBeanUnmarshaller<GitHubUser>(autoBean);
+            GitHubClientService.getInstance().getUserInfo(new AsyncRequestCallback<GitHubUser>(unmarshaller) {
+
+                @Override
+                protected void onSuccess(GitHubUser result) {
+                    githubUser = result;
+                    getUserOrganizations();
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+    
     private void revertProjectImport(FolderModel path) {
         if (path.getLinks().isEmpty()) {
             try {
@@ -495,5 +784,17 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
                               (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage()
                                   : GitExtension.MESSAGES.cloneFailed(repoUrl);
         IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.GIT));
+    }
+
+    /**
+     * @see org.exoplatform.ide.extension.samples.client.githubimport.ScrollEndHandler#onScrollEnd()
+     */
+    @Override
+    public void onScrollEnd() {
+        String account = display.getAccountNameBox().getValue();
+        GitHubRepositoryList repositoryList = repositories.get(account);
+        if (repositoryList.getNextPage() != null && repositoryList.getNextPage().length() > 0) {
+            getNextPage(account, repositoryList);
+        }
     }
 }
