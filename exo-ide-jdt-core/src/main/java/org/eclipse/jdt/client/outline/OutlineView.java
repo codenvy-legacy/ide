@@ -58,8 +58,6 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display {
 
     private CellTree cellTree;
 
-    private boolean isSyntaxErrorHighlightingEnable;
-
     private OutlineTreeViewModel outlineTreeViewModel;
 
     private SingleSelectionModel<Object> selectionModel;
@@ -83,9 +81,7 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display {
         // KeyboardSelectionPolicy.BOUND_TO_SELECTION is set
         // and because of the focus border, when use KeyboardSelectionPolicy.ENABLED.
         cellTree.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
-        if (isSyntaxErrorHighlightingEnable) {
-            outlineTreeViewModel.getDataProvider().getList().add(loadingMessage);
-        }
+        outlineTreeViewModel.getDataProvider().getList().add(loadingMessage);
 
         scrollPanel.add(cellTree);
         add(scrollPanel);
@@ -131,7 +127,7 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display {
     @Override
     public void updateOutline(CompilationUnit cUnit) {
         outlineTreeViewModel.getDataProvider().getList().clear();
-        if (cUnit == null && isSyntaxErrorHighlightingEnable) {
+        if (cUnit == null) {
             outlineTreeViewModel.getDataProvider().getList().add(loadingMessage);
             return;
         }
@@ -164,11 +160,6 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display {
     @Override
     public void focusInTree() {
         cellTree.setFocus(true);
-    }
-
-    @Override
-    public void setSyntaxErrorHighlighting(boolean enable) {
-        isSyntaxErrorHighlightingEnable = enable;
     }
 
     /** @see org.eclipse.jdt.client.outline.OutlinePresenter.Display#getNodes() */

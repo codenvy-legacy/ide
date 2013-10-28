@@ -164,8 +164,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             NAME_ENVIRONMENT = new NameEnvironment(activeFile.getProject().getId());
             if (event.getEditor() instanceof Markable) {
                 editors.put(activeFile.getId(), (Markable)event.getEditor());
-                if (SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(activeFile.getProject()) &&
-                    needReparse.contains(activeFile.getId())) {
+                if (needReparse.contains(activeFile.getId())) {
                     startParsing();
                 }
             }
@@ -205,23 +204,25 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
                 editor.unmarkAllProblems();
                 IDE.fireEvent(new UpdateOutlineEvent(unit, file));
                 IProblem[] tasks = (IProblem[])unit.getProperty("tasks");
-                List<Marker> markers = new ArrayList<Marker>();
-                if (tasks != null) {
-                    for (IProblem p : tasks) {
-                        markers.add(new ProblemImpl(p));
+                if (SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(activeFile.getProject())) {
+                    List<Marker> markers = new ArrayList<Marker>();
+                    if (tasks != null) {
+                        for (IProblem p : tasks) {
+                            markers.add(new ProblemImpl(p));
+                        }
                     }
-                }
-                boolean hasError = false;
-                if (unit.getProblems().length != 0 || editor != null) {
-                    for (IProblem p : unit.getProblems()) {
-                        markers.add(new ProblemImpl(p));
-                        if (p.isError())
-                            hasError = true;
+                    boolean hasError = false;
+                    if (unit.getProblems().length != 0 || editor != null) {
+                        for (IProblem p : unit.getProblems()) {
+                            markers.add(new ProblemImpl(p));
+                            if (p.isError())
+                                hasError = true;
+                        }
                     }
+                    editor.addProblems(markers.toArray(new Marker[markers.size()]));
+                    if (hasError)
+                        checkBuildStatus();
                 }
-                editor.addProblems(markers.toArray(new Marker[markers.size()]));
-                if (hasError)
-                    checkBuildStatus();
             }
 
             /**
@@ -311,8 +312,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             if (event.getFile().getProject().getProject() != null)
                 return; //TODO: checking is multi module project
 
-            if (SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(event.getFile().getProject()) &&
-                resolver.isProjectSupported(event.getFile().getProject().getProjectType())) {
+            if (resolver.isProjectSupported(event.getFile().getProject().getProjectType())) {
                 needReparse.add(event.getFile().getId());
                 startJob(event.getFile());
             }
@@ -357,7 +357,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             return;
         needReparse.remove(event.getFile().getId());
         finishJob(activeFile);
-        if (SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(activeFile.getProject()) && editors.containsKey(activeFile.getId())) {
+        if (editors.containsKey(activeFile.getId())) {
             startParsing();
         }
     }
@@ -419,12 +419,9 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
         for (String id : editors.keySet()) {
             needReparse.add(id);
         }
-        if (SyntaxErrorHighlightingPropertiesUtil.isSyntaxErrorHighlightingEnabled(activeFile.getProject())) {
-            startJob(activeFile);
-            startParsing();
-        } else {
-            checklInitializingWork();
-        }
+        checklInitializingWork();
+        startJob(activeFile);
+        startParsing();
     }
 
     public FileModel getActiveFile() {
@@ -445,9 +442,9 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
                     needReparse.add(id);
                 }
             }
-            checklInitializingWork();
-            startParsing();
         }
+        checklInitializingWork();
+        startParsing();
     }
 
     /** This need delay start parsing then dependency parsing is finish */
