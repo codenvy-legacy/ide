@@ -1,4 +1,4 @@
-filename=`ls codenvy-packaging-standalone-tomcat/target | grep codenvy-packaging-standalone-tomcat`
+filename=`ls codenvy-packaging-standalone-tomcat/target | grep codenvy`
 SSH_KEY_NAME=idex
 SSH_AS_USER_NAME=admin
 AS_IP=172.19.11.20

@@ -31,7 +31,7 @@
     <name>Codenvy SDK :: Assemblies Tomcat</name>
 
     <properties>
-        <tomcat.output.dir>${project.build.directory}/tomcat-ide/codenvy-platform-sdk-${project.version}</tomcat.output.dir>
+        <tomcat.output.dir>${project.build.directory}/tomcat-ide/codenvy-sdk-${project.version}</tomcat.output.dir>
     </properties>
 
     <dependencies>
@@ -663,7 +663,7 @@
                             <descriptors>
                                 <descriptor>${project.basedir}/src/main/assembly/tomcat-archive.xml</descriptor>
                             </descriptors>
-                            <finalName>codenvy-platform-sdk-${project.version}</finalName>
+                            <finalName>codenvy-sdk-${project.version}</finalName>
                         </configuration>
                     </execution>
                 </executions>
