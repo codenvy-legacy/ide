@@ -25,6 +25,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 
+import java.util.List;
+
 /** Client service for use factory. */
 public abstract class FactoryClientService {
 
@@ -114,5 +116,5 @@ public abstract class FactoryClientService {
      *         callback
      * @throws WebSocketException
      */
-    public abstract void copyProject(String downloadUrl, String projectId, RequestCallback<Void> callback) throws WebSocketException;
+    public abstract void copyProjects(String downloadUrl, List<String> projects, RequestCallback<Void> callback) throws WebSocketException;
 }
