@@ -118,7 +118,7 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
             VirtualFileSystem.getInstance()
                              .getItemById(projectId,
                                           new AsyncRequestCallback<ItemWrapper>(
-                                                  new ItemUnmarshaller(new ItemWrapper(new FileModel()))) {
+                                                  new ItemUnmarshaller(new ItemWrapper())) {
                                               @Override
                                               protected void onSuccess(ItemWrapper result) {
                                                   if (!(result.getItem() instanceof ProjectModel)) {
