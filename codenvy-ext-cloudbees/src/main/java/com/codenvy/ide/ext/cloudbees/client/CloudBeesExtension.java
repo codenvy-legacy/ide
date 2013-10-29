@@ -22,14 +22,12 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
-import com.codenvy.ide.ext.cloudbees.client.actions.CreateAccountAction;
-import com.codenvy.ide.ext.cloudbees.client.actions.CreateApplicationAction;
-import com.codenvy.ide.ext.cloudbees.client.actions.ShowApplicationsAction;
-import com.codenvy.ide.ext.cloudbees.client.actions.ShowCloudBeesProjectAction;
-import com.codenvy.ide.ext.cloudbees.client.actions.SwitchAccountAction;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
+import com.codenvy.ide.ext.cloudbees.client.actions.*;
 import com.codenvy.ide.ext.cloudbees.client.wizard.CloudBeesPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -42,10 +40,11 @@ import com.google.inject.Singleton;
 @Singleton
 @Extension(title = "CloudBees Support.", version = "3.0.0")
 public class CloudBeesExtension {
-    private static final String ID = "CloudBees";
+    public static final String ID = "CloudBees";
 
     @Inject
-    public CloudBeesExtension(PaaSAgent paasAgent, CloudBeesResources resources,
+    public CloudBeesExtension(PaaSAgent paasAgent,
+                              CloudBeesResources resources,
                               ActionManager actionManager,
                               ShowCloudBeesProjectAction showCloudBeesProjectAction,
                               ShowApplicationsAction showApplicationsAction,
@@ -56,8 +55,13 @@ public class CloudBeesExtension {
         resources.cloudBeesCSS().ensureInjected();
 
         // TODO change hard code types
-        JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "War");
-        paasAgent.registerPaaS(ID, ID, resources.cloudBees48(), requiredProjectTypes, wizardPage, null);
+        JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
+        natures.put("java", JsonCollections.<String>createArray("Servlet/JSP", "War"));
+
+        JsonArray<Provider<? extends AbstractPaasPage>> wizardPages = JsonCollections.createArray();
+        wizardPages.add(wizardPage);
+
+        paasAgent.register(ID, ID, resources.cloudBees48(), natures, wizardPages, false);
 
         actionManager.registerAction("cloudBeesShowProject", showCloudBeesProjectAction);
         actionManager.registerAction("showCloudBeesApplications", showApplicationsAction);

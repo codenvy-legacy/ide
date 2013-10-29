@@ -17,10 +17,15 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.resources.ProjectTypeAgent;
+import com.codenvy.ide.resources.ProjectTypeData;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -31,35 +36,28 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ProjectTypeAgentImpl implements ProjectTypeAgent {
-    private final JsonArray<ProjectTypeData> projectTypes;
-    private       ProjectTypeData            selectedProjectType;
+    private final JsonStringMap<ProjectTypeData> projectTypes;
 
     /** Create agent. */
     @Inject
     protected ProjectTypeAgentImpl() {
-        this.projectTypes = JsonCollections.createArray();
+        this.projectTypes = JsonCollections.createStringMap();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void registerProjectType(String typeName, String title, ImageResource icon) {
-        ProjectTypeData projectType = new ProjectTypeData(typeName, title, icon);
-        projectTypes.add(projectType);
-    }
+    public void register(@NotNull String typeName,
+                         @NotNull String title,
+                         @Nullable ImageResource icon,
+                         @NotNull String primaryNature,
+                         @NotNull JsonArray<String> secondaryNature) {
+        if (projectTypes.containsKey(typeName)) {
+            Window.alert("Project type with " + typeName + " name already exists");
+            return;
+        }
 
-    /** {@inheritDoc} */
-    @Override
-    public String getSelectedProjectType() {
-        return selectedProjectType != null ? selectedProjectType.getTypeName() : null;
-    }
-
-    /**
-     * Sets selected project type.
-     *
-     * @param projectType
-     */
-    public void setSelectedProjectType(ProjectTypeData projectType) {
-        selectedProjectType = projectType;
+        ProjectTypeData projectType = new ProjectTypeData(typeName, title, icon, primaryNature, secondaryNature);
+        projectTypes.put(typeName, projectType);
     }
 
     /**
@@ -68,6 +66,6 @@ public class ProjectTypeAgentImpl implements ProjectTypeAgent {
      * @return project types
      */
     public JsonArray<ProjectTypeData> getProjectTypes() {
-        return projectTypes;
+        return projectTypes.getValues();
     }
 }

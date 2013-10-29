@@ -118,24 +118,4 @@ public class CreateProjectService {
             e.printStackTrace();
         }
     }
-
-    @Path("project/empty")
-    @POST
-    @Produces(APPLICATION_JSON)
-    public void createEmptyProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, @QueryParam("rootId") String rootId,
-                                 List<Property> properties) throws VirtualFileSystemException {
-        VirtualFileSystem vfs = registry.getProvider(vfsId).newInstance(null, eventListenerList);
-        Folder projectFolder = vfs.createFolder(rootId, name);
-
-        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("conf/Simple_empty.zip");
-        if (templateStream == null) {
-            throw new InvalidArgumentException("Can't find Simple_empty.zip");
-        }
-        try {
-            vfs.importZip(projectFolder.getId(), templateStream, true);
-            updateProperties(name, properties, vfs, projectFolder);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

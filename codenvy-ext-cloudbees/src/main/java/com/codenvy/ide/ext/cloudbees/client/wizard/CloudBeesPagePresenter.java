@@ -17,15 +17,13 @@
  */
 package com.codenvy.ide.ext.cloudbees.client.wizard;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.template.CreateProjectProvider;
-import com.codenvy.ide.api.template.TemplateAgent;
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.*;
 import com.codenvy.ide.ext.cloudbees.client.login.LoggedInHandler;
@@ -51,6 +49,9 @@ import com.google.web.bindery.event.shared.EventBus;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
+import static com.codenvy.ide.ext.cloudbees.client.CloudBeesExtension.ID;
 
 /**
  * Presenter for creating application on CloudBees from New project wizard.
@@ -58,7 +59,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implements CloudBeesPageView.ActionDelegate {
+public class CloudBeesPagePresenter extends AbstractPaasPage implements CloudBeesPageView.ActionDelegate {
     private CloudBeesPageView             view;
     private EventBus                      eventBus;
     private ResourceProvider              resourcesProvider;
@@ -66,9 +67,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
     private CloudBeesLocalizationConstant constant;
     private LoginPresenter                loginPresenter;
     private CloudBeesClientService        service;
-    private TemplateAgent                 templateAgent;
     private BuildApplicationPresenter     buildApplicationPresenter;
-    private CreateProjectProvider         createProjectProvider;
     private NotificationManager           notificationManager;
     private boolean                       isLogined;
     /** Public url to war file of application. */
@@ -78,6 +77,9 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
     private String                        name;
     private Project                       project;
     private Notification                  notification;
+
+
+    private CommitCallback callback;
 
     /**
      * Create presenter.
@@ -89,16 +91,21 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
      * @param constant
      * @param loginPresenter
      * @param service
-     * @param templateAgent
      * @param resources
      * @param buildApplicationPresenter
      */
     @Inject
-    protected CloudBeesPagePresenter(CloudBeesPageView view, EventBus eventBus, ResourceProvider resourcesProvider, ConsolePart console,
-                                     CloudBeesLocalizationConstant constant, LoginPresenter loginPresenter, CloudBeesClientService service,
-                                     TemplateAgent templateAgent, CloudBeesResources resources,
-                                     BuildApplicationPresenter buildApplicationPresenter, NotificationManager notificationManager) {
-        super("Deploy project to CloudBees", resources.cloudBees48());
+    protected CloudBeesPagePresenter(CloudBeesPageView view,
+                                     EventBus eventBus,
+                                     ResourceProvider resourcesProvider,
+                                     ConsolePart console,
+                                     CloudBeesLocalizationConstant constant,
+                                     LoginPresenter loginPresenter,
+                                     CloudBeesClientService service,
+                                     CloudBeesResources resources,
+                                     BuildApplicationPresenter buildApplicationPresenter,
+                                     NotificationManager notificationManager) {
+        super("Deploy project to CloudBees", resources.cloudBees48(), ID);
 
         this.view = view;
         this.view.setDelegate(this);
@@ -108,7 +115,6 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
-        this.templateAgent = templateAgent;
         this.buildApplicationPresenter = buildApplicationPresenter;
         this.notificationManager = notificationManager;
     }
@@ -123,18 +129,6 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
         delegate.updateControls();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public WizardPagePresenter flipToNext() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean canFinish() {
-        return validate();
-    }
-
     /** Checking entered information on view. */
     private boolean validate() {
         if (isLogined) {
@@ -145,14 +139,20 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
 
     /** {@inheritDoc} */
     @Override
-    public boolean hasNext() {
-        return false;
+    public boolean isCompleted() {
+        return validate();
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean isCompleted() {
-        return validate();
+    public void focusComponent() {
+        // do nothing
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void removeOptions() {
+        // do nothing
     }
 
     /** {@inheritDoc} */
@@ -170,8 +170,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        createProjectProvider = templateAgent.getSelectedTemplate().getCreateProjectProvider();
-        projectName = createProjectProvider.getProjectName();
+        projectName = wizardContext.getData(PROJECT_NAME);
 
         isLogined = true;
         getDomains();
@@ -218,21 +217,12 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
 
     /** {@inheritDoc} */
     @Override
-    public void doFinish() {
-        createProjectProvider.create(new AsyncCallback<Project>() {
-            @Override
-            public void onSuccess(Project result) {
-                project = result;
-                if (isLogined) {
-                    getFirstDeployDomains();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                Log.error(CloudBeesPagePresenter.class, caught);
-            }
-        });
+    public void commit(@NotNull CommitCallback callback) {
+        this.callback = callback;
+        if (isLogined) {
+            project = wizardContext.getData(PROJECT);
+            getFirstDeployDomains();
+        }
     }
 
     /** Create application on Cloud Bees by sending request over WebSocket or HTTP. */
@@ -267,6 +257,8 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
                                                         @Override
                                                         public void onFailure(Throwable caught) {
                                                             Log.error(CloudBeesPagePresenter.class, "Can not refresh properties", caught);
+
+                                                            callback.onFailure(caught);
                                                         }
                                                     });
                                                 }
@@ -277,6 +269,8 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
                                                     notification.setStatus(FINISHED);
                                                     notification.setMessage(constant.deployApplicationFailureMessage());
                                                     super.onFailure(exception);
+
+                                                    callback.onFailure(exception);
                                                 }
                                             });
         } catch (WebSocketException e) {
@@ -304,6 +298,8 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
                                                       @Override
                                                       public void onFailure(Throwable caught) {
                                                           Log.error(CloudBeesPagePresenter.class, "Can not refresh properties", caught);
+
+                                                          callback.onFailure(caught);
                                                       }
                                                   });
                                               }
@@ -314,12 +310,16 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
                                                   notification.setStatus(FINISHED);
                                                   notification.setMessage(constant.deployApplicationFailureMessage());
                                                   super.onFailure(exception);
+
+                                                  callback.onFailure(exception);
                                               }
                                           });
         } catch (RequestException e) {
             notification.setType(ERROR);
             notification.setStatus(FINISHED);
             notification.setMessage(constant.deployApplicationFailureMessage());
+
+            callback.onFailure(e);
         }
     }
 
@@ -347,6 +347,8 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
 
         notification.setStatus(FINISHED);
         notification.setMessage(constant.deployApplicationSuccess());
+
+        callback.onSuccess();
     }
 
     /** Gets deploy domains. */

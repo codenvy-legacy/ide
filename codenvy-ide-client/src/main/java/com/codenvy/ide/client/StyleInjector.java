@@ -49,7 +49,6 @@ public class StyleInjector {
         resources.partStackCss().ensureInjected();
         resources.parenMatchHighlighterCss().ensureInjected();
         resources.dialogBox().ensureInjected();
-        resources.wizardCSS().ensureInjected();
         resources.welcomeCSS().ensureInjected();
         resources.notificationCss().ensureInjected();
     }

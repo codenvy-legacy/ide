@@ -127,6 +127,12 @@
             <classifier>sources</classifier>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${ch.qos.logback.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -350,14 +356,16 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
-        <testSourceDirectory>src/test/java</testSourceDirectory>
+        <sourceDirectory>src/main/java</sourceDirectory>
         <testResources>
+            <testResource>
+                <directory>src/test/java</directory>
+            </testResource>
             <testResource>
                 <directory>src/test/resources</directory>
             </testResource>
         </testResources>
-        <sourceDirectory>src/main/java</sourceDirectory>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
         <outputDirectory>target/classes</outputDirectory>
     </build>
-
 </project>

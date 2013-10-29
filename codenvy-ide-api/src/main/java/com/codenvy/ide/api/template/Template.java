@@ -17,63 +17,85 @@
  */
 package com.codenvy.ide.api.template;
 
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.inject.Provider;
 
 /**
- * Aggregate information about registered Template for creating project.
+ * Aggregate information about registered Template for creating a project.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class Template {
-    private ImageResource                           icon;
-    private String                                  title;
-    private CreateProjectProvider                   createProjectProvider;
-    private Provider<? extends WizardPagePresenter> wizardPage;
-    private JsonArray<String>                       projectTypes;
+    private ImageResource     icon;
+    private String            id;
+    private String            title;
+    private String            primaryNature;
+    private JsonArray<String> secondaryNature;
 
     /**
      * Create template.
      *
-     * @param icon
+     * @param id
+     *         template identification
      * @param title
-     * @param createProjectProvider
-     * @param wizardPage
-     * @param projectTypes
+     *         title that will be shown on a new project wizard
+     * @param icon
+     *         image that will be shown on a new project wizard
+     * @param primaryNature
+     *         primary nature that this template supports
+     * @param secondaryNature
+     *         secondary nature which this template supports
      */
-    public Template(ImageResource icon, String title, CreateProjectProvider createProjectProvider,
-                    Provider<? extends WizardPagePresenter> wizardPage, JsonArray<String> projectTypes) {
+    public Template(@NotNull String id,
+                    @NotNull String title,
+                    @Nullable ImageResource icon,
+                    @NotNull String primaryNature,
+                    @NotNull JsonArray<String> secondaryNature) {
+        this.id = id;
         this.icon = icon;
         this.title = title;
-        this.createProjectProvider = createProjectProvider;
-        this.wizardPage = wizardPage;
-        this.projectTypes = projectTypes;
+        this.primaryNature = primaryNature;
+        this.secondaryNature = secondaryNature;
+    }
+
+    /** @return {@link String} template id */
+    @NotNull
+    public String getId() {
+        return id;
     }
 
     /** @return template's icon */
+    @Nullable
     public ImageResource getIcon() {
         return icon;
     }
 
     /** @return template's title */
+    @NotNull
     public String getTitle() {
         return title;
     }
 
-    /** @return create project provider */
-    public CreateProjectProvider getCreateProjectProvider() {
-        return createProjectProvider;
-    }
-
-    /** @return the wizard page */
-    public WizardPagePresenter getWizardPage() {
-        return wizardPage != null ? wizardPage.get() : null;
-    }
-
-    /** @return available project types */
-    public JsonArray<String> getProjectTypes() {
-        return projectTypes;
+    /**
+     * Returns whether the template is available for a chosen primary and secondary natures.
+     *
+     * @param primaryNature
+     *         chosen primary nature
+     * @param secondaryNature
+     *         chosen secondary nature
+     * @return <code>true</code> if a template is available, and <code>false</code> otherwise
+     */
+    public boolean isAvailable(@NotNull String primaryNature, @NotNull JsonArray<String> secondaryNature) {
+        if (this.primaryNature.equals(primaryNature)) {
+            for (String nature : secondaryNature.asIterable()) {
+                if (!this.secondaryNature.contains(nature)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

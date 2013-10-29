@@ -44,7 +44,6 @@ public class CreateProjectClientServiceImpl implements CreateProjectClientServic
     private static final String CREATE_WAR_PROJECT    = BASE_URL + "/project/war";
     private static final String CREATE_JAVA_PROJECT   = BASE_URL + "/project/java";
     private static final String CREATE_SPRING_PROJECT = BASE_URL + "/project/spring";
-    private static final String CREATE_EMPTY_PROJECT  = BASE_URL + "/project/empty";
     private String           restContext;
     private Loader           loader;
     private ResourceProvider resourceProvider;
@@ -104,22 +103,6 @@ public class CreateProjectClientServiceImpl implements CreateProjectClientServic
         String url = requestUrl + param;
 
         loader.setMessage("Creating new project...");
-
-        AsyncRequest.build(POST, url)
-                    .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
-                    .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void createEmptyProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
-            throws RequestException {
-        String requestUrl = restContext + CREATE_EMPTY_PROJECT;
-
-        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootId=" + resourceProvider.getRootId();
-        String url = requestUrl + param;
-
-        loader.setMessage("Creating project...");
 
         AsyncRequest.build(POST, url)
                     .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())

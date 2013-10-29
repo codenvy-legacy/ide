@@ -17,10 +17,11 @@
  */
 package com.codenvy.ide.api.paas;
 
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonStringMap;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.inject.Provider;
 
 
 /**
@@ -30,40 +31,38 @@ import com.google.inject.Provider;
  */
 public class PaaS {
     /** Id of the PaaS. */
-    private String id;
-
+    private String                           id;
     /** Title of the PaaS. */
-    private String title;
-
+    private String                           title;
     /** PaaS image. */
-    private ImageResource image;
-
-    /** List of project types, required by the PaaS (can be deployed). */
-    private JsonArray<String> requiredProjectTypes;
-
-    private Provider<? extends WizardPagePresenter> wizardPage;
+    private ImageResource                    image;
+    private JsonStringMap<JsonArray<String>> natures;
+    private boolean                          provideTemplate;
 
     /**
-     * Create PaaS.
+     * Create the PaaS.
      *
      * @param id
+     *         PaaS identification
      * @param title
+     *         title that will be shown on a new project wizard
      * @param image
-     * @param requiredProjectTypes
-     * @param wizardPage
+     *         image that will be shown on a new project wizard
+     * @param natures
+     *         nature which the PaaS supports
+     * @param provideTemplate
+     *         <code>true</code> if the PaaS doesn't need general templates (it has own template), and <code>false</code> otherwise
      */
-    public PaaS(String id, String title, ImageResource image, JsonArray<String> requiredProjectTypes,
-                Provider<? extends WizardPagePresenter> wizardPage) {
+    public PaaS(@NotNull String id,
+                @NotNull String title,
+                @Nullable ImageResource image,
+                @NotNull JsonStringMap<JsonArray<String>> natures,
+                boolean provideTemplate) {
         this.id = id;
         this.title = title;
         this.image = image;
-        this.requiredProjectTypes = requiredProjectTypes;
-        this.wizardPage = wizardPage;
-    }
-
-    /** @return the wizardPage */
-    public WizardPagePresenter getWizardPage() {
-        return wizardPage != null ? wizardPage.get() : null;
+        this.natures = natures;
+        this.provideTemplate = provideTemplate;
     }
 
     /** @return {@link String} PaaS id */
@@ -81,8 +80,32 @@ public class PaaS {
         return image;
     }
 
-    /** @return the requiredProjectTypes */
-    public JsonArray<String> getRequiredProjectTypes() {
-        return requiredProjectTypes;
+    /** @return <code>true</code> if the PaaS doesn't need general templates (it has own template), and <code>false</code> otherwise */
+    public boolean isProvideTemplate() {
+        return provideTemplate;
+    }
+
+    /**
+     * Returns whether the PaaS is available for chosen primary and secondary natures.
+     *
+     * @param primaryNature
+     *         chosen primary nature
+     * @param secondaryNature
+     *         chosen secondary nature
+     * @return <code>true</code> if the PaaS is available, and <code>false</code> otherwise
+     */
+    public boolean isAvailable(@NotNull String primaryNature, @NotNull JsonArray<String> secondaryNature) {
+        JsonArray<String> secondary = natures.get(primaryNature);
+        if (secondary != null) {
+            for (String nature : secondaryNature.asIterable()) {
+                if (!secondary.contains(nature)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
     }
 }

@@ -18,9 +18,12 @@
 package com.codenvy.ide.part;
 
 import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.ui.workspace.EditorPartStack;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
+import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -44,10 +47,33 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
      * @param eventBus
      */
     @Inject
-    public EditorPartStackPresenter(@Named("editorPartStack") PartStackView view, EventBus eventBus,
+    public EditorPartStackPresenter(@Named("editorPartStack") PartStackView view,
+                                    EventBus eventBus,
                                     PartStackEventHandler partStackEventHandler) {
         super(eventBus, partStackEventHandler, view, null);
         partsClosable = true;
+
+        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
+            @Override
+            public void onProjectOpened(ProjectActionEvent event) {
+                //do nothing
+            }
+
+            @Override
+            public void onProjectClosed(ProjectActionEvent event) {
+                for (int i = parts.size() - 1; i >= 0; i--) {
+                    PartPresenter part = parts.get(i);
+                    if (part instanceof TextEditorPresenter) {
+                        removePart(part);
+                    }
+                }
+            }
+
+            @Override
+            public void onProjectDescriptionChanged(ProjectActionEvent event) {
+                //do nothing
+            }
+        });
     }
 
     /** {@inheritDoc} */
@@ -108,6 +134,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
      * Close Part
      *
      * @param part
+     *         part that need to be closed
      */
     protected void close(PartPresenter part) {
         // may cancel close
@@ -122,6 +149,4 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
             }
         }
     }
-
-
 }
