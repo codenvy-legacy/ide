@@ -17,33 +17,37 @@
  */
 package com.codenvy.ide.api.template;
 
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
+import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
 
 /**
- * Provides a way to register a new template for creating project.
+ * Provides a way to register a new template for creating a project.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public interface TemplateAgent {
     /**
-     * Registers new template for creating project.
+     * Registers a new template for creating a project.
      *
      * @param title
+     *         title that will be shown on a new project wizard page
      * @param icon
-     * @param projectTypes
-     * @param createProjectProvider
-     * @param wizardPage
+     *         icon that will be shown on a new project wizard page
+     * @param primaryNature
+     *         primary nature which supports the template
+     * @param secondaryNatures
+     *         secondary natures which supports the template
+     * @param wizardPages
+     *         pages which need to be added to a new project wizard
      */
-    void registerTemplate(String title, ImageResource icon, JsonArray<String> projectTypes, CreateProjectProvider createProjectProvider,
-                          Provider<? extends WizardPagePresenter> wizardPage);
-
-    /**
-     * Returns selected template for creating project.
-     *
-     * @return template
-     */
-    Template getSelectedTemplate();
+    void register(@NotNull String id,
+                  @NotNull String title,
+                  @Nullable ImageResource icon,
+                  @NotNull String primaryNature,
+                  @NotNull JsonArray<String> secondaryNatures,
+                  @NotNull JsonArray<Provider<? extends AbstractTemplatePage>> wizardPages);
 }

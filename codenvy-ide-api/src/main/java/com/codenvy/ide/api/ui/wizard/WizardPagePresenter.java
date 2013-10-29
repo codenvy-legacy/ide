@@ -26,6 +26,7 @@ import com.google.gwt.resources.client.ImageResource;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
+@Deprecated
 public interface WizardPagePresenter extends Presenter {
     /** Needs for delegate updateControls function into PagePresenter. */
     interface WizardUpdateDelegate {

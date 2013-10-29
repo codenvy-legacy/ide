@@ -22,8 +22,6 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.wizard.WizardPresenter;
-import com.codenvy.ide.wizard.newfolder.NewFolderPagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -53,8 +51,9 @@ public class NewFolderAction extends Action {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        NewFolderPagePresenter page = new NewFolderPagePresenter(resources, resourceProvider, selectionAgent);
-        WizardPresenter wizardDialog = new WizardPresenter(page, "Create folder", resources);
-        wizardDialog.showWizard();
+        // TODO
+//        NewFolderPagePresenter page = new NewFolderPagePresenter(resources, resourceProvider, selectionAgent);
+//        WizardPresenter wizardDialog = new WizardPresenter(page, "Create folder", resources);
+//        wizardDialog.showWizard();
     }
 }

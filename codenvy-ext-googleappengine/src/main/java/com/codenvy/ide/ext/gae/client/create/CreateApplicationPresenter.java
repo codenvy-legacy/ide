@@ -48,6 +48,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
+import static com.codenvy.ide.api.ui.wizard.WizardPage.CommitCallback;
 
 /**
  * Presenter that allow user to create application on Google App Engine.
@@ -70,6 +71,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     private Project               project;
     private String                warUrl;
     private Notification          notification;
+    private CommitCallback        callback;
 
     /** Constructor for Create Application Presenter. */
     @Inject
@@ -88,6 +90,19 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         this.notificationManager = notificationManager;
 
         this.view.setDelegate(this);
+    }
+
+    /**
+     * Shows current dialog window.
+     *
+     * @param project
+     *         opened project in current moment.
+     * @param callback
+     *         commit callback
+     */
+    public void showDialog(Project project, CommitCallback callback) {
+        this.callback = callback;
+        showDialog(project);
     }
 
     /**
@@ -260,6 +275,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                                                                                    result.getWebURL() + "</a>"));
 
                                    eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(project));
+                                   if (callback != null) {
+                                       callback.onSuccess();
+                                   }
                                }
 
                                @Override
@@ -267,12 +285,18 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                                    notification.setStatus(FINISHED);
                                    notification.setMessage(exception.getMessage());
                                    super.onFailure(exception);
+                                   if (callback != null) {
+                                       callback.onFailure(exception);
+                                   }
                                }
                            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             notification.setStatus(FINISHED);
             notification.setMessage(e.getMessage());
+            if (callback != null) {
+                callback.onFailure(e);
+            }
         }
     }
 

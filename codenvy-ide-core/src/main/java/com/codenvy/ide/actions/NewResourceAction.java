@@ -21,7 +21,6 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.wizard.WizardPresenter;
 import com.codenvy.ide.wizard.newresource.NewResourcePagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -51,8 +50,9 @@ public class NewResourceAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        WizardPresenter wizardDialog = new WizardPresenter(firstPage.get(), "Create resource", resources);
-        wizardDialog.showWizard();
+        // TODO
+//        WizardPresenter wizardDialog = new WizardPresenter(firstPage.get(), "Create resource", resources);
+//        wizardDialog.showWizard();
     }
 
     /** {@inheritDoc} */

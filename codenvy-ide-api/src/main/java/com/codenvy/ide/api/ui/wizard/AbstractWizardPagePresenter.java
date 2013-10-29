@@ -24,6 +24,7 @@ import com.google.gwt.resources.client.ImageResource;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
+@Deprecated
 public abstract class AbstractWizardPagePresenter implements WizardPagePresenter {
     protected WizardUpdateDelegate delegate;
 

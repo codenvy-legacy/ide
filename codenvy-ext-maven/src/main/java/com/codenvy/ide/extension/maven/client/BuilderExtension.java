@@ -21,17 +21,22 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.extension.maven.client.actions.BuildAction;
 import com.codenvy.ide.extension.maven.client.actions.BuildAndPublishAction;
-import com.codenvy.ide.extension.maven.client.template.CreateJavaProjectPresenter;
-import com.codenvy.ide.extension.maven.client.template.CreateSpringProjectPresenter;
-import com.codenvy.ide.extension.maven.client.template.CreateWarProjectPresenter;
+import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
+import com.codenvy.ide.extension.maven.client.template.CreateJavaProjectPage;
+import com.codenvy.ide.extension.maven.client.template.CreateSpringProjectPage;
+import com.codenvy.ide.extension.maven.client.template.CreateWarProjectPage;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.api.ui.action.IdeActions.*;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
+import static com.codenvy.ide.ext.java.client.JavaExtension.JAVA_APPLICATION_PROJECT_TYPE;
 import static com.codenvy.ide.ext.java.client.JavaExtension.JAVA_WEB_APPLICATION_PROJECT_TYPE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.json.JsonCollections.createArray;
@@ -49,13 +54,30 @@ public class BuilderExtension {
     /** Channel for the messages containing status of the Maven build job. */
     public static final String BUILD_STATUS_CHANNEL            = "maven:buildStatus:";
     public static final String SPRING_APPLICATION_PROJECT_TYPE = "Spring";
+    public static final String WAR_PROJECT_ID                  = "War";
+    public static final String SPRING_PROJECT_ID               = "Spring";
+    public static final String JAR_PROJECT_ID                  = "Jar";
 
+    /**
+     * Create extension.
+     *
+     * @param buildProjectPresenter
+     * @param templateAgent
+     * @param projectTypeAgent
+     * @param createJavaProjectPage
+     * @param createWarProjectPage
+     * @param createSpringProjectPage
+     */
     @Inject
-    public BuilderExtension(TemplateAgent templateAgent, CreateWarProjectPresenter createProjectPresenter,
-                            CreateJavaProjectPresenter createJavaProjectPresenter,
-                            CreateSpringProjectPresenter createSpringProjectPresenter,
-                            ProjectTypeAgent projectTypeAgent, BuilderLocalizationConstant localizationConstants,
-                            ActionManager actionManager, BuildAction buildAction,
+    public BuilderExtension(BuildProjectPresenter buildProjectPresenter,
+                            TemplateAgent templateAgent,
+                            ProjectTypeAgent projectTypeAgent,
+                            Provider<CreateJavaProjectPage> createJavaProjectPage,
+                            Provider<CreateWarProjectPage> createWarProjectPage,
+                            Provider<CreateSpringProjectPage> createSpringProjectPage,
+                            BuilderLocalizationConstant localizationConstants,
+                            ActionManager actionManager,
+                            BuildAction buildAction,
                             BuildAndPublishAction buildAndPublishAction) {
         // register actions
         actionManager.registerAction(localizationConstants.buildProjectControlId(), buildAction);
@@ -71,17 +93,29 @@ public class BuilderExtension {
         projectMenuActionGroup.addSeparator();
         projectMenuActionGroup.add(buildGroup);
 
-        // register project type
-        projectTypeAgent.registerProjectType(SPRING_APPLICATION_PROJECT_TYPE, "Spring application",
-                                             JavaClientBundle.INSTANCE.newJavaProject());
+        templateAgent.register(WAR_PROJECT_ID,
+                               "War project",
+                               null,
+                               PRIMARY_NATURE,
+                               createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createWarProjectPage));
+        templateAgent.register(JAR_PROJECT_ID,
+                               "Java project",
+                               JavaClientBundle.INSTANCE.javaProject(),
+                               PRIMARY_NATURE,
+                               createArray(JAVA_APPLICATION_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createJavaProjectPage));
+        templateAgent.register(SPRING_PROJECT_ID,
+                               "Spring project",
+                               JavaClientBundle.INSTANCE.javaProject(),
+                               PRIMARY_NATURE,
+                               createArray(SPRING_APPLICATION_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createSpringProjectPage));
 
-        // register templates
-        templateAgent.registerTemplate("War project", null, createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE),
-                                       createProjectPresenter, null);
-        templateAgent.registerTemplate("Java project", JavaClientBundle.INSTANCE.javaProject(),
-                                       createArray(PRIMARY_NATURE), createJavaProjectPresenter, null);
-        templateAgent.registerTemplate("Spring project", JavaClientBundle.INSTANCE.javaProject(),
-                                       createArray(SPRING_APPLICATION_PROJECT_TYPE),
-                                       createSpringProjectPresenter, null);
+        projectTypeAgent.register(SPRING_APPLICATION_PROJECT_TYPE,
+                                  "Spring application",
+                                  JavaClientBundle.INSTANCE.newJavaProject(),
+                                  PRIMARY_NATURE,
+                                  createArray(SPRING_APPLICATION_PROJECT_TYPE));
     }
 }

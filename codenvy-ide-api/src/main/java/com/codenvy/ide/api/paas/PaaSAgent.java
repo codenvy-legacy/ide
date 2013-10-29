@@ -17,10 +17,12 @@
  */
 package com.codenvy.ide.api.paas;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.extension.SDK;
-import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonStringMap;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
 
@@ -32,22 +34,25 @@ import com.google.inject.Provider;
 @SDK(title = "ide.api.ui.paas")
 public interface PaaSAgent {
     /**
-     * Registers new PaaS.
+     * Registers a new PaaS.
      *
      * @param id
+     *         id for PaaS identification
      * @param title
+     *         title that will be shown on a new project wizard page
      * @param image
-     * @param requiredTypes
-     * @param wizardPage
-     * @param preferencePage
+     *         image that will be shown on a new project wizard page
+     * @param natures
+     *         natures which support the PaaS
+     * @param wizardPages
+     *         pages which need to be added to a new project wizard
+     * @param provideTemplate
+     *         <code>true</code> if the PaaS doesn't need general templates (it has own template), and <code>false</code> otherwise
      */
-    void registerPaaS(String id, String title, ImageResource image, JsonArray<String> requiredTypes,
-                      Provider<? extends WizardPagePresenter> wizardPage, PreferencesPagePresenter preferencePage);
-
-    /**
-     * Returns selected PaaS.
-     *
-     * @return paas
-     */
-    PaaS getSelectedPaaS();
+    void register(@NotNull String id,
+                  @NotNull String title,
+                  @Nullable ImageResource image,
+                  @NotNull JsonStringMap<JsonArray<String>> natures,
+                  @NotNull JsonArray<Provider<? extends AbstractPaasPage>> wizardPages,
+                  boolean provideTemplate);
 }
