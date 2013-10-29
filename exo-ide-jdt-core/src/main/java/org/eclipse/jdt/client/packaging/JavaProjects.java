@@ -41,6 +41,7 @@ public class JavaProjects {
         projects.add(ProjectType.WAR.value());
         projects.add(ProjectType.JSP.value());
         projects.add(ProjectType.MultiModule.value());
+        projects.add(ProjectType.ANDROID.value());
     }
 
     public static boolean contains(ProjectModel project) {
