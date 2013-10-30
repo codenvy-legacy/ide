@@ -49,10 +49,7 @@ import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
-import org.exoplatform.ide.git.shared.InitRequest;
-import org.exoplatform.ide.git.shared.Remote;
-import org.exoplatform.ide.git.shared.RemoteAddRequest;
-import org.exoplatform.ide.git.shared.RemoteListRequest;
+import org.exoplatform.ide.git.shared.*;
 import org.exoplatform.ide.security.paas.Credential;
 import org.exoplatform.ide.security.paas.CredentialStore;
 import org.exoplatform.ide.security.paas.CredentialStoreException;
@@ -258,8 +255,14 @@ public class Express {
         String gitUrl = application.getGitUrl();
         if (workDir != null) {
             GitConnection git = null;
+            GitUser gituser = null;
             try {
-                git = factory.getConnection(workDir, null);
+                ConversationState conversationState = ConversationState.getCurrent();
+                if (conversationState != null) {
+                    gituser = new GitUser(conversationState.getIdentity().getUserId());
+                }
+
+                git = factory.getConnection(workDir, gituser);
                 git.init(new InitRequest());
                 git.remoteAdd(new RemoteAddRequest("express", gitUrl));
             } catch (GitException gite) {
