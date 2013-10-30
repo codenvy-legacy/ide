@@ -46,29 +46,29 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
 import static com.codenvy.commons.lang.IoUtil.createTempDirectory;
 import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 import static com.codenvy.commons.lang.NameGenerator.generate;
 import static com.codenvy.commons.lang.ZipUtils.unzip;
+import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
 
 
 /**
  * ApplicationRunner for deploy Python applications at Cloud Foundry PaaS.
- * 
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class CloudfoundryApplicationRunner implements ApplicationRunner, Startable {
     /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
-    private static final int               DEFAULT_APPLICATION_LIFETIME = 10;
+    private static final int DEFAULT_APPLICATION_LIFETIME = 10;
 
-    private static final Log               LOG                          = ExoLogger.getLogger(CloudfoundryApplicationRunner.class);
+    private static final Log LOG = ExoLogger.getLogger(CloudfoundryApplicationRunner.class);
 
-    private final int                      applicationLifetime;
-    private final long                     applicationLifetimeMillis;
+    private final int  applicationLifetime;
+    private final long applicationLifetimeMillis;
 
-    private final CloudfoundryPool         cfServers;
+    private final CloudfoundryPool cfServers;
 
     private final Map<String, Application> applications;
     private final ScheduledExecutorService applicationTerminator;
@@ -111,7 +111,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
     @Override
     public ApplicationInstance runApplication(VirtualFileSystem vfs, String projectId) throws ApplicationRunnerException,
-                                                                                      VirtualFileSystemException {
+                                                                                              VirtualFileSystemException {
         java.io.File path = null;
         try {
             Item project = vfs.getItem(projectId, false, PropertyFilter.NONE_FILTER);
@@ -161,10 +161,14 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             final CloudFoundryApplication cfApp = createApplication(cloudfoundry, target, name, appDir, type);
             final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
 
-            applications.put(name, new Application(name, target, expired, projectName));
+            String wsName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
+            String userId = ConversationState.getCurrent().getIdentity().getUserId();
+
+            applications.put(name, new Application(name, target, expired, projectName, wsName, userId));
             LOG.debug("Start application {} at CF server {}", name, target);
             LOG.info("EVENT#run-started# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
-                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + projectName + "# TYPE#Python#");
+                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + projectName +
+                     "# TYPE#Python#");
             LOG.info("EVENT#project-deployed# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
                      + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + projectName
                      + "# TYPE#Python# PAAS#LOCAL#");
@@ -186,8 +190,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     }
 
     /**
-     * Get applications logs and hide any errors. This method is used for getting logs of failed application to help user understand what is
-     * going wrong.
+     * Get applications logs and hide any errors. This method is used for getting logs of failed application to help user understand what
+     * is going wrong.
      */
     private String safeGetLogs(Cloudfoundry cloudfoundry, String name) {
         try {
@@ -264,13 +268,9 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             cloudfoundry.stopApplication(target, name, null, null, "cloudfoundry");
             cloudfoundry.deleteApplication(target, name, null, null, "cloudfoundry", true);
             LOG.debug("Stop application {}.", name);
-            if (ConversationState.getCurrent() != null) {
-                LOG.info("EVENT#run-finished# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
-                         + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" +
-                         applications.get(name).projectName + "# TYPE#Python#");
-            } else {
-                LOG.info("EVENT#run-finished# PROJECT#" + applications.get(name).projectName + "# TYPE#Python#");
-            }
+            Application application = applications.get(name);
+            LOG.info("EVENT#run-finished# WS#" + application.wsName + "# USER#" + application.userId + "# PROJECT#" +
+                     application.projectName + "# TYPE#Python#");
             applications.remove(name);
         } catch (Exception e) {
             throw new ApplicationRunnerException(e.getMessage(), e);
@@ -299,11 +299,11 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                                                       String name,
                                                       java.io.File path,
                                                       APPLICATION_TYPE type)
-                                                                            throws CloudfoundryException,
-                                                                            IOException,
-                                                                            ParsingResponseException,
-                                                                            VirtualFileSystemException,
-                                                                            CredentialStoreException {
+            throws CloudfoundryException,
+                   IOException,
+                   ParsingResponseException,
+                   VirtualFileSystemException,
+                   CredentialStoreException {
         if (APPLICATION_TYPE.PYTHON_APP_ENGINE == type) {
             final String command = "PATH=/home/vcap/bin:$PATH python_gae/dev_appserver.py --host=0.0.0.0 --port=$VCAP_APP_PORT " +
                                    "--skip_sdk_update_check=yes application";
@@ -346,13 +346,17 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
         final String name;
         final String server;
         final String projectName;
+        final String wsName;
+        final String userId;
         final long   expirationTime;
 
-        Application(String name, String server, long expirationTime, String projectName) {
+        Application(String name, String server, long expirationTime, String projectName, String wsName, String userId) {
             this.name = name;
             this.server = server;
             this.expirationTime = expirationTime;
             this.projectName = projectName;
+            this.wsName = wsName;
+            this.userId = userId;
         }
 
         boolean isExpired() {
