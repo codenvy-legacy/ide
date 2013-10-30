@@ -41,6 +41,7 @@ import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -203,6 +204,13 @@ public class FactoryHandler
                 protected void onSuccess(Void result) {
                     if (projects.size() == 1) {
                         openCopiedProject(projects.get(0).split(":")[0]);
+                    } else {
+                        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                            @Override
+                            public void execute() {
+                                IDE.fireEvent(new IDELoadCompleteEvent());
+                            }
+                        });
                     }
                 }
 
