@@ -84,7 +84,7 @@ public class FactoryClientServiceImpl extends FactoryClientService implements Co
 
         AsyncRequest.build(RequestBuilder.POST, uri)
                     .loader(loader)
-                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_FORM_URLENCODED)
                     .data(params)
                     .send(callback);
     }
