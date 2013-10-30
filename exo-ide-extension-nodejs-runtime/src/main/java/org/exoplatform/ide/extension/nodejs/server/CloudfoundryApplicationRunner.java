@@ -153,11 +153,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
             applications.put(name, new Application(name, target, expired, projectName, wsName, userId));
             LOG.debug("Start application {} at CF server {}", name, target);
-            LOG.info("EVENT#run-started# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
-                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + projectName +
-                     "# TYPE#nodejs#");
-            LOG.info("EVENT#project-deployed# WS#" + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME)
-                     + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + projectName +
+            LOG.info("EVENT#run-started# WS#" + wsName + "# USER#" + userId + "# PROJECT#" + projectName + "# TYPE#nodejs#");
+            LOG.info("EVENT#project-deployed# WS#" + wsName + "# USER#" + userId + "# PROJECT#" + projectName +
                      "# TYPE#nodejs# PAAS#LOCAL#");
             return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
         } catch (Exception e) {
