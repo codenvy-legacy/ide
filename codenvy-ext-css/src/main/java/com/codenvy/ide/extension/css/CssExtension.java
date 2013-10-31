@@ -21,20 +21,18 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.wizard.WizardAgent;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.extension.css.editor.CssEditorProvider;
-import com.codenvy.ide.extension.css.wizard.NewCSSFilePagePresenter;
+import com.codenvy.ide.extension.css.wizard.NewCSSFileHandler;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
  * Extension add CSS support to the IDE Application.
- * It porivdes configured TextEditorView with {@link CssEditorProvider} with syntax coloring and
- * autocomplete.
+ * It provides configured TextEditorView with {@link CssEditorProvider} with syntax coloring and autocomplete.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
@@ -51,13 +49,17 @@ public class CssExtension {
      * for CSS files to IDE
      */
     @Inject
-    public CssExtension(ResourceProvider resourceProvider, CssEditorProvider cssEditorProvider,
-                        EditorRegistry editorRegistry, WizardAgent wizardAgent, Provider<NewCSSFilePagePresenter> provider,
+    public CssExtension(ResourceProvider resourceProvider,
+                        CssEditorProvider cssEditorProvider,
+                        EditorRegistry editorRegistry,
+                        NewResourceAgent newResourceAgent,
+                        NewCSSFileHandler newCSSFileHandler,
                         CssExtensionResource resources, ParserResource res) {
         // Create and register new File type
         FileType cssFile = new FileType(null, "text/css", "css");
         resourceProvider.registerFileType(cssFile);
-        wizardAgent.registerNewResourceWizard("General", "Css file", resources.file(), provider);
+
+        newResourceAgent.register("Css file", "Css file", resources.file(), newCSSFileHandler);
 
         // register Editor Provider
         editorRegistry.register(cssFile, cssEditorProvider);

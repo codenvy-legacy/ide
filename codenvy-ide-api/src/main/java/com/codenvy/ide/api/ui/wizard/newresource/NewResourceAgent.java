@@ -15,31 +15,35 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.api.ui.wizard;
+package com.codenvy.ide.api.ui.wizard.newresource;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.extension.SDK;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.inject.Provider;
 
 
 /**
- * Provides register wizards for creating new project and new resource.
+ * Provides register resource for creating new resource wizard.
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @SDK(title = "ide.api.ui.wizard.newresource")
-public interface WizardAgent {
+public interface NewResourceAgent {
     /**
-     * Registers new wizard for creating new resource.
+     * Registers new resource for creating new resource wizard.
      *
-     * @param category
-     *         allows to show new resources wizard in tree view. it's name of parent node.
+     * @param id
+     *         id for resource identification
      * @param title
      *         the text what will be showed on wizard page
      * @param icon
      *         the icon what will be showed on wizard page
-     * @param wizardPage
-     *         first wizard page
+     * @param handler
+     *         handler that provides creating a resource
      */
-    void registerNewResourceWizard(String category, String title, ImageResource icon, Provider<? extends WizardPagePresenter> wizardPage);
+    void register(@NotNull String id,
+                  @NotNull String title,
+                  @Nullable ImageResource icon,
+                  @NotNull CreateResourceHandler handler);
 }

@@ -80,10 +80,8 @@ public class PaaSAgentImpl implements PaaSAgent {
 
         PaaS paas = new PaaS(id, title, image, natures, provideTemplate);
         registeredPaaS.put(id, paas);
-        if (wizardPages != null) {
-            for (Provider<? extends AbstractPaasPage> provider : wizardPages.asIterable()) {
-                newProjectWizard.addPaaSPage(provider);
-            }
+        for (Provider<? extends AbstractPaasPage> provider : wizardPages.asIterable()) {
+            newProjectWizard.addPaaSPage(provider);
         }
     }
 

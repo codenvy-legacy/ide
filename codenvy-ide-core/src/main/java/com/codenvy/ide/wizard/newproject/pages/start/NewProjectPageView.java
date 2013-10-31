@@ -77,16 +77,49 @@ public interface NewProjectPageView extends View<NewProjectPageView.ActionDelega
      */
     String getProjectName();
 
+    /**
+     * Set project types on place on view.
+     *
+     * @param projectTypes
+     *         project types those need to be set
+     */
     void setProjectTypes(JsonArray<ProjectTypeData> projectTypes);
 
+    /**
+     * Set PaaSes on place on view.
+     *
+     * @param paases
+     *         paases those need to be set
+     */
     void setPaases(JsonArray<PaaS> paases);
 
+    /**
+     * Select project type on view.
+     *
+     * @param id
+     *         id of project type that need to be selected
+     */
     void selectProjectType(int id);
 
+    /**
+     * Select paas on view.
+     *
+     * @param id
+     *         id of paas that need to be selected
+     */
     void selectPaas(int id);
 
+    /** Focus project name field on view. */
     void focusProjectName();
 
+    /**
+     * Sets whether Paas button is enabled.
+     *
+     * @param id
+     *         id of PaaS that need to be enabled
+     * @param isEnabled
+     *         <code>true</code> to enable the button, <code>false</code> to disable it
+     */
     void setEnablePaas(int id, boolean isEnabled);
 
     /**

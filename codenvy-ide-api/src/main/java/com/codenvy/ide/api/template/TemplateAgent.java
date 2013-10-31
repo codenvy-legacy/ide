@@ -33,6 +33,8 @@ public interface TemplateAgent {
     /**
      * Registers a new template for creating a project.
      *
+     * @param id
+     *         id for template identification
      * @param title
      *         title that will be shown on a new project wizard page
      * @param icon

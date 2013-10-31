@@ -15,31 +15,36 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.newresource;
+package com.codenvy.ide.wizard.newresource.page;
 
 import elemental.html.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
 import com.codenvy.ide.util.dom.Elements;
+import com.codenvy.ide.wizard.newresource.ResourceData;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 
 /**
- * NewResourcePageViewImpl is the view of NewResource wizard.
- * Provides selecting type of resource for creating new resource.
+ * NewResourcePageViewImpl is the view of {@link NewResourcePagePresenter}. Provides selecting type of resource for creating new
+ * resource.
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
@@ -53,12 +58,14 @@ public class NewResourcePageViewImpl extends Composite implements NewResourcePag
     ScrollPanel resources;
     @UiField(provided = true)
     Resources   res;
-    private ActionDelegate                    delegate;
-    private SimpleList<NewResourceWizardData> list;
-    private SimpleList.ListItemRenderer<NewResourceWizardData>  listItemRenderer =
-            new SimpleList.ListItemRenderer<NewResourceWizardData>() {
+    @UiField
+    TextBox     resourceName;
+    private ActionDelegate           delegate;
+    private SimpleList<ResourceData> list;
+    private SimpleList.ListItemRenderer<ResourceData>  listItemRenderer =
+            new SimpleList.ListItemRenderer<ResourceData>() {
                 @Override
-                public void render(Element itemElement, NewResourceWizardData itemData) {
+                public void render(Element itemElement, ResourceData itemData) {
                     TableCellElement label = Elements.createTDElement();
 
                     SafeHtmlBuilder sb = new SafeHtmlBuilder();
@@ -85,14 +92,13 @@ public class NewResourcePageViewImpl extends Composite implements NewResourcePag
                     return Elements.createTRElement();
                 }
             };
-    private SimpleList.ListEventDelegate<NewResourceWizardData> listDelegate     =
-            new SimpleList.ListEventDelegate<NewResourceWizardData>() {
-                public void onListItemClicked(Element itemElement, NewResourceWizardData itemData) {
-                    list.getSelectionModel().setSelectedItem(itemData);
-                    delegate.selectedFileType(itemData);
+    private SimpleList.ListEventDelegate<ResourceData> listDelegate     =
+            new SimpleList.ListEventDelegate<ResourceData>() {
+                public void onListItemClicked(Element itemElement, ResourceData itemData) {
+                    delegate.onResourceTypeSelected(itemData);
                 }
 
-                public void onListItemDoubleClicked(Element listItemBase, NewResourceWizardData itemData) {
+                public void onListItemDoubleClicked(Element listItemBase, ResourceData itemData) {
                 }
             };
 
@@ -114,13 +120,43 @@ public class NewResourcePageViewImpl extends Composite implements NewResourcePag
     }
 
     /** {@inheritDoc} */
+    @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setResourceWizard(JsonArray<NewResourceWizardData> resources) {
+    public String getResourceName() {
+        return resourceName.getText();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setResourceName(@NotNull String name) {
+        resourceName.setText(name);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setResourceWizard(@NotNull JsonArray<ResourceData> resources) {
         list.render(resources);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void focusResourceName() {
+        resourceName.setFocus(true);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void selectResourceType(@NotNull ResourceData resourceType) {
+        list.getSelectionModel().setSelectedItem(resourceType);
+    }
+
+    @UiHandler("resourceName")
+    public void onResourceNameKeyUp(KeyUpEvent event) {
+        delegate.onResourceNameChanged();
     }
 }

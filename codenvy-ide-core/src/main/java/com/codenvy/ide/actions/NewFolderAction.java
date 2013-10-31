@@ -52,7 +52,7 @@ public class NewFolderAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         // TODO
-//        NewFolderPagePresenter page = new NewFolderPagePresenter(resources, resourceProvider, selectionAgent);
+//        NewFolderHandler page = new NewFolderHandler(resources, resourceProvider, selectionAgent);
 //        WizardPresenter wizardDialog = new WizardPresenter(page, "Create folder", resources);
 //        wizardDialog.showWizard();
     }

@@ -27,6 +27,7 @@ import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
+import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.extension.ExtensionManagerPresenter;
 import com.codenvy.ide.toolbar.MainToolbar;
@@ -36,11 +37,13 @@ import com.codenvy.ide.welcome.action.ConnectSupportAction;
 import com.codenvy.ide.welcome.action.CreateProjectAction;
 import com.codenvy.ide.welcome.action.InviteAction;
 import com.codenvy.ide.welcome.action.ShowDocumentationAction;
-import com.codenvy.ide.wizard.WizardAgentImpl;
-import com.codenvy.ide.wizard.newfile.NewTextFilePagePresenter;
-import com.codenvy.ide.wizard.newfolder.NewFolderPagePresenter;
+import com.codenvy.ide.wizard.NewResourceWizardAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
+import com.codenvy.ide.wizard.newresource.NewFolderHandler;
+import com.codenvy.ide.wizard.newresource.NewResource;
+import com.codenvy.ide.wizard.newresource.NewTextFileHandler;
+import com.codenvy.ide.wizard.newresource.page.NewResourcePagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -55,13 +58,20 @@ import com.google.web.bindery.event.shared.EventBus;
 public class StandardComponentInitializer {
 
     @Inject
-    private WizardAgentImpl wizard;
+    @NewResource
+    private DefaultWizard newResourceWizard;
 
     @Inject
-    private Provider<NewFolderPagePresenter> newFolderProvider;
+    private Provider<NewResourcePagePresenter> chooseResourcePage;
 
     @Inject
-    private Provider<NewTextFilePagePresenter> newTextFileProvider;
+    private NewFolderHandler newFolderHandler;
+
+    @Inject
+    private NewTextFileHandler newTextFileHandler;
+
+    @Inject
+    private NewResourceWizardAgentImpl newResourceWizardAgent;
 
     @Inject
     private Resources resources;
@@ -148,9 +158,17 @@ public class StandardComponentInitializer {
     }
 
     public void initialize() {
+        newResourceWizard.addPage(chooseResourcePage);
+
         // TODO change icon
-        wizard.registerNewResourceWizard("General", "Folder", resources.folder(), newFolderProvider);
-        wizard.registerNewResourceWizard("General", "Text file", resources.file(), newTextFileProvider);
+        newResourceWizardAgent.register("Folder",
+                                        "Folder",
+                                        resources.folder(),
+                                        newFolderHandler);
+        newResourceWizardAgent.register("Text file",
+                                        "Text file",
+                                        resources.file(),
+                                        newTextFileHandler);
 
         preferencesAgent.addPage(extensionManagerPresenter);
 
