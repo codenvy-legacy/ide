@@ -332,7 +332,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
     }
     
     /** A summary info to display in a special area in the bottom of Facebook's post. */
-    final String SUMMARY_MESSAGE = "Code, Build, Test and Deploy instantly using Codenvy";
+    final String SUMMARY_MESSAGE = "Code, Build, Test and Deploy instantly using Codenvy.";
     
     /** Current virtual file system. */
     private VirtualFileSystemInfo vfs;
@@ -344,9 +344,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
     private String                latestCommitId;
     
     private String                vcsURL;
-    
-//    /** A Factory URL itself. */
-//    private String                factoryURL;
     
     /**
      * Display instance.
@@ -474,19 +471,10 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
      * Creates and displays Factory popup.
      */
     private void showPopup() {
-//        factoryURL = SpinnetGenerator.getBaseFactoryURL() + "?" + //
-//                FACTORY_VERSION + "=" + CURRENT_VERSION + "&" + //
-//                     PROJECT_NAME + "=" + openedProject.getName() + "&" + //
-//                WORKSPACE + "=" + Utils.getWorkspaceName() + "&" + //
-//                VCS_TYPE + "=git&" + //
-//                     VCS_URL + "=" + encodeQueryString(vcsURL) + "&" + //
-//                     COMMIT_ID + "=" + latestCommitId + "&" + //
-//                ACTION + "=" + FactorySpec10.ACTION_VALUES.OPEN_PROJECT +"&" +//
-//                     PROJECT_TYPE + "=" + URL.encodeQueryString(openedProject.getProjectType());
-        
         display = new CreateFactoryView();
         IDE.getInstance().openView(display.asView());
         bindDisplay();
+        
         loadUserDetails();
 
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -494,10 +482,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             public void execute() {
                 factoryJSON = null;
                 updatePreviewIFame();
-                //generateWebsitesSnippet();
-                
-//                generateGitHubSnippet();
-//                generateDirectSharingSnippet();
             }
         });
     }
@@ -850,7 +834,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
      * Generates content for embedding on Github.
      */
     private void updateGitHubSnippet(String createFactoryURL) {
-        String imageName = display.whiteStyleSelected() ? "factory-white.png" : "factory.png";
+        String imageName = display.whiteStyleSelected() ? "factory-white.png" : "factory-dark.png";
         String imageURL = new UrlBuilder()
             .setProtocol(Location.getProtocol()).setHost(Location.getHost())
             .setPath("factory/resources/" + imageName).buildString();
@@ -868,42 +852,61 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
     
     private void shareOnFacebook() {
         String createFactoryURL = getLink("create-project");        
-        if (createFactoryURL != null) {
-            Window.open("https://www.facebook.com/sharer/sharer.php" +
-            		"?s=100" +
-            		"&p[url]=" + encodeQueryString(createFactoryURL) +
-            		"&p[images][0]=https://codenvy.com/images/logoCodenvy.png" +
-            		"&p[title]=" + openedProject.getName() + " - Codenvy" +
-            		"&p[summary]=" + SUMMARY_MESSAGE,
-            		//"", "width=626,height=436");
-                    "", "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=660");
+        if (createFactoryURL == null) {
+            return;
         }
+        
+        String logoURL = getLink("image");
+        if (logoURL == null) {
+            logoURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                .setPath("factory/resources/codenvy.png").buildString();
+        }
+        
+        Window.open("https://www.facebook.com/sharer/sharer.php" +
+    		"?s=100" +
+    		"&p[url]=" + encodeQueryString(createFactoryURL) +
+    		"&p[title]=" + encodeQueryString(openedProject.getName() + " - Codenvy") +
+    		"&p[images][0]=" + encodeQueryString(logoURL) +
+    		"&p[summary]=" + encodeQueryString(SUMMARY_MESSAGE),
+
+    		"facebook-share-dialog",
+            "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=626,height=436");
     }
     
     private void shareOnGoogle() {
         String createFactoryURL = getLink("create-project");
-        if (createFactoryURL != null) {
-            Window.open("https://plus.google.com/share" +
-                    "?url=" + encodeQueryString(createFactoryURL),
-                    "", "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=480,width=550");
+        if (createFactoryURL == null) {
+            return;
         }
+        
+        String factoryId = factoryJSON.get("id").isString().stringValue();
+        String shareURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+            .setPath("factory/resources/share.jsp").buildString() + "?factory=" + factoryId;
+        
+        Window.open("https://plus.google.com/share" +
+            "?url=" + encodeQueryString(shareURL),
+            "", "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=480,width=550");
     }    
     
     private void shareOnTwitter() {
         String createFactoryURL = getLink("create-project");
-        if (createFactoryURL != null) {
-            Window.open("https://twitter.com/share" +
-            		"?url=" + encodeQueryString(createFactoryURL) +
-            		"&text=" + SUMMARY_MESSAGE,
-            		"", "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=260,width=660");            
+        if (createFactoryURL == null) {
+            return;
         }
+        
+        Window.open("https://twitter.com/share" +
+            "?url=" + encodeQueryString(createFactoryURL) +
+            "&text=" + SUMMARY_MESSAGE,
+            "", "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=260,width=660");            
     }    
     
     private void shareByEmail() {
         String createFactoryURL = getLink("create-project");
-        if (createFactoryURL != null) {
-            IDE.fireEvent(new SendMailEvent(createFactoryURL, openedProject.getName()));
+        if (createFactoryURL == null) {
+            return;
         }
+        
+        IDE.fireEvent(new SendMailEvent(createFactoryURL, openedProject.getName()));
     }
     
 }
