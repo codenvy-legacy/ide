@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 public class SshKeysManager {
 
     private static final Logger  LOG                        = LoggerFactory.getLogger(SshKeysManager.class);
-    private static final Pattern availableToSsh             = Pattern.compile("((((git|ssh)://)(([^\\\\/@:]+@)??)" +
+    private static final Pattern SSH_URL                    = Pattern.compile("((((git|ssh)://)(([^\\\\/@:]+@)??)" +
                                                                               "[^\\\\/@:]+)|([^\\\\/@:]+@[^\\\\/@:]+)" +
                                                                               ")(:|/)[^\\\\@:]+");
     private static final String  DEFAULT_KEY_DIRECTORY_PATH = System.getProperty("java.io.tmpdir");
@@ -116,7 +116,7 @@ public class SshKeysManager {
      * @return host if it exists in URL or <code>null</code> if it doesn't.
      */
     private String getHost(String url) {
-        if (availableToSsh.matcher(url).matches()) {
+        if (SSH_URL.matcher(url).matches()) {
             int start;
             if ((start = url.indexOf("://")) != -1) {
                 /*
