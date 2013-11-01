@@ -51,6 +51,8 @@ final public class JsToken extends JavaScriptObject {
                                       return this.id.name;
                                   } else if (this.type == "VariableDeclaration") {
                                       return this.declarations[0].id.name;
+                                  } else if (this.type == "VariableDeclarator") {
+                                      return this.id.name;
                                   } else if (this.type == "Identifier") {
                                       return this.name;
                                   } else if (this.type == "Property") {
@@ -77,19 +79,26 @@ final public class JsToken extends JavaScriptObject {
      * @return array of tokens's sub-tokens
      */
     public native JsoArray<JsToken> getSubTokens()/*-{
-                                             if (this.type == "FunctionDeclaration" && this.body.type == "BlockStatement") {
-                                                 return this.body.body;
-                                             } else if (this.type == "VariableDeclaration") {
-                                                 if (this.declarations[0].init.type == "ObjectExpression") {
-                                                     return this.declarations[0].init.properties;
-                                                 } else if (this.declarations[0].init.type == "CallExpression") {
-                                                     if (this.declarations[0].init.callee.type == "FunctionExpression") {
-                                                         return this.declarations[0].init.callee.body.body;
-                                                     }
-                                                 }
-                                             }
-                                                 return null;
-                                             }-*/;
+                                                  if (this.type == "FunctionDeclaration" && this.body.type == "BlockStatement") {
+                                                        return this.body.body;
+                                                  } else if (this.type == "VariableDeclaration") {
+                                                        if (this.declarations.length == 1) {
+                                                            if (this.declarations[0].init != null) {
+                                                                if (this.declarations[0].init.type == "ObjectExpression") {
+                                                                    return this.declarations[0].init.properties;
+                                                                } else if (this.declarations[0].init.type == "CallExpression") {
+                                                                    if (this.declarations[0].init.callee.type == "FunctionExpression") {
+                                                                        return this.declarations[0].init.callee.body.body;
+                                                                    }
+                                                                }
+                                                            }
+                                                            return null;
+                                                        } else if (this.declarations.length > 0) {
+                                                            return this.declarations;
+                                                         }
+                                                  }
+                                                        return null;
+                                                  }-*/;
 
     /**
      * Returns parameters array of the function.
