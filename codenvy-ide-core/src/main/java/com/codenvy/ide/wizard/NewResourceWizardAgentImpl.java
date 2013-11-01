@@ -51,13 +51,14 @@ public class NewResourceWizardAgentImpl implements NewResourceAgent {
     public void register(@NotNull String id,
                          @NotNull String title,
                          @Nullable ImageResource icon,
+                         @Nullable String extension,
                          @NotNull CreateResourceHandler handler) {
         if (newResourceWizardDatas.containsKey(id)) {
             Window.alert("Resource with " + id + " id already exists");
             return;
         }
 
-        ResourceData newResourceData = new ResourceData(id, title, icon, handler);
+        ResourceData newResourceData = new ResourceData(id, title, icon, extension, handler);
         newResourceWizardDatas.put(id, newResourceData);
     }
 

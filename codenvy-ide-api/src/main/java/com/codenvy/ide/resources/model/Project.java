@@ -190,28 +190,11 @@ public class Project extends Folder {
             AsyncRequestCallback<File> internalCallback = new AsyncRequestCallback<File>(new FileUnmarshaller()) {
                 @Override
                 protected void onSuccess(final File newFile) {
-                    if (name.contains("/")) {
-                        // refresh tree, cause additional hierarchy folders my have been created
-                        refreshTree(parent, new AsyncCallback<Folder>() {
-                            @Override
-                            public void onSuccess(Folder result) {
-                                eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newFile));
-                                callback.onSuccess(newFile);
-                            }
-
-                            @Override
-                            public void onFailure(Throwable exception) {
-                                callback.onFailure(exception);
-                            }
-                        });
-                    } else {
-                        // add to the list of items
-                        parent.addChild(newFile);
-                        // set proper parent project
-                        newFile.setProject(Project.this);
-                        eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newFile));
-                        callback.onSuccess(newFile);
-                    }
+                    newFile.setParent(parent);
+                    newFile.setProject(Project.this);
+                    parent.addChild(newFile);
+                    eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newFile));
+                    callback.onSuccess(newFile);
                 }
 
                 @Override
@@ -246,30 +229,12 @@ public class Project extends Folder {
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<Folder> internalCallback = new AsyncRequestCallback<Folder>(new FolderUnmarshaller()) {
                 @Override
-                protected void onSuccess(final Folder folder) {
-                    if (name.contains("/")) {
-                        // refresh tree, cause additional hierarchy folders my have been created
-                        refreshTree(parent, new AsyncCallback<Folder>() {
-                            @Override
-                            public void onSuccess(Folder result) {
-                                Folder newFolder = (Folder)result.findResourceById(folder.getId());
-                                eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newFolder));
-                                callback.onSuccess(newFolder);
-                            }
-
-                            @Override
-                            public void onFailure(Throwable exception) {
-                                callback.onFailure(exception);
-                            }
-                        });
-                    } else {
-                        // add to the list of items
-                        parent.addChild(folder);
-                        // set proper parent project
-                        folder.setProject(Project.this);
-                        eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(folder));
-                        callback.onSuccess(folder);
-                    }
+                protected void onSuccess(final Folder newFolder) {
+                    newFolder.setParent(parent);
+                    newFolder.setProject(Project.this);
+                    parent.addChild(newFolder);
+                    eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newFolder));
+                    callback.onSuccess(newFolder);
                 }
 
                 @Override

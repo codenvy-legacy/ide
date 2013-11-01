@@ -90,11 +90,13 @@ public class JavaExtension {
                                   JavaProject.PRIMARY_NATURE,
                                   JsonCollections.<String>createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE));
 
-        newResourceAgent.register("Java Class", "Java Class", JavaClientBundle.INSTANCE.newClassWizz(), newClassHandler);
-        newResourceAgent.register("Java Interface", "Java Interface", JavaClientBundle.INSTANCE.interfaceItem(), newInterfaceHandler);
-        newResourceAgent.register("Java Enum", "Java Enum", JavaClientBundle.INSTANCE.enumItem(), newEnumHandler);
-        newResourceAgent.register("Java Annotation", "Java Annotation", JavaClientBundle.INSTANCE.annotationItem(), newAnnotationHandler);
-        newResourceAgent.register("Java Package", "Java Package", JavaClientBundle.INSTANCE.packageItem(), newPackageHandler);
+        newResourceAgent.register("Java Class", "Java Class", JavaClientBundle.INSTANCE.newClassWizz(), "java", newClassHandler);
+        newResourceAgent
+                .register("Java Interface", "Java Interface", JavaClientBundle.INSTANCE.interfaceItem(), "java", newInterfaceHandler);
+        newResourceAgent.register("Java Enum", "Java Enum", JavaClientBundle.INSTANCE.enumItem(), "java", newEnumHandler);
+        newResourceAgent
+                .register("Java Annotation", "Java Annotation", JavaClientBundle.INSTANCE.annotationItem(), "java", newAnnotationHandler);
+        newResourceAgent.register("Java Package", "Java Package", JavaClientBundle.INSTANCE.packageItem(), null, newPackageHandler);
     }
 
     /** For test use only. */

@@ -21,7 +21,6 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.wizard.newresource.CreateResourceHandler;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.Package;
-import com.codenvy.ide.ext.java.client.projectmodel.SourceFolder;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
@@ -43,17 +42,7 @@ public class NewPackageHandler implements CreateResourceHandler {
     @Override
     public void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
                        @NotNull final AsyncCallback<Resource> callback) {
-        SourceFolder parentSourceFolder;
-        String parentName;
-        if (parent instanceof SourceFolder) {
-            parentSourceFolder = (SourceFolder)parent;
-            parentName = "";
-        } else {
-            parentSourceFolder = (SourceFolder)parent.getParent();
-            parentName = parent.getName() + '.';
-        }
-
-        ((JavaProject)project).createPackage(parentSourceFolder, parentName + name, new AsyncCallback<Package>() {
+        ((JavaProject)project).createPackage(parent, name, new AsyncCallback<Package>() {
             @Override
             public void onSuccess(Package result) {
                 callback.onSuccess(result);

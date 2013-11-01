@@ -73,10 +73,10 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
         JsonArray<ResourceData> resourceWizards = wizardAgent.getNewResourceWizards();
         this.view.setResourceWizard(resourceWizards);
         if (!resourceWizards.isEmpty()) {
-            view.selectResourceType(resourceWizards.get(0));
+            selectedResourceType = resourceWizards.get(0);
+            view.selectResourceType(selectedResourceType);
         }
 
-        selectedResourceType = null;
         project = resourceProvider.getActiveProject();
 
         Selection<?> selection = selectionAgent.getSelection();
@@ -97,7 +97,7 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
     /** {@inheritDoc} */
     @Override
     public boolean isCompleted() {
-        return selectedResourceType != null;
+        return selectedResourceType != null && isResourceNameValid && !hasSameResource && !view.getResourceName().isEmpty();
     }
 
     /** {@inheritDoc} */
@@ -115,14 +115,14 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
     /** {@inheritDoc} */
     @Override
     public String getNotice() {
-        if (selectedResourceType == null) {
-            return "Please, select resource type.";
-        } else if (view.getResourceName().isEmpty()) {
+        if (view.getResourceName().isEmpty()) {
             return "The resource name can't be empty.";
         } else if (!isResourceNameValid) {
             return "The resource name has incorrect symbol.";
         } else if (hasSameResource) {
             return "The resource with same name already exists.";
+        } else if (selectedResourceType == null) {
+            return "Please, select resource type.";
         }
 
         return null;
@@ -139,6 +139,7 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
     public void onResourceTypeSelected(ResourceData resourceType) {
         selectedResourceType = resourceType;
         view.selectResourceType(resourceType);
+        onResourceNameChanged();
         delegate.updateControls();
     }
 
@@ -148,14 +149,19 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
         String resourceName = view.getResourceName();
         isResourceNameValid = ResourceNameValidator.isFolderNameValid(resourceName);
 
-        hasSameResource = false;
+        String extension = selectedResourceType.getExtension();
+        if (extension == null) {
+            extension = "";
+        } else {
+            extension = '.' + extension;
+        }
+        resourceName = resourceName + extension;
 
+        hasSameResource = false;
         JsonArray<Resource> children = parent.getChildren();
         for (int i = 0; i < children.size() && !hasSameResource; i++) {
             Resource child = children.get(i);
-            if (child.isFolder()) {
-                hasSameResource = child.getName().equals(resourceName);
-            }
+            hasSameResource = child.getName().equals(resourceName);
         }
 
         delegate.updateControls();

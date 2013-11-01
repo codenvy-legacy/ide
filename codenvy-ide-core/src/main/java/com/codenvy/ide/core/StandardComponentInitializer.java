@@ -95,9 +95,6 @@ public class StandardComponentInitializer {
     private SaveAllAction saveAllAction;
 
     @Inject
-    private NewFolderAction newFolderAction;
-
-    @Inject
     private NewResourceAction newFileAction;
 
     @Inject
@@ -164,10 +161,12 @@ public class StandardComponentInitializer {
         newResourceWizardAgent.register("Folder",
                                         "Folder",
                                         resources.folder(),
+                                        null,
                                         newFolderHandler);
         newResourceWizardAgent.register("Text file",
                                         "Text file",
                                         resources.file(),
+                                        "txt",
                                         newTextFileHandler);
 
         preferencesAgent.addPage(extensionManagerPresenter);
@@ -193,10 +192,8 @@ public class StandardComponentInitializer {
         toolbarGroup.addSeparator();
         fileGroup.add(newGroup);
         fileGroup.add(openProjectAction);
-        actionManager.registerAction("newFolder", newFolderAction);
         actionManager.registerAction("newResource", newFileAction);
         newGroup.add(newFileAction);
-        newGroup.add(newFolderAction);
 
         DefaultActionGroup saveGroup = new DefaultActionGroup(actionManager);
         actionManager.registerAction("saveGroup", saveGroup);

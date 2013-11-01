@@ -59,7 +59,7 @@ public class CssExtension {
         FileType cssFile = new FileType(null, "text/css", "css");
         resourceProvider.registerFileType(cssFile);
 
-        newResourceAgent.register("Css file", "Css file", resources.file(), newCSSFileHandler);
+        newResourceAgent.register("Css file", "Css file", resources.file(), "css", newCSSFileHandler);
 
         // register Editor Provider
         editorRegistry.register(cssFile, cssEditorProvider);

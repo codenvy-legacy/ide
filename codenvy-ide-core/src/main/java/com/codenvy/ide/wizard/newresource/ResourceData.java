@@ -32,6 +32,7 @@ public class ResourceData {
     private String                id;
     private String                title;
     private ImageResource         icon;
+    private String                extension;
     private CreateResourceHandler handler;
 
     /**
@@ -43,16 +44,20 @@ public class ResourceData {
      *         title that will be shown on a new resource wizard
      * @param icon
      *         image that will be shown on a new resource wizard
+     * @param extension
+     *         extension of resource type
      * @param handler
      *         handler that provides creating a resource
      */
     public ResourceData(@NotNull String id,
                         @NotNull String title,
                         @Nullable ImageResource icon,
+                        @Nullable String extension,
                         @NotNull CreateResourceHandler handler) {
         this.id = id;
         this.title = title;
         this.icon = icon;
+        this.extension = extension;
         this.handler = handler;
     }
 
@@ -78,5 +83,11 @@ public class ResourceData {
     @NotNull
     public CreateResourceHandler getHandler() {
         return handler;
+    }
+
+    /** @return extension for this kind of resource */
+    @Nullable
+    public String getExtension() {
+        return extension;
     }
 }

@@ -39,11 +39,14 @@ public interface NewResourceAgent {
      *         the text what will be showed on wizard page
      * @param icon
      *         the icon what will be showed on wizard page
+     * @param extension
+     *         extension of resource type
      * @param handler
      *         handler that provides creating a resource
      */
     void register(@NotNull String id,
                   @NotNull String title,
                   @Nullable ImageResource icon,
+                  @Nullable String extension,
                   @NotNull CreateResourceHandler handler);
 }

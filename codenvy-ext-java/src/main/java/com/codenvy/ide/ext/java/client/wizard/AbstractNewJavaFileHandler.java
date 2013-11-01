@@ -73,9 +73,20 @@ public abstract class AbstractNewJavaFileHandler implements CreateResourceHandle
         if (parent instanceof SourceFolder) {
             return "\n";
         }
+        return "package " + getPackageName(parent) + ";\n\n";
+    }
 
-        // TODO full package ?
-        String packageName = parent.getName();
-        return "package " + packageName + ";\n\n";
+    /** @return full package name */
+    private String getPackageName(@NotNull Folder parent) {
+        if (parent instanceof SourceFolder) {
+            return "";
+        }
+
+        String parentPackage = getPackageName(parent.getParent());
+        if (parentPackage.isEmpty()) {
+            return parent.getName();
+        }
+
+        return parentPackage + '.' + parent.getName();
     }
 }
