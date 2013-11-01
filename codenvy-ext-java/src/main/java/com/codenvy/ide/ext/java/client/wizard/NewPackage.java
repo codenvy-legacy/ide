@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.java.client.wizard;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.ui.wizard.newresource.CreateResourceHandler;
+import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.Package;
 import com.codenvy.ide.resources.model.Folder;
@@ -32,10 +33,11 @@ import com.google.inject.Inject;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class NewPackageHandler implements CreateResourceHandler {
+public class NewPackage extends AbstractNewJavaResource {
 
     @Inject
-    public NewPackageHandler() {
+    public NewPackage(SelectionAgent selectionAgent) {
+        super("Java Package", "Java Package", JavaClientBundle.INSTANCE.packageItem(), null, selectionAgent);
     }
 
     /** {@inheritDoc} */

@@ -18,9 +18,7 @@
 package com.codenvy.ide.api.ui.wizard.newresource;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.extension.SDK;
-import com.google.gwt.resources.client.ImageResource;
 
 
 /**
@@ -31,22 +29,10 @@ import com.google.gwt.resources.client.ImageResource;
 @SDK(title = "ide.api.ui.wizard.newresource")
 public interface NewResourceAgent {
     /**
-     * Registers new resource for creating new resource wizard.
+     * Registers a new resource that will be added to new resource wizard.
      *
-     * @param id
-     *         id for resource identification
-     * @param title
-     *         the text what will be showed on wizard page
-     * @param icon
-     *         the icon what will be showed on wizard page
-     * @param extension
-     *         extension of resource type
-     * @param handler
-     *         handler that provides creating a resource
+     * @param resource
+     *         resource that need to be registered
      */
-    void register(@NotNull String id,
-                  @NotNull String title,
-                  @Nullable ImageResource icon,
-                  @Nullable String extension,
-                  @NotNull CreateResourceHandler handler);
+    void register(@NotNull ResourceData resource);
 }

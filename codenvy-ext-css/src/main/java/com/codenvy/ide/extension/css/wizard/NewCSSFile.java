@@ -18,7 +18,8 @@
 package com.codenvy.ide.extension.css.wizard;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.ui.wizard.newresource.CreateResourceHandler;
+import com.codenvy.ide.api.ui.wizard.newresource.ResourceData;
+import com.codenvy.ide.extension.css.CssExtensionResource;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
@@ -33,17 +34,18 @@ import com.google.inject.Inject;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewCSSFileHandler implements CreateResourceHandler {
+public class NewCSSFile extends ResourceData {
 
     @Inject
-    public NewCSSFileHandler() {
+    public NewCSSFile(CssExtensionResource resources) {
+        super("Css file", "Css file", resources.file(), "css");
     }
 
     /** {@inheritDoc} */
     @Override
     public void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
                        @NotNull final AsyncCallback<Resource> callback) {
-        String fileName = name + ".css";
+        String fileName = name + '.' + getExtension();
         project.createFile(parent, fileName, "@CHARSET \"UTF-8\";", MimeType.TEXT_CSS, new AsyncCallback<File>() {
             @Override
             public void onSuccess(File result) {

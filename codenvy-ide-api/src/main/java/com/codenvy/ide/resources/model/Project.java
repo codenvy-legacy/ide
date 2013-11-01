@@ -28,6 +28,7 @@ import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
@@ -190,11 +191,19 @@ public class Project extends Folder {
             AsyncRequestCallback<File> internalCallback = new AsyncRequestCallback<File>(new FileUnmarshaller()) {
                 @Override
                 protected void onSuccess(final File newFile) {
-                    newFile.setParent(parent);
-                    newFile.setProject(Project.this);
-                    parent.addChild(newFile);
-                    eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newFile));
-                    callback.onSuccess(newFile);
+                    refreshTree(parent, new AsyncCallback<Folder>() {
+                        @Override
+                        public void onSuccess(Folder result) {
+                            File file = (File)parent.findChildById(newFile.getId());
+                            eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
+                            callback.onSuccess(file);
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Log.error(Project.class, callback);
+                        }
+                    });
                 }
 
                 @Override
@@ -230,11 +239,19 @@ public class Project extends Folder {
             AsyncRequestCallback<Folder> internalCallback = new AsyncRequestCallback<Folder>(new FolderUnmarshaller()) {
                 @Override
                 protected void onSuccess(final Folder newFolder) {
-                    newFolder.setParent(parent);
-                    newFolder.setProject(Project.this);
-                    parent.addChild(newFolder);
-                    eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newFolder));
-                    callback.onSuccess(newFolder);
+                    refreshTree(parent, new AsyncCallback<Folder>() {
+                        @Override
+                        public void onSuccess(Folder result) {
+                            Folder folder = (Folder)parent.findChildById(newFolder.getId());
+                            eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(folder));
+                            callback.onSuccess(folder);
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Log.error(Project.class, callback);
+                        }
+                    });
                 }
 
                 @Override

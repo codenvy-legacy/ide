@@ -17,13 +17,18 @@
  */
 package com.codenvy.ide.wizard.newresource;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.ui.wizard.newresource.CreateResourceHandler;
+import com.codenvy.ide.api.selection.Selection;
+import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.api.ui.wizard.newresource.ResourceData;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+
+import static com.codenvy.ide.resources.model.Folder.TYPE;
 
 
 /**
@@ -31,10 +36,13 @@ import com.google.inject.Inject;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewFolderHandler implements CreateResourceHandler {
+public class NewFolder extends ResourceData {
+    private SelectionAgent selectionAgent;
 
     @Inject
-    public NewFolderHandler() {
+    public NewFolder(Resources resources, SelectionAgent selectionAgent) {
+        super("Folder", "Folder", resources.folder(), null);
+        this.selectionAgent = selectionAgent;
     }
 
     /** {@inheritDoc} */
@@ -52,5 +60,21 @@ public class NewFolderHandler implements CreateResourceHandler {
                 callback.onFailure(caught);
             }
         });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean inContext() {
+        Selection<?> selection = selectionAgent.getSelection();
+        if (selection != null) {
+            if (selectionAgent.getSelection().getFirstElement() instanceof Resource) {
+                Resource resource = (Resource)selectionAgent.getSelection().getFirstElement();
+                if (resource.isFile()) {
+                    resource = resource.getParent();
+                }
+                return resource instanceof Project || resource instanceof Folder && resource.getResourceType().equals(TYPE);
+            }
+        }
+        return false;
     }
 }

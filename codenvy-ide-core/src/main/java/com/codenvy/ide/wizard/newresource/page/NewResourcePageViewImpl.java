@@ -27,7 +27,7 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
 import com.codenvy.ide.util.dom.Elements;
-import com.codenvy.ide.wizard.newresource.ResourceData;
+import com.codenvy.ide.api.ui.wizard.newresource.ResourceData;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.resources.client.ImageResource;

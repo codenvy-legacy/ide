@@ -40,9 +40,9 @@ import com.codenvy.ide.welcome.action.ShowDocumentationAction;
 import com.codenvy.ide.wizard.NewResourceWizardAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
-import com.codenvy.ide.wizard.newresource.NewFolderHandler;
+import com.codenvy.ide.wizard.newresource.NewFolder;
 import com.codenvy.ide.wizard.newresource.NewResource;
-import com.codenvy.ide.wizard.newresource.NewTextFileHandler;
+import com.codenvy.ide.wizard.newresource.NewTextFile;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -65,10 +65,10 @@ public class StandardComponentInitializer {
     private Provider<NewResourcePagePresenter> chooseResourcePage;
 
     @Inject
-    private NewFolderHandler newFolderHandler;
+    private NewFolder newFolder;
 
     @Inject
-    private NewTextFileHandler newTextFileHandler;
+    private NewTextFile newTextFile;
 
     @Inject
     private NewResourceWizardAgentImpl newResourceWizardAgent;
@@ -157,17 +157,8 @@ public class StandardComponentInitializer {
     public void initialize() {
         newResourceWizard.addPage(chooseResourcePage);
 
-        // TODO change icon
-        newResourceWizardAgent.register("Folder",
-                                        "Folder",
-                                        resources.folder(),
-                                        null,
-                                        newFolderHandler);
-        newResourceWizardAgent.register("Text file",
-                                        "Text file",
-                                        resources.file(),
-                                        "txt",
-                                        newTextFileHandler);
+        newResourceWizardAgent.register(newFolder);
+        newResourceWizardAgent.register(newTextFile);
 
         preferencesAgent.addPage(extensionManagerPresenter);
 

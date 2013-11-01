@@ -198,7 +198,7 @@ public class JavaProject extends Project {
                             newCU.setProject(JavaProject.this);
                             parent.addChild(newCU);
                             // TODO workaround for a unified view for packages
-                            SourceFolder sourceFolder = getSourceFolder(newCU.getPackage());
+                            SourceFolder sourceFolder = getSourceFolder(newCU.getParent());
                             // refresh tree, cause additional hierarchy folders my have been created
                             refreshTree(sourceFolder, new AsyncCallback<Folder>() {
                                 @Override

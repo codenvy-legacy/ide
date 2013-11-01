@@ -20,7 +20,7 @@ package com.codenvy.ide.wizard.newresource.page;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.wizard.newresource.ResourceData;
+import com.codenvy.ide.api.ui.wizard.newresource.ResourceData;
 
 /**
  * Interface of new resource view.

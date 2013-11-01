@@ -18,6 +18,8 @@
 package com.codenvy.ide.ext.java.client.wizard;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
@@ -25,14 +27,15 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
 /**
- * Provides creating of a java annotation.
+ * Provides creating of a java enum.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class NewAnnotationHandler extends AbstractNewJavaFileHandler {
+public class NewEnum extends AbstractNewJavaResource {
 
     @Inject
-    public NewAnnotationHandler() {
+    public NewEnum(SelectionAgent selectionAgent) {
+        super("Java Enum", "Java Enum", JavaClientBundle.INSTANCE.enumItem(), "java", selectionAgent);
     }
 
     /** {@inheritDoc} */
@@ -40,7 +43,7 @@ public class NewAnnotationHandler extends AbstractNewJavaFileHandler {
     public void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
                        @NotNull final AsyncCallback<Resource> callback) {
         StringBuilder content = new StringBuilder(getPackage(parent));
-        content.append("public @interface ").append(name).append(TYPE_CONTENT);
+        content.append("public enum ").append(name).append(TYPE_CONTENT);
 
         createFile(name, parent, project, callback, content.toString());
     }

@@ -18,13 +18,17 @@
 package com.codenvy.ide.ext.java.client.wizard;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.ui.wizard.newresource.CreateResourceHandler;
+import com.codenvy.ide.annotations.Nullable;
+import com.codenvy.ide.api.selection.Selection;
+import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.api.ui.wizard.newresource.ResourceData;
 import com.codenvy.ide.ext.java.client.projectmodel.CompilationUnit;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.SourceFolder;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -32,8 +36,27 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public abstract class AbstractNewJavaFileHandler implements CreateResourceHandler {
+public abstract class AbstractNewJavaResource extends ResourceData {
     public static final String TYPE_CONTENT = "\n{\n}";
+    private SelectionAgent selectionAgent;
+
+    /**
+     * Create wizard's data.
+     *
+     * @param id
+     *         resource identification
+     * @param title
+     *         title that will be shown on a new resource wizard
+     * @param icon
+     *         image that will be shown on a new resource wizard
+     * @param extension
+     *         extension of a resource type
+     */
+    public AbstractNewJavaResource(@NotNull String id, @NotNull String title, @Nullable ImageResource icon, @Nullable String extension,
+                                   @NotNull SelectionAgent selectionAgent) {
+        super(id, title, icon, extension);
+        this.selectionAgent = selectionAgent;
+    }
 
     /**
      * Create a java file.
@@ -65,7 +88,7 @@ public abstract class AbstractNewJavaFileHandler implements CreateResourceHandle
 
     /** @return file name with extension(".java") */
     protected String createResourceName(@NotNull String name) {
-        return name + ".java";
+        return name + '.' + getExtension();
     }
 
     /** @return package name */
@@ -88,5 +111,21 @@ public abstract class AbstractNewJavaFileHandler implements CreateResourceHandle
         }
 
         return parentPackage + '.' + parent.getName();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean inContext() {
+        Selection<?> selection = selectionAgent.getSelection();
+        if (selection != null) {
+            if (selectionAgent.getSelection().getFirstElement() instanceof Resource) {
+                Resource resource = (Resource)selectionAgent.getSelection().getFirstElement();
+                if (resource.isFile()) {
+                    resource = resource.getParent();
+                }
+                return resource instanceof com.codenvy.ide.ext.java.client.projectmodel.Package || resource instanceof SourceFolder;
+            }
+        }
+        return false;
     }
 }

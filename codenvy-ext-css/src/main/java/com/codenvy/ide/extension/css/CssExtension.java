@@ -23,7 +23,7 @@ import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.extension.css.editor.CssEditorProvider;
-import com.codenvy.ide.extension.css.wizard.NewCSSFileHandler;
+import com.codenvy.ide.extension.css.wizard.NewCSSFile;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
@@ -53,13 +53,13 @@ public class CssExtension {
                         CssEditorProvider cssEditorProvider,
                         EditorRegistry editorRegistry,
                         NewResourceAgent newResourceAgent,
-                        NewCSSFileHandler newCSSFileHandler,
-                        CssExtensionResource resources, ParserResource res) {
+                        NewCSSFile newCSSFile,
+                        ParserResource res) {
         // Create and register new File type
         FileType cssFile = new FileType(null, "text/css", "css");
         resourceProvider.registerFileType(cssFile);
 
-        newResourceAgent.register("Css file", "Css file", resources.file(), "css", newCSSFileHandler);
+        newResourceAgent.register(newCSSFile);
 
         // register Editor Provider
         editorRegistry.register(cssFile, cssEditorProvider);

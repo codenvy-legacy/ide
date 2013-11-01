@@ -15,12 +15,15 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.newresource;
+package com.codenvy.ide.api.ui.wizard.newresource;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.api.ui.wizard.newresource.CreateResourceHandler;
+import com.codenvy.ide.resources.model.Folder;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.Resource;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 
 /**
@@ -28,12 +31,11 @@ import com.google.gwt.resources.client.ImageResource;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class ResourceData {
-    private String                id;
-    private String                title;
-    private ImageResource         icon;
-    private String                extension;
-    private CreateResourceHandler handler;
+public abstract class ResourceData {
+    private String        id;
+    private String        title;
+    private ImageResource icon;
+    private String        extension;
 
     /**
      * Create wizard's data.
@@ -45,20 +47,16 @@ public class ResourceData {
      * @param icon
      *         image that will be shown on a new resource wizard
      * @param extension
-     *         extension of resource type
-     * @param handler
-     *         handler that provides creating a resource
+     *         extension of a resource type
      */
     public ResourceData(@NotNull String id,
                         @NotNull String title,
                         @Nullable ImageResource icon,
-                        @Nullable String extension,
-                        @NotNull CreateResourceHandler handler) {
+                        @Nullable String extension) {
         this.id = id;
         this.title = title;
         this.icon = icon;
         this.extension = extension;
-        this.handler = handler;
     }
 
     /** @return {@link String} resource id */
@@ -79,15 +77,34 @@ public class ResourceData {
         return icon;
     }
 
-    /** @return handler that provides creating resource */
-    @NotNull
-    public CreateResourceHandler getHandler() {
-        return handler;
-    }
-
     /** @return extension for this kind of resource */
     @Nullable
     public String getExtension() {
         return extension;
+    }
+
+    /**
+     * Create a resource.
+     *
+     * @param name
+     *         resource name
+     * @param parent
+     *         folder where a resource needs to be created
+     * @param project
+     *         project where a resource needs to be created
+     * @param callback
+     *         callback provides actions after a resource has been created
+     */
+    public abstract void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
+                                @NotNull AsyncCallback<Resource> callback);
+
+    /**
+     * Returns whether this resource is in context.
+     * This option is usable in case a resource is available for current use case.
+     *
+     * @return <code>true</code> if this resource is in context, and <code>false</code> otherwise
+     */
+    public boolean inContext() {
+        return true;
     }
 }

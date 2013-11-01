@@ -24,12 +24,12 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
-import com.codenvy.ide.api.ui.wizard.newresource.CreateResourceHandler;
+import com.codenvy.ide.api.ui.wizard.newresource.ResourceData;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.*;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.NewResourceWizardAgentImpl;
-import com.codenvy.ide.wizard.newresource.ResourceData;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageView.ActionDelegate;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -70,11 +70,18 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
         this.view.setResourceName("");
         this.editorAgent = editorAgent;
 
-        JsonArray<ResourceData> resourceWizards = wizardAgent.getNewResourceWizards();
-        this.view.setResourceWizard(resourceWizards);
-        if (!resourceWizards.isEmpty()) {
-            selectedResourceType = resourceWizards.get(0);
-            view.selectResourceType(selectedResourceType);
+        JsonArray<ResourceData> newResources = wizardAgent.getResources();
+        if (!newResources.isEmpty()) {
+            JsonArray<ResourceData> availableResources = JsonCollections.createArray();
+            for (ResourceData resourceData : newResources.asIterable()) {
+                if (resourceData.inContext()) {
+                    availableResources.add(resourceData);
+                }
+            }
+
+            this.view.setResourceWizard(availableResources);
+            selectedResourceType = availableResources.get(0);
+            this.view.selectResourceType(selectedResourceType);
         }
 
         project = resourceProvider.getActiveProject();
@@ -170,8 +177,7 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
     /** {@inheritDoc} */
     @Override
     public void commit(@NotNull CommitCallback callback) {
-        CreateResourceHandler handler = selectedResourceType.getHandler();
-        handler.create(view.getResourceName(), parent, project, new AsyncCallback<Resource>() {
+        selectedResourceType.create(view.getResourceName(), parent, project, new AsyncCallback<Resource>() {
             @Override
             public void onSuccess(Resource result) {
                 if (result.isFile()) {

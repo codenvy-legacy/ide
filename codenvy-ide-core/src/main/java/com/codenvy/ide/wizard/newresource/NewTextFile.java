@@ -17,8 +17,9 @@
  */
 package com.codenvy.ide.wizard.newresource;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.ui.wizard.newresource.CreateResourceHandler;
+import com.codenvy.ide.api.ui.wizard.newresource.ResourceData;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
@@ -33,17 +34,18 @@ import com.google.inject.Inject;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewTextFileHandler implements CreateResourceHandler {
+public class NewTextFile extends ResourceData {
 
     @Inject
-    public NewTextFileHandler() {
+    public NewTextFile(Resources resources) {
+        super("Text file", "Text file", resources.file(), "txt");
     }
 
     /** {@inheritDoc} */
     @Override
     public void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
                        @NotNull final AsyncCallback<Resource> callback) {
-        String fileName = name + ".txt";
+        String fileName = name + '.' + getExtension();
         project.createFile(parent, fileName, "", MimeType.TEXT_PLAIN, new AsyncCallback<File>() {
             @Override
             public void onSuccess(File result) {

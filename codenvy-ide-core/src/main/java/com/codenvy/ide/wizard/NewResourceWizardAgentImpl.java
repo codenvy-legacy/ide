@@ -18,52 +18,45 @@
 package com.codenvy.ide.wizard;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.api.ui.wizard.newresource.CreateResourceHandler;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
+import com.codenvy.ide.api.ui.wizard.newresource.ResourceData;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.wizard.newresource.ResourceData;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 
 import javax.inject.Singleton;
 
 /**
- * Implements register wizards and returns all available wizard.
+ * The implementation of {@link NewResourceAgent}. Also returning all registered resources.
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
 public class NewResourceWizardAgentImpl implements NewResourceAgent {
-    private final JsonStringMap<ResourceData> newResourceWizardDatas;
+    private final JsonStringMap<ResourceData> resources;
 
-    /** Create NewResourceAgent */
+    /** Create agent */
     @Inject
     protected NewResourceWizardAgentImpl() {
-        newResourceWizardDatas = JsonCollections.createStringMap();
+        resources = JsonCollections.createStringMap();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void register(@NotNull String id,
-                         @NotNull String title,
-                         @Nullable ImageResource icon,
-                         @Nullable String extension,
-                         @NotNull CreateResourceHandler handler) {
-        if (newResourceWizardDatas.containsKey(id)) {
+    public void register(@NotNull ResourceData resource) {
+        String id = resource.getId();
+        if (resources.containsKey(id)) {
             Window.alert("Resource with " + id + " id already exists");
             return;
         }
 
-        ResourceData newResourceData = new ResourceData(id, title, icon, extension, handler);
-        newResourceWizardDatas.put(id, newResourceData);
+        resources.put(id, resource);
     }
 
-    /** @return all registered wizards for creating new resource */
-    public JsonArray<ResourceData> getNewResourceWizards() {
-        return newResourceWizardDatas.getValues();
+    /** @return all registered resources */
+    public JsonArray<ResourceData> getResources() {
+        return resources.getValues();
     }
 }

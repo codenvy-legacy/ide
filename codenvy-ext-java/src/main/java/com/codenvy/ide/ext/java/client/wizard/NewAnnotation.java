@@ -18,6 +18,8 @@
 package com.codenvy.ide.ext.java.client.wizard;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
@@ -25,14 +27,15 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
 /**
- * Provides creating of a java class.
+ * Provides creating of a java annotation.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class NewClassHandler extends AbstractNewJavaFileHandler {
+public class NewAnnotation extends AbstractNewJavaResource {
 
     @Inject
-    public NewClassHandler() {
+    public NewAnnotation(SelectionAgent selectionAgent) {
+        super("Java Annotation", "Java Annotation", JavaClientBundle.INSTANCE.annotationItem(), "java", selectionAgent);
     }
 
     /** {@inheritDoc} */
@@ -40,7 +43,7 @@ public class NewClassHandler extends AbstractNewJavaFileHandler {
     public void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
                        @NotNull final AsyncCallback<Resource> callback) {
         StringBuilder content = new StringBuilder(getPackage(parent));
-        content.append("public class ").append(name).append(TYPE_CONTENT);
+        content.append("public @interface ").append(name).append(TYPE_CONTENT);
 
         createFile(name, parent, project, callback, content.toString());
     }

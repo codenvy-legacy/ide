@@ -15,31 +15,36 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.api.ui.wizard.newresource;
+package com.codenvy.ide.ext.java.client.wizard;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.inject.Inject;
 
 /**
- * The handler for creating a resource. It needs to make it possible to create a new kind of resource.
+ * Provides creating of a java class.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface CreateResourceHandler {
-    /**
-     * Create a resource.
-     *
-     * @param name
-     *         resource name
-     * @param parent
-     *         folder where a resource needs to be created
-     * @param project
-     *         project where a resource needs to be created
-     * @param callback
-     *         callback provides actions after a resource has been created
-     */
-    void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project, @NotNull AsyncCallback<Resource> callback);
+public class NewClass extends AbstractNewJavaResource {
+
+    @Inject
+    public NewClass(SelectionAgent selectionAgent) {
+        super("Java Class", "Java Class", JavaClientBundle.INSTANCE.newClassWizz(), "java", selectionAgent);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
+                       @NotNull final AsyncCallback<Resource> callback) {
+        StringBuilder content = new StringBuilder(getPackage(parent));
+        content.append("public class ").append(name).append(TYPE_CONTENT);
+
+        createFile(name, parent, project, callback, content.toString());
+    }
 }

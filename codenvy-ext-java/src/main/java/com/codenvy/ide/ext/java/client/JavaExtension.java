@@ -69,11 +69,11 @@ public class JavaExtension {
                          JavaEditorProvider javaEditorProvider,
                          EventBus eventBus,
                          NewResourceAgent newResourceAgent,
-                         NewClassHandler newClassHandler,
-                         NewInterfaceHandler newInterfaceHandler,
-                         NewEnumHandler newEnumHandler,
-                         NewAnnotationHandler newAnnotationHandler,
-                         NewPackageHandler newPackageHandler,
+                         NewClass newClassHandler,
+                         NewInterface newInterfaceHandler,
+                         NewEnum newEnumHandler,
+                         NewAnnotation newAnnotationHandler,
+                         NewPackage newPackage,
                          ProjectTypeAgent projectTypeAgent) {
 
         this();
@@ -90,13 +90,11 @@ public class JavaExtension {
                                   JavaProject.PRIMARY_NATURE,
                                   JsonCollections.<String>createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE));
 
-        newResourceAgent.register("Java Class", "Java Class", JavaClientBundle.INSTANCE.newClassWizz(), "java", newClassHandler);
-        newResourceAgent
-                .register("Java Interface", "Java Interface", JavaClientBundle.INSTANCE.interfaceItem(), "java", newInterfaceHandler);
-        newResourceAgent.register("Java Enum", "Java Enum", JavaClientBundle.INSTANCE.enumItem(), "java", newEnumHandler);
-        newResourceAgent
-                .register("Java Annotation", "Java Annotation", JavaClientBundle.INSTANCE.annotationItem(), "java", newAnnotationHandler);
-        newResourceAgent.register("Java Package", "Java Package", JavaClientBundle.INSTANCE.packageItem(), null, newPackageHandler);
+        newResourceAgent.register(newClassHandler);
+        newResourceAgent.register(newInterfaceHandler);
+        newResourceAgent.register(newEnumHandler);
+        newResourceAgent.register(newAnnotationHandler);
+        newResourceAgent.register(newPackage);
     }
 
     /** For test use only. */
