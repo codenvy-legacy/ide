@@ -56,7 +56,7 @@ public class FocusManager {
 
     /**
      * Provides a handler, that is injected into PartStack, for the FocusManager to be able to track
-     * PartStac focus requests and changes of the active Part.
+     * PartStack focus requests and changes of the active Part.
      *
      * @return instance of PartStackEventHandler
      */

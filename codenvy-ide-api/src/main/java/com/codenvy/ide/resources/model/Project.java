@@ -38,7 +38,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 
 /**
- * Represents Project  model. Responsinble for deserialization of JSon String to generate it' own project model
+ * Represents Project  model. Responsible for deserialization of JSon String to generate it' own project model
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
