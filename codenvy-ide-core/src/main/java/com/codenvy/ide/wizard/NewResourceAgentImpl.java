@@ -19,7 +19,7 @@ package com.codenvy.ide.wizard;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
-import com.codenvy.ide.api.ui.wizard.newresource.ResourceData;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
@@ -34,18 +34,18 @@ import javax.inject.Singleton;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class NewResourceWizardAgentImpl implements NewResourceAgent {
-    private final JsonStringMap<ResourceData> resources;
+public class NewResourceAgentImpl implements NewResourceAgent {
+    private final JsonStringMap<NewResourceProvider> resources;
 
     /** Create agent */
     @Inject
-    protected NewResourceWizardAgentImpl() {
+    protected NewResourceAgentImpl() {
         resources = JsonCollections.createStringMap();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void register(@NotNull ResourceData resource) {
+    public void register(@NotNull NewResourceProvider resource) {
         String id = resource.getId();
         if (resources.containsKey(id)) {
             Window.alert("Resource with " + id + " id already exists");
@@ -56,7 +56,7 @@ public class NewResourceWizardAgentImpl implements NewResourceAgent {
     }
 
     /** @return all registered resources */
-    public JsonArray<ResourceData> getResources() {
+    public JsonArray<NewResourceProvider> getResources() {
         return resources.getValues();
     }
 }

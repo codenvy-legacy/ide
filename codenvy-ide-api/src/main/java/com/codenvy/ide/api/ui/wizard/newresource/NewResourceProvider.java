@@ -27,11 +27,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 
 /**
- * Aggregate information about registered resource type.
+ * Aggregate information about registered resource type. Also provides creating an instance of resource.
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public abstract class ResourceData {
+public abstract class NewResourceProvider {
     private String        id;
     private String        title;
     private ImageResource icon;
@@ -49,10 +49,10 @@ public abstract class ResourceData {
      * @param extension
      *         extension of a resource type
      */
-    public ResourceData(@NotNull String id,
-                        @NotNull String title,
-                        @Nullable ImageResource icon,
-                        @Nullable String extension) {
+    public NewResourceProvider(@NotNull String id,
+                               @NotNull String title,
+                               @Nullable ImageResource icon,
+                               @Nullable String extension) {
         this.id = id;
         this.title = title;
         this.icon = icon;

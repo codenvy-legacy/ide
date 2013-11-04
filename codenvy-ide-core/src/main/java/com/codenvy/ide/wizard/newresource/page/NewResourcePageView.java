@@ -19,8 +19,8 @@ package com.codenvy.ide.wizard.newresource.page;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.api.ui.wizard.newresource.ResourceData;
 
 /**
  * Interface of new resource view.
@@ -36,7 +36,7 @@ public interface NewResourcePageView extends View<NewResourcePageView.ActionDele
          * @param resourceType
          *         selected resource type
          */
-        void onResourceTypeSelected(@NotNull ResourceData resourceType);
+        void onResourceTypeSelected(@NotNull NewResourceProvider resourceType);
 
         /** Performs some actions in response to a user's changing a resource name. */
         void onResourceNameChanged();
@@ -60,7 +60,7 @@ public interface NewResourcePageView extends View<NewResourcePageView.ActionDele
      * @param resourceWizards
      *         list of resources
      */
-    void setResourceWizard(@NotNull JsonArray<ResourceData> resourceWizards);
+    void setResourceWizard(@NotNull JsonArray<NewResourceProvider> resourceWizards);
 
     /** Focus resource name field on view. */
     void focusResourceName();
@@ -71,5 +71,5 @@ public interface NewResourcePageView extends View<NewResourcePageView.ActionDele
      * @param resourceType
      *         resource type that need to be selected
      */
-    void selectResourceType(@NotNull ResourceData resourceType);
+    void selectResourceType(@NotNull NewResourceProvider resourceType);
 }

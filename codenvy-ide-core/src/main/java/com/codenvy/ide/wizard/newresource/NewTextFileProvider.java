@@ -15,38 +15,40 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.client.wizard;
+package com.codenvy.ide.wizard.newresource;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.ext.java.client.JavaClientBundle;
-import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
-import com.codenvy.ide.ext.java.client.projectmodel.Package;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
+import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.rest.MimeType;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
+
 /**
- * Provides creating of a java package.
+ * Provides creating of a new empty text file.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewPackage extends AbstractNewJavaResource {
+public class NewTextFileProvider extends NewResourceProvider {
 
     @Inject
-    public NewPackage(SelectionAgent selectionAgent) {
-        super("Java Package", "Java Package", JavaClientBundle.INSTANCE.packageItem(), null, selectionAgent);
+    public NewTextFileProvider(Resources resources) {
+        super("Text file", "Text file", resources.file(), "txt");
     }
 
     /** {@inheritDoc} */
     @Override
     public void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
                        @NotNull final AsyncCallback<Resource> callback) {
-        ((JavaProject)project).createPackage(parent, name, new AsyncCallback<Package>() {
+        String fileName = name + '.' + getExtension();
+        project.createFile(parent, fileName, "", MimeType.TEXT_PLAIN, new AsyncCallback<File>() {
             @Override
-            public void onSuccess(Package result) {
+            public void onSuccess(File result) {
                 callback.onSuccess(result);
             }
 

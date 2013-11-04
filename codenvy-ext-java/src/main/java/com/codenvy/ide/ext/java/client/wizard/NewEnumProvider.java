@@ -15,47 +15,36 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.newresource;
+package com.codenvy.ide.ext.java.client.wizard;
 
-import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.ui.wizard.newresource.ResourceData;
-import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.rest.MimeType;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
-
 /**
- * Provides creating of a new empty text file.
+ * Provides creating of a java enum.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class NewTextFile extends ResourceData {
+public class NewEnumProvider extends AbstractNewJavaResourceProvider {
 
     @Inject
-    public NewTextFile(Resources resources) {
-        super("Text file", "Text file", resources.file(), "txt");
+    public NewEnumProvider(SelectionAgent selectionAgent) {
+        super("Java Enum", "Java Enum", JavaClientBundle.INSTANCE.enumItem(), "java", selectionAgent);
     }
 
     /** {@inheritDoc} */
     @Override
     public void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
                        @NotNull final AsyncCallback<Resource> callback) {
-        String fileName = name + '.' + getExtension();
-        project.createFile(parent, fileName, "", MimeType.TEXT_PLAIN, new AsyncCallback<File>() {
-            @Override
-            public void onSuccess(File result) {
-                callback.onSuccess(result);
-            }
+        StringBuilder content = new StringBuilder(getPackage(parent));
+        content.append("public enum ").append(name).append(TYPE_CONTENT);
 
-            @Override
-            public void onFailure(Throwable caught) {
-                callback.onFailure(caught);
-            }
-        });
+        createFile(name, parent, project, callback, content.toString());
     }
 }

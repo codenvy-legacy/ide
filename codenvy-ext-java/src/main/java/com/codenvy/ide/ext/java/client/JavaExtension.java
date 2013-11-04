@@ -69,11 +69,11 @@ public class JavaExtension {
                          JavaEditorProvider javaEditorProvider,
                          EventBus eventBus,
                          NewResourceAgent newResourceAgent,
-                         NewClass newClassHandler,
-                         NewInterface newInterfaceHandler,
-                         NewEnum newEnumHandler,
-                         NewAnnotation newAnnotationHandler,
-                         NewPackage newPackage,
+                         NewClassProvider newClassHandler,
+                         NewInterfaceProvider newInterfaceHandler,
+                         NewEnumProvider newEnumHandler,
+                         NewAnnotationProvider newAnnotationHandler,
+                         NewPackageProvider newPackage,
                          ProjectTypeAgent projectTypeAgent) {
 
         this();

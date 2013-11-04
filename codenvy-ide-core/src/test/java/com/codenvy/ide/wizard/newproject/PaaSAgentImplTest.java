@@ -71,11 +71,11 @@ public class PaaSAgentImplTest extends GwtTestWithMockito {
     public void testRegisterWhenPaaSWithGivenIdIsExist() throws Exception {
         assertEquals(agent.getPaaSes().size(), 1);
 
-        agent.register("id", "title", null, null, null, false);
+        agent.register("id", "title", null, null, JsonCollections.<Provider<? extends AbstractPaasPage>>createArray(), false);
 
         assertEquals(agent.getPaaSes().size(), 2);
 
-        agent.register("id", "title", null, null, null, false);
+        agent.register("id", "title", null, null, JsonCollections.<Provider<? extends AbstractPaasPage>>createArray(), false);
 
         assertEquals(agent.getPaaSes().size(), 2);
     }

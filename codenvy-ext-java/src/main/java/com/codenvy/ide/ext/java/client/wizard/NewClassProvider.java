@@ -27,15 +27,15 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
 /**
- * Provides creating of a java annotation.
+ * Provides creating of a java class.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class NewAnnotation extends AbstractNewJavaResource {
+public class NewClassProvider extends AbstractNewJavaResourceProvider {
 
     @Inject
-    public NewAnnotation(SelectionAgent selectionAgent) {
-        super("Java Annotation", "Java Annotation", JavaClientBundle.INSTANCE.annotationItem(), "java", selectionAgent);
+    public NewClassProvider(SelectionAgent selectionAgent) {
+        super("Java Class", "Java Class", JavaClientBundle.INSTANCE.newClassWizz(), "java", selectionAgent);
     }
 
     /** {@inheritDoc} */
@@ -43,7 +43,7 @@ public class NewAnnotation extends AbstractNewJavaResource {
     public void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
                        @NotNull final AsyncCallback<Resource> callback) {
         StringBuilder content = new StringBuilder(getPackage(parent));
-        content.append("public @interface ").append(name).append(TYPE_CONTENT);
+        content.append("public class ").append(name).append(TYPE_CONTENT);
 
         createFile(name, parent, project, callback, content.toString());
     }

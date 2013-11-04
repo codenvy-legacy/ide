@@ -100,7 +100,7 @@ import com.codenvy.ide.websocket.MessageBusImpl;
 import com.codenvy.ide.welcome.WelcomePartPresenter;
 import com.codenvy.ide.welcome.WelcomePartView;
 import com.codenvy.ide.welcome.WelcomePartViewImpl;
-import com.codenvy.ide.wizard.NewResourceWizardAgentImpl;
+import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.WizardDialogPresenter;
 import com.codenvy.ide.wizard.WizardDialogView;
 import com.codenvy.ide.wizard.WizardDialogViewImpl;
@@ -161,7 +161,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(SelectionAgent.class).to(SelectionAgentImpl.class).in(Singleton.class);
         bind(WorkspaceAgent.class).to(WorkspacePresenter.class).in(Singleton.class);
         bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
-        bind(NewResourceAgent.class).to(NewResourceWizardAgentImpl.class).in(Singleton.class);
+        bind(NewResourceAgent.class).to(NewResourceAgentImpl.class).in(Singleton.class);
         bind(PaaSAgent.class).to(PaaSAgentImpl.class).in(Singleton.class);
         bind(TemplateAgent.class).to(TemplateAgentImpl.class).in(Singleton.class);
         bind(ProjectTypeAgent.class).to(ProjectTypeAgentImpl.class).in(Singleton.class);

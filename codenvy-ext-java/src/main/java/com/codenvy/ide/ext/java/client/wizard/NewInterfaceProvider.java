@@ -27,15 +27,15 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
 /**
- * Provides creating of a java enum.
+ * Provides creating of a java interface.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class NewEnum extends AbstractNewJavaResource {
+public class NewInterfaceProvider extends AbstractNewJavaResourceProvider {
 
     @Inject
-    public NewEnum(SelectionAgent selectionAgent) {
-        super("Java Enum", "Java Enum", JavaClientBundle.INSTANCE.enumItem(), "java", selectionAgent);
+    public NewInterfaceProvider(SelectionAgent selectionAgent) {
+        super("Java Interface", "Java Interface", JavaClientBundle.INSTANCE.interfaceItem(), "java", selectionAgent);
     }
 
     /** {@inheritDoc} */
@@ -43,7 +43,7 @@ public class NewEnum extends AbstractNewJavaResource {
     public void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
                        @NotNull final AsyncCallback<Resource> callback) {
         StringBuilder content = new StringBuilder(getPackage(parent));
-        content.append("public enum ").append(name).append(TYPE_CONTENT);
+        content.append("public interface ").append(name).append(TYPE_CONTENT);
 
         createFile(name, parent, project, callback, content.toString());
     }

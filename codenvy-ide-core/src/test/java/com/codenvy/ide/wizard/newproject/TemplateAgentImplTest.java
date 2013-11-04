@@ -67,11 +67,13 @@ public class TemplateAgentImplTest extends GwtTestWithMockito {
     public void testRegisterWhenTemplateWithGivenIdIsExist() throws Exception {
         assertEquals(agent.getTemplatesForProjectType("primaryNature", JsonCollections.createArray("secondaryNature")).size(), 0);
 
-        agent.register("id", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"), null);
+        agent.register("id", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"),
+                       JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray());
 
         assertEquals(agent.getTemplatesForProjectType("primaryNature", JsonCollections.createArray("secondaryNature")).size(), 1);
 
-        agent.register("id", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"), null);
+        agent.register("id", "title", null, "primaryNature", JsonCollections.createArray("secondaryNature"),
+                       JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray());
 
         assertEquals(agent.getTemplatesForProjectType("primaryNature", JsonCollections.createArray("secondaryNature")).size(), 1);
     }

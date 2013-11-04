@@ -15,24 +15,15 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.api.ui.wizard.newresource;
-
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.extension.SDK;
-
+package com.codenvy.ide.ext.java.client.wizard;
 
 /**
- * Provides register resource for creating new resource wizard.
+ * The implementation of {@link com.codenvy.ide.ext.java.client.projectmodel.Package} for testing.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@SDK(title = "ide.api.ui.wizard.newresource")
-public interface NewResourceAgent {
-    /**
-     * Registers a new resource that will be added to new resource wizard.
-     *
-     * @param resource
-     *         resource that need to be registered
-     */
-    void register(@NotNull NewResourceProvider resource);
+public class TestPackage extends com.codenvy.ide.ext.java.client.projectmodel.Package {
+    /** Create an instance of package. */
+    public TestPackage() {
+    }
 }

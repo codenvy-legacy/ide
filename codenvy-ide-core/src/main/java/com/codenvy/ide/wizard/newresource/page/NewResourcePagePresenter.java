@@ -17,19 +17,19 @@
  */
 package com.codenvy.ide.wizard.newresource.page;
 
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
-import com.codenvy.ide.api.ui.wizard.newresource.ResourceData;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.*;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.wizard.NewResourceWizardAgentImpl;
+import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageView.ActionDelegate;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -42,13 +42,14 @@ import com.google.inject.Inject;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class NewResourcePagePresenter extends AbstractWizardPage implements ActionDelegate {
-    private NewResourcePageView view;
-    private EditorAgent         editorAgent;
-    private ResourceData        selectedResourceType;
-    private boolean             isResourceNameValid;
-    private boolean             hasSameResource;
-    private Project             project;
-    private Folder              parent;
+    private NewResourcePageView      view;
+    private EditorAgent              editorAgent;
+    private CoreLocalizationConstant constant;
+    private NewResourceProvider      selectedResourceType;
+    private boolean                  isResourceNameValid;
+    private boolean                  hasSameResource;
+    private Project                  project;
+    private Folder                   parent;
 
     /**
      * Create presenter.
@@ -58,9 +59,10 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
      */
     @Inject
     public NewResourcePagePresenter(Resources resources,
+                                    CoreLocalizationConstant constant,
                                     NewResourcePageView view,
-                                    NewResourceWizardAgentImpl wizardAgent,
-                                    ResourceProvider resourceProvider,
+                                    NewResourceAgentImpl newResourceAgent,
+                                    com.codenvy.ide.api.resources.ResourceProvider resourceProvider,
                                     SelectionAgent selectionAgent,
                                     EditorAgent editorAgent) {
         super("Create a new resource", resources.newResourceIcon());
@@ -69,11 +71,12 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
         this.view.setDelegate(this);
         this.view.setResourceName("");
         this.editorAgent = editorAgent;
+        this.constant = constant;
 
-        JsonArray<ResourceData> newResources = wizardAgent.getResources();
+        JsonArray<NewResourceProvider> newResources = newResourceAgent.getResources();
         if (!newResources.isEmpty()) {
-            JsonArray<ResourceData> availableResources = JsonCollections.createArray();
-            for (ResourceData resourceData : newResources.asIterable()) {
+            JsonArray<NewResourceProvider> availableResources = JsonCollections.createArray();
+            for (NewResourceProvider resourceData : newResources.asIterable()) {
                 if (resourceData.inContext()) {
                     availableResources.add(resourceData);
                 }
@@ -123,13 +126,13 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
     @Override
     public String getNotice() {
         if (view.getResourceName().isEmpty()) {
-            return "The resource name can't be empty.";
+            return constant.enteringResourceName();
         } else if (!isResourceNameValid) {
-            return "The resource name has incorrect symbol.";
-        } else if (hasSameResource) {
-            return "The resource with same name already exists.";
+            return constant.noIncorrectResourceName();
         } else if (selectedResourceType == null) {
-            return "Please, select resource type.";
+            return constant.chooseResourceType();
+        } else if (hasSameResource) {
+            return constant.resourceExists(view.getResourceName());
         }
 
         return null;
@@ -143,7 +146,7 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
 
     /** {@inheritDoc} */
     @Override
-    public void onResourceTypeSelected(ResourceData resourceType) {
+    public void onResourceTypeSelected(@NotNull NewResourceProvider resourceType) {
         selectedResourceType = resourceType;
         view.selectResourceType(resourceType);
         onResourceNameChanged();
@@ -156,19 +159,21 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
         String resourceName = view.getResourceName();
         isResourceNameValid = ResourceNameValidator.isFolderNameValid(resourceName);
 
-        String extension = selectedResourceType.getExtension();
-        if (extension == null) {
-            extension = "";
-        } else {
-            extension = '.' + extension;
-        }
-        resourceName = resourceName + extension;
+        if (selectedResourceType != null) {
+            String extension = selectedResourceType.getExtension();
+            if (extension == null) {
+                extension = "";
+            } else {
+                extension = '.' + extension;
+            }
+            resourceName = resourceName + extension;
 
-        hasSameResource = false;
-        JsonArray<Resource> children = parent.getChildren();
-        for (int i = 0; i < children.size() && !hasSameResource; i++) {
-            Resource child = children.get(i);
-            hasSameResource = child.getName().equals(resourceName);
+            hasSameResource = false;
+            JsonArray<Resource> children = parent.getChildren();
+            for (int i = 0; i < children.size() && !hasSameResource; i++) {
+                Resource child = children.get(i);
+                hasSameResource = child.getName().equals(resourceName);
+            }
         }
 
         delegate.updateControls();

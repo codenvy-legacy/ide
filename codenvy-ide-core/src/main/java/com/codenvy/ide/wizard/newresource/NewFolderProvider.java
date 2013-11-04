@@ -21,7 +21,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.api.ui.wizard.newresource.ResourceData;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
@@ -36,11 +36,11 @@ import static com.codenvy.ide.resources.model.Folder.TYPE;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewFolder extends ResourceData {
+public class NewFolderProvider extends NewResourceProvider {
     private SelectionAgent selectionAgent;
 
     @Inject
-    public NewFolder(Resources resources, SelectionAgent selectionAgent) {
+    public NewFolderProvider(Resources resources, SelectionAgent selectionAgent) {
         super("Folder", "Folder", resources.folder(), null);
         this.selectionAgent = selectionAgent;
     }

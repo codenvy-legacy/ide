@@ -20,6 +20,8 @@ package com.codenvy.ide.ext.java.client.wizard;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
+import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
+import com.codenvy.ide.ext.java.client.projectmodel.Package;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
@@ -27,24 +29,31 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
 /**
- * Provides creating of a java class.
+ * Provides creating of a java package.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class NewClass extends AbstractNewJavaResource {
+public class NewPackageProvider extends AbstractNewJavaResourceProvider {
 
     @Inject
-    public NewClass(SelectionAgent selectionAgent) {
-        super("Java Class", "Java Class", JavaClientBundle.INSTANCE.newClassWizz(), "java", selectionAgent);
+    public NewPackageProvider(SelectionAgent selectionAgent) {
+        super("Java Package", "Java Package", JavaClientBundle.INSTANCE.packageItem(), null, selectionAgent);
     }
 
     /** {@inheritDoc} */
     @Override
     public void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
                        @NotNull final AsyncCallback<Resource> callback) {
-        StringBuilder content = new StringBuilder(getPackage(parent));
-        content.append("public class ").append(name).append(TYPE_CONTENT);
+        ((JavaProject)project).createPackage(parent, name, new AsyncCallback<Package>() {
+            @Override
+            public void onSuccess(Package result) {
+                callback.onSuccess(result);
+            }
 
-        createFile(name, parent, project, callback, content.toString());
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+            }
+        });
     }
 }

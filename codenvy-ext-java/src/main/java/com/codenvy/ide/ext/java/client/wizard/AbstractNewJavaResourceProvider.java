@@ -21,7 +21,7 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.api.ui.wizard.newresource.ResourceData;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.ext.java.client.projectmodel.CompilationUnit;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.SourceFolder;
@@ -36,7 +36,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public abstract class AbstractNewJavaResource extends ResourceData {
+public abstract class AbstractNewJavaResourceProvider extends NewResourceProvider {
     public static final String TYPE_CONTENT = "\n{\n}";
     private SelectionAgent selectionAgent;
 
@@ -52,8 +52,8 @@ public abstract class AbstractNewJavaResource extends ResourceData {
      * @param extension
      *         extension of a resource type
      */
-    public AbstractNewJavaResource(@NotNull String id, @NotNull String title, @Nullable ImageResource icon, @Nullable String extension,
-                                   @NotNull SelectionAgent selectionAgent) {
+    public AbstractNewJavaResourceProvider(@NotNull String id, @NotNull String title, @Nullable ImageResource icon,
+                                           @Nullable String extension, @NotNull SelectionAgent selectionAgent) {
         super(id, title, icon, extension);
         this.selectionAgent = selectionAgent;
     }

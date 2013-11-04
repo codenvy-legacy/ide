@@ -59,4 +59,16 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("extension.title")
     String extensionTitle();
+
+    @Key("enteringResourceName")
+    String enteringResourceName();
+
+    @Key("noIncorrectResourceName")
+    String noIncorrectResourceName();
+
+    @Key("resourceExists")
+    String resourceExists(String resourceName);
+
+    @Key("chooseResourceType")
+    String chooseResourceType();
 }

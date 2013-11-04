@@ -37,12 +37,12 @@ import com.codenvy.ide.welcome.action.ConnectSupportAction;
 import com.codenvy.ide.welcome.action.CreateProjectAction;
 import com.codenvy.ide.welcome.action.InviteAction;
 import com.codenvy.ide.welcome.action.ShowDocumentationAction;
-import com.codenvy.ide.wizard.NewResourceWizardAgentImpl;
+import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
-import com.codenvy.ide.wizard.newresource.NewFolder;
+import com.codenvy.ide.wizard.newresource.NewFolderProvider;
 import com.codenvy.ide.wizard.newresource.NewResource;
-import com.codenvy.ide.wizard.newresource.NewTextFile;
+import com.codenvy.ide.wizard.newresource.NewTextFileProvider;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -65,13 +65,13 @@ public class StandardComponentInitializer {
     private Provider<NewResourcePagePresenter> chooseResourcePage;
 
     @Inject
-    private NewFolder newFolder;
+    private NewFolderProvider newFolderProvider;
 
     @Inject
-    private NewTextFile newTextFile;
+    private NewTextFileProvider newTextFileProvider;
 
     @Inject
-    private NewResourceWizardAgentImpl newResourceWizardAgent;
+    private NewResourceAgentImpl newResourceWizardAgent;
 
     @Inject
     private Resources resources;
@@ -157,8 +157,8 @@ public class StandardComponentInitializer {
     public void initialize() {
         newResourceWizard.addPage(chooseResourcePage);
 
-        newResourceWizardAgent.register(newFolder);
-        newResourceWizardAgent.register(newTextFile);
+        newResourceWizardAgent.register(newFolderProvider);
+        newResourceWizardAgent.register(newTextFileProvider);
 
         preferencesAgent.addPage(extensionManagerPresenter);
 

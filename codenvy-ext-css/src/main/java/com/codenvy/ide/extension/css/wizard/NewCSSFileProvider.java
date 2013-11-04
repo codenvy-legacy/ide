@@ -15,36 +15,47 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.client.wizard;
+package com.codenvy.ide.extension.css.wizard;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.ext.java.client.JavaClientBundle;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
+import com.codenvy.ide.extension.css.CssExtensionResource;
+import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.rest.MimeType;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
+
 /**
- * Provides creating of a java interface.
+ * Provides creating of a new CSS file.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewInterface extends AbstractNewJavaResource {
+public class NewCSSFileProvider extends NewResourceProvider {
 
     @Inject
-    public NewInterface(SelectionAgent selectionAgent) {
-        super("Java Interface", "Java Interface", JavaClientBundle.INSTANCE.interfaceItem(), "java", selectionAgent);
+    public NewCSSFileProvider(CssExtensionResource resources) {
+        super("Css file", "Css file", resources.file(), "css");
     }
 
     /** {@inheritDoc} */
     @Override
     public void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
                        @NotNull final AsyncCallback<Resource> callback) {
-        StringBuilder content = new StringBuilder(getPackage(parent));
-        content.append("public interface ").append(name).append(TYPE_CONTENT);
+        String fileName = name + '.' + getExtension();
+        project.createFile(parent, fileName, "@CHARSET \"UTF-8\";", MimeType.TEXT_CSS, new AsyncCallback<File>() {
+            @Override
+            public void onSuccess(File result) {
+                callback.onSuccess(result);
+            }
 
-        createFile(name, parent, project, callback, content.toString());
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+            }
+        });
     }
 }

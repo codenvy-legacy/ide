@@ -23,11 +23,11 @@ import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
 import com.codenvy.ide.util.dom.Elements;
-import com.codenvy.ide.api.ui.wizard.newresource.ResourceData;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.resources.client.ImageResource;
@@ -60,12 +60,12 @@ public class NewResourcePageViewImpl extends Composite implements NewResourcePag
     Resources   res;
     @UiField
     TextBox     resourceName;
-    private ActionDelegate           delegate;
-    private SimpleList<ResourceData> list;
-    private SimpleList.ListItemRenderer<ResourceData>  listItemRenderer =
-            new SimpleList.ListItemRenderer<ResourceData>() {
+    private ActionDelegate                  delegate;
+    private SimpleList<NewResourceProvider> list;
+    private SimpleList.ListItemRenderer<NewResourceProvider>  listItemRenderer =
+            new SimpleList.ListItemRenderer<NewResourceProvider>() {
                 @Override
-                public void render(Element itemElement, ResourceData itemData) {
+                public void render(Element itemElement, NewResourceProvider itemData) {
                     TableCellElement label = Elements.createTDElement();
 
                     SafeHtmlBuilder sb = new SafeHtmlBuilder();
@@ -92,13 +92,13 @@ public class NewResourcePageViewImpl extends Composite implements NewResourcePag
                     return Elements.createTRElement();
                 }
             };
-    private SimpleList.ListEventDelegate<ResourceData> listDelegate     =
-            new SimpleList.ListEventDelegate<ResourceData>() {
-                public void onListItemClicked(Element itemElement, ResourceData itemData) {
+    private SimpleList.ListEventDelegate<NewResourceProvider> listDelegate     =
+            new SimpleList.ListEventDelegate<NewResourceProvider>() {
+                public void onListItemClicked(Element itemElement, NewResourceProvider itemData) {
                     delegate.onResourceTypeSelected(itemData);
                 }
 
-                public void onListItemDoubleClicked(Element listItemBase, ResourceData itemData) {
+                public void onListItemDoubleClicked(Element listItemBase, NewResourceProvider itemData) {
                 }
             };
 
@@ -139,7 +139,7 @@ public class NewResourcePageViewImpl extends Composite implements NewResourcePag
 
     /** {@inheritDoc} */
     @Override
-    public void setResourceWizard(@NotNull JsonArray<ResourceData> resources) {
+    public void setResourceWizard(@NotNull JsonArray<NewResourceProvider> resources) {
         list.render(resources);
     }
 
@@ -151,7 +151,7 @@ public class NewResourcePageViewImpl extends Composite implements NewResourcePag
 
     /** {@inheritDoc} */
     @Override
-    public void selectResourceType(@NotNull ResourceData resourceType) {
+    public void selectResourceType(@NotNull NewResourceProvider resourceType) {
         list.getSelectionModel().setSelectedItem(resourceType);
     }
 
