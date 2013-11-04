@@ -506,8 +506,7 @@ public class GitClientServiceImpl implements GitClientService {
                       boolean removeDeletedRefs, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         DtoClientImpls.FetchRequestImpl fetchRequest = DtoClientImpls.FetchRequestImpl.make();
         fetchRequest.setRemote(remote);
-        // TODO This is workaround for getting remote branches
-        // fetchRequest.setRefSpec(refspec);
+        fetchRequest.setRefSpec(refspec);
         fetchRequest.setRemoveDeletedRefs(removeDeletedRefs);
 
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -524,8 +523,7 @@ public class GitClientServiceImpl implements GitClientService {
                         boolean removeDeletedRefs, @NotNull RequestCallback<String> callback) throws WebSocketException {
         DtoClientImpls.FetchRequestImpl fetchRequest = DtoClientImpls.FetchRequestImpl.make();
         fetchRequest.setRemote(remote);
-        // TODO This is workaround for getting remote branches
-        // fetchRequest.setRefSpec(refspec);
+        fetchRequest.setRefSpec(refspec);
         fetchRequest.setRemoveDeletedRefs(removeDeletedRefs);
 
         callback.setStatusHandler(new FetchRequestHandler(project.getName(), refspec, eventBus, constant));

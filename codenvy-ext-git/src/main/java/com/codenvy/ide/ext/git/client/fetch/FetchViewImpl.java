@@ -23,7 +23,10 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -48,6 +51,8 @@ public class FetchViewImpl extends DialogBox implements FetchView {
 
     @UiField
     CheckBox                  removeDeletedRefs;
+    @UiField
+    CheckBox                  fetchAllBranches;
     @UiField
     ListBox                   repository;
     @UiField
@@ -188,5 +193,42 @@ public class FetchViewImpl extends DialogBox implements FetchView {
     @UiHandler("btnCancel")
     public void onCancelClicked(ClickEvent event) {
         delegate.onCancelClicked();
+    }
+    
+    @UiHandler("fetchAllBranches")
+    public void onValueChanged(ValueChangeEvent<Boolean> event) {
+        delegate.onValueChanged();
+    }
+
+    /**
+     * @see com.codenvy.ide.ext.git.client.fetch.FetchView#isFetchAllBranches()
+     */
+    @Override
+    public boolean isFetchAllBranches() {
+        return fetchAllBranches.getValue();
+    }
+
+    /**
+     * @see com.codenvy.ide.ext.git.client.fetch.FetchView#setFetchAllBranches(boolean)
+     */
+    @Override
+    public void setFetchAllBranches(boolean isFetchAllBranches) {
+        fetchAllBranches.setValue(isFetchAllBranches, true);
+    }
+
+    /**
+     * @see com.codenvy.ide.ext.git.client.fetch.FetchView#setEnableRemoteBranchField(boolean)
+     */
+    @Override
+    public void setEnableRemoteBranchField(boolean enabled) {
+        remoteBranch.setEnabled(enabled);
+    }
+
+    /**
+     * @see com.codenvy.ide.ext.git.client.fetch.FetchView#setEnableLocalBranchField(boolean)
+     */
+    @Override
+    public void setEnableLocalBranchField(boolean enabled) {
+        localBranch.setEnabled(enabled);
     }
 }

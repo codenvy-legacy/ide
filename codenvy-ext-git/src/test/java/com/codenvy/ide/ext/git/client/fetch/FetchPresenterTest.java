@@ -50,6 +50,7 @@ import static org.mockito.Mockito.*;
  */
 public class FetchPresenterTest extends BaseTest {
     public static final boolean NO_REMOVE_DELETE_REFS = false;
+    public static final boolean FETCH_ALL_BRANCHES = true;
     public static final boolean SHOW_ALL_INFORMATION  = true;
     @Mock
     private FetchView      view;
@@ -116,6 +117,7 @@ public class FetchPresenterTest extends BaseTest {
         verify(view).setEnableFetchButton(eq(ENABLE_BUTTON));
         verify(view).setRepositories((JsonArray<Remote>)anyObject());
         verify(view).setRemoveDeleteRefs(eq(NO_REMOVE_DELETE_REFS));
+        verify(view).setFetchAllBranches(eq(FETCH_ALL_BRANCHES));
         verify(view).showDialog();
         verify(view).setRemoteBranches((JsonArray<String>)anyObject());
         verify(view).setLocalBranches((JsonArray<String>)anyObject());
