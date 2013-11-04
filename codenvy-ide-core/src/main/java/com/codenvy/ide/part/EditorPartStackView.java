@@ -56,9 +56,9 @@ public class EditorPartStackView extends Composite implements PartStackView {
     private boolean focused;
 
     // DOM Handler
-    private final FocusRequstDOMHandler focusRequstHandler = new FocusRequstDOMHandler();
+    private final FocusRequestDOMHandler focusRequestHandler = new FocusRequestDOMHandler();
 
-    private HandlerRegistration focusRequstHandlerRegistration;
+    private HandlerRegistration focusRequestHandlerRegistration;
 
     // list of tabs
     private final JsonArray<TabButton> tabs = JsonCollections.createArray();
@@ -157,14 +157,14 @@ public class EditorPartStackView extends Composite implements PartStackView {
 
     /** Add MouseDown DOM Handler */
     protected void addFocusRequestHandler() {
-        focusRequstHandlerRegistration = addDomHandler(focusRequstHandler, MouseDownEvent.getType());
+        focusRequestHandlerRegistration = addDomHandler(focusRequestHandler, MouseDownEvent.getType());
     }
 
     /** Remove MouseDown DOM Handler */
     protected void removeFocusRequestHandler() {
-        if (focusRequstHandlerRegistration != null) {
-            focusRequstHandlerRegistration.removeHandler();
-            focusRequstHandlerRegistration = null;
+        if (focusRequestHandlerRegistration != null) {
+            focusRequestHandlerRegistration.removeHandler();
+            focusRequestHandlerRegistration = null;
         }
     }
 
@@ -232,7 +232,7 @@ public class EditorPartStackView extends Composite implements PartStackView {
     }
 
     /** Notifies delegated handler */
-    private final class FocusRequstDOMHandler implements MouseDownHandler {
+    private final class FocusRequestDOMHandler implements MouseDownHandler {
         @Override
         public void onMouseDown(MouseDownEvent event) {
             if (delegate != null) {

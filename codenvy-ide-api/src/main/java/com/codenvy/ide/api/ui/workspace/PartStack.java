@@ -39,7 +39,7 @@ public interface PartStack extends Presenter {
     public void setFocus(boolean focused);
 
     /**
-     * Add part to the PartStack. To immediately show part, you mast call <code>setActivePart()</code>.
+     * Add part to the PartStack. To immediately show part, you must call <code>setActivePart()</code>.
      *
      * @param part
      */

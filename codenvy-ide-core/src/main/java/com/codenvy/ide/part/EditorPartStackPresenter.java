@@ -99,7 +99,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
                                   partsClosable);
         bindEvents(tabItem, part);
         setActivePart(part);
-        // requst focus
+        // request focus
         onRequestFocus();
     }
 
@@ -130,12 +130,8 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
 
     }
 
-    /**
-     * Close Part
-     *
-     * @param part
-     *         part that need to be closed
-     */
+    /** {@inheritDoc} */
+    @Override
     protected void close(PartPresenter part) {
         // may cancel close
         if (part.onClose()) {

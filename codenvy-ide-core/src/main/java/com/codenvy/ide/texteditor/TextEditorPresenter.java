@@ -32,6 +32,7 @@ import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.util.executor.UserActivityManager;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
@@ -71,16 +72,24 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
     @Override
     protected void initializeEditor() {
         editor.configure(configuration);
-        documentProvider.getDocument(input, new DocumentCallback() {
 
+        // Postpone setting a document to give the time for a editor (TextEditorViewImpl) to fully construct itself.
+        // Otherwise, the editor may not be ready to render the document.
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
-            public void onDocument(Document document) {
-                TextEditorPresenter.this.document = document;
-                AnnotationModel annotationModel = documentProvider.getAnnotationModel(input);
-                editor.setDocument(document, annotationModel);
-                firePropertyChange(PROP_INPUT);
+            public void execute() {
+                documentProvider.getDocument(input, new DocumentCallback() {
+                    @Override
+                    public void onDocument(Document document) {
+                        TextEditorPresenter.this.document = document;
+                        AnnotationModel annotationModel = documentProvider.getAnnotationModel(input);
+                        editor.setDocument(document, annotationModel);
+                        firePropertyChange(PROP_INPUT);
+                    }
+                });
             }
         });
+
     }
 
     /** @see com.codenvy.ide.api.editor.TextEditorPartPresenter#close(boolean) */

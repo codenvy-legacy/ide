@@ -634,6 +634,7 @@
                             <descriptors>
                                 <descriptor>${project.basedir}/src/main/assembly/tomcat-archive.xml</descriptor>
                             </descriptors>
+                            <finalName>codenvy-${project.version}</finalName>
                         </configuration>
                     </execution>
                 </executions>

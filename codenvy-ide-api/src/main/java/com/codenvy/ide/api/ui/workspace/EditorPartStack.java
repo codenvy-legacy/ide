@@ -18,8 +18,8 @@
 package com.codenvy.ide.api.ui.workspace;
 
 /**
- * Part Stack is tabbed layout element, containing Parts. EditorParstack is shared
- * across the Perspeciteves and allows to display EditorParts
+ * Part Stack is tabbed layout element, containing Parts. EditorPartStack is shared
+ * across the Perspectives and allows to display EditorParts
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */

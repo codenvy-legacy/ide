@@ -76,7 +76,7 @@ public interface TextEditorPartView {
     void setDocument(Document document);
 
     /**
-     * Sets the given document as this displayr's text model and the
+     * Sets the given document as this display's text model and the
      * given annotation model as the model for this display's visual
      * annotations. The presentation is accordingly updated.
      *

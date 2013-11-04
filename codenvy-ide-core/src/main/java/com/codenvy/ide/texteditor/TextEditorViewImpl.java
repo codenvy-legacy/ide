@@ -209,7 +209,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         buffer.repositionAnchoredElementsWithColumn();
         if (renderer != null) {
          /*
-          * TODO: think about a scheme where we don't have to rerender
+          * TODO: think about a scheme where we don't have to render
           * the whole viewport (currently we do because of the right-side gap
           * fillers)
           */
@@ -401,7 +401,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         localCursorController = LocalCursorController.create(resources, focusManager, selection, buffer, this);
         ParenMatchHighlighter.create(textStore, getViewport(), textStore.getAnchorManager(), getView().getResources(),
                                      getRenderer(), getSelection());
-        createSyntaxHighligter(parser);
+        createSyntaxHighlighter(parser);
         new CurrentLineHighlighter(buffer, selection, resources);
         breakpointGutterManager.setDebugLineRenderer(new DebugLineRenderer(buffer, resources));
         textInputListenerManager.dispatch(new Dispatcher<TextInputListener>() {
@@ -605,7 +605,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     }
 
     /** @param parser */
-    private void createSyntaxHighligter(Parser parser) {
+    private void createSyntaxHighlighter(Parser parser) {
         if (parser == null) {
             return;
         }

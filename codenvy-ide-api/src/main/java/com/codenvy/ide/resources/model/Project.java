@@ -39,7 +39,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 
 /**
- * Represents Project  model. Responsinble for deserialization of JSon String to generate it' own project model
+ * Represents Project  model. Responsible for deserialization of JSon String to generate it' own project model
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
@@ -403,14 +403,14 @@ public class Project extends Folder {
      * @param callback
      * @throws ResourceException
      */
-    public void updateContent(File file, final AsyncCallback<File> callback) {
+    public void updateContent(final File file, final AsyncCallback<File> callback) {
         try {
             checkItemValid(file);
             // create internal wrapping Request Callback with proper Unmarshaller
-            AsyncRequestCallback<File> internalCallback = new AsyncRequestCallback<File>(new FileContentUnmarshaller(file)) {
+            AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>() {
                 @Override
-                protected void onSuccess(File result) {
-                    callback.onSuccess(result);
+                protected void onSuccess(Void result) {
+                    callback.onSuccess(file);
                 }
 
                 @Override
