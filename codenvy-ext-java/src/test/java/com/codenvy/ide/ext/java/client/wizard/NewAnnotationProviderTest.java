@@ -15,20 +15,22 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.client.inject;
-
-import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.google.gwt.inject.client.AbstractGinModule;
+package com.codenvy.ide.ext.java.client.wizard;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * Testing {@link NewAnnotationProvider} functionality.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@ExtensionGinModule
-public class JavaGinModule extends AbstractGinModule {
-
-    /** {@inheritDoc} */
+public class NewAnnotationProviderTest extends BaseNewJavaFileProviderTest {
     @Override
-    protected void configure() {
+    public void setUp() {
+        provider = new NewAnnotationProvider(selectionAgent);
+        content = "package mypackage;\n" +
+                  "\n" +
+                  "public @interface resourceName\n" +
+                  "{\n" +
+                  "}";
+        super.setUp();
     }
 }

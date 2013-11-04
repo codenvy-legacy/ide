@@ -15,20 +15,24 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.client.inject;
+package com.codenvy.ide.api.ui.wizard.newresource;
 
-import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.google.gwt.inject.client.AbstractGinModule;
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.extension.SDK;
+
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * Provides register resource for creating new resource wizard.
+ *
+ * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-@ExtensionGinModule
-public class JavaGinModule extends AbstractGinModule {
-
-    /** {@inheritDoc} */
-    @Override
-    protected void configure() {
-    }
+@SDK(title = "ide.api.ui.wizard.newresource")
+public interface NewResourceAgent {
+    /**
+     * Registers a new resource that will be added to new resource wizard.
+     *
+     * @param resource
+     *         resource that need to be registered
+     */
+    void register(@NotNull NewResourceProvider resource);
 }

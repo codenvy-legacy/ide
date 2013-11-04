@@ -17,10 +17,9 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
+import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.java.client.core.JavaConventions;
 import com.codenvy.ide.ext.java.client.core.JavaCore;
-
-import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringSet;
 import com.codenvy.ide.json.JsonStringSet.IterationCallback;
@@ -70,6 +69,7 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
     public JavaModelUnmarshaller(Folder root, JavaProject project) {
         super();
         this.root = root;
+        this.root.setChildren(JsonCollections.<Resource>createArray());
         this.project = project;
 
         sourceFolders = JsonCollections.createStringSet();
@@ -107,8 +107,7 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
      * @param project
      *         the project for that building java model
      */
-    private void parseProjectStructure(JSONValue children, Folder parentFolder, Folder parentFolderNonModelItems,
-                                       Project project) {
+    private void parseProjectStructure(JSONValue children, Folder parentFolder, Folder parentFolderNonModelItems, Project project) {
         JSONArray itemsArray = children.isArray();
         for (int i = 0; i < itemsArray.size(); i++) {
             JSONObject itemObject = itemsArray.get(i).isObject();
