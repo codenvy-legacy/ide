@@ -73,8 +73,13 @@ public class EditorTextStoreMutator implements TextStoreMutator {
             int lineOffset = document.getLineOffset(lineNumber);
             documentCommand.initialize(lineOffset + column, deleteCount, "");
             editor.customizeDocumentCommand(documentCommand);
+
+
             DeleteEdit delete = new DeleteEdit(documentCommand.offset, documentCommand.length);
+            TextChange textChange =
+                    TextChange.createDeletion(line, lineNumber, column, document.get(documentCommand.offset, documentCommand.length));
             delete.apply(document);
+            dispatchTextChange(textChange);
 
         } catch (BadLocationException e) {
             Log.error(EditorTextStoreMutator.class, e);
