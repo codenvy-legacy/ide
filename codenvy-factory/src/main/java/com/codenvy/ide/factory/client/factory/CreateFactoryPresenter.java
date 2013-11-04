@@ -879,9 +879,9 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             return;
         }
         
-        String factoryId = factoryJSON.get("id").isString().stringValue();
+        String factoryId = factoryJSON.get("id").isString().stringValue();        
         String shareURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-            .setPath("factory/resources/share.jsp").buildString() + "?factory=" + factoryId;
+            .setPath("factory/share/").buildString() + "/" + factoryId;
         
         Window.open("https://plus.google.com/share" +
             "?url=" + encodeQueryString(shareURL),
