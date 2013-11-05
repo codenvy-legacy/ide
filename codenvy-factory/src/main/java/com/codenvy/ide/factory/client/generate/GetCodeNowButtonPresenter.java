@@ -378,39 +378,39 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
     }
 
     private void generateSnippetsAndOpenView() {
-        factoryURL = SpinnetGenerator.getBaseFactoryURL() + "?" + //
-                FACTORY_VERSION + "=" + CURRENT_VERSION + "&" + //
-                     PROJECT_NAME + "=" + openedProject.getName() + "&" + //
-                WORKSPACE + "=" + Utils.getWorkspaceName() + "&" + //
-                VCS_TYPE + "=git&" + //
-                     VCS_URL + "=" + encodeQueryString(vcsURL) + "&" + //
-                     COMMIT_ID + "=" + latestCommitId + "&" + //
-                ACTION + "=" + FactorySpec10.ACTION_VALUES.OPEN_PROJECT +"&" +//
-                     PROJECT_TYPE + "=" + URL.encodeQueryString(openedProject.getProjectType());
-        
-        darkStyle = true;
-        generateSnippetForWebsites();
-        openView();
+//        factoryURL = SpinnetGenerator.getBaseFactoryURL() + "?" + //
+//                FACTORY_VERSION + "=" + CURRENT_VERSION + "&" + //
+//                     PROJECT_NAME + "=" + openedProject.getName() + "&" + //
+//                WORKSPACE + "=" + Utils.getWorkspaceName() + "&" + //
+//                VCS_TYPE + "=git&" + //
+//                     VCS_URL + "=" + encodeQueryString(vcsURL) + "&" + //
+//                     COMMIT_ID + "=" + latestCommitId + "&" + //
+//                ACTION + "=" + FactorySpec10.ACTION_VALUES.OPEN_PROJECT +"&" +//
+//                     PROJECT_TYPE + "=" + URL.encodeQueryString(openedProject.getProjectType());
+//        
+//        darkStyle = true;
+//        generateSnippetForWebsites();
+//        openView();
     }
 
     private void generateSnippetForWebsites() {
-        String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
-        
-        websitesSnippet = "<script " +
-        		"type=\"text/javascript\" " +
-        		"language=\"javascript\" " +
-        		"src=\"" + jsURL + "\" " +
-        		"style=\"" + (darkStyle ? "dark" : "white") + "\" " +
-        		"target=\"" + factoryURL + "\"></script>";
-        
-        websitesPreviewSnippet = "<script " +
-            "type=\"text/javascript\" " +
-            "language=\"javascript\" " +
-            "src=\"" + jsURL + "\"" +
-            "style=\"" + (darkStyle ? "dark" : "white") + "\" " +
-            		" ></script>";
-        
-        gitHubPagesSnippet = "[![alt](" + SpinnetGenerator.getCodeNowGitHubImageURL(darkStyle) + ")](" + factoryURL + ")";
+//        String jsURL = SpinnetGenerator.getCodeNowButtonJavascriptURL();
+//        
+//        websitesSnippet = "<script " +
+//        		"type=\"text/javascript\" " +
+//        		"language=\"javascript\" " +
+//        		"src=\"" + jsURL + "\" " +
+//        		"style=\"" + (darkStyle ? "dark" : "white") + "\" " +
+//        		"target=\"" + factoryURL + "\"></script>";
+//        
+//        websitesPreviewSnippet = "<script " +
+//            "type=\"text/javascript\" " +
+//            "language=\"javascript\" " +
+//            "src=\"" + jsURL + "\"" +
+//            "style=\"" + (darkStyle ? "dark" : "white") + "\" " +
+//            		" ></script>";
+//        
+//        gitHubPagesSnippet = "[![alt](" + SpinnetGenerator.getCodeNowGitHubImageURL(darkStyle) + ")](" + factoryURL + ")";
     }
 
 }

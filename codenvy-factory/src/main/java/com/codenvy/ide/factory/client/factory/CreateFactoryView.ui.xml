@@ -418,8 +418,7 @@
 			font-size: 70px;
 			opacity: 0;
 			filter: alpha(opacity = 0);
-			
-			visibility:hidden;
+			cursor: pointer!important;
 		}
 		
 		.fileUpload:hover {
@@ -438,9 +437,6 @@
 
 		.fileUploadSelected span {
 			text-align: left;
-			/*
-			cursor: default;
-			*/
 			
 			box-sizing: border-box;
 			-webkit-box-sizing: border-box;
@@ -453,16 +449,9 @@
 			border-radius: 2px;
 			height: 22px;
 			margin: 0;
-			/*
-			padding-left: 1px;
-			*/			
 		}		
 		
 		.fileUploadSelected input {
-	/*
-			display: none;
-			visibility: hidden;
-	*/
 		}
 		
 		.fileUploadSelected:hover {

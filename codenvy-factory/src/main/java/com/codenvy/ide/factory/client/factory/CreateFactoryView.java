@@ -718,40 +718,45 @@ public class CreateFactoryView extends ViewImpl
         }
     }
     
-    @Override
-    public void setCreateFactoryRequestContent(String content) {
-        factoryUrlContent.setValue(content);
+    private void setPostData(String postData) {
+        factoryUrlContent.setValue(postData);
     }
-        
+    
     /**
      * @see com.codenvy.ide.factory.client.factory.CreateFactoryPresenter.Display#createFactory(com.google.gwt.user.client.rpc.AsyncCallback)
      */
     @Override
-    public native void createFactory(final AsyncCallback<String> callback) /*-{
+    public native void createFactory(String postData, final AsyncCallback<String> callback) /*-{
         var instance = this;
+        instance.@com.codenvy.ide.factory.client.factory.CreateFactoryView::setPostData(Ljava/lang/String;)(postData);
         instance.@com.codenvy.ide.factory.client.factory.CreateFactoryView::createFactoryCallback = callback;
     
         var ifr = instance.@com.codenvy.ide.factory.client.factory.CreateFactoryView::createFactoryIFrame;
         
         ifr.onload = function() {          
             ifr = (ifr.contentWindow) ? ifr.contentWindow : (ifr.contentDocument.document) ? ifr.contentDocument.document : ifr.contentDocument;
-            instance.@com.codenvy.ide.factory.client.factory.CreateFactoryView::factoryCreationResultReceived(Ljava/lang/String;)(ifr.document.body.innerText);
+
+            var response = ifr.document.body.innerText;
+            if (response == null) {
+                var element = ifr.document.documentElement.getElementsByTagName("body")[0].firstChild;
+                response = element.innerHTML;
+            }
+            
+            instance.@com.codenvy.ide.factory.client.factory.CreateFactoryView::factoryCreationResultReceived(Ljava/lang/String;)(response);
         };
         
         instance.@com.codenvy.ide.factory.client.factory.CreateFactoryView::submitForm()();
     }-*/;
-    
-    private boolean uploadDisabled;
     
     /**
      * 
      */
     private void submitForm() {
         if (uploadFileField.hasAttribute("disabled")) {
+            uploadFileField.setAttribute("__disabled", "true");
             uploadFileField.removeAttribute("disabled");
-            uploadDisabled = true;
         } else {
-            uploadDisabled = false;
+            uploadFileField.setAttribute("__disabled", "false");
         }
         
         createFactoryForm.setMethod("post");
@@ -765,8 +770,10 @@ public class CreateFactoryView extends ViewImpl
      * @param response
      */
     private void factoryCreationResultReceived(String response) {
-        if (uploadDisabled) {
+        if ("true".equals(uploadFileField.getAttribute("__disabled"))) {
             uploadFileField.setAttribute("disabled", "disabled");
+        } else {
+            uploadFileField.removeAttribute("disabled");
         }
         
         if (createFactoryCallback != null) {
