@@ -22,6 +22,7 @@ import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.ext.java.client.JavaPartitions;
 import com.codenvy.ide.text.DocumentFactory;
@@ -36,10 +37,9 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class JavaEditorProvider implements EditorProvider {
-
     private final DocumentProvider            documentProvider;
-    private final Resources                   resources;
     private final UserActivityManager         activityManager;
+    private final NotificationManager         notificationManager;
     private       Provider<CodenvyTextEditor> editorProvider;
 
     /**
@@ -48,13 +48,14 @@ public class JavaEditorProvider implements EditorProvider {
      */
     @Inject
     public JavaEditorProvider(Resources resources, UserActivityManager activityManager,
-                              Provider<CodenvyTextEditor> editorProvider, DocumentFactory documentFactory) {
+                              Provider<CodenvyTextEditor> editorProvider, DocumentFactory documentFactory,
+                              NotificationManager notificationManager) {
         super();
-        this.resources = resources;
         this.activityManager = activityManager;
         this.editorProvider = editorProvider;
         this.documentProvider =
                 new CompilationUnitDocumentProvider(resources.workspaceEditorCss(), JavaClientBundle.INSTANCE.css(), documentFactory);
+        this.notificationManager = notificationManager;
     }
 
     /** @see com.codenvy.ide.api.editor.EditorProvider#getEditor() */
@@ -64,8 +65,7 @@ public class JavaEditorProvider implements EditorProvider {
         JavaEditorConfiguration configuration =
                 new JavaEditorConfiguration(activityManager, JavaClientBundle.INSTANCE, textEditor, JavaPartitions.JAVA_PARTITIONING);
 
-        textEditor.initialize(configuration, documentProvider);
+        textEditor.initialize(configuration, documentProvider, notificationManager);
         return textEditor;
     }
-
 }
