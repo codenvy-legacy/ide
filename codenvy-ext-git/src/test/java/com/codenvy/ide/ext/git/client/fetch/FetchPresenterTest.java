@@ -37,10 +37,11 @@ import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
 
+import static org.mockito.Mockito.when;
+
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.*;
 
 /**
@@ -63,7 +64,7 @@ public class FetchPresenterTest extends BaseTest {
         super.disarm();
 
         presenter = new FetchPresenter(view, service, resourceProvider, constant, notificationManager);
-
+        
         when(view.getRepositoryName()).thenReturn(REPOSITORY_NAME);
         when(view.getRepositoryUrl()).thenReturn(REMOTE_URI);
         when(view.getLocalBranch()).thenReturn(LOCAL_BRANCH);
@@ -108,9 +109,9 @@ public class FetchPresenterTest extends BaseTest {
                 return callback;
             }
         }).when(service).branchList(anyString(), anyString(), anyString(), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
-
+        
         presenter.showDialog();
-
+        
         verify(resourceProvider).getActiveProject();
         verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
                                    (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
@@ -391,7 +392,22 @@ public class FetchPresenterTest extends BaseTest {
         verify(constant).fetchFail(eq(REMOTE_URI));
         verify(notificationManager).showNotification((Notification)anyObject());
     }
-
+    
+    @Test
+    public void testOnValueChanged() throws Exception {
+        when(view.isFetchAllBranches()).thenReturn(FETCH_ALL_BRANCHES);
+        presenter.onValueChanged();;
+        
+        verify(view).setEnableLocalBranchField(eq(DISABLE_FIELD));
+        verify(view).setEnableRemoteBranchField(eq(DISABLE_FIELD));
+        
+        when(view.isFetchAllBranches()).thenReturn(!FETCH_ALL_BRANCHES);
+        presenter.onValueChanged();
+        
+        verify(view).setEnableLocalBranchField(eq(ENABLE_FIELD));
+        verify(view).setEnableRemoteBranchField(eq(ENABLE_FIELD));
+    }
+    
     @Test
     public void testOnCancelClicked() throws Exception {
         presenter.onCancelClicked();
