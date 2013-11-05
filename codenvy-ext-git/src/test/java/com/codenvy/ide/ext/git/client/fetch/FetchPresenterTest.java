@@ -40,7 +40,6 @@ import java.lang.reflect.Method;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.*;
 
 /**
@@ -50,6 +49,7 @@ import static org.mockito.Mockito.*;
  */
 public class FetchPresenterTest extends BaseTest {
     public static final boolean NO_REMOVE_DELETE_REFS = false;
+    public static final boolean FETCH_ALL_BRANCHES = true;
     public static final boolean SHOW_ALL_INFORMATION  = true;
     @Mock
     private FetchView      view;
@@ -62,7 +62,7 @@ public class FetchPresenterTest extends BaseTest {
         super.disarm();
 
         presenter = new FetchPresenter(view, service, resourceProvider, constant, notificationManager);
-
+        
         when(view.getRepositoryName()).thenReturn(REPOSITORY_NAME);
         when(view.getRepositoryUrl()).thenReturn(REMOTE_URI);
         when(view.getLocalBranch()).thenReturn(LOCAL_BRANCH);
@@ -107,15 +107,16 @@ public class FetchPresenterTest extends BaseTest {
                 return callback;
             }
         }).when(service).branchList(anyString(), anyString(), anyString(), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
-
+        
         presenter.showDialog();
-
+        
         verify(resourceProvider).getActiveProject();
         verify(service).remoteList(eq(VFS_ID), eq(PROJECT_ID), anyString(), eq(SHOW_ALL_INFORMATION),
                                    (AsyncRequestCallback<JsonArray<Remote>>)anyObject());
         verify(view).setEnableFetchButton(eq(ENABLE_BUTTON));
         verify(view).setRepositories((JsonArray<Remote>)anyObject());
         verify(view).setRemoveDeleteRefs(eq(NO_REMOVE_DELETE_REFS));
+        verify(view).setFetchAllBranches(eq(FETCH_ALL_BRANCHES));
         verify(view).showDialog();
         verify(view).setRemoteBranches((JsonArray<String>)anyObject());
         verify(view).setLocalBranches((JsonArray<String>)anyObject());
@@ -389,7 +390,22 @@ public class FetchPresenterTest extends BaseTest {
         verify(constant).fetchFail(eq(REMOTE_URI));
         verify(notificationManager).showNotification((Notification)anyObject());
     }
-
+    
+    @Test
+    public void testOnValueChanged() throws Exception {
+        when(view.isFetchAllBranches()).thenReturn(FETCH_ALL_BRANCHES);
+        presenter.onValueChanged();;
+        
+        verify(view).setEnableLocalBranchField(eq(DISABLE_FIELD));
+        verify(view).setEnableRemoteBranchField(eq(DISABLE_FIELD));
+        
+        when(view.isFetchAllBranches()).thenReturn(!FETCH_ALL_BRANCHES);
+        presenter.onValueChanged();
+        
+        verify(view).setEnableLocalBranchField(eq(ENABLE_FIELD));
+        verify(view).setEnableRemoteBranchField(eq(ENABLE_FIELD));
+    }
+    
     @Test
     public void testOnCancelClicked() throws Exception {
         presenter.onCancelClicked();
