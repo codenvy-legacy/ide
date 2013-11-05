@@ -24,7 +24,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M2</version>
+        <version>3.0.0-M3-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-security</artifactId>
     <packaging>jar</packaging>
