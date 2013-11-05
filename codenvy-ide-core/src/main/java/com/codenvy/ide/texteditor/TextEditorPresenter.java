@@ -18,10 +18,13 @@
 package com.codenvy.ide.texteditor;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.editor.AbstractTextEditorPresenter;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.DocumentProvider.DocumentCallback;
 import com.codenvy.ide.api.editor.SelectionProvider;
+import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.outline.OutlineImpl;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.annotation.AnnotationModel;
@@ -30,7 +33,6 @@ import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextListener;
 import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
-import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -155,8 +157,9 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
     }
 
     @Override
-    public void initialize(TextEditorConfiguration configuration, DocumentProvider documentProvider) {
-        super.initialize(configuration, documentProvider);
+    public void initialize(@NotNull TextEditorConfiguration configuration, @NotNull DocumentProvider documentProvider,
+                           @NotNull NotificationManager notificationManager) {
+        super.initialize(configuration, documentProvider, notificationManager);
         editor = new TextEditorViewImpl(resources, userActivityManager, breakpointGutterManager);
         editor.getTextListenerRegistrar().add(textListener);
     }

@@ -28,7 +28,6 @@ import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.*;
-import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageView.ActionDelegate;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -181,18 +180,19 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
 
     /** {@inheritDoc} */
     @Override
-    public void commit(@NotNull CommitCallback callback) {
+    public void commit(@NotNull final CommitCallback callback) {
         selectedResourceType.create(view.getResourceName(), parent, project, new AsyncCallback<Resource>() {
             @Override
             public void onSuccess(Resource result) {
                 if (result.isFile()) {
                     editorAgent.openEditor((File)result);
                 }
+                callback.onSuccess();
             }
 
             @Override
             public void onFailure(Throwable caught) {
-                Log.error(NewResourcePagePresenter.class, caught);
+                callback.onFailure(caught);
             }
         });
     }
