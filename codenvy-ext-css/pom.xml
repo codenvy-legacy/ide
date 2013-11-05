@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.0.0-M2</version>
     </parent>
     <artifactId>codenvy-ext-css</artifactId>
     <packaging>jar</packaging>
