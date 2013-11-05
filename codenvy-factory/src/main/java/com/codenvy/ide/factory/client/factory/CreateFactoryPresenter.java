@@ -852,10 +852,21 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
      * Generates content for embedding on Github.
      */
     private void updateGitHubSnippet(String createFactoryURL) {
-        String imageName = display.whiteStyleSelected() ? "factory-white.png" : "factory-dark.png";
-        String imageURL = new UrlBuilder()
-            .setProtocol(Location.getProtocol()).setHost(Location.getHost())
-            .setPath("factory/resources/" + imageName).buildString();
+        String style = factoryJSON.get("style").isString().stringValue();
+        
+        String imageURL = null;
+        if (style.equals("Advanced") || style.equals("Advanced with Counter")) {
+            imageURL = getLink("image");
+            if (imageURL == null) {
+                imageURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                    .setPath("factory/resources/codenvy.png").buildString();
+            }
+        } else {
+            String imageName = display.whiteStyleSelected() ? "factory-white.png" : "factory-dark.png";
+            imageURL = new UrlBuilder()
+                .setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                .setPath("factory/resources/" + imageName).buildString();            
+        }
         
         String code = "[![alt](" + imageURL + ")](" + createFactoryURL + ")";
         display.gitHubSnippet().setValue(code);
