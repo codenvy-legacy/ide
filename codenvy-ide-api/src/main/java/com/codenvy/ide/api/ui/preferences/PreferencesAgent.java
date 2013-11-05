@@ -19,6 +19,7 @@ package com.codenvy.ide.api.ui.preferences;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.extension.SDK;
+import com.google.inject.Provider;
 
 
 /**
@@ -29,9 +30,10 @@ import com.codenvy.ide.api.extension.SDK;
 @SDK(title = "ide.api.ui.preferences")
 public interface PreferencesAgent {
     /**
-     * Adds new preference page into preferences list.
+     * Adds a new preference page into preferences list.
      *
      * @param page
+     *         page that need to be added
      */
-    void addPage(@NotNull PreferencesPagePresenter page);
+    void addPage(@NotNull Provider<? extends PreferencesPagePresenter> page);
 }

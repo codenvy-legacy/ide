@@ -34,11 +34,10 @@
     <component>
         <type>com.codenvy.ide.StartBuilders</type>
     </component>
-    
+
     <component>
        <type>com.codenvy.api.builder.ApiResourcesApplication</type>
     </component>
-
 
     <!-- VirtualFileSystem -->
     <component>

@@ -40,7 +40,7 @@ import com.google.inject.name.Named;
 @Singleton
 public class BuilderClientServiceImpl implements BuilderClientService {
     /** Base url. */
-    private static final String BASE_URL = '/' + Utils.getWorkspaceName() + "/builder";
+    private static final String BASE_URL = '/' + Utils.getWorkspaceName() + "/maven";
     /** Build project method's path. */
     private static final String BUILD    = BASE_URL + "/build";
     /** Build project method's path. */

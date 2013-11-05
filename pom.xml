@@ -18,8 +18,7 @@
     from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.codenvy</groupId>
@@ -28,13 +27,14 @@
     </parent>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-parent</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Codenvy :: Parent</name>
     <scm>
         <connection>scm:git:git@github.com:codenvy/ide2.git</connection>
         <developerConnection>scm:git:git@github.com:codenvy/ide2.git</developerConnection>
-    </scm>
+      <tag>HEAD</tag>
+  </scm>
     <properties>
         <!-- Repositories URLs -->
         <exo.product.name>codenvy-ide</exo.product.name>
@@ -42,7 +42,7 @@
         <!-- Codenvy -->
         <com.codenvy.commons.version>0.8.0</com.codenvy.commons.version>
         <com.codenvy.organization.version>0.7.0</com.codenvy.organization.version>
-        <com.codenvy.platform-api.version>1.0.0-SNAPSHOT</com.codenvy.platform-api.version>
+        <com.codenvy.platform-api.version>1.0.0-beta1</com.codenvy.platform-api.version>
 
         <!-- eXo -->
         <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>

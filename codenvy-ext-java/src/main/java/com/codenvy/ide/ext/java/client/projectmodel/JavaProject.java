@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.ext.java.client.core.JavaConventions;
 import com.codenvy.ide.ext.java.client.core.JavaCore;
@@ -100,7 +101,7 @@ public class JavaProject extends Project {
      *         the name of new package
      * @param callback
      */
-    public void createPackage(final SourceFolder parent, String name, final AsyncCallback<Package> callback) {
+    public void createPackage(@NotNull final Folder parent, String name, final AsyncCallback<Package> callback) {
         try {
             checkItemValid(parent);
             if (!checkPackageName(name)) {
@@ -115,35 +116,29 @@ public class JavaProject extends Project {
             } else {
                 packagePartName = name.substring(folderParent.getName().length() + 1);
             }
-            final Folder packageParent = folderParent;
             final String path = packagePartName.replaceAll("\\.", "/");
             // create internal wrapping Request Callback with proper Unmarshaller
             AsyncRequestCallback<Package> internalCallback = new AsyncRequestCallback<Package>(new PackageUnmarshaller()) {
                 @Override
                 protected void onSuccess(final Package pack) {
-                    if (path.contains("/")) {
-                        // refresh tree, cause additional hierarchy folders my have been created
-                        refreshTree(parent, new AsyncCallback<Folder>() {
-                            @Override
-                            public void onSuccess(Folder result) {
-                                Package newPackage = (Package)parent.findResourceById(pack.getId());
-                                eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newPackage));
-                                callback.onSuccess(newPackage);
-                            }
+                    pack.setParent(parent);
+                    pack.setProject(JavaProject.this);
+                    parent.addChild(pack);
+                    // TODO workaround for a unified view for packages
+                    SourceFolder sourceFolder = getSourceFolder(pack);
+                    // refresh tree, cause additional hierarchy folders my have been created
+                    refreshTree(sourceFolder, new AsyncCallback<Folder>() {
+                        @Override
+                        public void onSuccess(Folder result) {
+                            eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(pack));
+                            callback.onSuccess(pack);
+                        }
 
-                            @Override
-                            public void onFailure(Throwable exception) {
-                                callback.onFailure(exception);
-                            }
-                        });
-                    } else {
-                        // add to the list of items
-                        parent.addChild(pack);
-                        // set proper parent project
-                        pack.setProject(JavaProject.this);
-                        eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(pack));
-                        callback.onSuccess(pack);
-                    }
+                        @Override
+                        public void onFailure(Throwable exception) {
+                            callback.onFailure(exception);
+                        }
+                    });
                 }
 
                 @Override
@@ -164,6 +159,20 @@ public class JavaProject extends Project {
     }
 
     /**
+     * Return a source folder for a chosen resource.
+     *
+     * @param folder
+     *         folder for which a source folder needs to be found
+     * @return a source folder
+     */
+    private SourceFolder getSourceFolder(@NotNull Folder folder) {
+        if (folder instanceof SourceFolder) {
+            return (SourceFolder)folder;
+        }
+        return getSourceFolder(folder.getParent());
+    }
+
+    /**
      * Create new Compilation Unit (Java file).
      * Compilation unit may created only in Packages or SourceFolder's.
      *
@@ -175,8 +184,7 @@ public class JavaProject extends Project {
      *         the content of compilation unit
      * @param callback
      */
-    public void createCompilationUnit(final Folder parent, String name, String content,
-                                      final AsyncCallback<CompilationUnit> callback) {
+    public void createCompilationUnit(final Folder parent, String name, String content, final AsyncCallback<CompilationUnit> callback) {
         try {
             checkItemValid(parent);
             checkCompilationUnitParent(parent);
@@ -185,13 +193,25 @@ public class JavaProject extends Project {
             AsyncRequestCallback<CompilationUnit> internalCallback =
                     new AsyncRequestCallback<CompilationUnit>(new CompilationUnitUnmarshaller()) {
                         @Override
-                        protected void onSuccess(CompilationUnit newCU) {
-                            // add to the list of items
-                            parent.addChild(newCU);
-                            // set proper parent project
+                        protected void onSuccess(final CompilationUnit newCU) {
+                            newCU.setParent(parent);
                             newCU.setProject(JavaProject.this);
-                            eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newCU));
-                            callback.onSuccess(newCU);
+                            parent.addChild(newCU);
+                            // TODO workaround for a unified view for packages
+                            SourceFolder sourceFolder = getSourceFolder(newCU.getParent());
+                            // refresh tree, cause additional hierarchy folders my have been created
+                            refreshTree(sourceFolder, new AsyncCallback<Folder>() {
+                                @Override
+                                public void onSuccess(Folder result) {
+                                    eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newCU));
+                                    callback.onSuccess(newCU);
+                                }
+
+                                @Override
+                                public void onFailure(Throwable exception) {
+                                    callback.onFailure(exception);
+                                }
+                            });
                         }
 
                         @Override
@@ -218,7 +238,7 @@ public class JavaProject extends Project {
      * @param name
      * @return
      */
-    protected Folder findFolderParent(SourceFolder parent, String name) {
+    protected Folder findFolderParent(Folder parent, String name) {
         Folder result = null;
         int longestMatch = 0;
         String[] newPackages = name.split("\\.");

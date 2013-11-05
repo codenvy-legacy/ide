@@ -28,6 +28,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.EnumSet;
@@ -49,6 +50,9 @@ public class Utils {
     private static MavenXpp3Reader pomReader = new MavenXpp3Reader();
     /** Maven POM writer. */
     private static MavenXpp3Writer pomWriter = new MavenXpp3Writer();
+
+    private Utils() {
+    }
 
     /**
      * Read pom.xml.
@@ -72,11 +76,11 @@ public class Utils {
      * @throws IOException
      *         error occurred while reading content of file
      */
-    static Model readPom(InputStream stream) throws IOException {
+    public static Model readPom(InputStream stream) throws IOException {
         try {
             return pomReader.read(stream, true);
         } catch (XmlPullParserException e) {
-            throw new IllegalStateException("Error occurred while parsing pom.xml :" + e.getMessage(), e);
+            throw new IllegalStateException("Error occurred while parsing pom.xml: " + e.getMessage(), e);
         }
     }
 
@@ -104,7 +108,7 @@ public class Utils {
      * @throws IOException
      *         error occurred while reading or writing content of file
      */
-    static void addDependencyToPom(Path path, Model pom) throws IOException {
+    public static void addDependencyToPom(Path path, Model pom) throws IOException {
         addDependencyToPom(path, pom.getGroupId(), pom.getArtifactId(), pom.getVersion());
     }
 
@@ -189,7 +193,7 @@ public class Utils {
      * @throws IOException
      *         error occurred while reading or writing content of file
      */
-    static void inheritGwtModule(Path path, String inheritableModuleLogicalName) throws IOException {
+    public static void inheritGwtModule(Path path, String inheritableModuleLogicalName) throws IOException {
         final String inheritsString = "    <inherits name='" + inheritableModuleLogicalName + "'/>";
         List<String> content = Files.readAllLines(path, UTF_8);
         // insert custom module as last 'inherits' entry
@@ -215,7 +219,7 @@ public class Utils {
      * @throws IllegalArgumentException
      *         if GWT module descriptor not found
      */
-    static String detectGwtModuleLogicalName(Path folder) throws IOException {
+    public static String detectGwtModuleLogicalName(Path folder) throws IOException {
         final String fileExtension = ".gwt.xml";
         final String resourcesDir = "/src/main/resources";
 
@@ -232,7 +236,7 @@ public class Utils {
     }
 
     /** Copy all DtoGenerator invocations from one pom.xml to another. */
-    static void copyDtoGeneratorInvocations(Model sourcePom, Path destPomPath) throws IOException {
+    public static void copyDtoGeneratorInvocations(Model sourcePom, Path destPomPath) throws IOException {
         final String dtoGeneratorClassName = "DtoGenerator";
 
         Model destPom = readPom(destPomPath);
@@ -252,6 +256,25 @@ public class Utils {
                 writePom(destPom, destPomPath);
             }
         }
+    }
+
+    /** Returns URL to get Tomcat binary distribution. */
+    public static URL getTomcatBinaryDistribution() throws IOException {
+        URL tomcatDistributionUrl = Thread.currentThread().getContextClassLoader().getResource("tomcat.zip");
+        if (tomcatDistributionUrl == null) {
+            throw new IOException("Unable to get Tomcat binary distribution.");
+        }
+        return tomcatDistributionUrl;
+    }
+
+    /** Returns URL to get Codenvy Platform binary distribution. */
+    public static URL getCodenvyPlatformBinaryDistribution() throws IOException {
+        URL codenvyPlatformDistributionUrl =
+                Thread.currentThread().getContextClassLoader().getResource("CodenvyPlatform.zip");
+        if (codenvyPlatformDistributionUrl == null) {
+            throw new IOException("Unable to get Codenvy Platform binary distribution.");
+        }
+        return codenvyPlatformDistributionUrl;
     }
 
     /** A {@code FileVisitor} that finds first file that match the specified pattern. */

@@ -17,11 +17,15 @@
  */
 package com.codenvy.ide.api.editor;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Abstract implementation of TextEditorPresenter
@@ -29,18 +33,18 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
 public abstract class AbstractTextEditorPresenter extends AbstractEditorPresenter implements CodenvyTextEditor {
-
     protected TextEditorConfiguration configuration;
-
-    protected DocumentProvider documentProvider;
-
-    protected Document document;
+    protected DocumentProvider        documentProvider;
+    protected Document                document;
+    protected NotificationManager     notificationManager;
 
     /** {@inheritDoc} */
     @Override
-    public void initialize(TextEditorConfiguration configuration, DocumentProvider documentProvider) {
+    public void initialize(@NotNull TextEditorConfiguration configuration, @NotNull DocumentProvider documentProvider,
+                           @NotNull NotificationManager notificationManager) {
         this.configuration = configuration;
         this.documentProvider = documentProvider;
+        this.notificationManager = notificationManager;
     }
 
     /** @see com.codenvy.ide.api.editor.TextEditorPartPresenter#getDocumentProvider() */
@@ -69,7 +73,6 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
     @Override
     public void doSave() {
         documentProvider.saveDocument(getEditorInput(), document, false, new AsyncCallback<EditorInput>() {
-
             @Override
             public void onSuccess(EditorInput result) {
                 updateDirtyState(false);
@@ -77,7 +80,8 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
 
             @Override
             public void onFailure(Throwable caught) {
-                Log.error(AbstractTextEditorPresenter.class, caught);
+                Notification notification = new Notification(caught.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
             }
         });
     }

@@ -18,26 +18,34 @@
 package com.codenvy.ide.ext.extruntime.server;
 
 import javax.ws.rs.core.Application;
-
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
- * JAX-RS application for Codenvy-extensions runtime.
- * 
+ * JAX-RS application for Codenvy extensions runtime.
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtensionRuntimeApplication.java Jul 3, 2013 3:26:32 PM azatsarynnyy $
  */
 public class ExtensionRuntimeApplication extends Application {
+    private Set<Object> singletons;
+
+    public ExtensionRuntimeApplication() {
+        singletons = new HashSet<>(2);
+        singletons.add(new BuilderExceptionMapper());
+        singletons.add(new RunnerExceptionMapper());
+    }
+
     /** {@inheritDoc} */
     @Override
-    public Set<Class< ? >> getClasses() {
-        return Collections.<Class< ? >> singleton(ExtensionRuntimeService.class);
+    public Set<Class<?>> getClasses() {
+        return Collections.<Class<?>>singleton(ExtensionsRuntimeService.class);
     }
 
     /** {@inheritDoc} */
     @Override
     public Set<Object> getSingletons() {
-        return Collections.<Object> singleton(ExtensionLauncherExceptionMapper.class);
+        return singletons;
     }
 }

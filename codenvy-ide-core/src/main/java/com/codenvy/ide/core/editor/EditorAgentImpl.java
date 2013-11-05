@@ -66,6 +66,7 @@ public class EditorAgentImpl implements EditorAgent {
         public void onActivePartChanged(ActivePartChangedEvent event) {
             if (event.getActivePart() instanceof EditorPartPresenter) {
                 activeEditor = (EditorPartPresenter)event.getActivePart();
+                activeEditor.activate();
             }
         }
     };

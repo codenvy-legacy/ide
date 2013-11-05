@@ -17,15 +17,13 @@
  */
 package com.codenvy.ide.ext.appfog.client.wizard;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.template.CreateProjectProvider;
-import com.codenvy.ide.api.template.TemplateAgent;
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.*;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
@@ -56,6 +54,9 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
+import static com.codenvy.ide.ext.appfog.client.AppFogExtension.ID;
 
 /**
  * Presenter for creating application on AppFog from New project wizard.
@@ -63,7 +64,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class AppFogPagePresenter extends AbstractWizardPagePresenter implements AppFogPageView.ActionDelegate, ProjectBuiltHandler {
+public class AppFogPagePresenter extends AbstractPaasPage implements AppFogPageView.ActionDelegate, ProjectBuiltHandler {
     private AppFogPageView             view;
     private EventBus                   eventBus;
     private String                     server;
@@ -78,13 +79,12 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
     private HandlerRegistration        projectBuildHandler;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
-    private TemplateAgent              templateAgent;
-    private CreateProjectProvider      createProjectProvider;
     private NotificationManager        notificationManager;
     private InfraDetail                currentInfra;
     private Notification               notification;
     private JsonArray<InfraDetail>     infras;
     private boolean                    isLogined;
+    private CommitCallback             callback;
 
     /**
      * Create presenter.
@@ -97,15 +97,14 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
      * @param constant
      * @param loginPresenter
      * @param service
-     * @param templateAgent
      * @param notificationManager
      */
     @Inject
     protected AppFogPagePresenter(AppFogPageView view, EventBus eventBus, ResourceProvider resourcesProvider, ConsolePart console,
                                   AppfogResources resources, AppfogLocalizationConstant constant, LoginPresenter loginPresenter,
-                                  AppfogClientService service, TemplateAgent templateAgent, NotificationManager notificationManager) {
+                                  AppfogClientService service, NotificationManager notificationManager) {
 
-        super("Deploy project to AppFog", resources.appfog48());
+        super("Deploy project to AppFog", resources.appfog48(), ID);
 
         this.view = view;
         this.view.setDelegate(this);
@@ -115,7 +114,6 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
-        this.templateAgent = templateAgent;
         this.notificationManager = notificationManager;
     }
 
@@ -167,35 +165,26 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
 
     /** {@inheritDoc} */
     @Override
-    public WizardPagePresenter flipToNext() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean canFinish() {
-        return validate();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean hasNext() {
-        return false;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public boolean isCompleted() {
         return validate();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void focusComponent() {
+        // do nothing
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void removeOptions() {
+        // do nothing
+    }
+
     /** Checking entered information on view. */
     public boolean validate() {
-        if (isLogined) {
-            return view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty() &&
-                   currentInfra != null;
-        }
-        return true;
+        return !isLogined || view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty() &&
+                             currentInfra != null;
     }
 
     /** {@inheritDoc} */
@@ -215,8 +204,7 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        createProjectProvider = templateAgent.getSelectedTemplate().getCreateProjectProvider();
-        projectName = createProjectProvider.getProjectName();
+        projectName = wizardContext.getData(PROJECT_NAME);
 
         server = AppFogExtension.DEFAULT_SERVER;
         view.setTarget(server);
@@ -253,7 +241,6 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
         notification = new Notification(message, Notification.Status.PROGRESS);
         notificationManager.showNotification(notification);
 
-
         try {
             // Application will be started after creation (IDE-1618)
             boolean noStart = false;
@@ -273,6 +260,7 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
                         @Override
                         public void onFailure(Throwable caught) {
                             Log.error(AppFogPagePresenter.class, "Can not refresh properties", caught);
+                            callback.onFailure(caught);
                         }
                     });
                 }
@@ -283,6 +271,7 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
                     notification.setType(ERROR);
                     notification.setMessage(constant.applicationCreationFailed());
                     super.onFailure(exception);
+                    callback.onFailure(exception);
                 }
             });
         } catch (WebSocketException e) {
@@ -317,6 +306,7 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
                         @Override
                         public void onFailure(Throwable caught) {
                             Log.error(AppFogPagePresenter.class, "Can not refresh properties", caught);
+                            callback.onFailure(caught);
                         }
                     });
                 }
@@ -327,6 +317,7 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
                     notification.setType(ERROR);
                     notification.setMessage(constant.applicationCreationFailed());
                     super.onFailure(exception);
+                    callback.onFailure(exception);
                 }
             });
         } catch (RequestException e) {
@@ -334,6 +325,7 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
             notification.setStatus(FINISHED);
             notification.setType(ERROR);
             notification.setMessage(constant.applicationCreationFailed());
+            callback.onFailure(e);
         }
     }
 
@@ -358,6 +350,7 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
         notification.setMessage(msg);
         console.print(msg);
         eventBus.fireEvent(new RefreshBrowserEvent(project));
+        callback.onSuccess();
     }
 
     /**
@@ -489,28 +482,24 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
         eventBus.fireEvent(new BuildProjectEvent(project));
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void doFinish() {
-        createProjectProvider.create(new AsyncCallback<Project>() {
-            @Override
-            public void onSuccess(Project result) {
-                if (isLogined) {
-                    deploy(result);
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                Log.error(AppFogPagePresenter.class, caught);
-            }
-        });
-    }
-
     /** Deploy project to AppFog. */
     public void deploy(Project project) {
         this.project = project;
 
         buildApplication();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void commit(@NotNull CommitCallback callback) {
+        if (!isLogined) {
+            callback.onSuccess();
+            return;
+        }
+
+        this.callback = callback;
+
+        Project project = wizardContext.getData(PROJECT);
+        deploy(project);
     }
 }

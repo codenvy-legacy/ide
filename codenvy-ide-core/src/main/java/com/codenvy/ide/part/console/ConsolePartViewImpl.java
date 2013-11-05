@@ -35,13 +35,13 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate> implements ConsolePartView {
+    interface ConsolePartViewImplUiBinder extends UiBinder<Widget, ConsolePartViewImpl> {
+    }
+
     private static ConsolePartViewImplUiBinder uiBinder = GWT.create(ConsolePartViewImplUiBinder.class);
 
     @UiField
     FlowPanel consoleArea;
-
-    interface ConsolePartViewImplUiBinder extends UiBinder<Widget, ConsolePartViewImpl> {
-    }
 
     @Inject
     public ConsolePartViewImpl(PartStackUIResources resources) {
@@ -53,5 +53,11 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
     @Override
     public void print(String message) {
         consoleArea.add(new HTML(message));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void clear() {
+        consoleArea.clear();
     }
 }

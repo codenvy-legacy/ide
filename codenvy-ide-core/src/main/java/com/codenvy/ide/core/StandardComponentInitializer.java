@@ -18,17 +18,7 @@
 package com.codenvy.ide.core;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.actions.CloseProjectAction;
-import com.codenvy.ide.actions.DeleteResourceAction;
-import com.codenvy.ide.actions.NewFolderAction;
-import com.codenvy.ide.actions.NewProjectAction;
-import com.codenvy.ide.actions.NewResourceAction;
-import com.codenvy.ide.actions.OpenProjectAction;
-import com.codenvy.ide.actions.SaveAction;
-import com.codenvy.ide.actions.SaveAllAction;
-import com.codenvy.ide.actions.ShowPreferencesAction;
-import com.codenvy.ide.actions.UpdateExtensionAction;
-import com.codenvy.ide.api.paas.PaaSAgent;
+import com.codenvy.ide.actions.*;
 import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Constraints;
@@ -37,8 +27,9 @@ import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
+import com.codenvy.ide.api.ui.wizard.DefaultWizard;
+import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.extension.ExtensionManagerPresenter;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.welcome.WelcomeLocalizationConstant;
@@ -46,9 +37,13 @@ import com.codenvy.ide.welcome.action.ConnectSupportAction;
 import com.codenvy.ide.welcome.action.CreateProjectAction;
 import com.codenvy.ide.welcome.action.InviteAction;
 import com.codenvy.ide.welcome.action.ShowDocumentationAction;
-import com.codenvy.ide.wizard.WizardAgentImpl;
-import com.codenvy.ide.wizard.newfile.NewTextFilePagePresenter;
-import com.codenvy.ide.wizard.newfolder.NewFolderPagePresenter;
+import com.codenvy.ide.wizard.NewResourceAgentImpl;
+import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
+import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
+import com.codenvy.ide.wizard.newresource.NewFolderProvider;
+import com.codenvy.ide.wizard.newresource.NewResource;
+import com.codenvy.ide.wizard.newresource.NewTextFileProvider;
+import com.codenvy.ide.wizard.newresource.page.NewResourcePagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -63,13 +58,20 @@ import com.google.web.bindery.event.shared.EventBus;
 public class StandardComponentInitializer {
 
     @Inject
-    private WizardAgentImpl wizard;
+    @NewResource
+    private DefaultWizard newResourceWizard;
 
     @Inject
-    private Provider<NewFolderPagePresenter> newFolderProvider;
+    private Provider<NewResourcePagePresenter> chooseResourcePage;
 
     @Inject
-    private Provider<NewTextFilePagePresenter> newTextFileProvider;
+    private NewFolderProvider newFolderProvider;
+
+    @Inject
+    private NewTextFileProvider newTextFileProvider;
+
+    @Inject
+    private NewResourceAgentImpl newResourceWizardAgent;
 
     @Inject
     private Resources resources;
@@ -79,9 +81,6 @@ public class StandardComponentInitializer {
 
     @Inject
     private EventBus eventBus;
-
-    @Inject
-    private PaaSAgent paasAgent;
 
     @Inject
     private ActionManager actionManager;
@@ -94,9 +93,6 @@ public class StandardComponentInitializer {
 
     @Inject
     private SaveAllAction saveAllAction;
-
-    @Inject
-    private NewFolderAction newFolderAction;
 
     @Inject
     private NewResourceAction newFileAction;
@@ -139,10 +135,19 @@ public class StandardComponentInitializer {
     private CloseProjectAction closeProjectAction;
 
     @Inject
+    private NewProjectWizard newProjectWizard;
+
+    @Inject
+    private Provider<NewProjectPagePresenter> newProjectPageProvider;
+
+    @Inject
+    private Provider<ChooseTemplatePagePresenter> chooseTemplatePageProvider;
+
+    @Inject
     private PreferencesAgent preferencesAgent;
 
     @Inject
-    private ExtensionManagerPresenter extensionManagerPresenter;
+    private Provider<ExtensionManagerPresenter> extensionManagerPresenter;
 
     /** Instantiates {@link StandardComponentInitializer} an creates standard content */
     @Inject
@@ -150,9 +155,10 @@ public class StandardComponentInitializer {
     }
 
     public void initialize() {
-        // TODO change icon
-        wizard.registerNewResourceWizard("General", "Folder", resources.folder(), newFolderProvider);
-        wizard.registerNewResourceWizard("General", "Text file", resources.file(), newTextFileProvider);
+        newResourceWizard.addPage(chooseResourcePage);
+
+        newResourceWizardAgent.register(newFolderProvider);
+        newResourceWizardAgent.register(newTextFileProvider);
 
         preferencesAgent.addPage(extensionManagerPresenter);
 
@@ -177,10 +183,8 @@ public class StandardComponentInitializer {
         toolbarGroup.addSeparator();
         fileGroup.add(newGroup);
         fileGroup.add(openProjectAction);
-        actionManager.registerAction("newFolder", newFolderAction);
         actionManager.registerAction("newResource", newFileAction);
         newGroup.add(newFileAction);
-        newGroup.add(newFolderAction);
 
         DefaultActionGroup saveGroup = new DefaultActionGroup(actionManager);
         actionManager.registerAction("saveGroup", saveGroup);
@@ -208,7 +212,6 @@ public class StandardComponentInitializer {
         runMenuActionGroup.add(updateExtensionAction);
 
         toolbarPresenter.bindMainGroup(toolbarGroup);
-        paasAgent.registerPaaS("None", "None", null, JsonCollections.<String>createArray("", "java", "War"), null, null);
 
         welcomePart.addItem(createProjectAction);
         welcomePart.addItem(showDocumentationAction);
@@ -230,5 +233,8 @@ public class StandardComponentInitializer {
         actionManager.registerAction("closeProjectGroup", closeProjectGroup);
         closeProjectGroup.add(closeProjectAction);
         contextMenuGroup.add(closeProjectGroup);
+
+        newProjectWizard.addPage(newProjectPageProvider);
+        newProjectWizard.addPage(chooseTemplatePageProvider);
     }
 }

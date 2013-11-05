@@ -17,15 +17,11 @@
  */
 package com.codenvy.ide.ext.openshift.client.wizard;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.template.CreateProjectProvider;
-import com.codenvy.ide.api.template.Template;
-import com.codenvy.ide.api.template.TemplateAgent;
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.openshift.client.*;
@@ -37,7 +33,6 @@ import com.codenvy.ide.ext.openshift.client.marshaller.ApplicationInfoUnmarshall
 import com.codenvy.ide.ext.openshift.client.marshaller.ListUnmarshaller;
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.part.projectexplorer.ProjectExplorerPartPresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
@@ -46,13 +41,17 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
+import static com.codenvy.ide.ext.openshift.client.OpenShiftExtension.ID;
+import static com.codenvy.ide.json.JsonCollections.createArray;
+import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
 /**
  * Wizard page for creating project on OpenShift.
@@ -61,65 +60,53 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * @version $Id: $
  */
 @Singleton
-public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implements OpenShiftPageView.ActionDelegate {
+public class OpenShiftPagePresenter extends AbstractPaasPage implements OpenShiftPageView.ActionDelegate {
     private OpenShiftPageView             view;
     private EventBus                      eventBus;
-    private ConsolePart                   console;
     private ResourceProvider              resourceProvider;
     private OpenShiftLocalizationConstant constant;
     private LoginPresenter                loginPresenter;
     private OpenShiftClientService        service;
-    private TemplateAgent                 templateAgent;
-    private CreateProjectProvider         createProjectProvider;
     private UpdateKeyPresenter            updateKeyPresenter;
     private GitClientService              gitService;
     private ProjectExplorerPartPresenter  projectExplorer;
-    private OpenShiftPagePresenter        instance;
     private NotificationManager           notificationManager;
     private boolean                       isLogged;
     private Project                       project;
     private String                        projectName;
     private Notification                  notification;
-
+    private CommitCallback                callback;
 
     /**
      * Create presenter.
      *
      * @param view
      * @param eventBus
-     * @param console
      * @param resourceProvider
      * @param constant
      * @param loginPresenter
      * @param service
-     * @param templateAgent
      * @param resources
      * @param updateKeyPresenter
      * @param gitService
      * @param projectExplorer
-     * @param createProjectProvider
      */
     @Inject
-    protected OpenShiftPagePresenter(OpenShiftPageView view, EventBus eventBus, ConsolePart console, ResourceProvider resourceProvider,
+    protected OpenShiftPagePresenter(OpenShiftPageView view, EventBus eventBus, ResourceProvider resourceProvider,
                                      OpenShiftLocalizationConstant constant, LoginPresenter loginPresenter, OpenShiftClientService service,
-                                     TemplateAgent templateAgent, OpenShiftResources resources, UpdateKeyPresenter updateKeyPresenter,
-                                     GitClientService gitService, ProjectExplorerPartPresenter projectExplorer,
-                                     CreateProjectProvider createProjectProvider, NotificationManager notificationManager) {
-        super("Deploy project to OpenShift", resources.openShift48());
+                                     OpenShiftResources resources, UpdateKeyPresenter updateKeyPresenter, GitClientService gitService,
+                                     ProjectExplorerPartPresenter projectExplorer, NotificationManager notificationManager) {
+        super("Deploy project to OpenShift", resources.openShift48(), ID);
 
         this.view = view;
         this.eventBus = eventBus;
-        this.console = console;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
-        this.templateAgent = templateAgent;
         this.updateKeyPresenter = updateKeyPresenter;
         this.gitService = gitService;
         this.projectExplorer = projectExplorer;
-        this.instance = this;
-        this.createProjectProvider = createProjectProvider;
         this.notificationManager = notificationManager;
     }
 
@@ -131,26 +118,20 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
 
     /** {@inheritDoc} */
     @Override
-    public WizardPagePresenter flipToNext() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean canFinish() {
-        return validate();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean hasNext() {
-        return false;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public boolean isCompleted() {
         return validate();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void focusComponent() {
+        //do nothing
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void removeOptions() {
+        //do nothing
     }
 
     /** {@inheritDoc} */
@@ -168,18 +149,7 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        Provider<OpenShiftPagePresenter> wizardInstance = new Provider<OpenShiftPagePresenter>() {
-            @Override
-            public OpenShiftPagePresenter get() {
-                return instance;
-            }
-        };
-
-        Template template = new Template(null, "OpenShift", createProjectProvider, wizardInstance, JsonCollections.createArray("War"));
-        createProjectProvider = template.getCreateProjectProvider();
-        createProjectProvider.setProjectName(templateAgent.getSelectedTemplate().getCreateProjectProvider().getProjectName());
-        projectName = createProjectProvider.getProjectName();
-
+        projectName = wizardContext.getData(PROJECT_NAME);
         view.setName(projectName);
 
         getApplicationTypes();
@@ -189,8 +159,35 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
 
     /** {@inheritDoc} */
     @Override
-    public void doFinish() {
-        createEmptyProject();
+    public void commit(@NotNull CommitCallback callback) {
+        this.callback = callback;
+
+        if (!isLogged) {
+            callback.onSuccess();
+            return;
+        }
+
+        notification = new Notification(constant.creatingApplicationStarted(projectName), PROGRESS);
+        notificationManager.showNotification(notification);
+
+        projectExplorer.setContent(null);
+
+        JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE));
+        resourceProvider.createProject(projectName, properties, new AsyncCallback<Project>() {
+            @Override
+            public void onSuccess(Project result) {
+                project = result;
+                createApplication();
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                notification.setStatus(FINISHED);
+                notification.setType(ERROR);
+                notification.setMessage(caught.getMessage());
+                OpenShiftPagePresenter.this.callback.onFailure(caught);
+            }
+        });
     }
 
     /** Get application types supported by OpenShift. */
@@ -229,31 +226,6 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
         return !isLogged || view.getName() != null && !view.getName().isEmpty();
     }
 
-    /** Create empty project, without any files. */
-    private void createEmptyProject() {
-        notification = new Notification(constant.creatingApplicationStarted(projectName), PROGRESS);
-        notificationManager.showNotification(notification);
-
-        createProjectProvider.create(new AsyncCallback<Project>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                notification.setStatus(FINISHED);
-                notification.setType(ERROR);
-                notification.setMessage(caught.getMessage());
-                eventBus.fireEvent(new ExceptionThrownEvent(caught));
-            }
-
-            @Override
-            public void onSuccess(Project result) {
-                projectExplorer.setContent(null);
-                if (isLogged) {
-                    project = result;
-                    createApplication();
-                }
-            }
-        });
-    }
-
     /** Create application on OpenShift and after that start to update public key. */
     private void createApplication() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -286,6 +258,7 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
             notification.setType(ERROR);
             notification.setMessage(e.getMessage());
             eventBus.fireEvent(new ExceptionThrownEvent(e));
+            callback.onFailure(e);
         }
     }
 
@@ -312,6 +285,10 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
                                           @Override
                                           protected void onFailure(Throwable exception) {
                                               super.onFailure(exception);
+                                              notification.setStatus(FINISHED);
+                                              notification.setType(ERROR);
+                                              notification.setMessage(exception.getMessage());
+                                              callback.onFailure(exception);
                                               //TODO cleanup project if creation of application on OpenShift is failed.
                                           }
                                       });
@@ -320,6 +297,7 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
             notification.setType(ERROR);
             notification.setMessage(e.getMessage());
             eventBus.fireEvent(new ExceptionThrownEvent(e));
+            callback.onFailure(e);
         }
     }
 
@@ -337,6 +315,7 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
                 notification.setStatus(FINISHED);
                 notification.setType(ERROR);
                 notification.setMessage(msg);
+                callback.onFailure(caught);
             }
 
             @Override
@@ -348,6 +327,7 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
                     notification.setStatus(FINISHED);
                     notification.setType(ERROR);
                     notification.setMessage(msg);
+                    callback.onSuccess();
                 }
             }
         });
@@ -368,6 +348,7 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
                         notification.setStatus(FINISHED);
                         notification.setType(ERROR);
                         notification.setMessage(msg);
+                        callback.onFailure(caught);
                     }
 
                     @Override
@@ -383,6 +364,7 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
                             notification.setStatus(FINISHED);
                             notification.setType(ERROR);
                             notification.setMessage(msg);
+                            callback.onSuccess();
                         }
                     }
                 });
@@ -394,6 +376,7 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
         project.flushProjectProperties(new AsyncCallback<Project>() {
             @Override
             public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
             }
 
             @Override
@@ -413,11 +396,13 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
         project.refreshTree(new AsyncCallback<Project>() {
             @Override
             public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
             }
 
             @Override
             public void onSuccess(Project result) {
                 projectExplorer.setContent(result.getParent());
+                callback.onSuccess();
             }
         });
     }

@@ -21,7 +21,7 @@ package com.codenvy.ide.ext.gae.client.wizard;
 import com.codenvy.ide.api.mvp.View;
 
 /**
- * The view of {@link GAEWizardPresenter}.
+ * The view of {@link GAEWizardPagePresenter}.
  *
  * @author <a href="mailto:vzhukovskii@codenvy.com">Vladislav Zhukovskii</a>
  * @version $Id: $

@@ -20,10 +20,10 @@ package com.codenvy.ide.actions;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.wizard.WizardPresenter;
-import com.codenvy.ide.wizard.newproject.NewProjectPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardDialog;
+import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
+import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -32,21 +32,21 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class NewProjectAction extends Action {
-
-    private final Resources                         resources;
-    private final Provider<NewProjectPagePresenter> firstPage;
+    private WizardDialogFactory wizardDialogFactory;
+    private NewProjectWizard    wizard;
 
     @Inject
-    public NewProjectAction(Resources resources, Provider<NewProjectPagePresenter> firstPage) {
+    public NewProjectAction(Resources resources, WizardDialogFactory wizardDialogFactory, NewProjectWizard wizard) {
         super("Project", "Create new project", resources.project());
 
-        this.resources = resources;
-        this.firstPage = firstPage;
+        this.wizardDialogFactory = wizardDialogFactory;
+        this.wizard = wizard;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        WizardPresenter wizardDialog = new WizardPresenter(firstPage.get(), "Create project", resources);
-        wizardDialog.showWizard();
+        WizardDialog wizardDialog = wizardDialogFactory.create(wizard);
+        wizardDialog.show();
     }
 }

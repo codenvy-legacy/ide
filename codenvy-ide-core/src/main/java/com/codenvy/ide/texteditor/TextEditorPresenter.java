@@ -18,10 +18,13 @@
 package com.codenvy.ide.texteditor;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.editor.AbstractTextEditorPresenter;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.DocumentProvider.DocumentCallback;
 import com.codenvy.ide.api.editor.SelectionProvider;
+import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.outline.OutlineImpl;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.annotation.AnnotationModel;
@@ -30,8 +33,8 @@ import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextListener;
 import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
-import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.util.executor.UserActivityManager;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
@@ -71,16 +74,24 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
     @Override
     protected void initializeEditor() {
         editor.configure(configuration);
-        documentProvider.getDocument(input, new DocumentCallback() {
 
+        // Postpone setting a document to give the time for a editor (TextEditorViewImpl) to fully construct itself.
+        // Otherwise, the editor may not be ready to render the document.
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
-            public void onDocument(Document document) {
-                TextEditorPresenter.this.document = document;
-                AnnotationModel annotationModel = documentProvider.getAnnotationModel(input);
-                editor.setDocument(document, annotationModel);
-                firePropertyChange(PROP_INPUT);
+            public void execute() {
+                documentProvider.getDocument(input, new DocumentCallback() {
+                    @Override
+                    public void onDocument(Document document) {
+                        TextEditorPresenter.this.document = document;
+                        AnnotationModel annotationModel = documentProvider.getAnnotationModel(input);
+                        editor.setDocument(document, annotationModel);
+                        firePropertyChange(PROP_INPUT);
+                    }
+                });
             }
         });
+
     }
 
     /** @see com.codenvy.ide.api.editor.TextEditorPartPresenter#close(boolean) */
@@ -146,9 +157,16 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
     }
 
     @Override
-    public void initialize(TextEditorConfiguration configuration, DocumentProvider documentProvider) {
-        super.initialize(configuration, documentProvider);
+    public void initialize(@NotNull TextEditorConfiguration configuration, @NotNull DocumentProvider documentProvider,
+                           @NotNull NotificationManager notificationManager) {
+        super.initialize(configuration, documentProvider, notificationManager);
         editor = new TextEditorViewImpl(resources, userActivityManager, breakpointGutterManager);
         editor.getTextListenerRegistrar().add(textListener);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void activate() {
+        editor.getBuffer().synchronizeScrollTop();
     }
 }

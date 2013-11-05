@@ -17,6 +17,11 @@
  */
 package com.codenvy.ide.ext.java.client;
 
+import com.codenvy.ide.api.editor.EditorRegistry;
+import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.ext.java.client.codeassistant.ContentAssistHistory;
 import com.codenvy.ide.ext.java.client.core.JavaCore;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
@@ -25,19 +30,12 @@ import com.codenvy.ide.ext.java.client.internal.compiler.impl.CompilerOptions;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectModelProvider;
 import com.codenvy.ide.ext.java.client.templates.*;
-import com.codenvy.ide.ext.java.client.wizard.NewJavaClassPagePresenter;
-import com.codenvy.ide.ext.java.client.wizard.NewPackagePagePresenter;
-
-import com.codenvy.ide.api.editor.EditorRegistry;
-import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.resources.FileType;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.wizard.WizardAgent;
+import com.codenvy.ide.ext.java.client.wizard.*;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.rest.MimeType;
 import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.HashMap;
@@ -48,9 +46,9 @@ import java.util.HashMap;
  */
 @Extension(title = "Java Support : syntax highlighting and autocomplete.", version = "3.0.0")
 public class JavaExtension {
-    private static final String JAVA_PERSPECTIVE = "Java";
-
-    public static final String JAVA_WEB_APPLICATION_PROJECT_TYPE = "War";
+    private static final String JAVA_PERSPECTIVE                  = "Java";
+    public static final  String JAVA_APPLICATION_PROJECT_TYPE     = "Jar";
+    public static final  String JAVA_WEB_APPLICATION_PROJECT_TYPE = "War";
 
     private static JavaExtension instance;
 
@@ -66,9 +64,17 @@ public class JavaExtension {
      *
      */
     @Inject
-    public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry, JavaEditorProvider javaEditorProvider,
-                         EventBus eventBus, WizardAgent wizardAgent, Provider<NewPackagePagePresenter> packageProvider,
-                         Provider<NewJavaClassPagePresenter> classProvider, ProjectTypeAgent projectTypeAgent) {
+    public JavaExtension(ResourceProvider resourceProvider,
+                         EditorRegistry editorRegistry,
+                         JavaEditorProvider javaEditorProvider,
+                         EventBus eventBus,
+                         NewResourceAgent newResourceAgent,
+                         NewClassProvider newClassHandler,
+                         NewInterfaceProvider newInterfaceHandler,
+                         NewEnumProvider newEnumHandler,
+                         NewAnnotationProvider newAnnotationHandler,
+                         NewPackageProvider newPackage,
+                         ProjectTypeAgent projectTypeAgent) {
 
         this();
         FileType javaFile = new FileType(JavaClientBundle.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
@@ -77,12 +83,18 @@ public class JavaExtension {
         resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModelProvider(eventBus));
         JavaClientBundle.INSTANCE.css().ensureInjected();
 
-        projectTypeAgent.registerProjectType(JavaProject.PRIMARY_NATURE, "Java application", JavaClientBundle.INSTANCE.newJavaProject());
-        projectTypeAgent
-                .registerProjectType(JAVA_WEB_APPLICATION_PROJECT_TYPE, "Java web application", JavaClientBundle.INSTANCE.newJavaProject());
+        projectTypeAgent.register(JavaProject.PRIMARY_NATURE, "Java application", JavaClientBundle.INSTANCE.newJavaProject(),
+                                  JavaProject.PRIMARY_NATURE, JsonCollections.<String>createArray(JAVA_APPLICATION_PROJECT_TYPE));
+        projectTypeAgent.register(JAVA_WEB_APPLICATION_PROJECT_TYPE, "Java web application",
+                                  JavaClientBundle.INSTANCE.newJavaProject(),
+                                  JavaProject.PRIMARY_NATURE,
+                                  JsonCollections.<String>createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE));
 
-        wizardAgent.registerNewResourceWizard(JAVA_PERSPECTIVE, "Package", JavaClientBundle.INSTANCE.packageItem(), packageProvider);
-        wizardAgent.registerNewResourceWizard(JAVA_PERSPECTIVE, "Java Class", JavaClientBundle.INSTANCE.newClassWizz(), classProvider);
+        newResourceAgent.register(newClassHandler);
+        newResourceAgent.register(newInterfaceHandler);
+        newResourceAgent.register(newEnumHandler);
+        newResourceAgent.register(newAnnotationHandler);
+        newResourceAgent.register(newPackage);
     }
 
     /** For test use only. */

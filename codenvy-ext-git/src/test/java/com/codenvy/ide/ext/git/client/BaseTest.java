@@ -45,6 +45,8 @@ public abstract class BaseTest extends GwtTestWithMockito {
     public static final boolean UNSELECTED_ITEM = false;
     public static final boolean ENABLE_BUTTON   = true;
     public static final boolean DISABLE_BUTTON  = false;
+    public static final boolean ENABLE_FIELD    = true;
+    public static final boolean DISABLE_FIELD   = false;
     public static final String  EMPTY_TEXT      = "";
     public static final String  PROJECT_NAME    = "test";
     public static final String  REMOTE_NAME     = "codenvy";

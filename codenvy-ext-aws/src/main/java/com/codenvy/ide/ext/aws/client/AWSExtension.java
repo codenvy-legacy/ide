@@ -22,10 +22,12 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.ext.aws.client.beanstalk.wizard.BeanstalkPagePresenter;
 import com.codenvy.ide.ext.aws.client.command.*;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -37,8 +39,8 @@ import com.google.inject.Singleton;
 @Singleton
 @Extension(title = "AWS Support.", version = "3.0.0")
 public class AWSExtension {
-    private static final String ID             = "AWS";
-    public static final  String INIT_VER_LABEL = "initial version";
+    public static final String ID             = "AWS";
+    public static final String INIT_VER_LABEL = "initial version";
 
     /**
      * Create CloudFoundry extension.
@@ -51,16 +53,27 @@ public class AWSExtension {
      * @param s3ManagementAction
      * @param beanstalkManagementAction
      * @param createApplicationManagementAction
+     *
      * @param wizardPage
      */
     @Inject
-    public AWSExtension(PaaSAgent paasAgent, AWSResource resource, ActionManager actionManager, SwitchAccountAction switchAccountAction,
-                        EC2ManagementAction ec2ManagementAction, S3ManagementAction s3ManagementAction,
+    public AWSExtension(PaaSAgent paasAgent,
+                        AWSResource resource,
+                        ActionManager actionManager,
+                        SwitchAccountAction switchAccountAction,
+                        EC2ManagementAction ec2ManagementAction,
+                        S3ManagementAction s3ManagementAction,
                         BeanstalkManagementAction beanstalkManagementAction,
                         CreateApplicationManagementAction createApplicationManagementAction,
                         Provider<BeanstalkPagePresenter> wizardPage) {
-        JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Spring", "War");
-        paasAgent.registerPaaS(ID, "Amazon Web Services", resource.elasticBeanstalk48(), requiredProjectTypes, wizardPage, null);
+        // TODO change hard code types
+        JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
+        natures.put("java", JsonCollections.<String>createArray("Servlet/JSP", "Spring", "War"));
+
+        JsonArray<Provider<? extends AbstractPaasPage>> wizardPages = JsonCollections.createArray();
+        wizardPages.add(wizardPage);
+
+        paasAgent.register(ID, "Amazon Web Services", resource.elasticBeanstalk48(), natures, wizardPages, false);
 
         actionManager.registerAction("awsSwitchAccount", switchAccountAction);
         actionManager.registerAction("awsEc2Management", ec2ManagementAction);
