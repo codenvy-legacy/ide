@@ -160,4 +160,10 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
         editor = new TextEditorViewImpl(resources, userActivityManager, breakpointGutterManager);
         editor.getTextListenerRegistrar().add(textListener);
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void activate() {
+        editor.getBuffer().synchronizeScrollTop();
+    }
 }
