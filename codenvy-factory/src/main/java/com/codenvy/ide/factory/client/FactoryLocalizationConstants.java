@@ -59,6 +59,9 @@ public interface FactoryLocalizationConstants extends Messages {
 
     @Key("messages.cloneSuccessful")
     String cloneSuccessful(String vcsUrl);
+    
+    @Key("messages.sharing.summary")
+    String sharingSummary();    
 
     /*
      * Controls
