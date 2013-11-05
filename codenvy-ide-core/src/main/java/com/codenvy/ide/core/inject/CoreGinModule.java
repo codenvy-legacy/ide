@@ -33,11 +33,11 @@ import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
+import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.DefaultWizardFactory;
-import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
-import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.api.ui.workspace.EditorPartStack;
 import com.codenvy.ide.api.ui.workspace.PartStack;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
@@ -100,11 +100,10 @@ import com.codenvy.ide.websocket.MessageBusImpl;
 import com.codenvy.ide.welcome.WelcomePartPresenter;
 import com.codenvy.ide.welcome.WelcomePartView;
 import com.codenvy.ide.welcome.WelcomePartViewImpl;
-import com.codenvy.ide.wizard.WizardAgentImpl;
+import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.WizardDialogPresenter;
 import com.codenvy.ide.wizard.WizardDialogView;
 import com.codenvy.ide.wizard.WizardDialogViewImpl;
-import com.codenvy.ide.wizard.newfile.NewGenericFilePageViewImpl;
 import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
 import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
 import com.codenvy.ide.wizard.newproject.TemplateAgentImpl;
@@ -112,8 +111,10 @@ import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageView;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageViewImpl;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageView;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageViewImpl;
-import com.codenvy.ide.wizard.newresource.NewResourcePageView;
-import com.codenvy.ide.wizard.newresource.NewResourcePageViewImpl;
+import com.codenvy.ide.wizard.newresource.NewResource;
+import com.codenvy.ide.wizard.newresource.NewResourceWizardProvider;
+import com.codenvy.ide.wizard.newresource.page.NewResourcePageView;
+import com.codenvy.ide.wizard.newresource.page.NewResourcePageViewImpl;
 import com.codenvy.ide.workspace.*;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
@@ -160,7 +161,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(SelectionAgent.class).to(SelectionAgentImpl.class).in(Singleton.class);
         bind(WorkspaceAgent.class).to(WorkspacePresenter.class).in(Singleton.class);
         bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
-        bind(WizardAgent.class).to(WizardAgentImpl.class).in(Singleton.class);
+        bind(NewResourceAgent.class).to(NewResourceAgentImpl.class).in(Singleton.class);
         bind(PaaSAgent.class).to(PaaSAgentImpl.class).in(Singleton.class);
         bind(TemplateAgent.class).to(TemplateAgentImpl.class).in(Singleton.class);
         bind(ProjectTypeAgent.class).to(ProjectTypeAgentImpl.class).in(Singleton.class);
@@ -207,7 +208,6 @@ public class CoreGinModule extends AbstractGinModule {
         // Views
         bind(WorkspaceView.class).to(WorkspaceViewImpl.class).in(Singleton.class);
         bind(MainMenuView.class).to(MainMenuViewImpl.class).in(Singleton.class);
-        bind(NewGenericFilePageView.class).to(NewGenericFilePageViewImpl.class).in(Singleton.class);
 
         bind(ToolbarView.class).to(ToolbarViewImpl.class);
         bind(ToolbarPresenter.class).annotatedWith(MainToolbar.class).to(ToolbarPresenter.class).in(Singleton.class);
@@ -222,6 +222,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(SearchPartView.class).to(SearchPartViewImpl.class).in(Singleton.class);
 
         bind(ChooseTemplatePageView.class).to(ChooseTemplatePageViewImpl.class);
+        bind(DefaultWizard.class).annotatedWith(NewResource.class).toProvider(NewResourceWizardProvider.class).in(Singleton.class);
         bind(NewResourcePageView.class).to(NewResourcePageViewImpl.class);
         bind(NewProjectPageView.class).to(NewProjectPageViewImpl.class);
         bind(OpenProjectView.class).to(OpenProjectViewImpl.class);

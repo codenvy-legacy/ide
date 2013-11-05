@@ -15,20 +15,18 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.client.inject;
+package com.codenvy.ide.ext.java.client.wizard;
 
-import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.google.gwt.inject.client.AbstractGinModule;
+import com.codenvy.ide.resources.model.File;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * The implementation of {@link File} for testing.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@ExtensionGinModule
-public class JavaGinModule extends AbstractGinModule {
-
-    /** {@inheritDoc} */
-    @Override
-    protected void configure() {
+public class TestFile extends File {
+    /** Create an instance of file. */
+    public TestFile() {
+        super();
     }
 }

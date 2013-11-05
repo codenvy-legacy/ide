@@ -64,10 +64,8 @@ public class TemplateAgentImpl implements TemplateAgent {
 
         Template template = new Template(id, title, icon, primaryNature, secondaryNatures);
         templates.put(id, template);
-        if (wizardPages != null) {
-            for (Provider<? extends AbstractTemplatePage> provider : wizardPages.asIterable()) {
-                newProjectWizard.addPageAfterChooseTemplate(provider);
-            }
+        for (Provider<? extends AbstractTemplatePage> provider : wizardPages.asIterable()) {
+            newProjectWizard.addPageAfterChooseTemplate(provider);
         }
     }
 
