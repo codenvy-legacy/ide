@@ -31,7 +31,8 @@ import java.lang.reflect.Method;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.NEW_PROJECT_WIZARD_TUTORIAL_ID;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 
 /**
  * Testing {@link com.codenvy.ide.ext.tutorials.client.template.CreateNewProjectWizardTutorialPage} functionality.
@@ -44,6 +45,7 @@ public class CreateNewProjectWizardTutorialPageTest extends BaseCreateTutorialTe
         super.setUp();
         page = new CreateNewProjectWizardTutorialPage(service, resourceProvider);
         page.setContext(wizardContext);
+        templateId = NEW_PROJECT_WIZARD_TUTORIAL_ID;
     }
 
     @Override
@@ -104,12 +106,5 @@ public class CreateNewProjectWizardTutorialPageTest extends BaseCreateTutorialTe
                                                                                             (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();
-    }
-
-    @Override
-    public void testInContext() {
-        when(template.getId()).thenReturn(NEW_PROJECT_WIZARD_TUTORIAL_ID);
-
-        super.testInContext();
     }
 }
