@@ -45,9 +45,9 @@
       <appengine.version>1.7.7</appengine.version>
       <ch.qos.logback.version>1.0.0</ch.qos.logback.version>
       <crash.version>1.0.0-beta21</crash.version>
-      <com.codenvy.commons.version>0.9.0</com.codenvy.commons.version>
-      <com.codenvy.organization.version>0.8.0</com.codenvy.organization.version>
-      <com.codenvy.factory.version>0.2.0</com.codenvy.factory.version>
+      <com.codenvy.commons.version>0.9.1</com.codenvy.commons.version>
+      <com.codenvy.organization.version>0.8.1</com.codenvy.organization.version>
+      <com.codenvy.factory.version>0.2.1</com.codenvy.factory.version>
 
       <javax.annotation.version>1.0</javax.annotation.version>
       <javax.ws.version>1.0</javax.ws.version>
