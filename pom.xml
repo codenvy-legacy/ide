@@ -27,7 +27,7 @@
     </parent>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-parent</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.0.0-M3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Codenvy :: Parent</name>
     <scm>
@@ -125,6 +125,11 @@
         <module>codenvy-ext-ssh</module>
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
+        <module>codenvy-ext-tutorials</module>
+        <module>codenvy-ext-extensions-runtime</module>
+        <module>codenvy-sdk-application-war</module>
+        <module>codenvy-sdk-private-dependencies</module>
+        <module>codenvy-sdk-packaging-standalone-tomcat</module>
     </modules>
 
     <profiles>
