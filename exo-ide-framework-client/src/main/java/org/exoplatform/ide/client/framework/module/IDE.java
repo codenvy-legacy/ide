@@ -181,22 +181,6 @@ public abstract class IDE {
      */
     public abstract void closeView(String viewId);
 
-    // /**
-    // * Add new editor.
-    // *
-    // * @param editor
-    // */
-    // public abstract void addEditor(Editor editor);
-    //
-    // /**
-    // * Returns array of EditorBuilder for mimeType
-    // *
-    // * @param mimeType of file
-    // * @return {@link EditorBuilder} for mimeType
-    // * @throws EditorNotFoundException if {@link EditorProducer} not found for mimeType
-    // */
-    // public abstract Editor[] getEditors(String mimeType) throws EditorNotFoundException;
-
     /**
      * Returns FileTypeRegistry.
      *
@@ -234,4 +218,27 @@ public abstract class IDE {
             return true;
         return !user.getRoles().contains("developer") && !user.getRoles().contains("admin");
     }
+    
+    /**
+     * Returns full name of current user.
+     * 
+     * @return full name of current user
+     */
+    public static String getUserFullName() {
+        if (user == null) {
+            return "";
+        }
+        
+        String fullName = "";
+        if (user.getFirstName() != null) {
+            fullName = user.getFirstName();
+        }
+        
+        if (user.getLastName() != null) {
+            fullName += (fullName.isEmpty() ? "" : " ") + user.getLastName();
+        }
+        
+        return fullName;
+    }
+    
 }

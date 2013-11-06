@@ -23,6 +23,7 @@ import com.codenvy.ide.commons.IdeUser;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.client.WorkspaceManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
+import com.codenvy.organization.model.Profile;
 import com.codenvy.organization.model.User;
 import com.codenvy.organization.model.Workspace;
 
@@ -93,19 +94,31 @@ public class IDEConfigurationService {
             ConversationState curentState = ConversationState.getCurrent();
             Identity identity = curentState.getIdentity();
             String userId = identity.getUserId();
+            
+            String firstName = null;
+            String lastName = null;
+            
+            if (!"__anonim".equals(userId) && userManager.userExists(userId)) {
+                User user = userManager.getUserByAlias(userId);
+                Profile profile = user.getProfile();
+                
+                firstName = profile.getAttribute("firstName");
+                lastName = profile.getAttribute("lastName");
+            }
+            
             boolean temporary = false;
             List<IDEWorkspace> workspaces = new ArrayList<IDEWorkspace>();
             try {
                 for (Workspace workspace : userManager.getUserWorkspaces(userId)) {
-                    workspaces.add(new IDEWorkspace(uriInfo.getBaseUriBuilder().replacePath(null).path("ide").path(workspace.getName())
-                                                           .build().toString(),
+                    workspaces.add(new IDEWorkspace(uriInfo.getBaseUriBuilder().replacePath(null).path("ide").path(workspace.getName()).build().toString(),
                                                     workspace.getName(), workspace.getId(), workspace.isTemporary()));
                 }
                 temporary = userManager.getUserByAlias(userId).isTemporary();
             } catch (OrganizationServiceException ignore) {
                 // ignore
             }
-            IdeUser user = new IdeUser(userId, identity.getRoles(), request.getSession().getId(), workspaces, temporary);
+            
+            IdeUser user = new IdeUser(userId, firstName, lastName, identity.getRoles(), request.getSession().getId(), workspaces, temporary);
             LOG.debug(user.toString());
             result.put("user", user);
             result.put("userSettings", Collections.emptyMap());

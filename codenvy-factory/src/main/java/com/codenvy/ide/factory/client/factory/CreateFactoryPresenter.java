@@ -21,7 +21,6 @@ import com.codenvy.ide.factory.client.FactoryExtension;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonEvent;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonHandler;
 import com.codenvy.ide.factory.client.generate.SendMailEvent;
-import com.codenvy.ide.factory.client.marshaller.UserProfileUnmarshaller;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -29,7 +28,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.json.client.JSONArray;
@@ -42,10 +40,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.OpenResourceEvent;
 import org.exoplatform.ide.client.framework.application.ResourceSelectedCallback;
@@ -62,7 +57,6 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
-import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
@@ -70,9 +64,6 @@ import org.exoplatform.ide.git.client.marshaller.LogResponseUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.google.gwt.http.client.URL.encodeQueryString;
 
@@ -474,71 +465,23 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
      * Creates and displays Factory popup.
      */
     private void showPopup() {
+        factoryJSON = null;
         display = new CreateFactoryView();
         IDE.getInstance().openView(display.asView());
         bindDisplay();
         
-        loadUserDetails();
+        // Sets current user email
+        display.setEmailFieldValue(IDE.user.getName());
 
+        // Sets current user full name
+        display.setAuthorFieldValue(IDE.getUserFullName());
+        
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {
-                factoryJSON = null;
                 updatePreviewIFame();
             }
         });
-    }
-    
-    /**
-     * Loads User Name and Email.
-     */
-    private void loadUserDetails() {
-        try {
-            final String requestUrl = Utils.getAuthorizationContext() + "/private/organization/users?alias=" + IDE.user.getName();
-
-            UserProfileUnmarshaller unmarshaller = new UserProfileUnmarshaller(new HashMap<String, String>());
-            
-            AsyncRequestCallback<Map<String, String>> callback = new AsyncRequestCallback<Map<String, String>>(unmarshaller) {
-                @Override
-                protected void onSuccess(Map<String, String> result) {
-                    try {
-                        if (IDE.user != null && IDE.user.getName() != null) {
-                            String email = IDE.user.getName();
-                            display.setEmailFieldValue(email);                        
-                        }
-                        
-                        String author = "";
-                        if (result != null) {
-                            if (result.get("firstName") != null) {
-                                author += result.get("firstName");                            
-                            }
-                            
-                            if (result.get("lastName") != null) {
-                                if (!author.isEmpty()) {
-                                    author += " ";
-                                }
-                                
-                                author += result.get("lastName");
-                            }
-                        }
-                        
-                        display.setAuthorFieldValue(author);
-                        
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                protected void onFailure(Throwable e) {
-                    e.printStackTrace();
-                }
-            };
-
-            AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-        } catch (RequestException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-        }
     }
     
     /**
