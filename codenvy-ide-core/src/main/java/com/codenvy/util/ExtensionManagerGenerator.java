@@ -46,8 +46,8 @@ public class ExtensionManagerGenerator {
     protected static final Pattern EXT_PATTERN = Pattern.compile(".*@Extension\\s*\\(.*\\).*", Pattern.DOTALL);
 
     /**
-     * Path of the ouput class, it definitely should already exits. To ensure proper config.
-     * File content will be overriden.
+     * Path of the output class, it definitely should already exits. To ensure proper config.
+     * File content will be overridden.
      */
     protected static final String EXT_MANAGER_PATH =
             "com/codenvy/ide/client/ExtensionManager.java";
@@ -115,7 +115,7 @@ public class ExtensionManagerGenerator {
     public static void generateClass(StringBuilder builder) {
         // generate class header
         builder.append("/**\n");
-        builder.append(" * THIS CLASS WILL BE OVERRIDEN BY MAVEN BUILD. DON'T EDIT CLASS, IT WILL HAVE NO EFFECT.\n");
+        builder.append(" * THIS CLASS WILL BE OVERRIDDEN BY MAVEN BUILD. DON'T EDIT CLASS, IT WILL HAVE NO EFFECT.\n");
         builder.append(" */\n");
         builder.append("@Singleton\n");
         builder.append("@SuppressWarnings(\"rawtypes\")\n");
@@ -125,7 +125,7 @@ public class ExtensionManagerGenerator {
 
         // field
         builder.append(GeneratorUtils.TAB
-                       + "/** Contains the map will all the Extnesion Providers <FullClassFQN, Provider>. */\n");
+                       + "/** Contains the map will all the Extension Providers <FullClassFQN, Provider>. */\n");
         builder.append(GeneratorUtils.TAB
                        + "protected final JsonStringMap<Provider> extensions = JsonCollections.createStringMap();\n\n");
 
@@ -165,7 +165,7 @@ public class ExtensionManagerGenerator {
 
         // generate getter
         builder.append(GeneratorUtils.TAB
-                       + "/** Returns  the map will all the Extnesion Providers <FullClassFQN, Provider>. */\n");
+                       + "/** Returns  the map will all the Extension Providers <FullClassFQN, Provider>. */\n");
         builder.append(GeneratorUtils.TAB + "public JsonStringMap<Provider> getExtensions()\n");
         builder.append(GeneratorUtils.TAB + "{\n");
         builder.append(GeneratorUtils.TAB2 + "return extensions;\n");
@@ -190,7 +190,7 @@ public class ExtensionManagerGenerator {
         builder.append("import com.codenvy.ide.json.JsonStringMap;\n");
         builder.append("import com.codenvy.ide.json.JsonCollections;\n");
 
-        // add all Extenions into the import
+        // add all Extensions into the import
         // NO NEED TO GENERATE IMPORT FOR EXTENSION, SINCE FULL FQN USED IN CONSTRUCTOR ARGUMENTS
         //      for (String fqn : extensionsFqn.keySet())
         //      {
