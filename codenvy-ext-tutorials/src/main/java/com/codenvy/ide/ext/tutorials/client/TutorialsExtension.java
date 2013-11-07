@@ -52,6 +52,7 @@ public class TutorialsExtension {
     public static final String WIZARD_TUTORIAL_ID              = "WizardTutorial";
     public static final String NEW_PROJECT_WIZARD_TUTORIAL_ID  = "NewProjectWizardTutorial";
     public static final String NEW_RESOURCE_WIZARD_TUTORIAL_ID = "NewResourceWizardTutorial";
+    public static final String PARTS_TUTORIAL_ID               = "PartsTutorial";
 
     @Inject
     public TutorialsExtension(TemplateAgent templateAgent,
@@ -61,6 +62,7 @@ public class TutorialsExtension {
                               Provider<CreateWizardTutorialPage> createWizardTutorialPageProvider,
                               Provider<CreateNewProjectWizardTutorialPage> createNewProjectWizardTutorialPageProvider,
                               Provider<CreateNewResourceWizardTutorialPage> createNewResourceWizardTutorialPageProvider,
+                              Provider<CreatePartsTutorialPage> createPartsTutorialPageProvider,
                               ProjectTypeAgent projectTypeAgent,
                               TutorialsResources resources,
                               TutorialsLocalizationConstant localizationConstants,
@@ -120,5 +122,11 @@ public class TutorialsExtension {
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
                                JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(
                                        createNewResourceWizardTutorialPageProvider));
+        templateAgent.register(PARTS_TUTORIAL_ID,
+                               "Tutorial project that illustrates examples of using Part API.",
+                               resources.codenvyTutorialTemplate(),
+                               PRIMARY_NATURE,
+                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createPartsTutorialPageProvider));
     }
 }

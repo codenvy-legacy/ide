@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- * 
- * [2012] - [2013] Codenvy, S.A. 
+ *
+ * [2012] - [2013] Codenvy, S.A.
  * All Rights Reserved.
- * 
+ *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -28,25 +28,24 @@ import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
 
-import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.DTO_TUTORIAL_ID;
+import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.PARTS_TUTORIAL_ID;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 
 /**
- * Testing {@link CreateDTOTutorialPage} functionality.
+ * Testing {@link CreatePartsTutorialPage} functionality.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: TutorialsExtension.java Sep 19, 2013 4:14:56 PM azatsarynnyy $
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
+public class CreatePartsTutorialPageTest extends BaseCreateTutorialTest {
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreateDTOTutorialPage(service, resourceProvider);
+        page = new CreatePartsTutorialPage(service, resourceProvider);
         page.setContext(wizardContext);
-        templateId = DTO_TUTORIAL_ID;
+        templateId = PARTS_TUTORIAL_ID;
     }
 
     @Override
@@ -61,7 +60,7 @@ public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
                 return callback;
             }
         }).when(service)
-                .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createPartsTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsSuccessful();
     }
@@ -78,7 +77,7 @@ public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
                 return callback;
             }
         }).when(service)
-                .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createPartsTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenCreateTutorialRequestIsFailed();
     }
@@ -95,7 +94,7 @@ public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
                 return callback;
             }
         }).when(service)
-                .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createPartsTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsFailed();
     }
@@ -103,7 +102,7 @@ public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
     @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
-                .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createPartsTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();
     }
