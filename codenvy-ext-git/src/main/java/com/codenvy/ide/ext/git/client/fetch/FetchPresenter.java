@@ -301,9 +301,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
         view.close();
     }
 
-    /**
-     * @see com.codenvy.ide.ext.git.client.fetch.FetchView.ActionDelegate#onValueChanged()
-     */
+    /** {@inheritDoc} */
     @Override
     public void onValueChanged() {
         boolean isFetchAll = view.isFetchAllBranches();
