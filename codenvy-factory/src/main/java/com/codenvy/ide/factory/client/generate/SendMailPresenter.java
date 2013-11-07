@@ -18,21 +18,32 @@
 package com.codenvy.ide.factory.client.generate;
 
 import com.codenvy.ide.factory.client.FactoryClientService;
+import com.codenvy.ide.factory.client.FactoryExtension;
+import com.codenvy.ide.factory.client.marshaller.UserProfileUnmarshaller;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.util.Utils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Presenter to share Factory URL by e-mail.
@@ -82,6 +93,20 @@ public class SendMailPresenter implements SendMailHandler, ViewClosedHandler {
          *         true if enable, otherwise false.
          */
         void enableSendButton(boolean enable);
+
+        /**
+         * Returns 'Sender Name' field.
+         *
+         * @return 'Sender Name' field
+         */
+        HasValue<String> getSenderName();
+
+        /**
+         * Returns 'Sender Email' field.
+         *
+         * @return 'Sender Email' field
+         */
+        HasValue<String> getSenderEmail();
     }
 
     /** Display. */
@@ -120,19 +145,63 @@ public class SendMailPresenter implements SendMailHandler, ViewClosedHandler {
                 display.enableSendButton(isCorrectFilled());
             }
         });
+
+        display.getSenderEmail().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                display.enableSendButton(isCorrectFilled());
+            }
+        });
+
+        display.getSenderName().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                display.enableSendButton(isCorrectFilled());
+            }
+        });
     }
 
     /** @see com.codenvy.ide.factory.client.generate.SendMailHandler#onSendMail(com.codenvy.ide.factory.client.generate.SendMailEvent) */
     @Override
-    public void onSendMail(SendMailEvent event) {
-        if (display == null) {
-            display = GWT.create(Display.class);
-            IDE.getInstance().openView(display.asView());
-            bindDisplay();
-        }
+    public void onSendMail(final SendMailEvent event) {
+        try {
+            final String requestUrl = Utils.getAuthorizationContext() + "/private/organization/users?alias=" + IDE.user.getName();
 
-        display.getMessageField().setValue(event.getMessage());
-        display.focusRecipientField();
+            UserProfileUnmarshaller unmarshaller = new UserProfileUnmarshaller(new HashMap<String, String>());
+
+            AsyncRequestCallback<Map<String, String>> callback = new AsyncRequestCallback<Map<String, String>>(unmarshaller) {
+                @Override
+                protected void onSuccess(Map<String, String> result) {
+                    if (display == null) {
+                        display = GWT.create(Display.class);
+                        IDE.getInstance().openView(display.asView());
+                        bindDisplay();
+                    }
+
+                    String firstAndLastName = result.get("firstName") + " " + result.get("lastName");
+                    display.getSenderEmail().setValue(IDE.user.getName());
+                    display.getSenderName().setValue(firstAndLastName);
+
+                    String messageTemplate = FactoryExtension.LOCALIZATION_CONSTANTS.sendMailFieldMessageEntry(event.getProjectName(),
+                                                                                                               event.getFactoryUrl(),
+                                                                                                               firstAndLastName,
+                                                                                                               IDE.user.getName());
+
+                    display.getMessageField().setValue(messageTemplate);
+                    display.focusRecipientField();
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Dialogs.getInstance().showError(FactoryExtension.LOCALIZATION_CONSTANTS.sendMailErrorGettingProfile());
+                }
+            };
+
+            AsyncRequest.build(RequestBuilder.GET, requestUrl)
+                        .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
     }
 
     /**
@@ -174,6 +243,7 @@ public class SendMailPresenter implements SendMailHandler, ViewClosedHandler {
      */
     private boolean isCorrectFilled() {
         return !display.getRecipientField().getValue().isEmpty() && !display.getMessageField().getValue().isEmpty() &&
+               !display.getSenderEmail().getValue().isEmpty() && !display.getSenderName().getValue().isEmpty() &&
                display.getRecipientField().getValue().matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                                                               + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
     }

@@ -18,16 +18,18 @@
 package com.codenvy.ide.factory.server;
 
 import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.commons.security.oauth.OAuthTokenProvider;
 import com.codenvy.ide.commons.shared.ProjectType;
 
 import org.apache.commons.io.IOUtils;
 import org.codenvy.mail.MailSenderClient;
+import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.everrest.websockets.WSConnectionContext;
+import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
-import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
-import org.exoplatform.ide.git.shared.CloneRequest;
-import org.exoplatform.ide.git.shared.GitUser;
+import org.exoplatform.ide.git.shared.*;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -45,6 +47,7 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
+import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -52,6 +55,7 @@ import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -70,7 +74,10 @@ public class FactoryService {
     private       VirtualFileSystemRegistry vfsRegistry;
     private       LocalPathResolver         localPathResolver;
 
-    private static final Pattern PATTERN = Pattern.compile("public static final String PROJECT_ID = .*");
+    @Inject
+    private OAuthTokenProvider oauthTokenProvider;
+
+    private static final Pattern PATTERN        = Pattern.compile("public static final String PROJECT_ID = .*");
     private static final Pattern PATTERN_NUMBER = Pattern.compile("public static final String PROJECT_NUMBER = .*");
 
     /**
@@ -134,7 +141,7 @@ public class FactoryService {
         String user = ConversationState.getCurrent().getIdentity().getUserId();
         factoryUrl.append("&pname=").append(project.getName()).append("&wname=").append(workspace).append("&vcs=")
                   .append(vcs).append("&vcsurl=").append(vcsUrl).append("&idcommit=").append(idCommit)
-                  .append("&action=").append(action);
+                  .append("&action=").append(action).append("&ptype=").append(project.getProjectType());
         LOG.info("EVENT#factory-created# WS#" + workspace + "# USER#" + user + "# PROJECT#" + project.getName() +
                  "# TYPE#" + project.getProjectType() + "# REPO-URL#" + vcsUrl + "# FACTORY-URL#" + factoryUrl + "#");
     }
@@ -147,30 +154,90 @@ public class FactoryService {
                              @QueryParam("remoteuri") String remoteUri,
                              @QueryParam("idcommit") String idCommit,
                              @QueryParam("ptype") String projectType,
-                             @QueryParam("action") String action)
+                             @QueryParam("action") String action,
+                             @QueryParam("keepvcsinfo") boolean keepVcsInfo,
+                             @QueryParam("gitbranch") String gitBranch)
             throws VirtualFileSystemException, GitException,
                    URISyntaxException, IOException {
         GitConnection gitConnection = getGitConnection(projectId, vfsId);
-        CloneRequest cloneRequest = new CloneRequest(remoteUri, null);
-        gitConnection.clone(cloneRequest);
-        BranchCheckoutRequest checkoutRequest = new BranchCheckoutRequest();
-        checkoutRequest.setName("temp");
-        checkoutRequest.setCreateNew(true);
-        checkoutRequest.setStartPoint(idCommit);
-        gitConnection.branchCheckout(checkoutRequest);
-        deleteRepository(vfsId, projectId);
-        return convertToProject(vfsId, projectId, remoteUri, projectType, action);
 
+        try {
+            gitConnection.clone(new CloneRequest(remoteUri, null));
+
+            if (idCommit != null && !idCommit.trim().isEmpty()) {
+                gitConnection.branchCheckout(new BranchCheckoutRequest("temp", idCommit, true));
+            } else if (gitBranch != null && !gitBranch.trim().isEmpty()) {
+                List<Branch> branches = gitConnection.branchList(new BranchListRequest(null));
+                boolean doCheckout = true;
+                for (Branch branch : branches) {
+                    if (branch.getDisplayName().equals(gitBranch) && branch.isActive()) {
+                        doCheckout = !doCheckout;
+                        break;
+                    }
+                }
+                if (doCheckout) {
+                    gitConnection.branchCheckout(new BranchCheckoutRequest(gitBranch, "origin/" + gitBranch, doCheckout));
+                }
+            }
+
+            if (!keepVcsInfo)
+                deleteRepository(vfsId, projectId);
+        } catch (JGitInternalException e) {
+            //if commit id doesn't exist, jgit produce exception like "Missing unknown <hashOfCommit>"
+            if (e.getMessage().contains("Missing unknown")) {
+                publishWebsocketMessage("Commit <b>" + idCommit + "</b> doesn't exist. Switching to default branch.");
+
+                if (!keepVcsInfo)
+                    deleteRepository(vfsId, projectId);
+            } else {
+                deleteRepository(vfsId, projectId);
+                throw new GitException(e);
+            }
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().matches("Ref .* can not be resolved")) {
+                if (idCommit != null && !idCommit.trim().isEmpty()) {
+                    publishWebsocketMessage("Commit <b>" + idCommit + "</b> doesn't exist. Switching to default branch.");
+                } else if (gitBranch != null && !gitBranch.trim().isEmpty()) {
+                    publishWebsocketMessage("Branch <b>" + gitBranch + "</b> doesn't exist. Switching to default branch.");
+                }
+
+                if (!keepVcsInfo)
+                    deleteRepository(vfsId, projectId);
+            } else {
+                throw new IllegalArgumentException(e);
+            }
+        }
+
+        return convertToProject(vfsId, projectId, remoteUri, projectType, action, keepVcsInfo);
     }
 
-    private Item convertToProject(String vfsId, String projectId, String remoteUri, String projectType, String action)
+    /**
+     * Send message to socket to allow client make output to console.
+     *
+     * @param content
+     *         message content
+     */
+    private void publishWebsocketMessage(String content) {
+        ChannelBroadcastMessage message = new ChannelBroadcastMessage();
+        message.setChannel("factory-events");
+        message.setType(ChannelBroadcastMessage.Type.NONE);
+        message.setBody(content);
+
+        try {
+            WSConnectionContext.sendMessage(message);
+        } catch (Exception ex) {
+            LOG.error("Failed to send message over WebSocket.", ex);
+        }
+    }
+
+    private Item convertToProject(String vfsId, String projectId, String remoteUri, String projectType, String action, boolean keepVcsInfo)
             throws VirtualFileSystemException, IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         Item itemToUpdate = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         try {
-            Item item = vfs.getItemByPath(itemToUpdate.getPath() + "/.project", null , false, null);
+            Item item = vfs.getItemByPath(itemToUpdate.getPath() + "/.project", null, false, null);
             vfs.delete(item.getId(), null);
-        }catch (ItemNotFoundException ignore){
+        } catch (ItemNotFoundException ignore) {
             // ignore
         }
         if (projectType != null && !projectType.isEmpty()) {
@@ -179,6 +246,8 @@ public class FactoryService {
             props.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
             props.add(new PropertyImpl("vfs:projectType", projectType));
             props.add(new PropertyImpl("codenow", remoteUri));
+            if (keepVcsInfo)
+                props.add(new PropertyImpl("isGitRepository", "true"));
             itemToUpdate = vfs.updateItem(itemToUpdate.getId(), props, null);
             if (ProjectType.GOOGLE_MBS_ANDROID.toString().equals(projectType)) {
                 File constJava = (File)vfs
@@ -200,7 +269,8 @@ public class FactoryService {
                 }
 
                 String newContent = PATTERN.matcher(content).replaceFirst("public static final String PROJECT_ID = \"" + prjID + "\";");
-                newContent = PATTERN_NUMBER.matcher(newContent).replaceFirst("public static final String PROJECT_NUMBER = \"" + prjNum + "\";");
+                newContent =
+                        PATTERN_NUMBER.matcher(newContent).replaceFirst("public static final String PROJECT_NUMBER = \"" + prjNum + "\";");
                 vfs.updateContent(constJava.getId(), MediaType.valueOf(constJava.getMimeType()),
                                   new ByteArrayInputStream(newContent.getBytes()), null);
             }

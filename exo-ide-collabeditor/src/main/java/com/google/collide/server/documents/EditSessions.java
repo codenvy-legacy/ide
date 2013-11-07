@@ -402,6 +402,7 @@ public class EditSessions implements Startable {
                     session.getCollaborators());
             if (!list.isEmpty()) {
                 response.putOpenedFiles(session.getPath(), list);
+                response.putFileEditSessions(session.getPath(), session.getFileEditSessionKey());
             }
         }
         return response;

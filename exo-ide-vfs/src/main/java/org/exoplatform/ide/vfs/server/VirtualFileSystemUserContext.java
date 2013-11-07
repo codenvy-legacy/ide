@@ -17,16 +17,23 @@
  */
 package org.exoplatform.ide.vfs.server;
 
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Iterator;
+import java.util.ServiceLoader;
 
 /** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
 public abstract class VirtualFileSystemUserContext {
+
+    private static VirtualFileSystemUserContextProvider userContextProvider;
+
+    static {
+        ServiceLoader<VirtualFileSystemUserContextProvider> sl = ServiceLoader.load(VirtualFileSystemUserContextProvider.class);
+        Iterator<VirtualFileSystemUserContextProvider> iterator = sl.iterator();
+        if (iterator.hasNext()) {
+            userContextProvider = iterator.next();
+        } else {
+            userContextProvider = new ConversationStateUserContextProvider();
+        }
+    }
 
     protected VirtualFileSystemUserContext() {
     }
@@ -34,25 +41,6 @@ public abstract class VirtualFileSystemUserContext {
     public abstract VirtualFileSystemUser getVirtualFileSystemUser();
 
     public static VirtualFileSystemUserContext newInstance() {
-        return new DefaultVirtualFileSystemUserContext();
-    }
-
-    private static class DefaultVirtualFileSystemUserContext extends VirtualFileSystemUserContext {
-        public VirtualFileSystemUser getVirtualFileSystemUser() {
-            final ConversationState cs = ConversationState.getCurrent();
-
-            if (cs == null) {
-                return new VirtualFileSystemUser(VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL, Collections.<String>emptySet());
-            }
-            final Identity identity = cs.getIdentity();
-            final Set<String > groups = new HashSet<String>(2);
-            if (identity.getRoles().contains("developer")) {
-                groups.add("workspace/developer");
-            }
-            if (identity.getRoles().contains("admin")) {
-                groups.add("workspace/admin");
-            }
-            return new VirtualFileSystemUser(identity.getUserId(), groups);
-        }
+        return userContextProvider.newUserContext();
     }
 }

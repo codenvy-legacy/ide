@@ -32,6 +32,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -54,7 +55,8 @@ import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-import java.util.Iterator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -311,11 +313,10 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler, 
     /** Get path for files with merge conflicts and update his content if it is opened. */
     private void updateOpenedFiles(String exceptionMessage, final String remoteUrl) {
         String[] filesWithConflicts = exceptionMessage.split("</br>");
-        for (int i = 1; i < filesWithConflicts.length - 1; i++) {
-            Iterator<FileModel> iterator = openedEditor.keySet().iterator();
-            while (iterator.hasNext()) {
-                final FileModel openedFile = iterator.next();
-                if (openedFile.getPath().contains(filesWithConflicts[i])) {
+        for (String filePath : filesWithConflicts){
+            Set<FileModel> openedFiles = new HashSet<FileModel>(openedEditor.keySet());
+            for(FileModel openedFile : openedFiles) {
+                if(openedFile.getPath().contains(filePath)) {
                     updateFileContent(openedFile, remoteUrl);
                 }
             }
@@ -337,6 +338,9 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler, 
                                 document.replace(0,
                                                  document.getLength(),
                                                  result.getContent());
+                                //It is required for deleting '*' character on the opened file tab
+                                result.setContentChanged(false);
+                                IDE.fireEvent(new FileSavedEvent(result, null));
                             } catch (BadLocationException e) {
                                 handleError(e, remoteUrl);
                             }
@@ -381,8 +385,12 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler, 
 
     @Override
     public void onEditorFileClosed(EditorFileClosedEvent event) {
-        if (openedEditor.containsKey(event.getFile())) {
-            openedEditor.remove(event.getFile());
+        Set<FileModel> openedFiles = new HashSet<FileModel>(openedEditor.keySet());
+        for (FileModel file : openedFiles) {
+            if (file.getId().equals(event.getFile().getId())) {
+                openedEditor.remove(file);
+                return;
+            }
         }
     }
 }

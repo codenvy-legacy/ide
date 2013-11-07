@@ -219,7 +219,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         display.getShareEmailButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.fireEvent(new SendMailEvent(factoryURLEscaped));
+                IDE.fireEvent(new SendMailEvent(factoryURLEscaped, openedProject.getName()));
             }
         });
 

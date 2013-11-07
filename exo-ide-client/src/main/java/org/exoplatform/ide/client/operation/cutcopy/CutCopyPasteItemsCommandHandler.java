@@ -115,17 +115,17 @@ public class CutCopyPasteItemsCommandHandler extends ItemsOperationPresenter
                                             Operation.MOVE);
                 return;
             }
-            for (FileModel f : openedFiles.values()) {
-                if (openedEditors.containsKey(f.getId())) {
-                    if (openedEditors.get(f.getId()) instanceof CollabEditor) {
-                        if (collaborationManager.isFileOpened(f.getPath())) {
-                            new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't cut <b>").appendEscaped(
-                                    f.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, f.getPath(), f,
-                                                        f.getPath(), Operation.MOVE);
-                            return;
-                        }
+            if (openedEditors.containsKey(i.getId())) {
+                if (openedEditors.get(i.getId()) instanceof CollabEditor) {
+                    if (collaborationManager.isFileOpened(i.getPath())) {
+                        new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't cut <b>").appendEscaped(
+                                i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), i,
+                                                    i.getPath(), Operation.MOVE);
+                        return;
                     }
                 }
+            }
+            for (FileModel f : openedFiles.values()) {
                 if (f.getPath().equals(i.getPath())) {
                     Dialogs.getInstance().showError(IDE.NAVIGATION_CONSTANT.cutOpenFile(f.getName()));
                     return;

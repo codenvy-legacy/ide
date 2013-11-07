@@ -30,6 +30,7 @@ import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer;
 import com.google.collide.client.collaboration.NotificationController;
 import com.google.collide.client.disable.DisableEnableCollaborationControl;
 import com.google.collide.client.document.DocumentManager;
+import com.google.collide.client.document.DocumentManagerCleaner;
 import com.google.collide.client.status.StatusPresenter;
 import com.google.collide.codemirror2.CodeMirror2;
 import com.google.gwt.core.client.GWT;
@@ -63,6 +64,7 @@ public class CollabEditorExtension extends Extension implements ConnectionOpened
 
     private UsersModel usersModel;
     private DisableEnableCollaborationControl control;
+    private DocumentManagerCleaner documentManagerCleaner;
 
     public static CollabEditorExtension get() {
         return instance;
@@ -80,6 +82,7 @@ public class CollabEditorExtension extends Extension implements ConnectionOpened
         IDE.messageBus().setOnOpenHandler(this);
         control = new DisableEnableCollaborationControl(context.getResources());
         IDE.getInstance().addControl(control);
+        documentManagerCleaner = new DocumentManagerCleaner();
     }
 
     public AppContext getContext() {

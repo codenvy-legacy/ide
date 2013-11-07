@@ -18,11 +18,10 @@
 package com.codenvy.ide.collaboration.chat.client;
 
 import com.codenvy.ide.client.util.logging.Log;
-import com.codenvy.ide.collaboration.dto.GetChatParticipantsResponse;
-import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.GetChatParticipantsImpl;
+import com.codenvy.ide.collaboration.watcher.client.ProjectParticipantsReceivedEvent;
+import com.codenvy.ide.collaboration.watcher.client.ProjectParticipantsReceivedHandler;
 import com.codenvy.ide.commons.shared.ListenerManager;
 import com.codenvy.ide.dtogen.client.RoutableDtoClientImpl;
-import com.codenvy.ide.dtogen.shared.ServerError.FailureReason;
 import com.codenvy.ide.dtogen.shared.ServerToClientDto;
 import com.codenvy.ide.json.client.Jso;
 import com.codenvy.ide.json.shared.JsonArray;
@@ -41,7 +40,6 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
-import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
 import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
@@ -52,7 +50,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  *
  */
 public class ChatExtension extends Extension
-        implements ConnectionOpenedHandler, ProjectOpenedHandler, ProjectClosedHandler, UserInfoReceivedHandler {
+        implements ConnectionOpenedHandler, ProjectOpenedHandler, ProjectClosedHandler, UserInfoReceivedHandler,
+                   ProjectParticipantsReceivedHandler {
 
     public static final ChatResources resources = GWT.create(ChatResources.class);
     private static ChatExtension   instance;
@@ -88,6 +87,7 @@ public class ChatExtension extends Extension
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
+        IDE.addHandler(ProjectParticipantsReceivedEvent.TYPE, this);
     }
 
     private void createPresenter() {
@@ -99,6 +99,7 @@ public class ChatExtension extends Extension
                                                  userInfo.getName(), CollabEditorExtension.get());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         unsubscribe(event.getProject());
@@ -117,12 +118,10 @@ public class ChatExtension extends Extension
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         currentProject = event.getProject();
-//        if (!CollaborationPropertiesUtil.isCollaborationEnabled(currentProject)) {
-//            return;
-//        }
         if (IDE.messageBus().getReadyState() != ReadyState.OPEN) {
             subscribeOnReady = true;
         } else {
@@ -133,24 +132,9 @@ public class ChatExtension extends Extension
     private void subscribeToChanel() {
         final String projectId = currentProject.getId();
         IDE.messageBus().subscribe("project_chat." + projectId, handler);
-        GetChatParticipantsImpl request = GetChatParticipantsImpl.make();
-        request.setProjectId(projectId);
-        chatApi.GET_CHAT_PARTISIPANTS.send(request, new ApiCallback<GetChatParticipantsResponse>() {
-            @Override
-            public void onFail(FailureReason reason) {
-
-            }
-
-            @Override
-            public void onMessageReceived(GetChatParticipantsResponse message) {
-                if (CollaborationPropertiesUtil.isCollaborationEnabled(currentProject)) {
-                    chatPresenter.setProjectId(currentProject);
-                }
-                chatPresenter.setChatParticipants(message.getParticipants());
-            }
-        });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onUserInfoReceived(UserInfoReceivedEvent event) {
         userInfo = event.getUserInfo();
@@ -162,6 +146,7 @@ public class ChatExtension extends Extension
         createPresenter();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onConnectionOpened() {
         createPresenter();
@@ -180,5 +165,14 @@ public class ChatExtension extends Extension
 
     public ListenerManager<ProjectUsersListener> getProjectUserListeners() {
         return chatPresenter.getProjectUsersListeners();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onProjectUsersReceived(ProjectParticipantsReceivedEvent event) {
+        if (CollaborationPropertiesUtil.isCollaborationEnabled(currentProject)) {
+            chatPresenter.setProjectId(currentProject);
+        }
+        chatPresenter.setChatParticipants(event.getProjectParticipants());
     }
 }
