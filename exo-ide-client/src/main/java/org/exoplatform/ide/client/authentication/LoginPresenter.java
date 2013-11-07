@@ -328,7 +328,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
     @Override
     public void onUserInfoReceived(UserInfoReceivedEvent event) {
-        login = event.getUserInfo().getName();
+        login = event.getUserInfo().getUserId();
     }
 
 }

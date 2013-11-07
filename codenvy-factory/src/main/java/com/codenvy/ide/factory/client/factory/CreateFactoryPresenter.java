@@ -471,7 +471,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         bindDisplay();
         
         // Sets current user email
-        display.setEmailFieldValue(IDE.user.getName());
+        display.setEmailFieldValue(IDE.user.getUserId());
 
         // Sets current user full name
         display.setAuthorFieldValue(IDE.getUserFullName());

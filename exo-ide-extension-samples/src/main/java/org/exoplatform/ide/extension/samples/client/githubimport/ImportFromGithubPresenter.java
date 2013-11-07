@@ -530,7 +530,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
     @Override
     public void onImportFromGithub(ImportFromGithubEvent event) {
         if (userInfo != null) {
-            getToken(userInfo.getName());
+            getToken(userInfo.getUserId());
             return;
         } else {
             Dialogs.getInstance().showError(SamplesExtension.LOCALIZATION_CONSTANT.userNotFound());

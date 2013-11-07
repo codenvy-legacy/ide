@@ -160,10 +160,10 @@ public class SendMailPresenter implements SendMailHandler, ViewClosedHandler {
             bindDisplay();
         }        
         
-        display.getSenderEmail().setValue(IDE.user.getName());
+        display.getSenderEmail().setValue(IDE.user.getUserId());
         display.getSenderName().setValue(IDE.getUserFullName());
         String messageTemplate = FactoryExtension.LOCALIZATION_CONSTANTS.sendMailFieldMessageEntry(
-                   event.getProjectName(), event.getFactoryUrl(), IDE.getUserFullName(), IDE.user.getName());
+                   event.getProjectName(), event.getFactoryUrl(), IDE.getUserFullName(), IDE.user.getUserId());
         display.getMessageField().setValue(messageTemplate);
         display.focusRecipientField();        
     }

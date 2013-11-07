@@ -345,7 +345,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         if (contentAssistHistory == null) {
             Preferences preferences = GWT.create(Preferences.class);
             contentAssistHistory =
-                    ContentAssistHistory.load(preferences, Preferences.CODEASSIST_LRU_HISTORY + userInfo.getName());
+                    ContentAssistHistory.load(preferences, Preferences.CODEASSIST_LRU_HISTORY + userInfo.getUserId());
 
             if (contentAssistHistory == null)
                 contentAssistHistory = new ContentAssistHistory();
@@ -397,7 +397,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         Preferences preferences = GWT.create(Preferences.class);
         if (contentAssistHistory != null) {
             ContentAssistHistory.store(contentAssistHistory, preferences,
-                                       Preferences.CODEASSIST_LRU_HISTORY + userInfo.getName());
+                                       Preferences.CODEASSIST_LRU_HISTORY + userInfo.getUserId());
             QualifiedTypeNameHistory.getDefault().save();
         }
     }

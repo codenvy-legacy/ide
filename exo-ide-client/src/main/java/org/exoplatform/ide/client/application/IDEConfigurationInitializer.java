@@ -18,10 +18,10 @@
 package org.exoplatform.ide.client.application;
 
 import com.codenvy.ide.client.util.logging.Log;
-import com.codenvy.ide.factory.shared.AdvancedFactorySpec;
-import com.codenvy.ide.factory.shared.FactorySpec10;
-import com.codenvy.ide.factory.shared.CopySpec10;
 import com.codenvy.ide.factory.client.receive.StartWithInitParamsEvent;
+import com.codenvy.ide.factory.shared.AdvancedFactorySpec;
+import com.codenvy.ide.factory.shared.CopySpec10;
+import com.codenvy.ide.factory.shared.FactorySpec10;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -124,7 +124,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
                                    controls.initControls(result.getUserInfo().getRoles(), result.getCurrentWorkspace());
 
-                                   new SettingsServiceImpl(IDE.eventBus(), result.getUserInfo().getName(), IDELoader.get());
+                                   new SettingsServiceImpl(IDE.eventBus(), result.getUserInfo().getUserId(), IDELoader.get());
                                    SettingsService.getInstance().restoreFromCookies(applicationSettings);
 
                                    initialOpenedProject = applicationSettings.getValueAsString("opened-project");

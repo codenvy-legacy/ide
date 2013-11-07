@@ -96,7 +96,7 @@ public class ChatExtension extends Extension
         }
         chatApi = new ChatApi(IDE.messageBus());
         chatPresenter = new ProjectChatPresenter(chatApi, messageFilter, IDE.getInstance(), chatControl, pointerControl,
-                                                 userInfo.getName(), CollabEditorExtension.get());
+                                                 userInfo.getUserId(), CollabEditorExtension.get());
     }
 
     /** {@inheritDoc} */

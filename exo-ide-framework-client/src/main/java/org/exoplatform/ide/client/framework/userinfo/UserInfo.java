@@ -37,7 +37,7 @@ public interface UserInfo {
      * @return user's name
      */
     @PropertyName(value = "userId")
-    public String getName();
+    public String getUserId();
 
     /**
      * Change the user's name.
@@ -46,7 +46,7 @@ public interface UserInfo {
      *         user's name
      */
     @PropertyName(value = "userId")
-    public void setName(String name);
+    public void setUserId(String userId);
 
     /**
      * Returns user's first name.
