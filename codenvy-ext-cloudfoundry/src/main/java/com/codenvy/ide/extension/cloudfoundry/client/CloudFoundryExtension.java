@@ -22,6 +22,7 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.extension.cloudfoundry.client.action.CreateApplicationAction;
 import com.codenvy.ide.extension.cloudfoundry.client.action.ShowApplicationsAction;
 import com.codenvy.ide.extension.cloudfoundry.client.action.ShowCloudFoundryProjectAction;
@@ -29,6 +30,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.action.ShowLoginAction;
 import com.codenvy.ide.extension.cloudfoundry.client.wizard.CloudFoundryPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -64,10 +66,10 @@ public class CloudFoundryExtension {
     }
 
     /** Default CloudFoundry server. */
-    public static final  String DEFAULT_CF_SERVER = "http://api.cloudfoundry.com";
-    private static final String CF_ID             = "CloudFoundry";
-    private static final String WF_ID             = "Tier3WF";
-    public static final  String ID                = "CloudFoundry";
+    public static final String DEFAULT_CF_SERVER = "http://api.cloudfoundry.com";
+    public static final String CF_ID             = "CloudFoundry";
+    public static final String WF_ID             = "Tier3WF";
+    public static final String ID                = "CloudFoundry";
 
     /**
      * Create CloudFoundry extension.
@@ -87,8 +89,15 @@ public class CloudFoundryExtension {
         resources.cloudFoundryCss().ensureInjected();
 
         // TODO change hard code types
-        JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War");
-        paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), requiredProjectTypes, wizardPage, null);
+        JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
+        natures.put("java", JsonCollections.<String>createArray("Servlet/JSP", "Spring", "War"));
+        natures.put("Ruby", JsonCollections.<String>createArray("Rails"));
+
+        JsonArray<Provider<? extends AbstractPaasPage>> wizardPages = JsonCollections.createArray();
+        wizardPages.add(wizardPage);
+
+        paasAgent.register(ID, ID, resources.cloudFoundry48(), natures, wizardPages, false);
+
         DefaultActionGroup projectPaas = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PROJECT_PAAS);
         actionManager.registerAction("showCloudfoundryProject", showCloudFoundryProjectAction);
         projectPaas.add(showCloudFoundryProjectAction);

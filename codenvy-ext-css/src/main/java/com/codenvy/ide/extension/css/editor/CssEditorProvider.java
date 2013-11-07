@@ -21,6 +21,7 @@ import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -32,28 +33,27 @@ import com.google.inject.Provider;
  * @version $Id:
  */
 public class CssEditorProvider implements EditorProvider {
-
-    private final DocumentProvider documentProvider;
-
-    private Provider<CodenvyTextEditor> editorProvider;
-
-    private final CssResources cssRes;
+    private final DocumentProvider            documentProvider;
+    private       Provider<CodenvyTextEditor> editorProvider;
+    private final CssResources                cssRes;
+    private final NotificationManager         notificationManager;
 
     /** @param documentProvider */
     @Inject
-    public CssEditorProvider(DocumentProvider documentProvider, CssResources cssRes, Provider<CodenvyTextEditor> editorProvider) {
+    public CssEditorProvider(DocumentProvider documentProvider, CssResources cssRes, Provider<CodenvyTextEditor> editorProvider,
+                             NotificationManager notificationManager) {
         super();
         this.documentProvider = documentProvider;
         this.editorProvider = editorProvider;
         this.cssRes = cssRes;
+        this.notificationManager = notificationManager;
     }
 
     /** @see com.codenvy.ide.api.editor.EditorProvider#getEditor() */
     @Override
     public EditorPartPresenter getEditor() {
         CodenvyTextEditor textEditor = editorProvider.get();
-        textEditor.initialize(new CssEditorConfiguration(cssRes), documentProvider);
+        textEditor.initialize(new CssEditorConfiguration(cssRes), documentProvider, notificationManager);
         return textEditor;
     }
-
 }

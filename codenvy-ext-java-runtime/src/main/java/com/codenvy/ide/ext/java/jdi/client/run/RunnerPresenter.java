@@ -18,6 +18,8 @@
 package com.codenvy.ide.ext.java.jdi.client.run;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
@@ -96,9 +98,14 @@ public class RunnerPresenter implements ProjectBuiltHandler {
      * @param notificationManager
      */
     @Inject
-    protected RunnerPresenter(@Named("restContext") String restContext, ApplicationRunnerClientService service, EventBus eventBus,
-                              ResourceProvider resourceProvider, JavaRuntimeLocalizationConstant constant, ConsolePart console,
-                              MessageBus messageBus, NotificationManager notificationManager) {
+    protected RunnerPresenter(@Named("restContext") String restContext,
+                              ApplicationRunnerClientService service,
+                              EventBus eventBus,
+                              ResourceProvider resourceProvider,
+                              JavaRuntimeLocalizationConstant constant,
+                              ConsolePart console,
+                              MessageBus messageBus,
+                              NotificationManager notificationManager) {
         this.restContext = restContext;
         this.service = service;
         this.eventBus = eventBus;
@@ -126,6 +133,22 @@ public class RunnerPresenter implements ProjectBuiltHandler {
                 }
             }
         };
+        this.eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
+            @Override
+            public void onProjectOpened(ProjectActionEvent event) {
+                // do nothing
+            }
+
+            @Override
+            public void onProjectClosed(ProjectActionEvent event) {
+                doStopApp();
+            }
+
+            @Override
+            public void onProjectDescriptionChanged(ProjectActionEvent event) {
+                // do nothing
+            }
+        });
     }
 
     /** Runs java application. */
@@ -344,6 +367,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
         String msg = constant.applicationStoped(appName);
         Notification notification = new Notification(msg, INFO);
         notificationManager.showNotification(notification);
+        console.clear();
         runningApp = null;
     }
 }

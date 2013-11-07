@@ -22,15 +22,17 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
+import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.ext.gae.client.actions.CreateApplicationAction;
 import com.codenvy.ide.ext.gae.client.actions.LoginAction;
 import com.codenvy.ide.ext.gae.client.actions.ManageApplicationAction;
 import com.codenvy.ide.ext.gae.client.actions.UpdateApplicationAction;
-import com.codenvy.ide.ext.gae.client.wizard.GAEWizardPresenter;
+import com.codenvy.ide.ext.gae.client.wizard.GAEWizardPagePresenter;
 import com.codenvy.ide.ext.gae.shared.Token;
 import com.codenvy.ide.ext.java.client.JavaExtension;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
@@ -49,19 +51,26 @@ public class GAEExtension {
     public static final String APP_ENGINE_SCOPE = "https://www.googleapis.com/auth/appengine.admin";
     public static final String CREATE_APP_URL   = "https://appengine.google.com/start/createapp";
 
-    /**
-     * Constructor for Google App Engine extension.
-     */
+    /** Constructor for Google App Engine extension. */
     @Inject
-    public GAEExtension(PaaSAgent paasAgent, GAEResources resources, ActionManager actionManager,
-                        LoginAction loginAction, CreateApplicationAction createApplicationAction,
-                        Provider<GAEWizardPresenter> wizardPage, UpdateApplicationAction updateApplicationAction,
+    public GAEExtension(PaaSAgent paasAgent,
+                        GAEResources resources,
+                        ActionManager actionManager,
+                        LoginAction loginAction,
+                        CreateApplicationAction createApplicationAction,
+                        Provider<GAEWizardPagePresenter> wizardPage,
+                        UpdateApplicationAction updateApplicationAction,
                         ManageApplicationAction manageApplicationAction) {
         // TODO change hard code types
-        JsonArray<String> requiredProjectTypes =
-                JsonCollections.createArray("Python", "PHP", "War");
+        JsonStringMap<JsonArray<String>> natures = JsonCollections.createStringMap();
+        natures.put("java", JsonCollections.<String>createArray("War"));
+        natures.put("Python", JsonCollections.<String>createArray());
+        natures.put("PHP", JsonCollections.<String>createArray());
 
-        paasAgent.registerPaaS(ID, ID, resources.googleAppEngine48(), requiredProjectTypes, wizardPage, null);
+        JsonArray<Provider<? extends AbstractPaasPage>> wizardPages = JsonCollections.createArray();
+        wizardPages.add(wizardPage);
+
+        paasAgent.register(ID, ID, resources.googleAppEngine48(), natures, wizardPages, false);
 
         actionManager.registerAction("gaeLoginAction", loginAction);
         actionManager.registerAction("gaeCreateAppAction", createApplicationAction);

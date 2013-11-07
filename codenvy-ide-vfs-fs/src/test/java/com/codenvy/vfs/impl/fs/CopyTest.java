@@ -84,12 +84,8 @@ public class CopyTest extends LocalFileSystemTest {
         writeProperties(destinationProjectPath, projectProperties);
 
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
-        Principal user = DtoFactory.getInstance().createDto(Principal.class);
-        user.setName("andrew");
-        user.setType(Principal.Type.USER);
-        Principal admin = DtoFactory.getInstance().createDto(Principal.class);
-        admin.setName("admin");
-        admin.setType(Principal.Type.USER);
+        Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
+        Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
 
         permissions.put(user, EnumSet.of(BasicPermissions.ALL));
         permissions.put(admin, EnumSet.of(BasicPermissions.READ));
@@ -175,9 +171,7 @@ public class CopyTest extends LocalFileSystemTest {
     public void testCopyFolderContainsFileNoReadPermission() throws Exception {
         List<String> l = flattenDirectory(folderPath);
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
-        Principal principal = DtoFactory.getInstance().createDto(Principal.class);
-        principal.setName("andrew");
-        principal.setType(Principal.Type.USER);
+        Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
         Random r = new Random();
         // Find one file randomly and apply permissions to it.
@@ -218,9 +212,7 @@ public class CopyTest extends LocalFileSystemTest {
     public void testCopyFolderContainsFolderNoReadPermission() throws Exception {
         List<String> l = flattenDirectory(folderPath);
         Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
-        Principal principal = DtoFactory.getInstance().createDto(Principal.class);
-        principal.setName("andrew");
-        principal.setType(Principal.Type.USER);
+        Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
         Random r = new Random();
         // Find one file randomly and apply permissions to it.

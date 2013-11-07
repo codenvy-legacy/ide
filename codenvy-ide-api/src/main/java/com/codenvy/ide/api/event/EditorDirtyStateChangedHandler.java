@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.EventHandler;
 public interface EditorDirtyStateChangedHandler extends EventHandler {
 
     /**
-     * Iditor became dirty, containing unsaved changes, or got saved
+     * Editor became dirty, containing unsaved changes, or got saved
      *
      * @param event
      */

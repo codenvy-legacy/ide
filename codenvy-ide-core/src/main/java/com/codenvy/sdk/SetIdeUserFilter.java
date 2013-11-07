@@ -37,8 +37,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Set current user as "ide" on all request.
- * This is need for avoiding unauthorized access? during launch extension in SDK."
+ * Filter that set current user as "ide" on all requests.
+ * This filter is needed in order to allow the user to be always logged on and
+ * to avoiding unauthorized access in launched extension in SDK.
  *
  * @author <a href="mailto:vparfonov@codenvy.com">Vitalii Parfonov</a>
  */
@@ -53,17 +54,17 @@ public class SetIdeUserFilter implements Filter {
 
     /**
      * Set current {@link org.exoplatform.services.security.ConversationState}, if it is not registered yet then
-     * create new one and register in {@link org.exoplatform.services.security.ConversationRegistry}. {@inheritDoc}
+     * create new one and register in {@link org.exoplatform.services.security.ConversationRegistry}.
      */
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
                                                                                                      ServletException {
-
         HttpServletRequest httpRequest = (HttpServletRequest)request;
         ExoContainer container = getContainer();
 
         try {
             ExoContainerContext.setCurrentContainer(container);
-            ConversationState state = getCurrentState(container, httpRequest);
+            ConversationState state = getCurrentState(httpRequest);
             ConversationState.setCurrent(state);
             chain.doFilter(request, response);
         } finally {
@@ -80,28 +81,29 @@ public class SetIdeUserFilter implements Filter {
         }
     }
 
-    /** Gives the current state */
-    private ConversationState getCurrentState(ExoContainer container, HttpServletRequest httpRequest) {
-        ConversationState state = null;
+    /** Gives the current state. */
+    private ConversationState getCurrentState(HttpServletRequest httpRequest) {
         String userId = httpRequest.getRemoteUser();
 
-        if (userId == null)
+        if (userId == null) {
             userId = "ide";
+        }
 
         HttpSession httpSession = httpRequest.getSession();
         StateKey stateKey = new HttpSessionStateKey(httpSession);
 
-        final Set<String> groups = new HashSet<String>(2);
+        final Set<String> groups = new HashSet<>(2);
         groups.add("developer");
         groups.add("admin");
         Identity identity = new Identity(userId, Collections.<MembershipEntry>emptyList(), groups);
-        state = new ConversationState(identity);
+        ConversationState state = new ConversationState(identity);
         state.setAttribute(ConversationState.SUBJECT, identity.getSubject());
 
         return state;
     }
 
     /** {@inheritDoc} */
+    @Override
     public void destroy() {
         // nothing to do.
     }
@@ -110,5 +112,4 @@ public class SetIdeUserFilter implements Filter {
         ExoContainer container = ExoContainerContext.getCurrentContainer();
         return container;
     }
-
 }

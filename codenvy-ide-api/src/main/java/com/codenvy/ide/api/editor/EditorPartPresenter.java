@@ -93,4 +93,10 @@ public interface EditorPartPresenter extends PartPresenter {
      *         the instance of CloseHandler
      */
     public void addCloseHandler(EditorPartCloseHandler closeHandler);
+
+
+    /**
+     * Call this method then editor became visible
+     */
+    public void activate();
 }

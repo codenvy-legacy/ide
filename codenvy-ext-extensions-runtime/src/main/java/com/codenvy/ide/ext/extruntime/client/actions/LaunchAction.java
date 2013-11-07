@@ -30,7 +30,7 @@ import com.google.inject.Singleton;
 import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
 
 /**
- * Action for launching Codenvy application with custom extension.
+ * Action to launch Codenvy application with custom extension.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: LaunchAction.java Jul 3, 2013 1:58:47 PM azatsarynnyy $
@@ -53,7 +53,7 @@ public class LaunchAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        controller.launch();
+        controller.buildAndLaunch();
     }
 
     /** {@inheritDoc} */

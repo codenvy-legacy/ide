@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.api.parts;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 
@@ -32,6 +33,10 @@ public interface ConsolePart extends PartPresenter {
      * Print message on console.
      *
      * @param message
+     *         message that need to be shown
      */
-    public void print(String message);
+    void print(@NotNull String message);
+
+    /** Clear console. Remove all messages. */
+    void clear();
 }

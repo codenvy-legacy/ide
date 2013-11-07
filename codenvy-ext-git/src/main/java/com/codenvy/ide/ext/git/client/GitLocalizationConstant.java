@@ -468,6 +468,9 @@ public interface GitLocalizationConstant extends Messages {
 
     @Key("view.fetch.remove.deleted.refs.title")
     String fetchRemoveDeletedRefsTitle();
+    
+    @Key("view.fetch.all.branches.field.title")
+    String fetchAllBranchesTitle();
 
     // Remote
     @Key("view.remotes.title")

@@ -70,20 +70,20 @@ public class SearcherTest extends LocalFileSystemTest {
 
         queryToResult = new Pair[10];
         // text
-        queryToResult[0] = new Pair<String[], String>(new String[]{file1, file2, file3}, "text=to%20be%20or%20not%20to%20be");
-        queryToResult[1] = new Pair<String[], String>(new String[]{file1, file2, file3}, "text=to%20be%20or");
+        queryToResult[0] = new Pair<>(new String[]{file1, file2, file3}, "text=to%20be%20or%20not%20to%20be");
+        queryToResult[1] = new Pair<>(new String[]{file1, file2, file3}, "text=to%20be%20or");
         // text + media type
-        queryToResult[2] = new Pair<String[], String>(new String[]{file2, file3}, "text=to%20be%20or&mediaType=text/plain");
-        queryToResult[3] = new Pair<String[], String>(new String[]{file1}, "text=to%20be%20or&mediaType=text/xml");
+        queryToResult[2] = new Pair<>(new String[]{file2, file3}, "text=to%20be%20or&mediaType=text/plain");
+        queryToResult[3] = new Pair<>(new String[]{file1}, "text=to%20be%20or&mediaType=text/xml");
         // text + name
-        queryToResult[4] = new Pair<String[], String>(new String[]{file2}, "text=to%20be%20or&name=*File02");
-        queryToResult[5] = new Pair<String[], String>(new String[]{file1, file2, file3}, "text=to%20be%20or&name=SearcherTest*");
+        queryToResult[4] = new Pair<>(new String[]{file2}, "text=to%20be%20or&name=*File02");
+        queryToResult[5] = new Pair<>(new String[]{file1, file2, file3}, "text=to%20be%20or&name=SearcherTest*");
         // text + path
-        queryToResult[6] = new Pair<String[], String>(new String[]{file3}, "text=to%20be%20or&path=" + folder1);
-        queryToResult[7] = new Pair<String[], String>(new String[]{file1, file2, file3}, "text=to%20be%20or&path=" + searchTestPath);
+        queryToResult[6] = new Pair<>(new String[]{file3}, "text=to%20be%20or&path=" + folder1);
+        queryToResult[7] = new Pair<>(new String[]{file1, file2, file3}, "text=to%20be%20or&path=" + searchTestPath);
         // name + media type
-        queryToResult[8] = new Pair<String[], String>(new String[]{file2, file3}, "name=SearcherTest*&mediaType=text/plain");
-        queryToResult[9] = new Pair<String[], String>(new String[]{file1}, "name=SearcherTest*&mediaType=text/xml");
+        queryToResult[8] = new Pair<>(new String[]{file2, file3}, "name=SearcherTest*&mediaType=text/plain");
+        queryToResult[9] = new Pair<>(new String[]{file1}, "name=SearcherTest*&mediaType=text/xml");
 
         CleanableSearcherProvider searcherProvider = new CleanableSearcherProvider();
         // Re-register virtual file system with searching enabled.
@@ -118,7 +118,7 @@ public class SearcherTest extends LocalFileSystemTest {
     public void testSearch() throws Exception {
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "search";
-        Map<String, List<String>> h = new HashMap<String, List<String>>(1);
+        Map<String, List<String>> h = new HashMap<>(1);
         h.put("Content-Type", Arrays.asList("application/x-www-form-urlencoded"));
         for (Pair<String[], String> pair : queryToResult) {
             ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, pair.b.getBytes(), writer, null);
@@ -129,11 +129,11 @@ public class SearcherTest extends LocalFileSystemTest {
                     "Expected %d but found %d for query %s", pair.a.length, result.size(), pair.b),
                          pair.a.length,
                          result.size());
-            List<String> resultPaths = new ArrayList<String>(result.size());
+            List<String> resultPaths = new ArrayList<>(result.size());
             for (Item item : result) {
                 resultPaths.add(item.getPath());
             }
-            List<String> copy = new ArrayList<String>(resultPaths);
+            List<String> copy = new ArrayList<>(resultPaths);
             copy.removeAll(Arrays.asList(pair.a));
             assertTrue(String.format("Expected result is %s but found %s", Arrays.toString(pair.a), resultPaths), copy.isEmpty());
             writer.reset();

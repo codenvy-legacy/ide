@@ -16,8 +16,8 @@ In order to use GWT Super DevMode - build Codenvy with a 'dev' maven profile:
 mvn clean install -Pdev
 
 How to run Codenvy SDK?
-Build all IDE 3 modules from the root of the project using sdk-pom.xml:
-mvn clean install -fsdk-pom.xml
+Build all IDE 3 modules from the root of the project using 'sdk' system property:
+mvn clean install -Dsdk
 The documentation is maintained on wiki.codenvycorp.com. Please, see here for more information:
 https://wiki.codenvycorp.com/x/vAE-/
 https://wiki.codenvycorp.com/x/_QE-/
