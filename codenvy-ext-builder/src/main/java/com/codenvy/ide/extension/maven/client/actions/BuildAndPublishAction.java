@@ -49,7 +49,7 @@ public class BuildAndPublishAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        presenter.buildProject(resourceProvider.getActiveProject(), true, false);
+        presenter.buildProject(resourceProvider.getActiveProject());
     }
 
     /** {@inheritDoc} */
