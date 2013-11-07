@@ -37,7 +37,7 @@ public interface UserInfo {
      * @return user's name
      */
     @PropertyName(value = "userId")
-    public String getName();
+    public String getUserId();
 
     /**
      * Change the user's name.
@@ -46,8 +46,40 @@ public interface UserInfo {
      *         user's name
      */
     @PropertyName(value = "userId")
-    public void setName(String name);
+    public void setUserId(String userId);
 
+    /**
+     * Returns user's first name.
+     * 
+     * @return user's first name
+     */
+    @PropertyName(value = "firstName")
+    public String getFirstName();
+
+    /**
+     * Changes user's first name.
+     * 
+     * @param firstName new first name
+     */
+    @PropertyName(value = "firstName")
+    public void setFirstName(String firstName);
+    
+    /**
+     * Returns user's last name.
+     * 
+     * @return users last name
+     */
+    @PropertyName(value = "lastName")
+    public String getLastName();
+
+    /**
+     * Changes user's last name.
+     * 
+     * @param lastName new last name
+     */
+    @PropertyName(value = "lastName")
+    public void setLastName(String lastName);
+    
     /**
      * Returns the list of the user's groups.
      *

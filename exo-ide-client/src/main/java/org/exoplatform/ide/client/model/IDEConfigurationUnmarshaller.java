@@ -95,12 +95,10 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitialCo
                 }
 
                 if (object.containsKey(VFS_BASE_URL)) {
-                    initializationConfiguration.getIdeConfiguration().setVfsBaseUrl(
-                            object.get(VFS_BASE_URL).isString().stringValue());
+                    initializationConfiguration.getIdeConfiguration().setVfsBaseUrl(object.get(VFS_BASE_URL).isString().stringValue());
                 }
 
-                if (object.containsKey(VFS_ID))
-                {
+                if (object.containsKey(VFS_ID)) {
                     initializationConfiguration.getIdeConfiguration().setVfsId(object.get(VFS_ID).isString().stringValue());
                 }
 

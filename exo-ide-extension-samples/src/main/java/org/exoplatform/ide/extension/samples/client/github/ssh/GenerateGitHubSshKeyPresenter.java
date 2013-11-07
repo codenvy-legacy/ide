@@ -111,7 +111,7 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, V
             public void onClick(ClickEvent event) {
                 IDE.getInstance().closeView(display.asView().getId());
                 loader.show();
-                getToken(userInfo.getName());
+                getToken(userInfo.getUserId());
             }
         });
     }

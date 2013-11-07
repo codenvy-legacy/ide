@@ -352,7 +352,7 @@ public class FactoryHandler
                                           if (value != null && value) {
                                               String authUrl = Utils.getAuthorizationContext()
                                                                + "/ide/oauth/authenticate?oauth_provider=wso2"
-                                                               + "&userId=" + IDE.user.getName() +
+                                                               + "&userId=" + IDE.user.getUserId() +
                                                                "&redirect_after_login=/ide/" +
                                                                Utils.getWorkspaceName();
 
