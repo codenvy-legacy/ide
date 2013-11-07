@@ -111,7 +111,7 @@ import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageView;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageViewImpl;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageView;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageViewImpl;
-import com.codenvy.ide.wizard.newresource.NewResource;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
 import com.codenvy.ide.wizard.newresource.NewResourceWizardProvider;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageView;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageViewImpl;

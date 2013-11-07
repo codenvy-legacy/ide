@@ -31,7 +31,8 @@ import java.lang.reflect.Method;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.ACTION_TUTORIAL_ID;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 
 /**
  * Testing {@link com.codenvy.ide.ext.tutorials.client.template.CreateActionTutorialPage} functionality.
@@ -39,12 +40,12 @@ import static org.mockito.Mockito.*;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class CreateActionTutorialPageTest extends BaseCreateTutorialTest {
-
     @Override
     public void setUp() {
         super.setUp();
         page = new CreateActionTutorialPage(service, resourceProvider);
         page.setContext(wizardContext);
+        templateId = ACTION_TUTORIAL_ID;
     }
 
     @Override
@@ -104,12 +105,5 @@ public class CreateActionTutorialPageTest extends BaseCreateTutorialTest {
                 .createActionTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();
-    }
-
-    @Override
-    public void testInContext() {
-        when(template.getId()).thenReturn(ACTION_TUTORIAL_ID);
-
-        super.testInContext();
     }
 }
