@@ -35,12 +35,11 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 
 /**
- * Testing {@link com.codenvy.ide.ext.tutorials.client.template.CreateNotificationTutorialPage} functionality.
+ * Testing {@link CreateNotificationTutorialPage} functionality.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class CreateNotificationTutorialPageTest extends BaseCreateTutorialTest {
-
     @Override
     public void setUp() {
         super.setUp();
