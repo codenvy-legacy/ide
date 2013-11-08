@@ -28,7 +28,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -40,7 +42,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.OpenResourceEvent;
 import org.exoplatform.ide.client.framework.application.ResourceSelectedCallback;
@@ -729,7 +734,11 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             public void onSuccess(String result) {
                 try {
                     factoryJSON = JSONParser.parseStrict(result).isObject();
-                    updateSnippets();
+                    
+                    loadSnippetContent(display.websitesSnippet(), "snippet/html");
+                    loadSnippetContent(display.gitHubSnippet(), "snippet/markdown");
+                    loadSnippetContent(display.directSharingSnippet(), "snippet/url");            
+                    
                     display.nextPage();
                 } catch (Exception e) {
                     while (result.indexOf(". ") > 0) {
@@ -762,64 +771,46 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         
         return null;
     }
-
-    /**
-     * Updates all snippets after factory creation.
-     */
-    private void updateSnippets() {
-        String createFactoryURL = getLink("create-project");        
-        if (createFactoryURL != null) {
-            updateEmbedHtmlSnippet();
-            updateGitHubSnippet(createFactoryURL);
-            updateDirectSharingSnippet(createFactoryURL);
-        }
-    }
+    
     
     /**
-     * Update Embed HTML snippet.
+     * Updates snippet content according to specified relation. 
+     * 
+     * @param snippet snippet to update
+     * @param rel relation
      */
-    private void updateEmbedHtmlSnippet() {
-        String jsURL = new UrlBuilder()
-            .setProtocol(Location.getProtocol()).setHost(Location.getHost())
-            .setPath("factory/resources/embed.js").buildString();
-        jsURL += "?" + factoryJSON.get("id").isString().stringValue();
-
-        display.websitesSnippet().setValue("" +
-            "<script " +
-                "type=\"text/javascript\" language=\"javascript\" " +
-                "src=\"" + jsURL + "\" " +
-            "></script>");
-    }
-    
-    /**
-     * Generates content for embedding on Github.
-     */
-    private void updateGitHubSnippet(String createFactoryURL) {
-        String style = factoryJSON.get("style").isString().stringValue();
-        
-        String imageURL = null;
-        if (style.equals("Advanced") || style.equals("Advanced with Counter")) {
-            imageURL = getLink("image");
-            if (imageURL == null) {
-                imageURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                    .setPath("factory/resources/codenvy.png").buildString();
-            }
-        } else {
-            String imageName = display.whiteStyleSelected() ? "factory-white.png" : "factory-dark.png";
-            imageURL = new UrlBuilder()
-                .setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                .setPath("factory/resources/" + imageName).buildString();            
+    private void loadSnippetContent(final HasValue<String> snippet, final String rel) {
+        snippet.setValue("");
+        String url = getLink(rel);
+        if (url != null) {
+            try {
+                final Unmarshallable<String> unmarshaller = new Unmarshallable<String>() {
+                    private String text;
+                    @Override
+                    public void unmarshal(Response response) throws UnmarshallerException {
+                        text = response.getText();
+                    }
+                    @Override
+                    public String getPayload() {
+                        return text;
+                    }
+                };
+                
+                AsyncRequestCallback<String> callback = new AsyncRequestCallback<String>(unmarshaller) {
+                    @Override
+                    protected void onSuccess(String result) {
+                        snippet.setValue(unmarshaller.getPayload());
+                    }
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        IDE.fireEvent(new ExceptionThrownEvent(exception));
+                    }
+                };
+                AsyncRequest.build(RequestBuilder.GET, url).send(callback);            
+            } catch (Exception e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }        
         }
-        
-        String code = "[![alt](" + imageURL + ")](" + createFactoryURL + ")";
-        display.gitHubSnippet().setValue(code);
-    }
-
-    /**
-     * Generates content for direct sharing.
-     */
-    private void updateDirectSharingSnippet(String createFactoryURL) {
-        display.directSharingSnippet().setValue(createFactoryURL);
     }
     
     /**
