@@ -21,9 +21,11 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.wizard.newresource.NewResourcePagePresenter;
+import com.codenvy.ide.api.ui.wizard.DefaultWizard;
+import com.codenvy.ide.api.ui.wizard.WizardDialog;
+import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -33,26 +35,26 @@ import com.google.inject.Singleton;
 @Singleton
 public class NewResourceAction extends Action {
 
-
-    private final Provider<NewResourcePagePresenter> firstPage;
-    private       ResourceProvider                   resourceProvider;
-    private       Resources                          resources;
+    private WizardDialogFactory wizardDialogFactory;
+    private DefaultWizard       wizard;
+    private ResourceProvider    resourceProvider;
 
     @Inject
     public NewResourceAction(Resources resources,
-                             Provider<NewResourcePagePresenter> firstPage, ResourceProvider resourceProvider) {
+                             ResourceProvider resourceProvider,
+                             WizardDialogFactory wizardDialogFactory,
+                             @NewResource DefaultWizard wizard) {
         super("Other", "Create new resource", resources.file());
-        this.firstPage = firstPage;
+        this.wizardDialogFactory = wizardDialogFactory;
+        this.wizard = wizard;
         this.resourceProvider = resourceProvider;
-        this.resources = resources;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO
-//        WizardPresenter wizardDialog = new WizardPresenter(firstPage.get(), "Create resource", resources);
-//        wizardDialog.showWizard();
+        WizardDialog wizardDialog = wizardDialogFactory.create(wizard);
+        wizardDialog.show();
     }
 
     /** {@inheritDoc} */

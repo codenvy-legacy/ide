@@ -31,7 +31,8 @@ import java.lang.reflect.Method;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.NOTIFICATION_TUTORIAL_ID;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 
 /**
  * Testing {@link com.codenvy.ide.ext.tutorials.client.template.CreateNotificationTutorialPage} functionality.
@@ -45,6 +46,7 @@ public class CreateNotificationTutorialPageTest extends BaseCreateTutorialTest {
         super.setUp();
         page = new CreateNotificationTutorialPage(service, resourceProvider);
         page.setContext(wizardContext);
+        templateId = NOTIFICATION_TUTORIAL_ID;
     }
 
     @Override
@@ -104,12 +106,5 @@ public class CreateNotificationTutorialPageTest extends BaseCreateTutorialTest {
                 .createNotificationTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();
-    }
-
-    @Override
-    public void testInContext() {
-        when(template.getId()).thenReturn(NOTIFICATION_TUTORIAL_ID);
-
-        super.testInContext();
     }
 }

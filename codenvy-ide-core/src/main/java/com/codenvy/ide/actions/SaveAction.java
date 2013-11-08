@@ -52,6 +52,4 @@ public class SaveAction extends Action {
         EditorPartPresenter editor = editorAgent.getActiveEditor();
         e.getPresentation().setEnabled(editor != null && editor.isDirty());
     }
-
-
 }

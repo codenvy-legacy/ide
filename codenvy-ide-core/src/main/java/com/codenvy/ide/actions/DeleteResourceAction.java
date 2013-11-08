@@ -18,6 +18,8 @@
 package com.codenvy.ide.actions;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -25,23 +27,27 @@ import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
 public class DeleteResourceAction extends Action {
-    private SelectionAgent   selectionAgent;
-    private ResourceProvider resourceProvider;
+    private SelectionAgent      selectionAgent;
+    private ResourceProvider    resourceProvider;
+    private NotificationManager notificationManager;
 
     @Inject
-    public DeleteResourceAction(SelectionAgent selectionAgent, ResourceProvider resourceProvider, Resources resources) {
+    public DeleteResourceAction(SelectionAgent selectionAgent, ResourceProvider resourceProvider, Resources resources,
+                                NotificationManager notificationManager) {
         super("Delete", "Delete resource", resources.delete());
 
         this.selectionAgent = selectionAgent;
         this.resourceProvider = resourceProvider;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
@@ -71,7 +77,8 @@ public class DeleteResourceAction extends Action {
 
             @Override
             public void onFailure(Throwable caught) {
-                Log.error(DeleteResourceAction.class, "Exception during project removing", caught);
+                Notification notification = new Notification(caught.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
             }
         });
     }

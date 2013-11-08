@@ -19,11 +19,9 @@ package com.codenvy.ide.wizard;
 
 import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
-import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,18 +57,10 @@ public class WizardDialogPresenterTest {
     private WizardDialogPresenter presenter;
 
     @Before
-    public void disarm() {
-        // don't throw an exception if GWT.create() invoked
-        GWTMockUtilities.disarm();
-
+    public void setUp() {
         presenter = new WizardDialogPresenter(view, wizard);
 
         when(wizard.flipToFirst()).thenReturn(firstPage);
-    }
-
-    @After
-    public void restore() {
-        GWTMockUtilities.restore();
     }
 
     @Test

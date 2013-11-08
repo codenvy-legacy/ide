@@ -32,7 +32,11 @@
         }
 
         .emptyBorder {
-            margin: 6px;
+            margin: 10px;
+        }
+
+		.emptySmallBorder {
+            margin: 5px;
         }
 
         .space {
@@ -44,8 +48,12 @@
             top: 24px;
             float: left;
         }
+
+		.textAlignMiddle{
+			line-height: 20px;	
+		}
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="450px" height="130px" addStyleNames="{style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="450px" height="165px" addStyleNames="{style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
                 <c:Button addStyleNames="{style.alignBtn}" text="{locale.buttonCancel}" width="60px" size="SMALL" type="DANGER"
@@ -54,25 +62,28 @@
                           type="SUCCESS" ui:field="btnFetch"/>
             </g:FlowPanel>
         </g:south>
-        <g:south size="22.0">
-            <g:CheckBox ui:field="removeDeletedRefs" HTML="{locale.fetchRemoveDeletedRefsTitle}" addStyleNames="{res.gitCSS.textFont}"/>
-        </g:south>
         <g:north size="26.0">
             <g:FlowPanel>
-                <g:Label text="{locale.fetchRemoteFieldTitle}" addStyleNames="{res.gitCSS.textFont} {style.alignLeft}"/>
+                <g:Label width="160px" height="22px" text="{locale.fetchRemoteFieldTitle}" addStyleNames="{res.gitCSS.textFont} {style.alignLeft} {style.textAlignMiddle}"/>
                 <g:ListBox width="290px" ui:field="repository" addStyleNames="{res.gitCSS.textFont} {style.alignLeft}"/>
             </g:FlowPanel>
+        </g:north>
+        <g:north size="25.0">
+            <g:CheckBox ui:field="removeDeletedRefs" HTML="{locale.fetchRemoveDeletedRefsTitle}" addStyleNames="{res.gitCSS.textFont}"/>
+        </g:north>
+        <g:north size="30.0">
+            <g:CheckBox ui:field="fetchAllBranches" HTML="{locale.fetchAllBranchesTitle}" addStyleNames="{res.gitCSS.textFont}"/>
         </g:north>
         <g:center>
             <g:DockLayoutPanel unit="PCT" width="100%" height="100%">
                 <g:east size="48">
-                    <g:FlowPanel addStyleNames="{style.emptyBorder}">
+                    <g:FlowPanel addStyleNames="{style.emptySmallBorder}">
                         <g:Label text="{locale.fetchLocalBranchesTitle}" width="100%"/>
                         <g:ListBox ui:field="localBranch" width="100%"/>
                     </g:FlowPanel>
                 </g:east>
                 <g:west size="48">
-                    <g:FlowPanel addStyleNames="{style.emptyBorder}">
+                    <g:FlowPanel addStyleNames="{style.emptySmallBorder}">
                         <g:Label text="{locale.fetchRemoteBranchesTitle}" width="100%"/>
                         <g:ListBox ui:field="remoteBranch" width="100%"/>
                     </g:FlowPanel>

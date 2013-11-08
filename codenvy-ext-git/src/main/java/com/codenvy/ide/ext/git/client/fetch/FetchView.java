@@ -35,6 +35,9 @@ public interface FetchView extends View<FetchView.ActionDelegate> {
 
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         void onCancelClicked();
+        
+        /** Performs any actions appropriate in response to the user having changed something. */
+        void onValueChanged();
     }
 
     /** @return <code>true</code> if need to delete remove refs, and <code>false</code> otherwise */
@@ -47,7 +50,17 @@ public interface FetchView extends View<FetchView.ActionDelegate> {
      *         <code>true</code> need to delete remove refs, <code>false</code> don't need
      */
     void setRemoveDeleteRefs(boolean isRemoveDeleteRefs);
-
+    
+    /** @return <code>true</code> if need to fetch all branches from remote repository, and <code>false</code> otherwise */
+    boolean isFetchAllBranches();
+    
+    /**
+     * Set whether to fetch all branches from remote repository or not.
+     * 
+     * @param isFetchAllBranches <code>true</code> need to fetch all branches, <code>false</code> fetch specified branch
+     */
+    void setFetchAllBranches(boolean isFetchAllBranches);
+    
     /**
      * Returns selected repository name.
      *
@@ -103,6 +116,23 @@ public interface FetchView extends View<FetchView.ActionDelegate> {
      *         <code>true</code> to enable the button, <code>false</code> to disable it
      */
     void setEnableFetchButton(boolean enabled);
+    
+    /**
+     * Change the enable state of the remote branch field.
+     *
+     * @param enabled
+     *         <code>true</code> to enable the field, <code>false</code> to disable it
+     */
+    void setEnableRemoteBranchField(boolean enabled);
+    
+    /**
+     * Change the enable state of the local branch field.
+     *
+     * @param enabled
+     *         <code>true</code> to enable the field, <code>false</code> to disable it
+     */
+    void setEnableLocalBranchField(boolean enabled);
+    
 
     /** Close dialog. */
     void close();

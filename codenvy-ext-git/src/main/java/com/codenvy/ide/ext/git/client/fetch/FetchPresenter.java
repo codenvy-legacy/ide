@@ -83,6 +83,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
     public void showDialog() {
         project = resourceProvider.getActiveProject();
         view.setRemoveDeleteRefs(false);
+        view.setFetchAllBranches(true);
         getRemotes();
     }
 
@@ -223,7 +224,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
         final String remoteUrl = view.getRepositoryUrl();
         String remoteName = view.getRepositoryName();
         boolean removeDeletedRefs = view.isRemoveDeletedRefs();
-
+        
         try {
             service.fetchWS(resourceProvider.getVfsId(), project, remoteName, getRefs(), removeDeletedRefs, new RequestCallback<String>() {
                 @Override
@@ -267,13 +268,16 @@ public class FetchPresenter implements FetchView.ActionDelegate {
     /** @return list of refs to fetch */
     @NotNull
     private JsonArray<String> getRefs() {
+        JsoArray<String> array = JsoArray.create();
+        if (view.isFetchAllBranches()){
+            return array;
+        }
+        
         String localBranch = view.getLocalBranch();
         String remoteBranch = view.getRemoteBranch();
         String remoteName = view.getRepositoryName();
         String refs = localBranch.isEmpty() ? remoteBranch
                                             : "refs/heads/" + localBranch + ":" + "refs/remotes/" + remoteName + "/" + remoteBranch;
-
-        JsoArray<String> array = JsoArray.create();
         array.add(refs);
 
         return array;
@@ -295,5 +299,13 @@ public class FetchPresenter implements FetchView.ActionDelegate {
     @Override
     public void onCancelClicked() {
         view.close();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onValueChanged() {
+        boolean isFetchAll = view.isFetchAllBranches();
+        view.setEnableLocalBranchField(!isFetchAll);
+        view.setEnableRemoteBranchField(!isFetchAll);
     }
 }
