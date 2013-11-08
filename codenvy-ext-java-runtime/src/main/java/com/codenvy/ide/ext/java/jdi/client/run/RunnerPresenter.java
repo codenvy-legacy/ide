@@ -31,10 +31,10 @@ import com.codenvy.ide.ext.java.jdi.client.marshaller.ApplicationInstanceUnmarsh
 import com.codenvy.ide.ext.java.jdi.client.marshaller.ApplicationInstanceUnmarshallerWS;
 import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.ApplicationInstance;
-import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
-import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
-import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
-import com.codenvy.ide.extension.maven.shared.BuildStatus;
+import com.codenvy.ide.extension.builder.client.event.BuildProjectEvent;
+import com.codenvy.ide.extension.builder.client.event.ProjectBuiltEvent;
+import com.codenvy.ide.extension.builder.client.event.ProjectBuiltHandler;
+import com.codenvy.ide.extension.builder.shared.BuildStatus;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;

@@ -173,7 +173,7 @@
                         <configuration>
                             <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                             <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.ext.extruntime.shared,com.codenvy.ide.extension.maven.shared</argument>
+                                <argument>--dto_packages=com.codenvy.ide.ext.extruntime.shared,com.codenvy.ide.extension.builder.shared</argument>
                                 <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/ext/extruntime/dto/server/DtoServerImpls.java</argument>
                                 <argument>--impl=server</argument>
                                 <argument>--package_base=${generated.sources.directory}/</argument>

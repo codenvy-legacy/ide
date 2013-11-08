@@ -76,7 +76,7 @@ public class GWTMavenCodeServer implements GWTCodeServer {
         // For details, see com.codenvy.util.IDEInjectorGenerator and com.codenvy.util.ExtensionManagerGenerator.
         final String[] command = new String[]{
                 getMavenExecCommand(), "generate-sources",
-                "gwt:run-codeserver", // org.codehaus.mojo:gwt-maven-plugin should be already described in a pom.xml
+                "gwt:run-codeserver", // org.codehaus.mojo:gwt-builder-plugin should be already described in a pom.xml
                 "-P" + ADD_SOURCES_PROFILE};
 
         ProcessBuilder processBuilder = new ProcessBuilder(command).directory(configuration.getWorkDir().toFile());
@@ -165,7 +165,7 @@ public class GWTMavenCodeServer implements GWTCodeServer {
         }
 
         Map<String, Plugin> plugins = profile.getBuild().getPluginsAsMap();
-        Plugin buildHelperPlugin = plugins.get("org.codehaus.mojo:build-helper-maven-plugin");
+        Plugin buildHelperPlugin = plugins.get("org.codehaus.mojo:build-helper-builder-plugin");
         PluginExecution execution = buildHelperPlugin.getExecutionsAsMap().get("add-extension-sources");
 
         final String confString = String.format("<configuration>" +
@@ -216,7 +216,7 @@ public class GWTMavenCodeServer implements GWTCodeServer {
             Model pom = Utils.readPom(pomPath);
             Build build = pom.getBuild();
             Map<String, Plugin> plugins = build.getPluginsAsMap();
-            Plugin gwtPlugin = plugins.get("org.codehaus.mojo:gwt-maven-plugin");
+            Plugin gwtPlugin = plugins.get("org.codehaus.mojo:gwt-builder-plugin");
             Xpp3Dom existingConfiguration = (Xpp3Dom)gwtPlugin.getConfiguration();
             Xpp3Dom mergedConfiguration = Xpp3DomUtils.mergeXpp3Dom(existingConfiguration, additionalConfiguration);
             gwtPlugin.setConfiguration(mergedConfiguration);

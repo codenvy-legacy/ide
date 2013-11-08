@@ -30,9 +30,9 @@ import com.codenvy.ide.extension.cloudfoundry.client.marshaller.FrameworksUnmars
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
-import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
-import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
-import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
+import com.codenvy.ide.extension.builder.client.event.BuildProjectEvent;
+import com.codenvy.ide.extension.builder.client.event.ProjectBuiltEvent;
+import com.codenvy.ide.extension.builder.client.event.ProjectBuiltHandler;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;

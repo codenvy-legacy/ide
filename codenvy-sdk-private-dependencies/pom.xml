@@ -100,7 +100,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <!-- IMPORTANT!
                  Specify version explicitly because addParentPoms parameter works with 2.8 or higher.
-                 Version 2.6 is defined in com.codenvy:maven-parent-pom. -->
+                 Version 2.6 is defined in com.codenvy:builder-parent-pom. -->
                 <version>2.8</version>
                 <executions>
                     <execution>

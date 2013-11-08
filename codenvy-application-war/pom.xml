@@ -133,11 +133,11 @@
             <artifactId>codenvy-ext-java</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-java-runtime</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-demo</artifactId>
@@ -288,7 +288,7 @@
                         <configuration>
                             <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                             <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.extension.maven.shared</argument>
+                                <argument>--dto_packages=com.codenvy.ide.extension.builder.shared</argument>
                                 <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/extension/maven/dto/client/DtoClientImpls.java</argument>
                                 <argument>--impl=client</argument>
                                 <argument>--package_base=${generated.sources.directory}/</argument>

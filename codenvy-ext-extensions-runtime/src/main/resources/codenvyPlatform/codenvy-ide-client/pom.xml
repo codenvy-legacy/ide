@@ -350,7 +350,7 @@
                         <configuration>
                             <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                             <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.extension.maven.shared</argument>
+                                <argument>--dto_packages=com.codenvy.ide.extension.builder.shared</argument>
                                 <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/extension/maven/dto/client/DtoClientImpls.java</argument>
                                 <argument>--impl=client</argument>
                                 <argument>--package_base=${generated.sources.directory}/</argument>
@@ -479,7 +479,7 @@
 	<!--
 	This profile is required for launching Codenvy extensions in 'codenvy-ext-extensions-runtime' module.
 	See com.codenvy.ide.ext.extruntime.server.codeserver.GWTMavenCodeServer.fixMGWT332Bug() method.
-	It's a recommended (https://groups.google.com/d/msg/codehaus-mojo-gwt-maven-plugin-users/zvJ0IlGN7Fw/RbyteSEKXtoJ)
+	It's a recommended (https://groups.google.com/d/msg/codehaus-mojo-gwt-builder-plugin-users/zvJ0IlGN7Fw/RbyteSEKXtoJ)
 	workaround of a known bug of Maven GWT Plugin (https://jira.codehaus.org/browse/MGWT-332).
 	-->
 	<profiles>

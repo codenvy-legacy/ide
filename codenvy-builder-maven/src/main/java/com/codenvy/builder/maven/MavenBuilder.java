@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
  */
 public class MavenBuilder extends Builder {
 
-    /** Rules for maven assembly plugin. Use it for create zip of all project dependencies. */
+    /** Rules for builder assembly plugin. Use it for create zip of all project dependencies. */
     private static final String assemblyDescriptor       = "<assembly>\n" +
                                                            "  <id>dependencies</id>\n" +
                                                            "  <formats>\n" +
@@ -68,7 +68,7 @@ public class MavenBuilder extends Builder {
 
     @Override
     public String getName() {
-        return "maven";
+        return "builder";
     }
 
     @Override
@@ -112,7 +112,7 @@ public class MavenBuilder extends Builder {
         final java.io.File mvnHome = getMavenHome();
         if (mvnHome != null) {
             final String mvn = "bin" + java.io.File.separatorChar + "mvn";
-            return new java.io.File(mvnHome, mvn).getAbsolutePath(); // If maven home directory set use it
+            return new java.io.File(mvnHome, mvn).getAbsolutePath(); // If builder home directory set use it
         } else {
             return "mvn"; // otherwise 'mvn' should be in PATH variable
         }

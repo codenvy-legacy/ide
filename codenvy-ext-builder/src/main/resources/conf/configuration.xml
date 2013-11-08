@@ -22,7 +22,7 @@
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
     <component>
-        <type>com.codenvy.ide.extension.maven.server.CreateProjectApplication</type>
+        <type>com.codenvy.ide.extension.builder.server.CreateProjectApplication</type>
     </component>
 
 </configuration>

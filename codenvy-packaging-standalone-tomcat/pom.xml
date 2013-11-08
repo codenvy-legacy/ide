@@ -64,7 +64,7 @@
         </dependency>
         <!--<dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-maven</artifactId>
+            <artifactId>exo-ide-builder</artifactId>
             <type>war</type>
             <version>${org.exoplatform.ide.version}</version>
         </dependency>
@@ -330,7 +330,7 @@
                                       tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${project.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true"/>
-                                <!--<copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${org.exoplatform.ide.version}.war"-->
+                                <!--<copy file="${project.build.directory}/packager-conf/war/exo-ide-builder-${org.exoplatform.ide.version}.war"-->
                                       <!--tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true"/>-->
                                 <!--<copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war"-->
                                       <!--tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>-->
@@ -383,7 +383,7 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
-                    <!-- Create the distribution zip and attach it to maven -->
+                    <!-- Create the distribution zip and attach it to builder -->
                     <execution>
                         <id>tomcat-zip</id>
                         <phase>package</phase>

@@ -241,10 +241,10 @@ public class Utils {
 
         Model destPom = readPom(destPomPath);
         Map<String, Plugin> destPomPlugins = destPom.getBuild().getPluginsAsMap();
-        Plugin destPomExecPlugin = destPomPlugins.get("org.codehaus.mojo:exec-maven-plugin");
+        Plugin destPomExecPlugin = destPomPlugins.get("org.codehaus.mojo:exec-builder-plugin");
 
         Map<String, Plugin> plugins = sourcePom.getBuild().getPluginsAsMap();
-        Plugin execPlugin = plugins.get("org.codehaus.mojo:exec-maven-plugin");
+        Plugin execPlugin = plugins.get("org.codehaus.mojo:exec-builder-plugin");
         if (execPlugin == null) {
             return;
         }
