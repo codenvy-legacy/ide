@@ -209,6 +209,9 @@
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
+            <resource>
+                <directory>${project.build.directory}/generated-sources/dto/</directory>
+            </resource>
         </resources>
         <sourceDirectory>src/main/java</sourceDirectory>
         <testResources>
