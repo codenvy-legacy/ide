@@ -379,8 +379,8 @@ public class FactoryService {
                 gitUrl = gitUrl.substring(separatorPos + 1);
             }
             gitUrl = gitUrl.replace(":", "/");
+            gitUrl = "https://".concat(gitUrl);
         }
-        gitUrl = "https://".concat(gitUrl);
         try {
             URL url = new URL(gitUrl);
             url.openConnection().getInputStream();
