@@ -43,14 +43,15 @@ import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_N
 @Extension(title = "Codenvy tutorial projects support.", version = "3.0.0")
 public class TutorialsExtension {
     /** Default name of the tutorial project type. */
-    public static final String TUTORIAL_PROJECT_TYPE          = "CodenvyTutorial";
+    public static final String TUTORIAL_PROJECT_TYPE           = "CodenvyTutorial";
     /** Default name of the file that contains tutorial description. */
-    public static final String DEFAULT_README_FILE_NAME       = "guide.html";
-    public static final String DTO_TUTORIAL_ID                = "DTOTutorial";
-    public static final String ACTION_TUTORIAL_ID             = "ActionTutorial";
-    public static final String NOTIFICATION_TUTORIAL_ID       = "NotificationTutorial";
-    public static final String WIZARD_TUTORIAL_ID             = "WizardTutorial";
-    public static final String NEW_PROJECT_WIZARD_TUTORIAL_ID = "NewProjectWizardTutorial";
+    public static final String DEFAULT_README_FILE_NAME        = "guide.html";
+    public static final String DTO_TUTORIAL_ID                 = "DTOTutorial";
+    public static final String ACTION_TUTORIAL_ID              = "ActionTutorial";
+    public static final String NOTIFICATION_TUTORIAL_ID        = "NotificationTutorial";
+    public static final String WIZARD_TUTORIAL_ID              = "WizardTutorial";
+    public static final String NEW_PROJECT_WIZARD_TUTORIAL_ID  = "NewProjectWizardTutorial";
+    public static final String NEW_RESOURCE_WIZARD_TUTORIAL_ID = "NewResourceWizardTutorial";
 
     @Inject
     public TutorialsExtension(TemplateAgent templateAgent,
@@ -59,6 +60,7 @@ public class TutorialsExtension {
                               Provider<CreateNotificationTutorialPage> createNotificationTutorialPage,
                               Provider<CreateWizardTutorialPage> createWizardTutorialPageProvider,
                               Provider<CreateNewProjectWizardTutorialPage> createNewProjectWizardTutorialPageProvider,
+                              Provider<CreateNewResourceWizardTutorialPage> createNewResourceWizardTutorialPageProvider,
                               ProjectTypeAgent projectTypeAgent,
                               TutorialsResources resources,
                               TutorialsLocalizationConstant localizationConstants,
@@ -109,7 +111,14 @@ public class TutorialsExtension {
                                resources.codenvyTutorialTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
-                               JsonCollections
-                                       .<Provider<? extends AbstractTemplatePage>>createArray(createNewProjectWizardTutorialPageProvider));
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(
+                                       createNewProjectWizardTutorialPageProvider));
+        templateAgent.register(NEW_RESOURCE_WIZARD_TUTORIAL_ID,
+                               "Tutorial project that illustrates examples of using New resource wizard.",
+                               resources.codenvyTutorialTemplate(),
+                               PRIMARY_NATURE,
+                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(
+                                       createNewResourceWizardTutorialPageProvider));
     }
 }

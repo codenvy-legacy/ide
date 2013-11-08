@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.wizard.newresource;
+package com.codenvy.ide.api.ui.wizard.newresource;
 
 import com.google.inject.BindingAnnotation;
 

@@ -24,7 +24,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.0.0-M3-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-aws</artifactId>
     <packaging>jar</packaging>
@@ -244,6 +244,9 @@
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${generated.sources.directory}</directory>
             </resource>
         </resources>
         <sourceDirectory>src/main/java</sourceDirectory>

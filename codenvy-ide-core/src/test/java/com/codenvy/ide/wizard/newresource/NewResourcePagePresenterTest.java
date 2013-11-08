@@ -23,8 +23,10 @@ import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.wizard.Wizard;
+import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.File;
@@ -44,6 +46,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
+import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static org.mockito.Matchers.eq;
@@ -82,6 +85,8 @@ public class NewResourcePagePresenterTest {
     private File                                           file;
     @Mock
     private NewResourceProvider                            selectedResource;
+    @Mock
+    private WizardContext                                  wizardContext;
     private NewResourcePagePresenter                       presenter;
 
     @SuppressWarnings("unchecked")
@@ -106,6 +111,7 @@ public class NewResourcePagePresenterTest {
 
         presenter =
                 new NewResourcePagePresenter(resources, constant, view, newResourceAgent, resourceProvider, selectionAgent, editorAgent);
+        presenter.setContext(wizardContext);
         presenter.setUpdateDelegate(delegate);
     }
 
@@ -230,7 +236,23 @@ public class NewResourcePagePresenterTest {
         setUp(project, JsonCollections.<NewResourceProvider>createArray());
 
         presenter.focusComponent();
+
         verify(view).focusResourceName();
+        verify(wizardContext).putData(eq(NEW_RESOURCE_PROVIDER), (NewResourceProvider)anyObject());
+        verify(wizardContext).putData(eq(PROJECT), (Project)anyObject());
+        verify(wizardContext).putData(eq(PARENT), (Folder)anyObject());
+    }
+
+    @Test
+    public void testRemoveOptions() throws Exception {
+        setUp(project, JsonCollections.<NewResourceProvider>createArray());
+
+        presenter.removeOptions();
+
+        verify(wizardContext).removeData(eq(NEW_RESOURCE_PROVIDER));
+        verify(wizardContext).removeData(eq(PROJECT));
+        verify(wizardContext).removeData(eq(PARENT));
+        verify(wizardContext).removeData(eq(NewResourceWizardKeys.RESOURCE_NAME));
     }
 
     @Test
@@ -252,6 +274,7 @@ public class NewResourcePagePresenterTest {
         presenter.onResourceTypeSelected(selectedResource);
 
         verify(view).selectResourceType(eq(selectedResource));
+        verify(wizardContext).putData(eq(NEW_RESOURCE_PROVIDER), (NewResourceProvider)anyObject());
         verify(delegate, times(2)).updateControls();
     }
 
@@ -263,6 +286,7 @@ public class NewResourcePagePresenterTest {
         verify(delegate).updateControls();
         verify(selectedResource).getExtension();
         verify(project).getChildren();
+        verify(wizardContext).putData(eq(NewResourceWizardKeys.RESOURCE_NAME), anyString());
     }
 
     @Test
@@ -273,6 +297,7 @@ public class NewResourcePagePresenterTest {
         verify(delegate).updateControls();
         verify(selectedResource, never()).getExtension();
         verify(project, never()).getChildren();
+        verify(wizardContext).putData(eq(NewResourceWizardKeys.RESOURCE_NAME), anyString());
     }
 
     @Test
