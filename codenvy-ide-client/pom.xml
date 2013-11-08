@@ -232,6 +232,19 @@
                             </arguments>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>DtoRegistry-client</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.codenvy.util.DtoFactoryVisitorRegistryGenerator</mainClass>
+                            <arguments>
+                                <argument>--rootDir=${generated.sources.directory}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 

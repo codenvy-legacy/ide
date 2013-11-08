@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- * 
- * [2012] - [2013] Codenvy, S.A. 
+ *
+ * [2012] - [2013] Codenvy, S.A.
  * All Rights Reserved.
- * 
+ *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -28,25 +28,24 @@ import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
 
-import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.NOTIFICATION_TUTORIAL_ID;
+import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.NEW_RESOURCE_WIZARD_TUTORIAL_ID;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 
 /**
- * Testing {@link com.codenvy.ide.ext.tutorials.client.template.CreateNotificationTutorialPage} functionality.
+ * Testing {@link com.codenvy.ide.ext.tutorials.client.template.CreateNewResourceWizardTutorialPage} functionality.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class CreateNotificationTutorialPageTest extends BaseCreateTutorialTest {
-
+public class CreateNewResourceWizardTutorialPageTest extends BaseCreateTutorialTest {
     @Override
     public void setUp() {
         super.setUp();
-        page = new CreateNotificationTutorialPage(service, resourceProvider);
+        page = new CreateNewResourceWizardTutorialPage(service, resourceProvider);
         page.setContext(wizardContext);
-        templateId = NOTIFICATION_TUTORIAL_ID;
+        templateId = NEW_RESOURCE_WIZARD_TUTORIAL_ID;
     }
 
     @Override
@@ -60,8 +59,8 @@ public class CreateNotificationTutorialPageTest extends BaseCreateTutorialTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service)
-                .createNotificationTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).createNewResourceWizardTutorialProject(anyString(), (JsonArray<Property>)anyObject(),
+                                                                (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsSuccessful();
     }
@@ -77,8 +76,8 @@ public class CreateNotificationTutorialPageTest extends BaseCreateTutorialTest {
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(service)
-                .createNotificationTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).createNewResourceWizardTutorialProject(anyString(), (JsonArray<Property>)anyObject(),
+                                                                (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenCreateTutorialRequestIsFailed();
     }
@@ -94,16 +93,17 @@ public class CreateNotificationTutorialPageTest extends BaseCreateTutorialTest {
                 onSuccess.invoke(callback, (Void)null);
                 return callback;
             }
-        }).when(service)
-                .createNotificationTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        }).when(service).createNewResourceWizardTutorialProject(anyString(), (JsonArray<Property>)anyObject(),
+                                                                (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenGetProjectRequestIsFailed();
     }
 
     @Override
     public void testCreateWhenRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service)
-                .createNotificationTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        doThrow(RequestException.class).when(service).createNewResourceWizardTutorialProject(anyString(),
+                                                                                             (JsonArray<Property>)anyObject(),
+                                                                                             (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();
     }

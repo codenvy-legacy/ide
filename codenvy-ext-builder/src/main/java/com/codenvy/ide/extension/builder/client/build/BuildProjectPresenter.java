@@ -28,6 +28,7 @@ import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.BuilderClientService;
 import com.codenvy.ide.extension.builder.client.BuilderExtension;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
@@ -145,7 +146,8 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
                                     ConsolePart console, BuilderClientService service,
                                     BuilderLocalizationConstant constant, BuilderResources resources,
                                     WorkspaceAgent workspaceAgent, MessageBus messageBus,
-                                    NotificationManager notificationManager) {
+                                    NotificationManager notificationManager,
+                                    DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.view.setTitle(TITLE);

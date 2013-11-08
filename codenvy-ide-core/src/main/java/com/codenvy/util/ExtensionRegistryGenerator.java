@@ -169,7 +169,7 @@ public class ExtensionRegistryGenerator extends Generator {
             /*
                JsonArray<DependencyDescription> deps = JsonCollections.<DependencyDescription> createArray();
             */
-                generateDependeciesForExtension(sw, extension);
+                generateDependenciesForExtension(sw, extension);
 
                 Extension annotation = extension.getAnnotation(Extension.class);
             
@@ -197,13 +197,13 @@ public class ExtensionRegistryGenerator extends Generator {
      * <p/>
      * JsonArray<DependencyDescription> deps = JsonCollections.<DependencyDescription> createArray();
      * deps.add(new DependencyDescription("ide.api.ui.menu", ""));
-     * deps.add(new DependencyDescription("extension.demo", "1.0.0-aplha"));
+     * deps.add(new DependencyDescription("extension.demo", "1.0.0-alpha"));
      *
      * @param sw
      * @param extension
      * @throws UnableToCompleteException
      */
-    private void generateDependeciesForExtension(SourceWriter sw, JClassType extension) throws UnableToCompleteException {
+    private void generateDependenciesForExtension(SourceWriter sw, JClassType extension) throws UnableToCompleteException {
         // expected code
       /*      
             JsonArray<DependencyDescription> deps = JsonCollections.<DependencyDescription> createArray();

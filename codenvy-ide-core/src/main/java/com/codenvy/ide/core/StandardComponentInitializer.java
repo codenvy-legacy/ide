@@ -41,7 +41,7 @@ import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
 import com.codenvy.ide.wizard.newresource.NewFolderProvider;
-import com.codenvy.ide.wizard.newresource.NewResource;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
 import com.codenvy.ide.wizard.newresource.NewTextFileProvider;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePagePresenter;
 import com.google.inject.Inject;
