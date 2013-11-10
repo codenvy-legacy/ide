@@ -17,6 +17,10 @@
  */
 package com.codenvy.ide.dto;
 
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONParser;
 import com.google.inject.Singleton;
 
 import java.util.HashMap;
@@ -58,6 +62,30 @@ public class DtoFactory {
      */
     public <T> T createDtoFromJson(String json, Class<T> dtoInterface) {
         return getDtoProvider(dtoInterface).fromJson(json);
+    }
+
+    /**
+     * Parses the JSON data from the specified sting into list of objects of the specified type.
+     *
+     * @param json
+     *         JSON data
+     * @param dtoInterface
+     *         DTO interface
+     * @return list of DTO
+     * @throws IllegalArgumentException
+     *         if can't provide any implementation for specified interface
+     */
+    public <T> JsonArray<T> createListDtoFromJson(String json, Class<T> dtoInterface) {
+        final DtoProvider<T> dtoProvider = getDtoProvider(dtoInterface);
+        final JSONArray jsonArray = JSONParser.parseStrict(json).isArray();
+        final JsonArray<T> result = JsonCollections.createArray();
+
+        for (int i = 0; i < jsonArray.size(); i++) {
+            String payload = jsonArray.get(i).isObject().toString();
+            result.add(dtoProvider.fromJson(payload));
+        }
+
+        return result;
     }
 
     /** Serializes dto to JSON format. */

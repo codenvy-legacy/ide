@@ -51,6 +51,7 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     private static final String CREATE_WIZARD_TUTORIAL              = "/wizard";
     private static final String CREATE_NEW_PROJECT_WIZARD_TUTORIAL  = "/newproject";
     private static final String CREATE_NEW_RESOURCE_WIZARD_TUTORIAL = "/newresource";
+    private static final String CREATE_PARTS_TUTORIAL               = "/parts";
     /** REST-service context. */
     private String           restContext;
     /** Loader to be displayed. */
@@ -121,6 +122,14 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     public void createNewResourceWizardTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
                                                        @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
         final String requestUrl = restContext + BASE_URL + CREATE_NEW_RESOURCE_WIZARD_TUTORIAL;
+        sendRequest(requestUrl, projectName, properties, callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void createPartsTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+                                           @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
+        final String requestUrl = restContext + BASE_URL + CREATE_PARTS_TUTORIAL;
         sendRequest(requestUrl, projectName, properties, callback);
     }
 
