@@ -25,6 +25,8 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ErrorEvent;
+import com.google.gwt.event.dom.client.ErrorHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
@@ -777,7 +779,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         return null;
     }
     
-    
     /**
      * Updates snippet content according to specified relation. 
      * 
@@ -818,12 +819,19 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         }
     }
     
+    /**
+     * Indicates whether image checked for sharing on Facebook.
+     */
     private boolean facebookImageChecked; 
     
-    private Image fbImage;
-    
+    /**
+     * URL to image for sharing on Facebook.
+     */
     private String facebookImageURl;
     
+    /**
+     * Checks dimensions of image for sharing on Facebook.
+     */
     private void findBetterFacebokImage() {
         facebookImageChecked = false;
         
@@ -835,12 +843,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             return;
         }        
         
-        if (fbImage != null) {
-            fbImage.removeFromParent();
-            fbImage = null;
-        }
-        
-        fbImage = new Image(facebookImageURl);
+        final Image fbImage = new Image(facebookImageURl);
         fbImage.addLoadHandler(new LoadHandler() {
             @Override
             public void onLoad(LoadEvent event) {
@@ -851,15 +854,25 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                         int height = fbImage.getOffsetHeight();
                         
                         fbImage.removeFromParent();
-                        fbImage = null;
+                        facebookImageChecked = true;
                         
                         if (width < 200 || height < 200) {
                             facebookImageURl = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
                                 .setPath("factory/resources/codenvy.png").buildString();                            
                         }
-                        facebookImageChecked = true;
                     }
                 });
+            }
+        });
+        
+        fbImage.addErrorHandler(new ErrorHandler() {
+            @Override
+            public void onError(ErrorEvent event) {
+                fbImage.removeFromParent();
+                facebookImageChecked = true;
+
+                facebookImageURl = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                    .setPath("factory/resources/codenvy.png").buildString();
             }
         });
         RootPanel.get().add(fbImage, -10000, -10000);
@@ -875,12 +888,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             if (createFactoryURL == null || !facebookImageChecked) {
                 return;
             }
-            
-//            String logoURL = getLink("image");
-//            if (logoURL == null) {
-//                logoURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-//                    .setPath("factory/resources/codenvy.png").buildString();
-//            }
             
             Window.open("https://www.facebook.com/sharer/sharer.php" +
                 "?s=100" +
