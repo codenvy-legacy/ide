@@ -16,7 +16,7 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
-            <version>${gwt.maven.plugin.version}</version>
+            <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

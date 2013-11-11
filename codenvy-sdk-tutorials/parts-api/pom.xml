@@ -9,8 +9,8 @@
     </parent>
     <packaging>jar</packaging>
     <groupId>com.codenvy.tutorial</groupId>
-    <artifactId>notification-api</artifactId>
-    <name>Codenvy Extension :: Notification API</name>
+    <artifactId>parts-api</artifactId>
+    <name>Codenvy Extension :: New Project Wizard API</name>
 
     <dependencies>
         <dependency>
