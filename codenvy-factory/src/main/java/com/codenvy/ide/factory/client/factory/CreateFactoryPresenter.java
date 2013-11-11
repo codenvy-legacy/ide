@@ -26,6 +26,8 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestBuilder;
@@ -40,6 +42,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.RootPanel;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
@@ -737,7 +741,8 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                     
                     loadSnippetContent(display.websitesSnippet(), "snippet/html");
                     loadSnippetContent(display.gitHubSnippet(), "snippet/markdown");
-                    loadSnippetContent(display.directSharingSnippet(), "snippet/url");            
+                    loadSnippetContent(display.directSharingSnippet(), "snippet/url");
+                    findBetterFacebokImage();
                     
                     display.nextPage();
                 } catch (Exception e) {
@@ -813,6 +818,53 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         }
     }
     
+    private boolean facebookImageChecked; 
+    
+    private Image fbImage;
+    
+    private String facebookImageURl;
+    
+    private void findBetterFacebokImage() {
+        facebookImageChecked = false;
+        
+        facebookImageURl = getLink("image");
+        if (facebookImageURl == null) {
+            facebookImageChecked = true;
+            facebookImageURl = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                .setPath("factory/resources/codenvy.png").buildString();
+            return;
+        }        
+        
+        if (fbImage != null) {
+            fbImage.removeFromParent();
+            fbImage = null;
+        }
+        
+        fbImage = new Image(facebookImageURl);
+        fbImage.addLoadHandler(new LoadHandler() {
+            @Override
+            public void onLoad(LoadEvent event) {
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        int width = fbImage.getOffsetWidth();
+                        int height = fbImage.getOffsetHeight();
+                        
+                        fbImage.removeFromParent();
+                        fbImage = null;
+                        
+                        if (width < 200 || height < 200) {
+                            facebookImageURl = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                                .setPath("factory/resources/codenvy.png").buildString();                            
+                        }
+                        facebookImageChecked = true;
+                    }
+                });
+            }
+        });
+        RootPanel.get().add(fbImage, -10000, -10000);
+    }
+    
     /**
      * Share on Facebook button Click handler.
      */
@@ -820,22 +872,22 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         @Override
         public void onClick(ClickEvent event) {
             String createFactoryURL = getLink("create-project");        
-            if (createFactoryURL == null) {
+            if (createFactoryURL == null || !facebookImageChecked) {
                 return;
             }
             
-            String logoURL = getLink("image");
-            if (logoURL == null) {
-                logoURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
-                    .setPath("factory/resources/codenvy.png").buildString();
-            }
+//            String logoURL = getLink("image");
+//            if (logoURL == null) {
+//                logoURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+//                    .setPath("factory/resources/codenvy.png").buildString();
+//            }
             
             Window.open("https://www.facebook.com/sharer/sharer.php" +
                 "?s=100" +
                 "&p[url]=" + encodeQueryString(createFactoryURL) +
                 "&p[title]=" + encodeQueryString(openedProject.getName() + " - Codenvy") +
-                "&p[images][0]=" + encodeQueryString(logoURL) +
-                "&p[summary]=" + encodeQueryString(FactoryExtension.LOCALIZATION_CONSTANTS.sharingSummary()),
+                "&p[images][0]=" + encodeQueryString(facebookImageURl) +
+                "&p[summary]=" + encodeQueryString(FactoryExtension.LOCALIZATION_CONSTANTS.facebookSubtitle()),
                 
                 "facebook-share-dialog",
                 "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=626,height=436");
@@ -869,15 +921,17 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
     private ClickHandler shareOnTwitterClickHandler = new ClickHandler() {
         @Override
         public void onClick(ClickEvent event) {
-            String createFactoryURL = getLink("create-project");
-            if (createFactoryURL == null) {
+            String factoryURL = getLink("create-project");
+            if (factoryURL == null) {
                 return;
             }
             
-            Window.open("https://twitter.com/share" +
-                "?url=" + encodeQueryString(createFactoryURL) +
-                "&text=" + FactoryExtension.LOCALIZATION_CONSTANTS.sharingSummary(),
-                "", "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=260,width=660");            
+            String text = "Code,%20Build,%20Test%20and%20Deploy%20my%20Factory%20-%20" + 
+                openedProject.getName() + ":%20" +
+                encodeQueryString(factoryURL) + "%20%23Codenvy";
+            
+            Window.open("https://twitter.com/intent/tweet?text=" + text + "&url=/",
+                "", "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=550,height=420");
         }
     };
     
@@ -895,5 +949,5 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             IDE.fireEvent(new SendMailEvent(createFactoryURL, openedProject.getName()));
         }
     };
-    
+
 }
