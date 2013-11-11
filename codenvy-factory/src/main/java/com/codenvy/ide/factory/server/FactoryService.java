@@ -33,14 +33,23 @@ import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
-import org.exoplatform.ide.git.shared.*;
+import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
+import org.exoplatform.ide.git.shared.BranchListRequest;
+import org.exoplatform.ide.git.shared.CloneRequest;
+import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.*;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -48,14 +57,20 @@ import org.exoplatform.services.security.ConversationState;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -395,13 +410,14 @@ public class FactoryService {
         //and get stream again
         try {
             URL url = new URL(gitUrl);
-            url.openStream();
+            url.openStream().close();
             return true;
         } catch (IOException e) {
+            BufferedReader reader = null;
             try {
                 //append git information to the url
                 URL url = new URL(gitUrl.concat("/info/refs?service=git-upload-pack"));
-                BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                reader = new BufferedReader(new InputStreamReader(url.openStream()));
                 StringBuilder sb = new StringBuilder();
                 String readerLine;
                 while ((readerLine = reader.readLine()) != null) {
@@ -415,6 +431,14 @@ public class FactoryService {
             } catch (IOException io) {
                 LOG.error("It is not possible to get stream to " + gitUrl, io);
                 return false;
+            } finally {
+                try {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                } catch (IOException io) {
+                    LOG.error("Can't close stream", io);
+                }
             }
         }
     }
