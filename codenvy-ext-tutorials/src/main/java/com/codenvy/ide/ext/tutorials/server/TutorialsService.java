@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.tutorials.server;
 
+import com.codenvy.ide.annotations.NotNull;
+
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
@@ -63,15 +65,14 @@ public class TutorialsService {
     @Path("dto")
     @POST
     public void createDTOTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-                                         @QueryParam("rootid") String rootId,
-                                         List<Property> properties) throws VirtualFileSystemException, IOException {
-        InputStream templateStream =
-                Thread.currentThread().getContextClassLoader().getResourceAsStream("templates/DtoTutorial.zip");
-        createProject(vfsId, templateStream, name, rootId, properties);
+                                         @QueryParam("rootid") String rootId, List<Property> properties)
+            throws VirtualFileSystemException, IOException {
+        createProject(vfsId, "templates/DtoTutorial.zip", name, rootId, properties);
     }
 
-    private void createProject(String vfsId, InputStream templateStream, String name, String rootId, List<Property> properties)
-            throws VirtualFileSystemException, IOException {
+    private void createProject(@NotNull String vfsId, @NotNull String templatePath, @NotNull String name, @NotNull String rootId,
+                               @NotNull List<Property> properties) throws VirtualFileSystemException, IOException {
+        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(templatePath);
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         if (templateStream == null) {
             throw new InvalidArgumentException("Can't find project template.");
@@ -83,7 +84,8 @@ public class TutorialsService {
         updateProperties(name, properties, vfs, projectFolder);
     }
 
-    private void updateProperties(String name, List<Property> properties, VirtualFileSystem vfs, Folder projectFolder)
+    private void updateProperties(@NotNull String name, @NotNull List<Property> properties, @NotNull VirtualFileSystem vfs,
+                                  @NotNull Folder projectFolder)
             throws VirtualFileSystemException {
         Item projectItem = vfs.getItem(projectFolder.getId(), false, ALL_FILTER);
         if (projectItem instanceof ProjectImpl) {
@@ -115,9 +117,7 @@ public class TutorialsService {
     public void createNotificationTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
                                                   @QueryParam("rootid") String rootId, List<Property> properties)
             throws VirtualFileSystemException, IOException {
-        InputStream templateStream =
-                Thread.currentThread().getContextClassLoader().getResourceAsStream("templates/NotificationTutorial.zip");
-        createProject(vfsId, templateStream, name, rootId, properties);
+        createProject(vfsId, "templates/NotificationTutorial.zip", name, rootId, properties);
     }
 
     /**
@@ -141,9 +141,7 @@ public class TutorialsService {
     public void createActionTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
                                             @QueryParam("rootid") String rootId, List<Property> properties)
             throws VirtualFileSystemException, IOException {
-        InputStream templateStream =
-                Thread.currentThread().getContextClassLoader().getResourceAsStream("templates/ActionTutorial.zip");
-        createProject(vfsId, templateStream, name, rootId, properties);
+        createProject(vfsId, "templates/ActionTutorial.zip", name, rootId, properties);
     }
 
     /**
@@ -167,9 +165,7 @@ public class TutorialsService {
     public void createWizardTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
                                             @QueryParam("rootid") String rootId, List<Property> properties)
             throws VirtualFileSystemException, IOException {
-        InputStream templateStream =
-                Thread.currentThread().getContextClassLoader().getResourceAsStream("templates/WizardTutorial.zip");
-        createProject(vfsId, templateStream, name, rootId, properties);
+        createProject(vfsId, "templates/WizardTutorial.zip", name, rootId, properties);
     }
 
     /**
@@ -193,8 +189,54 @@ public class TutorialsService {
     public void createNewProjectWizardTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
                                                       @QueryParam("rootid") String rootId, List<Property> properties)
             throws VirtualFileSystemException, IOException {
-        InputStream templateStream =
-                Thread.currentThread().getContextClassLoader().getResourceAsStream("templates/NewProjectWizardTutorial.zip");
-        createProject(vfsId, templateStream, name, rootId, properties);
+        createProject(vfsId, "templates/NewProjectWizardTutorial.zip", name, rootId, properties);
+    }
+
+    /**
+     * Create 'New resource wizard tutorial' project.
+     *
+     * @param vfsId
+     *         identifier of virtual file system
+     * @param name
+     *         name of the newly created project
+     * @param rootId
+     *         identifier of parent folder for the new project
+     * @param properties
+     *         properties to set to project
+     * @throws VirtualFileSystemException
+     *         if any error occurred in VFS
+     * @throws IOException
+     *         if any error occurred while input-output operations
+     */
+    @Path("newresource")
+    @POST
+    public void createNewResourceWizardTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
+                                                       @QueryParam("rootid") String rootId, List<Property> properties)
+            throws VirtualFileSystemException, IOException {
+        createProject(vfsId, "templates/NewResourceWizardTutorial.zip", name, rootId, properties);
+    }
+
+    /**
+     * Create 'Parts tutorial' project.
+     *
+     * @param vfsId
+     *         identifier of virtual file system
+     * @param name
+     *         name of the newly created project
+     * @param rootId
+     *         identifier of parent folder for the new project
+     * @param properties
+     *         properties to set to project
+     * @throws VirtualFileSystemException
+     *         if any error occurred in VFS
+     * @throws IOException
+     *         if any error occurred while input-output operations
+     */
+    @Path("parts")
+    @POST
+    public void createTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
+                                      @QueryParam("rootid") String rootId, List<Property> properties)
+            throws VirtualFileSystemException, IOException {
+        createProject(vfsId, "templates/PartsTutorial.zip", name, rootId, properties);
     }
 }

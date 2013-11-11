@@ -48,21 +48,21 @@ public class BootstrapController {
      * Create controller.
      *
      * @param componentRegistry
+     * @param workspaceProvider
      * @param styleInjector
      * @param extensionInitializer
      * @param preferencesManager
      * @param userService
      * @param resourceProvider
+     * @param dtoRegistrar
      */
     @Inject
     public BootstrapController(final ComponentRegistry componentRegistry, final Provider<WorkspacePresenter> workspaceProvider,
                                StyleInjector styleInjector, final ExtensionInitializer extensionInitializer,
-                               final PreferencesManagerImpl preferencesManager,
-                               UserClientService userService, final ResourceProvider resourceProvider) {
+                               final PreferencesManagerImpl preferencesManager, UserClientService userService,
+                               final ResourceProvider resourceProvider, DtoRegistrar dtoRegistrar) {
         styleInjector.inject();
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW).setCallback(new Callback<Void, Exception>() {
-
-
             @Override
             public void onFailure(Exception reason) {
             }
@@ -74,6 +74,7 @@ public class BootstrapController {
         }).inject();
 
         try {
+            dtoRegistrar.registerDtoProviders();
             UserUnmarshaller unmarshaller = new UserUnmarshaller();
             userService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
                 @Override

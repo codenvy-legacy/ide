@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- * 
- * [2012] - [2013] Codenvy, S.A. 
+ *
+ * [2012] - [2013] Codenvy, S.A.
  * All Rights Reserved.
- * 
+ *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -16,7 +16,6 @@
  * from Codenvy S.A..
  */
 package com.codenvy.ide.ext.tutorials.client.template;
-
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -35,18 +34,18 @@ import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_
 import static com.codenvy.ide.ext.extruntime.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
-import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.ACTION_TUTORIAL_ID;
+import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.NEW_RESOURCE_WIZARD_TUTORIAL_ID;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.TUTORIAL_PROJECT_TYPE;
 import static com.codenvy.ide.json.JsonCollections.createArray;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
 /**
- * The wizard page for creating action tutorial template.
+ * The wizard page for creating New resource wizard tutorial template.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class CreateActionTutorialPage extends AbstractTemplatePage {
+public class CreateNewResourceWizardTutorialPage extends AbstractTemplatePage {
     private TutorialsClientService service;
     private ResourceProvider       resourceProvider;
 
@@ -58,8 +57,8 @@ public class CreateActionTutorialPage extends AbstractTemplatePage {
      * @param resourceProvider
      */
     @Inject
-    public CreateActionTutorialPage(TutorialsClientService service, ResourceProvider resourceProvider) {
-        super(null, null, ACTION_TUTORIAL_ID);
+    public CreateNewResourceWizardTutorialPage(TutorialsClientService service, ResourceProvider resourceProvider) {
+        super(null, null, NEW_RESOURCE_WIZARD_TUTORIAL_ID);
         this.service = service;
         this.resourceProvider = resourceProvider;
     }
@@ -74,7 +73,7 @@ public class CreateActionTutorialPage extends AbstractTemplatePage {
                                                                   createArray("src/main/java", "src/main/resources")));
         final String projectName = wizardContext.getData(PROJECT_NAME);
         try {
-            service.createActionTutorialProject(projectName, properties, new AsyncRequestCallback<Void>() {
+            service.createNewResourceWizardTutorialProject(projectName, properties, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {

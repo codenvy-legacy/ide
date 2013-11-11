@@ -55,7 +55,9 @@ public class Notification {
         void onCloseClicked();
     }
 
+    /** Notification observer. */
     public interface NotificationObserver {
+        /** Performs some actions in response to a user's changing something */
         void onValueChanged();
     }
 
