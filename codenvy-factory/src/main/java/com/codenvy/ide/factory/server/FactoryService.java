@@ -33,14 +33,23 @@ import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
-import org.exoplatform.ide.git.shared.*;
+import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
+import org.exoplatform.ide.git.shared.BranchListRequest;
+import org.exoplatform.ide.git.shared.CloneRequest;
+import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.*;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -48,11 +57,20 @@ import org.exoplatform.services.security.ConversationState;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -360,7 +378,14 @@ public class FactoryService {
     }
 
     /**
-     * Check repository public or not
+     * Check repository public or not.
+     * First of all if url is SSH, it will be converted to https,
+     * we trying to get stream, not successful result means that
+     * git provider doesn't provide stream for this url, so /info/refs/service=git-upload-pack
+     * should be appended to url, after this we are going to take stream one more time if url
+     * gives us stream, we read content and check it,
+     * if it contains "git repository not found", then it is private repository
+     * or it is not exists, else repository is public
      *
      * @param gitUrl
      *         repository url
@@ -381,12 +406,40 @@ public class FactoryService {
             gitUrl = gitUrl.replace(":", "/");
             gitUrl = "https://".concat(gitUrl);
         }
+        //make double open stream, try to get url stream, if not successful try to append url information
+        //and get stream again
         try {
             URL url = new URL(gitUrl);
-            url.openConnection().getInputStream();
+            url.openStream().close();
             return true;
         } catch (IOException e) {
-            return false;
+            BufferedReader reader = null;
+            try {
+                //append git information to the url
+                URL url = new URL(gitUrl.concat("/info/refs?service=git-upload-pack"));
+                reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                StringBuilder sb = new StringBuilder();
+                String readerLine;
+                while ((readerLine = reader.readLine()) != null) {
+                    sb.append(readerLine);
+                }
+                if (sb.toString().toLowerCase().indexOf("git repository not found") != -1) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } catch (IOException io) {
+                LOG.error("It is not possible to get stream to " + gitUrl, io);
+                return false;
+            } finally {
+                try {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                } catch (IOException io) {
+                    LOG.error("Can't close stream", io);
+                }
+            }
         }
     }
 }
