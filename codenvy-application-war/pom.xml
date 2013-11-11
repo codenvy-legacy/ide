@@ -33,7 +33,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
-        <gwt.module>com.codenvy.ide.IDE</gwt.module>
+        <ide.module>com.codenvy.ide.IDE</ide.module>
     </properties>
 
     <dependencies>
@@ -494,18 +494,17 @@
                     <execution>
                         <configuration>
                             <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
+                            <modules>
+                               <module>${ide.module}</module>
+                            </modules>
+                            <logLevel>INFO</logLevel>
                         </configuration>
                         <goals>
                             <goal>compile</goal>
-                            <goal>test</goal>
+                            <!--<goal>test</goal>-->
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <module>${gwt.module}</module>
-                    <logLevel>INFO</logLevel>
-                    <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
-                </configuration>
             </plugin>
 
             <plugin>
@@ -549,7 +548,7 @@
         <profile>
             <id>dev</id>
             <properties>
-                <gwt.module>com.codenvy.ide.IDE_dev</gwt.module>
+                <ide.module>com.codenvy.ide.IDE_dev</ide.module>
             </properties>
         </profile>
     </profiles>
