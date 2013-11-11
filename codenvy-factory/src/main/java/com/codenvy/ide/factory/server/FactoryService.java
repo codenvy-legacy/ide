@@ -51,8 +51,11 @@ import javax.mail.MessagingException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -360,7 +363,14 @@ public class FactoryService {
     }
 
     /**
-     * Check repository public or not
+     * Check repository public or not.
+     * First of all if url is SSH, it will be converted to https,
+     * we trying to get stream, not successful result means that
+     * git provider doesn't provide stream for this url, so /info/refs/service=git-upload-pack
+     * should be appended to url, after this we are going to take stream one more time if url
+     * gives us stream, we read content and check it,
+     * if it contains "git repository not found", then it is private repository
+     * or it is not exists, else repository is public
      *
      * @param gitUrl
      *         repository url
@@ -381,12 +391,31 @@ public class FactoryService {
             gitUrl = gitUrl.replace(":", "/");
             gitUrl = "https://".concat(gitUrl);
         }
+        //make double open stream, try to get url stream, if not successful try to append url information
+        //and get stream again
         try {
             URL url = new URL(gitUrl);
-            url.openConnection().getInputStream();
+            url.openStream();
             return true;
         } catch (IOException e) {
-            return false;
+            try {
+                //append git information to the url
+                URL url = new URL(gitUrl.concat("/info/refs?service=git-upload-pack"));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                StringBuilder sb = new StringBuilder();
+                String readerLine;
+                while ((readerLine = reader.readLine()) != null) {
+                    sb.append(readerLine);
+                }
+                if (sb.toString().toLowerCase().indexOf("git repository not found") != -1) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } catch (IOException io) {
+                LOG.error("It is not possible to get stream to " + gitUrl, io);
+                return false;
+            }
         }
     }
 }
