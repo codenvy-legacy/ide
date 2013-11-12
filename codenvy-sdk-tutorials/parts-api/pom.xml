@@ -10,15 +10,15 @@
 
     <distributionManagement>
         <repository>
-            <id>repo.codenvy.private</id>
+            <id>repo.codenvy.public</id>
             <url>http://maven.codenvycorp.com/content/repositories/codenvy-public-releases/</url>
         </repository>
         <snapshotRepository>
-            <id>repo.codenvy.private</id>
+            <id>repo.codenvy.public</id>
             <url>http://maven.codenvycorp.com/content/repositories/codenvy-public-snapshots/</url>
         </snapshotRepository>
         <site>
-            <id>repo.codenvy.private</id>
+            <id>repo.codenvy.public</id>
             <url>http://maven.codenvycorp.com/content/groups/public/</url>
         </site>
     </distributionManagement>
