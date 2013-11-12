@@ -66,4 +66,20 @@ public interface ApplicationInstance {
      * @param lifetime application lifetime, in minutes
      */
     void setLifetime(int lifetime);
+
+
+    /**
+     * Set application running host.
+     *
+     * @param applicationUrl application host address
+     */
+    void setApplicationUrl(String applicationUrl);
+
+
+    /**
+     * Gets application running host.
+     *
+     * @return  applicationUrl application host address
+     */
+    String getApplicationUrl();
 }

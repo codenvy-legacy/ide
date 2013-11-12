@@ -29,26 +29,30 @@ public class ApplicationInstanceImpl implements ApplicationInstance {
     /** Application's port. */
     private String name;
 
+    /** Application's url. */
+    private String applicationUrl;
+
     /** Application's port. */
-    private int    port     = 80;
+    private int port = 80;
 
     /** Lifetime of application instance in minutes. After this time application may be stopped automatically. */
-    private int    lifetime = -1;
+    private int lifetime = -1;
 
     /**
      * Constructs new instance of {@link ApplicationInstanceImpl} with the given name and lifetime.
-     * 
+     *
      * @param name app's name
      * @param lifetime app's lifetime
      */
-    public ApplicationInstanceImpl(String name, int lifetime) {
+    public ApplicationInstanceImpl(String name, int lifetime, String applicationUrl) {
         this.name = name;
         this.lifetime = lifetime;
+        this.applicationUrl = applicationUrl;
     }
 
     /**
      * Constructs new instance of {@link ApplicationInstanceImpl} with the given name.
-     * 
+     *
      * @param name app's name
      */
     public ApplicationInstanceImpl(String name) {
@@ -86,6 +90,16 @@ public class ApplicationInstanceImpl implements ApplicationInstance {
     @Override
     public void setLifetime(int lifetime) {
         this.lifetime = lifetime;
+    }
+
+    @Override
+    public String getApplicationUrl() {
+        return applicationUrl;
+    }
+
+    @Override
+    public void setApplicationUrl(String applicationUrl) {
+        this.applicationUrl = applicationUrl;
     }
 
     @Override
