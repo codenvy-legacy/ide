@@ -68,7 +68,7 @@ public class MavenBuilder extends Builder {
 
     @Override
     public String getName() {
-        return "builder";
+        return "maven";
     }
 
     @Override

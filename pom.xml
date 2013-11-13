@@ -112,6 +112,7 @@
         <module>codenvy-ide-core</module>
         <module>codenvy-builder-maven</module>
         <module>codenvy-ext-builder</module>
+        <module>codenvy-api-war</module>
         <module>codenvy-ext-demo</module>
         <module>codenvy-ext-css</module>
         <module>codenvy-ext-java</module>

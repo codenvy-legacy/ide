@@ -39,6 +39,12 @@
             <type>war</type>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-api-war</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-websocket</artifactId>
             <exclusions>
@@ -330,6 +336,8 @@
                                       tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${project.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-api-war-${project.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/api.war" overwrite="true"/>
                                 <!--<copy file="${project.build.directory}/packager-conf/war/exo-ide-builder-${org.exoplatform.ide.version}.war"-->
                                       <!--tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true"/>-->
                                 <!--<copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war"-->
