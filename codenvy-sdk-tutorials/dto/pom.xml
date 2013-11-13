@@ -14,17 +14,6 @@
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
     </properties>
 
-    <distributionManagement>
-        <repository>
-            <id>codenvy-public-releases</id>
-            <url>http://maven.codenvycorp.com/content/repositories/codenvy-public-releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>codenvy-public-snapshots</id>
-            <url>http://maven.codenvycorp.com/content/repositories/codenvy-public-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <dependencies>
         <dependency>
             <groupId>com.google.gwt</groupId>
