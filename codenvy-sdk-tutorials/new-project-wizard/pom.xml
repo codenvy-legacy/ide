@@ -2,22 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.codenvy.ide</groupId>
+    <parent>
+        <artifactId>codenvy-ide-parent</artifactId>
+        <groupId>com.codenvy.ide</groupId>
+        <version>3.0.0-M3-SNAPSHOT</version>
+    </parent>
     <artifactId>new-project-wizard-tutorial</artifactId>
-    <version>3.0.0-M3-SNAPSHOT</version>
     <name>Codenvy Extension :: New Project Wizard API</name>
     <packaging>jar</packaging>
-
-    <distributionManagement>
-        <repository>
-            <id>codenvy-public-releases</id>
-            <url>http://maven.codenvycorp.com/content/repositories/codenvy-public-releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>codenvy-public-snapshots</id>
-            <url>http://maven.codenvycorp.com/content/repositories/codenvy-public-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <dependencies>
         <dependency>
