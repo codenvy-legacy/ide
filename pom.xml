@@ -36,11 +36,18 @@
         <developerConnection>scm:git:git@github.com:codenvy/ide2.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
+
+    <!--
+        IMPORTANT!
+        Make sure that the same properties in file
+        codenvy-ext-extensions-runtime/src/main/resource/codenvyPlatform/codenvy-ide-client/pom.xml
+        have the same values.
+    -->
     <properties>
         <exo.product.name>codenvy-ide</exo.product.name>
 
         <!-- Codenvy -->
-        <com.codenvy.commons.version>0.8.0</com.codenvy.commons.version>
+        <com.codenvy.commons.version>0.10.0-SNAPSHOT</com.codenvy.commons.version>
         <com.codenvy.organization.version>0.7.0</com.codenvy.organization.version>
         <com.codenvy.platform-api.version>1.0.0-SNAPSHOT</com.codenvy.platform-api.version>
 
@@ -48,10 +55,6 @@
         <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
         <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
 
-        <!-- IMPORTANT!
-             Make sure that the same property (org.exoplatform.ide.version) in file
-             codenvy-ext-extensions-runtime/src/main/resource/codenvyPlatform/codenvy-ide-client/pom.xml
-             has the same value -->
         <org.exoplatform.ide.version>2.9.0-SNAPSHOT</org.exoplatform.ide.version>
 
         <!-- CodeAssistant DataBase -->
