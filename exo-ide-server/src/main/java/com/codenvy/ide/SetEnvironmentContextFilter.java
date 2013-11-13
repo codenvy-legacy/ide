@@ -111,7 +111,8 @@ public class SetEnvironmentContextFilter implements Filter {
         Map<String, Object> myEnv = new HashMap<String, Object>();
         myEnv.put(EnvironmentContext.GIT_SERVER, "git");
         myEnv.put(EnvironmentContext.TMP_DIR, new File("../temp"));
-        myEnv.put(EnvironmentContext.VFS_ROOT_DIR, new File("../temp/fs-root"));
+        final String vfsRootDir = System.getProperty("com.codenvy.vfs.rootdir", "../temp/fs-root");
+        myEnv.put(EnvironmentContext.VFS_ROOT_DIR, new File(vfsRootDir));
         myEnv.put(EnvironmentContext.VFS_INDEX_DIR, new File("../temp/fs-index-root"));
         this.env = Collections.unmodifiableMap(myEnv);
     }
