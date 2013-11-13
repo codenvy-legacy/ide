@@ -1,0 +1,209 @@
+<div>
+
+In this tutorial:
+<ul>
+<li><a href="#add-project">Add a New Project Type</a></li>
+<li><a href="#add-template">Add a New Template</a></li>
+<li><a href="#paas">Register a New PaaS</a></li>
+<li><a href="#add-page">Add Page at a Particular Position</a></li>
+</ul>
+
+<h2 id="add-project">Add a New Project Type</h2>
+
+To add a new project type, a project type agent needs to be retrieved:
+<pre>@Inject public NewProjectWizardTutorialExtension(...ProjectTypeAgent projectTypeAgent,...)</pre>
+Browse full code at
+<pre>com.codenvy.ide.tutorial.wizard.newproject.NewProjectWizardTutorialExtension</pre>
+
+Next, we register own project type in this agent. It is done by calling a register method on this agent:
+<pre>
+projectTypeAgent.register(MY_PROJECT_TYPE,
+                          MY_PROJECT_TYPE,
+                          null,
+                          MY_PROJECT_TYPE,
+                          JsonCollections.createArray());
+</pre>
+Browse full code in
+<pre>com.codenvy.ide.tutorial.wizard.newproject.NewProjectWizardTutorialExtension</pre>
+
+Parameters used:
+<ul>
+	<li>project type name</li>
+	<li>project type title (the name shown on the Wizard mainpage)</li>
+	<li>project type icon (optional, i.e. can be 'null')</li>
+	<li>primary nature (programming language, for instance Java or PHP)</li>
+	<li>list of secondary nature (for example, if it is Java, it may be war or JSP)</li>
+</ul>
+So, having registered a new project type, we can see it on the Wizard mainpage. If a new project primary and secondary nature fit PaaS parameters, these PaaS will be available for the freshly added project type.
+
+<h2 id="add-template">Add a Template</h2>
+
+Now, that we have a new project type, let's add 2 new templates for it.
+
+To add a new template, we need to get a template agent:
+<pre> @Inject public NewProjectWizardTutorialExtension(... TemplateAgent templateAgent ...)</pre>
+Browse full code in
+<pre>com.codenvy.ide.tutorial.wizard.newproject.NewProjectWizardTutorialExtension</pre>
+To register this template, we need to call a register method on this agent. We do it this way:
+<pre>
+templateAgent.register(MY_TEMPLATE_1,
+                       MY_TEMPLATE_1,
+                       null,
+                       MY_PROJECT_TYPE,
+                       JsonCollections.createArray(),
+                       JsonCollections.&lt;Provider&lt;? extends AbstractTemplatePage&gt;&gt;createArray(new TemplatePageProvider("Template 1 page", MY_TEMPLATE_1)));</pre>
+Full code:
+<pre>com.codenvy.ide.tutorial.wizard.newproject.NewProjectWizardTutorialExtension</pre>
+
+Parameters used:
+<ul>
+	<li>template ID (every template has its unique ID, so it is impossible to register a new template with the ID that already exists)</li>
+	<li>template title</li>
+	<li>template icon (optional - can be null)</li>
+	<li>template primary nature (for instance programming language)</li>
+	<li>template secondary nature</li>
+	<li>list of Wizard page providers (the list of pages that can be potentially required for a template task. This page may not be shown, but there should be a task assigned to it).</li>
+</ul>
+
+To create a template page, we extend AbstractTemplatePage (by default, AbstractTemplatePage parameter 'can skip' is true, since in most cases users need tasks supplied by template pages, but not pages themselves)
+<pre>
+public class TemplatePage extends AbstractTemplatePage {
+
+public TemplatePage(@Nullable String caption, String templateID) {
+super(caption, null, templateID);
+}
+
+/** {@inheritDoc} */
+@Override
+public boolean canSkip() {
+return false;
+}
+
+/** {@inheritDoc} */
+@Override
+public void go(AcceptsOneWidget container) {
+container.setWidget(new Label(getCaption()));
+}
+
+/** {@inheritDoc} */
+@Override
+public void commit(@NotNull CommitCallback callback) {
+Window.alert("Commit on page " + getCaption());
+callback.onSuccess();
+}
+}
+</pre>
+
+We need to feed list of providers that can create pages to the agent. This is how we've done it:
+<pre>
+public class TemplatePageProvider implements Provider {
+private String caption;
+private String templateID;
+
+public TemplatePageProvider(String caption, String templateID) {
+this.caption = caption;
+this.templateID = templateID;
+}
+
+/** {@inheritDoc} */
+@Override
+public TemplatePage get() {
+return new TemplatePage(caption, templateID);
+}
+}
+</pre>
+
+<h2 id="paas">Register a New PaaS</h2>
+
+To add a new PaaS we need to get a PaaS agent:
+<pre>@Inject public NewProjectWizardTutorialExtension(... PaaSAgent paasAgent...)</pre>
+Browse full code in
+<pre>com.codenvy.ide.tutorial.wizard.newproject.NewProjectWizardTutorialExtension</pre>
+
+To register a new PaaS one needs to call register method on the agent:
+<pre>
+JsonStringMap&lt;JsonArray&gt; natures = JsonCollections.createStringMap();
+natures.put(MY_PROJECT_TYPE, JsonCollections.createArray());
+
+JsonArray&lt;Provider&lt;? extends AbstractPaasPage&gt;&gt; wizardPages = JsonCollections.createArray();
+wizardPages.add(new PaasPageProvider("PaaS 1 page", MY_PAAS_1));
+
+paasAgent.register(MY_PAAS_1, MY_PAAS_1, null, natures, wizardPages, false);
+</pre>
+
+Parameters used:
+<ul>
+	<li>PaaS ID</li>
+	<li>PaaS title</li>
+	<li>PaaS icon (optional, i.e. can be 'null')</li>
+	<li>PaaS natures - can support multiple natures (for instance primary nature Java, secondary nature JSP, War)</li>
+	<li>Wizard page providers</li>
+	<li>ProvideTemplate - indicates whether or not a PaaS needs a template</li>
+</ul>
+PaaS Pages
+
+We need to create PaaS pages. In this tutorial we extend AbstractPaasPage (but you may create your own implementation though. The point is that AbstractPaasPage already contains the logic that asks pages if or not they are in context, whether or not to show them etc):
+<pre>
+public class PaasPage extends AbstractPaasPage {
+
+public PaasPage(@Nullable String caption, @NotNull String paasID) {
+super(caption, null, paasID);
+}
+
+/** {@inheritDoc} */
+@Override
+public void go(AcceptsOneWidget container) {
+container.setWidget(new Label(getCaption()));
+}
+
+/** {@inheritDoc} */
+@Override
+public void commit(@NotNull CommitCallback callback) {
+Window.alert("Commit on page " + getCaption());
+callback.onSuccess();
+}
+}
+</pre>
+
+We need to feed list of providers that can create pages to the agent. This is how we've done it:
+<pre>
+public class PaasPageProvider implements Provider {
+private String caption;
+private String paasID;
+
+public PaasPageProvider(String caption, String paasID) {
+this.caption = caption;
+this.paasID = paasID;
+}
+
+/** {@inheritDoc} */
+@Override
+public PaasPage get() {
+return new PaasPage(caption, paasID);
+}
+}
+</pre>
+
+<h2 id="add-page">Add a Page at a Particular Position</h2>
+
+First, we need to get our NewProjectWizard:
+<pre>@Inject public NewProjectWizardTutorialExtension(NewProjectWizard newProjectWizard...)</pre>
+Full code -
+<pre>com.codenvy.ide.tutorial.wizard.newproject.NewProjectWizardTutorialExtension</pre>
+
+NewProjectWizard extends out default wizards with all its methods, including add page. It also has its own 3 methods:
+<ul>
+	<li>addPageAfterFirst (adds a page after start wizard page)</li>
+	<li>addPageAfterChooseTemplate (adds a page after template choosing page)</li>
+	<li>addPageBeforePaas (add a new page before PaaS page)</li>
+</ul>
+
+This is how the pages have been added:
+<pre>
+newProjectWizard.addPageAfterFirst(new PageProvider("Page after first"));
+newProjectWizard.addPageAfterChooseTemplate(new PageProvider("Page after choose template"));
+newProjectWizard.addPageBeforePaas(new PageProvider("Page before PaaS"));
+newProjectWizard.addPage(new PageProvider("Page after PaaS"));
+</pre>
+
+</div>
