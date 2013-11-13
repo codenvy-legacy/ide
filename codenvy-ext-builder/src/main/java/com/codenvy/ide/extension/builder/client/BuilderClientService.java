@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.extension.builder.client;
 
+import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 
@@ -75,7 +76,7 @@ public interface BuilderClientService {
      *         callback
      * @throws RequestException
      */
-    public void status(String link, AsyncRequestCallback<String> callback) throws RequestException;
+    public void status(Link link, AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Get build log.

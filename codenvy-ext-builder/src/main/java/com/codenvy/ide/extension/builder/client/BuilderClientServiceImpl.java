@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.extension.builder.client;
 
+import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
@@ -106,9 +107,9 @@ public class BuilderClientServiceImpl implements BuilderClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void status(String link, AsyncRequestCallback<String> callback) throws RequestException {
+    public void status(Link link, AsyncRequestCallback<String> callback) throws RequestException {
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-        AsyncRequest.build(RequestBuilder.GET, link).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+        AsyncRequest.build(RequestBuilder.GET, link.getHref()).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
                     .send(callback);
     }
 
