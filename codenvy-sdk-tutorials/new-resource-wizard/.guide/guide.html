@@ -1,0 +1,152 @@
+<div>
+
+<ul>
+<li><a href="#create-resource">Create New Resources Through a New Resource Wizard</a></li>
+<li><a href="#get-agent">Get a New Resource Agent</a></li>
+<li><a href="#register-resource">Register New Resource Type</a></li>
+<li><a href="#create-provider">Create a Resource Provider</a></li>
+<li><a href="#methods-overview">Methods Overview</a></li>
+<li><a href="#create-method">Create method</a></li>
+<li><a href="#in-context">inContext Method</a></li>
+<li><a href="#add-page">Add Own Page to a New Resource Wizard</a></li>
+<li><a href="#add-page">Add a Page</a></li>
+<li><a href="# reset-method">Re-set inContext Method</a></li>
+<li><a href="#wizard-keys">Wizard Keys</a></li>
+</ul>
+
+Our API model has an abstract resource class </b>com.codenvy.ide.resources.model.Resource</b>. Resources are files and folders of a project. There can be project specific files and folders, for instance classes/interfaces (as specific file types) and packages (as specific folder types), in case this is a Java project.
+
+Resources are created with a New Resource Wizard. Below is a quick tutorial on how to create resources and add own pages to a New Resource Wizard.
+
+<h1 id="create-resource">Create New Resources Through a New Resource Wizard</h1>
+
+<h2 ide="get-agent">Get a New Resource Agent</h2>
+To create own resources, we'll first need to get a new resource agent
+<pre>@Inject public NewResourceWizardTutorialExtension(...newResourceAgent...) {</pre>
+
+The complete code can be found in
+<pre>com.codenvy.ide.tutorial.wizard.newresource.NewResourceWizardTutorialExtension</pre>
+
+<h2 id="register-resource">Register New Resource Type</h2>
+Done with that. Now, let's register a new resource type - we'll call a register method on this agent:
+<pre>newResourceAgent.register(myResourceProvider);</pre>
+
+<h2 id="create-provider">Create a Resource Provider</h2>
+A resource provider is given to a register method. <b>myResourceProvider</b> is a class that can create a new resource of any type it supports/provides. Consequently, to create this provider, lets extend the following class:
+<pre>com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider</pre>
+
+Here's an example of a provider we have created in our template:
+<pre>
+public class MyResourceProvider extends NewResourceProvider {
+    public static final String LOGIN_PLACE    = "@login";
+    public static final String PASSWORD_PLACE = "@password";
+    private SelectionAgent selectionAgent;
+
+    @Inject
+    public MyResourceProvider(SelectionAgent selectionAgent) {
+        super("My file", "My file", null, "xml");
+        this.selectionAgent = selectionAgent;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void create(@NotNull String name, @NotNull Folder parent, @NotNull Project project,
+                       @NotNull final AsyncCallback&lt;Resource&gt; callback) {
+        String fileName = name + '.' + getExtension();
+        String content = "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;\n" +
+                         "&lt;configuration&gt;\n" +
+                         "    &lt;login&gt;" + LOGIN_PLACE + "&lt;/login&gt;\n" +
+                         "    &lt;password&gt;" + PASSWORD_PLACE + "&lt;/password&gt;\n" +
+                         "&lt;/configuration&gt;";
+
+        project.createFile(parent, fileName, content, TEXT_XML, new AsyncCallback&lt;File&gt;() {
+            @Override
+            public void onSuccess(File result) {
+                callback.onSuccess(result);
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+            }
+        });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean inContext() {
+        // Possible to create this type of resource just in folder
+        Selection&lt;?&gt; selection = selectionAgent.getSelection();
+        if (selection != null) {
+            if (selectionAgent.getSelection().getFirstElement() instanceof Resource) {
+                Resource resource = (Resource)selectionAgent.getSelection().getFirstElement();
+                if (resource.isFile()) {
+                    resource = resource.getParent();
+                }
+                return resource.getResourceType().equals(TYPE);
+            }
+        }
+        return false;
+    }
+}
+</pre>
+
+Full code is available in
+<pre>com.codenvy.ide.tutorial.wizard.newresource.provider.MyResourceProvider</pre>
+
+New resource provider has a <b>Title</b> and <b>Icon</b> that will show up in New Resource Wizard page (for instance, Java, Ruby or Python file, each having a different logo). Also, this provider contains an extension (this mostly concerns files) that can be given <strong>null </strong>parameter, if this is a folder. This is done to check if a particular resource type with a particular name already exists in the project.
+
+<h2 id="methods-overview">Methods Overview</h2>
+There are a few methods that actually do the trick, namely:
+
+<h3 id="create-method">Create method</h3>
+As its name suggests, this method does the actual job, i.e. creates a new resource:
+<pre>create(@NotNull String name, @NotNull Folder parent, @NotNull Project project, @NotNull AsyncCallback callback);</pre>
+
+Its input parameters are:
+<ul>
+	<li><strong>resource name</strong></li>
+	<li><strong>parent folder</strong> (i.e. where this resource should be created), project (in which project a new resource should be created)</li>
+	<li><strong>callback</strong>, which is a class that returns result of a new resource creation (successful or fail)</li>
+</ul>
+
+<h3 id="in-context">inContext Method</h3>
+<pre>boolean inContext()</pre>
+
+Its primary role is to filter possibility to create resources according to pre-defined rules/parameters. In the above example, we set the following rule - a new resource can be created only inside a folder, not in project root, or in a package.
+
+A developer may set own rules/filters for creating a new resource.
+
+<h1 id="add-page">Add Own Page to a New Resource Wizard</h1>
+
+<h2 id="get-wizard">Get a Wizard</h2>
+To add a new page, one needs to get this wizard:
+<pre>@Inject public NewResourceWizardTutorialExtension(...@NewResource DefaultWizard newResourceWizard...) {</pre>
+
+<h2 id="add-page">Add a Page</h2>
+Now, it's time to add page. We can do it this way:
+<pre>newResourceWizard.addPage(myResourcePage);</pre>
+
+Full code is available in
+<pre>com.codenvy.ide.tutorial.wizard.newresource.NewResourceWizardTutorialExtension</pre>
+
+<h2 id="reset-method">Re-set inContext Method</h2>
+So, we have added a new page after the first (and the only) Wizard page. It is possible to add as many of them as required. But to connect this page with the resource provider, we need to re-set <b>inContext</b> method for a Wizard page. In simple words, we specify when we need this page to be displayed (for example, only when creating a Java or a CSS file)
+
+<pre>
+    @Override
+    public boolean inContext() {
+        NewResourceProvider resourceProvider = wizardContext.getData(NEW_RESOURCE_PROVIDER);
+        return resourceProvider != null && resourceProvider instanceof MyResourceProvider;
+    }
+</pre>
+
+Browse full code in
+<pre>com.codenvy.ide.tutorial.wizard.newresource.page.MyResourcePagePresenter</pre>
+
+The added Wizard page will be shown only if a particular resource type is chosen. If this method remains unchanged, added page will be shown for all resource types.
+
+<h2 id="wizard-keys">Wizard Keys</h2>
+<b>com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys</b> has keys with parameters that you can get from Wizard context.
+
+</div>
