@@ -37,7 +37,6 @@
         <tag>HEAD</tag>
     </scm>
     <properties>
-        <!-- Repositories URLs -->
         <exo.product.name>codenvy-ide</exo.product.name>
 
         <!-- Codenvy -->
@@ -48,7 +47,12 @@
         <!-- eXo -->
         <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
         <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
-        <org.exoplatform.ide.version>2.7.0</org.exoplatform.ide.version>
+
+        <!-- IMPORTANT!
+             Make sure that the same property (org.exoplatform.ide.version) in file
+             codenvy-ext-extensions-runtime/src/main/resource/codenvyPlatform/codenvy-ide-client/pom.xml
+             has the same value -->
+        <org.exoplatform.ide.version>2.9.0-SNAPSHOT</org.exoplatform.ide.version>
 
         <!-- CodeAssistant DataBase -->
         <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
