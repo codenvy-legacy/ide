@@ -32,11 +32,11 @@ class MavenBuilderClient {
     /** Base URL of Maven build server. */
     private final String buildServerBaseURL;
     /** Relative path to start a new build. */
-    private final String BUILD_PATH        = "/builder/maven/build";
+    private final String BUILD_PATH        = "/builder/builder/build";
     /** Relative path to deploy project. */
-    private final String DEPLOY_PATH       = "/builder/maven/deploy";
+    private final String DEPLOY_PATH       = "/builder/builder/deploy";
     /** Relative path to check status of a build task. */
-    private final String CHECK_STATUS_PATH = "/builder/maven/status";
+    private final String CHECK_STATUS_PATH = "/builder/builder/status";
 
     /**
      * Creates new {@link MavenBuilderClient} instance.

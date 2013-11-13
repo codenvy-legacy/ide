@@ -33,9 +33,9 @@ import com.codenvy.ide.extension.cloudfoundry.client.marshaller.SystemInfoUnmars
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo;
-import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
-import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
-import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
+import com.codenvy.ide.extension.builder.client.event.BuildProjectEvent;
+import com.codenvy.ide.extension.builder.client.event.ProjectBuiltEvent;
+import com.codenvy.ide.extension.builder.client.event.ProjectBuiltHandler;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
@@ -349,7 +349,7 @@ public class CloudFoundryPagePresenter extends AbstractPaasPage implements Cloud
         }
     }
 
-    /** Check current project is maven project. */
+    /** Check current project is builder project. */
     private void beforeDeploy() {
         JsonArray<Resource> children = project.getChildren();
 

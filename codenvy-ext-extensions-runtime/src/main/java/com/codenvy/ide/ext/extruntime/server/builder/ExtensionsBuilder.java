@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.extruntime.server.builder;
 
 import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls;
-import com.codenvy.ide.extension.maven.shared.BuildStatus;
+import com.codenvy.ide.extension.builder.shared.BuildStatus;
 
 import org.apache.maven.model.Model;
 import org.exoplatform.container.xml.InitParams;

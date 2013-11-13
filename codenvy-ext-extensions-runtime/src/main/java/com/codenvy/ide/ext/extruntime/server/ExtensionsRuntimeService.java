@@ -149,7 +149,7 @@ public class ExtensionsRuntimeService {
                               new ByteArrayInputStream(stream.toByteArray()),
                               null);
         } catch (XmlPullParserException e) {
-            LOG.warn("Error occurred while setting maven project coordinates.", e);
+            LOG.warn("Error occurred while setting builder project coordinates.", e);
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
