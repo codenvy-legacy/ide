@@ -18,7 +18,8 @@
     from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.codenvy</groupId>
@@ -127,13 +128,13 @@
         <module>codenvy-ide-client</module>
         <module>codenvy-ext-tutorials</module>
         <module>codenvy-ext-extensions-runtime</module>
-        <!--<module>codenvy-sdk-tutorials/action-api</module>-->
-        <!--<module>codenvy-sdk-tutorials/dto</module>-->
-        <!--<module>codenvy-sdk-tutorials/new-project-wizard</module>-->
-        <!--<module>codenvy-sdk-tutorials/new-resource-wizard</module>-->
-        <!--<module>codenvy-sdk-tutorials/notification-api</module>-->
-        <!--<module>codenvy-sdk-tutorials/parts-api</module>-->
-        <!--<module>codenvy-sdk-tutorials/wizard-api</module>-->
+        <module>codenvy-sdk-tutorials/action-api</module>
+        <module>codenvy-sdk-tutorials/dto</module>
+        <module>codenvy-sdk-tutorials/new-project-wizard</module>
+        <module>codenvy-sdk-tutorials/new-resource-wizard</module>
+        <module>codenvy-sdk-tutorials/notification-api</module>
+        <module>codenvy-sdk-tutorials/parts-api</module>
+        <module>codenvy-sdk-tutorials/wizard-api</module>
         <module>codenvy-sdk-application-war</module>
         <module>codenvy-sdk-private-dependencies</module>
         <module>codenvy-sdk-packaging-standalone-tomcat</module>

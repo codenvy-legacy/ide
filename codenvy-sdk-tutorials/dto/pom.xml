@@ -16,17 +16,13 @@
 
     <distributionManagement>
         <repository>
-            <id>repo.codenvy.public</id>
-            <url>http://maven.codenvycorp.com/content/repositories/codenvy-public-releases/</url>
+            <id>codenvy-public-releases</id>
+            <url>http://maven.codenvycorp.com/content/repositories/codenvy-public-releases</url>
         </repository>
         <snapshotRepository>
-            <id>repo.codenvy.public</id>
-            <url>http://maven.codenvycorp.com/content/repositories/codenvy-public-snapshots/</url>
+            <id>codenvy-public-snapshots</id>
+            <url>http://maven.codenvycorp.com/content/repositories/codenvy-public-snapshots</url>
         </snapshotRepository>
-        <site>
-            <id>repo.codenvy.public</id>
-            <url>http://maven.codenvycorp.com/content/groups/public/</url>
-        </site>
     </distributionManagement>
 
     <dependencies>
