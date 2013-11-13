@@ -69,7 +69,7 @@
         <!-- Testing libraries -->
         <junit.version>4.7</junit.version>
         <mockito.version>1.9.5</mockito.version>
-        <gwt-test-utils.version>0.44</gwt-test-utils.version>
+        <gwt-test-utils.version>0.45</gwt-test-utils.version>
         <org.easytesting.fest-assert.version>1.4</org.easytesting.fest-assert.version>
 
         <!-- Logging libraries -->
