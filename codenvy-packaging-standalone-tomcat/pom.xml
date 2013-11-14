@@ -108,6 +108,24 @@
             <artifactId>codenvy-ext-maven</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!--<dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-tutorials</artifactId>
+            <type>jar</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-extensions-runtime</artifactId>
+            <type>jar</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-sdk-private-dependencies</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>-->
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-git-server</artifactId>
@@ -167,6 +185,8 @@
             <artifactId>jsch</artifactId>
             <version>${jsch.version}</version>
         </dependency>
+
+        <!-- Google App Engine SDK -->
         <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-java-sdk</artifactId>
@@ -179,7 +199,6 @@
             <type>zip</type>
             <version>${appengine.version}</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -274,6 +293,24 @@
                             <!--<outputDirectory>${project.build.directory}</outputDirectory>-->
                         <!--</configuration>-->
                     <!--</execution>-->
+                    <!--<execution>
+                        <id>copy-private-dependencies-for-sdk</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>codenvy-sdk-private-dependencies</artifactId>
+                                    <type>zip</type>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                    <destFileName>repo.zip</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>-->
                 </executions>
             </plugin>
             <plugin>
@@ -338,6 +375,8 @@
                                       tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
                                 <!--<unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"-->
                                        <!--dest="${project.build.directory}/tomcat-ide"/>-->
+                                <!--<unzip src="${project.build.directory}/repo.zip" dest="${project.build.directory}/tomcat-ide"/>
+                                <chmod dir="${project.build.directory}/tomcat-ide" perm="+x" includes="install.sh" />-->
                                 <!--<unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip"-->
                                        <!--dest="${project.build.directory}/tomcat-ide">-->
                                     <!--<patternset>-->

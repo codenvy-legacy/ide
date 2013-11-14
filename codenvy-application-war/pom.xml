@@ -86,17 +86,6 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-client</artifactId>
-            <!-- Next two dependencies are added to client module only to allow launching Codenvy SDK in GWT DevMode. -->
-            <exclusions>
-                <exclusion>
-                    <groupId>com.codenvy.ide</groupId>
-                    <artifactId>codenvy-ext-tutorials</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.codenvy.ide</groupId>
-                    <artifactId>codenvy-ext-extensions-runtime</artifactId>
-                </exclusion>
-            </exclusions>
             <version>${project.version}</version>
         </dependency>
         <dependency>

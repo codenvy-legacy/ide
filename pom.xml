@@ -115,8 +115,8 @@
         <module>codenvy-ext-demo</module>
         <module>codenvy-ext-css</module>
         <module>codenvy-ext-java</module>
-        <!--module>codenvy-ext-java-runtime</module-->
-        <!--module>codenvy-ext-cloudfoundry</module>
+        <!--module>codenvy-ext-java-runtime</module
+        module>codenvy-ext-cloudfoundry</module>
         <module>codenvy-ext-cloudbees</module>
         <module>codenvy-ext-appfog</module>
         <module>codenvy-ext-openshift</module>
@@ -126,45 +126,13 @@
         <module>codenvy-ext-git</module>
         <module>codenvy-ext-maven</module>
         <module>codenvy-ext-ssh</module>
+        <!--<module>codenvy-ext-extensions-runtime</module>
+        <module>codenvy-ext-tutorials</module>-->
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
-        <!--module>codenvy-ext-tutorials</module>
-        <module>codenvy-ext-extensions-runtime</module-->
-        <!--module>codenvy-sdk-application-war</module>
-        <module>codenvy-sdk-private-dependencies</module>
-        <module>codenvy-sdk-packaging-standalone-tomcat</module-->
+        <module>codenvy-application-war</module>
+        <module>codenvy-ide-site-war</module>
+        <!--<module>codenvy-sdk-private-dependencies</module>-->
+        <module>codenvy-packaging-standalone-tomcat</module>
     </modules>
-
-    <profiles>
-        <profile>
-            <!-- Used to build default-version (non-SDK) of Codenvy -->
-            <id>default-version</id>
-            <activation>
-                <property>
-                    <name>!sdk</name>
-                </property>
-            </activation>
-            <modules>
-                <module>codenvy-ide-site-war</module>
-                <module>codenvy-application-war</module>
-                <module>codenvy-packaging-standalone-tomcat</module>
-            </modules>
-        </profile>
-        <profile>
-            <!-- Used to build Codenvy Platform SDK -->
-            <id>sdk-version</id>
-            <activation>
-                <property>
-                    <name>sdk</name>
-                </property>
-            </activation>
-            <modules>
-                <module>codenvy-ext-tutorials</module>
-                <module>codenvy-ext-extensions-runtime</module>
-                <module>codenvy-sdk-application-war</module>
-                <module>codenvy-sdk-private-dependencies</module>
-                <module>codenvy-sdk-packaging-standalone-tomcat</module>
-            </modules>
-        </profile>
-    </profiles>
 </project>
