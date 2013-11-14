@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  * Used to store credentials when given url is WSO2.
@@ -35,6 +36,7 @@ import java.io.IOException;
  */
 public class OAuthCredentialsProvider implements CredentialsProvider {
 
+    private static final Pattern WSO_2_URL_PATTERN = Pattern.compile(FactoryServlet.WSO_2_URL_STRING);
     private static final Logger LOG = LoggerFactory.getLogger(OAuthCredentialsProvider.class);
     private final OAuthTokenProvider tokenProvider;
 
@@ -44,7 +46,7 @@ public class OAuthCredentialsProvider implements CredentialsProvider {
 
     @Override
     public boolean get(String url, CredentialItem... items) throws GitException {
-        if (!FactoryServlet.WSO_2_URL_PATTERN.matcher(url).matches()) {
+        if (!WSO_2_URL_PATTERN.matcher(url).matches()) {
             return false;
         }
         Token token;
