@@ -60,8 +60,11 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectPresenter.java Feb 17, 2012 5:39:10 PM azatsarynnyy $
  */
+
+//TODO: need rework for using websocket wait for server side
+
 @Singleton
-public class BuildProjectPresenter extends BasePresenter implements Notification.OpenNotificationHandler {
+public class BuildProjectPresenter implements Notification.OpenNotificationHandler {
     private final static String TITLE = "Output";
     /** Delay in millisecond between requests for build job status. */
     private static final int    delay = 3000;
@@ -72,20 +75,17 @@ public class BuildProjectPresenter extends BasePresenter implements Notification
     /** Identifier of project we want to send for build. */
     /** Build of another project is performed. */
     private boolean isBuildInProgress = false;
-    /** View closed flag. */
-    private boolean isViewClosed      = true;
     /** Project for build. */
     private       Project                     projectToBuild;
     private       RequestStatusHandler        statusHandler;
-    private       String                      buildStatusChannel;
+    //    private       String                      buildStatusChannel;
     private final EventBus                    eventBus;
     private       ResourceProvider            resourceProvider;
     private       ConsolePart                 console;
     private       BuilderClientService        service;
     private       BuilderLocalizationConstant constant;
-    private       BuilderResources            resources;
     private       WorkspaceAgent              workspaceAgent;
-    private       MessageBus                  messageBus;
+    //    private       MessageBus                  messageBus;
     private       NotificationManager         notificationManager;
     private       Notification                notification;
 
@@ -97,16 +97,18 @@ public class BuildProjectPresenter extends BasePresenter implements Notification
      * @param console
      * @param service
      * @param constant
-     * @param resources
      * @param workspaceAgent
      * @param messageBus
      * @param notificationManager
      */
     @Inject
-    protected BuildProjectPresenter(EventBus eventBus, ResourceProvider resourceProvider,
-                                    ConsolePart console, BuilderClientService service,
-                                    BuilderLocalizationConstant constant, BuilderResources resources,
-                                    WorkspaceAgent workspaceAgent, MessageBus messageBus,
+    protected BuildProjectPresenter(EventBus eventBus,
+                                    ResourceProvider resourceProvider,
+                                    ConsolePart console,
+                                    BuilderClientService service,
+                                    BuilderLocalizationConstant constant,
+                                    WorkspaceAgent workspaceAgent,
+                                    MessageBus messageBus,
                                     NotificationManager notificationManager,
                                     DtoFactory dtoFactory) {
         this.eventBus = eventBus;
@@ -115,8 +117,7 @@ public class BuildProjectPresenter extends BasePresenter implements Notification
         this.console = console;
         this.service = service;
         this.constant = constant;
-        this.resources = resources;
-        this.messageBus = messageBus;
+//        this.messageBus = messageBus;
         this.notificationManager = notificationManager;
         this.dtoFactory = dtoFactory;
     }
@@ -154,7 +155,7 @@ public class BuildProjectPresenter extends BasePresenter implements Notification
                                   BuildTaskDescriptor btd = dtoFactory.createDtoFromJson(result, BuildTaskDescriptor.class);
                                   startCheckingStatus(btd);
                                   setBuildInProgress(true);
-                                  String message = "Building project <b>" + projectToBuild.getPath().substring(1) + "</b>";
+                                  String message = constant.buildInProgress(projectToBuild.getName());
                                   notification = new Notification(message, PROGRESS, BuildProjectPresenter.this);
                                   notificationManager.showNotification(notification);
                               }
@@ -209,16 +210,16 @@ public class BuildProjectPresenter extends BasePresenter implements Notification
     /**
      * Check for status and display necessary messages.
      *
-     * @param buildStatus
+     * @param descriptor
      *         status of build
      */
-    private void updateBuildStatus(BuildTaskDescriptor buildStatus) {
-        BuildStatus status = buildStatus.getStatus();
+    private void updateBuildStatus(BuildTaskDescriptor descriptor) {
+        BuildStatus status = descriptor.getStatus();
         if (status == BuildStatus.IN_PROGRESS || status == BuildStatus.IN_QUEUE) {
             return;
         }
         if (status == BuildStatus.CANCELLED || status == BuildStatus.FAILED || status == BuildStatus.SUCCESSFUL) {
-            afterBuildFinished(buildStatus);
+            afterBuildFinished(descriptor);
             return;
         }
     }
@@ -237,10 +238,7 @@ public class BuildProjectPresenter extends BasePresenter implements Notification
 //            // nothing to do
 //        }
         setBuildInProgress(false);
-        StringBuilder message =
-                new StringBuilder("Finished building project <b>").append(projectToBuild.getPath().substring(1))
-                                                                  .append("</b>.\r\nResult: ").append(
-                        descriptor.getStatus().toString());
+        String message = constant.buildFinished(projectToBuild.getName());
         notification.setStatus(FINISHED);
         notification.setMessage(message.toString());
 
@@ -252,10 +250,9 @@ public class BuildProjectPresenter extends BasePresenter implements Notification
         } else if (descriptor.getStatus() == BuildStatus.FAILED) {
             Notification notification = new Notification(constant.buildFailed(), ERROR, this);
             notificationManager.showNotification(notification);
-            String exceptionMessage = "Building of project failed";
-            statusHandler.requestError(projectToBuild.getName(), new Exception("Building of project failed", new Throwable(
-                    exceptionMessage)));
-            console.print(exceptionMessage);
+            String errorMessage = constant.buildFailed();
+            statusHandler.requestError(projectToBuild.getName(), new Exception(errorMessage));
+            console.print(errorMessage);
         }
         getBuildLogs(descriptor);
         if (descriptor.getStatus() == BuildStatus.SUCCESSFUL) {
@@ -263,7 +260,7 @@ public class BuildProjectPresenter extends BasePresenter implements Notification
             for (int i = 0; i < links.size(); i++) {
                 Link link = links.get(i);
                 if (link.getRel().equalsIgnoreCase("download result"))
-                    console.print(link.getHref());
+                    console.print(constant.downloadArtifact(link.getHref()));
             }
         }
     }
@@ -285,7 +282,7 @@ public class BuildProjectPresenter extends BasePresenter implements Notification
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    String msg = "Can't get build log";
+                    String msg = constant.failGetBuildResult();
                     console.print(msg);
                     Notification notification = new Notification(msg, ERROR);
                     notificationManager.showNotification(notification);
@@ -297,44 +294,15 @@ public class BuildProjectPresenter extends BasePresenter implements Notification
     }
 
 
-    /** {@inheritDoc} */
-    @Override
-    public String getTitle() {
-        return TITLE;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public ImageResource getTitleImage() {
-        return resources.build();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getTitleToolTip() {
-        return "Displays builder output";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void go(AcceptsOneWidget container) {
-
-    }
 
     /** {@inheritDoc} */
     @Override
     public void onOpenClicked() {
-        if (isViewClosed) {
-            workspaceAgent.openPart(this, PartStackType.INFORMATION);
-            isViewClosed = false;
-        }
-
-        PartPresenter activePart = partStack.getActivePart();
-        if (activePart == null || !activePart.equals(this)) {
-            partStack.setActivePart(this);
-        }
+        workspaceAgent.setActivePart(console);
     }
 
+
+    //Temporary solutions wait for server side for reworking to websocket
     private class RefreshBuildStatusTimer extends Timer {
         private BuildTaskDescriptor buildTaskDescriptor;
 
@@ -345,7 +313,6 @@ public class BuildProjectPresenter extends BasePresenter implements Notification
 
         @Override
         public void run() {
-
             Link statusLink = null;
             if (buildTaskDescriptor.getStatus().equals(BuildStatus.IN_QUEUE) ||
                 buildTaskDescriptor.getStatus().equals(BuildStatus.IN_PROGRESS)) {
@@ -378,6 +345,7 @@ public class BuildProjectPresenter extends BasePresenter implements Notification
                         notification.setType(ERROR);
 
                         eventBus.fireEvent(new ExceptionThrownEvent(exception));
+
                     }
                 });
             } catch (RequestException e) {
