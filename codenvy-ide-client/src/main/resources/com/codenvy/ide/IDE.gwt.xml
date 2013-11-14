@@ -43,6 +43,9 @@
     <inherits name='com.codenvy.ide.ext.git.Git'/>
     <inherits name='com.codenvy.ide.ext.ssh.Ssh'/>
 
+
+    <inherits name='com.codenvy.api.PlatformAPI'/>
+
     <stylesheet src="IDE.css"/>
 
     <!-- Specify the app entry point class.                         -->

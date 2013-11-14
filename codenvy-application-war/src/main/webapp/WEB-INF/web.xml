@@ -29,10 +29,6 @@
         <param-name>everrest.exoplatform.standalone.config</param-name>
         <param-value>war:/WEB-INF/classes/conf/exo-configuration.xml</param-value>
     </context-param>
-     <context-param>
-        <param-name>javax.ws.rs.Application</param-name>
-        <param-value>com.codenvy.api.builder.ApiResourcesApplication</param-value>
-    </context-param>
 
     <listener>
         <listener-class>org.everrest.exoplatform.servlet.EverrestExoContextListener$StandaloneContainerStarter</listener-class>
@@ -104,7 +100,7 @@
         <servlet-class>org.eclipse.jgit.http.server.GitServlet</servlet-class>
         <init-param>
             <param-name>base-path</param-name>
-            <param-value>${org.exoplatform.ide.server.fs-root-path}/</param-value>
+            <param-value>${com.codenvy.vfs.rootdir}/</param-value>
         </init-param>
         <init-param>
             <param-name>export-all</param-name>

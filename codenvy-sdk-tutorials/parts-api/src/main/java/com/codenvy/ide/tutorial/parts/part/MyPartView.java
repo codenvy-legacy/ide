@@ -15,45 +15,28 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.builder.client.build;
+package com.codenvy.ide.tutorial.parts.part;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 
 /**
- * The view of {@link BuildProjectPresenter}.
+ * The view of {@link MyPartPresenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface BuildProjectView extends View<BuildProjectView.ActionDelegate> {
-    /** Needs for delegate some function into BuildProject view. */
+public interface MyPartView extends View<MyPartView.ActionDelegate> {
+    /** Required for delegating functions in view. */
     public interface ActionDelegate extends BaseActionDelegate {
-        /** Performs any actions appropriate in response to the user having pressed the ClearOutput button. */
-        void onClearOutputClicked();
+        /** Performs some actions in response to a user's clicking on Button */
+        void onButtonClicked();
     }
 
     /**
-     * Shows message.
-     *
-     * @param text
-     */
-    void showMessageInOutput(String text);
-
-    /** Clears output. */
-    void clearOutput();
-
-    /**
-     * Sets whether ClearOutput button is enabled.
-     *
-     * @param isEnabled
-     *         <code>true</code> to enable the button, <code>false</code> to disable it
-     */
-    void setClearOutputButtonEnabled(boolean isEnabled);
-
-    /**
-     * Sets title.
+     * Set title of my part.
      *
      * @param title
+     *         title that need to be set
      */
     void setTitle(String title);
 }

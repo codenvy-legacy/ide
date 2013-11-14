@@ -114,4 +114,18 @@ public interface TutorialsClientService {
      */
     void createNewResourceWizardTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
                                                 @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Create 'Parts tutorial' project.
+     *
+     * @param projectName
+     *         name of the project to create
+     * @param properties
+     *         properties to set to a newly created project
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    void createPartsTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+                                    @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 }

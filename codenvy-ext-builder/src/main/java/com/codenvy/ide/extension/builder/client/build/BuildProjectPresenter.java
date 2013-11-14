@@ -17,6 +17,9 @@
  */
 package com.codenvy.ide.extension.builder.client.build;
 
+import com.codenvy.api.builder.BuildStatus;
+import com.codenvy.api.builder.dto.BuildTaskDescriptor;
+import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
@@ -27,33 +30,29 @@ import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
-import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.BuilderClientService;
-import com.codenvy.ide.extension.builder.client.BuilderExtension;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.ide.extension.builder.client.BuilderResources;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.RequestStatusHandler;
-import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.websocket.Message;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.websocket.MessageBus;
-import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import java.util.List;
+
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
 /**
  * Presenter for build project with builder.
@@ -62,75 +61,37 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * @version $Id: BuildProjectPresenter.java Feb 17, 2012 5:39:10 PM azatsarynnyy $
  */
 @Singleton
-public class BuildProjectPresenter extends BasePresenter implements BuildProjectView.ActionDelegate,
-                                                                    Notification.OpenNotificationHandler {
-    private final static String TITLE                 = "Output";
+public class BuildProjectPresenter extends BasePresenter implements Notification.OpenNotificationHandler {
+    private final static String TITLE = "Output";
     /** Delay in millisecond between requests for build job status. */
-    private static final int    delay                 = 3000;
+    private static final int    delay = 3000;
     /** Handler for processing Maven build status which is received over WebSocket connection. */
-    private final SubscriptionHandler<String> buildStatusHandler;
-    private       BuildProjectView            view;
+//    private final SubscriptionHandler<String> buildStatusHandler;
+    private final DtoFactory dtoFactory;
+
     /** Identifier of project we want to send for build. */
-    private String              projectId         = null;
-    /** The builds identifier. */
-    private String              buildID           = null;
-    /** Status of previously build. */
     /** Build of another project is performed. */
-    private boolean             isBuildInProgress = false;
+    private boolean isBuildInProgress = false;
     /** View closed flag. */
-    private boolean             isViewClosed      = true;
+    private boolean isViewClosed      = true;
     /** Project for build. */
-    private Project                     projectToBuild;
-    private RequestStatusHandler        statusHandler;
-    private String                      buildStatusChannel;
-    private EventBus                    eventBus;
-    private ResourceProvider            resourceProvider;
-    private ConsolePart                 console;
-    private BuilderClientService        service;
-    private BuilderLocalizationConstant constant;
-    private BuilderResources            resources;
-    private WorkspaceAgent              workspaceAgent;
-    private MessageBus                  messageBus;
-    private NotificationManager         notificationManager;
-    private Notification                notification;
-
-    /** A timer for periodically sending request of build status. */
-    private Timer refreshBuildStatusTimer = new Timer() {
-        @Override
-        public void run() {
-            StringUnmarshaller unmarshaller = new StringUnmarshaller();
-
-            try {
-                service.status(buildID, new AsyncRequestCallback<String>(unmarshaller) {
-                    @Override
-                    protected void onSuccess(String response) {
-
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        setBuildInProgress(false);
-                        notification.setStatus(FINISHED);
-                        notification.setMessage(exception.getMessage());
-                        notification.setType(ERROR);
-
-                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    }
-                });
-            } catch (RequestException e) {
-                setBuildInProgress(false);
-                notification.setStatus(FINISHED);
-                notification.setMessage(e.getMessage());
-                notification.setType(ERROR);
-                eventBus.fireEvent(new ExceptionThrownEvent(e));
-            }
-        }
-    };
+    private       Project                     projectToBuild;
+    private       RequestStatusHandler        statusHandler;
+    private       String                      buildStatusChannel;
+    private final EventBus                    eventBus;
+    private       ResourceProvider            resourceProvider;
+    private       ConsolePart                 console;
+    private       BuilderClientService        service;
+    private       BuilderLocalizationConstant constant;
+    private       BuilderResources            resources;
+    private       WorkspaceAgent              workspaceAgent;
+    private       MessageBus                  messageBus;
+    private       NotificationManager         notificationManager;
+    private       Notification                notification;
 
     /**
      * Create presenter.
      *
-     * @param view
      * @param eventBus
      * @param resourceProvider
      * @param console
@@ -142,17 +103,14 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
      * @param notificationManager
      */
     @Inject
-    protected BuildProjectPresenter(BuildProjectView view, EventBus eventBus, ResourceProvider resourceProvider,
+    protected BuildProjectPresenter(EventBus eventBus, ResourceProvider resourceProvider,
                                     ConsolePart console, BuilderClientService service,
                                     BuilderLocalizationConstant constant, BuilderResources resources,
                                     WorkspaceAgent workspaceAgent, MessageBus messageBus,
                                     NotificationManager notificationManager,
                                     DtoFactory dtoFactory) {
-        this.view = view;
-        this.view.setDelegate(this);
-        this.view.setTitle(TITLE);
-        this.workspaceAgent = workspaceAgent;
         this.eventBus = eventBus;
+        this.workspaceAgent = workspaceAgent;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.service = service;
@@ -160,43 +118,14 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
         this.resources = resources;
         this.messageBus = messageBus;
         this.notificationManager = notificationManager;
-
-
-        StringUnmarshallerWs unmarshaller = new StringUnmarshallerWs();
-
-        buildStatusHandler = new SubscriptionHandler<String>(unmarshaller) {
-            @Override
-            protected void onMessageReceived(String buildStatus) {
-//                updateBuildStatus(buildStatus);
-            }
-
-            @Override
-            protected void onErrorReceived(Throwable exception) {
-                try {
-                    BuildProjectPresenter.this.messageBus.unsubscribe(buildStatusChannel, this);
-                } catch (WebSocketException e) {
-                    // nothing to do
-                }
-
-                setBuildInProgress(false);
-                notification.setType(ERROR);
-                notification.setStatus(FINISHED);
-                notification.setMessage(exception.getMessage());
-
-                BuildProjectPresenter.this.eventBus.fireEvent(new ExceptionThrownEvent(exception));
-            }
-        };
-
-
+        this.dtoFactory = dtoFactory;
     }
-
 
     /**
      * Performs building of project.
      *
      * @param project
      *         project to build. If <code>null</code> - active project will build.
-     *
      */
     public void buildProject(Project project) {
         if (isBuildInProgress) {
@@ -205,45 +134,38 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
             notificationManager.showNotification(notification);
             return;
         }
-
         if (project == null) {
             projectToBuild = resourceProvider.getActiveProject();
         } else {
             projectToBuild = project;
         }
-
-        statusHandler = new BuildRequestStatusHandler(projectToBuild.getPath().substring(1), eventBus, constant);
+        statusHandler = new BuildRequestStatusHandler(projectToBuild.getName(), eventBus, constant);
         doBuild();
     }
 
     /** Start the build of project. */
     private void doBuild() {
-        projectId = projectToBuild.getId();
-        statusHandler.requestInProgress(projectId);
-        StringUnmarshaller unmarshaller = new StringUnmarshaller();
-
+        statusHandler.requestInProgress(projectToBuild.getName());
         try {
             service.build(projectToBuild.getName(),
-                          new AsyncRequestCallback<String>(unmarshaller) {
+                          new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                               @Override
                               protected void onSuccess(String result) {
-                                  buildID = result.substring(result.lastIndexOf("/") + 1);
+                                  BuildTaskDescriptor btd = dtoFactory.createDtoFromJson(result, BuildTaskDescriptor.class);
+                                  startCheckingStatus(btd);
                                   setBuildInProgress(true);
-                                  String message =
-                                          "Building project <b>" + projectToBuild.getPath().substring(1) + "</b>";
+                                  String message = "Building project <b>" + projectToBuild.getPath().substring(1) + "</b>";
                                   notification = new Notification(message, PROGRESS, BuildProjectPresenter.this);
                                   notificationManager.showNotification(notification);
-                                  startCheckingStatus(buildID);
                               }
 
                               @Override
                               protected void onFailure(Throwable exception) {
-                                  statusHandler.requestError(projectId, exception);
+                                  statusHandler.requestError(projectToBuild.getName(), exception);
                                   setBuildInProgress(false);
                                   notification.setStatus(FINISHED);
                                   notification.setType(ERROR);
                                   notification.setMessage(exception.getMessage());
-
                                   if (!(exception instanceof ServerException)) {
                                       eventBus.fireEvent(new ExceptionThrownEvent(exception));
                                   }
@@ -261,16 +183,17 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
      * Starts checking job status by subscribing on receiving
      * messages over WebSocket or scheduling task to check status.
      *
-     * @param buildId
-     *         id of the build job to check status
+     * @param buildTaskDescriptor
+     *         the build job to check status
      */
-    private void startCheckingStatus(String buildId) {
-        try {
-            buildStatusChannel = BuilderExtension.BUILD_STATUS_CHANNEL + buildId;
-            messageBus.subscribe(buildStatusChannel, buildStatusHandler);
-        } catch (WebSocketException e) {
-            refreshBuildStatusTimer.schedule(delay);
-        }
+    private void startCheckingStatus(BuildTaskDescriptor buildTaskDescriptor) {
+        RefreshBuildStatusTimer statusTimer = new RefreshBuildStatusTimer(buildTaskDescriptor);
+        statusTimer.run();
+//        try {
+//            buildStatusChannel = BuilderExtension.BUILD_STATUS_CHANNEL + buildTaskDescriptor.getTaskId();
+//            messageBus.subscribe(buildStatusChannel, buildStatusHandler);
+//        } catch (WebSocketException e) {
+//        }
     }
 
 
@@ -281,46 +204,98 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
      */
     private void setBuildInProgress(boolean buildInProgress) {
         isBuildInProgress = buildInProgress;
-        view.setClearOutputButtonEnabled(!buildInProgress);
-    }
-
-
-    /**
-     * Output the message and activate view if necessary.
-     *
-     * @param message
-     *         message for output
-     */
-    private void showBuildMessage(String message) {
-        view.setClearOutputButtonEnabled(true);
-        view.showMessageInOutput(message);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onClearOutputClicked() {
-        view.clearOutput();
-        view.setClearOutputButtonEnabled(false);
     }
 
     /**
-     * Formats dependency string in xml.
+     * Check for status and display necessary messages.
      *
-     * @param dependency
-     *         dependency string in xml format
-     * @return formatted xml
+     * @param buildStatus
+     *         status of build
      */
-    private String formatDependencyXml(String dependency) {
-
-        String formatStr = SafeHtmlUtils.htmlEscape(dependency)//
-                .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;")//
-                .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;")//
-                .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;");
-        if (formatStr.contains("&lt;type&gt;")) {
-            formatStr = formatStr.replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;");
+    private void updateBuildStatus(BuildTaskDescriptor buildStatus) {
+        BuildStatus status = buildStatus.getStatus();
+        if (status == BuildStatus.IN_PROGRESS || status == BuildStatus.IN_QUEUE) {
+            return;
         }
-        return formatStr.replaceFirst("&gt;&lt;", "&gt;<br>&lt;");
+        if (status == BuildStatus.CANCELLED || status == BuildStatus.FAILED || status == BuildStatus.SUCCESSFUL) {
+            afterBuildFinished(buildStatus);
+            return;
+        }
     }
+
+
+    /**
+     * Perform actions after build is finished.
+     *
+     * @param descriptor
+     *         status of build job
+     */
+    private void afterBuildFinished(BuildTaskDescriptor descriptor) {
+//        try {
+//            messageBus.unsubscribe(buildStatusChannel, buildStatusHandler);
+//        } catch (Exception e) {
+//            // nothing to do
+//        }
+        setBuildInProgress(false);
+        StringBuilder message =
+                new StringBuilder("Finished building project <b>").append(projectToBuild.getPath().substring(1))
+                                                                  .append("</b>.\r\nResult: ").append(
+                        descriptor.getStatus().toString());
+        notification.setStatus(FINISHED);
+        notification.setMessage(message.toString());
+
+        if (descriptor.getStatus() == BuildStatus.SUCCESSFUL) {
+            Notification notification = new Notification(constant.buildSuccess(), INFO, this);
+            notificationManager.showNotification(notification);
+            statusHandler.requestFinished(projectToBuild.getName());
+            console.print(message.toString());
+        } else if (descriptor.getStatus() == BuildStatus.FAILED) {
+            Notification notification = new Notification(constant.buildFailed(), ERROR, this);
+            notificationManager.showNotification(notification);
+            String exceptionMessage = "Building of project failed";
+            statusHandler.requestError(projectToBuild.getName(), new Exception("Building of project failed", new Throwable(
+                    exceptionMessage)));
+            console.print(exceptionMessage);
+        }
+        getBuildLogs(descriptor);
+        if (descriptor.getStatus() == BuildStatus.SUCCESSFUL) {
+            List<Link> links = descriptor.getLinks();
+            for (int i = 0; i < links.size(); i++) {
+                Link link = links.get(i);
+                if (link.getRel().equalsIgnoreCase("download result"))
+                    console.print(link.getHref());
+            }
+        }
+    }
+
+    private void getBuildLogs(BuildTaskDescriptor descriptor) {
+        Link statusLink = null;
+        List<Link> links = descriptor.getLinks();
+        for (int i = 0; i < links.size(); i++) {
+            Link link = links.get(i);
+            if (link.getRel().equalsIgnoreCase("view build log"))
+                statusLink = link;
+        }
+        try {
+            service.log(statusLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                @Override
+                protected void onSuccess(String result) {
+                    console.printf(result);
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    String msg = "Can't get build log";
+                    console.print(msg);
+                    Notification notification = new Notification(msg, ERROR);
+                    notificationManager.showNotification(notification);
+                }
+            });
+        } catch (RequestException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
+
 
     /** {@inheritDoc} */
     @Override
@@ -343,8 +318,7 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        view.setClearOutputButtonEnabled(false);
-        container.setWidget(view);
+
     }
 
     /** {@inheritDoc} */
@@ -361,36 +335,59 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
         }
     }
 
-    /** Deserializer for responses body. */
-    private class StringUnmarshaller implements Unmarshallable<String> {
-        protected String builder;
+    private class RefreshBuildStatusTimer extends Timer {
+        private BuildTaskDescriptor buildTaskDescriptor;
 
-        /** {@inheritDoc} */
-        @Override
-        public void unmarshal(Response response) {
-            builder = response.getText();
+        public RefreshBuildStatusTimer(BuildTaskDescriptor buildTaskDescriptor) {
+            this.buildTaskDescriptor = buildTaskDescriptor;
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public String getPayload() {
-            return builder;
-        }
-    }
 
-    private class StringUnmarshallerWs implements com.codenvy.ide.websocket.rest.Unmarshallable<String> {
-        private String payload;
-
-        /** {@inheritDoc} */
         @Override
-        public void unmarshal(Message response) throws UnmarshallerException {
-            payload = response.getBody();
+        public void run() {
+
+            Link statusLink = null;
+            if (buildTaskDescriptor.getStatus().equals(BuildStatus.IN_QUEUE) ||
+                buildTaskDescriptor.getStatus().equals(BuildStatus.IN_PROGRESS)) {
+                List<Link> links = buildTaskDescriptor.getLinks();
+                for (int i = 0; i < links.size(); i++) {
+                    Link link = links.get(i);
+                    if (link.getRel().equalsIgnoreCase("get status"))
+                        statusLink = link;
+                }
+            }
+
+            try {
+                service.status(statusLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                    @Override
+                    protected void onSuccess(String response) {
+                        BuildTaskDescriptor btd = dtoFactory.createDtoFromJson(response, BuildTaskDescriptor.class);
+                        updateBuildStatus(btd);
+
+                        BuildStatus status = btd.getStatus();
+                        if (status == BuildStatus.IN_PROGRESS || status == BuildStatus.IN_QUEUE) {
+                            schedule(delay);
+                        }
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        setBuildInProgress(false);
+                        notification.setStatus(FINISHED);
+                        notification.setMessage(exception.getMessage());
+                        notification.setType(ERROR);
+
+                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                    }
+                });
+            } catch (RequestException e) {
+                setBuildInProgress(false);
+                notification.setStatus(FINISHED);
+                notification.setMessage(e.getMessage());
+                notification.setType(ERROR);
+                eventBus.fireEvent(new ExceptionThrownEvent(e));
+            }
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public String getPayload() {
-            return payload;
-        }
     }
 }

@@ -35,7 +35,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 
 /**
- * Testing {@link com.codenvy.ide.ext.tutorials.client.template.CreateNewResourceWizardTutorialPage} functionality.
+ * Testing {@link CreateNewResourceWizardTutorialPage} functionality.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */

@@ -90,8 +90,9 @@ public class DtoFactoryVisitorRegistryGenerator {
     private static void findDtoFactoryVisitors() throws IOException {
         Reflections reflection = new Reflections(new TypeAnnotationsScanner());
         Set<Class<?>> classes = reflection.getTypesAnnotatedWith(ClientDtoFactoryVisitor.class);
+        int i = 0;
         for (Class clazz : classes) {
-            dtoFactoryVisitors.put(clazz.getCanonicalName(), clazz.getSimpleName());
+            dtoFactoryVisitors.put(clazz.getCanonicalName(), "provider_" + i++);
             System.out.println(String.format("New DtoFactoryVisitor found: %s", clazz.getCanonicalName()));
         }
         System.out.println(String.format("Found: %d DtoFactoryVisitor(s)", dtoFactoryVisitors.size()));
@@ -174,11 +175,11 @@ public class DtoFactoryVisitorRegistryGenerator {
         builder.append(GeneratorUtils.TAB + "{\n");
 
         // paste add here
-        for (Entry<String, String> extension : dtoFactoryVisitors.entrySet()) {
-            String fullFqn = extension.getKey();
-            String variableName = extension.getValue().toLowerCase();
+        for (Entry<String, String> entries : dtoFactoryVisitors.entrySet()) {
+            String fullFqn = entries.getKey();
+            String variableName = entries.getValue().toLowerCase();
 
-            String putStatement = String.format("this.providers.put(\"%s\",%s);%n", fullFqn, variableName);
+            String putStatement = String.format("this.providers.put(\"%s\", %s);%n", fullFqn, variableName);
             builder.append(GeneratorUtils.TAB2 + putStatement);
         }
 
