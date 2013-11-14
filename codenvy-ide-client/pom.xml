@@ -152,14 +152,12 @@
             <artifactId>codenvy-ext-ssh</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!-- Add next two dependencies to allow launching Codenvy SDK in GWT DevMode. -->
        <!-- <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-extensions-runtime</artifactId>
             <version>${project.version}</version>
-        </dependency>-->
-        <!--<dependency>
+        </dependency>
+        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-tutorials</artifactId>
             <version>${project.version}</version>
