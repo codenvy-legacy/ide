@@ -39,21 +39,23 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
+                <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
+                    <!-- Create the distribution zip and attach it to maven -->
                     <execution>
-                        <id>Project in zip file</id>
-                        <phase>prepare-package</phase>
-                        <configuration>
-                            <target>
-                                <zip destfile="${project.build.directory}/${project.artifactId}-${project.version}.zip">
-                                    <fileset dir="${project.basedir}"/>
-                                </zip>
-                            </target>
-                        </configuration>
+                        <id>${project.artifactId}</id>
+                        <phase>package</phase>
                         <goals>
-                            <goal>run</goal>
+                            <goal>single</goal>
                         </goals>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <updateOnly>false</updateOnly>
+                            <descriptors>
+                                <descriptor>${project.basedir}/src/main/assembly/tutorial-archive.xml</descriptor>
+                            </descriptors>
+                            <finalName>${project.artifactId}-${project.version}</finalName>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
