@@ -35,9 +35,9 @@
         </init-params>
     </component>
     
-    <component>
-      <type>org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory</type>
-    </component>
+    <!--<component>-->
+      <!--<type>org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory</type>-->
+    <!--</component>-->
     
      <component>
         <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
