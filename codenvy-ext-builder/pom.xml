@@ -28,7 +28,7 @@
     </parent>
     <artifactId>codenvy-ext-builder</artifactId>
     <packaging>jar</packaging>
-    <name>Codenvy Extension :: Buikder</name>
+    <name>Codenvy Extension :: Builder</name>
 
     <properties>
         <dto-generator-out-directory>${project.build.directory}/generated-sources/dto/</dto-generator-out-directory>
