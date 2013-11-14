@@ -47,15 +47,15 @@
         <exo.product.name>codenvy-ide</exo.product.name>
 
         <!-- Codenvy -->
-        <com.codenvy.commons.version>0.10.0-SNAPSHOT</com.codenvy.commons.version>
-        <com.codenvy.organization.version>0.7.0</com.codenvy.organization.version>
+        <com.codenvy.commons.version>0.9.1</com.codenvy.commons.version>
+        <com.codenvy.organization.version>0.8.1</com.codenvy.organization.version>
         <com.codenvy.platform-api.version>1.0.0-SNAPSHOT</com.codenvy.platform-api.version>
 
         <!-- eXo -->
         <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
         <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
 
-        <org.exoplatform.ide.version>2.9.0-SNAPSHOT</org.exoplatform.ide.version>
+        <org.exoplatform.ide.version>2.8.1</org.exoplatform.ide.version>
 
         <!-- CodeAssistant DataBase -->
         <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
