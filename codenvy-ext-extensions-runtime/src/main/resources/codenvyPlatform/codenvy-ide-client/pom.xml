@@ -32,7 +32,7 @@
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
 
         <!-- eXo -->
-        <org.exoplatform.ide.version>2.7.0</org.exoplatform.ide.version>
+        <org.exoplatform.ide.version>2.9.0-SNAPSHOT</org.exoplatform.ide.version>
 
         <!-- GWT -->
         <gwt.version>2.5.1</gwt.version>
@@ -41,7 +41,7 @@
         <!-- Testing libraries -->
         <junit.version>4.7</junit.version>
         <mockito.version>1.9.5</mockito.version>
-        <gwt-test-utils.version>0.44</gwt-test-utils.version>
+        <gwt-test-utils.version>0.45</gwt-test-utils.version>
 
         <!-- Logging libraries -->
         <org.slf4j.version>1.6.2</org.slf4j.version>

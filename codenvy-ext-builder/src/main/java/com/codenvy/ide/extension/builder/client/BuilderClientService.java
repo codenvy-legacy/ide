@@ -70,7 +70,6 @@ public interface BuilderClientService {
     /**
      * Check current status of previously launched build.
      *
-     * @param buildid
      *         identifier of build
      * @param callback
      *         callback
@@ -87,7 +86,7 @@ public interface BuilderClientService {
      *         callback
      * @throws RequestException
      */
-    public void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    public void log(Link link, AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Get build result.

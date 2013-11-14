@@ -35,7 +35,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 
 /**
- * Testing {@link com.codenvy.ide.ext.tutorials.client.template.CreateDTOTutorialPage} functionality.
+ * Testing {@link CreateDTOTutorialPage} functionality.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: TutorialsExtension.java Sep 19, 2013 4:14:56 PM azatsarynnyy $
