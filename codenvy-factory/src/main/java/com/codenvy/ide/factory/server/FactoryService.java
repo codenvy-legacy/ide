@@ -44,12 +44,7 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
-import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.ide.vfs.shared.*;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -74,8 +69,7 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -160,17 +154,10 @@ public class FactoryService {
         GitConnection gitConnection = getGitConnection(vfs, projectId);
         try {
             gitConnection.clone(new CloneRequest(factoryUrl.getVcsurl(), null));
+
             //check and set type of cloned repository
-            try {
-                Workspace workspace = workspaceManager.getWorkspaceByName(workspaceName);
-                if (isRepositoryPublic(factoryUrl.getVcsurl())) {
-                    workspace.setAttribute("is_private", "false");
-                } else {
-                    workspace.setAttribute("is_private", "true");
-                }
-            } catch (OrganizationServiceException e) {
-                LOG.error("It is not possible to get workspace", e);
-            }
+            setPrivateRepositoryPermissions(factoryUrl.getVcsurl(), vfs, projectId);
+
             if (factoryUrl.getCommitid() != null && !factoryUrl.getCommitid().trim().isEmpty()) {
                 //Try to checkout to new branch "temp" with HEAD of setted commit ID
                 gitConnection.branchCheckout(new BranchCheckoutRequest("temp", factoryUrl.getCommitid(), true));
@@ -440,6 +427,25 @@ public class FactoryService {
                     LOG.error("Can't close stream", io);
                 }
             }
+        }
+    }
+
+    private void setPrivateRepositoryPermissions(String vcsUrl, VirtualFileSystem vfs, String projectId) {
+        try {
+            Workspace workspace = workspaceManager.getWorkspaceByName(workspaceName);
+            if (isRepositoryPublic(vcsUrl)) {
+                workspace.setAttribute("is_private", "false");
+            } else {
+                workspace.setAttribute("is_private", "true");
+                AccessControlEntry ace =
+                        new AccessControlEntryImpl(new PrincipalImpl("workspace/developer", Principal.Type.GROUP), Collections
+                                .singleton(VirtualFileSystemInfo.BasicPermissions.ALL.value()));
+                vfs.updateACL(projectId, Arrays.asList(ace), true, null);
+            }
+        } catch (OrganizationServiceException e) {
+            LOG.error("It is not possible to get workspace", e);
+        } catch (VirtualFileSystemException e) {
+            LOG.error("Can't set permissions for private project");
         }
     }
 }
