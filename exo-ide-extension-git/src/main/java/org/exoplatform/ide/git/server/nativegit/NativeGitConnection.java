@@ -497,44 +497,46 @@ public class NativeGitConnection implements GitConnection {
      *         authentication failed or command execution failed
      */
     public void executeWithCredentials(GitCommand command, String url) throws GitException {
-        //create empty credentials
-        CredentialItem.Username username = new CredentialItem.Username();
-        username.setValue("");
-        CredentialItem.Password password = new CredentialItem.Password();
-        password.setValue("");
-        //set up empty credentials
-        command.setAskPassScriptPath(credentialsLoader.createGitAskPassScript(username, password).toString());
-        try {
-            //after failed clone, git will remove directory
-            if (!nativeGit.getRepository().exists()) {
-                nativeGit.getRepository().mkdirs();
-            }
-            command.execute();
-        } catch (GitException e) {
-            //if not authorized
-            if (e.getMessage().toLowerCase().startsWith("fatal: authentication failed")) {
-                //try to search available credentials and execute command with it
-                command.setAskPassScriptPath(credentialsLoader.findCredentialsAndCreateGitAskPassScript(url).toString());
-                try {
-                    //after failed clone, git will remove directory
-                    if (!nativeGit.getRepository().exists()) {
-                        nativeGit.getRepository().mkdirs();
-                    }
-                    command.execute();
-                } catch (GitException inner) {
-                    //if not authorized again make runtime exception
-                    if (inner.getMessage().toLowerCase().startsWith("fatal: authentication failed")) {
-                        throw new NotAuthorizedException("not authorized");
-                    } else {
-                        throw inner;
-                    }
-                }
-            } else {
-                throw e;
-            }
-        }
-    }
-
+	    //create empty credentials
+	    CredentialItem.Username username = new CredentialItem.Username();
+	    username.setValue("");
+	    CredentialItem.Password password = new CredentialItem.Password();
+	    password.setValue("");
+	    //set up empty credentials
+	    command.setAskPassScriptPath(credentialsLoader.createGitAskPassScript(username, password).toString());
+	    try {
+		//after failed clone, git will remove directory
+		if (!nativeGit.getRepository().exists()) {
+		    nativeGit.getRepository().mkdirs();
+		}
+		command.execute();
+	    } catch (GitException e) {
+		if (!nativeGit.getRepository().exists()) {
+		    nativeGit.getRepository().mkdirs();
+		}
+		//if not authorized
+		if (e.getMessage().toLowerCase().startsWith("fatal: authentication failed")) {
+		    //try to search available credentials and execute command with it
+		    command.setAskPassScriptPath(credentialsLoader.findCredentialsAndCreateGitAskPassScript(url).toString());
+		    try {
+			//after failed clone, git will remove directory
+			command.execute();
+		    } catch (GitException inner) {
+			if (!nativeGit.getRepository().exists()) {
+			    nativeGit.getRepository().mkdirs();
+			}
+			//if not authorized again make runtime exception
+			if (inner.getMessage().toLowerCase().startsWith("fatal: authentication failed")) {
+			    throw new NotAuthorizedException("not authorized");
+			} else {
+			    throw inner;
+			}
+		    }
+		} else {
+		    throw e;
+		}
+	    }
+	}
     /**
      * Gets branch ref by branch name.
      *
