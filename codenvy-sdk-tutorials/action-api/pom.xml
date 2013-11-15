@@ -2,38 +2,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.codenvy.ide</groupId>
+    <parent>
+        <artifactId>codenvy-sdk-tutorials</artifactId>
+        <groupId>com.codenvy.ide</groupId>
+        <version>3.0.0-M3-SNAPSHOT</version>
+    </parent>
     <artifactId>action-api-tutorial</artifactId>
-    <version>3.0.0-M3-SNAPSHOT</version>
     <name>Codenvy Tutorial :: Action API</name>
     <packaging>jar</packaging>
-
-    <distributionManagement>
-        <repository>
-            <id>repo.codenvy.public</id>
-            <url>http://maven.codenvycorp.com/content/repositories/codenvy-public-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>repo.codenvy.public</id>
-            <url>http://maven.codenvycorp.com/content/repositories/codenvy-public-snapshots/</url>
-        </snapshotRepository>
-        <site>
-            <id>repo.codenvy.public</id>
-            <url>http://maven.codenvycorp.com/content/groups/public/</url>
-        </site>
-    </distributionManagement>
 
     <dependencies>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
-            <version>2.5.1</version>
+            <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
-            <version>2.1.1</version>
+            <version>${gin.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -43,6 +31,30 @@
     </dependencies>
 
     <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <!-- Create the distribution zip and attach it to maven -->
+                    <execution>
+                        <id>${project.artifactId}</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <updateOnly>false</updateOnly>
+                            <descriptors>
+                                <descriptor>${project.basedir}/src/main/assembly/tutorial-archive.xml</descriptor>
+                            </descriptors>
+                            <finalName>${project.artifactId}-${project.version}</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
         <resources>
             <resource>
                 <directory>src/main/java</directory>

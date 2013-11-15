@@ -20,8 +20,6 @@ package com.codenvy.ide.extension.builder.client.inject;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.extension.builder.client.BuilderClientService;
 import com.codenvy.ide.extension.builder.client.BuilderClientServiceImpl;
-import com.codenvy.ide.extension.builder.client.build.BuildProjectView;
-import com.codenvy.ide.extension.builder.client.build.BuildProjectViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -32,7 +30,5 @@ public class BuilderGinModule extends AbstractGinModule {
     @Override
     protected void configure() {
         bind(BuilderClientService.class).to(BuilderClientServiceImpl.class).in(Singleton.class);
-
-        bind(BuildProjectView.class).to(BuildProjectViewImpl.class).in(Singleton.class);
     }
 }

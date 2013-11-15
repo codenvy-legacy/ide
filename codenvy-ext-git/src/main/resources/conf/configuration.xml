@@ -39,7 +39,7 @@
         </init-params>
     </component>
     
-     <component>
+    <component>
         <type>com.codenvy.ide.ext.git.server.nativegit.OAuthCredentialsProvider</type>
     </component>
 

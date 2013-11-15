@@ -115,10 +115,8 @@ public class BuilderClientServiceImpl implements BuilderClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
-        final String requestUrl = restServiceContext + LOG + "/" + buildid;
-
-        AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
+    public void log(Link link, AsyncRequestCallback<String> callback) throws RequestException {
+        AsyncRequest.build(RequestBuilder.GET, link.getHref()).loader(loader)
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 

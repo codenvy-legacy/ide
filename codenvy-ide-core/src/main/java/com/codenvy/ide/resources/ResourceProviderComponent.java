@@ -67,7 +67,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     private boolean initialized = false;
     private       Project  activeProject;
     private final EventBus eventBus;
-    private final FileType defaulFile;
+    private final FileType defaultFile;
 
     /**
      * Resources API for client application.
@@ -77,11 +77,12 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
      */
     @Inject
     public ResourceProviderComponent(ModelProvider genericModelProvider, Loader loader, EventBus eventBus,
-                                     @Named("defaultFileType") FileType defaulFile, @Named("restContext") String restContext) {
+                                     @Named("defaultFileType") FileType defaultFile,
+                                     @Named("restContext") String restContext) {
         super();
         this.genericModelProvider = genericModelProvider;
         this.eventBus = eventBus;
-        this.defaulFile = defaulFile;
+        this.defaultFile = defaultFile;
         this.workspaceURL = restContext + '/' + Utils.getWorkspaceName() + "/vfs/v2";
         this.modelProviders = JsonCollections.<ModelProvider>createStringMap();
         this.natures = JsonCollections.<ProjectNature>createStringMap();
@@ -104,8 +105,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                     @Override
                     protected void onFailure(Throwable exception) {
                         // notify Component failed
-                        callback.onFailure(new ComponentException("Failed to start Resource Manager. Cause:" + exception.getMessage(),
-                                                                  ResourceProviderComponent.this));
+                        callback.onFailure(new ComponentException(
+                                "Failed to start Resource Manager. Cause:" + exception.getMessage(),
+                                ResourceProviderComponent.this));
                         Log.error(ResourceProviderComponent.class, exception);
                     }
                 };
@@ -423,7 +425,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 }
             }
         }
-        return defaulFile;
+        return defaultFile;
 
     }
 
