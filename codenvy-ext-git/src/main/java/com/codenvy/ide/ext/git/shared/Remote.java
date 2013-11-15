@@ -28,6 +28,10 @@ import com.codenvy.ide.dto.DTO;
 @DTO
 public interface Remote {
     String getName();
-
+    
+    Remote withName(String name);
+    
     String getUrl();
+    
+    Remote withUrl(String url);
 }

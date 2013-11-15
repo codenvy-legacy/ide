@@ -18,7 +18,6 @@
 package com.codenvy.ide.ext.git.shared;
 
 import com.codenvy.ide.dto.DTO;
-import com.codenvy.ide.json.JsonArray;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -52,11 +51,11 @@ public interface MergeResult {
     MergeStatus getMergeStatus();
 
     /** @return merged commits */
-    JsonArray<String> getMergedCommits();
+    String[] getMergedCommits();
 
     /** @return files that has conflicts. May return <code>null</code> or empty array if there is no conflicts */
-    JsonArray<String> getConflicts();
+    String[] getConflicts();
 
     /** @return files that failed to merge (not files that has conflicts). */
-    JsonArray<String> getFailed();
+    String[] getFailed();
 }

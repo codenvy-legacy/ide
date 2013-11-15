@@ -27,7 +27,6 @@ import com.codenvy.ide.dto.DTO;
  */
 @DTO
 public interface LogRequest extends GitRequest {
-    // TODO
     // private List<String> fileFilter;
     // private boolean noRenames = true;
     // private int renameLimit;

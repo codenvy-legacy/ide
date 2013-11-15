@@ -29,7 +29,13 @@ import com.codenvy.ide.dto.DTO;
 public interface RemoteListRequest extends GitRequest {
     /** @return if <code>true</code> show remote url and name otherwise show remote name only */
     boolean verbose();
+    
+    RemoteListRequest withVerbose(boolean verbose);
 
     /** @return remote name */
     String getRemote();
+    
+    RemoteListRequest withRemote(String remote);
+    
+    void setRemote(String remote);
 }

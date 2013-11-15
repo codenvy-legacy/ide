@@ -29,10 +29,16 @@ import com.codenvy.ide.dto.DTO;
 public interface CommitRequest extends GitRequest {
     /** @return commit message */
     String getMessage();
+    
+    CommitRequest withMessage(String message);
 
     /** @return <code>true</code> if need automatically stage files that have been modified and deleted */
-    boolean all();
+    boolean isAll();
+    
+    CommitRequest withAll(boolean all);
 
     /** @return <code>true</code> in case when commit is amending a previous commit. */
-    boolean amend();
+    boolean isAmend();
+    
+    CommitRequest withAmend(boolean amend);
 }

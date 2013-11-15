@@ -26,4 +26,6 @@ import com.codenvy.ide.dto.DTO;
 @DTO
 public interface RepoInfo {
     String getRemoteUri();
+    
+    RepoInfo withRemoteUri(String remoteUri);
 }

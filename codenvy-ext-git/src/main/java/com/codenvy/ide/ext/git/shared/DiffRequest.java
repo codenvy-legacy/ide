@@ -18,7 +18,6 @@
 package com.codenvy.ide.ext.git.shared;
 
 import com.codenvy.ide.dto.DTO;
-import com.codenvy.ide.json.JsonArray;
 
 /**
  * Request to show changes between commits. Use {@link #commitA} and {@link #commitB} to specify values for comparison.
@@ -65,26 +64,40 @@ public interface DiffRequest extends GitRequest {
     }
 
     /** @return filter of file to show diff. It may be either list of file names or name of directory to show all files under them */
-    JsonArray<String> getFileFilter();
+    String[] getFileFilter();
+    
+    DiffRequest withFileFilter(String[] fileFilter);
 
     /** @return type of diff output */
     DiffType getType();
+    
+    DiffRequest withDiffType(DiffType type);
 
     /** @return <code>true</code> if renames must not be showing in diff result */
-    boolean noRenames();
+    boolean isNoRenames();
+    
+    DiffRequest withNoRenames(boolean noRenames);
 
     /** @return limit of showing renames in diff output. This attribute has sense if {@link #noRenames} is <code>false</code> */
     int getRenameLimit();
+    
+    DiffRequest withRenameLimit(int renameLimit);
 
     /** @return first commit to view changes */
     String getCommitA();
+    
+    DiffRequest withCommitA(String commitA);
 
     /** @return second commit to view changes */
     String getCommitB();
+    
+    DiffRequest withCommitB(String commitB);
 
     /**
      * @return if <code>false</code> (default) view changes between {@link #commitA} and working tree otherwise between {@link #commitA}
      *         and index
      */
-    boolean cached();
+    boolean isCached();
+    
+    DiffRequest withCached(boolean isCached);
 }

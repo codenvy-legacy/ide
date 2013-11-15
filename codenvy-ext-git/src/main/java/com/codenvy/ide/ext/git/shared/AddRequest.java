@@ -18,8 +18,6 @@
 package com.codenvy.ide.ext.git.shared;
 
 import com.codenvy.ide.dto.DTO;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 
 /**
  * Request to add content of working tree to Git index. This action prepares content to next commit.
@@ -30,10 +28,14 @@ import com.codenvy.ide.json.JsonCollections;
 @DTO
 public interface AddRequest extends GitRequest {
     /** Default file pattern that will be used if {@link #filepattern} is not set. All content of working tree will be added in index. */
-    JsonArray<String> DEFAULT_PATTERN = JsonCollections.createArray(".");
+    String[] DEFAULT_PATTERN = new String[]{"."};
 
     /** @return files to add content from */
-    JsonArray<String> getFilepattern();
+    String[] getFilepattern();
+    
+    void setFilepattern(String[] pattern);
+    
+    AddRequest withFilepattern(String[] filepattern);
 
     /**
      * @return if <code>true</code> than never stage new files, but stage modified new contents of tracked files. It will remove files from
@@ -41,5 +43,7 @@ public interface AddRequest extends GitRequest {
      *         modified
      *         files added to the index.
      */
-    boolean update();
+    boolean isUpdate();
+    
+    AddRequest withUpdate(boolean isUpdate);
 }

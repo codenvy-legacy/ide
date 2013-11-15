@@ -17,8 +17,9 @@
  */
 package com.codenvy.ide.ext.git.client.marshaller;
 
-import com.codenvy.ide.rest.Unmarshallable;
-import com.google.gwt.http.client.Response;
+import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.websocket.Message;
+import com.codenvy.ide.websocket.rest.Unmarshallable;
 
 /**
  * Deserializer for response's body.
@@ -31,8 +32,8 @@ public class StringUnmarshaller implements Unmarshallable<String> {
 
     /** {@inheritDoc} */
     @Override
-    public void unmarshal(Response response) {
-        payload = response.getText();
+    public void unmarshal(Message response) throws UnmarshallerException {
+        this.payload = response.getBody();
     }
 
     /** {@inheritDoc} */

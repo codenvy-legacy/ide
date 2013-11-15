@@ -15,34 +15,16 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.git.shared;
+package com.codenvy.ide.ext.git.server.nativegit;
 
-import com.codenvy.ide.dto.DTO;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.ext.git.server.GitException;
 
 /**
- * Git reference bean.
+ * Provides credentials to use with git commands that need it
  *
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Jul 20, 2011 2:41:39 PM anya $
+ * @author <a href="mailto:evoevodin@codenvy.com">Eugene Voevodin</a>
  */
-@DTO
-public interface Reference {
-    public enum RefType {
-        LOCAL_BRANCH,
-        REMOTE_BRANCH,
-        TAG;
-    }
+public interface CredentialsProvider {
 
-    /** @return the displayName */
-    String getDisplayName();
-
-    /** @return the fullName */
-    String getFullName();
-
-    /** @return the refType */
-    RefType getRefType();
-
-    /** @return available branches */
-    JsonArray<Reference> getBranches();
+    public boolean get(String url, CredentialItem... items) throws GitException;
 }

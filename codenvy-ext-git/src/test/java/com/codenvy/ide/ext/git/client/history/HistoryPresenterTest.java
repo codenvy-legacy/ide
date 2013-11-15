@@ -23,12 +23,12 @@ import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStack;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.DiffRequest;
 import com.codenvy.ide.ext.git.shared.LogResponse;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -40,14 +40,23 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.codenvy.ide.ext.git.shared.DiffRequest.DiffType.RAW;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.anyBoolean;
-import static org.mockito.Mockito.anyInt;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link HistoryPresenter} functionality.
@@ -80,7 +89,7 @@ public class HistoryPresenterTest extends BaseTest {
         super.disarm();
 
         presenter = new HistoryPresenter(view, service, constant, resources, resourceProvider, workspaceAgent, selectionAgent,
-                                         notificationManager);
+                                         notificationManager, dtoFactory);
         presenter.setPartStack(partStack);
 
         when(partStack.getActivePart()).thenReturn(partPresenter);
@@ -93,17 +102,17 @@ public class HistoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<LogResponse> callback = (AsyncRequestCallback<LogResponse>)arguments[3];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, logResponse);
                 return callback;
             }
-        }).when(service).log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<LogResponse>)anyObject());
+        }).when(service).log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
-        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(TEXT_NOT_FORMATTED), (AsyncRequestCallback<LogResponse>)anyObject());
+        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(TEXT_NOT_FORMATTED), (AsyncRequestCallback<String>)anyObject());
         verify(view).selectProjectChangesButton(eq(SELECTED_ITEM));
         verify(view).selectDiffWithPrevVersionButton(eq(SELECTED_ITEM));
         verify(view).setCommitADate(eq(EMPTY_TEXT));
@@ -124,17 +133,17 @@ public class HistoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<LogResponse> callback = (AsyncRequestCallback<LogResponse>)arguments[3];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<LogResponse>)anyObject());
+        }).when(service).log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
-        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(TEXT_NOT_FORMATTED), (AsyncRequestCallback<LogResponse>)anyObject());
+        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(TEXT_NOT_FORMATTED), (AsyncRequestCallback<String>)anyObject());
         verify(view).selectProjectChangesButton(eq(SELECTED_ITEM));
         verify(view).selectDiffWithPrevVersionButton(eq(SELECTED_ITEM));
         verify(view, times(2)).setCommitADate(eq(EMPTY_TEXT));
@@ -154,12 +163,12 @@ public class HistoryPresenterTest extends BaseTest {
     @Test
     public void testShowDialogWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
-                .log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<LogResponse>)anyObject());
+                .log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
-        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(TEXT_NOT_FORMATTED), (AsyncRequestCallback<LogResponse>)anyObject());
+        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(TEXT_NOT_FORMATTED), (AsyncRequestCallback<String>)anyObject());
         verify(view).selectProjectChangesButton(eq(SELECTED_ITEM));
         verify(view).selectDiffWithPrevVersionButton(eq(SELECTED_ITEM));
         verify(view, times(2)).setCommitADate(eq(EMPTY_TEXT));
@@ -181,7 +190,7 @@ public class HistoryPresenterTest extends BaseTest {
         presenter.onRefreshClicked();
 
         verify(resourceProvider).getActiveProject();
-        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(TEXT_NOT_FORMATTED), (AsyncRequestCallback<LogResponse>)anyObject());
+        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(TEXT_NOT_FORMATTED), (AsyncRequestCallback<String>)anyObject());
     }
 
     @Test
@@ -196,7 +205,7 @@ public class HistoryPresenterTest extends BaseTest {
                 return callback;
             }
         }).when(service)
-                .diff(anyString(), anyString(), (JsonArray<String>)anyObject(), (DiffRequest.DiffType)anyObject(), anyBoolean(), anyInt(),
+                .diff(anyString(), anyString(), (String[])anyObject(), (DiffRequest.DiffType)anyObject(), anyBoolean(), anyInt(),
                       anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.onDiffWithIndexClicked();
@@ -207,7 +216,7 @@ public class HistoryPresenterTest extends BaseTest {
         verify(view).selectProjectChangesButton(eq(DISABLE_BUTTON));
         verify(view).selectResourceChangesButton(eq(ENABLE_BUTTON));
         verify(service)
-                .diff(eq(VFS_ID), eq(PROJECT_ID), (JsonArray<String>)anyObject(), eq(RAW), eq(NO_RENAMES), eq(RENAME_LIMIT),
+                .diff(eq(VFS_ID), eq(PROJECT_ID), (String[])anyObject(), eq(RAW), eq(NO_RENAMES), eq(RENAME_LIMIT),
                       eq(REVISION_ID), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
 
         verify(view).setDiffContext(eq(EMPTY_TEXT));
@@ -229,7 +238,7 @@ public class HistoryPresenterTest extends BaseTest {
                 return callback;
             }
         }).when(service)
-                .diff(anyString(), anyString(), (JsonArray<String>)anyObject(), (DiffRequest.DiffType)anyObject(), anyBoolean(), anyInt(),
+                .diff(anyString(), anyString(), (String[])anyObject(), (DiffRequest.DiffType)anyObject(), anyBoolean(), anyInt(),
                       anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.onDiffWithIndexClicked();
@@ -240,7 +249,7 @@ public class HistoryPresenterTest extends BaseTest {
         verify(view).selectProjectChangesButton(eq(DISABLE_BUTTON));
         verify(view).selectResourceChangesButton(eq(ENABLE_BUTTON));
         verify(service)
-                .diff(eq(VFS_ID), eq(PROJECT_ID), (JsonArray<String>)anyObject(), eq(RAW), eq(NO_RENAMES), eq(RENAME_LIMIT),
+                .diff(eq(VFS_ID), eq(PROJECT_ID), (String[])anyObject(), eq(RAW), eq(NO_RENAMES), eq(RENAME_LIMIT),
                       eq(REVISION_ID), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
         verify(constant).diffFailed();
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -255,7 +264,7 @@ public class HistoryPresenterTest extends BaseTest {
 
     @Test
     public void testOnProjectChangesClickedWhenRequestExceptionHappened() throws Exception {
-        doThrow(RequestException.class).when(service).diff(anyString(), anyString(), (JsonArray<String>)anyObject(),
+        doThrow(RequestException.class).when(service).diff(anyString(), anyString(), (String[])anyObject(),
                                                            (DiffRequest.DiffType)anyObject(), anyBoolean(), anyInt(),
                                                            anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
 
@@ -267,7 +276,7 @@ public class HistoryPresenterTest extends BaseTest {
         verify(view).selectProjectChangesButton(eq(DISABLE_BUTTON));
         verify(view).selectResourceChangesButton(eq(ENABLE_BUTTON));
         verify(service)
-                .diff(eq(VFS_ID), eq(PROJECT_ID), (JsonArray<String>)anyObject(), eq(RAW), eq(NO_RENAMES), eq(RENAME_LIMIT),
+                .diff(eq(VFS_ID), eq(PROJECT_ID), (String[])anyObject(), eq(RAW), eq(NO_RENAMES), eq(RENAME_LIMIT),
                       eq(REVISION_ID), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
         verify(view).setCommitADate(anyString());
         verify(view).setCommitARevision(anyString());
@@ -297,7 +306,7 @@ public class HistoryPresenterTest extends BaseTest {
         verify(view).selectDiffWithPrevVersionButton(eq(UNSELECTED_ITEM));
         verify(view).selectDiffWithWorkingTreeButton(eq(UNSELECTED_ITEM));
         verify(view).setDiffContext(eq(EMPTY_TEXT));
-        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(TEXT_NOT_FORMATTED), (AsyncRequestCallback<LogResponse>)anyObject());
+        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(TEXT_NOT_FORMATTED), (AsyncRequestCallback<String>)anyObject());
     }
 
     @Test
@@ -319,7 +328,7 @@ public class HistoryPresenterTest extends BaseTest {
         verify(view).selectDiffWithIndexButton(eq(UNSELECTED_ITEM));
         verify(view).selectDiffWithPrevVersionButton(eq(UNSELECTED_ITEM));
         verify(view).setDiffContext(eq(EMPTY_TEXT));
-        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(TEXT_NOT_FORMATTED), (AsyncRequestCallback<LogResponse>)anyObject());
+        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(TEXT_NOT_FORMATTED), (AsyncRequestCallback<String>)anyObject());
     }
 
     @Test
@@ -342,7 +351,7 @@ public class HistoryPresenterTest extends BaseTest {
         verify(view).selectDiffWithWorkingTreeButton(eq(UNSELECTED_ITEM));
 
         verify(view).setDiffContext(eq(EMPTY_TEXT));
-        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(TEXT_NOT_FORMATTED), (AsyncRequestCallback<LogResponse>)anyObject());
+        verify(service).log(eq(VFS_ID), eq(PROJECT_ID), eq(TEXT_NOT_FORMATTED), (AsyncRequestCallback<String>)anyObject());
     }
 
     @Test
@@ -359,7 +368,7 @@ public class HistoryPresenterTest extends BaseTest {
 
     @Test
     public void testOnRevisionSelectedWhenDiffRequestIsSuccessful() throws Exception {
-        JsonArray<Revision> revisions = JsonCollections.createArray();
+        List<Revision> revisions = new ArrayList<Revision>();
         revisions.add(selectedRevision);
         revisions.add(selectedRevision);
         when(logResponse.getCommits()).thenReturn(revisions);
@@ -367,12 +376,12 @@ public class HistoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<LogResponse> callback = (AsyncRequestCallback<LogResponse>)arguments[3];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, logResponse);
                 return callback;
             }
-        }).when(service).log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<LogResponse>)anyObject());
+        }).when(service).log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -383,7 +392,7 @@ public class HistoryPresenterTest extends BaseTest {
                 return callback;
             }
         }).when(service)
-                .diff(anyString(), anyString(), (JsonArray<String>)anyObject(), (DiffRequest.DiffType)anyObject(), anyBoolean(), anyInt(),
+                .diff(anyString(), anyString(), (String[])anyObject(), (DiffRequest.DiffType)anyObject(), anyBoolean(), anyInt(),
                       anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
@@ -391,7 +400,7 @@ public class HistoryPresenterTest extends BaseTest {
         presenter.onRevisionSelected(selectedRevision);
 
         verify(service)
-                .diff(eq(VFS_ID), eq(PROJECT_ID), (JsonArray<String>)anyObject(), eq(DiffRequest.DiffType.RAW), anyBoolean(), anyInt(),
+                .diff(eq(VFS_ID), eq(PROJECT_ID), (String[])anyObject(), eq(DiffRequest.DiffType.RAW), anyBoolean(), anyInt(),
                       eq(REVISION_ID), eq(REVISION_ID), (AsyncRequestCallback<String>)anyObject());
         verify(view).setDiffContext(eq(EMPTY_TEXT));
         verify(view).setCommitADate(anyString());
@@ -402,7 +411,7 @@ public class HistoryPresenterTest extends BaseTest {
 
     @Test
     public void testOnRevisionSelectedWhenDiffRequestIsFailed() throws Exception {
-        JsonArray<Revision> revisions = JsonCollections.createArray();
+        List<Revision> revisions = new ArrayList<Revision>();
         revisions.add(selectedRevision);
         revisions.add(selectedRevision);
         when(logResponse.getCommits()).thenReturn(revisions);
@@ -410,12 +419,12 @@ public class HistoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<LogResponse> callback = (AsyncRequestCallback<LogResponse>)arguments[3];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, logResponse);
                 return callback;
             }
-        }).when(service).log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<LogResponse>)anyObject());
+        }).when(service).log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -426,7 +435,7 @@ public class HistoryPresenterTest extends BaseTest {
                 return callback;
             }
         }).when(service)
-                .diff(anyString(), anyString(), (JsonArray<String>)anyObject(), (DiffRequest.DiffType)anyObject(), anyBoolean(), anyInt(),
+                .diff(anyString(), anyString(), (String[])anyObject(), (DiffRequest.DiffType)anyObject(), anyBoolean(), anyInt(),
                       anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
@@ -434,7 +443,7 @@ public class HistoryPresenterTest extends BaseTest {
         presenter.onRevisionSelected(selectedRevision);
 
         verify(service)
-                .diff(eq(VFS_ID), eq(PROJECT_ID), (JsonArray<String>)anyObject(), eq(DiffRequest.DiffType.RAW), anyBoolean(), anyInt(),
+                .diff(eq(VFS_ID), eq(PROJECT_ID), (String[])anyObject(), eq(DiffRequest.DiffType.RAW), anyBoolean(), anyInt(),
                       eq(REVISION_ID), eq(REVISION_ID), (AsyncRequestCallback<String>)anyObject());
         verify(view).setDiffContext(eq(EMPTY_TEXT));
         verify(view).setCommitADate(anyString());
@@ -445,7 +454,7 @@ public class HistoryPresenterTest extends BaseTest {
 
     @Test
     public void testOnRevisionSelectedWhenRequestExceptionHappened() throws Exception {
-        JsonArray<Revision> revisions = JsonCollections.createArray();
+        List<Revision> revisions = new ArrayList<Revision>();
         revisions.add(selectedRevision);
         revisions.add(selectedRevision);
         when(logResponse.getCommits()).thenReturn(revisions);
@@ -453,14 +462,14 @@ public class HistoryPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<LogResponse> callback = (AsyncRequestCallback<LogResponse>)arguments[3];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, logResponse);
                 return callback;
             }
-        }).when(service).log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<LogResponse>)anyObject());
+        }).when(service).log(anyString(), anyString(), anyBoolean(), (AsyncRequestCallback<String>)anyObject());
         doThrow(RequestException.class).when(service)
-                .diff(anyString(), anyString(), (JsonArray<String>)anyObject(), (DiffRequest.DiffType)anyObject(), anyBoolean(), anyInt(),
+                .diff(anyString(), anyString(), (String[])anyObject(), (DiffRequest.DiffType)anyObject(), anyBoolean(), anyInt(),
                       anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
@@ -468,7 +477,7 @@ public class HistoryPresenterTest extends BaseTest {
         presenter.onRevisionSelected(selectedRevision);
 
         verify(service)
-                .diff(eq(VFS_ID), eq(PROJECT_ID), (JsonArray<String>)anyObject(), eq(DiffRequest.DiffType.RAW), anyBoolean(), anyInt(),
+                .diff(eq(VFS_ID), eq(PROJECT_ID), (String[])anyObject(), eq(DiffRequest.DiffType.RAW), anyBoolean(), anyInt(),
                       eq(REVISION_ID), eq(REVISION_ID), (AsyncRequestCallback<String>)anyObject());
         verify(view).setDiffContext(eq(EMPTY_TEXT));
         verify(view).setCommitADate(anyString());

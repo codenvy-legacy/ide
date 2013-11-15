@@ -156,7 +156,7 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
      * @return pattern of the files to be removed
      */
     @NotNull
-    private JsonArray<String> getFilePatterns() {
+    private String[] getFilePatterns() {
         String projectPath = project.getPath();
 
         Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
@@ -170,14 +170,7 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
         String pattern = element.getPath().replaceFirst(projectPath, "");
         pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
 
-        JsoArray<String> patterns = JsoArray.create();
-        if (pattern.isEmpty() || "/".equals(pattern)) {
-            patterns.add(".");
-        } else {
-            patterns.add(pattern);
-        }
-
-        return patterns;
+        return (pattern.length() == 0 || "/".equals(pattern)) ? new String[]{"."} : new String[]{pattern};
     }
 
     /**

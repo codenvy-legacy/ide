@@ -18,7 +18,6 @@
 package com.codenvy.ide.ext.git.shared;
 
 import com.codenvy.ide.dto.DTO;
-import com.codenvy.ide.json.JsonArray;
 
 /**
  * Request to remove files.
@@ -29,8 +28,12 @@ import com.codenvy.ide.json.JsonArray;
 @DTO
 public interface RmRequest extends GitRequest {
     /** @return files to remove */
-    JsonArray<String> getFiles();
+    String[] getFiles();
+    
+    RmRequest withFiles(String[] files);
 
     /** @return is RmRequest represents remove from index only */
     boolean cached();
+    
+    RmRequest withCached(boolean cached);
 }

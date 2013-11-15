@@ -26,6 +26,14 @@ import com.codenvy.ide.dto.DTO;
 @DTO
 public interface GitUser {
     String getName();
+    
+    void setName(String name);
+    
+    GitUser withName(String name);
 
     String getEmail();
+    
+    String setEmail(String email);
+    
+    GitUser withEmail(String email);
 }

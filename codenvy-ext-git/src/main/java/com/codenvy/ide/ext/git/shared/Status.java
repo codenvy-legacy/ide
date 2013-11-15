@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.git.shared;
 
 import com.codenvy.ide.dto.DTO;
-import com.codenvy.ide.json.JsonArray;
+
+import java.util.Set;
 
 /**
  * @author <a href="mailto:dvishinskiy@codenvy.com">Dmitriy Vyshinskiy</a>
@@ -26,25 +27,47 @@ import com.codenvy.ide.json.JsonArray;
  */
 @DTO
 public interface Status {
-    boolean clean();
+    boolean isClean();
 
-    boolean getShortFormat();
+    void setClean(Boolean isClean);
+    
+    boolean isShortFormat();
+    
+    void setShortFormat(Boolean isShort);
 
     String getBranchName();
+    
+    void setBranchName(String branchName);
 
-    JsonArray<String> getAdded();
+    Set<String> getAdded();
+    
+    void setAdded(Set<String> added);
 
-    JsonArray<String> getChanged();
+    Set<String> getChanged();
+    
+    void setChanged(Set<String> changed);
 
-    JsonArray<String> getRemoved();
+    Set<String> getRemoved();
+    
+    void setRemoved(Set<String> removed);
 
-    JsonArray<String> getMissing();
+    Set<String> getMissing();
+    
+    void setMissing(Set<String> missing);
 
-    JsonArray<String> getModified();
+    Set<String> getModified();
+    
+    void setModified(Set<String> modified);
 
-    JsonArray<String> getUntracked();
+    Set<String> getUntracked();
+    
+    void setUntracked(Set<String> untracked);
 
-    JsonArray<String> getUntrackedFolders();
+    Set<String> getUntrackedFolders();
+    
+    void setUntrackedFolders(Set<String> untrackedFolders);
 
-    JsonArray<String> getConflicting();
+    Set<String> getConflicting();
+    
+    void setConflicting(Set<String> added);
 }

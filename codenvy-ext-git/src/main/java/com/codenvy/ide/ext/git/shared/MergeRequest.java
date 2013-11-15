@@ -29,4 +29,6 @@ import com.codenvy.ide.dto.DTO;
 public interface MergeRequest extends GitRequest {
     /** @return commit to merge */
     String getCommit();
+    
+    MergeRequest withCommit(String commit);
 }

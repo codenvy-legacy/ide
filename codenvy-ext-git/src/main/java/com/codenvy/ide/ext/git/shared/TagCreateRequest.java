@@ -37,5 +37,5 @@ public interface TagCreateRequest extends GitRequest {
     String getMessage();
 
     /** @return force create tag operation */
-    boolean force();
+    boolean isForce();
 }

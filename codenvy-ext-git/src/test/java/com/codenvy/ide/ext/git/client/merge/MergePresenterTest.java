@@ -19,10 +19,10 @@ package com.codenvy.ide.ext.git.client.merge;
 
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.MergeResult;
-import com.codenvy.ide.ext.git.shared.Reference;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
@@ -38,6 +38,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_LOCAL;
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_REMOTE;
@@ -64,7 +65,7 @@ public class MergePresenterTest extends BaseTest {
     public void disarm() {
         super.disarm();
 
-        presenter = new MergePresenter(view, service, resourceProvider, eventBus, constant, notificationManager);
+        presenter = new MergePresenter(view, service, resourceProvider, eventBus, constant, notificationManager, dtoFactory);
     }
 
     @Test
@@ -78,30 +79,30 @@ public class MergePresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<JsonArray<Branch>> callback = (AsyncRequestCallback<JsonArray<Branch>>)arguments[3];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, branches);
                 return callback;
             }
-        }).when(service).branchList(anyString(), anyString(), eq(LIST_LOCAL), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
+        }).when(service).branchList(anyString(), anyString(), eq(LIST_LOCAL), (AsyncRequestCallback<String>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<JsonArray<Branch>> callback = (AsyncRequestCallback<JsonArray<Branch>>)arguments[3];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, branches);
                 return callback;
             }
-        }).when(service).branchList(anyString(), anyString(), eq(LIST_REMOTE), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
+        }).when(service).branchList(anyString(), anyString(), eq(LIST_REMOTE), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
 
         verify(resourceProvider).getActiveProject();
         verify(view).setEnableMergeButton(eq(DISABLE_BUTTON));
         verify(view).showDialog();
-        verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_LOCAL), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
-        verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_REMOTE), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
+        verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_LOCAL), (AsyncRequestCallback<String>)anyObject());
+        verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_REMOTE), (AsyncRequestCallback<String>)anyObject());
         verify(view).setRemoteBranches((JsonArray<Reference>)anyObject());
         verify(view).setLocalBranches((JsonArray<Reference>)anyObject());
         verify(eventBus, never()).fireEvent((ExceptionThrownEvent)anyObject());
@@ -114,27 +115,27 @@ public class MergePresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<JsonArray<Branch>> callback = (AsyncRequestCallback<JsonArray<Branch>>)arguments[3];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).branchList(anyString(), anyString(), eq(LIST_LOCAL), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
+        }).when(service).branchList(anyString(), anyString(), eq(LIST_LOCAL), (AsyncRequestCallback<String>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<JsonArray<Branch>> callback = (AsyncRequestCallback<JsonArray<Branch>>)arguments[3];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).branchList(anyString(), anyString(), eq(LIST_REMOTE), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
+        }).when(service).branchList(anyString(), anyString(), eq(LIST_REMOTE), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
 
-        verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_LOCAL), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
-        verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_REMOTE), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
+        verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_LOCAL), (AsyncRequestCallback<String>)anyObject());
+        verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_REMOTE), (AsyncRequestCallback<String>)anyObject());
         verify(eventBus, times(2)).fireEvent((ExceptionThrownEvent)anyObject());
         verify(notificationManager, times(2)).showNotification((Notification)anyObject());
     }
@@ -142,14 +143,14 @@ public class MergePresenterTest extends BaseTest {
     @Test
     public void testShowDialogWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
-                .branchList(anyString(), anyString(), eq(LIST_LOCAL), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
+                .branchList(anyString(), anyString(), eq(LIST_LOCAL), (AsyncRequestCallback<String>)anyObject());
         doThrow(RequestException.class).when(service)
-                .branchList(anyString(), anyString(), eq(LIST_REMOTE), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
+                .branchList(anyString(), anyString(), eq(LIST_REMOTE), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
 
-        verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_LOCAL), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
-        verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_REMOTE), (AsyncRequestCallback<JsonArray<Branch>>)anyObject());
+        verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_LOCAL), (AsyncRequestCallback<String>)anyObject());
+        verify(service).branchList(eq(VFS_ID), eq(PROJECT_ID), eq(LIST_REMOTE), (AsyncRequestCallback<String>)anyObject());
         verify(eventBus, times(2)).fireEvent((ExceptionThrownEvent)anyObject());
         verify(notificationManager, times(2)).showNotification((Notification)anyObject());
     }
@@ -170,12 +171,12 @@ public class MergePresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<MergeResult> callback = (AsyncRequestCallback<MergeResult>)arguments[3];
+                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, mergeResult);
                 return callback;
             }
-        }).when(service).merge(anyString(), anyString(), anyString(), (AsyncRequestCallback<MergeResult>)anyObject());
+        }).when(service).merge(anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -189,7 +190,7 @@ public class MergePresenterTest extends BaseTest {
         presenter.onReferenceSelected(selectedReference);
         presenter.onMergeClicked();
 
-        verify(service).merge(eq(VFS_ID), anyString(), eq(DISPLAY_NAME), (AsyncRequestCallback<MergeResult>)anyObject());
+        verify(service).merge(eq(VFS_ID), anyString(), eq(DISPLAY_NAME), (AsyncRequestCallback<String>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(view).close();
     }
@@ -201,19 +202,19 @@ public class MergePresenterTest extends BaseTest {
         presenter.onReferenceSelected(selectedReference);
         presenter.onMergeClicked();
 
-        verify(service).merge(eq(VFS_ID), anyString(), eq(DISPLAY_NAME), (AsyncRequestCallback<MergeResult>)anyObject());
+        verify(service).merge(eq(VFS_ID), anyString(), eq(DISPLAY_NAME), (AsyncRequestCallback<String>)anyObject());
     }
 
     @Test
     public void testOnMergeClickedWhenExceptionHappened() throws Exception {
         when(selectedReference.getDisplayName()).thenReturn(DISPLAY_NAME);
         doThrow(RequestException.class).when(service)
-                .merge(anyString(), anyString(), anyString(), (AsyncRequestCallback<MergeResult>)anyObject());
+                .merge(anyString(), anyString(), anyString(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.onReferenceSelected(selectedReference);
         presenter.onMergeClicked();
 
-        verify(service).merge(eq(VFS_ID), anyString(), eq(DISPLAY_NAME), (AsyncRequestCallback<MergeResult>)anyObject());
+        verify(service).merge(eq(VFS_ID), anyString(), eq(DISPLAY_NAME), (AsyncRequestCallback<String>)anyObject());
 
         verify(eventBus).fireEvent((ExceptionThrownEvent)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -226,6 +227,6 @@ public class MergePresenterTest extends BaseTest {
         presenter.onReferenceSelected(selectedReference);
         presenter.onMergeClicked();
 
-        verify(service).merge(anyString(), anyString(), eq(DISPLAY_NAME), (AsyncRequestCallback<MergeResult>)anyObject());
+        verify(service).merge(anyString(), anyString(), eq(DISPLAY_NAME), (AsyncRequestCallback<String>)anyObject());
     }
 }

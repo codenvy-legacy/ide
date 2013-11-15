@@ -18,9 +18,9 @@
 package com.codenvy.ide.ext.ssh.client;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.ssh.dto.client.DtoClientImpls;
-import com.codenvy.ide.ext.ssh.shared.GenKeyRequest;
-import com.codenvy.ide.ext.ssh.shared.KeyItem;
+import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
+import com.codenvy.ide.ext.ssh.dto.KeyItem;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
@@ -46,6 +46,7 @@ public class SshKeyServiceImpl implements SshKeyService {
     private final String restContext;
     private final Loader loader;
     private final String wsName;
+    private final DtoFactory dtoFactory;
 
     /**
      * Create service.
@@ -54,10 +55,11 @@ public class SshKeyServiceImpl implements SshKeyService {
      * @param loader
      */
     @Inject
-    protected SshKeyServiceImpl(@Named("restContext") String restContext, Loader loader) {
+    protected SshKeyServiceImpl(@Named("restContext") String restContext, Loader loader, DtoFactory dtoFactory) {
         this.restContext = restContext;
         this.loader = loader;
         this.wsName = '/' + Utils.getWorkspaceName();
+        this.dtoFactory = dtoFactory;
     }
 
     /** {@inheritDoc} */
@@ -75,13 +77,10 @@ public class SshKeyServiceImpl implements SshKeyService {
     public void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<GenKeyRequest> callback) throws RequestException {
         String url = restContext + wsName + "/ssh-keys/gen";
 
-        DtoClientImpls.GenKeyRequestImpl keyRequest = DtoClientImpls.GenKeyRequestImpl.make();
-        keyRequest.setHost(host);
-
-        String data = keyRequest.serialize();
+        GenKeyRequest keyRequest = dtoFactory.createDto(GenKeyRequest.class).withHost(host);
 
         loader.setMessage("Generate keys for " + host);
-        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(data)
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(dtoFactory.toJson(keyRequest))
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 

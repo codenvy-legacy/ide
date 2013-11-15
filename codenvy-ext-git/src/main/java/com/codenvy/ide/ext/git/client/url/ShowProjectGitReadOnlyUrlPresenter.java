@@ -22,8 +22,8 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.client.marshaller.StringUnmarshaller;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -68,10 +68,9 @@ public class ShowProjectGitReadOnlyUrlPresenter implements ShowProjectGitReadOnl
     /** Show dialog. */
     public void showDialog() {
         String projectId = resourceProvider.getActiveProject().getId();
-        StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
-            service.getGitReadOnlyUrl(resourceProvider.getVfsId(), projectId, new AsyncRequestCallback<String>(unmarshaller) {
+            service.getGitReadOnlyUrl(resourceProvider.getVfsId(), projectId, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
                     view.setUrl(result);

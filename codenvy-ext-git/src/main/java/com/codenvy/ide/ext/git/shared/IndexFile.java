@@ -29,7 +29,15 @@ import com.codenvy.ide.dto.DTO;
 public interface IndexFile {
     /** @return the indexed if <code>true</code> file is in index */
     boolean indexed();
+    
+    void setIndexed(boolean indexed);
+    
+    IndexFile withIndexed(boolean indexed);
 
     /** @return file path */
     String getPath();
+    
+    void setPath(String path);
+    
+    IndexFile withPath(String path);
 }

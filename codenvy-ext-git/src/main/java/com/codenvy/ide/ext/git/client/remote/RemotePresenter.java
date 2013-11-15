@@ -21,13 +21,14 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.client.marshaller.RemoteListUnmarshaller;
 import com.codenvy.ide.ext.git.client.remote.add.AddRemoteRepositoryPresenter;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -52,6 +53,7 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
     private NotificationManager          notificationManager;
     private Remote                       selectedRemote;
     private String                       projectId;
+    private DtoFactory                   dtoFactory;
 
     /**
      * Create presenter.
@@ -86,14 +88,14 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
      * local).
      */
     private void getRemotes() {
-        RemoteListUnmarshaller unmarshaller = new RemoteListUnmarshaller();
         try {
             service.remoteList(resourceProvider.getVfsId(), projectId, null, true,
-                               new AsyncRequestCallback<JsonArray<Remote>>(unmarshaller) {
+                               new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
-                                   protected void onSuccess(JsonArray<Remote> result) {
+                                   protected void onSuccess(String result) {
+                                       JsonArray<Remote> remotes = dtoFactory.createListDtoFromJson(result, Remote.class);
                                        view.setEnableDeleteButton(false);
-                                       view.setRemotes(result);
+                                       view.setRemotes(remotes);
                                        if (!view.isShown()) {
                                            view.showDialog();
                                        }

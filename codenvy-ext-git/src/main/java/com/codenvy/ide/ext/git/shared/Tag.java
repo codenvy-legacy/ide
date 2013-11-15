@@ -29,4 +29,6 @@ import com.codenvy.ide.dto.DTO;
 public interface Tag {
     /** @return tag name */
     String getName();
+    
+    Tag withName(String name);
 }

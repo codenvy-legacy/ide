@@ -36,16 +36,32 @@ public interface Revision {
 
     /** @return branch name */
     String getBranch();
+    
+    void setBranch(String branch);
+    
+    Revision withBranch(String branch);
 
     /** @return commit id */
     String getId();
+    
+    void setId(String id);
+    
+    Revision withId(String id);
 
     /** @return commit message */
     String getMessage();
+    
+    void setMessage(String message);
+    
+    Revision withMessage(String message);
 
     /** @return time of commit */
-    double getCommitTime();
+    long getCommitTime();
+    
+    Revision withCommitTime(long time);
 
     /** @return committer */
     GitUser getCommitter();
+    
+    Revision withCommitter(GitUser user);
 }

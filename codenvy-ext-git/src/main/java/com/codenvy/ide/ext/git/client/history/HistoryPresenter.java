@@ -28,18 +28,18 @@ import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
-import com.codenvy.ide.ext.git.client.marshaller.DiffResponseUnmarshaller;
-import com.codenvy.ide.ext.git.client.marshaller.LogResponseUnmarshaller;
 import com.codenvy.ide.ext.git.shared.LogResponse;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.ImageResource;
@@ -80,6 +80,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
     private Revision            selectedRevision;
     private SelectionAgent      selectionAgent;
     private NotificationManager notificationManager;
+    private DtoFactory              dtoFactory;
 
     /**
      * Create presenter.
@@ -95,7 +96,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
     @Inject
     public HistoryPresenter(HistoryView view, GitClientService service, GitLocalizationConstant constant, GitResources resources,
                             ResourceProvider resourceProvider, WorkspaceAgent workspaceAgent, SelectionAgent selectionAgent,
-                            NotificationManager notificationManager) {
+                            NotificationManager notificationManager, DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.view.setTitle(constant.historyTitle());
@@ -106,6 +107,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         this.workspaceAgent = workspaceAgent;
         this.selectionAgent = selectionAgent;
         this.notificationManager = notificationManager;
+        this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */
@@ -137,13 +139,12 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
 
     /** Get the log of the commits. If successfully received, then display in revision grid, otherwise - show error in output panel. */
     private void getCommitsLog(@NotNull String projectId) {
-        LogResponseUnmarshaller unmarshaller = new LogResponseUnmarshaller();
-
         try {
-            service.log(resourceProvider.getVfsId(), projectId, false, new AsyncRequestCallback<LogResponse>(unmarshaller) {
+            service.log(resourceProvider.getVfsId(), projectId, false, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
-                protected void onSuccess(LogResponse result) {
-                    revisions = result.getCommits();
+                protected void onSuccess(String result) {
+                    LogResponse logResponse = dtoFactory.createDtoFromJson(result, LogResponse.class);
+                    revisions = JsonCollections.createArray(logResponse.getCommits());
                     view.setRevisions(revisions);
                 }
 
@@ -301,8 +302,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
 
     /** Get the changes between revisions. On success - display diff in text format, otherwise - show the error message in output panel. */
     private void getDiff() {
-        JsonArray<String> filePatterns = JsoArray.create();
-
+        String pattern = "";
         Project project = resourceProvider.getActiveProject();
         if (!showChangesInProject && project != null) {
             Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
@@ -314,18 +314,15 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
                 element = selection.getFirstElement();
             }
 
-            String pattern = element.getPath().replaceFirst(project.getPath(), "");
+            pattern = element.getPath().replaceFirst(project.getPath(), "");
             pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
-            if (pattern.length() > 0) {
-                filePatterns.add(pattern);
-            }
         }
 
         if (DiffWith.DIFF_WITH_INDEX.equals(diffType) || DiffWith.DIFF_WITH_WORK_TREE.equals(diffType)) {
             boolean isCached = DiffWith.DIFF_WITH_INDEX.equals(diffType);
-            doDiffWithNotCommited(filePatterns, selectedRevision, isCached);
+            doDiffWithNotCommited((pattern.length() > 0) ? new String[]{pattern} : new String[]{}, selectedRevision, isCached);
         } else {
-            doDiffWithPrevVersion(filePatterns, selectedRevision);
+            doDiffWithPrevVersion((pattern.length() > 0) ? new String[]{pattern} : new String[]{}, selectedRevision);
         }
     }
 
@@ -339,17 +336,16 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
      * @param isCached
      *         if <code>true</code> compare with index, else - with working tree
      */
-    private void doDiffWithNotCommited(@NotNull JsonArray<String> filePatterns, @Nullable final Revision revision, final boolean isCached) {
+    private void doDiffWithNotCommited(@NotNull String[] filePatterns, @Nullable final Revision revision, final boolean isCached) {
         if (revision == null) {
             return;
         }
 
         String projectId = resourceProvider.getActiveProject().getId();
-        DiffResponseUnmarshaller unmarshaller = new DiffResponseUnmarshaller();
 
         try {
             service.diff(resourceProvider.getVfsId(), projectId, filePatterns, RAW, false, 0, revision.getId(), isCached,
-                         new AsyncRequestCallback<String>(unmarshaller) {
+                         new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                              @Override
                              protected void onSuccess(String result) {
                                  view.setDiffContext(result);
@@ -382,7 +378,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
      * @param revisionB
      *         selected commit
      */
-    private void doDiffWithPrevVersion(@NotNull JsonArray<String> filePatterns, @Nullable final Revision revisionB) {
+    private void doDiffWithPrevVersion(@NotNull String[] filePatterns, @Nullable final Revision revisionB) {
         if (revisionB == null) {
             return;
         }
@@ -391,11 +387,9 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         if (index + 1 < revisions.size()) {
             final Revision revisionA = revisions.get(index + 1);
             String projectId = resourceProvider.getActiveProject().getId();
-            DiffResponseUnmarshaller unmarshaller = new DiffResponseUnmarshaller();
-
             try {
                 service.diff(resourceProvider.getVfsId(), projectId, filePatterns, RAW, false, 0, revisionA.getId(), revisionB.getId(),
-                             new AsyncRequestCallback<String>(unmarshaller) {
+                             new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                  @Override
                                  protected void onSuccess(String result) {
                                      view.setDiffContext(result);

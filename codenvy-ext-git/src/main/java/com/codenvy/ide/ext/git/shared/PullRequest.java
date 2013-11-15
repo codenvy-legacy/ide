@@ -29,10 +29,16 @@ import com.codenvy.ide.dto.DTO;
 public interface PullRequest extends GitRequest {
     /** @return refspec to fetch */
     String getRefSpec();
+    
+    PullRequest withRefSpec(String refSpec);
 
     /** @return remote name. If <code>null</code> then 'origin' will be used */
     String getRemote();
+    
+    PullRequest withRemote(String remote);
 
     /** @return time (in seconds) to wait without data transfer occurring before aborting fetching data from remote repository */
     int getTimeout();
+    
+    PullRequest withTimeout(int timeout);
 }

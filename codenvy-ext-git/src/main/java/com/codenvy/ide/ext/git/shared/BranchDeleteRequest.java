@@ -29,7 +29,11 @@ import com.codenvy.ide.dto.DTO;
 public interface BranchDeleteRequest extends GitRequest {
     /** @return name of branch to delete */
     String getName();
+    
+    BranchDeleteRequest withName(String name);
 
     /** @return if <code>true</code> then delete branch {@link #name} even if it is not fully merged */
-    boolean force();
+    boolean isForce();
+    
+    BranchDeleteRequest withForce(boolean force);
 }

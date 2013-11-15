@@ -22,11 +22,15 @@
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
     <component>
-        <type>org.exoplatform.ide.git.server.rest.GitHubServiceApplication</type>
+        <type>com.codenvy.ide.ext.git.server.rest.GitHubServiceApplication</type>
     </component>
 
     <component>
-        <type>org.exoplatform.ide.git.server.github.GitHub</type>
+        <type>com.codenvy.ide.ext.git.server.nativegit.CredentialsLoader</type>
+    </component>
+    
+    <component>
+        <type>com.codenvy.ide.ext.git.server.github.GitHub</type>
         <init-params>
             <value-param>
                 <name>github-user</name>
@@ -35,16 +39,25 @@
         </init-params>
     </component>
     
-    <component>
-      <type>org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory</type>
-    </component>
-    
      <component>
-        <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
+        <type>com.codenvy.ide.ext.git.server.nativegit.OAuthCredentialsProvider</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.ide.ext.git.server.nativegit.SshKeysManager</type>
     </component>
     
     <component>
-       <type>org.exoplatform.ide.git.server.GitIgnoreConfigChecker</type>
+        <key>com.codenvy.ide.ext.git.server.GitConnectionFactory</key>
+        <type>com.codenvy.ide.ext.git.server.nativegit.NativeGitConnectionFactory</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.ide.ext.git.server.rest.GitApplication</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.ide.ext.git.server.GitIgnoreConfigChecker</type>
     </component>
     
 </configuration>

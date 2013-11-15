@@ -29,7 +29,11 @@ import com.codenvy.ide.dto.DTO;
 public interface BranchCreateRequest extends GitRequest {
     /** @return name of branch to be created */
     String getName();
+    
+    BranchCreateRequest withName(String name);
 
     /** @return name of a commit at which to start the new branch. If <code>null</code> the HEAD will be used */
     String getStartPoint();
+    
+    BranchCreateRequest withStartPoint(String startPoint);
 }

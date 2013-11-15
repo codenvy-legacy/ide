@@ -29,7 +29,13 @@ import com.codenvy.ide.dto.DTO;
 public interface InitRequest extends GitRequest {
     /** @return working directory for new git repository */
     String getWorkingDir();
-
+    
+    void setWorkingDir(String workingDir);
+    
+    InitRequest withWorkingDir(String workingDir);
+    
     /** @return <code>true</code> then bare repository created */
-    boolean bare();
+    boolean isBare();
+    
+    InitRequest withBare(boolean bare);
 }

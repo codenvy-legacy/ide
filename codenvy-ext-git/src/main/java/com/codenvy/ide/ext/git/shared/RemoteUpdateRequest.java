@@ -18,7 +18,6 @@
 package com.codenvy.ide.ext.git.shared;
 
 import com.codenvy.ide.dto.DTO;
-import com.codenvy.ide.json.JsonArray;
 
 /**
  * Request to update tracked repositories.
@@ -32,7 +31,7 @@ public interface RemoteUpdateRequest extends GitRequest {
     String getName();
 
     /** @return list tracked branches */
-    JsonArray<String> getBranches();
+    String[] getBranches();
 
     /**
      * @return if <code>true</code> then {@link #branches} instead of replacing the list of currently tracked branches,
@@ -41,14 +40,14 @@ public interface RemoteUpdateRequest extends GitRequest {
     boolean addBranches();
 
     /** @return remote URLs to be added */
-    JsonArray<String> getAddUrl();
+    String[] getAddUrl();
 
     /** @return remote URLs to be removed */
-    JsonArray<String> getRemoveUrl();
+    String[] getRemoveUrl();
 
     /** @return remote push URLs to be added */
-    JsonArray<String> getAddPushUrl();
+    String[] getAddPushUrl();
 
     /** @return remote push URLs to be removed */
-    JsonArray<String> getRemovePushUrl();
+    String[] getRemovePushUrl();
 }
