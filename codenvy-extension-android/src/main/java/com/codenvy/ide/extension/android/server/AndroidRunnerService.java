@@ -56,7 +56,7 @@ public class AndroidRunnerService {
                  + "# USER#" + ConversationState.getCurrent().getIdentity().getUserId() + "# PROJECT#" + projectName + "# TYPE#" +
                  projectType + "# PAAS#Manymo#");
 
-        return "{\"applicationUrl\":\"" + "https://www.manymo.com/apps/" + manymo.getId() + "/emulators/83/connect?secret=" +
+        return "{\"applicationUrl\":\"" + "https://www.manymo.com/apps/" + manymo.getId() + "/emulators/142/connect?secret=" +
                manymo.getSecret() + "\"}";
     }
 
