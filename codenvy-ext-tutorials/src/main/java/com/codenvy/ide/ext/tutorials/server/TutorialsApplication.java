@@ -17,9 +17,13 @@
  */
 package com.codenvy.ide.ext.tutorials.server;
 
+import org.exoplatform.container.xml.InitParams;
+
 import javax.ws.rs.core.Application;
 import java.util.Collections;
 import java.util.Set;
+
+import static com.codenvy.ide.commons.ContainerUtils.readValueParam;
 
 /**
  * JAX-RS application for 'Codenvy Tutorials' extension.
@@ -28,6 +32,12 @@ import java.util.Set;
  * @version $Id: TutorialsApplication.java Sep 13, 2013 3:26:32 PM azatsarynnyy $
  */
 public class TutorialsApplication extends Application {
+    public static String BASE_URL;
+
+    public TutorialsApplication(InitParams initParams) {
+        BASE_URL = readValueParam(initParams, "tutorials-url", "");
+    }
+
     /** {@inheritDoc} */
     @Override
     public Set<Class<?>> getClasses() {
