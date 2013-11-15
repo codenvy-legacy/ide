@@ -24,7 +24,6 @@ import javax.servlet.ServletContextListener;
 import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderRegistry;
 import com.codenvy.api.core.Lifecycle;
-import com.codenvy.api.core.config.Configuration;
 import com.codenvy.api.core.util.ComponentLoader;
 
 import java.lang.ref.WeakReference;
@@ -40,7 +39,7 @@ public class ServletListener implements ServletContextListener {
 
     private List<Builder> builders;
 
-    private List<WeakReference> lifeCycles;
+    private List<WeakReference<Builder>> lifeCycles;
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
@@ -49,14 +48,6 @@ public class ServletListener implements ServletContextListener {
         builders = new ArrayList<>(all.size());
         lifeCycles = new ArrayList<>(all.size());
         for (Builder builder : all) {
-            final Configuration configuration = builder.getDefaultConfiguration();
-            for (String name : configuration.getNames()) {
-                final String parameter = servletContext.getInitParameter(builder.getName() + '.' + name);
-                if (parameter != null) {
-                    configuration.set(name, parameter);
-                }
-            }
-            builder.setConfiguration(configuration);
             builder.start();
             builders.add(builder);
             lifeCycles.add(new WeakReference<>(builder));

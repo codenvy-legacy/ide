@@ -84,6 +84,7 @@
         <commons-fileupload.version>1.2.1</commons-fileupload.version>
         <commons-io.version>2.4</commons-io.version>
         <commons-codec.version>1.6</commons-codec.version>
+        <commons.compress.version>1.6</commons.compress.version>
         <jgit.version>2.3.1.201302201838-r</jgit.version>
         <jsch.version>0.1.44-1</jsch.version>
         <servlet-api.version>3.0.1</servlet-api.version>
@@ -113,6 +114,7 @@
         <module>codenvy-ide-core</module>
         <module>codenvy-builder-maven</module>
         <module>codenvy-builder-ant</module>
+        <module>codenvy-runner-docker</module>
         <module>codenvy-ext-builder</module>
         <module>codenvy-api-war</module>
         <module>codenvy-ext-demo</module>
