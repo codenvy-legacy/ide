@@ -238,7 +238,7 @@ public class TutorialsService {
      */
     @Path("parts")
     @POST
-    public void createTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
+    public void createPartsTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
                                       @QueryParam("rootid") String rootId, List<Property> properties)
             throws VirtualFileSystemException, IOException {
         createProject(vfsId, BASE_URL + "/parts-api-tutorial.zip", name, rootId, properties);
