@@ -200,33 +200,25 @@ public class FetchViewImpl extends DialogBox implements FetchView {
         delegate.onValueChanged();
     }
 
-    /**
-     * @see com.codenvy.ide.ext.git.client.fetch.FetchView#isFetchAllBranches()
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean isFetchAllBranches() {
         return fetchAllBranches.getValue();
     }
 
-    /**
-     * @see com.codenvy.ide.ext.git.client.fetch.FetchView#setFetchAllBranches(boolean)
-     */
+    /** {@inheritDoc} */
     @Override
     public void setFetchAllBranches(boolean isFetchAllBranches) {
         fetchAllBranches.setValue(isFetchAllBranches, true);
     }
 
-    /**
-     * @see com.codenvy.ide.ext.git.client.fetch.FetchView#setEnableRemoteBranchField(boolean)
-     */
+    /** {@inheritDoc} */
     @Override
     public void setEnableRemoteBranchField(boolean enabled) {
         remoteBranch.setEnabled(enabled);
     }
 
-    /**
-     * @see com.codenvy.ide.ext.git.client.fetch.FetchView#setEnableLocalBranchField(boolean)
-     */
+    /** {@inheritDoc} */
     @Override
     public void setEnableLocalBranchField(boolean enabled) {
         localBranch.setEnabled(enabled);

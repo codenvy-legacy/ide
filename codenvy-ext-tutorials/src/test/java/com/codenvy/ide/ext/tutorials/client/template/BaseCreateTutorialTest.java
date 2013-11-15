@@ -70,6 +70,7 @@ public abstract class BaseCreateTutorialTest {
     protected PaaS                   paas;
     @Mock
     protected Template               template;
+    protected String                 templateId;
     protected AbstractTemplatePage   page;
 
     @Before
@@ -151,6 +152,7 @@ public abstract class BaseCreateTutorialTest {
     @Test
     public void testInContext() {
         when(paas.isProvideTemplate()).thenReturn(!PROVIDE_TEMPLATE);
+        when(template.getId()).thenReturn(templateId);
 
         assertEquals(page.inContext(), IN_CONTEXT);
     }

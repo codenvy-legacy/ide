@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.0.0-M3-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-extensions-runtime</artifactId>
     <packaging>jar</packaging>
@@ -173,7 +173,7 @@
                         <configuration>
                             <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                             <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.ext.extruntime.shared,com.codenvy.ide.extension.maven.shared</argument>
+                                <argument>--dto_packages=com.codenvy.ide.ext.extruntime.shared,com.codenvy.ide.extension.builder.shared</argument>
                                 <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/ext/extruntime/dto/server/DtoServerImpls.java</argument>
                                 <argument>--impl=server</argument>
                                 <argument>--package_base=${generated.sources.directory}/</argument>
@@ -356,6 +356,9 @@
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${generated.sources.directory}</directory>
             </resource>
         </resources>
         <sourceDirectory>src/main/java</sourceDirectory>

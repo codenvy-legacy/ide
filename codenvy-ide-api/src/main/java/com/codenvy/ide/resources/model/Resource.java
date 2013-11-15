@@ -106,9 +106,9 @@ public abstract class Resource {
      *
      * @return the path of the {@link Resource} in relation to {@link Project}
      */
-    public String getRealtivePath() {
+    public String getRelativePath() {
         if (parent != null && !(parent instanceof Project)) {
-            return parent.getRealtivePath() + "/" + name;
+            return parent.getRelativePath() + "/" + name;
         } else {
             return name;
         }

@@ -344,7 +344,7 @@ public class AntBuilder extends Builder {
             } else {
                 // otherwise show just name of library.
                 // Typically it may means that dependency is obtained with some dependency manager,
-                // e.g. with maven over maven-ant-task.
+                // e.g. with builder over builder-ant-task.
                 collector.addDependency(new DependencyCollector.Dependency(uniqueNameChecker.maybeAddIndex(file.getName())));
             }
         }

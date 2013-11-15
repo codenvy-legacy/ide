@@ -78,6 +78,17 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
         }
     }
 
+
+    /** {@inheritDoc} */
+    @Override
+    public void printf(String message) {
+        view.print("<pre>" + message + "</pre>");
+        PartPresenter activePart = partStack.getActivePart();
+        if (activePart == null || !activePart.equals(this)) {
+            partStack.setActivePart(this);
+        }
+    }
+
     /** {@inheritDoc} */
     @Override
     public void clear() {

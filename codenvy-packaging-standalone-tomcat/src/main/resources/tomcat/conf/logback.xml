@@ -64,7 +64,5 @@
     <root level="DEBUG">
         <appender-ref ref="SIFT"/>
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="email"/>
-        <appender-ref ref="SYSLOG"/>
     </root>
 </configuration>

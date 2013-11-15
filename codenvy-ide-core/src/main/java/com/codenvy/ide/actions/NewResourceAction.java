@@ -24,7 +24,7 @@ import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
-import com.codenvy.ide.wizard.newresource.NewResource;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

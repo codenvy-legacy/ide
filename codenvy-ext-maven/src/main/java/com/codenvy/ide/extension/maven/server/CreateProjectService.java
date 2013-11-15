@@ -43,7 +43,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@Path("{ws-name}/maven/create")
+@Path("{ws-name}/builder/create")
 public class CreateProjectService {
     @Inject
     VirtualFileSystemRegistry registry;

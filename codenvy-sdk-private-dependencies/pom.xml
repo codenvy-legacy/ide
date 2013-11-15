@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.0.0-M3-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-sdk-private-dependencies</artifactId>
     <packaging>pom</packaging>
@@ -100,7 +100,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <!-- IMPORTANT!
                  Specify version explicitly because addParentPoms parameter works with 2.8 or higher.
-                 Version 2.6 is defined in com.codenvy:maven-parent-pom. -->
+                 Version 2.6 is defined in com.codenvy:builder-parent-pom. -->
                 <version>2.8</version>
                 <executions>
                     <execution>

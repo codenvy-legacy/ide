@@ -32,17 +32,17 @@ public interface PartPresenter extends Presenter {
      * The property id for <code>getTitle</code>, <code>getTitleImage</code>
      * and <code>getTitleToolTip</code>.
      */
-    public static final int TITLE_PROPERTY = 0x001;
+    static final int TITLE_PROPERTY = 0x001;
 
     /** The property id for <code>getSelection</code>. */
-    public static final int SELECTION_PROPERTY = 0x002;
+    static final int SELECTION_PROPERTY = 0x002;
 
     /**
      * Title of the Part
      *
      * @return
      */
-    public String getTitle();
+    String getTitle();
 
     /**
      * Returns the title image of this part.  If this value changes
@@ -54,7 +54,7 @@ public interface PartPresenter extends Presenter {
      *
      * @return the title image
      */
-    public ImageResource getTitleImage();
+    ImageResource getTitleImage();
 
     /**
      * Returns the title tool tip text of this part.
@@ -68,21 +68,21 @@ public interface PartPresenter extends Presenter {
      *
      * @return the part title tool tip (not <code>null</code>)
      */
-    public String getTitleToolTip();
+    String getTitleToolTip();
 
     /**
      * Return size of part. If current part is vertical panel then size is height. If current part is horizontal panel then size is width.
      *
      * @return size of part
      */
-    public int getSize();
+    int getSize();
 
     /**
      * This method is called when Part is opened.
      * Note: this method is NOT called when part gets focused. It is called when new tab in
      * PartStack created.
      */
-    public void onOpen();
+    void onOpen();
 
     /**
      * This method is called when part is going to be closed. Part itself can deny
@@ -91,7 +91,7 @@ public interface PartPresenter extends Presenter {
      *
      * @return allow close
      */
-    public boolean onClose();
+    boolean onClose();
 
     /**
      * Adds a listener for changes to properties of this part.
@@ -100,10 +100,10 @@ public interface PartPresenter extends Presenter {
      * @param listener
      *         a property listener
      */
-    public void addPropertyListener(PropertyListener listener);
+    void addPropertyListener(PropertyListener listener);
 
     /** @return The {@link Selection} of this Part. */
-    public Selection<?> getSelection();
+    Selection<?> getSelection();
 
     /**
      * Removes the given property listener from this part.
@@ -112,5 +112,5 @@ public interface PartPresenter extends Presenter {
      * @param listener
      *         a property listener
      */
-    public void removePropertyListener(PropertyListener listener);
+    void removePropertyListener(PropertyListener listener);
 }

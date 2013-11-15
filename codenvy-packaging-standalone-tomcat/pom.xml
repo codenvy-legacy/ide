@@ -25,7 +25,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.0.0-M3-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-packaging-standalone-tomcat</artifactId>
     <packaging>pom</packaging>
@@ -35,6 +35,12 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-application-war</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-api-war</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
@@ -64,7 +70,7 @@
         </dependency>
         <!--<dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-maven</artifactId>
+            <artifactId>exo-ide-builder</artifactId>
             <type>war</type>
             <version>${org.exoplatform.ide.version}</version>
         </dependency>
@@ -108,6 +114,30 @@
             <artifactId>codenvy-ext-maven</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-ant</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <!--<dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-tutorials</artifactId>
+            <type>jar</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-extensions-runtime</artifactId>
+            <type>jar</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-sdk-private-dependencies</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>-->
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-git-server</artifactId>
@@ -167,6 +197,8 @@
             <artifactId>jsch</artifactId>
             <version>${jsch.version}</version>
         </dependency>
+
+        <!-- Google App Engine SDK -->
         <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-java-sdk</artifactId>
@@ -179,7 +211,6 @@
             <type>zip</type>
             <version>${appengine.version}</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -274,6 +305,24 @@
                             <!--<outputDirectory>${project.build.directory}</outputDirectory>-->
                         <!--</configuration>-->
                     <!--</execution>-->
+                    <!--<execution>
+                        <id>copy-private-dependencies-for-sdk</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>codenvy-sdk-private-dependencies</artifactId>
+                                    <type>zip</type>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                    <destFileName>repo.zip</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>-->
                 </executions>
             </plugin>
             <plugin>
@@ -330,7 +379,9 @@
                                       tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${project.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true"/>
-                                <!--<copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${org.exoplatform.ide.version}.war"-->
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-api-war-${project.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/api.war" overwrite="true"/>
+                                <!--<copy file="${project.build.directory}/packager-conf/war/exo-ide-builder-${org.exoplatform.ide.version}.war"-->
                                       <!--tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true"/>-->
                                 <!--<copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war"-->
                                       <!--tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>-->
@@ -338,6 +389,8 @@
                                       tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
                                 <!--<unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"-->
                                        <!--dest="${project.build.directory}/tomcat-ide"/>-->
+                                <!--<unzip src="${project.build.directory}/repo.zip" dest="${project.build.directory}/tomcat-ide"/>
+                                <chmod dir="${project.build.directory}/tomcat-ide" perm="+x" includes="install.sh" />-->
                                 <!--<unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip"-->
                                        <!--dest="${project.build.directory}/tomcat-ide">-->
                                     <!--<patternset>-->
@@ -383,7 +436,7 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
-                    <!-- Create the distribution zip and attach it to maven -->
+                    <!-- Create the distribution zip and attach it to builder -->
                     <execution>
                         <id>tomcat-zip</id>
                         <phase>package</phase>

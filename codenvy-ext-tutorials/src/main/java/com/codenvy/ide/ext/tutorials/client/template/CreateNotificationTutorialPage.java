@@ -28,7 +28,6 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
@@ -46,7 +45,6 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMAR
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@Singleton
 public class CreateNotificationTutorialPage extends AbstractTemplatePage {
     private TutorialsClientService service;
     private ResourceProvider       resourceProvider;

@@ -40,8 +40,11 @@
     <inherits name='com.codenvy.ide.extension.demo.Demo'/>
     <inherits name='com.codenvy.ide.extension.css.Css'/>
     <inherits name='com.codenvy.ide.extension.maven.Maven'/>
+    <inherits name='com.codenvy.ide.extension.ant.Ant'/>
     <inherits name='com.codenvy.ide.ext.git.Git'/>
     <inherits name='com.codenvy.ide.ext.ssh.Ssh'/>
+
+    <inherits name='com.codenvy.api.PlatformAPI'/>
 
     <stylesheet src="IDE.css"/>
 

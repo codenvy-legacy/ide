@@ -34,9 +34,9 @@ import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshalle
 import com.codenvy.ide.ext.appfog.client.marshaller.InfrasUnmarshaller;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.ext.appfog.shared.InfraDetail;
-import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
-import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
-import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
+import com.codenvy.ide.extension.builder.client.event.BuildProjectEvent;
+import com.codenvy.ide.extension.builder.client.event.ProjectBuiltEvent;
+import com.codenvy.ide.extension.builder.client.event.ProjectBuiltHandler;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
@@ -459,7 +459,7 @@ public class AppFogPagePresenter extends AbstractPaasPage implements AppFogPageV
         }
     }
 
-    /** Check current project is maven project. */
+    /** Check current project is builder project. */
     private void beforeDeploy() {
         JsonArray<Resource> children = project.getChildren();
 

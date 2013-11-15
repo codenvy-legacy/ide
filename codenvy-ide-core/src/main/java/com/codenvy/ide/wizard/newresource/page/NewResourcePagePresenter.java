@@ -34,6 +34,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
+import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.*;
 
 /**
  * Provides selecting kind of file which user wish to create and create resource of the chosen type with given name.
@@ -113,12 +114,18 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
     @Override
     public void focusComponent() {
         view.focusResourceName();
+        wizardContext.putData(NEW_RESOURCE_PROVIDER, selectedResourceType);
+        wizardContext.putData(PROJECT, project);
+        wizardContext.putData(PARENT, parent);
     }
 
     /** {@inheritDoc} */
     @Override
     public void removeOptions() {
-        // do nothing
+        wizardContext.removeData(NEW_RESOURCE_PROVIDER);
+        wizardContext.removeData(PROJECT);
+        wizardContext.removeData(PARENT);
+        wizardContext.removeData(RESOURCE_NAME);
     }
 
     /** {@inheritDoc} */
@@ -147,6 +154,7 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
     @Override
     public void onResourceTypeSelected(@NotNull NewResourceProvider resourceType) {
         selectedResourceType = resourceType;
+        wizardContext.putData(NEW_RESOURCE_PROVIDER, selectedResourceType);
         view.selectResourceType(resourceType);
         onResourceNameChanged();
         delegate.updateControls();
@@ -174,6 +182,8 @@ public class NewResourcePagePresenter extends AbstractWizardPage implements Acti
                 hasSameResource = child.getName().equals(resourceName);
             }
         }
+
+        wizardContext.putData(RESOURCE_NAME, resourceName);
 
         delegate.updateControls();
     }
