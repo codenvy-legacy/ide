@@ -50,7 +50,7 @@ public class NativeGitConnection implements GitConnection {
      * @param keysManager
      *         manager for ssh keys. If it is null default ssh will be used;
      * @param credentialsLoader
-     *          loader for credentials
+     *         loader for credentials
      * @throws GitException
      *         when some error occurs
      */
@@ -511,17 +511,20 @@ public class NativeGitConnection implements GitConnection {
             }
             command.execute();
         } catch (GitException e) {
+            if (!nativeGit.getRepository().exists()) {
+                nativeGit.getRepository().mkdirs();
+            }
             //if not authorized
             if (e.getMessage().toLowerCase().startsWith("fatal: authentication failed")) {
                 //try to search available credentials and execute command with it
                 command.setAskPassScriptPath(credentialsLoader.findCredentialsAndCreateGitAskPassScript(url).toString());
                 try {
                     //after failed clone, git will remove directory
+                    command.execute();
+                } catch (GitException inner) {
                     if (!nativeGit.getRepository().exists()) {
                         nativeGit.getRepository().mkdirs();
                     }
-                    command.execute();
-                } catch (GitException inner) {
                     //if not authorized again make runtime exception
                     if (inner.getMessage().toLowerCase().startsWith("fatal: authentication failed")) {
                         throw new NotAuthorizedException("not authorized");
