@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.tutorials.client;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -41,8 +42,8 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createDTOTutorialProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
-            throws RequestException;
+    void createDTOTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+                                  @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Create 'Notification tutorial' project.
@@ -55,8 +56,8 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createNotificationTutorialProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
-            throws RequestException;
+    void createNotificationTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+                                           @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Create 'Notification tutorial' project.
@@ -69,8 +70,8 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createActionTutorialProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
-            throws RequestException;
+    void createActionTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+                                     @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Create 'Wizard tutorial' project.
@@ -83,8 +84,8 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createWizardTutorialProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
-            throws RequestException;
+    void createWizardTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+                                     @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Create 'New project wizard tutorial' project.
@@ -97,6 +98,34 @@ public interface TutorialsClientService {
      *         callback
      * @throws RequestException
      */
-    void createNewProjectWizardTutorialProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
-            throws RequestException;
+    void createNewProjectWizardTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+                                               @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Create 'New resource wizard tutorial' project.
+     *
+     * @param projectName
+     *         name of the project to create
+     * @param properties
+     *         properties to set to a newly created project
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    void createNewResourceWizardTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+                                                @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Create 'Parts tutorial' project.
+     *
+     * @param projectName
+     *         name of the project to create
+     * @param properties
+     *         properties to set to a newly created project
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    void createPartsTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+                                    @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 }

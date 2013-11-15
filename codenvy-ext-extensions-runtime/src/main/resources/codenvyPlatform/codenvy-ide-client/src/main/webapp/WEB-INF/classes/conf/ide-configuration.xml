@@ -117,4 +117,19 @@
         <type>org.exoplatform.ide.git.server.GitIgnoreConfigChecker</type>
     </component>
 
+    <!--
+    ***************************************************************************************
+    ********************************** OAuth Support **************************************
+    ***************************************************************************************
+    -->
+
+    <component>
+        <key>com.codenvy.commons.security.oauth.OAuthTokenProvider</key>
+        <type>com.codenvy.commons.security.oauth.OAuthAuthenticatorTokenProvider</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.security.oauth.ExoOAuthAuthenticatorProvider</type>
+    </component>
+
 </configuration>

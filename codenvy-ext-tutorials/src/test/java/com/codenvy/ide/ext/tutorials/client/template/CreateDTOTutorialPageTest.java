@@ -31,21 +31,22 @@ import java.lang.reflect.Method;
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.DTO_TUTORIAL_ID;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 
 /**
- * Testing {@link com.codenvy.ide.ext.tutorials.client.template.CreateDTOTutorialPage} functionality.
+ * Testing {@link CreateDTOTutorialPage} functionality.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: TutorialsExtension.java Sep 19, 2013 4:14:56 PM azatsarynnyy $
  */
 public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
-
     @Override
     public void setUp() {
         super.setUp();
         page = new CreateDTOTutorialPage(service, resourceProvider);
         page.setContext(wizardContext);
+        templateId = DTO_TUTORIAL_ID;
     }
 
     @Override
@@ -105,12 +106,5 @@ public class CreateDTOTutorialPageTest extends BaseCreateTutorialTest {
                 .createDTOTutorialProject(anyString(), (JsonArray<Property>)anyObject(), (AsyncRequestCallback<Void>)anyObject());
 
         super.testCreateWhenRequestExceptionHappened();
-    }
-
-    @Override
-    public void testInContext() {
-        when(template.getId()).thenReturn(DTO_TUTORIAL_ID);
-
-        super.testInContext();
     }
 }

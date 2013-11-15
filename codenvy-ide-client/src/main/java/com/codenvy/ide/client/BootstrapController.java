@@ -48,36 +48,39 @@ public class BootstrapController {
      * Create controller.
      *
      * @param componentRegistry
+     * @param workspaceProvider
      * @param styleInjector
      * @param extensionInitializer
      * @param preferencesManager
      * @param userService
      * @param resourceProvider
+     * @param dtoRegistrar
      */
     @Inject
     public BootstrapController(final ComponentRegistry componentRegistry, final Provider<WorkspacePresenter> workspaceProvider,
                                StyleInjector styleInjector, final ExtensionInitializer extensionInitializer,
-                               final PreferencesManagerImpl preferencesManager,
-                               UserClientService userService, final ResourceProvider resourceProvider) {
+                               final PreferencesManagerImpl preferencesManager, UserClientService userService,
+                               final ResourceProvider resourceProvider, DtoRegistrar dtoRegistrar) {
         styleInjector.inject();
-        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW).setCallback(new Callback<Void, Exception>() {
+        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
+                      .setCallback(new Callback<Void, Exception>() {
+                          @Override
+                          public void onFailure(Exception reason) {
+                          }
 
-
-            @Override
-            public void onFailure(Exception reason) {
-            }
-
-            @Override
-            public void onSuccess(Void result) {
-                ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_parsers.js").setWindow(ScriptInjector.TOP_WINDOW).inject();
-            }
-        }).inject();
+                          @Override
+                          public void onSuccess(Void result) {
+                              ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_parsers.js")
+                                            .setWindow(ScriptInjector.TOP_WINDOW).inject();
+                          }
+                      }).inject();
 
         try {
+            dtoRegistrar.registerDtoProviders();
             UserUnmarshaller unmarshaller = new UserUnmarshaller();
             userService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
                 @Override
-                protected void onSuccess(User user) {
+                protected void onSuccess(final User user) {
                     JsonStringMap<String> attributes = user.getProfileAttributes();
                     preferencesManager.load(attributes);
 
@@ -91,6 +94,16 @@ public class BootstrapController {
                             SimplePanel mainPanel = new SimplePanel();
                             RootLayoutPanel.get().add(mainPanel);
                             WorkspacePresenter workspacePresenter = workspaceProvider.get();
+
+                            String userId = user.getUserId();
+                            if (userId.equals("__anonim")) {
+                                workspacePresenter.setVisibleLoginButton(true);
+                                workspacePresenter.setVisibleLogoutButton(false);
+                            } else {
+                                workspacePresenter.setVisibleLoginButton(false);
+                                workspacePresenter.setVisibleLogoutButton(true);
+                            }
+
                             // Display IDE
                             workspacePresenter.go(mainPanel);
                             //Display list of projects in project explorer
