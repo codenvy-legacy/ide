@@ -36,6 +36,7 @@
         <developerConnection>scm:git:git@github.com:codenvy/ide2.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
+
     <properties>
         <exo.product.name>codenvy-ide</exo.product.name>
 
@@ -139,18 +140,6 @@
 
         <module>codenvy-ext-tutorials</module>
 
-        <!--<module>codenvy-sdk-tutorials/action-api</module>-->
-        <!--<module>codenvy-sdk-tutorials/dto</module>-->
-        <!--<module>codenvy-sdk-tutorials/new-project-wizard</module>-->
-        <!--<module>codenvy-sdk-tutorials/new-resource-wizard</module>-->
-        <!--<module>codenvy-sdk-tutorials/notification-api</module>-->
-        <!--<module>codenvy-sdk-tutorials/parts-api</module>-->
-        <!--<module>codenvy-sdk-tutorials/wizard-api</module>-->
-        <!--module>codenvy-ext-tutorials</module>
-        <module>codenvy-ext-extensions-runtime</module-->
-        <!--module>codenvy-sdk-application-war</module>
-        <module>codenvy-sdk-private-dependencies</module>
-        <module>codenvy-sdk-packaging-standalone-tomcat</module-->
 
         <module>codenvy-application-war</module>
         <module>codenvy-ide-site-war</module>
