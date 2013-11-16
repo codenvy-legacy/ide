@@ -39,6 +39,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import java.util.List;
+
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.ext.git.client.merge.Reference.RefType.LOCAL_BRANCH;
@@ -229,15 +231,15 @@ public class MergePresenter implements MergeView.ActionDelegate {
         }
 
         StringBuilder conflictMessage = new StringBuilder();
-        String[] conflicts = mergeResult.getConflicts();
-        if (conflicts != null && conflicts.length > 0) {
+        List<String> conflicts = mergeResult.getConflicts();
+        if (conflicts != null && conflicts.size() > 0) {
             for (String conflict: conflicts) {
                 conflictMessage.append("- ").append(conflict).append("<br>");
             }
         }
         StringBuilder commitsMessage = new StringBuilder();
-        String[] commits = mergeResult.getMergedCommits();
-        if (commits != null && commits.length > 0) {
+        List<String> commits = mergeResult.getMergedCommits();
+        if (commits != null && commits.size() > 0) {
             for (String commit : commits) {
                 commitsMessage.append("- ").append(commit).append("<br>");
             }

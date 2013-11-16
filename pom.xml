@@ -135,12 +135,8 @@
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
 
-        <module>codenvy-builder-maven</module>
-        <module>codenvy-builder-ant</module>
-        <module>codenvy-api-war</module>
-
         <module>codenvy-ext-tutorials</module>
-        <module>codenvy-ext-extensions-runtime</module>
+
         <!--<module>codenvy-sdk-tutorials/action-api</module>-->
         <!--<module>codenvy-sdk-tutorials/dto</module>-->
         <!--<module>codenvy-sdk-tutorials/new-project-wizard</module>-->
@@ -148,9 +144,6 @@
         <!--<module>codenvy-sdk-tutorials/notification-api</module>-->
         <!--<module>codenvy-sdk-tutorials/parts-api</module>-->
         <!--<module>codenvy-sdk-tutorials/wizard-api</module>-->
-        <module>codenvy-sdk-application-war</module>
-        <module>codenvy-sdk-private-dependencies</module>
-        <module>codenvy-sdk-packaging-standalone-tomcat</module>
         <!--module>codenvy-ext-tutorials</module>
         <module>codenvy-ext-extensions-runtime</module-->
         <!--module>codenvy-sdk-application-war</module>

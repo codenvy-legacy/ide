@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.ssh.dto;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
+
 
 /** @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a> */
 @DTO

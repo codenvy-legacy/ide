@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Request to pull (fetch and merge) changes from remote repository to local branch.

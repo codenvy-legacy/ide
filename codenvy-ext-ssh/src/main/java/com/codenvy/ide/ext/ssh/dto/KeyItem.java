@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.ssh.dto;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
+
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -29,11 +30,11 @@ public interface KeyItem {
     
     KeyItem withHost(String host);
 
-    String getPublicKeyURL();
+    String getPublicKeyUrl();
     
-    KeyItem withPublicKeyURL(String publicKeyUrl);
+    KeyItem withPublicKeyUrl(String publicKeyUrl);
 
-    String getRemoveKeyURL();
+    String getRemoteKeyUrl();
     
     KeyItem withRemoteKeyUrl(String remoteKeyURL);
 }

@@ -97,7 +97,7 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
         Column<KeyItem, String> publicKeyColumn = new Column<KeyItem, String>(new ButtonCell()) {
             @Override
             public String getValue(KeyItem object) {
-                if (object.getPublicKeyURL() != null) {
+                if (object.getPublicKeyUrl() != null) {
                     return "View";
                 } else {
                     return "";

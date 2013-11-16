@@ -22,6 +22,7 @@ import com.codenvy.ide.ext.git.server.nativegit.NativeGitMergeResult;
 import com.codenvy.ide.ext.git.shared.MergeResult;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,9 +51,9 @@ public class MergeCommand extends GitCommand<MergeResult> {
         //result of merging
         NativeGitMergeResult mergeResult = new NativeGitMergeResult();
         //get merge commits
-        String[] mergedCommits = new String[2];
-        mergedCommits[0] = new LogCommand(getRepository()).setCount(1).execute().get(0).getId();
-        mergedCommits[1] = new LogCommand(getRepository()).setBranch(commit).setCount(1).execute().get(0).getId();
+        ArrayList<String> mergedCommits = new ArrayList<String>();
+        mergedCommits.add(new LogCommand(getRepository()).setCount(1).execute().get(0).getId());
+        mergedCommits.add(new LogCommand(getRepository()).setBranch(commit).setCount(1).execute().get(0).getId());
         mergeResult.setMergedCommits(mergedCommits);
         try {
             start();
@@ -76,9 +77,7 @@ public class MergeCommand extends GitCommand<MergeResult> {
                         conflictFiles.add(outLine.substring(outLine.indexOf("in") + 3));
                     }
                 }
-                String[] conflicts = new String[conflictFiles.size()];
-                conflictFiles.toArray(conflicts);
-                mergeResult.setConflicts(conflicts);
+                mergeResult.setConflicts(conflictFiles);
                 //if Updating is first then it is Failed situation cause of exception
             } else if (output.get(0).startsWith("Updating")) {
                 mergeResult.setStatus(MergeResult.MergeStatus.FAILED);
@@ -98,9 +97,7 @@ public class MergeCommand extends GitCommand<MergeResult> {
                 while (!output.get(i).startsWith("Please")) {
                     failedFiles.add(output.get(i++).trim());
                 }
-                String[] failed = new String[failedFiles.size()];
-                failedFiles.toArray(failed);
-                mergeResult.setFailed(failed);
+                mergeResult.setFailed(failedFiles);
             } else {
                 mergeResult.setStatus(MergeResult.MergeStatus.NOT_SUPPORTED);
             }

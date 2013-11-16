@@ -38,6 +38,10 @@ import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_LOCAL;
@@ -268,9 +272,9 @@ public class FetchPresenter implements FetchView.ActionDelegate {
 
     /** @return list of refs to fetch */
     @NotNull
-    private String[] getRefs() {
+    private List<String> getRefs() {
         if (view.isFetchAllBranches()){
-            return new String[]{};
+            return new ArrayList<String>();
         }
         
         String localBranch = view.getLocalBranch();
@@ -278,7 +282,7 @@ public class FetchPresenter implements FetchView.ActionDelegate {
         String remoteName = view.getRepositoryName();
         String refs = localBranch.isEmpty() ? remoteBranch
                                             : "refs/heads/" + localBranch + ":" + "refs/remotes/" + remoteName + "/" + remoteBranch;
-        return new String[]{refs};
+        return new ArrayList<String>(Arrays.asList(refs));
     }
 
     /**

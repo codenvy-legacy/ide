@@ -64,7 +64,7 @@ public class CommitPresenterTest extends BaseTest {
 
         presenter = new CommitPresenter(view, service, resourceProvider, constant, eventBus, notificationManager, dtoFactory);
 
-        when(revision.fake()).thenReturn(false);
+        when(revision.isFake()).thenReturn(false);
     }
 
     @Test

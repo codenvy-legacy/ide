@@ -265,7 +265,7 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         Revision revision = gitConnection.commit(request);
         try {
-            if (revision.fake()) {
+            if (revision.isFake()) {
                 Status status = status(false);
 
                 try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {

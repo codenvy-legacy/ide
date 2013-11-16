@@ -135,7 +135,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
         JsonArray<String> files = JsonCollections.createArray();
         for (int i = 0; i < indexedFiles.size(); i++) {
             IndexFile indexFile = indexedFiles.get(i);
-            if (!indexFile.indexed()) {
+            if (!indexFile.isIndexed()) {
                 files.add(indexFile.getPath());
             }
         }

@@ -19,6 +19,8 @@ package com.codenvy.ide.ext.git.server.nativegit;
 
 import com.codenvy.ide.ext.git.shared.MergeResult;
 
+import java.util.List;
+
 /**
  * NativeGit implementation of org.exoplatform.ide.git.shared.MergeResult
  *
@@ -28,28 +30,28 @@ public class NativeGitMergeResult implements MergeResult {
 
     private String head;
     private MergeStatus status;
-    private String[] conflicts;
-    private String[] failed;
-    private String[] mergedCommits;
+    private List<String> conflicts;
+    private List<String> failed;
+    private List<String> mergedCommits;
 
     /**
      * @param mergedCommits commits that was merged
      */
-    public void setMergedCommits(String[] mergedCommits) {
+    public void setMergedCommits(List<String> mergedCommits) {
         this.mergedCommits = mergedCommits;
     }
 
     /**
      * @param failed file names that failed after merge
      */
-    public void setFailed(String[] failed) {
+    public void setFailed(List<String> failed) {
         this.failed = failed;
     }
 
     /**
      * @param conflicts file names that conflicting after merge
      */
-    public void setConflicts(String[] conflicts) {
+    public void setConflicts(List<String> conflicts) {
         this.conflicts = conflicts;
     }
 
@@ -87,7 +89,7 @@ public class NativeGitMergeResult implements MergeResult {
      * @see com.codenvy.ide.ext.git.shared_.MergeResult#getMergedCommits()
      */
     @Override
-    public String[] getMergedCommits() {
+    public List<String> getMergedCommits() {
         return mergedCommits;
     }
 
@@ -95,7 +97,7 @@ public class NativeGitMergeResult implements MergeResult {
      * @see com.codenvy.ide.ext.git.shared_.MergeResult#getConflicts()
      */
     @Override
-    public String[] getConflicts() {
+    public List<String> getConflicts() {
         return conflicts;
     }
 
@@ -103,7 +105,7 @@ public class NativeGitMergeResult implements MergeResult {
      * @see com.codenvy.ide.ext.git.shared_.MergeResult#getFailed()
      */
     @Override
-    public String[] getFailed() {
+    public List<String> getFailed() {
         return failed;
     }
 }

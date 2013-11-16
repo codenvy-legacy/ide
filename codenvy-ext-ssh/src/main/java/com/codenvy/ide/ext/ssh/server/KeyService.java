@@ -184,7 +184,7 @@ public class KeyService {
                             uriInfo.getBaseUriBuilder().path(getClass()).path(getClass(), "removeKeys").queryParam("host", host)
                                    .build(wsName).toString();
                     ;
-                    result.add(DtoFactory.getInstance().createDto(KeyItem.class).withHost(host).withPublicKeyURL(getPublicKeyUrl).withRemoteKeyUrl(removeKeysUrl));
+                    result.add(DtoFactory.getInstance().createDto(KeyItem.class).withHost(host).withPublicKeyUrl(getPublicKeyUrl).withRemoteKeyUrl(removeKeysUrl));
                 }
                 return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
             }

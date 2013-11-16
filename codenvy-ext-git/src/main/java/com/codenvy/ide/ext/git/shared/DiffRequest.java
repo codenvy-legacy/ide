@@ -17,7 +17,9 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
+
+import java.util.List;
 
 /**
  * Request to show changes between commits. Use {@link #commitA} and {@link #commitB} to specify values for comparison.
@@ -64,14 +66,14 @@ public interface DiffRequest extends GitRequest {
     }
 
     /** @return filter of file to show diff. It may be either list of file names or name of directory to show all files under them */
-    String[] getFileFilter();
+    List<String> getFileFilter();
     
-    DiffRequest withFileFilter(String[] fileFilter);
+    DiffRequest withFileFilter(List<String> fileFilter);
 
     /** @return type of diff output */
     DiffType getType();
     
-    DiffRequest withDiffType(DiffType type);
+    DiffRequest withType(DiffType type);
 
     /** @return <code>true</code> if renames must not be showing in diff result */
     boolean isNoRenames();

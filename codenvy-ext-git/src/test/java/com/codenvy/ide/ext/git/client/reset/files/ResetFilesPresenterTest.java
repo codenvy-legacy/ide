@@ -18,13 +18,11 @@
 package com.codenvy.ide.ext.git.client.reset.files;
 
 import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.IndexFile;
 import com.codenvy.ide.ext.git.shared.ResetRequest;
 import com.codenvy.ide.ext.git.shared.Status;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -38,7 +36,9 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.mockito.Matchers.anyObject;
@@ -71,7 +71,7 @@ public class ResetFilesPresenterTest extends BaseTest {
     @Test
     public void testShowDialogWhenStatusRequestIsSuccessful() throws Exception {
         final Status status = mock(Status.class);
-        Set<String> changes = new HashSet<String>();
+        List<String> changes = new ArrayList<String>();
         when(status.getAdded()).thenReturn(changes);
         when(status.getChanged()).thenReturn(changes);
         when(status.getRemoved()).thenReturn(changes);
@@ -131,7 +131,7 @@ public class ResetFilesPresenterTest extends BaseTest {
     @Test
     public void testOnResetClickedWhenNothingToReset() throws Exception {
         final Status status = mock(Status.class);
-        Set<String> changes = new HashSet<String>();
+        List<String> changes = new ArrayList<String>();
         when(status.getAdded()).thenReturn(changes);
         when(status.getChanged()).thenReturn(changes);
         when(status.getRemoved()).thenReturn(changes);
@@ -162,7 +162,7 @@ public class ResetFilesPresenterTest extends BaseTest {
     // TODO problem with native method into DTO object
     public void testOnResetClickedWhenResetRequestIsSuccessful() throws Exception {
         final Status status = mock(Status.class);
-        Set<String> changes = new HashSet<String>();
+        List<String> changes = new ArrayList<String>();
         changes.add("Change");
         when(status.getAdded()).thenReturn(changes);
         when(status.getChanged()).thenReturn(changes);
@@ -215,7 +215,7 @@ public class ResetFilesPresenterTest extends BaseTest {
     // TODO problem with native method into DTO object
     public void testOnResetClickedWhenResetRequestIsFailed() throws Exception {
         final Status status = mock(Status.class);
-        Set<String> changes = new HashSet<String>();
+        List<String> changes = new ArrayList<String>();
         changes.add("Change");
         when(status.getAdded()).thenReturn(changes);
         when(status.getChanged()).thenReturn(changes);
@@ -257,7 +257,7 @@ public class ResetFilesPresenterTest extends BaseTest {
     // TODO problem with native method into DTO object
     public void testOnResetClickedWhenRequestExceptionHappened() throws Exception {
         final Status status = mock(Status.class);
-        Set<String> changes = new HashSet<String>();
+        List<String> changes = new ArrayList<String>();
         changes.add("Change");
         when(status.getAdded()).thenReturn(changes);
         when(status.getChanged()).thenReturn(changes);

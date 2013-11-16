@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.git.server.nativegit.commands;
 import com.codenvy.ide.ext.git.server.GitException;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Remove files
@@ -28,7 +29,7 @@ import java.io.File;
  */
 public class RemoveCommand extends GitCommand<Void> {
 
-    private String[] listOfFiles;
+    private List<String> listOfFiles;
     private boolean  cached;
 
     public RemoveCommand(File repository) {
@@ -56,7 +57,7 @@ public class RemoveCommand extends GitCommand<Void> {
      *         files to remove
      * @return RemoveCommand with established listOfFiles
      */
-    public RemoveCommand setListOfFiles(String[] listOfFiles) {
+    public RemoveCommand setListOfFiles(List<String> listOfFiles) {
         this.listOfFiles = listOfFiles;
         return this;
     }

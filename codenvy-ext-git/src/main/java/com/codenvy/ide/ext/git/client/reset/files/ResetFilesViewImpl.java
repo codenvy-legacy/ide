@@ -98,7 +98,7 @@ public class ResetFilesViewImpl extends DialogBox implements ResetFilesView {
         Column<IndexFile, Boolean> checkColumn = new Column<IndexFile, Boolean>(new CheckboxCell(false, true)) {
             @Override
             public Boolean getValue(IndexFile file) {
-                return !file.indexed();
+                return !file.isIndexed();
             }
         };
 

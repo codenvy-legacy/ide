@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.git.server.nativegit.commands;
 import com.codenvy.ide.ext.git.server.GitException;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Add remote to repository
@@ -29,7 +30,7 @@ import java.io.File;
 public class RemoteAddCommand extends GitCommand<Void> {
     private String   name;
     private String   url;
-    private String[] branches;
+    private List<String> branches;
 
     public RemoteAddCommand(File repository) {
         super(repository);
@@ -67,7 +68,7 @@ public class RemoteAddCommand extends GitCommand<Void> {
         return this;
     }
 
-    public RemoteAddCommand setBranches(String[] branches) {
+    public RemoteAddCommand setBranches(List<String> branches) {
         this.branches = branches;
         return this;
     }

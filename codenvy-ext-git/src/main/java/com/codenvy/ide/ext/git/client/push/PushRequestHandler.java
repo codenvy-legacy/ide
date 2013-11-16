@@ -24,6 +24,8 @@ import com.codenvy.ide.job.JobChangeEvent;
 import com.codenvy.ide.job.RequestStatusHandlerBase;
 import com.google.web.bindery.event.shared.EventBus;
 
+import java.util.List;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Oct 31, 2011 evgen $
@@ -41,10 +43,10 @@ public class PushRequestHandler extends RequestStatusHandlerBase {
      * @param eventBus
      * @param constant
      */
-    public PushRequestHandler(@NotNull String projectName, @NotNull String[] refSpec, @NotNull EventBus eventBus,
+    public PushRequestHandler(@NotNull String projectName, @NotNull List<String> refSpec, @NotNull EventBus eventBus,
                               @NotNull GitLocalizationConstant constant) {
         super(projectName, eventBus);
-        String[] split = refSpec[0].split(":");
+        String[] split = refSpec.get(0).split(":");
         this.localBranch = split[0];
         this.remoteBranch = split[1];
         this.constant = constant;

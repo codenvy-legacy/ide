@@ -24,6 +24,8 @@ import com.codenvy.ide.job.JobChangeEvent;
 import com.codenvy.ide.job.RequestStatusHandlerBase;
 import com.google.web.bindery.event.shared.EventBus;
 
+import java.util.List;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Oct 31, 2011 evgen $
@@ -41,11 +43,11 @@ public class FetchRequestHandler extends RequestStatusHandlerBase {
      * @param eventBus
      * @param constant
      */
-    public FetchRequestHandler(@NotNull String projectName, @NotNull String[] refSpec, @NotNull EventBus eventBus,
+    public FetchRequestHandler(@NotNull String projectName, @NotNull List<String> refSpec, @NotNull EventBus eventBus,
                                @NotNull GitLocalizationConstant constant) {
         super(projectName, eventBus);
-        if (refSpec.length > 0){
-            String[] split = refSpec[0].split(":");
+        if (refSpec.size() > 0){
+            String[] split = refSpec.get(0).split(":");
             this.localBranch = split[0];
             if (split.length < 2) {
                 this.remoteBranch = split[1];

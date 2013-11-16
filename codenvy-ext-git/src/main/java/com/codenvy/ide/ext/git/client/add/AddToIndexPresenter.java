@@ -37,6 +37,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
@@ -188,7 +192,7 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
      * @return pattern of the files to be added
      */
     @NotNull
-    private String[] getFilePatterns() {
+    private List<String> getFilePatterns() {
         String projectPath = project.getPath();
 
         Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
@@ -202,7 +206,7 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
         String pattern = element.getPath().replaceFirst(projectPath, "");
         pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
 
-        return (pattern.length() == 0 || "/".equals(pattern)) ? new String[]{"."} : new String[]{pattern};
+        return (pattern.length() == 0 || "/".equals(pattern)) ? new ArrayList<String>(Arrays.asList(".")) : new ArrayList<String>(Arrays.asList(pattern));
     }
 
     /**

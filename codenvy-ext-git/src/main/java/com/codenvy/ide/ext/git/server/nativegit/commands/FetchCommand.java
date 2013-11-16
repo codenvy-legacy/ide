@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.git.server.nativegit.commands;
 import com.codenvy.ide.ext.git.server.GitException;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Download objects and refs from other repository
@@ -28,7 +29,7 @@ import java.io.File;
  */
 public class FetchCommand extends GitCommand<Void> {
 
-    private String[] refSpec;
+    private List<String> refSpec;
     private String   remote;
     private boolean  prune;
 
@@ -55,7 +56,7 @@ public class FetchCommand extends GitCommand<Void> {
      *         ref spec to fetch
      * @return FetchCommand with established ref spec
      */
-    public FetchCommand setRefSpec(String[] refSpec) {
+    public FetchCommand setRefSpec(List<String> refSpec) {
         this.refSpec = refSpec;
         return this;
     }

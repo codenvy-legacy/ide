@@ -49,17 +49,6 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-commons</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>javassist</groupId>
-                    <artifactId>javassist</artifactId>
-                </exclusion>
-            </exclusions>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -201,7 +190,7 @@
                             <package>com.codenvy.ide.ext.git.shared</package>
                         </dtoPackages>
                         <outputDirectory>${dto-generator-out-directory}</outputDirectory>
-                        <genClassName>com.codenvy.ide.ext.git.shared.DtoClientImpls</genClassName>
+                        <genClassName>com.codenvy.ide.ext.git.client.dto.DtoClientImpls</genClassName>
                         <impl>client</impl>
                     </configuration>
                 </execution>
@@ -213,10 +202,10 @@
                     </goals>
                     <configuration>
                         <dtoPackages>
-                            <package>com.codenvy.test.dto</package>
+                            <package>com.codenvy.ide.ext.git.shared</package>
                         </dtoPackages>
                         <outputDirectory>${dto-generator-out-directory}</outputDirectory>
-                        <genClassName>com.codenvy.ide.ext.git.shared.DtoServerImpls</genClassName>
+                        <genClassName>com.codenvy.ide.ext.git.server.dto.DtoServerImpls</genClassName>
                         <impl>server</impl>
                     </configuration>
                 </execution>
@@ -227,6 +216,11 @@
                     <artifactId>codenvy-ext-git</artifactId>
                     <version>${project.version}</version>
                 </dependency>
+                <dependency>
+                        <groupId>com.codenvy.platform-api</groupId>
+                        <artifactId>codenvy-api-core</artifactId>
+                        <version>${com.codenvy.platform-api.version}</version>
+                    </dependency>
                 <!--
                 Other dependencies if DTOs from current project need them.
                 -->
@@ -251,9 +245,6 @@
             </testResource>
             <testResource>
                 <directory>src/test/resources</directory>
-            </testResource>
-            <testResource>
-                <directory>${project.build.directory}/generated-sources/dto/</directory>
             </testResource>
         </testResources>
         <sourceDirectory>src/main/java</sourceDirectory>

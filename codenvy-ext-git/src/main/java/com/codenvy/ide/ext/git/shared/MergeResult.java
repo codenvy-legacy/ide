@@ -17,7 +17,9 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -51,11 +53,11 @@ public interface MergeResult {
     MergeStatus getMergeStatus();
 
     /** @return merged commits */
-    String[] getMergedCommits();
+    List<String> getMergedCommits();
 
     /** @return files that has conflicts. May return <code>null</code> or empty array if there is no conflicts */
-    String[] getConflicts();
+    List<String> getConflicts();
 
     /** @return files that failed to merge (not files that has conflicts). */
-    String[] getFailed();
+    List<String> getFailed();
 }

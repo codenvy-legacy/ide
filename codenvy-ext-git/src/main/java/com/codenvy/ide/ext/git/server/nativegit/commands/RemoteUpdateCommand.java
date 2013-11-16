@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.git.server.nativegit.commands;
 import com.codenvy.ide.ext.git.server.GitException;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Update remote
@@ -31,11 +32,11 @@ public class RemoteUpdateCommand extends GitCommand<Void> {
     private boolean  addBranches;
     private String   remoteName;
     private String   newUrl;
-    private String[] branchesToAdd;
-    private String[] addUrl;
-    private String[] removeUrl;
-    private String[] addPushUrl;
-    private String[] removePushUrl;
+    private List<String> branchesToAdd;
+    private List<String> addUrl;
+    private List<String> removeUrl;
+    private List<String> addPushUrl;
+    private List<String> removePushUrl;
 
     /** @see com.codenvy.ide.ext.git.server.nativegit.commands.GitCommand */
     public RemoteUpdateCommand(File repository) {
@@ -96,7 +97,7 @@ public class RemoteUpdateCommand extends GitCommand<Void> {
      *         branches to add or replace
      * @return RemoteUpdateCommand with established branches to add
      */
-    public RemoteUpdateCommand setBranchesToAdd(String[] branchesToAdd) {
+    public RemoteUpdateCommand setBranchesToAdd(List<String> branchesToAdd) {
         this.branchesToAdd = branchesToAdd;
         return this;
     }
@@ -106,7 +107,7 @@ public class RemoteUpdateCommand extends GitCommand<Void> {
      *         url(s) that will be added to remote
      * @return RemoteUpdateCommand with established add url(s)
      */
-    public RemoteUpdateCommand setAddUrl(String[] addUrl) {
+    public RemoteUpdateCommand setAddUrl(List<String> addUrl) {
         this.addUrl = addUrl;
         return this;
     }
@@ -116,7 +117,7 @@ public class RemoteUpdateCommand extends GitCommand<Void> {
      *         url(s) that will be removed from remote
      * @return RemoteUpdateCommand with established removeUrl parameter
      */
-    public RemoteUpdateCommand setRemoveUrl(String[] removeUrl) {
+    public RemoteUpdateCommand setRemoveUrl(List<String> removeUrl) {
         this.removeUrl = removeUrl;
         return this;
     }
@@ -126,7 +127,7 @@ public class RemoteUpdateCommand extends GitCommand<Void> {
      *         url(s) that will be added as push to remote
      * @return RemoteUpdateCommand with established push url(s) that will be added
      */
-    public RemoteUpdateCommand setAddPushUrl(String[] addPushUrl) {
+    public RemoteUpdateCommand setAddPushUrl(List<String> addPushUrl) {
         this.addPushUrl = addPushUrl;
         return this;
     }
@@ -156,7 +157,7 @@ public class RemoteUpdateCommand extends GitCommand<Void> {
      *         url(s) that will be removed from push
      * @return RemoteUpdateCommand with established push url(s) that will be removed
      */
-    public RemoteUpdateCommand setRemovePushUrl(String[] removePushUrl) {
+    public RemoteUpdateCommand setRemovePushUrl(List<String> removePushUrl) {
         this.removePushUrl = removePushUrl;
         return this;
     }

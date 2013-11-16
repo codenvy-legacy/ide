@@ -17,7 +17,9 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
+
+import java.util.List;
 
 /**
  * Request to fetch data from remote repository.
@@ -28,9 +30,9 @@ import com.codenvy.ide.dto.DTO;
 @DTO
 public interface FetchRequest extends GitRequest {
     /** @return list of refspec to fetch */
-    String[] getRefSpec();
+    List<String> getRefSpec();
     
-    FetchRequest withRefSpec(String[] refSpec);
+    FetchRequest withRefSpec(List<String> refSpec);
 
     /** @return remote name. If <code>null</code> then 'origin' will be used */
     String getRemote();

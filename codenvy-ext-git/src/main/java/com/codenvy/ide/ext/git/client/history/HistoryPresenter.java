@@ -47,7 +47,10 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.ext.git.shared.DiffRequest.DiffType.RAW;
@@ -320,9 +323,9 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
 
         if (DiffWith.DIFF_WITH_INDEX.equals(diffType) || DiffWith.DIFF_WITH_WORK_TREE.equals(diffType)) {
             boolean isCached = DiffWith.DIFF_WITH_INDEX.equals(diffType);
-            doDiffWithNotCommited((pattern.length() > 0) ? new String[]{pattern} : new String[]{}, selectedRevision, isCached);
+            doDiffWithNotCommited((pattern.length() > 0) ? new ArrayList<String>(Arrays.asList(pattern)) : new ArrayList<String>(), selectedRevision, isCached);
         } else {
-            doDiffWithPrevVersion((pattern.length() > 0) ? new String[]{pattern} : new String[]{}, selectedRevision);
+            doDiffWithPrevVersion((pattern.length() > 0) ? new ArrayList<String>(Arrays.asList(pattern)) : new ArrayList<String>(), selectedRevision);
         }
     }
 
@@ -336,7 +339,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
      * @param isCached
      *         if <code>true</code> compare with index, else - with working tree
      */
-    private void doDiffWithNotCommited(@NotNull String[] filePatterns, @Nullable final Revision revision, final boolean isCached) {
+    private void doDiffWithNotCommited(@NotNull List<String> filePatterns, @Nullable final Revision revision, final boolean isCached) {
         if (revision == null) {
             return;
         }
@@ -378,7 +381,7 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
      * @param revisionB
      *         selected commit
      */
-    private void doDiffWithPrevVersion(@NotNull String[] filePatterns, @Nullable final Revision revisionB) {
+    private void doDiffWithPrevVersion(@NotNull List<String> filePatterns, @Nullable final Revision revisionB) {
         if (revisionB == null) {
             return;
         }

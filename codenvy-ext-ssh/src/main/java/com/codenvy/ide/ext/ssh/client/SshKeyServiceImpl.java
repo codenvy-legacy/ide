@@ -91,7 +91,7 @@ public class SshKeyServiceImpl implements SshKeyService {
         loader.setMessage("Getting public SSH key for " + keyItem.getHost());
         loader.show();
         callback.setLoader(loader);
-        jsonp.requestObject(keyItem.getPublicKeyURL(), callback);
+        jsonp.requestObject(keyItem.getPublicKeyUrl(), callback);
     }
 
     /** {@inheritDoc} */
@@ -101,6 +101,6 @@ public class SshKeyServiceImpl implements SshKeyService {
         loader.setMessage("Deleting SSH keys for " + keyItem.getHost());
         loader.show();
         callback.setLoader(loader);
-        jsonp.send(keyItem.getRemoveKeyURL(), callback);
+        jsonp.send(keyItem.getRemoteKeyUrl(), callback);
     }
 }

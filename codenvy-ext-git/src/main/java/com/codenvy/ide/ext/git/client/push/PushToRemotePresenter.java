@@ -38,6 +38,10 @@ import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_LOCAL;
@@ -270,10 +274,10 @@ public class PushToRemotePresenter implements PushToRemoteView.ActionDelegate {
 
     /** @return list of refs to push */
     @NotNull
-    private String[] getRefs() {
+    private List<String> getRefs() {
         String localBranch = "refs/heads/" + view.getLocalBranch();
         String remoteBranch = "refs/heads/" + view.getRemoteBranch();
-        return new String[]{localBranch + ":" + remoteBranch};
+        return new ArrayList<String>(Arrays.asList(localBranch + ":" + remoteBranch));
     }
 
     /**

@@ -17,7 +17,9 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
+
+import java.util.List;
 
 /**
  * Request to update tracked repositories.
@@ -31,23 +33,23 @@ public interface RemoteUpdateRequest extends GitRequest {
     String getName();
 
     /** @return list tracked branches */
-    String[] getBranches();
+    List<String> getBranches();
 
     /**
      * @return if <code>true</code> then {@link #branches} instead of replacing the list of currently tracked branches,
      *         added to that list
      */
-    boolean addBranches();
+    boolean isAddBranches();
 
     /** @return remote URLs to be added */
-    String[] getAddUrl();
+    List<String> getAddUrl();
 
     /** @return remote URLs to be removed */
-    String[] getRemoveUrl();
+    List<String> getRemoveUrl();
 
     /** @return remote push URLs to be added */
-    String[] getAddPushUrl();
+    List<String> getAddPushUrl();
 
     /** @return remote push URLs to be removed */
-    String[] getRemovePushUrl();
+    List<String> getRemovePushUrl();
 }

@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.git.server.nativegit.commands;
 import com.codenvy.ide.ext.git.server.GitException;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Used for adding new files into index(stage area).
@@ -28,7 +29,7 @@ import java.io.File;
  */
 public class AddCommand extends GitCommand<Void> {
     private boolean update;
-    private String[] filePattern;
+    private List<String> filePattern;
 
     public AddCommand(File repositoryPlace) {
         super(repositoryPlace);
@@ -60,7 +61,7 @@ public class AddCommand extends GitCommand<Void> {
      * @param pattern file pattern for add command.
      * @return AddCommand with established pattern
      */
-    public AddCommand setFilePattern(String[] pattern) {
+    public AddCommand setFilePattern(List<String> pattern) {
         this.filePattern = pattern;
         return this;
     }

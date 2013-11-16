@@ -17,7 +17,9 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
+
+import java.util.List;
 
 /**
  * Clone repository to {@link #workingDir}.
@@ -33,9 +35,9 @@ public interface CloneRequest extends GitRequest {
     CloneRequest withRemoteUri(String remoteUri);
 
     /** @return list of remote branches to fetch in cloned repository */
-    String[] getBranchesToFetch();
+    List<String> getBranchesToFetch();
     
-    CloneRequest withBranchesToFetch(String[] branchesToFetch);
+    CloneRequest withBranchesToFetch(List<String> branchesToFetch);
 
     /** @return work directory for cloning */
     String getWorkingDir();

@@ -107,7 +107,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
                 @Override
                 protected void onSuccess(String result) {
                     Revision revision = dtoFactory.createDtoFromJson(result, Revision.class);
-                    if (!revision.fake()) {
+                    if (!revision.isFake()) {
                         onCommitSuccess(revision);
                     } else {
                         Notification notification = new Notification(revision.getMessage(), ERROR);
@@ -135,7 +135,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
                                @Override
                                protected void onSuccess(String result) {
                                    Revision revision = dtoFactory.createDtoFromJson(result, Revision.class);
-                                   if (!revision.fake()) {
+                                   if (!revision.isFake()) {
                                        onCommitSuccess(revision);
                                    } else {
                                        Notification notification = new Notification(revision.getMessage(), ERROR);

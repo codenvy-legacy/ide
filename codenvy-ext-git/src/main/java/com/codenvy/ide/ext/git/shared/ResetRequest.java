@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.git.shared;
 
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Request to reset current HEAD to the specified state.

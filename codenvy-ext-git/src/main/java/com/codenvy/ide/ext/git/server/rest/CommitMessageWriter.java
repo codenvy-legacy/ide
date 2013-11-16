@@ -69,7 +69,7 @@ public final class CommitMessageWriter implements MessageBodyWriter<Revision> {
                         MultivaluedMap<String, Object> httpHeaders,
                         OutputStream entityStream) throws IOException, WebApplicationException {
         Writer writer = new OutputStreamWriter(entityStream);
-        if (!revision.fake()) {
+        if (!revision.isFake()) {
             writer.write('[');
             writer.write(revision.getBranch());
             writer.write(' ');

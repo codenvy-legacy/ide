@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.git.server.nativegit.commands;
 import com.codenvy.ide.ext.git.server.GitException;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Update remote refs with associated objects
@@ -28,7 +29,7 @@ import java.io.File;
  */
 public class PushCommand extends GitCommand<Void> {
 
-    private String[] refSpec;
+    private List<String> refSpec;
     private String   remote;
     private boolean  force;
 
@@ -58,7 +59,7 @@ public class PushCommand extends GitCommand<Void> {
      *         ref specs to push
      * @return PushCommand with established ref specs
      */
-    public PushCommand setRefSpec(String[] refSpecs) {
+    public PushCommand setRefSpec(List<String> refSpecs) {
         this.refSpec = refSpecs;
         return this;
     }

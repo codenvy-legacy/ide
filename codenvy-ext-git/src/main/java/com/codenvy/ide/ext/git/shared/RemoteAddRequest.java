@@ -17,7 +17,9 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
+
+import java.util.List;
 
 /**
  * Request to add remote configuration {@link #name} for repository at {@link #url}.
@@ -38,5 +40,5 @@ public interface RemoteAddRequest extends GitRequest {
     RemoteAddRequest withUrl(String url);
 
     /** @return list of tracked branches in remote repository */
-    String[] getBranches();
+    List<String> getBranches();
 }

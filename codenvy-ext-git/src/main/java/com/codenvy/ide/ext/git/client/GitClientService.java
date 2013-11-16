@@ -19,13 +19,18 @@ package com.codenvy.ide.ext.git.client;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.ext.git.shared.*;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.ext.git.shared.Branch;
+import com.codenvy.ide.ext.git.shared.Commiters;
+import com.codenvy.ide.ext.git.shared.DiffRequest;
+import com.codenvy.ide.ext.git.shared.ResetRequest;
+import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
+
+import java.util.List;
 
 /**
  * Service contains methods for working with Git repository from client side. Example usage, initialize Git repository: <br>
@@ -53,7 +58,7 @@ public interface GitClientService {
      *         callback
      * @throws RequestException
      */
-    void add(@NotNull String vfsId, @NotNull Project project, boolean update, @Nullable String[] filePattern,
+    void add(@NotNull String vfsId, @NotNull Project project, boolean update, @Nullable List<String> filePattern,
              @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
@@ -72,7 +77,7 @@ public interface GitClientService {
      *         callback
      * @throws WebSocketException
      */
-    void addWS(@NotNull String vfsId, @NotNull Project project, boolean update, @Nullable String[] filePattern,
+    void addWS(@NotNull String vfsId, @NotNull Project project, boolean update, @Nullable List<String> filePattern,
                @NotNull RequestCallback<String> callback) throws WebSocketException;
 
     /**
@@ -99,7 +104,7 @@ public interface GitClientService {
      *         callback
      * @throws RequestException
      */
-    void fetch(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, String[] refspec,
+    void fetch(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, List<String> refspec,
                boolean removeDeletedRefs, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
@@ -126,7 +131,7 @@ public interface GitClientService {
      *         callback
      * @throws WebSocketException
      */
-    void fetchWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, String[] refspec,
+    void fetchWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, List<String> refspec,
                  boolean removeDeletedRefs, @NotNull RequestCallback<String> callback) throws WebSocketException;
 
     /**
@@ -278,7 +283,7 @@ public interface GitClientService {
      * @param callback
      *         callback
      */
-    void remove(@NotNull String vfsId, @NotNull String projectid, String[] files, boolean cached,
+    void remove(@NotNull String vfsId, @NotNull String projectid, List<String> files, boolean cached,
                 @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
@@ -402,7 +407,7 @@ public interface GitClientService {
      *         callback
      * @throws RequestException
      */
-    void push(@NotNull String vfsId, @NotNull Project project, @NotNull String[] refSpec, @NotNull String remote, boolean force,
+    void push(@NotNull String vfsId, @NotNull Project project, @NotNull List<String> refSpec, @NotNull String remote, boolean force,
               @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
@@ -423,7 +428,7 @@ public interface GitClientService {
      *         callback
      * @throws WebSocketException
      */
-    void pushWS(@NotNull String vfsId, @NotNull Project project, @NotNull String[] refSpec, @NotNull String remote, boolean force,
+    void pushWS(@NotNull String vfsId, @NotNull Project project, @NotNull List<String> refSpec, @NotNull String remote, boolean force,
                 @NotNull RequestCallback<String> callback) throws WebSocketException;
 
     /**
@@ -526,7 +531,7 @@ public interface GitClientService {
      * @param callback
      *         callback
      */
-    void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull String[] fileFilter, @NotNull DiffRequest.DiffType type,
+    void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull List<String> fileFilter, @NotNull DiffRequest.DiffType type,
               boolean noRenames, int renameLimit, @NotNull String commitA, @NotNull String commitB,
               @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
@@ -553,7 +558,7 @@ public interface GitClientService {
      * @param callback
      *         callback
      */
-    void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull String[] fileFilter, @NotNull DiffRequest.DiffType type,
+    void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull List<String> fileFilter, @NotNull DiffRequest.DiffType type,
               boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached, @NotNull AsyncRequestCallback<String> callback)
             throws RequestException;
 

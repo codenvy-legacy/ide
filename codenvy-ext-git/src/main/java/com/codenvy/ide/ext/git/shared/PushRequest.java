@@ -18,7 +18,9 @@
 package com.codenvy.ide.ext.git.shared;
 
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
+
+import java.util.List;
 
 /**
  * Request to update remote refs using local refs. In other words send changes from local repository to remote one.
@@ -29,9 +31,9 @@ import com.codenvy.ide.dto.DTO;
 @DTO
 public interface PushRequest extends GitRequest {
     /** @return list of refspec to push */
-    String[] getRefSpec();
+    List<String> getRefSpec();
     
-    PushRequest withRefSpec(String[] refspec);
+    PushRequest withRefSpec(List<String> refspec);
 
     /** @return remote repository. URI or name is acceptable. If not specified then 'origin' will be used */
     String getRemote();
@@ -39,7 +41,7 @@ public interface PushRequest extends GitRequest {
     PushRequest withRemote(String remote);
     
     /** @return force or not push operation */
-    boolean force();
+    boolean isForce();
     
     PushRequest withForce(boolean force);
 

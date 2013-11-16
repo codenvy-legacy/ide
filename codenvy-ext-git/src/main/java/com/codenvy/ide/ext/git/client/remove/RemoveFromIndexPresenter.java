@@ -25,8 +25,6 @@ import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
@@ -35,6 +33,10 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
@@ -156,7 +158,7 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
      * @return pattern of the files to be removed
      */
     @NotNull
-    private String[] getFilePatterns() {
+    private List<String> getFilePatterns() {
         String projectPath = project.getPath();
 
         Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
@@ -170,7 +172,7 @@ public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDeleg
         String pattern = element.getPath().replaceFirst(projectPath, "");
         pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
 
-        return (pattern.length() == 0 || "/".equals(pattern)) ? new String[]{"."} : new String[]{pattern};
+        return (pattern.length() == 0 || "/".equals(pattern)) ? new ArrayList<String>(Arrays.asList(".")) : new ArrayList<String>(Arrays.asList(pattern));
     }
 
     /**

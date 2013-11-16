@@ -180,7 +180,7 @@
 								<package>com.codenvy.ide.ext.ssh.dto</package>
 							</dtoPackages>
 							<outputDirectory>${dto-generator-out-directory}</outputDirectory>
-							<genClassName>com.codenvy.ide.ext.ssh.dto.DtoClientImpls</genClassName>
+							<genClassName>com.codenvy.ide.ext.ssh.dto.client.DtoClientImpls</genClassName>
 							<impl>client</impl>
 						</configuration>
 					</execution>
@@ -195,7 +195,7 @@
 								<package>com.codenvy.ide.ext.ssh.dto</package>
 							</dtoPackages>
 							<outputDirectory>${dto-generator-out-directory}</outputDirectory>
-							<genClassName>com.codenvy.ide.ext.ssh.dto.DtoServerImpls</genClassName>
+							<genClassName>com.codenvy.ide.ext.ssh.dto.server.DtoServerImpls</genClassName>
 							<impl>server</impl>
 						</configuration>
 					</execution>

@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Request to get list of remotes. If {@link #remote} is specified then info about this remote only given.
@@ -28,7 +28,7 @@ import com.codenvy.ide.dto.DTO;
 @DTO
 public interface RemoteListRequest extends GitRequest {
     /** @return if <code>true</code> show remote url and name otherwise show remote name only */
-    boolean verbose();
+    boolean isVerbose();
     
     RemoteListRequest withVerbose(boolean verbose);
 

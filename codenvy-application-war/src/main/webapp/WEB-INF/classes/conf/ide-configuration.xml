@@ -63,6 +63,54 @@
 
     <!-- LogReader -->
     <!-- End LogReader -->
+    
+    <!-- Git -->
+    <component>
+        <type>com.codenvy.ide.ext.git.server.rest.GitHubServiceApplication</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.ide.ext.git.server.nativegit.CredentialsLoader</type>
+    </component>
+    
+    <component>
+        <type>com.codenvy.ide.ext.git.server.github.GitHub</type>
+        <init-params>
+            <value-param>
+                <name>github-user</name>
+                <value>eXoIDE</value>
+            </value-param>
+        </init-params>
+    </component>
+    
+    <component>
+        <type>com.codenvy.ide.ext.git.server.nativegit.OAuthCredentialsProvider</type>
+    </component>
+
+    <component>
+		<key>com.codenvy.commons.security.oauth.OAuthTokenProvider</key>
+		<type>com.codenvy.commons.security.oauth.OAuthAuthenticatorTokenProvider
+		</type>
+	</component>
+    
+    <component>
+        <type>com.codenvy.ide.ext.git.server.nativegit.SshKeysManager</type>
+    </component>
+    
+    <component>
+        <key>com.codenvy.ide.ext.git.server.GitConnectionFactory</key>
+        <type>com.codenvy.ide.ext.git.server.nativegit.NativeGitConnectionFactory</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.ide.ext.git.server.rest.GitApplication</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.ide.ext.git.server.GitIgnoreConfigChecker</type>
+    </component>
+    
+    <!-- End Git -->
 
     <!--
     ***************************************************************************************

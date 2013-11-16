@@ -21,6 +21,7 @@ import com.codenvy.ide.ext.git.server.GitException;
 import com.codenvy.ide.ext.git.shared.DiffRequest;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Show diff
@@ -29,7 +30,7 @@ import java.io.File;
  */
 public class DiffCommand extends GitCommand<String> {
 
-    private String[] filesFilter;
+    private List<String> filesFilter;
     private String   commitA;
     private String   commitB;
     private String   type;
@@ -100,7 +101,7 @@ public class DiffCommand extends GitCommand<String> {
      *         files to filter
      * @return DiffCommand with established files to filter
      */
-    public DiffCommand setFileFilter(String[] filesFilter) {
+    public DiffCommand setFileFilter(List<String> filesFilter) {
         this.filesFilter = filesFilter;
         return this;
     }

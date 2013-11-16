@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Describe single commit.
@@ -32,7 +32,7 @@ public interface Revision {
      *
      * @return
      */
-    boolean fake();
+    boolean isFake();
 
     /** @return branch name */
     String getBranch();

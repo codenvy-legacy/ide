@@ -40,17 +40,13 @@ import com.codenvy.ide.ext.git.shared.DiffRequest;
 import com.codenvy.ide.ext.git.shared.FetchRequest;
 import com.codenvy.ide.ext.git.shared.InitRequest;
 import com.codenvy.ide.ext.git.shared.LogRequest;
-import com.codenvy.ide.ext.git.shared.LogResponse;
 import com.codenvy.ide.ext.git.shared.MergeRequest;
 import com.codenvy.ide.ext.git.shared.PullRequest;
 import com.codenvy.ide.ext.git.shared.PushRequest;
-import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.ext.git.shared.RemoteAddRequest;
 import com.codenvy.ide.ext.git.shared.RemoteListRequest;
 import com.codenvy.ide.ext.git.shared.ResetRequest;
 import com.codenvy.ide.ext.git.shared.RmRequest;
-import com.codenvy.ide.ext.git.shared.Status;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -68,6 +64,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
+
+import java.util.List;
 
 import static com.codenvy.ide.rest.HTTPHeader.ACCEPT;
 import static com.codenvy.ide.rest.HTTPHeader.CONTENTTYPE;
@@ -140,7 +138,9 @@ public class GitClientServiceImpl implements GitClientService {
     @Override
     public void init(@NotNull String vfsId, @NotNull String projectid, @NotNull String projectName, boolean bare,
                      @NotNull AsyncRequestCallback<String> callback) throws RequestException {
-        InitRequest initRequest = dtoFactory.createDto(InitRequest.class).withBare(bare).withWorkingDir(projectid);
+        InitRequest initRequest = dtoFactory.createDto(InitRequest.class);
+        initRequest.setBare(bare);
+        initRequest.setWorkingDir(projectid);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
         String url = restServiceContext + INIT + "?" + params;
@@ -154,7 +154,9 @@ public class GitClientServiceImpl implements GitClientService {
     @Override
     public void initWS(@NotNull String vfsId, @NotNull String projectid, @NotNull String projectName, boolean bare,
                        @NotNull RequestCallback<String> callback) throws WebSocketException {
-        InitRequest initRequest = dtoFactory.createDto(InitRequest.class).withBare(bare).withWorkingDir(projectid);
+        InitRequest initRequest = dtoFactory.createDto(InitRequest.class);
+        initRequest.setBare(bare);
+        initRequest.setWorkingDir(projectid);
 
         callback.setStatusHandler(new InitRequestStatusHandler(projectName, eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
@@ -217,7 +219,7 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void add(@NotNull String vfsId, @NotNull Project project, boolean update, @Nullable String[] filePattern,
+    public void add(@NotNull String vfsId, @NotNull Project project, boolean update, @Nullable List<String> filePattern,
                     @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         AddRequest addRequest = dtoFactory.createDto(AddRequest.class).withUpdate(update);
         if (filePattern == null) {
@@ -236,7 +238,7 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void addWS(@NotNull String vfsId, @NotNull Project project, boolean update, @Nullable String[] filePattern,
+    public void addWS(@NotNull String vfsId, @NotNull Project project, boolean update, @Nullable List<String> filePattern,
                       @NotNull RequestCallback<String> callback) throws WebSocketException {
         AddRequest addRequest = dtoFactory.createDto(AddRequest.class).withUpdate(update);
         if (filePattern == null) {
@@ -291,7 +293,7 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void push(@NotNull String vfsId, @NotNull Project project, @NotNull String[] refSpec, @NotNull String remote,
+    public void push(@NotNull String vfsId, @NotNull Project project, @NotNull List<String> refSpec, @NotNull String remote,
                      boolean force, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         PushRequest pushRequest = dtoFactory.createDto(PushRequest.class).withRemote(remote).withRefSpec(refSpec).withForce(force);
 
@@ -305,7 +307,7 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void pushWS(@NotNull String vfsId, @NotNull Project project, @NotNull String[] refSpec, @NotNull String remote,
+    public void pushWS(@NotNull String vfsId, @NotNull Project project, @NotNull List<String> refSpec, @NotNull String remote,
                        boolean force, @NotNull RequestCallback<String> callback) throws WebSocketException {
         PushRequest pushRequest = dtoFactory.createDto(PushRequest.class).withRemote(remote).withRefSpec(refSpec).withForce(force);
 
@@ -416,7 +418,7 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void remove(@NotNull String vfsId, @NotNull String projectid, String[] files, boolean cached,
+    public void remove(@NotNull String vfsId, @NotNull String projectid, List<String> files, boolean cached,
                        @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         RmRequest rmRequest = dtoFactory.createDto(RmRequest.class).withFiles(files).withCached(cached);
 
@@ -487,7 +489,7 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void fetch(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, String[] refspec,
+    public void fetch(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, List<String> refspec,
                       boolean removeDeletedRefs, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         FetchRequest fetchRequest = dtoFactory.createDto(FetchRequest.class).withRefSpec(refspec).withRemote(remote).withRemoveDeletedRefs(removeDeletedRefs);
 
@@ -501,7 +503,7 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void fetchWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, String[] refspec,
+    public void fetchWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, List<String> refspec,
                         boolean removeDeletedRefs, @NotNull RequestCallback<String> callback) throws WebSocketException {
         FetchRequest fetchRequest = dtoFactory.createDto(FetchRequest.class).withRefSpec(refspec).withRemote(remote).withRemoveDeletedRefs(removeDeletedRefs);
 
@@ -551,11 +553,11 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull String[] fileFilter,
+    public void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull List<String> fileFilter,
                      @NotNull DiffRequest.DiffType type, boolean noRenames, int renameLimit, @NotNull String commitA,
                      @NotNull String commitB, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         DiffRequest diffRequest =
-            dtoFactory.createDto(DiffRequest.class).withFileFilter(fileFilter).withDiffType(type)
+            dtoFactory.createDto(DiffRequest.class).withFileFilter(fileFilter).withType(type)
                       .withNoRenames(noRenames).withCommitA(commitA).withCommitB(commitB).withRenameLimit(renameLimit);
 
         diff(diffRequest, vfsId, projectid, callback);
@@ -563,11 +565,11 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull String[] fileFilter,
+    public void diff(@NotNull String vfsId, @NotNull String projectid, @NotNull List<String> fileFilter,
                      @NotNull DiffRequest.DiffType type, boolean noRenames, int renameLimit, @NotNull String commitA, boolean cached,
                      @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         DiffRequest diffRequest =
-                                  dtoFactory.createDto(DiffRequest.class).withFileFilter(fileFilter).withDiffType(type)
+                                  dtoFactory.createDto(DiffRequest.class).withFileFilter(fileFilter).withType(type)
                                             .withNoRenames(noRenames).withCommitA(commitA).withRenameLimit(renameLimit).withCached(cached);
 
         diff(diffRequest, vfsId, projectid, callback);

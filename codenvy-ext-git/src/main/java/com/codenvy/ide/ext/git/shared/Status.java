@@ -17,8 +17,9 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -29,45 +30,45 @@ import java.util.Set;
 public interface Status {
     boolean isClean();
 
-    void setClean(Boolean isClean);
+    void setClean(boolean isClean);
     
     boolean isShortFormat();
     
-    void setShortFormat(Boolean isShort);
+    void setShortFormat(boolean isShort);
 
     String getBranchName();
     
     void setBranchName(String branchName);
 
-    Set<String> getAdded();
+    List<String> getAdded();
     
-    void setAdded(Set<String> added);
+    void setAdded(List<String> added);
 
-    Set<String> getChanged();
+    List<String> getChanged();
     
-    void setChanged(Set<String> changed);
+    void setChanged(List<String> changed);
 
-    Set<String> getRemoved();
+    List<String> getRemoved();
     
-    void setRemoved(Set<String> removed);
+    void setRemoved(List<String> removed);
 
-    Set<String> getMissing();
+    List<String> getMissing();
     
-    void setMissing(Set<String> missing);
+    void setMissing(List<String> missing);
 
-    Set<String> getModified();
+    List<String> getModified();
     
-    void setModified(Set<String> modified);
+    void setModified(List<String> modified);
 
-    Set<String> getUntracked();
+    List<String> getUntracked();
     
-    void setUntracked(Set<String> untracked);
+    void setUntracked(List<String> untracked);
 
-    Set<String> getUntrackedFolders();
+    List<String> getUntrackedFolders();
     
-    void setUntrackedFolders(Set<String> untrackedFolders);
+    void setUntrackedFolders(List<String> untrackedFolders);
 
-    Set<String> getConflicting();
+    List<String> getConflicting();
     
-    void setConflicting(Set<String> added);
+    void setConflicting(List<String> added);
 }

@@ -24,9 +24,8 @@ import com.codenvy.ide.ext.git.shared.Status;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * NativeGit implementation for org.exoplatform.ide.git.shared.Status and
@@ -38,25 +37,25 @@ public class NativeGitStatusImpl implements Status, InfoPage {
 
     private String branchName;
 
-    private Boolean shortFormat;
+    private boolean shortFormat;
 
-    private Boolean clean;
+    private boolean clean;
 
-    private Set<String> added;
+    private List<String> added;
 
-    private Set<String> changed;
+    private List<String> changed;
 
-    private Set<String> removed;
+    private List<String> removed;
 
-    private Set<String> missing;
+    private List<String> missing;
 
-    private Set<String> modified;
+    private List<String> modified;
 
-    private Set<String> untracked;
+    private List<String> untracked;
 
-    private Set<String> untrackedFolders;
+    private List<String> untrackedFolders;
 
-    private Set<String> conflicting;
+    private List<String> conflicting;
 
     private NativeGit nativeGit;
 
@@ -97,7 +96,7 @@ public class NativeGitStatusImpl implements Status, InfoPage {
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#setClean(Boolean) */
     @Override
-    public void setClean(Boolean clean) {
+    public void setClean(boolean clean) {
         this.clean = clean;
     }
 
@@ -109,7 +108,7 @@ public class NativeGitStatusImpl implements Status, InfoPage {
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#setShortFormat(Boolean) */
     @Override
-    public void setShortFormat(Boolean shortFormat) {
+    public void setShortFormat(boolean shortFormat) {
         this.shortFormat = shortFormat;
     }
 
@@ -127,121 +126,121 @@ public class NativeGitStatusImpl implements Status, InfoPage {
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#getAdded() */
     @Override
-    public Set<String> getAdded() {
+    public List<String> getAdded() {
         if (added == null){
-            added = new LinkedHashSet<>();
+            added = new ArrayList<String>();
         }
         return added;
     }
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#setAdded(java.util.Set) */
     @Override
-    public void setAdded(Set<String> added) {
+    public void setAdded(List<String> added) {
         this.added = added;
     }
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#getChanged() */
     @Override
-    public Set<String> getChanged() {
+    public List<String> getChanged() {
         if (changed == null){
-            changed = new LinkedHashSet<>();
+            changed = new ArrayList<String>();
         }
         return changed;
     }
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#setChanged(java.util.Set) */
     @Override
-    public void setChanged(Set<String> changed) {
+    public void setChanged(List<String> changed) {
         this.changed = changed;
     }
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#getRemoved() */
     @Override
-    public Set<String> getRemoved() {
+    public List<String> getRemoved() {
         if (removed == null){
-            removed = new LinkedHashSet<>();
+            removed = new ArrayList<String>();
         }
         return removed;
     }
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#setRemoved(java.util.Set) */
     @Override
-    public void setRemoved(Set<String> removed) {
+    public void setRemoved(List<String> removed) {
         this.removed = removed;
     }
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#getMissing() */
     @Override
-    public Set<String> getMissing() {
+    public List<String> getMissing() {
         if (missing == null) {
-            missing = new LinkedHashSet<>();
+            missing = new ArrayList<String>();
         }
         return missing;
     }
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#setMissing(java.util.Set) */
     @Override
-    public void setMissing(Set<String> missing) {
+    public void setMissing(List<String> missing) {
         this.missing = missing;
     }
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#getModified() */
     @Override
-    public Set<String> getModified() {
+    public List<String> getModified() {
         if (modified == null) {
-            modified = new LinkedHashSet<>();
+            modified = new ArrayList<String>();
         }
         return modified;
     }
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#setModified(java.util.Set) */
     @Override
-    public void setModified(Set<String> modified) {
+    public void setModified(List<String> modified) {
         this.modified = modified;
     }
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#getUntracked() */
     @Override
-    public Set<String> getUntracked() {
+    public List<String> getUntracked() {
         if (untracked == null) {
-            untracked = new LinkedHashSet<>();
+            untracked = new ArrayList<String>();
         }
         return untracked;
     }
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#setUntracked(java.util.Set) */
     @Override
-    public void setUntracked(Set<String> untracked) {
+    public void setUntracked(List<String> untracked) {
         this.untracked = untracked;
     }
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#getUntrackedFolders() */
     @Override
-    public Set<String> getUntrackedFolders() {
+    public List<String> getUntrackedFolders() {
         if (untrackedFolders == null) {
-            untrackedFolders = new LinkedHashSet<>();
+            untrackedFolders = new ArrayList<String>();
         }
         return untrackedFolders;
     }
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#setUntrackedFolders(java.util.Set) */
     @Override
-    public void setUntrackedFolders(Set<String> untrackedFolders) {
+    public void setUntrackedFolders(List<String> untrackedFolders) {
         this.untrackedFolders = untrackedFolders;
     }
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#getConflicting() */
     @Override
-    public Set<String> getConflicting() {
+    public List<String> getConflicting() {
         if (conflicting == null) {
-            conflicting = new LinkedHashSet<>();
+            conflicting = new ArrayList<String>();
         }
         return conflicting;
     }
 
     /** @see com.codenvy.ide.ext.git.shared_.Status#setConflicting(java.util.Set) */
     @Override
-    public void setConflicting(Set<String> conflicting) {
+    public void setConflicting(List<String> conflicting) {
         this.conflicting = conflicting;
     }
 
@@ -257,14 +256,14 @@ public class NativeGitStatusImpl implements Status, InfoPage {
         List<String> statusOutput = status.execute();
         setClean(statusOutput.size() == 0);
         if (!isClean()) {
-            added = new LinkedHashSet<>();
-            changed = new LinkedHashSet<>();
-            removed = new LinkedHashSet<>();
-            missing = new LinkedHashSet<>();
-            modified = new LinkedHashSet<>();
-            untracked = new LinkedHashSet<>();
-            untrackedFolders = new LinkedHashSet<>();
-            conflicting = new LinkedHashSet<>();
+            added = new ArrayList<String>();
+            changed = new ArrayList<String>();
+            removed = new ArrayList<String>();
+            missing = new ArrayList<String>();
+            modified = new ArrayList<String>();
+            untracked = new ArrayList<String>();
+            untrackedFolders = new ArrayList<String>();
+            conflicting = new ArrayList<String>();
             for (String statusLine : statusOutput) {
                 //add conflict files AA, UU, any of U
                 addFileIfAccepted(conflicting, statusLine, 'A', 'A');
@@ -304,7 +303,7 @@ public class NativeGitStatusImpl implements Status, InfoPage {
      * @param Y
      *         second template parameter
      */
-    private void addFileIfAccepted(Set<String> statusFiles, String statusLine, char X, char Y) {
+    private void addFileIfAccepted(List<String> statusFiles, String statusLine, char X, char Y) {
         if (X == '*' && statusLine.charAt(1) == Y
             || Y == '*' && statusLine.charAt(0) == X
             || statusLine.charAt(0) == X && statusLine.charAt(1) == Y) {

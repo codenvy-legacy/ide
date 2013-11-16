@@ -76,6 +76,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -310,7 +312,7 @@ public class NativeGitConnection implements GitConnection {
         if (!request.isBare()) {
             try {
                 nativeGit.createAddCommand()
-                         .setFilePattern(new String[]{"."})
+                         .setFilePattern(new ArrayList<String>(Arrays.asList(".")))
                          .execute();
                 nativeGit.createCommitCommand()
                          .setMessage("init")
@@ -399,7 +401,7 @@ public class NativeGitConnection implements GitConnection {
         } else {
             pushCommand = nativeGit.createPushCommand();
         }
-        pushCommand.setRemote(url).setForce(request.force())
+        pushCommand.setRemote(url).setForce(request.isForce())
                    .setRefSpec(request.getRefSpec())
                    .setTimeout(request.getTimeout());
         executeWithCredentials(pushCommand, url);
@@ -438,7 +440,7 @@ public class NativeGitConnection implements GitConnection {
                  .setRemoteName(request.getName())
                  .setAddUrl(request.getAddUrl())
                  .setBranchesToAdd(request.getBranches())
-                 .setAddBranches(request.addBranches())
+                 .setAddBranches(request.isAddBranches())
                  .setAddPushUrl(request.getAddPushUrl())
                  .setRemovePushUrl(request.getRemovePushUrl())
                  .setRemoveUrl(request.getRemoveUrl())

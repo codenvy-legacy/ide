@@ -18,7 +18,6 @@
 package com.codenvy.ide.ext.git.client.fetch;
 
 import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.BaseTest;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.Remote;
@@ -37,11 +36,19 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link FetchPresenter} functionality.
@@ -251,15 +258,15 @@ public class FetchPresenterTest extends BaseTest {
                 onSuccess.invoke(callback, EMPTY_TEXT);
                 return callback;
             }
-        }).when(service).fetchWS(anyString(), (Project)anyObject(), anyString(), (String[])anyObject(), anyBoolean(),
+        }).when(service).fetchWS(anyString(), (Project)anyObject(), anyString(), (List<String>)anyObject(), anyBoolean(),
                                  (RequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onFetchClicked();
 
-        verify(service).fetchWS(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (String[])anyObject(),
+        verify(service).fetchWS(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
                                 eq(NO_REMOVE_DELETE_REFS), (RequestCallback<String>)anyObject());
-        verify(service, never()).fetch(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (String[])anyObject(),
+        verify(service, never()).fetch(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
                                        eq(NO_REMOVE_DELETE_REFS), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -282,15 +289,15 @@ public class FetchPresenterTest extends BaseTest {
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).fetchWS(anyString(), (Project)anyObject(), anyString(), (String[])anyObject(), anyBoolean(),
+        }).when(service).fetchWS(anyString(), (Project)anyObject(), anyString(), (List<String>)anyObject(), anyBoolean(),
                                  (RequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onFetchClicked();
 
-        verify(service).fetchWS(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (String[])anyObject(),
+        verify(service).fetchWS(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
                                 eq(NO_REMOVE_DELETE_REFS), (RequestCallback<String>)anyObject());
-        verify(service, never()).fetch(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (String[])anyObject(),
+        verify(service, never()).fetch(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
                                        eq(NO_REMOVE_DELETE_REFS), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).fetchFail(eq(REMOTE_URI));
@@ -305,7 +312,7 @@ public class FetchPresenterTest extends BaseTest {
         when(view.getLocalBranch()).thenReturn(LOCAL_BRANCH);
         when(view.getRemoteBranch()).thenReturn(REMOTE_BRANCH);
         doThrow(WebSocketException.class).when(service).fetchWS(anyString(), (Project)anyObject(), anyString(),
-                                                                (String[])anyObject(),
+                                                                (List<String>)anyObject(),
                                                                 anyBoolean(), (RequestCallback<String>)anyObject());
         doAnswer(new Answer() {
             @Override
@@ -316,15 +323,15 @@ public class FetchPresenterTest extends BaseTest {
                 onSuccess.invoke(callback, EMPTY_TEXT);
                 return callback;
             }
-        }).when(service).fetch(anyString(), (Project)anyObject(), anyString(), (String[])anyObject(), anyBoolean(),
+        }).when(service).fetch(anyString(), (Project)anyObject(), anyString(), (List<String>)anyObject(), anyBoolean(),
                                (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onFetchClicked();
 
-        verify(service).fetchWS(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (String[])anyObject(),
+        verify(service).fetchWS(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
                                 eq(NO_REMOVE_DELETE_REFS), (RequestCallback<String>)anyObject());
-        verify(service).fetch(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (String[])anyObject(),
+        verify(service).fetch(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
                               eq(NO_REMOVE_DELETE_REFS), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -339,7 +346,7 @@ public class FetchPresenterTest extends BaseTest {
         when(view.getLocalBranch()).thenReturn(LOCAL_BRANCH);
         when(view.getRemoteBranch()).thenReturn(REMOTE_BRANCH);
         doThrow(WebSocketException.class).when(service).fetchWS(anyString(), (Project)anyObject(), anyString(),
-                                                                (String[])anyObject(),
+                                                                (List<String>)anyObject(),
                                                                 anyBoolean(), (RequestCallback<String>)anyObject());
         doAnswer(new Answer() {
             @Override
@@ -350,15 +357,15 @@ public class FetchPresenterTest extends BaseTest {
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).fetch(anyString(), (Project)anyObject(), anyString(), (String[])anyObject(), anyBoolean(),
+        }).when(service).fetch(anyString(), (Project)anyObject(), anyString(), (List<String>)anyObject(), anyBoolean(),
                                (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onFetchClicked();
 
-        verify(service).fetchWS(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (String[])anyObject(),
+        verify(service).fetchWS(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
                                 eq(NO_REMOVE_DELETE_REFS), (RequestCallback<String>)anyObject());
-        verify(service).fetch(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (String[])anyObject(),
+        verify(service).fetch(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
                               eq(NO_REMOVE_DELETE_REFS), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).fetchFail(eq(REMOTE_URI));
@@ -374,18 +381,18 @@ public class FetchPresenterTest extends BaseTest {
         when(view.getRemoteBranch()).thenReturn(REMOTE_BRANCH);
 
         doThrow(WebSocketException.class).when(service).fetchWS(anyString(), (Project)anyObject(), anyString(),
-                                                                (String[])anyObject(),
+                                                                (List<String>)anyObject(),
                                                                 anyBoolean(), (RequestCallback<String>)anyObject());
         doThrow(RequestException.class).when(service).fetch(anyString(), (Project)anyObject(), anyString(),
-                                                            (String[])anyObject(),
+                                                            (List<String>)anyObject(),
                                                             anyBoolean(), (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onFetchClicked();
 
-        verify(service).fetchWS(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (String[])anyObject(),
+        verify(service).fetchWS(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
                                 eq(NO_REMOVE_DELETE_REFS), (RequestCallback<String>)anyObject());
-        verify(service).fetch(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (String[])anyObject(),
+        verify(service).fetch(eq(VFS_ID), eq(project), eq(REPOSITORY_NAME), (List<String>)anyObject(),
                               eq(NO_REMOVE_DELETE_REFS), (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).fetchFail(eq(REMOTE_URI));

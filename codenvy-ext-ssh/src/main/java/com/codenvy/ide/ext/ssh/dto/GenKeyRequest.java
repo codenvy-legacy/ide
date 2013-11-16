@@ -17,7 +17,8 @@
  */
 package com.codenvy.ide.ext.ssh.dto;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
+
 
 /**
  * Interface describe a request for generate a SSH-key.

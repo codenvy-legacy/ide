@@ -37,6 +37,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyObject;
@@ -243,17 +244,17 @@ public class PushToRemotePresenterTest extends BaseTest {
                 onSuccess.invoke(callback, EMPTY_TEXT);
                 return callback;
             }
-        }).when(service).pushWS(anyString(), (Project)anyObject(), (String[])anyObject(), anyString(), anyBoolean(),
+        }).when(service).pushWS(anyString(), (Project)anyObject(), (List<String>)anyObject(), anyString(), anyBoolean(),
                                 (RequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onPushClicked();
 
         verify(service)
-                       .pushWS(eq(VFS_ID), eq(project), (String[])anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
+                       .pushWS(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
                                (RequestCallback<String>)anyObject());
         verify(service, never())
-                                .push(eq(VFS_ID), eq(project), (String[])anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
+                                .push(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
                                       (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -271,17 +272,17 @@ public class PushToRemotePresenterTest extends BaseTest {
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).pushWS(anyString(), (Project)anyObject(), (String[])anyObject(), anyString(), anyBoolean(),
+        }).when(service).pushWS(anyString(), (Project)anyObject(), (List<String>)anyObject(), anyString(), anyBoolean(),
                                 (RequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onPushClicked();
 
         verify(service)
-                       .pushWS(eq(VFS_ID), eq(project), (String[])anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
+                       .pushWS(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
                                (RequestCallback<String>)anyObject());
         verify(service, never())
-                                .push(eq(VFS_ID), eq(project), (String[])anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
+                                .push(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
                                       (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).pushFail();
@@ -291,7 +292,7 @@ public class PushToRemotePresenterTest extends BaseTest {
     @Test
     public void testOnPushClickedWhenPushRequestIsSuccessful() throws Exception {
         doThrow(WebSocketException.class).when(service)
-                                         .pushWS(anyString(), (Project)anyObject(), (String[])anyObject(), anyString(), anyBoolean(),
+                                         .pushWS(anyString(), (Project)anyObject(), (List<String>)anyObject(), anyString(), anyBoolean(),
                                                  (RequestCallback<String>)anyObject());
         doAnswer(new Answer() {
             @Override
@@ -302,17 +303,17 @@ public class PushToRemotePresenterTest extends BaseTest {
                 onSuccess.invoke(callback, EMPTY_TEXT);
                 return callback;
             }
-        }).when(service).push(anyString(), (Project)anyObject(), (String[])anyObject(), anyString(), anyBoolean(),
+        }).when(service).push(anyString(), (Project)anyObject(), (List<String>)anyObject(), anyString(), anyBoolean(),
                               (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onPushClicked();
 
         verify(service)
-                       .pushWS(eq(VFS_ID), eq(project), (String[])anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
+                       .pushWS(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
                                (RequestCallback<String>)anyObject());
         verify(service)
-                       .push(eq(VFS_ID), eq(project), (String[])anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
+                       .push(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
                              (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -322,7 +323,7 @@ public class PushToRemotePresenterTest extends BaseTest {
     @Test
     public void testOnPushClickedWhenPushRequestIsFailed() throws Exception {
         doThrow(WebSocketException.class).when(service)
-                                         .pushWS(anyString(), (Project)anyObject(), (String[])anyObject(), anyString(), anyBoolean(),
+                                         .pushWS(anyString(), (Project)anyObject(), (List<String>)anyObject(), anyString(), anyBoolean(),
                                                  (RequestCallback<String>)anyObject());
         doAnswer(new Answer() {
             @Override
@@ -333,17 +334,17 @@ public class PushToRemotePresenterTest extends BaseTest {
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).push(anyString(), (Project)anyObject(), (String[])anyObject(), anyString(), anyBoolean(),
+        }).when(service).push(anyString(), (Project)anyObject(), (List<String>)anyObject(), anyString(), anyBoolean(),
                               (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onPushClicked();
 
         verify(service)
-                       .pushWS(eq(VFS_ID), eq(project), (String[])anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
+                       .pushWS(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
                                (RequestCallback<String>)anyObject());
         verify(service)
-                       .push(eq(VFS_ID), eq(project), (String[])anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
+                       .push(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
                              (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).pushFail();
@@ -353,20 +354,20 @@ public class PushToRemotePresenterTest extends BaseTest {
     @Test
     public void testOnPushClickedRestRequestWhenExceptionHappened() throws Exception {
         doThrow(WebSocketException.class).when(service)
-                                         .pushWS(anyString(), (Project)anyObject(), (String[])anyObject(), anyString(), anyBoolean(),
+                                         .pushWS(anyString(), (Project)anyObject(), (List<String>)anyObject(), anyString(), anyBoolean(),
                                                  (RequestCallback<String>)anyObject());
         doThrow(RequestException.class).when(service)
-                                       .push(anyString(), (Project)anyObject(), (String[])anyObject(), anyString(), anyBoolean(),
+                                       .push(anyString(), (Project)anyObject(), (List<String>)anyObject(), anyString(), anyBoolean(),
                                              (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onPushClicked();
 
         verify(service)
-                       .pushWS(eq(VFS_ID), eq(project), (String[])anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
+                       .pushWS(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
                                (RequestCallback<String>)anyObject());
         verify(service)
-                       .push(eq(VFS_ID), eq(project), (String[])anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
+                       .push(eq(VFS_ID), eq(project), (List<String>)anyObject(), eq(REPOSITORY_NAME), eq(DISABLE_CHECK),
                              (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(notificationManager).showNotification((Notification)anyObject());
