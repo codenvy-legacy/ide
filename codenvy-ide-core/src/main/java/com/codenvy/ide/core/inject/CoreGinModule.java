@@ -187,7 +187,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
 
         bind(EditorRegistry.class).to(EditorRegistryImpl.class).in(Singleton.class);
-        bind(EditorProvider.class).annotatedWith(Names.named("defaulEditor")).to(DefaultEditorProvider.class);
+        bind(EditorProvider.class).annotatedWith(Names.named("defaultEditor")).to(DefaultEditorProvider.class);
         bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
         bind(UserActivityManager.class).in(Singleton.class);
         bind(OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);

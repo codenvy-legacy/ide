@@ -25,6 +25,7 @@ import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.notification.NotificationManagerImpl;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -32,10 +33,9 @@ import com.google.inject.Singleton;
 
 
 /**
- * Root Presenter that implements Workspace logic. Descendant Presenters are injected via
- * constructor and exposed to corresponding UI containers.
- * It contains Menu, Toolbar and WorkBench Presenter to expose their views into corresponding places
- * and to maintain their interactions.
+ * Root Presenter that implements Workspace logic. Descendant Presenters are injected via constructor and exposed to corresponding UI
+ * containers. It contains Menu, Toolbar and WorkBench Presenter to expose their views into corresponding places and to maintain their
+ * interactions.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
@@ -106,4 +106,32 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
         workBenchPresenter.removePart(part);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void onLoginClicked() {
+        String href = Window.Location.getHref();
+        int index = href.indexOf("ide");
+        String url = href.substring(0, index);
+        Window.Location.replace(url + "site/index.html");
+    }
+
+    /**
+     * Sets whether Login button is visible.
+     *
+     * @param visible
+     *         <code>true</code> to visible the button, <code>false</code> to disable it
+     */
+    public void setVisibleLoginButton(boolean visible) {
+        view.setVisibleLoginButton(visible);
+    }
+
+    /**
+     * Sets whether Logout button is visible.
+     *
+     * @param visible
+     *         <code>true</code> to visible the button, <code>false</code> to disable it
+     */
+    public void setVisibleLogoutButton(boolean visible) {
+        view.setVisibleLogoutButton(visible);
+    }
 }

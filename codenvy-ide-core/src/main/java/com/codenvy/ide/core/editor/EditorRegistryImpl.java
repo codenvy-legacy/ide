@@ -39,7 +39,7 @@ public class EditorRegistryImpl implements EditorRegistry {
     private JsonIntegerMap<EditorProvider> registry;
 
     @Inject
-    public EditorRegistryImpl(@Named("defaulEditor") EditorProvider defaultProvider,
+    public EditorRegistryImpl(@Named("defaultEditor") EditorProvider defaultProvider,
                               @Named("defaultFileType") FileType defaultFile) {
         super();
         registry = JsonCollections.createIntegerMap();
