@@ -18,7 +18,6 @@
 package com.codenvy.ide.ext.java.jdi.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.ApplicationInstance;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.rest.Unmarshallable;
@@ -29,7 +28,7 @@ import com.codenvy.ide.websocket.rest.Unmarshallable;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class ApplicationInstanceUnmarshallerWS implements Unmarshallable<ApplicationInstance> {
-    private DtoClientImpls.ApplicationInstanceImpl applicationInstance;
+//    private DtoClientImpls.ApplicationInstanceImpl applicationInstance;
 
     /** {@inheritDoc} */
     @Override
@@ -40,12 +39,12 @@ public class ApplicationInstanceUnmarshallerWS implements Unmarshallable<Applica
             return;
         }
 
-        applicationInstance = DtoClientImpls.ApplicationInstanceImpl.deserialize(text);
+//        applicationInstance = DtoClientImpls.ApplicationInstanceImpl.deserialize(text);
     }
 
     /** {@inheritDoc} */
     @Override
     public ApplicationInstance getPayload() {
-        return applicationInstance;
+        return null;//applicationInstance;
     }
 }

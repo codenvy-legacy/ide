@@ -46,7 +46,7 @@ public class DebugAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        presenter.debugApplication();
+//        presenter.debugApplication();
     }
 
     /** {@inheritDoc} */

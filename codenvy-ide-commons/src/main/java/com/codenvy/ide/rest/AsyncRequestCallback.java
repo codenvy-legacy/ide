@@ -47,6 +47,8 @@ public abstract class AsyncRequestCallback<T> implements RequestCallback {
 
     private AsyncRequest request;
 
+
+
     /**
      * @param obj
      * @param loader
@@ -150,8 +152,6 @@ public abstract class AsyncRequestCallback<T> implements RequestCallback {
      * If response is successfully received and
      * response status code is in set of success codes.
      *
-     * @param request
-     * @param response
      */
     protected abstract void onSuccess(T result);
 

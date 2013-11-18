@@ -23,9 +23,9 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
-import com.codenvy.ide.ext.java.jdi.client.marshaller.StringUnmarshaller;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -95,11 +95,8 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionView.Actio
     @Override
     public void onEvaluateClicked() {
         view.setEnableEvaluateButton(false);
-
-        StringUnmarshaller unmarshaller = new StringUnmarshaller();
-
         try {
-            service.evaluateExpression(debuggerInfo.getId(), view.getExpression(), new AsyncRequestCallback<String>(unmarshaller) {
+            service.evaluateExpression(debuggerInfo.getId(), view.getExpression(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
                     view.setResult(result);
