@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -86,9 +87,9 @@ public class DockerRunner extends Runner {
     }
 
     @Override
-    protected ApplicationProcess newApplicationProcess(DeploymentSources toDeploy,
-                                                       RunnerConfiguration runnerCfg,
-                                                       ApplicationProcess.Callback callback) throws RunnerException {
+    protected synchronized ApplicationProcess newApplicationProcess(DeploymentSources toDeploy,
+                                                                    RunnerConfiguration runnerCfg,
+                                                                    ApplicationProcess.Callback callback) throws RunnerException {
         try {
             final java.io.File applicationFile = toDeploy.getFile();
             final java.io.File dockerFile = new java.io.File(applicationFile.getParentFile(), "Dockerfile");
@@ -104,7 +105,7 @@ public class DockerRunner extends Runner {
             final ImageUsage imageUsage = createImageIfNeed(connector, dockerRepoName, fileHash, dockerFile, applicationFile);
             final ContainerConfig dockerCfg =
                     new ContainerConfig().withImage(imageUsage.image).withMemory(runnerCfg.getMemory() * 1024 * 1024);
-            final DockerProcess docker = new DockerProcess(connector, dockerCfg, callback);
+            final DockerProcess docker = new DockerProcess(getExecutor(), connector, dockerCfg, callback);
             imageUsage.inc();
             registerDisposer(docker, new Disposer() {
                 @Override
@@ -218,15 +219,19 @@ public class DockerRunner extends Runner {
     }
 
     private static class DockerProcess extends ApplicationProcess {
+        final ExecutorService executor;
         final DockerConnector connector;
         final ContainerConfig dockerCfg;
+        final Callback        callback;
         String       container;
         DockerLogger logger;
 
-        DockerProcess(DockerConnector connector, ContainerConfig dockerCfg, Callback callback) {
+        DockerProcess(ExecutorService executor, DockerConnector connector, ContainerConfig dockerCfg, Callback callback) {
             super(callback);
+            this.executor = executor;
             this.connector = connector;
             this.dockerCfg = dockerCfg;
+            this.callback = callback;
         }
 
         @Override
@@ -238,6 +243,17 @@ public class DockerRunner extends Runner {
             connector.startContainer(response.getId(), null); // TODO: host config
             container = response.getId();
             logger = new DockerLogger(connector, container);
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        connector.waitContainer(container);
+                    } catch (IOException e) {
+                        callback.startError(e);
+                    }
+                    callback.stopped(DockerProcess.this);
+                }
+            });
         }
 
         @Override
