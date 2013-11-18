@@ -52,6 +52,7 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     private static final String CREATE_NEW_PROJECT_WIZARD_TUTORIAL  = "/newproject";
     private static final String CREATE_NEW_RESOURCE_WIZARD_TUTORIAL = "/newresource";
     private static final String CREATE_PARTS_TUTORIAL               = "/parts";
+    private static final String CREATE_EDITOR_TUTORIAL              = "/editor";
     /** REST-service context. */
     private String           restContext;
     /** Loader to be displayed. */
@@ -81,7 +82,7 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     @Override
     public void createDTOTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
                                          @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        final String requestUrl = restContext + BASE_URL + CREATE_DTO_TUTORIAL;
+        String requestUrl = restContext + BASE_URL + CREATE_DTO_TUTORIAL;
         sendRequest(requestUrl, projectName, properties, callback);
     }
 
@@ -89,7 +90,7 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     @Override
     public void createNotificationTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
                                                   @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        final String requestUrl = restContext + BASE_URL + CREATE_NOTIFICATION_TUTORIAL;
+        String requestUrl = restContext + BASE_URL + CREATE_NOTIFICATION_TUTORIAL;
         sendRequest(requestUrl, projectName, properties, callback);
     }
 
@@ -97,7 +98,7 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     @Override
     public void createActionTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
                                             @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        final String requestUrl = restContext + BASE_URL + CREATE_ACTION_TUTORIAL;
+        String requestUrl = restContext + BASE_URL + CREATE_ACTION_TUTORIAL;
         sendRequest(requestUrl, projectName, properties, callback);
     }
 
@@ -105,7 +106,7 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     @Override
     public void createWizardTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
                                             @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        final String requestUrl = restContext + BASE_URL + CREATE_WIZARD_TUTORIAL;
+        String requestUrl = restContext + BASE_URL + CREATE_WIZARD_TUTORIAL;
         sendRequest(requestUrl, projectName, properties, callback);
     }
 
@@ -113,7 +114,7 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     @Override
     public void createNewProjectWizardTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
                                                       @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        final String requestUrl = restContext + BASE_URL + CREATE_NEW_PROJECT_WIZARD_TUTORIAL;
+        String requestUrl = restContext + BASE_URL + CREATE_NEW_PROJECT_WIZARD_TUTORIAL;
         sendRequest(requestUrl, projectName, properties, callback);
     }
 
@@ -121,7 +122,7 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     @Override
     public void createNewResourceWizardTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
                                                        @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        final String requestUrl = restContext + BASE_URL + CREATE_NEW_RESOURCE_WIZARD_TUTORIAL;
+        String requestUrl = restContext + BASE_URL + CREATE_NEW_RESOURCE_WIZARD_TUTORIAL;
         sendRequest(requestUrl, projectName, properties, callback);
     }
 
@@ -129,7 +130,15 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
     @Override
     public void createPartsTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
                                            @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        final String requestUrl = restContext + BASE_URL + CREATE_PARTS_TUTORIAL;
+        String requestUrl = restContext + BASE_URL + CREATE_PARTS_TUTORIAL;
+        sendRequest(requestUrl, projectName, properties, callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void createEditorTutorialProject(@NotNull String projectName, @NotNull JsonArray<Property> properties,
+                                            @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
+        String requestUrl = restContext + BASE_URL + CREATE_EDITOR_TUTORIAL;
         sendRequest(requestUrl, projectName, properties, callback);
     }
 
