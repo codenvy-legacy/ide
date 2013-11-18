@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.factory.client.factory;
 
-import com.codenvy.ide.factory.client.FactoryExtension;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonEvent;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonHandler;
 import com.codenvy.ide.factory.client.generate.SendMailEvent;
@@ -889,13 +888,12 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                 return;
             }
             
+            String factoryId = factoryJSON.get("id").isString().stringValue();        
+            String shareURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                .setPath("factory/share/" + factoryId).buildString();
+            
             Window.open("https://www.facebook.com/sharer/sharer.php" +
-                "?s=100" +
-                "&p[url]=" + encodeQueryString(createFactoryURL) +
-                "&p[title]=" + encodeQueryString(openedProject.getName() + " - Codenvy") +
-                "&p[images][0]=" + encodeQueryString(facebookImageURl) +
-                "&p[summary]=" + encodeQueryString(FactoryExtension.LOCALIZATION_CONSTANTS.facebookSubtitle()),
-                
+                "?u=" + encodeQueryString(shareURL),
                 "facebook-share-dialog",
                 "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=626,height=436");
         }
