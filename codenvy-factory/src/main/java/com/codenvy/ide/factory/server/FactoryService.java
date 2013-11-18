@@ -18,6 +18,7 @@
 package com.codenvy.ide.factory.server;
 
 import com.codenvy.api.factory.SimpleFactoryUrl;
+import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.ide.commons.shared.ProjectType;
 import com.codenvy.ide.factory.shared.FactorySpec10;
 import com.codenvy.organization.client.UserManager;
@@ -38,6 +39,7 @@ import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
 import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.GitUser;
+import org.exoplatform.ide.project.ProjectPrepare;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -69,7 +71,10 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -99,6 +104,13 @@ public class FactoryService {
 
     private static final Pattern PATTERN        = Pattern.compile("public static final String PROJECT_ID = .*");
     private static final Pattern PATTERN_NUMBER = Pattern.compile("public static final String PROJECT_NUMBER = .*");
+
+    private static final String BRANCH_NOT_FOUND    = "Branch <b>%s</b> doesn't exist. Switching to default branch.";
+    private static final String SWITCHING_TO_BRANCH = "Switching to <b>%s</b> branch.";
+    private static final String COMMIT_NOT_FOUND    = "Commit <b>%s</b> doesn't exist. Switching to default branch.";
+
+    private static final Pattern COMMIT_NOT_FOUND_PATTERN = Pattern.compile("(.*fatal: reference is not a tree:.*)|" +
+                                                                            "(.*fatal: Cannot update paths and switch to branch 'temp'.*)");
 
     /**
      * Sends e-mail message to share Factory URL.
@@ -144,7 +156,7 @@ public class FactoryService {
     @Path("clone")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    //@RolesAllowed("developer") TODO anonymouse user aren't able to use clone with this
+    //@RolesAllowed("developer")
     public Item cloneProject(SimpleFactoryUrl factoryUrl,
                              @QueryParam("vfsid") String vfsId,
                              @QueryParam("projectid") String projectId) throws VirtualFileSystemException, GitException,
@@ -165,24 +177,25 @@ public class FactoryService {
                 //Try to checkout to specified branch. For first we need to list all cloned local branches to
                 //find if specified branch already exist, if its true, we check if this this branch is active
                 List<Branch> branches = gitConnection.branchList(new BranchListRequest(null));
+
+                Branch chkBranch = null;
+
                 for (Branch branch : branches) {
                     if (branch.getDisplayName().equals(factoryUrl.getVcsbranch())) {
-                        gitConnection.branchCheckout(
-                                new BranchCheckoutRequest(factoryUrl.getVcsbranch(),
-                                                          "origin/" + factoryUrl.getVcsbranch(), false));
+                        chkBranch = branch;
                         break;
                     }
                 }
+
+                if (chkBranch == null) {
+                    publishWebsocketMessage(String.format(BRANCH_NOT_FOUND, factoryUrl.getVcsbranch()));
+                } else {
+                    publishWebsocketMessage(String.format(SWITCHING_TO_BRANCH, factoryUrl.getVcsbranch()));
+                }
             }
         } catch (GitException e) {
-            if (e.getMessage().matches("(.*Ref .* can not be resolved.*)|(.*Missing unknown.*)")) {
-                if (factoryUrl.getCommitid() != null && !factoryUrl.getCommitid().trim().isEmpty()) {
-                    publishWebsocketMessage("Commit <b>" + factoryUrl.getCommitid() +
-                                            "</b> doesn't exist. Switching to default branch.");
-                } else if (factoryUrl.getVcsbranch() != null && !factoryUrl.getVcsbranch().trim().isEmpty()) {
-                    publishWebsocketMessage("Branch <b>" + factoryUrl.getVcsbranch() +
-                                            "</b> doesn't exist. Switching to default branch.");
-                }
+            if (COMMIT_NOT_FOUND_PATTERN.matcher(e.getLocalizedMessage()).matches() && emptyCommitId(factoryUrl)) {
+                publishWebsocketMessage(String.format(COMMIT_NOT_FOUND, factoryUrl.getCommitid()));
             } else {
                 deleteRepository(vfs, projectId);
                 LOG.warn(e.getLocalizedMessage(), e);
@@ -196,6 +209,10 @@ public class FactoryService {
         }
 
         return convertToProject(factoryUrl, vfsId, projectId);
+    }
+
+    private boolean emptyCommitId(SimpleFactoryUrl factoryUrl) {
+        return factoryUrl.getCommitid() == null || factoryUrl.getCommitid().trim().isEmpty();
     }
 
     /**
@@ -230,23 +247,38 @@ public class FactoryService {
             throws VirtualFileSystemException, IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         Item itemToUpdate = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
+
+        ProjectType projectType = ProjectType.DEFAULT;
         try {
-            Item item = vfs.getItemByPath(itemToUpdate.getPath() + "/.project", null, false, null);
-            vfs.delete(item.getId(), null);
-        } catch (ItemNotFoundException ignore) {
-            // ignore
+            String decodedPtype = URLDecoder.decode(factoryUrl.getProjectattributes().get("ptype"), "UTF-8");
+            projectType = ProjectType.fromValue(decodedPtype);
+        } catch (IllegalArgumentException | NullPointerException e) {//
         }
 
-        ProjectType projectType =
-                ProjectType.fromValue(factoryUrl.getProjectattributes().get(FactorySpec10.PROJECT_TYPE));
-
         List<Property> props = new ArrayList<>();
-        props.addAll(itemToUpdate.getProperties());
-        props.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-        props.add(new PropertyImpl("vfs:projectType", projectType.toString()));
+
+        if (projectType == ProjectType.DEFAULT || projectType == ProjectType.MULTI_MODULE) {
+            try {
+                new ProjectPrepare(vfs).doPrepare(projectId);
+                itemToUpdate = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
+                projectType = ProjectType.fromValue(((Project)itemToUpdate).getProjectType());
+            } catch (Exception e) {
+                itemToUpdate = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
+                props.addAll(itemToUpdate.getProperties());
+                props.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+                props.add(new PropertyImpl("vfs:projectType", projectType.toString()));
+            }
+        } else {
+            props.addAll(itemToUpdate.getProperties());
+            props.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+            props.add(new PropertyImpl("vfs:projectType", projectType.toString()));
+        }
+
         props.add(new PropertyImpl("codenow", factoryUrl.getVcsurl()));
-        if (factoryUrl.getVcsinfo())
+        if (factoryUrl.getVcsinfo()) {
             props.add(new PropertyImpl("isGitRepository", "true"));
+        }
+
         itemToUpdate = vfs.updateItem(itemToUpdate.getId(), props, null);
 
         if (ProjectType.GOOGLE_MBS_ANDROID == projectType) {
@@ -274,7 +306,7 @@ public class FactoryService {
                 (File)vfs.getItemByPath(item.getPath() + "/src/com/google/cloud/backend/android/Consts.java", null,
                                         false,
                                         PropertyFilter.NONE_FILTER);
-        String content = IOUtils.toString(vfs.getContent(constJava.getId()).getStream());
+        String content = IoUtil.readStream(vfs.getContent(constJava.getId()).getStream());
 
         String[] actionParams = factoryUrl.getAction().replaceAll("'", "").split(";");
         String prjNum = null;

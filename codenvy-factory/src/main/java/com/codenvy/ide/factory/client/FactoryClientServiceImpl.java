@@ -38,6 +38,7 @@ import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
+import org.exoplatform.ide.git.client.clone.CloneRequestStatusHandler;
 
 import java.util.List;
 
@@ -111,6 +112,8 @@ public class FactoryClientServiceImpl extends FactoryClientService implements Co
 
         SimpleFactoryUrlMarshaller marshaller = new SimpleFactoryUrlMarshaller(factoryUrl);
 
+        callback.setStatusHandler(new CloneRequestStatusHandler(factoryUrl.getProjectattributes().get("pname"), factoryUrl.getVcsurl()));
+
         RequestMessage message = RequestMessageBuilder.build(RequestBuilder.POST, uri + "?" + params)
                                                       .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
                                                       .data(marshaller.marshal())
@@ -132,6 +135,8 @@ public class FactoryClientServiceImpl extends FactoryClientService implements Co
                     .loader(loader)
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
                     .data(marshaller.marshal())
+                    .requestStatusHandler(new CloneRequestStatusHandler(factoryUrl.getProjectattributes().get("pname"),
+                                                                        factoryUrl.getVcsurl()))
                     .send(callback);
     }
 

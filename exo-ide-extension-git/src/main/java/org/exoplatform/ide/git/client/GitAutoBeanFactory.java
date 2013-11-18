@@ -20,13 +20,7 @@ package org.exoplatform.ide.git.client;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
-import org.exoplatform.ide.git.shared.Collaborators;
-import org.exoplatform.ide.git.shared.Commiters;
-import org.exoplatform.ide.git.shared.Credentials;
-import org.exoplatform.ide.git.shared.GitHubRepository;
-import org.exoplatform.ide.git.shared.GitHubRepositoryList;
-import org.exoplatform.ide.git.shared.GitHubUser;
-import org.exoplatform.ide.git.shared.Status;
+import org.exoplatform.ide.git.shared.*;
 
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
@@ -66,5 +60,4 @@ public interface GitAutoBeanFactory extends AutoBeanFactory {
      * @return {@link AutoBean} of type {@link GitHubRepositoryList}
      */
     AutoBean<GitHubRepositoryList> gitHubRepositoryList();
-
 }

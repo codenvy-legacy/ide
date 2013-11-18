@@ -41,19 +41,19 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
  */
 public class OAuthLoginView extends ViewImpl {
 
-    private static final String           ID               = "ideGaeOAuthLoginView";
+    private static final String ID = "ideGaeOAuthLoginView";
 
-    private static final int              WIDTH            = 450;
+    private static final int WIDTH = 450;
 
-    private static final int              HEIGHT           = 180;
+    private static final int HEIGHT = 180;
 
-    private static final String           LABEL_ID         = "ideOAuthLoginViewLabel";
+    private static final String LABEL_ID = "ideOAuthLoginViewLabel";
 
-    private static final String           AUTH_BUTTON_ID   = "ideOAuthLoginViewAuthButton";
+    private static final String AUTH_BUTTON_ID = "ideOAuthLoginViewAuthButton";
 
-    private static final String           CANCEL_BUTTON_ID = "ideOAuthLoginViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideOAuthLoginViewCancelButton";
 
-    private static OAuthLoginViewUiBinder uiBinder         = GWT.create(OAuthLoginViewUiBinder.class);
+    private static OAuthLoginViewUiBinder uiBinder = GWT.create(OAuthLoginViewUiBinder.class);
 
     interface OAuthLoginViewUiBinder extends UiBinder<Widget, OAuthLoginView> {
     }
@@ -65,7 +65,7 @@ public class OAuthLoginView extends ViewImpl {
     ImageButton cancelButton;
 
     @UiField
-    Label       label;
+    Label label;
 
     public OAuthLoginView() {
         super(ID, ViewType.MODAL, GoogleAppEngineExtension.GAE_LOCALIZATION.loginOAuthTitle(), new Image(GAEClientBundle.INSTANCE.login()),
@@ -86,12 +86,11 @@ public class OAuthLoginView extends ViewImpl {
 
             @Override
             public void onClick(ClickEvent event) {
-                String authUrl = Utils.getAuthorizationContext()
-                                 + "/ide/oauth/authenticate?oauth_provider=google"
-                                 + "&scope=https://www.googleapis.com/auth/appengine.admin"
-                                 + "&userId=" + IDE.user.getUserId() + "&redirect_after_login=/ide/" + Utils.getWorkspaceName();
-                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 450, 500, null);
-                authWindow.loginWithOAuth();
+                new JsPopUpOAuthWindow().withOauthProvider("google")
+                                        .withScope("https://www.googleapis.com/auth/appengine.admin")
+                                        .withWindowWidth(450)
+                                        .withWindowHeight(500)
+                                        .login();
                 IDE.getInstance().closeView(ID);
             }
         });

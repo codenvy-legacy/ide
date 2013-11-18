@@ -212,11 +212,11 @@
 
     <!-- GitHub support -->
     <component>
-        <type>org.exoplatform.ide.git.server.rest.GitHubServiceApplication</type>
+        <type>org.exoplatform.ide.git.server.provider.rest.ProviderApplication</type>
     </component>
 
     <component>
-        <type>org.exoplatform.ide.git.server.github.GitHub</type>
+        <type>org.exoplatform.ide.git.server.provider.github.GitHub</type>
         <init-params>
             <value-param>
                 <name>github-user</name>

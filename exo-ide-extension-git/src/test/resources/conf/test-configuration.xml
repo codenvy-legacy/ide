@@ -24,11 +24,11 @@
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
     <component>
-        <type>org.exoplatform.ide.git.server.rest.GitHubServiceApplication</type>
+        <type>org.exoplatform.ide.git.server.provider.rest.ProviderApplication</type>
     </component>
 
     <component>
-        <type>org.exoplatform.ide.git.server.github.GitHub</type>
+        <type>org.exoplatform.ide.git.server.provider.github.GitHub</type>
         <init-params>
             <value-param>
                 <name>github-user</name>

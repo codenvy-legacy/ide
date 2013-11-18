@@ -20,7 +20,6 @@ package com.codenvy.ide.factory.client.receive;
 
 import com.codenvy.api.factory.AdvancedFactoryUrl;
 import com.codenvy.api.factory.SimpleFactoryUrl;
-import com.codenvy.factory.FactoryServlet;
 import com.codenvy.ide.factory.client.FactoryClientService;
 import com.codenvy.ide.factory.client.FactoryExtension;
 import com.codenvy.ide.factory.shared.AdvancedFactorySpec;
@@ -32,7 +31,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Random;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -54,12 +52,16 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
-import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.events.MessageHandler;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.git.client.marshaller.GitUrlInfoUnmarshaller;
+import org.exoplatform.ide.git.client.ssh.SSHKeyProcessor;
+import org.exoplatform.ide.git.client.ssh.SSHKeyProcessorEvent;
+import org.exoplatform.ide.git.shared.GitUrlVendorInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
@@ -302,19 +304,26 @@ public class FactoryHandler
         FolderModel folder = new FolderModel();
         folder.setName(factoryUrl.getProjectattributes().get(PROJECT_NAME) + ((projectDirExist) ? Random.nextInt() : ""));
         try {
-            VirtualFileSystem.getInstance()
-                             .createFolder(vfs.getRoot(),
-                                           new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(folder)) {
-                                               @Override
-                                               protected void onSuccess(FolderModel projectFolder) {
-                                                   cloneRepository(projectFolder);
-                                               }
+            VirtualFileSystem
+                    .getInstance()
+                    .createFolder(vfs.getRoot(),
+                                  new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(folder)) {
+                                      @Override
+                                      protected void onSuccess(final FolderModel projectFolder) {
+                                          IDE.fireEvent(
+                                                  new SSHKeyProcessorEvent(factoryUrl.getVcsurl(), false, new SSHKeyProcessor.Callback() {
+                                                      @Override
+                                                      public void onSuccess() {
+                                                          cloneRepository(projectFolder);
+                                                      }
+                                                  }));
+                                      }
 
-                                               @Override
-                                               protected void onFailure(Throwable e) {
-                                                   handleError(e);
-                                               }
-                                           });
+                                      @Override
+                                      protected void onFailure(Throwable e) {
+                                          handleError(e);
+                                      }
+                                  });
         } catch (RequestException e) {
             handleError(e);
         }
@@ -323,47 +332,43 @@ public class FactoryHandler
     /**
      * Open native js popup window with wso2 authorization page.
      *
-     * @param authorizeCallback
+     * @param callback
      *         callback for authorization status.
      */
-    private void openOauthPopupWindow(final AsyncCallback<Void> authorizeCallback) {
-        final JsPopUpOAuthWindow.JsPopUpOAuthWindowCallback authWindowCallback =
-                new JsPopUpOAuthWindow.JsPopUpOAuthWindowCallback() {
-                    @Override
-                    public void oAuthFinished(int authenticationStatus) {
-                        if (authenticationStatus == 2) { //means that auth was successful
-                            authorizeCallback.onSuccess(null);
-                        } else if (authenticationStatus == 1) { //means that auth was fail
-                            authorizeCallback.onFailure(
-                                    new Exception(FactoryExtension.LOCALIZATION_CONSTANTS.privateRepoAuthFailed()));
-                        } else { //if user permit login
-                            authorizeCallback
-                                    .onFailure(new Exception(
-                                            FactoryExtension.LOCALIZATION_CONSTANTS.privateRepoAuthPermitted()));
-                        }
+    private void openOauthPopupWindow(final JsPopUpOAuthWindow.Callback callback, final String vcsUrl) {
+        GitUrlInfoUnmarshaller unmarshaller = new GitUrlInfoUnmarshaller(new GitUrlVendorInfo());
+
+        try {
+            GitClientService.getInstance().getUrlVendorInfo(vcsUrl, new AsyncRequestCallback<GitUrlVendorInfo>(unmarshaller) {
+                @Override
+                protected void onSuccess(final GitUrlVendorInfo info) {
+                    if (info.getVendorName() != null && !(info.getVendorName().equals("bitbucket") && !info.isGivenUrlSSH())) {
+                        Dialogs.getInstance().ask(GitExtension.MESSAGES.authorizeTitle(),
+                                                  GitExtension.MESSAGES.authorizeBody(info.getVendorBaseHost()),
+                                                  new BooleanValueReceivedHandler() {
+                                                      @Override
+                                                      public void booleanValueReceived(Boolean value) {
+                                                          if (value != null && value) {
+                                                              new JsPopUpOAuthWindow().withOauthProvider(info.getVendorName())
+                                                                                      .withCallback(callback)
+                                                                                      .withScopes(info.getOAuthScopes())
+                                                                                      .login();
+                                                          }
+                                                      }
+                                                  }, true);
+                    } else {
+                        IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.authorizeNotSupported()));
                     }
-                };
+                }
 
-        Dialogs.getInstance().ask(FactoryExtension.LOCALIZATION_CONSTANTS.privateRepoNeedAuthTitle(),
-                                  FactoryExtension.LOCALIZATION_CONSTANTS.privateRepoNeedAuthContent("wso2"),
-                                  new BooleanValueReceivedHandler() {
-                                      @Override
-                                      public void booleanValueReceived(Boolean value) {
-                                          if (value != null && value) {
-                                              String authUrl = Utils.getAuthorizationContext()
-                                                               + "/ide/oauth/authenticate?oauth_provider=wso2"
-                                                               + "&userId=" + IDE.user.getUserId() +
-                                                               "&redirect_after_login=/ide/" +
-                                                               Utils.getWorkspaceName();
-
-                                              JsPopUpOAuthWindow authWindow =
-                                                      new JsPopUpOAuthWindow(authUrl,
-                                                                             Utils.getAuthorizationErrorPageURL(),
-                                                                             950, 500, authWindowCallback);
-                                              authWindow.loginWithOAuth();
-                                          }
-                                      }
-                                  }, true);
+                @Override
+                protected void onFailure(Throwable e) {
+                    IDE.fireEvent(new ExceptionThrownEvent(e));
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
     }
 
     /**
@@ -375,18 +380,20 @@ public class FactoryHandler
     private void cloneRepository(final FolderModel projectFolder) {
         IDELoader.getInstance().setMessage(FactoryExtension.LOCALIZATION_CONSTANTS.cloningProcess());
         IDELoader.getInstance().show();
-        final AsyncCallback<Void> authCallback = new AsyncCallback<Void>() {
-            @Override
-            public void onFailure(Throwable e) {
-                handleError(e);
-            }
 
+        final JsPopUpOAuthWindow.Callback authCallback = new JsPopUpOAuthWindow.Callback() {
             @Override
-            public void onSuccess(Void var) {
-                cloneRepository(projectFolder);
+            public void oAuthFinished(int authenticationStatus) {
+                if (authenticationStatus == 2) {
+                    IDE.fireEvent(new SSHKeyProcessorEvent(factoryUrl.getVcsurl(), true, new SSHKeyProcessor.Callback() {
+                        @Override
+                        public void onSuccess() {
+                            cloneRepository(projectFolder);
+                        }
+                    }));
+                }
             }
         };
-
 
         final MessageBus eventBus = IDE.messageBus();
         try {
@@ -409,8 +416,11 @@ public class FactoryHandler
                                                         IDELoader.getInstance().hide();
                                                         eventBus.unsubscribe("factory-events", webSocketEventHandler);
 
-                                                        if (isWso2ServiceAndNotAuthorized(e)) {
-                                                            openOauthPopupWindow(authCallback);
+                                                        if (e instanceof org.exoplatform.ide.client.framework.websocket.rest.exceptions
+                                                                .UnauthorizedException
+                                                            || (e instanceof org.exoplatform.ide.client.framework.websocket.rest.exceptions
+                                                                .ServerException)) {
+                                                            openOauthPopupWindow(authCallback, factoryUrl.getVcsurl());
                                                         } else {
                                                             handleError(e);
                                                         }
@@ -419,7 +429,12 @@ public class FactoryHandler
         } catch (WebSocketException e) {
             IDELoader.getInstance().hide();
             eventBus.unsubscribe("factory-events", webSocketEventHandler);
-            cloneRepositoryREST(projectFolder);
+            IDE.fireEvent(new SSHKeyProcessorEvent(factoryUrl.getVcsurl(), false, new SSHKeyProcessor.Callback() {
+                @Override
+                public void onSuccess() {
+                    cloneRepositoryREST(projectFolder);
+                }
+            }));
         }
     }
 
@@ -440,15 +455,18 @@ public class FactoryHandler
     private void cloneRepositoryREST(final FolderModel projectFolder) {
         IDELoader.getInstance().setMessage(FactoryExtension.LOCALIZATION_CONSTANTS.cloningProcess());
         IDELoader.getInstance().show();
-        final AsyncCallback<Void> authCallback = new AsyncCallback<Void>() {
-            @Override
-            public void onFailure(Throwable e) {
-                handleError(e);
-            }
 
+        final JsPopUpOAuthWindow.Callback authCallback = new JsPopUpOAuthWindow.Callback() {
             @Override
-            public void onSuccess(Void var) {
-                cloneRepositoryREST(projectFolder);
+            public void oAuthFinished(int authenticationStatus) {
+                if (authenticationStatus == 2) {
+                    IDE.fireEvent(new SSHKeyProcessorEvent(factoryUrl.getVcsurl(), true, new SSHKeyProcessor.Callback() {
+                        @Override
+                        public void onSuccess() {
+                            cloneRepositoryREST(projectFolder);
+                        }
+                    }));
+                }
             }
         };
 
@@ -467,8 +485,11 @@ public class FactoryHandler
                                                   @Override
                                                   protected void onFailure(Throwable e) {
                                                       IDELoader.getInstance().hide();
-                                                      if (isWso2ServiceAndNotAuthorized(e)) {
-                                                          openOauthPopupWindow(authCallback);
+
+                                                      if (e instanceof org.exoplatform.gwtframework.commons.exception
+                                                              .UnauthorizedException ||
+                                                          (e instanceof org.exoplatform.gwtframework.commons.exception.ServerException)) {
+                                                          openOauthPopupWindow(authCallback, factoryUrl.getVcsurl());
                                                       } else {
                                                           handleError(e);
                                                       }
@@ -478,18 +499,6 @@ public class FactoryHandler
             IDELoader.getInstance().hide();
             handleError(e);
         }
-    }
-
-    /**
-     * Check if error message from git with value "not authorized" and remote vcs url from WSO2.
-     *
-     * @param e
-     *         exception instance
-     * @return true if our vcs url is from WSO2 and error message contains "not authorized"
-     */
-    private boolean isWso2ServiceAndNotAuthorized(Throwable e) {
-        return factoryUrl.getVcsurl().matches(FactoryServlet.WSO_2_URL_STRING) &&
-               e.getMessage().contains("not authorized");
     }
 
     /**

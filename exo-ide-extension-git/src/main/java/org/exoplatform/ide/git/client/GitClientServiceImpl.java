@@ -19,7 +19,6 @@ package org.exoplatform.ide.git.client;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Window;
 
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.loader.Loader;
@@ -27,6 +26,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -58,33 +58,9 @@ import org.exoplatform.ide.git.client.marshaller.RemoveRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.ResetRequestMarshaller;
 import org.exoplatform.ide.git.client.pull.PullRequestHandler;
 import org.exoplatform.ide.git.client.push.PushRequestHandler;
-import org.exoplatform.ide.git.shared.AddRequest;
-import org.exoplatform.ide.git.shared.Branch;
-import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
-import org.exoplatform.ide.git.shared.BranchCreateRequest;
-import org.exoplatform.ide.git.shared.BranchDeleteRequest;
-import org.exoplatform.ide.git.shared.BranchListRequest;
-import org.exoplatform.ide.git.shared.CloneRequest;
-import org.exoplatform.ide.git.shared.CommitRequest;
-import org.exoplatform.ide.git.shared.Commiters;
-import org.exoplatform.ide.git.shared.DiffRequest;
+import org.exoplatform.ide.git.shared.*;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
-import org.exoplatform.ide.git.shared.FetchRequest;
-import org.exoplatform.ide.git.shared.InitRequest;
-import org.exoplatform.ide.git.shared.LogRequest;
-import org.exoplatform.ide.git.shared.MergeRequest;
-import org.exoplatform.ide.git.shared.MergeResult;
-import org.exoplatform.ide.git.shared.PullRequest;
-import org.exoplatform.ide.git.shared.PushRequest;
-import org.exoplatform.ide.git.shared.Remote;
-import org.exoplatform.ide.git.shared.RemoteAddRequest;
-import org.exoplatform.ide.git.shared.RemoteListRequest;
-import org.exoplatform.ide.git.shared.RepoInfo;
-import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
-import org.exoplatform.ide.git.shared.Revision;
-import org.exoplatform.ide.git.shared.RmRequest;
-import org.exoplatform.ide.git.shared.Status;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -92,12 +68,12 @@ import java.util.List;
 
 /**
  * Implementation of the {@link GitClientService}.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 23, 2011 11:52:24 AM anya $
  */
 public class GitClientServiceImpl extends GitClientService {
-    
+
     public static final String ADD               =  "/git/add";
 
     public static final String BRANCH_LIST       =  "/git/branch-list";
@@ -162,7 +138,7 @@ public class GitClientServiceImpl extends GitClientService {
      * @param eventBus eventBus
      * @param restContext rest context
      * @param loader loader to show on server request
-     * @param restContext 
+     * @param restContext
      */
     public GitClientServiceImpl(String restConetxt, String wsName, Loader loader, MessageBus wsMessageBus) {
         this.wsName = wsName;
@@ -735,7 +711,7 @@ public class GitClientServiceImpl extends GitClientService {
 
     /**
      * Make diff request.
-     * 
+     *
      * @param diffRequest request for diff
      * @param href working directory's href
      * @param callback callback
@@ -816,4 +792,11 @@ public class GitClientServiceImpl extends GitClientService {
                     .send(callback);
     }
 
+    @Override
+    public void getUrlVendorInfo(String vcsUrl, AsyncRequestCallback<GitUrlVendorInfo> callback) throws RequestException {
+        String url = restServiceContext + "/git-service/info";
+
+        String params = "vcsurl=" + vcsUrl;
+        AsyncRequest.build(RequestBuilder.GET, url + "?" + params).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+    }
 }

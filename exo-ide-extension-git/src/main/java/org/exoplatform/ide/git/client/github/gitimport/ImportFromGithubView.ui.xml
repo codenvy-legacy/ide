@@ -1,0 +1,112 @@
+<!--
+
+    CODENVY CONFIDENTIAL
+    __________________
+
+    [2012] - [2013] Codenvy, S.A.
+    All Rights Reserved.
+
+    NOTICE:  All information contained herein is, and remains
+    the property of Codenvy S.A. and its suppliers,
+    if any.  The intellectual and technical concepts contained
+    herein are proprietary to Codenvy S.A.
+    and its suppliers and may be covered by U.S. and Foreign Patents,
+    patents in process, and are protected by trade secret or copyright law.
+    Dissemination of this information or reproduction of this material
+    is strictly forbidden unless prior written permission is obtained
+    from Codenvy S.A..
+
+-->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+             xmlns:e="urn:import:org.exoplatform.ide.git.client.github.gitimport">
+
+    <ui:with field='resource' type='org.exoplatform.ide.git.client.GitClientBundle'/>
+    <ui:with field="locale" type="org.exoplatform.ide.git.client.GitLocalizationConstant"/>
+
+    <ui:style>
+        .buttons {
+            display: block;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .floatRight {
+            float: right;
+        }
+
+        .floatLeft {
+            float: left;
+        }
+
+        .label {
+            padding-left: 2px;
+            margin-top: 3px;
+            margin-right: 10px;
+        }
+
+        .explainlabel {
+            color: #787878;
+            margin-top: 3px;
+        }
+
+        .errorlabel {
+            color: #D21A1A;
+            margin-top: 3px;
+        }
+
+        .indents10 {
+            margin: 0 10px 10px;
+        }
+
+        .border {
+            border: 1px solid gray
+        }
+    </ui:style>
+
+    <g:LayoutPanel>
+        <g:layer left="0px" right="0" top="10px" height="60px">
+            <g:FlowPanel stylePrimaryName="{style.indents10}">
+                <g:Label text="Select account: " addStyleNames="{style.floatLeft} {style.label}"/>
+                <g:FlowPanel addStyleNames="{style.floatRight}" width="375px">
+                    <f:Border ui:field="errorBorder" margin="0" borderColor="#D21A1A" height="20px">
+                        <f:layer>
+                            <f:ComboBoxField ui:field="accountNameBox" addStyleNames="{style.floatLeft}" height="20px" pickListHeight="100"
+                                             width="375px"/>
+                        </f:layer>
+                    </f:Border>
+                    <g:Label ui:field="explanationLabel" text="Then select project to import" addStyleNames="{style.explainlabel}"/>
+                    <g:Label ui:field="errorLabel" addStyleNames="{style.errorlabel}"/>
+                </g:FlowPanel>
+            </g:FlowPanel>
+        </g:layer>
+        <g:layer top="60px" bottom="55px">
+            <g:DockLayoutPanel ui:field="importStep" width="100%" height="100%">
+                <g:center>
+                    <f:Border margin="10">
+                        <f:layer top="0px" bottom="0">
+                            <g:ScrollPanel ui:field="scrollPanel">
+                                <e:GitHubProjectsListGrid width="100%" ui:field="repositoriesGrid" height="100%"/>
+                            </g:ScrollPanel>
+                        </f:layer>
+                    </f:Border>
+                </g:center>
+            </g:DockLayoutPanel>
+        </g:layer>
+        <g:layer left="0px" right="0" bottom="32px" height="25px">
+            <g:FlowPanel stylePrimaryName="{style.indents10}">
+                <f:Label text="Project Name" addStyleNames="{style.floatLeft} {style.label}"/>
+                <f:TextInput ui:field="projectNameField" addStyleNames="{style.floatRight} {style.border}" width="380px" height="20px"/>
+            </g:FlowPanel>
+        </g:layer>
+        <g:layer height="22px" bottom="8">
+            <g:FlowPanel styleName="{style.buttons}">
+                <f:ImageButton ui:field="cancelButton" width="90" height="22" text="Cancel" imageResource="{resource.cancel}"
+                               disabledImageResource="{resource.cancelDisabled}" addStyleNames="{style.floatLeft}"/>
+                <f:ImageButton ui:field="finishButton" width="90" height="22" text="Finish" addStyleNames="{style.floatRight}"/>
+            </g:FlowPanel>
+        </g:layer>
+    </g:LayoutPanel>
+</ui:UiBinder>

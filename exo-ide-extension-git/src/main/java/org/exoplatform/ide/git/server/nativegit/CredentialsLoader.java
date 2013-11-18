@@ -37,7 +37,6 @@ public class CredentialsLoader implements Startable {
     private static final Logger LOG                          = LoggerFactory.getLogger(CredentialsLoader.class);
     private static final String GIT_ASK_PASS_SCRIPT_TEMPLATE = "META-INF/NativeGitAskPassTemplate";
     private static final String GIT_ASK_PASS_SCRIPT          = "ask_pass";
-    private static String                    gitAskPassTemplate;
     private static List<CredentialsProvider> instances;
 
     /**
@@ -49,6 +48,20 @@ public class CredentialsLoader implements Startable {
      */
     public File createGitAskPassScript(CredentialItem.Username username, CredentialItem.Password password)
             throws GitException {
+
+        String gitAskPassTemplate = "";
+
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(Thread.currentThread().getContextClassLoader()
+                                            .getResourceAsStream(GIT_ASK_PASS_SCRIPT_TEMPLATE)))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                gitAskPassTemplate = gitAskPassTemplate.concat(line);
+            }
+        } catch (Exception e) {
+            LOG.error("Can't load template " + GIT_ASK_PASS_SCRIPT_TEMPLATE);
+        }
+
         File askScriptDirectory = new File(System.getProperty("java.io.tmpdir")
                                            + "/" + ConversationState.getCurrent().getIdentity().getUserId());
         if (!askScriptDirectory.exists()) {
@@ -98,17 +111,6 @@ public class CredentialsLoader implements Startable {
     @Override
     public void start() {
         instances = ExoContainerContext.getCurrentContainer().getComponentInstancesOfType(CredentialsProvider.class);
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(Thread.currentThread().getContextClassLoader()
-                                            .getResourceAsStream(GIT_ASK_PASS_SCRIPT_TEMPLATE)))) {
-            gitAskPassTemplate = "";
-            String line;
-            while ((line = reader.readLine()) != null) {
-                gitAskPassTemplate = gitAskPassTemplate.concat(line);
-            }
-        } catch (Exception e) {
-            LOG.error("Can't load template " + GIT_ASK_PASS_SCRIPT_TEMPLATE);
-        }
     }
 
     @Override

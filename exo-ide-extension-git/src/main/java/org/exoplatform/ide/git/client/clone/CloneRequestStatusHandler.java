@@ -25,20 +25,26 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.git.client.GitExtension;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: Oct 28, 2011 evgen $
+ * Status handler for clone operation.
  */
 public class CloneRequestStatusHandler extends RequestStatusHandlerBase {
 
     private String remoteUri;
 
-    /** @param remoteUri */
+    /**
+     * Create handler.
+     *
+     * @param projectName
+     *         name for project which cloning
+     * @param remoteUri
+     *         url for remote repository
+     */
     public CloneRequestStatusHandler(String projectName, String remoteUri) {
         super(projectName);
         this.remoteUri = remoteUri;
     }
 
-    /** @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestInProgress(java.lang.String) */
+    /** {@inheritDoc} */
     @Override
     public void requestInProgress(String id) {
         Job job = new Job(id, JobStatus.STARTED);
@@ -46,12 +52,11 @@ public class CloneRequestStatusHandler extends RequestStatusHandlerBase {
         IDE.fireEvent(new JobChangeEvent(job));
     }
 
-    /** @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestFinished(java.lang.String) */
+    /** {@inheritDoc} */
     @Override
     public void requestFinished(String id) {
         Job job = new Job(id, JobStatus.FINISHED);
         job.setFinishMessage(GitExtension.MESSAGES.cloneFinished(projectName, remoteUri));
         IDE.fireEvent(new JobChangeEvent(job));
     }
-
 }

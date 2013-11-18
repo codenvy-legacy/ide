@@ -65,9 +65,6 @@ public class SshKeyService {
      */
     public void getAllKeys(JsonpAsyncCallback<JavaScriptObject> callback) {
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
-        loader.setMessage("Getting SSH keys....");
-        loader.show();
-        callback.setLoader(loader);
         jsonp.requestObject(restContext + Utils.getWorkspaceName() + "/ssh-keys/all", callback);
     }
 

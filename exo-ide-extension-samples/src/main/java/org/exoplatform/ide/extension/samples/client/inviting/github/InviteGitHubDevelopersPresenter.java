@@ -51,7 +51,7 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteEvent;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteHandler;
 import org.exoplatform.ide.git.client.clone.GitURLParser;
-import org.exoplatform.ide.git.client.github.GitHubClientService;
+import org.exoplatform.ide.git.client.github.collaborators.GitHubClientService;
 import org.exoplatform.ide.git.client.marshaller.RemoteListUnmarshaller;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubUser;

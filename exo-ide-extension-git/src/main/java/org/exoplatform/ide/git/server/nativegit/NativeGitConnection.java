@@ -519,7 +519,6 @@ public class NativeGitConnection implements GitConnection {
                 //try to search available credentials and execute command with it
                 command.setAskPassScriptPath(credentialsLoader.findCredentialsAndCreateGitAskPassScript(url).toString());
                 try {
-                    //after failed clone, git will remove directory
                     command.execute();
                 } catch (GitException inner) {
                     if (!nativeGit.getRepository().exists()) {
@@ -532,6 +531,9 @@ public class NativeGitConnection implements GitConnection {
                         throw inner;
                     }
                 }
+            } else if (e.getMessage().toLowerCase().contains("please make sure you have the correct access rights")) {
+                //in case that user tries to clone repository via ssh and he doesn't have ssh key
+                throw new GitException("SSH key not found or you have not rights to access this repository.");
             } else {
                 throw e;
             }

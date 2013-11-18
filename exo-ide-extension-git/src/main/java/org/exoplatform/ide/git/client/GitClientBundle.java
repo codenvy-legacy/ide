@@ -255,4 +255,10 @@ public interface GitClientBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/git/images/controls/repository_Disabled.png")
     ImageResource projectReadOnlyGitUrlDisabled();
+
+    @Source("org/exoplatform/ide/git/images/controls/import-from-github.png")
+    ImageResource importFromGithubControl();
+
+    @Source("org/exoplatform/ide/git/images/controls/import-from-github_Disabled.png")
+    ImageResource importFromGithubDisabledControl();
 }

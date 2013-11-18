@@ -346,6 +346,28 @@
         </init-params>
     </component>
 
+    <component>
+        <type>org.exoplatform.ide.security.oauth.ExoBitBucketOAuthAuthenticator</type>
+        <init-params>
+            <value-param>
+                <name>type</name>
+                <value>web</value>
+            </value-param>
+            <value-param>
+                <name>client-id</name>
+                <value>YOUR_CLIENT_ID</value>
+            </value-param>
+            <value-param>
+                <name>client-secret</name>
+                <value>YOUR_CLIENT_SECRET</value>
+            </value-param>
+            <values-param>
+                <name>redirect-uris</name>
+                <value>http://example.com/callback</value>
+            </values-param>
+        </init-params>
+    </component>
+
     <!--
     ***************************************************************************************
     ********************************** Collaboration Editor *******************************

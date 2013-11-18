@@ -149,7 +149,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 //                                 + Utils.getAuthorizationPageURL();
 //
 //                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500, null);
-//                authWindow.loginWithOAuth();
+//                authWindow.login();
 //                IDE.getInstance().closeView(display.asView().getId());
 //
 //            }
@@ -164,7 +164,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 //                                 + "&scope=user&scope=repo&redirect_after_login="
 //                                 + Utils.getAuthorizationPageURL();
 //                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500, null);
-//                authWindow.loginWithOAuth();
+//                authWindow.login();
 //                IDE.getInstance().closeView(display.asView().getId());
 //
 //            }

@@ -92,6 +92,11 @@
             <type>jar</type>
             <classifier>sources</classifier>
         </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <!-- DO NOT REMOVE NEED FOR GWT BUILD-->
