@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.core.editor;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.SDK;
@@ -48,13 +49,13 @@ public class EditorRegistryImpl implements EditorRegistry {
 
     /** {@inheritDoc} */
     @Override
-    public void register(FileType fileType, EditorProvider provider) {
+    public void register(@NotNull FileType fileType, @NotNull EditorProvider provider) {
         registry.put(fileType.getId(), provider);
     }
 
     /** {@inheritDoc} */
     @Override
-    public EditorProvider getDefaultEditor(FileType fileType) {
+    public EditorProvider getDefaultEditor(@NotNull FileType fileType) {
         return registry.get(fileType.getId());
     }
 }

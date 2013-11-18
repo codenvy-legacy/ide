@@ -55,7 +55,7 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
         firePropertyChange(EditorPartPresenter.PROP_DIRTY);
     }
 
-    /** @see com.codenvy.ide.api.editor.EditorPartPresenter#isDirty() */
+    /** {@inheritDoc} */
     @Override
     public boolean isDirty() {
         return dirtyState;
@@ -75,7 +75,7 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
         return input;
     }
 
-    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#onClose() */
+    /** {@inheritDoc} */
     @Override
     public boolean onClose() {
         if (isDirty()) {
