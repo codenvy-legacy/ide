@@ -46,7 +46,7 @@ public class AndroidRunnerService {
     @Produces(MediaType.APPLICATION_JSON)
     public String run(@QueryParam("apk") URL apk, @QueryParam("oauth_token") String oauthToken) throws Exception {
         final ManymoApplication manymo = uploadApplication(apk, oauthToken);
-        return "{\"applicationUrl\":\"" + "https://www.manymo.com/apps/" + manymo.getId() + "/emulators/83/connect?secret=" +
+        return "{\"applicationUrl\":\"" + "https://www.manymo.com/apps/" + manymo.getId() + "/emulators/142/connect?secret=" +
                manymo.getSecret() + "\"}";
     }
 
