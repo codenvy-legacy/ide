@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.core.editor;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorInitException;
 import com.codenvy.ide.api.editor.EditorInput;
@@ -149,7 +150,7 @@ public class EditorAgentImpl implements EditorAgent {
 
     /** {@inheritDoc} */
     @Override
-    public void openEditor(final File file) {
+    public void openEditor(@NotNull final File file) {
         if (openedEditors.containsKey(file.getId())) {
             workspace.setActivePart(openedEditors.get(file.getId()));
         } else {

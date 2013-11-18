@@ -18,6 +18,7 @@
 package com.codenvy.ide.welcome;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.WelcomeItemAction;
 import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
@@ -80,7 +81,7 @@ public class WelcomePartPresenter extends AbstractPartPresenter implements Welco
 
     /** {@inheritDoc} */
     @Override
-    public void addItem(WelcomeItemAction action) {
+    public void addItem(@NotNull WelcomeItemAction action) {
         actions.add(action);
         view.addItem(action.getTitle(), action.getCaption(), action.getIcon(), actions.size() - 1);
     }

@@ -33,18 +33,12 @@ import com.google.web.bindery.event.shared.EventBus;
  * Part presenter for Outline.
  *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
  */
 @Singleton
 public class OutlinePartPresenter extends BasePresenter implements ActivePartChangedHandler, OutlinePart, OutlinePartView.ActionDelegate {
+    private final OutlinePartView         view;
+    private       TextEditorPartPresenter activePart;
 
-    private final OutlinePartView view;
-
-    private TextEditorPartPresenter activePart;
-
-    /**
-     *
-     */
     @Inject
     public OutlinePartPresenter(OutlinePartView view, EventBus eventBus) {
         this.view = view;
@@ -62,14 +56,12 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     /** {@inheritDoc} */
     @Override
     public String getTitleToolTip() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -93,5 +85,4 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
             }
         }
     }
-
 }

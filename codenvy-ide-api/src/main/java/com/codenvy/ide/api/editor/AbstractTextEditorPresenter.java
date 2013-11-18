@@ -47,19 +47,19 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
         this.notificationManager = notificationManager;
     }
 
-    /** @see com.codenvy.ide.api.editor.TextEditorPartPresenter#getDocumentProvider() */
+    /** {@inheritDoc} */
     @Override
     public DocumentProvider getDocumentProvider() {
         return documentProvider;
     }
 
-    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#getTitleImage() */
+    /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
         return input.getImageResource();
     }
 
-    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#getTitle() */
+    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         if (isDirty()) {
@@ -69,7 +69,7 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
         }
     }
 
-    /** @see com.codenvy.ide.api.editor.EditorPartPresenter#doSave() */
+    /** {@inheritDoc} */
     @Override
     public void doSave() {
         documentProvider.saveDocument(getEditorInput(), document, false, new AsyncCallback<EditorInput>() {
@@ -86,10 +86,9 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
         });
     }
 
-    /** @see com.codenvy.ide.api.editor.EditorPartPresenter#doSaveAs() */
+    /** {@inheritDoc} */
     @Override
     public void doSaveAs() {
-        // TODO Auto-generated method stub
-
+        // do nothing
     }
 }

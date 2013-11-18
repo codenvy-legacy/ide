@@ -17,28 +17,26 @@
  */
 package com.codenvy.ide.api.editor;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.user.client.Window;
 
 /**
- * Abstract implementation of {@link EditorPartPresenter} that is intended to be used by subclassing
- * instead of directly implementing an interface.
+ * Abstract implementation of {@link EditorPartPresenter} that is intended to be used by subclassing instead of directly implementing an
+ * interface.
  *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
 public abstract class AbstractEditorPresenter extends AbstractPartPresenter implements EditorPartPresenter {
-
-    protected boolean dirtyState;
-
+    protected boolean     dirtyState;
     protected EditorInput input;
-
     protected final JsonArray<EditorPartCloseHandler> closeHandlers = JsonCollections.createArray();
 
     /** {@inheritDoc} */
     @Override
-    public void init(EditorInput input) throws EditorInitException {
+    public void init(@NotNull EditorInput input) throws EditorInitException {
         this.input = input;
         initializeEditor();
     }
@@ -65,7 +63,7 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
 
     /** {@inheritDoc} */
     @Override
-    public void addCloseHandler(EditorPartCloseHandler closeHandler) {
+    public void addCloseHandler(@NotNull EditorPartCloseHandler closeHandler) {
         if (!closeHandlers.contains(closeHandler)) {
             closeHandlers.add(closeHandler);
         }
@@ -95,5 +93,4 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
             handler.onClose(this);
         }
     }
-
 }

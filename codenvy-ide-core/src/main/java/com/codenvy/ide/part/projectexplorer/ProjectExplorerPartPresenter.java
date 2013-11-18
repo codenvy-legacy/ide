@@ -18,17 +18,18 @@
 package com.codenvy.ide.part.projectexplorer;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.api.event.ResourceChangedHandler;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
+import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.contexmenu.ContextMenuPresenter;
-import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
@@ -87,7 +88,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      *
      * @param resource
      */
-    public void setContent(Resource resource) {
+    public void setContent(@NotNull Resource resource) {
         view.setItems(resource);
     }
 
@@ -153,13 +154,13 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     }
 
     @Override
-    public void onResourceSelected(Resource resource) {
+    public void onResourceSelected(@NotNull Resource resource) {
         setSelection(new Selection<Resource>(resource));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onResourceAction(Resource resource) {
+    public void onResourceAction(@NotNull Resource resource) {
         // open file
         if (resource.isFile()) {
             eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));

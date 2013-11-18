@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.api.ui.workspace;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
@@ -26,41 +27,35 @@ import com.codenvy.ide.util.ListenerManager.Dispatcher;
  * Abstract base implementation of all PartPresenter
  *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
  */
 public abstract class AbstractPartPresenter implements PartPresenter {
-
     private ListenerManager<PropertyListener> manager;
+    private Selection<?>                      selection;
 
-    private Selection<?> selection;
-
-    /**
-     *
-     */
     public AbstractPartPresenter() {
         manager = ListenerManager.create();
     }
 
-    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#onClose() */
+    /** {@inheritDoc} */
     @Override
     public boolean onClose() {
         return true;
     }
 
-    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#onOpen() */
+    /** {@inheritDoc} */
     @Override
     public void onOpen() {
     }
 
-    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#addPropertyListener(com.codenvy.ide.api.ui.workspace.PropertyListener) */
+    /** {@inheritDoc} */
     @Override
-    public void addPropertyListener(PropertyListener listener) {
+    public void addPropertyListener(@NotNull PropertyListener listener) {
         manager.add(listener);
     }
 
-    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#removePropertyListener(com.codenvy.ide.api.ui.workspace.PropertyListener) */
+    /** {@inheritDoc} */
     @Override
-    public void removePropertyListener(PropertyListener listener) {
+    public void removePropertyListener(@NotNull PropertyListener listener) {
         manager.remove(listener);
     }
 
@@ -92,7 +87,7 @@ public abstract class AbstractPartPresenter implements PartPresenter {
      * @param selection
      *         instance of Selection
      */
-    public void setSelection(Selection<?> selection) {
+    public void setSelection(@NotNull Selection<?> selection) {
         this.selection = selection;
         firePropertyChange(SELECTION_PROPERTY);
     }

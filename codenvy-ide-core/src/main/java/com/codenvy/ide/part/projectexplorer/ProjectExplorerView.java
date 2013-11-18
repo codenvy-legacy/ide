@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.part.projectexplorer;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 import com.codenvy.ide.resources.model.Resource;
@@ -33,7 +34,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
      * @param resource
      *         The root resource item
      */
-    void setItems(Resource resource);
+    void setItems(@NotNull Resource resource);
 
     /**
      * Sets title of part.
@@ -41,7 +42,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
      * @param title
      *         title of part
      */
-    void setTitle(String title);
+    void setTitle(@NotNull String title);
 
     /** Needs for delegate some function into ProjectTree view. */
     public interface ActionDelegate extends BaseActionDelegate {
@@ -51,7 +52,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          * @param resource
          *         node
          */
-        void onResourceSelected(Resource resource);
+        void onResourceSelected(@NotNull Resource resource);
 
         /**
          * Performs any actions in response to some node action.
@@ -59,7 +60,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          * @param resource
          *         node
          */
-        void onResourceAction(Resource resource);
+        void onResourceAction(@NotNull Resource resource);
 
         /**
          * Performs any actions appropriate in response to the user having clicked right button on mouse.
