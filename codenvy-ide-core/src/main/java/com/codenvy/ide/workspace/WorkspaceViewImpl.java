@@ -18,8 +18,10 @@
 package com.codenvy.ide.workspace;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 
@@ -29,11 +31,10 @@ import com.google.inject.Inject;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class WorkspaceViewImpl extends Composite implements WorkspaceView {
-
-    interface WorspaceViewUiBinder extends UiBinder<Widget, WorkspaceViewImpl> {
+    interface WorkspaceViewUiBinder extends UiBinder<Widget, WorkspaceViewImpl> {
     }
 
-    private static WorspaceViewUiBinder uiBinder = GWT.create(WorspaceViewUiBinder.class);
+    private static WorkspaceViewUiBinder uiBinder = GWT.create(WorkspaceViewUiBinder.class);
 
     @UiField
     SimplePanel perspectivePanel;
@@ -43,6 +44,11 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView {
     SimplePanel toolbarPanel;
     @UiField
     FlowPanel   statusPanel;
+    @UiField
+    Button      btnLogin;
+    @UiField
+    Button      btnLogout;
+    ActionDelegate delegate;
 
     /** Create view. */
     @Inject
@@ -59,8 +65,7 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView {
     /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
-        // ok
-        // there are no events for now
+        this.delegate = delegate;
     }
 
     /** {@inheritDoc} */
@@ -79,5 +84,22 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView {
     @Override
     public FlowPanel getStatusPanel() {
         return statusPanel;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleLoginButton(boolean visible) {
+        btnLogin.setVisible(visible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleLogoutButton(boolean visible) {
+        btnLogout.setVisible(visible);
+    }
+
+    @UiHandler("btnLogin")
+    public void onLoginClicked(ClickEvent event) {
+        delegate.onLoginClicked();
     }
 }

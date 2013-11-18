@@ -19,24 +19,28 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
+        <artifactId>codenvy-ide-parent</artifactId>
         <version>3.0.0-M3-SNAPSHOT</version>
     </parent>
-    <packaging>pom</packaging>
-    <artifactId>codenvy-sdk-tutorials</artifactId>
-    <name>Codenvy :: SDK Tutorials</name>
 
-    <modules>
-        <module>action-api</module>
-        <module>dto</module>
-        <module>new-project-wizard</module>
-        <module>new-resource-wizard</module>
-        <module>notification-api</module>
-        <module>parts-api</module>
-        <module>wizard-api</module>
-    </modules>
+    <artifactId>codenvy-runner-docker</artifactId>
+    <name>Codenvy Runner Docker</name>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-runner</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>${commons.compress.version}</version>
+        </dependency>
+    </dependencies>
 </project>

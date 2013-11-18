@@ -20,7 +20,6 @@ package com.codenvy.api.bootstrap.servlet;
 import com.codenvy.api.builder.BuildQueue;
 import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderRegistry;
-import com.codenvy.api.core.config.Configuration;
 import com.codenvy.api.core.util.ComponentLoader;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
@@ -49,28 +48,12 @@ public final class BuildersBootstrap implements ServletContextListener {
         final ServletContext servletContext = sce.getServletContext();
         final BuilderRegistry builders = new BuilderRegistry();
         for (Builder builder : ComponentLoader.all(Builder.class)) {
-            final Configuration configuration = builder.getDefaultConfiguration();
-            for (String name : configuration.getNames()) {
-                final String parameter = servletContext.getInitParameter(builder.getName() + '.' + name);
-                if (parameter != null) {
-                    configuration.set(name, parameter);
-                }
-            }
-            builder.setConfiguration(configuration);
             builder.start();
             builders.add(builder);
             lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(builder));
         }
 
         final BuildQueue queue = new BuildQueue();
-        final Configuration configuration = queue.getDefaultConfiguration();
-        for (String name : configuration.getNames()) {
-            final String parameter = servletContext.getInitParameter(name);
-            if (parameter != null) {
-                configuration.set(name, parameter);
-            }
-        }
-        queue.setConfiguration(configuration);
         queue.start();
         lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(queue));
 

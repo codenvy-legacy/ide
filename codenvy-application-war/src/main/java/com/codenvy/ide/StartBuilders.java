@@ -19,7 +19,6 @@ package com.codenvy.ide;
 
 import com.codenvy.api.builder.BuildQueue;
 import com.codenvy.api.builder.internal.Builder;
-import com.codenvy.api.core.config.Configuration;
 import com.codenvy.api.core.util.ComponentLoader;
 
 import org.picocontainer.Startable;
@@ -56,8 +55,6 @@ public class StartBuilders implements Startable {
         builders = new ArrayList<>(all.size());
         lifeCycles = new ArrayList<>(all.size());
         for (Builder builder : all) {
-            final Configuration configuration = builder.getDefaultConfiguration();
-            builder.setConfiguration(configuration);
             builder.start();
             builders.add(builder);
             lifeCycles.add(new WeakReference<>(builder));

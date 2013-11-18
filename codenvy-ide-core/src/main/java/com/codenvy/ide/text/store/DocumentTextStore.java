@@ -61,11 +61,11 @@ public class DocumentTextStore extends DocumentModel implements TextStore {
     /** @see com.codenvy.ide.text.TextStore#getLength() */
     @Override
     public int getLength() {
-        int lenght = 0;
+        int length = 0;
         for (Line line = getFirstLine(); line != null; line = line.getNextLine()) {
-            lenght += line.getText().length();
+            length += line.getText().length();
         }
-        return lenght;
+        return length;
     }
 
     /** @see com.codenvy.ide.text.TextStore#replace(int, int, java.lang.String) */
