@@ -17,9 +17,10 @@
  */
 package com.codenvy.ide.factory.client.factory;
 
-import com.codenvy.ide.factory.client.factory.CreateFactoryPresenter.ButtonStyleChangedHandler;
+import com.codenvy.ide.factory.client.factory.CreateFactoryPresenter.ChangeHandler;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.InputElement;
@@ -73,8 +74,6 @@ public class CreateFactoryView extends ViewImpl
         
         String blockHeaderCollapsed();
         
-        // File Upload field
-        
         String fileUploadSelected();
         
     }
@@ -82,9 +81,9 @@ public class CreateFactoryView extends ViewImpl
     @UiField
     Style style;    
 
-    public static final String    ID          = "ide.factory.pupop";
+    public static final String    ID                    = "ide.factory.pupop";
 
-    public static final String    TITLE       = "Create and Publish a Factory";
+    public static final String    TITLE                 = "Create and Publish a Factory";
     
     public static final int       INITIAL_WIDTH         = 800;
     
@@ -103,13 +102,13 @@ public class CreateFactoryView extends ViewImpl
     @UiField
     InputElement                  checkShowCounter, radioVertical, radioHorizontal, radioDark, radioWhite, openAfterLaunchField;
 
-    @UiField    LabelElement        uploadFilePanel;
+    @UiField    LabelElement      uploadFilePanel;
     
-    @UiField    InputElement        uploadFileField;
+    @UiField    InputElement      uploadFileField;
     
-    @UiField    SpanElement         selectedFileNameSpan;
+    @UiField    SpanElement       selectedFileNameSpan;
     
-    @UiField    DivElement          resetUploadButton;
+    @UiField    DivElement        resetUploadButton;
     
     @UiField
     ImageButton                   buttonCancel, buttonCreate, buttonBack, buttonFinish;
@@ -149,7 +148,9 @@ public class CreateFactoryView extends ViewImpl
 
     private int                   currentPage = 0;
 
-    private ButtonStyleChangedHandler refreshCallback;
+    private ChangeHandler buttonStyleChangeHandler;
+    
+    private ChangeHandler advancedParametersChangeHandler;
     
     private ValueChangeHandler<String> uploadLogoValueChangeHandler;
     
@@ -177,11 +178,8 @@ public class CreateFactoryView extends ViewImpl
         radioWhite.setId("radioWhite");
 
         // sinking events
-        addChangeListener(checkShowCounter);
-        addChangeListener(radioVertical);
-        addChangeListener(radioHorizontal);
-        addChangeListener(radioDark);
-        addChangeListener(radioWhite);
+        listenStyleChanges(checkShowCounter, radioVertical, radioHorizontal, radioDark, radioWhite);
+        listenParametersChanges(descriptionField, emailField, authorField, companyIdField, affiliateIdField);
         
         handleFileUploadEvents();
         
@@ -373,17 +371,33 @@ public class CreateFactoryView extends ViewImpl
         }
     }-*/;
 
-    private void addChangeListener(InputElement element) {
-        DOM.sinkEvents((com.google.gwt.user.client.Element)element.cast(), Event.ONCHANGE);        
-        DOM.setEventListener((com.google.gwt.user.client.Element)element.cast(), new EventListener() {
-            @Override
-            public void onBrowserEvent(Event event) {
-                if (refreshCallback != null) {
-                    refreshCallback.onButtonStyleChanged();
+    private void listenStyleChanges(Element... elements) {
+        for (Element element : elements) {
+            DOM.sinkEvents((com.google.gwt.user.client.Element)element.cast(), Event.ONCHANGE);        
+            DOM.setEventListener((com.google.gwt.user.client.Element)element.cast(), new EventListener() {
+                @Override
+                public void onBrowserEvent(Event event) {
+                    if (buttonStyleChangeHandler != null) {
+                        buttonStyleChangeHandler.onChange();
+                    }
                 }
-            }
-        });
+            });            
+        }
     }
+    
+    private void listenParametersChanges(Element ... elements) {
+        for (Element element : elements) {
+            DOM.sinkEvents((com.google.gwt.user.client.Element)element.cast(), Event.ONCHANGE);        
+            DOM.setEventListener((com.google.gwt.user.client.Element)element.cast(), new EventListener() {
+                @Override
+                public void onBrowserEvent(Event event) {
+                    if (advancedParametersChangeHandler != null) {
+                        advancedParametersChangeHandler.onChange();
+                    }
+                }
+            });            
+        }
+    }    
     
     private void addClickHandler(DivElement element, final ClickHandler clickHandler) {
         DOM.sinkEvents((com.google.gwt.user.client.Element)element.cast(), Event.ONCLICK);        
@@ -546,9 +560,14 @@ public class CreateFactoryView extends ViewImpl
     }
 
     @Override
-    public void setButtonStyleChangedHandler(ButtonStyleChangedHandler callback) {
-        this.refreshCallback = callback;
+    public void setButtonStyleChangedHandler(ChangeHandler handler) {
+        buttonStyleChangeHandler = handler;
     }
+    
+    @Override
+    public void setAdvancedParametersChangedHandler(ChangeHandler handler) {
+        advancedParametersChangeHandler = handler;
+    }    
 
     @Override
     public native void previewFactoryButton(String content) /*-{
