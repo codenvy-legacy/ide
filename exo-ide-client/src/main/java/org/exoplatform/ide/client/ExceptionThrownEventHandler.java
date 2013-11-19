@@ -18,11 +18,12 @@
 package org.exoplatform.ide.client;
 
 import com.codenvy.ide.client.util.logging.Log;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
-import org.exoplatform.gwtframework.commons.exception.*;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.commons.exception.ServerDisconnectedException;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 
 /**
@@ -43,6 +44,11 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler {
      *      .ExceptionThrownEvent)
      */
     public void onError(ExceptionThrownEvent event) {
+        if (event.getException() == null) {
+            Dialogs.getInstance().showError(event.getErrorMessage());
+            return;
+        }
+        
         Throwable error = event.getException();
         Log.error(getClass(), error);
         error.printStackTrace();
@@ -60,56 +66,13 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler {
             ServerException serverException = (ServerException)error;
             processServerError(serverException, event.getErrorMessage());
         } else {
-            if (error != null)
-                Dialogs.getInstance().showError(error.getMessage());
-            else
-                Dialogs.getInstance().showError(event.getErrorMessage());
+            Dialogs.getInstance().showError(error.getMessage());
         }
     }
 
     private void showServerDisconnectedDialog(final ServerDisconnectedException exception) {
-
         String message = IDE.IDE_LOCALIZATION_CONSTANT.serverDisconnected();
         Dialogs.getInstance().showError(message);
-//      Dialogs.getInstance().ask("IDE", message, new BooleanValueReceivedHandler()
-//      {
-//         @Override
-//         public void booleanValueReceived(Boolean value)
-//         {
-//            if (value != null && value == true)
-//            {
-//               if (exception.getAsyncRequest() != null)
-//               {
-//                  Log.info("call  < asyncRequest.sendRequest(); > from ServerDisconnectedDialog ");
-//                  try
-//                  {
-//                     exception.getAsyncRequest().send(exception.getAsyncRequest().getCallback());
-//                  }
-//                  catch (RequestException e)
-//                  {
-//                  }
-//               }
-//               else if (exception.getAsyncRequest() != null)
-//               {
-//                  Log.info("call  < asyncRequest.sendRequest(); > from ServerDisconnectedDialog ");
-//                  sendAgain(exception.getAsyncRequest());
-//               }
-//            }
-//         }
-//      });
-    }
-
-    private void sendAgain(AsyncRequest request) {
-        try {
-            request.send(request.getCallback());
-        } catch (final Exception e) {
-            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    onError(new ExceptionThrownEvent(e));
-                }
-            });
-        }
     }
 
     private void processServerError(ServerException serverException, String errorMessage) {
