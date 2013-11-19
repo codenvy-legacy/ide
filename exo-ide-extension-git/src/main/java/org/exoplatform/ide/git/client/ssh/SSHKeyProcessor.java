@@ -26,6 +26,7 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.marshaller.GitUrlInfoUnmarshaller;
 import org.exoplatform.ide.git.shared.GitUrlVendorInfo;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -137,7 +138,7 @@ public class SSHKeyProcessor implements SSHKeyProcessorHandler, GenerateGitHubKe
             protected void onFailure(Throwable e) {
                 if (e instanceof UnauthorizedException) {
                     Dialogs.getInstance().ask(GitExtension.MESSAGES.authorizeTitle(),
-                                              GitExtension.MESSAGES.authorizeBody(info.getVendorBaseHost()),
+                                              GitExtension.MESSAGES.authorizeSSHBody(info.getVendorBaseHost()),
                                               new BooleanValueReceivedHandler() {
                                                   @Override
                                                   public void booleanValueReceived(Boolean value) {
@@ -171,7 +172,7 @@ public class SSHKeyProcessor implements SSHKeyProcessorHandler, GenerateGitHubKe
     @Override
     public void onGenerateGitHubSshKey(GenerateGitHubKeyEvent event) {
         this.callback = sshKeyGeneratedCallback;
-        //TODO need adapt code to use there
+        generateNewKeyPair(new GitUrlVendorInfo("github", "github.com", Arrays.asList("user", "repo"), false));
     }
 
     Callback sshKeyGeneratedCallback = new Callback() {
