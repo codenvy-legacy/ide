@@ -26,7 +26,6 @@ import com.codenvy.api.runner.internal.Disposer;
 import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
-import com.codenvy.api.runner.internal.docker.DockerfileBuilder;
 import com.codenvy.api.runner.internal.dto.RunRequest;
 import com.codenvy.runner.docker.json.ContainerConfig;
 import com.codenvy.runner.docker.json.ContainerCreated;
@@ -46,7 +45,7 @@ import java.util.concurrent.TimeUnit;
 
 /** @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a> */
 public class DockerRunner extends Runner {
-    private static final Logger LOG = LoggerFactory.getLogger(com.codenvy.api.runner.internal.docker.DockerRunner.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DockerRunner.class);
 
     private final Map<String, java.io.File> dockerFileTemplates;
     private final Map<String, ImageUsage>   dockerImageUsage;
@@ -166,8 +165,7 @@ public class DockerRunner extends Runner {
         }
     }
 
-    protected com.codenvy.api.runner.internal.docker.DockerfileBuilder getDockerfileBuilder(DockerRunnerConfiguration configuration) throws
-                                                                                                                                     RunnerException {
+    protected DockerfileBuilder getDockerfileBuilder(DockerRunnerConfiguration configuration) throws RunnerException {
         final String dockerfileName = configuration.getDockerfileName();
         final java.io.File template = dockerFileTemplates.get(dockerfileName);
         if (template == null) {
