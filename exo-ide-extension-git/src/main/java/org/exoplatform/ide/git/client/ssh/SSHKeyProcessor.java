@@ -147,6 +147,8 @@ public class SSHKeyProcessor implements SSHKeyProcessorHandler, GenerateGitHubKe
                                                                                   .withScopes(info.getOAuthScopes())
                                                                                   .withCallback(authCallback)
                                                                                   .login();
+                                                      } else {
+                                                          IDE.fireEvent(new RefreshKeysEvent());
                                                       }
                                                   }
                                               });
