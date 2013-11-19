@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.git.shared;
 
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Request to reset current HEAD to the specified state.
@@ -58,7 +58,13 @@ public interface ResetRequest extends GitRequest {
 
     /** @return commit to which current head should be reset */
     String getCommit();
+    
+    void setCommit(String commit);
+    
+    ResetRequest withCommit(String commit);
 
     /** @return type of reset. */
     ResetType getType();
+    
+    void setType(ResetType type);
 }

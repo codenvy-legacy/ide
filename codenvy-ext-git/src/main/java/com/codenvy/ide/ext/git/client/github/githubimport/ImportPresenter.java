@@ -24,13 +24,12 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.github.GitHubClientService;
 import com.codenvy.ide.ext.git.client.github.load.ProjectData;
 import com.codenvy.ide.ext.git.client.marshaller.AllRepositoriesUnmarshaller;
-import com.codenvy.ide.ext.git.client.marshaller.RepoInfoUnmarshaller;
-import com.codenvy.ide.ext.git.client.marshaller.RepoInfoUnmarshallerWS;
 import com.codenvy.ide.ext.git.client.marshaller.StringUnmarshaller;
 import com.codenvy.ide.ext.git.shared.GitHubRepository;
 import com.codenvy.ide.ext.git.shared.RepoInfo;
@@ -84,6 +83,7 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
     private GitClientService                           gitService;
     private NotificationManager                        notificationManager;
     private Notification                               notification;
+    private DtoFactory                                 dtoFactory;
 
 
     /**
@@ -102,7 +102,7 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
     @Inject
     public ImportPresenter(ImportView view, GitHubClientService service, EventBus eventBus, @Named("restContext") String restContext,
                            GitLocalizationConstant constant, ResourceProvider resourceProvider, ConsolePart console,
-                           GitClientService gitService, NotificationManager notificationManager) {
+                           GitClientService gitService, NotificationManager notificationManager, DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
@@ -113,6 +113,7 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
         this.console = console;
         this.gitService = gitService;
         this.notificationManager = notificationManager;
+        this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */
@@ -122,9 +123,8 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
 
     /** Get the list of all authorized user's repositories. */
     private void getUserRepos() {
-        AllRepositoriesUnmarshaller unmarshaller = new AllRepositoriesUnmarshaller();
         try {
-            service.getAllRepositories(new AsyncRequestCallback<JsonStringMap<JsonArray<GitHubRepository>>>(unmarshaller) {
+            service.getAllRepositories(new AsyncRequestCallback<JsonStringMap<JsonArray<GitHubRepository>>>(new AllRepositoriesUnmarshaller(dtoFactory)) {
                 @Override
                 protected void onSuccess(JsonStringMap<JsonArray<GitHubRepository>> result) {
                     onListLoaded(result);
@@ -191,9 +191,8 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
      *         user which need token
      */
     private void getToken(final String user) {
-        StringUnmarshaller unmarshaller = new StringUnmarshaller();
         try {
-            service.getUserToken(user, new AsyncRequestCallback<String>(unmarshaller) {
+            service.getUserToken(user, new AsyncRequestCallback<String>(new com.codenvy.ide.rest.StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
                     if (result == null || result.isEmpty()) {
@@ -297,13 +296,13 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
      *         folder (root of GIT repository)
      */
     private void cloneRepository(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
-        RepoInfoUnmarshallerWS unmarshallerWS = new RepoInfoUnmarshallerWS();
         try {
             gitService.cloneRepositoryWS(resourceProvider.getVfsId(), project, remoteUri, remoteName,
-                                         new RequestCallback<RepoInfo>(unmarshallerWS) {
+                                         new RequestCallback<String>(new StringUnmarshaller()) {
                                              @Override
-                                             protected void onSuccess(RepoInfo result) {
-                                                 onCloneSuccess(result, project);
+                                             protected void onSuccess(String result) {
+                                                 RepoInfo repoInfo = dtoFactory.createDtoFromJson(result, RepoInfo.class);
+                                                 onCloneSuccess(repoInfo, project);
                                              }
 
                                              @Override
@@ -329,13 +328,13 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
      *         folder (root of GIT repository)
      */
     private void cloneRepositoryREST(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
-        RepoInfoUnmarshaller unmarshaller = new RepoInfoUnmarshaller();
         try {
             gitService.cloneRepository(resourceProvider.getVfsId(), project, remoteUri, remoteName,
-                                       new AsyncRequestCallback<RepoInfo>(unmarshaller) {
+                                       new AsyncRequestCallback<String>(new com.codenvy.ide.rest.StringUnmarshaller()) {
                                            @Override
-                                           protected void onSuccess(RepoInfo result) {
-                                               onCloneSuccess(result, project);
+                                           protected void onSuccess(String result) {
+                                               RepoInfo repoInfo = dtoFactory.createDtoFromJson(result, RepoInfo.class);
+                                               onCloneSuccess(repoInfo, project);
                                            }
 
                                            @Override

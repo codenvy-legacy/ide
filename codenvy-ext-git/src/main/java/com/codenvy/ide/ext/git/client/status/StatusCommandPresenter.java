@@ -23,9 +23,9 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.client.marshaller.StringUnmarshaller;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -72,10 +72,8 @@ public class StatusCommandPresenter {
             return;
         }
 
-        StringUnmarshaller unmarshaller = new StringUnmarshaller();
-
         try {
-            service.statusText(resourceProvider.getVfsId(), project.getId(), false, new AsyncRequestCallback<String>(unmarshaller) {
+            service.statusText(resourceProvider.getVfsId(), project.getId(), false, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
                     console.print(result);

@@ -17,8 +17,9 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.dto.shared.DTO;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -26,5 +27,5 @@ import com.codenvy.ide.json.JsonArray;
  */
 @DTO
 public interface Log {
-    JsonArray<Revision> getCommits();
+    List<Revision> getCommits();
 }

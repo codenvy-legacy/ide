@@ -35,11 +35,11 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.*;
 
 /**
@@ -126,7 +126,7 @@ public class RemoveFromIndexPresenterTest extends BaseTest {
                 onSuccess.invoke(callback, EMPTY_TEXT);
                 return callback;
             }
-        }).when(service).remove(anyString(), anyString(), (JsonArray<String>)anyObject(), anyBoolean(),
+        }).when(service).remove(anyString(), anyString(), (List<String>)anyObject(), anyBoolean(),
                                 (AsyncRequestCallback<String>)anyObject());
         doAnswer(new Answer() {
             @Override
@@ -142,7 +142,7 @@ public class RemoveFromIndexPresenterTest extends BaseTest {
         presenter.onRemoveClicked();
 
         verify(service)
-                .remove(eq(VFS_ID), eq(PROJECT_ID), (JsonArray<String>)anyObject(), eq(REMOVED),
+                .remove(eq(VFS_ID), eq(PROJECT_ID), (List<String>)anyObject(), eq(REMOVED),
                         (AsyncRequestCallback<String>)anyObject());
         verify(resourceProvider).getProject(eq(PROJECT_NAME), (AsyncCallback<Project>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -163,14 +163,14 @@ public class RemoveFromIndexPresenterTest extends BaseTest {
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(service).remove(anyString(), anyString(), (JsonArray<String>)anyObject(), anyBoolean(),
+        }).when(service).remove(anyString(), anyString(), (List<String>)anyObject(), anyBoolean(),
                                 (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onRemoveClicked();
 
         verify(service)
-                .remove(eq(VFS_ID), eq(PROJECT_ID), (JsonArray<String>)anyObject(), eq(REMOVED),
+                .remove(eq(VFS_ID), eq(PROJECT_ID), (List<String>)anyObject(), eq(REMOVED),
                         (AsyncRequestCallback<String>)anyObject());
         verify(constant).removeFilesFailed();
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -181,14 +181,14 @@ public class RemoveFromIndexPresenterTest extends BaseTest {
     public void testOnRemoveClickedWhenExceptionHappened() throws Exception {
         when(view.isRemoved()).thenReturn(REMOVED);
         when(selectionAgent.getSelection()).thenReturn(null);
-        doThrow(RequestException.class).when(service).remove(anyString(), anyString(), (JsonArray<String>)anyObject(), anyBoolean(),
+        doThrow(RequestException.class).when(service).remove(anyString(), anyString(), (List<String>)anyObject(), anyBoolean(),
                                                              (AsyncRequestCallback<String>)anyObject());
 
         presenter.showDialog();
         presenter.onRemoveClicked();
 
         verify(service)
-                .remove(eq(VFS_ID), eq(PROJECT_ID), (JsonArray<String>)anyObject(), eq(REMOVED),
+                .remove(eq(VFS_ID), eq(PROJECT_ID), (List<String>)anyObject(), eq(REMOVED),
                         (AsyncRequestCallback<String>)anyObject());
         verify(view).close();
         verify(constant).removeFilesFailed();

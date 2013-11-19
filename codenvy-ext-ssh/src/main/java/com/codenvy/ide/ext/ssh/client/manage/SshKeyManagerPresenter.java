@@ -24,21 +24,16 @@ import com.codenvy.ide.api.ui.preferences.AbstractPreferencesPagePresenter;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.ext.git.client.github.GitHubClientService;
-import com.codenvy.ide.ext.git.client.marshaller.AllRepositoriesUnmarshaller;
-import com.codenvy.ide.ext.git.shared.GitHubRepository;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.ssh.client.JsonpAsyncCallback;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
 import com.codenvy.ide.ext.ssh.client.SshResources;
 import com.codenvy.ide.ext.ssh.client.key.SshKeyPresenter;
-import com.codenvy.ide.ext.ssh.client.marshaller.SshKeysUnmarshaller;
 import com.codenvy.ide.ext.ssh.client.upload.UploadSshKeyPresenter;
-import com.codenvy.ide.ext.ssh.shared.GenKeyRequest;
-import com.codenvy.ide.ext.ssh.shared.KeyItem;
+import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
+import com.codenvy.ide.ext.ssh.dto.KeyItem;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.resources.marshal.StringUnmarshaller;
 import com.codenvy.ide.resources.marshal.UserUnmarshaller;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -75,12 +70,13 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     private SshLocalizationConstant constant;
     private EventBus                eventBus;
     private UserClientService       userService;
-    private GitHubClientService     gitHubClientService;
+  //TODO  private GitHubClientService     gitHubClientService;
     private Loader                  loader;
     private String                  restContext;
     private SshKeyPresenter         sshKeyPresenter;
     private UploadSshKeyPresenter   uploadSshKeyPresenter;
     private NotificationManager     notificationManager;
+    private DtoFactory              dtoFactory;
 
     /**
      * Create presenter.
@@ -97,9 +93,9 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
      */
     @Inject
     public SshKeyManagerPresenter(SshKeyManagerView view, SshKeyService service, SshResources resources, SshLocalizationConstant constant,
-                                  EventBus eventBus, UserClientService userService, GitHubClientService gitHubClientService,
+                                  EventBus eventBus, UserClientService userService, /* TODO GitHubClientService gitHubClientService,*/
                                   @Named("restContext") String restContext, SshKeyPresenter sshKeyPresenter,
-                                  UploadSshKeyPresenter uploadSshKeyPresenter, NotificationManager notificationManager) {
+                                  UploadSshKeyPresenter uploadSshKeyPresenter, NotificationManager notificationManager, DtoFactory dtoFactory) {
         super(constant.sshManagerTitle(), resources.sshKeyManager());
 
         this.view = view;
@@ -108,11 +104,12 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         this.constant = constant;
         this.eventBus = eventBus;
         this.userService = userService;
-        this.gitHubClientService = gitHubClientService;
+     //TODO   this.gitHubClientService = gitHubClientService;
         this.restContext = restContext;
         this.sshKeyPresenter = sshKeyPresenter;
         this.uploadSshKeyPresenter = uploadSshKeyPresenter;
         this.notificationManager = notificationManager;
+        this.dtoFactory = dtoFactory;
     }
 
     /** {@inheritDoc} */
@@ -185,7 +182,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
             public void onSuccess(JavaScriptObject result) {
                 boolean githubKeyExists = false;
                 loader = getLoader();
-                JsonArray<KeyItem> keys = SshKeysUnmarshaller.unmarshal(result);
+                JsonArray<KeyItem> keys = dtoFactory.createListDtoFromJson(result.toString(), KeyItem.class);
 
                 for (int i = 0; i < keys.size(); i++) {
                     KeyItem key = keys.get(i);
@@ -239,7 +236,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
      *         user which need token
      */
     private void getToken(@NotNull final String user) {
-        StringUnmarshaller unmarshaller = new StringUnmarshaller();
+      /* TODO StringUnmarshaller unmarshaller = new StringUnmarshaller();
 
         try {
             gitHubClientService.getUserToken(user, new AsyncRequestCallback<String>(unmarshaller) {
@@ -261,7 +258,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
             });
         } catch (RequestException e) {
             loader.hide();
-        }
+        }*/
     }
 
     /** Log in  github */
@@ -307,7 +304,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
             @Override
             public void onSuccess(JavaScriptObject result) {
                 getLoader().hide();
-                JsonArray<KeyItem> keys = SshKeysUnmarshaller.unmarshal(result);
+                JsonArray<KeyItem> keys = dtoFactory.createListDtoFromJson(result.toString(), KeyItem.class);
                 for (int i = 0; i < keys.size(); i++) {
                     KeyItem key = keys.get(i);
                     if (key.getHost().equals("github.com")) {
@@ -353,7 +350,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
 
     /** Get the list of all authorized user's repositories. */
     private void getUserRepos() {
-        try {
+      /* TODO try {
             AllRepositoriesUnmarshaller unmarshaller = new AllRepositoriesUnmarshaller();
             gitHubClientService.getAllRepositories(new AsyncRequestCallback<JsonStringMap<JsonArray<GitHubRepository>>>(unmarshaller) {
                 @Override
@@ -372,7 +369,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             Notification notification = new Notification(e.getMessage(), ERROR);
             notificationManager.showNotification(notification);
-        }
+        }*/
     }
 
     /** {@inheritDoc} */
@@ -400,7 +397,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
             @Override
             public void onSuccess(JavaScriptObject result) {
                 getLoader().hide();
-                JsonArray<KeyItem> keys = SshKeysUnmarshaller.unmarshal(result);
+                JsonArray<KeyItem> keys = dtoFactory.createListDtoFromJson(result.toString(), KeyItem.class);
                 view.setKeys(keys);
             }
 

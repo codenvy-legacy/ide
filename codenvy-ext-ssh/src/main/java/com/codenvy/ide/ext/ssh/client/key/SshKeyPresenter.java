@@ -23,7 +23,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.ssh.client.JsonpAsyncCallback;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
-import com.codenvy.ide.ext.ssh.shared.KeyItem;
+import com.codenvy.ide.ext.ssh.dto.KeyItem;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 import com.google.inject.Inject;
