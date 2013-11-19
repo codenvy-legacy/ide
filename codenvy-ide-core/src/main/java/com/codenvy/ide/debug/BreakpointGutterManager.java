@@ -207,7 +207,7 @@ public class BreakpointGutterManager {
 
     /** @return all breakpoints. */
     public List<Breakpoint> getBreakPoints() {
-        final List<Breakpoint> points = new ArrayList<>(breakPoints.size());
+        final List<Breakpoint> points = new ArrayList<Breakpoint>(breakPoints.size());
 
         breakPoints.iterate(new JsonStringMap.IterationCallback<JsonArray<Breakpoint>>() {
             @Override

@@ -130,7 +130,7 @@
         <module>codenvy-ext-demo</module>
         <module>codenvy-ext-css</module>
         <module>codenvy-ext-java</module>
-        <module>codenvy-ext-java-runtime</module>
+        <!--module>codenvy-ext-java-runtime</module-->
         <!--module>codenvy-ext-cloudfoundry</module>
         <module>codenvy-ext-cloudbees</module>
         <module>codenvy-ext-appfog</module>
