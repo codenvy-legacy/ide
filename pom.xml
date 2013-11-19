@@ -37,6 +37,13 @@
         <tag>HEAD</tag>
     </scm>
 
+    <!--
+        IMPORTANT!
+        Make sure that the same properties in files
+        codenvy-ext-extensions-runtime/src/main/resource/codenvyPlatform/codenvy-ide-client/pom.xml
+        codenvy-sdk-tutorials/*/pom.xml
+        have the same values.
+    -->
     <properties>
         <exo.product.name>codenvy-ide</exo.product.name>
 
@@ -122,29 +129,31 @@
         <module>codenvy-ext-css</module>
         <module>codenvy-ext-java</module>
         <!--module>codenvy-ext-java-runtime</module
-        module>codenvy-ext-cloudfoundry</module>
-        <module>codenvy-ext-cloudbees</module>
-        <module>codenvy-ext-appfog</module>
-        <module>codenvy-ext-openshift</module>
-        <module>codenvy-ext-googleappengine</module>
-        <module>codenvy-ext-aws</module>
-        <module>codenvy-ext-jenkins</module-->
+module>codenvy-ext-cloudfoundry</module>
+<module>codenvy-ext-cloudbees</module>
+<module>codenvy-ext-appfog</module>
+<module>codenvy-ext-openshift</module>
+<module>codenvy-ext-googleappengine</module>
+<module>codenvy-ext-aws</module>
+<module>codenvy-ext-jenkins</module-->
         <module>codenvy-ext-git</module>
         <module>codenvy-ext-maven</module>
         <module>codenvy-ext-ant</module>
         <module>codenvy-ext-ssh</module>
         <!--<module>codenvy-ext-extensions-runtime</module>
-        <module>codenvy-ext-tutorials</module>-->
+<module>codenvy-ext-tutorials</module>-->
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
-
-        <module>codenvy-ext-tutorials</module>
-
-
+        <module>codenvy-sdk-tutorials/action-api</module>
+        <module>codenvy-sdk-tutorials/dto</module>
+        <module>codenvy-sdk-tutorials/wizard-api</module>
+        <module>codenvy-sdk-tutorials/parts-api</module>
+        <module>codenvy-sdk-tutorials/notification-api</module>
+        <module>codenvy-sdk-tutorials/new-project-wizard</module>
+        <module>codenvy-sdk-tutorials/new-resource-wizard</module>
         <module>codenvy-application-war</module>
         <module>codenvy-ide-site-war</module>
         <!--<module>codenvy-sdk-private-dependencies</module>-->
         <module>codenvy-packaging-standalone-tomcat</module>
-
     </modules>
 </project>

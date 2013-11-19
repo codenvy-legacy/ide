@@ -91,7 +91,6 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
                 });
             }
         });
-
     }
 
     /** @see com.codenvy.ide.api.editor.TextEditorPartPresenter#close(boolean) */

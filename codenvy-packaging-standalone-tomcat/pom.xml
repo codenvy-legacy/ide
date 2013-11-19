@@ -381,6 +381,10 @@ from Codenvy S.A..
                                     <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/"/>
                                 </move>
 
+                                <!--<move todir="${project.build.directory}/tomcat-ide/tutorials">-->
+                                    <!--<fileset dir="${project.build.directory}/packager-conf/zip/tutorials"/>-->
+                                <!--</move>-->
+
                                 <war destfile="${project.build.directory}/tomcat-ide/webapps/ide.war" needxmlfile="false">
                                     <fileset dir="${project.build.directory}/packager-conf/war/ide"/>
                                 </war>

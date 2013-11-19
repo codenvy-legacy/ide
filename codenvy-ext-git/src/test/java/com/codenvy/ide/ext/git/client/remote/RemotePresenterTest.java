@@ -61,7 +61,7 @@ public class RemotePresenterTest extends BaseTest {
     public void disarm() {
         super.disarm();
 
-        presenter = new RemotePresenter(view, service, resourceProvider, constant, addRemoteRepositoryPresenter, notificationManager);
+        presenter = new RemotePresenter(view, service, resourceProvider, constant, addRemoteRepositoryPresenter, notificationManager, dtoFactory);
 
         when(selectedRemote.getName()).thenReturn(REPOSITORY_NAME);
     }

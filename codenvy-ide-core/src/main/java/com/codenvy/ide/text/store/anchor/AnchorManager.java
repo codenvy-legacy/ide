@@ -210,7 +210,7 @@ public class AnchorManager {
      * For now, the performance is O(lines + anchors)
      * <p/>
      * TODO: Instead we should consider maintaining a separate anchor.
-     * TODO: avoid recusrion list. This should let us easily achieve O(anchors)
+     * TODO: avoid recursion list. This should let us easily achieve O(anchors)
      * or better.
      *
      * @param anchor
