@@ -163,11 +163,7 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor {
         }
     }
 
-    /**
-     * @see com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor#computeCompletionProposals(com.codenvy.ide.texteditor.api
-     * .TextEditorPartView,
-     *      int)
-     */
+    /** {@inheritDoc} */
     @Override
     public CompletionProposal[] computeCompletionProposals(TextEditorPartView view, int offset) {
         if (view.getSelection().hasSelection()) {
@@ -222,16 +218,15 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor {
         return proposals;
     }
 
-    /** @see com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor#getCompletionProposalAutoActivationCharacters() */
+    /** {@inheritDoc} */
     @Override
     public char[] getCompletionProposalAutoActivationCharacters() {
         return new char[]{':'};
     }
 
-    /** @see com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor#getErrorMessage() */
+    /** {@inheritDoc} */
     @Override
     public String getErrorMessage() {
         return null;
     }
-
 }

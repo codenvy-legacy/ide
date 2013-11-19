@@ -15,29 +15,27 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.css.editor;
+package com.codenvy.ide.tutorial.editor.editor;
 
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.texteditor.api.parser.BasicTokenFactory;
 import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
 
+import static com.codenvy.ide.tutorial.editor.EditorTutorialExtension.GROOVY_MIME_TYPE;
+
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * The groovy file type editor configuration.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class CssEditorConfiguration extends TextEditorConfiguration {
+public class GroovyEditorConfiguration extends TextEditorConfiguration {
 
-    private CssResources resourcess;
-
-    /** @param resourcess */
-    public CssEditorConfiguration(CssResources resourcess) {
+    public GroovyEditorConfiguration() {
         super();
-        this.resourcess = resourcess;
     }
 
     private static native CmParser getParserForMime(String mime) /*-{
@@ -45,20 +43,20 @@ public class CssEditorConfiguration extends TextEditorConfiguration {
         return $wnd.CodeMirror.getMode(conf, mime);
     }-*/;
 
-
     /** {@inheritDoc} */
     @Override
     public Parser getParser(TextEditorPartView view) {
-        CmParser parser = getParserForMime("text/css");
-        parser.setNameAndFactory("css", new CssTokenFactory());
+        CmParser parser = getParserForMime(GROOVY_MIME_TYPE);
+        parser.setNameAndFactory("groovy", new BasicTokenFactory());
         return parser;
     }
 
     /** {@inheritDoc} */
     @Override
     public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view) {
-        JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
-        map.put(Document.DEFAULT_CONTENT_TYPE, new CssCodeAssistantProcessor(resourcess));
-        return map;
+//        JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
+//        map.put(EditorTutorialExtension.GROOVY_MIME_TYPE, new CssCodeAssistantProcessor(resourcess));
+//        return map;
+        return null;
     }
 }
