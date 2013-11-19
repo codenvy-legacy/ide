@@ -194,7 +194,7 @@ public class FactoryService {
                 }
             }
         } catch (GitException e) {
-            if (COMMIT_NOT_FOUND_PATTERN.matcher(e.getLocalizedMessage()).matches() && emptyCommitId(factoryUrl)) {
+            if (COMMIT_NOT_FOUND_PATTERN.matcher(e.getLocalizedMessage()).find()) {
                 publishWebsocketMessage(String.format(COMMIT_NOT_FOUND, factoryUrl.getCommitid()));
             } else {
                 deleteRepository(vfs, projectId);
@@ -209,10 +209,6 @@ public class FactoryService {
         }
 
         return convertToProject(factoryUrl, vfsId, projectId);
-    }
-
-    private boolean emptyCommitId(SimpleFactoryUrl factoryUrl) {
-        return factoryUrl.getCommitid() == null || factoryUrl.getCommitid().trim().isEmpty();
     }
 
     /**
