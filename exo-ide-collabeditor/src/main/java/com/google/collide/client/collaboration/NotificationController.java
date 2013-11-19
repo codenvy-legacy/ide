@@ -44,11 +44,9 @@ public class NotificationController {
                 }
             };
 
-
     private NotificationManager manager;
 
     private UsersModel usersModel;
-
 
     public NotificationController(NotificationManager manager, CollaborationManager collaborationManager,
                                   MessageFilter messageFilter, UsersModel usersModel, HandlerManager eventBus, Css css) {
@@ -64,7 +62,7 @@ public class NotificationController {
         String fileName = notification.getFilePath();
         fileName = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
         manager.addNotification(new Notification("User " + user.getDisplayName() + " wants to " + getOperationName(
-                notification.getOperation()) + " " + targetPath + " and ask you to close file " + fileName, -1));
+                notification.getOperation()) + " " + targetPath + " and asks you to close file " + fileName, -1));
     }
 
     private String getOperationName(Operation operation) {

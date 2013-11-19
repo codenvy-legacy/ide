@@ -35,8 +35,11 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @version $Id:
  */
 public class ProjectLockedPresenter implements ResourceLockedView.ActionDelegate, ProjectUsersListener {
+    
     private final ResourceLockedView                  view;
+    
     private final ProjectModel                        project;
+    
     private final FileOperationNotification.Operation operation;
 
     public ProjectLockedPresenter(ProjectModel project, FileOperationNotification.Operation operation) {
@@ -49,7 +52,7 @@ public class ProjectLockedPresenter implements ResourceLockedView.ActionDelegate
         builder.appendHtmlConstant("Can't delete project <b>").appendEscaped(
                 project.getName()).appendHtmlConstant("</b>").toSafeHtml();
         view.setMessageText(builder.toSafeHtml());
-        view.setUserList(new SafeHtmlBuilder().appendEscaped("This project opened by other user(s).").toSafeHtml());
+        view.setUserList(new SafeHtmlBuilder().appendEscaped("This project is opened by other user(s).").toSafeHtml());
         ChatExtension.get().getProjectUserListeners().add(this);
     }
 
@@ -64,7 +67,7 @@ public class ProjectLockedPresenter implements ResourceLockedView.ActionDelegate
         DtoClientImpls.ProjectOperationNotificationImpl notification = DtoClientImpls.ProjectOperationNotificationImpl.make();
         notification.setProjectId(project.getId()).setClientId(BootstrapSession.getBootstrapSession().getActiveClientId());
         String username = BootstrapSession.getBootstrapSession().getUsername();
-        notification.setMessage(username + " wont to delete " + project.getName() + " and ask you to close this project.");
+        notification.setMessage(username + " wants to delete " + project.getName() + " and asks you to close this project.");
         VfsWatcherExtension.get().collaborationApi.PROJECT_NOTIFICATION.send(notification);
     }
 
@@ -75,8 +78,7 @@ public class ProjectLockedPresenter implements ResourceLockedView.ActionDelegate
     @Override
     public void onUserCloseProject() {
         if (ChatExtension.get().getCurrentProjectParticipants().size() <= 1) {
-
-            Dialogs.getInstance().showInfo("All users close project, now you may perform operation.");
+            Dialogs.getInstance().showInfo("All users have just closed the project, now you may perform the operation.");
             onClose();
         }
     }

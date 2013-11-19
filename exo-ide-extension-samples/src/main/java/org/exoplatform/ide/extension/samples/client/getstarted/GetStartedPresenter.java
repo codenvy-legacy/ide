@@ -25,7 +25,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 
@@ -52,11 +51,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
@@ -271,7 +267,8 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
 
         currentStep = WizardStep.TECHNOLOGY;
         display.setNextButtonEnable(false);
-        setProjectTypes();
+        
+        loadTemplates();
     }
 
     private void showChoosePaaSStep() {
@@ -297,8 +294,6 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
     }
 
     private void createAndDeploy() {
-        // loader.setMessage("Loading...");
-        // loader.show();
         if (currentPaaS instanceof NoneTarget) {
             createProjectFromTemplate(currentProjectTemplate, this);
         } else {
@@ -306,31 +301,30 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         }
     }
 
-    private void setProjectTypes() {
+    private void loadTemplates() {
         try {
-            TemplateService.getInstance()
-                           .getProjectTemplateList(
-                                                   new AsyncRequestCallback<List<ProjectTemplate>>(
-                                                                                                   new ProjectTemplateListUnmarshaller(
-                                                                                                                                       new ArrayList<ProjectTemplate>())) {
-
-                                                       @Override
-                                                       protected void onSuccess(List<ProjectTemplate> result) {
-                                                           availableProjectTemplates = result;
-                                                           availableProjectTypes = getProjectTypesFromTemplates(availableProjectTemplates);
-                                                           Collections.sort(availableProjectTypes, PROJECT_TYPES_COMPARATOR);
-                                                           display.setProjectTypes(availableProjectTypes);
-                                                           setProjectTypesButtonsHandlers();
-                                                       }
-
-                                                       @Override
-                                                       protected void onFailure(Throwable exception) {
-                                                           Dialogs.getInstance().showError("Something wrong.");
-                                                       }
-                                                   });
+            TemplateService.getInstance().getProjectTemplateList(
+                new AsyncRequestCallback<List<ProjectTemplate>>(new ProjectTemplateListUnmarshaller(new ArrayList<ProjectTemplate>())) {
+                   @Override
+                   protected void onSuccess(List<ProjectTemplate> result) {
+                       availableProjectTemplates = result;
+                       showTemplates();
+                   }
+                   @Override
+                   protected void onFailure(Throwable exception) {
+                       Dialogs.getInstance().showError("Project list can not be loaded.");
+                   }
+               });
         } catch (RequestException e) {
-            Dialogs.getInstance().showError("Something wrong while taking request.");
+            Dialogs.getInstance().showError("Project list can not be loaded.");
         }
+    }
+    
+    private void showTemplates() {
+        availableProjectTypes = getProjectTypesFromTemplates(availableProjectTemplates);
+        Collections.sort(availableProjectTypes, PROJECT_TYPES_COMPARATOR);
+        display.setProjectTypes(availableProjectTypes);
+        setProjectTypesButtonsHandlers();        
     }
 
     /**
