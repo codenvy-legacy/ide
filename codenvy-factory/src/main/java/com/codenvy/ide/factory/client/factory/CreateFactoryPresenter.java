@@ -22,6 +22,8 @@ import com.codenvy.ide.factory.client.generate.GetCodeNowButtonHandler;
 import com.codenvy.ide.factory.client.generate.SendMailEvent;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ErrorEvent;
@@ -88,11 +90,11 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
     VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler {
     
     /**
-     * Handler interface for handle changing of Button style.
+     * Handler interface to handling changes.
      */
-    public interface ButtonStyleChangedHandler {
+    public interface ChangeHandler {
         
-        void onButtonStyleChanged();
+        void onChange();
         
     }
     
@@ -165,12 +167,19 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         void enableDefaultStyleOptions(boolean enabled);
         
         /**
-         * Sets the {@link ButtonStyleChangedHandler} to handle changes of Factory Button style.
+         * Sets the {@link ChangeHandler} to handle changes of Factory Button style.
          * 
          * @param handler handler to handle changes
          */
-        void setButtonStyleChangedHandler(ButtonStyleChangedHandler handler);
-                
+        void setButtonStyleChangedHandler(ChangeHandler handler);
+
+        /**
+         * Sets {@link ChangeHandler} to handle changes of Factory Button advanced parameters.
+         * 
+         * @param handler handler to handle changes
+         */
+        void setAdvancedParametersChangedHandler(ChangeHandler handler);
+        
         /**
          * Returns value of Upload Image field.
          * 
@@ -360,8 +369,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
      */
     private Display display;
     
-    private boolean isAdvanced = false;
-    
     private JSONObject factoryJSON;    
     
     /**
@@ -501,7 +508,11 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         display.getCreateButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                createFactory();
+                if (factoryJSON != null) {
+                    display.nextPage();
+                } else {                    
+                    createFactory();
+                }
             }
         });
         
@@ -515,7 +526,6 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         display.getBackButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                factoryJSON = null;
                 display.previousPage();
             }
         });
@@ -527,34 +537,27 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
             }
         });
         
-        display.setButtonStyleChangedHandler(new ButtonStyleChangedHandler() {
+        display.setButtonStyleChangedHandler(new ChangeHandler() {
             @Override
-            public void onButtonStyleChanged() {
-                // TODO check for ability to remove this verification.
-                String uploadFile = display.getUploadImageFieldValue();
-                if (uploadFile != null && !uploadFile.isEmpty()) {
-                    display.enableDefaultStyleOptions(true);
-                } else {
-                    display.enableDefaultStyleOptions(false);
-                }
-                
+            public void onChange() {
+                factoryJSON = null;
+                display.enableDefaultStyleOptions(isStyleAdvanced());
                 updatePreviewIFame();
+            }
+        });
+        
+        display.setAdvancedParametersChangedHandler(new ChangeHandler() {
+            @Override
+            public void onChange() {
+                factoryJSON = null;
             }
         });
         
         display.setUploadImageFieldValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
-                String path = display.getUploadImageFieldValue();
-                
-                if (path != null && !path.trim().isEmpty()) {
-                    isAdvanced = true;
-                    display.enableDefaultStyleOptions(true);
-                } else {
-                    isAdvanced = false;
-                    display.enableDefaultStyleOptions(false);
-                }
-
+                factoryJSON = null;
+                display.enableDefaultStyleOptions(isStyleAdvanced());
                 updatePreviewIFame();
             }
         });
@@ -570,6 +573,8 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                 IDE.fireEvent(new OpenResourceEvent(new ResourceSelectedCallback() {
                     @Override
                     public void onResourceSelected(Item resource) {
+                        factoryJSON = null;
+                        
                         if (resource != null) {
                             String path = resource.getPath();
                             String projectPath = openedProject.getPath();
@@ -582,6 +587,21 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                 }));
             }
         });
+    }
+    
+    /**
+     * Determines whether advanced style of Factory button is selected.
+     * 
+     * @return <b>true</b> if advanced style selected, <b>false</b> otherwise
+     */
+    private boolean isStyleAdvanced() {
+        String path = display.getUploadImageFieldValue();
+        
+        if (path != null && !path.trim().isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
     /**
@@ -699,7 +719,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         projectAttributes.put("pname", new JSONString(openedProject.getName()));
         projectAttributes.put("ptype", new JSONString(openedProject.getProjectType()));        
 
-        if (isAdvanced) {
+        if (isStyleAdvanced()) {
             if (display.showCounterChecked()) {
                 request.put("style", new JSONString("Advanced with Counter"));
             } else {
