@@ -33,6 +33,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 /**
  * The manager provides to manege breakpoints and shows it into gutter.
  *
@@ -202,13 +206,13 @@ public class BreakpointGutterManager {
     }
 
     /** @return all breakpoints. */
-    public JsonArray<Breakpoint> getBreakPoints() {
-        final JsonArray<Breakpoint> points = JsonCollections.createArray();
+    public List<Breakpoint> getBreakPoints() {
+        final List<Breakpoint> points = new ArrayList<Breakpoint>(breakPoints.size());
 
         breakPoints.iterate(new JsonStringMap.IterationCallback<JsonArray<Breakpoint>>() {
             @Override
             public void onIteration(String key, JsonArray<Breakpoint> value) {
-                points.addAll(value);
+                points.addAll((Collection<? extends Breakpoint>)value);
             }
         });
 

@@ -17,7 +17,9 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
+
+
 
 /**
  * Request to create new git repository.
@@ -29,7 +31,15 @@ import com.codenvy.ide.dto.DTO;
 public interface InitRequest extends GitRequest {
     /** @return working directory for new git repository */
     String getWorkingDir();
-
+    
+    void setWorkingDir(String workingDir);
+    
+    InitRequest withWorkingDir(String workingDir);
+    
     /** @return <code>true</code> then bare repository created */
-    boolean bare();
+    boolean isBare();
+    
+    void setBare(boolean bare);
+    
+    InitRequest withBare(boolean bare);
 }

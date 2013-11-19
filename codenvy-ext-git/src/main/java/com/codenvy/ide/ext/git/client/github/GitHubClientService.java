@@ -53,19 +53,6 @@ public interface GitHubClientService {
             throws RequestException;
 
     /**
-     * Log in GitHub account.
-     *
-     * @param login
-     *         user's login
-     * @param password
-     *         user's password
-     * @param callback
-     *         callback the client has to implement
-     */
-    void loginGitHub(@NotNull String login, @NotNull String password, @NotNull AsyncRequestCallback<String> callback)
-            throws RequestException;
-
-    /**
      * Get list of collaborators of GitHub repository. For detail see GitHub REST API http://developer.github.com/v3/repos/collaborators/.
      *
      * @param user

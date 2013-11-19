@@ -43,4 +43,18 @@ public interface ApplicationInstance {
     String getDebugHost();
 
     int getDebugPort();
+
+    void setDebugHost(String debugHost);
+
+    void setDebugPort(int debugPort);
+
+    void setHost(String host);
+
+    void setLifetime(int lifetime);
+
+    void setName(String name);
+
+    void setPort(int port);
+
+    void setStopURL(String stopURL);
 }

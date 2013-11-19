@@ -22,15 +22,15 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.client.marshaller.RepoInfoUnmarshaller;
-import com.codenvy.ide.ext.git.client.marshaller.RepoInfoUnmarshallerWS;
 import com.codenvy.ide.ext.git.shared.RepoInfo;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
@@ -60,10 +60,11 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
     private GitLocalizationConstant constant;
     private NotificationManager     notificationManager;
     private Notification            notification;
+    private DtoFactory              dtoFactory;
 
     @Inject
     public CloneRepositoryPresenter(CloneRepositoryView view, GitClientService service, ResourceProvider resourceProvider,
-                                    EventBus eventBus, GitLocalizationConstant constant, NotificationManager notificationManager) {
+                                    EventBus eventBus, GitLocalizationConstant constant, NotificationManager notificationManager, DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
@@ -71,6 +72,7 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
         this.eventBus = eventBus;
         this.constant = constant;
         this.notificationManager = notificationManager;
+        this.dtoFactory = dtoFactory;
     }
 
     /** {@inheritDoc} */
@@ -110,13 +112,13 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      *         folder (root of GIT repository)
      */
     private void cloneRepository(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
-        RepoInfoUnmarshallerWS unmarshallerWS = new RepoInfoUnmarshallerWS();
         try {
             service.cloneRepositoryWS(resourceProvider.getVfsId(), project, remoteUri, remoteName,
-                                      new RequestCallback<RepoInfo>(unmarshallerWS) {
+                                      new RequestCallback<String>(new com.codenvy.ide.ext.git.client.marshaller.StringUnmarshaller()) {
                                           @Override
-                                          protected void onSuccess(RepoInfo result) {
-                                              onCloneSuccess(result, project);
+                                          protected void onSuccess(String result) {
+                                              RepoInfo repository = dtoFactory.createDtoFromJson(result, RepoInfo.class);
+                                              onCloneSuccess(repository, project);
                                           }
 
                                           @Override
@@ -143,13 +145,13 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
      *         folder (root of GIT repository)
      */
     private void cloneRepositoryREST(@NotNull final String remoteUri, @NotNull String remoteName, @NotNull final Project project) {
-        RepoInfoUnmarshaller unmarshaller = new RepoInfoUnmarshaller();
         try {
             service.cloneRepository(resourceProvider.getVfsId(), project, remoteUri, remoteName,
-                                    new AsyncRequestCallback<RepoInfo>(unmarshaller) {
+                                    new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                         @Override
-                                        protected void onSuccess(RepoInfo result) {
-                                            onCloneSuccess(result, project);
+                                        protected void onSuccess(String result) {
+                                            RepoInfo repository = dtoFactory.createDtoFromJson(result, RepoInfo.class);
+                                            onCloneSuccess(repository, project);
                                         }
 
                                         @Override

@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.git.client.merge;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.ext.git.shared.Reference;
 import com.codenvy.ide.json.JsonArray;
 
 /**

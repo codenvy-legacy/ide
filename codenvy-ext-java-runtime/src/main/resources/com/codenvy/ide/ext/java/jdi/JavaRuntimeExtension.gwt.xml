@@ -26,6 +26,8 @@
     <inherits name="com.google.gwt.json.JSON"/>
     <inherits name='com.codenvy.ide.Api'/>
     <inherits name="com.google.gwt.inject.Inject"/>
+    <inherits name="com.codenvy.ide.Core"/>
+    <inherits name="com.codenvy.ide.ext.java.Java"/>
 
     <source path="client"/>
     <source path=""/>

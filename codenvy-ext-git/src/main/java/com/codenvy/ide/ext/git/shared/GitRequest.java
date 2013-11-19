@@ -17,17 +17,18 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.dto.shared.DTO;
+
+import java.util.Map;
 
 /**
- * Abstract request to {@link org.exoplatform.ide.git.server.GitConnection}.
- *
+ * Abstract request to {@link com.codenvy.ide.ext.git.server.GitConnection}.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: GitRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
 @DTO
 public interface GitRequest {
     /** @return set of request attributes */
-    JsonStringMap<String> getAttributes();
+    Map<String, String> getAttributes();
 }

@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.git.client.github;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Collaborators;
 import com.codenvy.ide.ext.git.shared.GitHubRepository;
 import com.codenvy.ide.json.JsonArray;
@@ -33,10 +32,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
-import static com.codenvy.ide.rest.HTTPHeader.CONTENT_TYPE;
-import static com.codenvy.ide.rest.MimeType.APPLICATION_JSON;
 import static com.google.gwt.http.client.RequestBuilder.GET;
-import static com.google.gwt.http.client.RequestBuilder.POST;
 
 /**
  * Implementation for {@link GitHubClientService}.
@@ -48,16 +44,17 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
 public class GitHubClientServiceImpl implements GitHubClientService {
     private static final String BASE_URL      = '/' + Utils.getWorkspaceName() + "/github";
     private static final String LIST          = BASE_URL + "/list";
-    private static final String LOGIN         = BASE_URL + "/login";
     private static final String LIST_USER     = BASE_URL + "/list/user";
     private static final String LIST_ALL      = BASE_URL + "/list/available";
     private static final String COLLABORATORS = BASE_URL + "/collaborators";
     private static final String TOKEN         = BASE_URL + "/token";
+    
     /** REST service context. */
     private String restServiceContext;
+    
     /** Loader to be displayed. */
     private Loader loader;
-
+    
     /**
      * Create service.
      *
@@ -92,20 +89,6 @@ public class GitHubClientServiceImpl implements GitHubClientService {
             throws RequestException {
         String url = restServiceContext + LIST_ALL;
         AsyncRequest.build(GET, url).loader(loader).send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void loginGitHub(@NotNull String login, @NotNull String password, @NotNull AsyncRequestCallback<String> callback)
-            throws RequestException {
-        String url = restServiceContext + LOGIN;
-
-        DtoClientImpls.CredentialsImpl credentials = DtoClientImpls.CredentialsImpl.make();
-        credentials.setLogin(login);
-        credentials.setPassword(password);
-
-        AsyncRequest.build(POST, url).loader(loader).data(credentials.serialize())
-                    .header(CONTENT_TYPE, APPLICATION_JSON).send(callback);
     }
 
     /** {@inheritDoc} */

@@ -22,7 +22,8 @@ import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
-import com.codenvy.ide.json.JsonArray;
+
+import java.util.List;
 
 /**
  * The view of {@link DebuggerPresenter}.
@@ -74,7 +75,7 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      * @param variables
      *         available variables
      */
-    void setVariables(@NotNull JsonArray<Variable> variables);
+    void setVariables(@NotNull List<Variable> variables);
 
     /**
      * Sets breakpoints.
@@ -82,7 +83,7 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      * @param breakPoints
      *         available breakpoints
      */
-    void setBreakPoints(@NotNull JsonArray<Breakpoint> breakPoints);
+    void setBreakPoints(@NotNull List<Breakpoint> breakPoints);
 
     /**
      * Sets java virtual machine name and version.
@@ -173,5 +174,5 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      * @param variables
      *         variable what need to add into
      */
-    void setVariablesIntoSelectedVariable(@NotNull JsonArray<Variable> variables);
+    void setVariablesIntoSelectedVariable(@NotNull List<Variable> variables);
 }

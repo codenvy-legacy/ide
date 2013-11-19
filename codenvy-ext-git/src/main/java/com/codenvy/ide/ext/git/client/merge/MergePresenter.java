@@ -22,18 +22,16 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.client.marshaller.BranchListUnmarshaller;
-import com.codenvy.ide.ext.git.client.marshaller.MergeUnmarshaller;
-import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.ext.git.shared.MergeResult;
-import com.codenvy.ide.ext.git.shared.Reference;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -41,13 +39,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import java.util.List;
+
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+import static com.codenvy.ide.ext.git.client.merge.Reference.RefType.LOCAL_BRANCH;
+import static com.codenvy.ide.ext.git.client.merge.Reference.RefType.REMOTE_BRANCH;
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_LOCAL;
 import static com.codenvy.ide.ext.git.shared.BranchListRequest.LIST_REMOTE;
 import static com.codenvy.ide.ext.git.shared.MergeResult.MergeStatus.ALREADY_UP_TO_DATE;
-import static com.codenvy.ide.ext.git.shared.Reference.RefType.LOCAL_BRANCH;
-import static com.codenvy.ide.ext.git.shared.Reference.RefType.REMOTE_BRANCH;
 
 /**
  * Presenter to perform merge reference with current HEAD commit.
@@ -68,6 +68,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
     private Reference               selectedReference;
     private String                  projectId;
     private String                  projectName;
+    private DtoFactory              dtoFactory;
 
     /**
      * Create presenter.
@@ -81,7 +82,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
      */
     @Inject
     public MergePresenter(MergeView view, GitClientService service, ResourceProvider resourceProvider, EventBus eventBus,
-                          GitLocalizationConstant constant, NotificationManager notificationManager) {
+                          GitLocalizationConstant constant, NotificationManager notificationManager, DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
@@ -89,6 +90,7 @@ public class MergePresenter implements MergeView.ActionDelegate {
         this.eventBus = eventBus;
         this.constant = constant;
         this.notificationManager = notificationManager;
+        this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */
@@ -100,22 +102,20 @@ public class MergePresenter implements MergeView.ActionDelegate {
         view.setEnableMergeButton(false);
 
         try {
-            BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller();
             service.branchList(resourceProvider.getVfsId(), projectId, LIST_LOCAL,
-                               new AsyncRequestCallback<JsonArray<Branch>>(unmarshaller) {
+                               new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
-                                   protected void onSuccess(JsonArray<Branch> result) {
-                                       if (result == null || result.isEmpty())
+                                   protected void onSuccess(String result) {
+                                       JsonArray<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
+                                       if (branches.isEmpty()){
                                            return;
+                                       }
 
                                        JsonArray<Reference> references = JsonCollections.createArray();
-                                       for (int i = 0; i < result.size(); i++) {
-                                           Branch branch = result.get(i);
-                                           if (!branch.active()) {
-                                               DtoClientImpls.ReferenceImpl reference = DtoClientImpls.ReferenceImpl.make();
-                                               reference.setFullName(branch.getName());
-                                               reference.setDisplayName(branch.getDisplayName());
-                                               reference.setRefType(LOCAL_BRANCH);
+                                       for (int i = 0; i < branches.size(); i++) {
+                                           Branch branch = branches.get(i);
+                                           if (!branch.isActive()) {
+                                               Reference reference = new Reference(branch.getName(), branch.getDisplayName(), LOCAL_BRANCH);
                                                references.add(reference);
                                            }
                                        }
@@ -136,22 +136,21 @@ public class MergePresenter implements MergeView.ActionDelegate {
         }
 
         try {
-            BranchListUnmarshaller unmarshaller = new BranchListUnmarshaller();
             service.branchList(resourceProvider.getVfsId(), projectId, LIST_REMOTE,
-                               new AsyncRequestCallback<JsonArray<Branch>>(unmarshaller) {
+                               new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                    @Override
-                                   protected void onSuccess(JsonArray<Branch> result) {
-                                       if (result == null || result.isEmpty())
+                                   protected void onSuccess(String result) {
+                                       JsonArray<Branch> branches = dtoFactory.createListDtoFromJson(result, Branch.class);
+                                       
+                                       if (branches.isEmpty()){
                                            return;
+                                       }
 
                                        JsonArray<Reference> references = JsonCollections.createArray();
-                                       for (int i = 0; i < result.size(); i++) {
-                                           Branch branch = result.get(i);
-                                           if (!branch.active()) {
-                                               DtoClientImpls.ReferenceImpl reference = DtoClientImpls.ReferenceImpl.make();
-                                               reference.setFullName(branch.getName());
-                                               reference.setDisplayName(branch.getDisplayName());
-                                               reference.setRefType(REMOTE_BRANCH);
+                                       for (int i = 0; i < branches.size(); i++) {
+                                           Branch branch = branches.get(i);
+                                           if (!branch.isActive()) {
+                                               Reference reference = new Reference(branch.getName(), branch.getDisplayName(), REMOTE_BRANCH);
                                                references.add(reference);
                                            }
                                        }
@@ -183,17 +182,16 @@ public class MergePresenter implements MergeView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onMergeClicked() {
-        MergeUnmarshaller unmarshaller = new MergeUnmarshaller();
-
         try {
             service.merge(resourceProvider.getVfsId(), projectId, selectedReference.getDisplayName(),
-                          new AsyncRequestCallback<MergeResult>(unmarshaller) {
+                          new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                               @Override
-                              protected void onSuccess(final MergeResult result) {
+                              protected void onSuccess(String result) {
+                                  final MergeResult mergeResult = dtoFactory.createDtoFromJson(result, MergeResult.class);
                                   resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
                                       @Override
                                       public void onSuccess(Project project) {
-                                          Notification notification = new Notification(formMergeMessage(result), INFO);
+                                          Notification notification = new Notification(formMergeMessage(mergeResult), INFO);
                                           notificationManager.showNotification(notification);
                                           view.close();
                                       }
@@ -233,18 +231,16 @@ public class MergePresenter implements MergeView.ActionDelegate {
         }
 
         StringBuilder conflictMessage = new StringBuilder();
-        JsonArray<String> conflicts = mergeResult.getConflicts();
-        if (conflicts != null && !conflicts.isEmpty()) {
-            for (int i = 0; i < conflicts.size(); i++) {
-                String conflict = conflicts.get(i);
+        List<String> conflicts = mergeResult.getConflicts();
+        if (conflicts != null && conflicts.size() > 0) {
+            for (String conflict: conflicts) {
                 conflictMessage.append("- ").append(conflict).append("<br>");
             }
         }
         StringBuilder commitsMessage = new StringBuilder();
-        JsonArray<String> commits = mergeResult.getMergedCommits();
-        if (commits != null && !commits.isEmpty()) {
-            for (int i = 0; i < commits.size(); i++) {
-                String commit = commits.get(i);
+        List<String> commits = mergeResult.getMergedCommits();
+        if (commits != null && commits.size() > 0) {
+            for (String commit : commits) {
                 commitsMessage.append("- ").append(commit).append("<br>");
             }
         }
