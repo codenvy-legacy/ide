@@ -168,4 +168,13 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
         loader.setMessage("Stopping an application...");
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
+
+    @Override
+    public void run(String projectName, AsyncRequestCallback<String> callback) throws RequestException {
+        final String requestUrl = "/api/" + Utils.getWorkspaceName() + "/runner/run";
+
+        String params = "project=" + projectName;
+        AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params)
+                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+    }
 }

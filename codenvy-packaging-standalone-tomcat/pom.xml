@@ -167,14 +167,14 @@
             <artifactId>codenvy-ext-tutorials</artifactId>
             <type>jar</type>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-extensions-runtime</artifactId>
             <type>jar</type>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-sdk-private-dependencies</artifactId>
             <type>zip</type>
