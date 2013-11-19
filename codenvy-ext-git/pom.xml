@@ -50,6 +50,12 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
+            </exclusions>
             <version>${project.version}</version>
         </dependency>
 
@@ -69,6 +75,12 @@
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
+            </exclusions>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         
@@ -216,11 +228,6 @@
                     <artifactId>codenvy-ext-git</artifactId>
                     <version>${project.version}</version>
                 </dependency>
-                <dependency>
-                        <groupId>com.codenvy.platform-api</groupId>
-                        <artifactId>codenvy-api-core</artifactId>
-                        <version>${com.codenvy.platform-api.version}</version>
-                    </dependency>
                 <!--
                 Other dependencies if DTOs from current project need them.
                 -->

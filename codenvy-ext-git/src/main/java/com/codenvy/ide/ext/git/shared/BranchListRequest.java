@@ -40,5 +40,7 @@ public interface BranchListRequest extends GitRequest {
     /** @return branches list mode */
     String getListMode();
     
+    void setListMode(String listMode);
+    
     BranchListRequest withListMode(String listMode);
 }

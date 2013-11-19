@@ -34,6 +34,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -97,6 +98,7 @@ public class HistoryPresenterTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void testShowDialogWhenLogRequestIsSuccessful() throws Exception {
         doAnswer(new Answer() {
             @Override
@@ -367,6 +369,7 @@ public class HistoryPresenterTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void testOnRevisionSelectedWhenDiffRequestIsSuccessful() throws Exception {
         List<Revision> revisions = new ArrayList<Revision>();
         revisions.add(selectedRevision);
@@ -410,6 +413,7 @@ public class HistoryPresenterTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void testOnRevisionSelectedWhenDiffRequestIsFailed() throws Exception {
         List<Revision> revisions = new ArrayList<Revision>();
         revisions.add(selectedRevision);
@@ -453,6 +457,7 @@ public class HistoryPresenterTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void testOnRevisionSelectedWhenRequestExceptionHappened() throws Exception {
         List<Revision> revisions = new ArrayList<Revision>();
         revisions.add(selectedRevision);

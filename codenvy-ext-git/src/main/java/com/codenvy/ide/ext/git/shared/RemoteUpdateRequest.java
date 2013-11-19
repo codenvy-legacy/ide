@@ -31,25 +31,39 @@ import java.util.List;
 public interface RemoteUpdateRequest extends GitRequest {
     /** @return remote name */
     String getName();
+    
+    void setName(String name);
 
     /** @return list tracked branches */
     List<String> getBranches();
 
+    void setBranches(List<String> branches);
+    
     /**
      * @return if <code>true</code> then {@link #branches} instead of replacing the list of currently tracked branches,
      *         added to that list
      */
     boolean isAddBranches();
+    
+    void setAddBranches(boolean isAddBranches);
 
     /** @return remote URLs to be added */
     List<String> getAddUrl();
+    
+    void setAddUrl(List<String> addUrl);
 
     /** @return remote URLs to be removed */
     List<String> getRemoveUrl();
 
+    void setRemoveUrl(List<String> removeUrl);
+    
     /** @return remote push URLs to be added */
     List<String> getAddPushUrl();
+    
+    void setAddPushUrl(List<String> addPushUrl);
 
     /** @return remote push URLs to be removed */
     List<String> getRemovePushUrl();
+    
+    void setRemovePushUrl(List<String> removePushUrl);
 }

@@ -64,6 +64,25 @@
     <!-- LogReader -->
     <!-- End LogReader -->
     
+     <!--
+    ***************************************************************************************
+    ********************************** OAuth Support **************************************
+    ***************************************************************************************
+    -->
+
+    <component>
+        <type>com.codenvy.commons.security.oauth.OAuthAuthenticationApplication</type>
+    </component>
+
+    <component>
+        <key>com.codenvy.commons.security.oauth.OAuthTokenProvider</key>
+        <type>com.codenvy.commons.security.oauth.OAuthAuthenticatorTokenProvider</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.ide.security.oauth.server.LabOAuthAuthenticatorProvider</type>
+    </component>
+    
     <!-- Git -->
     <component>
         <type>com.codenvy.ide.ext.git.server.rest.GitHubServiceApplication</type>
@@ -86,12 +105,6 @@
     <component>
         <type>com.codenvy.ide.ext.git.server.nativegit.OAuthCredentialsProvider</type>
     </component>
-
-    <component>
-		<key>com.codenvy.commons.security.oauth.OAuthTokenProvider</key>
-		<type>com.codenvy.commons.security.oauth.OAuthAuthenticatorTokenProvider
-		</type>
-	</component>
     
     <component>
         <type>com.codenvy.ide.ext.git.server.nativegit.SshKeysManager</type>

@@ -26,6 +26,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -76,6 +77,7 @@ public class BranchPresenterTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void testShowDialogWhenGetBranchesRequestIsSuccessful() throws Exception {
         final JsonArray<Branch> branches = JsonCollections.createArray();
         doAnswer(new Answer() {

@@ -24,6 +24,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.IndexFile;
+import com.codenvy.ide.ext.git.shared.ResetRequest.ResetType;
 import com.codenvy.ide.ext.git.shared.Status;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -150,7 +151,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
         String projectId = project.getId();
 
         try {
-            service.reset(resourceProvider.getVfsId(), projectId, "HEAD", null, new AsyncRequestCallback<String>() {
+            service.reset(resourceProvider.getVfsId(), projectId, "HEAD", ResetType.MIXED, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {

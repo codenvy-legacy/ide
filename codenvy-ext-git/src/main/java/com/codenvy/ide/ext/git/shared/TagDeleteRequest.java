@@ -29,4 +29,6 @@ import com.codenvy.dto.shared.DTO;
 public interface TagDeleteRequest extends GitRequest {
     /** @return name of tag to delete */
     String getName();
+    
+    void setName(String name);
 }

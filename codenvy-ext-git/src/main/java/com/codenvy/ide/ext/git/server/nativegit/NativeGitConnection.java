@@ -451,7 +451,7 @@ public class NativeGitConnection implements GitConnection {
     @Override
     public void reset(ResetRequest request) throws GitException {
         nativeGit.createResetCommand()
-                 .setMode(request.getType().toString())
+                 .setMode(request.getType().getValue())
                  .setCommit(request.getCommit())
                  .execute();
     }

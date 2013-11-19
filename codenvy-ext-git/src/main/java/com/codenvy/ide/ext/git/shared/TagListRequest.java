@@ -29,4 +29,6 @@ import com.codenvy.dto.shared.DTO;
 public interface TagListRequest extends GitRequest {
     /** @return tag's names pattern */
     String getPattern();
+    
+    void setPattern(String pattern);
 }

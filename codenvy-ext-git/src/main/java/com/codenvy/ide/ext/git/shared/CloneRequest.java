@@ -32,10 +32,14 @@ public interface CloneRequest extends GitRequest {
     /** @return URI of repository to be cloned */
     String getRemoteUri();
     
+    void setRemoteUri(String remoteUri);
+    
     CloneRequest withRemoteUri(String remoteUri);
 
     /** @return list of remote branches to fetch in cloned repository */
     List<String> getBranchesToFetch();
+    
+    void setBranchesToFetch(List<String> branchesToFetch);
     
     CloneRequest withBranchesToFetch(List<String> branchesToFetch);
 
@@ -49,6 +53,8 @@ public interface CloneRequest extends GitRequest {
     /** @return remote name. If <code>null</code> then 'origin' will be used */
     String getRemoteName();
     
+    void setRemoteName(String remoteName);
+    
     CloneRequest withRemoteName(String remoteName);
 
     /**
@@ -56,6 +62,8 @@ public interface CloneRequest extends GitRequest {
      *         default timeout may be used. This is implementation specific
      */
     int getTimeout();
+    
+    void setTimeout(int timeout);
     
     CloneRequest withTimeout(int timeout);
 }

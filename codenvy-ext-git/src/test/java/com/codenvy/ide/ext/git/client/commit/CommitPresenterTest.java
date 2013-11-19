@@ -30,6 +30,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -80,6 +81,7 @@ public class CommitPresenterTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void testOnCommitClickedWhenCommitWSRequestIsSuccessful() throws Exception {
         when(view.getMessage()).thenReturn(COMMIT_TEXT);
         when(view.isAllFilesInclued()).thenReturn(ALL_FILE_INCLUDES);
@@ -151,6 +153,7 @@ public class CommitPresenterTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void testOnCommitClickedWhenCommitRequestIsSuccessful() throws Exception {
         when(view.getMessage()).thenReturn(COMMIT_TEXT);
         when(view.isAllFilesInclued()).thenReturn(ALL_FILE_INCLUDES);

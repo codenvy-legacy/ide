@@ -29,6 +29,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -74,6 +75,7 @@ public class ResetToCommitPresenterTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void testShowDialogWhenLogRequestIsSuccessful() throws Exception {
         doAnswer(new Answer() {
             @Override

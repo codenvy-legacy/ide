@@ -32,20 +32,28 @@ public interface FetchRequest extends GitRequest {
     /** @return list of refspec to fetch */
     List<String> getRefSpec();
     
+    void setRefSpec(List<String> refSpec);
+    
     FetchRequest withRefSpec(List<String> refSpec);
 
     /** @return remote name. If <code>null</code> then 'origin' will be used */
     String getRemote();
+    
+    void setRemote(String remote);
     
     FetchRequest withRemote(String remote);
 
     /** @return <code>true</code> if local refs must be deleted if they deleted in remote repository and <code>false</code> otherwise */
     boolean isRemoveDeletedRefs();
     
+    void setRemoveDeletedRefs(boolean isRemoveDeletedRefs);
+    
     FetchRequest withRemoveDeletedRefs(boolean isRemoveDeletedRefs);
 
     /** @return time (in seconds) to wait without data transfer occurring before aborting fetching data from remote repository */
     int getTimeout();
+    
+    void setTimeout(int timeout);
     
     FetchRequest withTimeout(int timeout);
 }

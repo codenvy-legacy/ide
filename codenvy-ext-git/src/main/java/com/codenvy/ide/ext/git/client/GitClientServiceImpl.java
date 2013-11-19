@@ -278,7 +278,6 @@ public class GitClientServiceImpl implements GitClientService {
     public void commitWS(@NotNull String vfsId, @NotNull Project project, @NotNull String message, boolean all, boolean amend,
                          @NotNull RequestCallback<String> callback) throws WebSocketException {
         CommitRequest commitRequest = dtoFactory.createDto(CommitRequest.class).withMessage(message).withAmend(amend).withAll(all);
-        
         callback.setStatusHandler(new CommitRequestHandler(project.getName(), message, eventBus, constant));
         String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
         String url = wsName + COMMIT + params;

@@ -49,5 +49,7 @@ public interface AddRequest extends GitRequest {
      */
     boolean isUpdate();
     
+    void setUpdate(boolean isUpdate);
+    
     AddRequest withUpdate(boolean isUpdate);
 }

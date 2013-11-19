@@ -32,13 +32,19 @@ public interface RemoteAddRequest extends GitRequest {
     /** @return remote name */
     String getName();
     
+    void setName(String name);
+    
     RemoteAddRequest withName(String name);
 
     /** @return repository url */
     String getUrl();
     
+    void setUrl(String url);
+    
     RemoteAddRequest withUrl(String url);
 
     /** @return list of tracked branches in remote repository */
     List<String> getBranches();
+    
+    void setBranches(List<String> branches);
 }

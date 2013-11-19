@@ -33,20 +33,28 @@ public interface PushRequest extends GitRequest {
     /** @return list of refspec to push */
     List<String> getRefSpec();
     
+    void setRefSpec(List<String> refSpec);
+    
     PushRequest withRefSpec(List<String> refspec);
 
     /** @return remote repository. URI or name is acceptable. If not specified then 'origin' will be used */
     String getRemote();
+    
+    void setRemote(String remote);
 
     PushRequest withRemote(String remote);
     
     /** @return force or not push operation */
     boolean isForce();
     
+    void setForce(boolean isForce);
+    
     PushRequest withForce(boolean force);
 
     /** @return time (in seconds) to wait without data transfer occurring before aborting pushing data to remote repository */
     int getTimeout();
+    
+    void setTimeout(int timeout);
     
     PushRequest withTimeout(int timeout);
 }

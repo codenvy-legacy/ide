@@ -30,10 +30,14 @@ public interface BranchCheckoutRequest extends GitRequest {
     /** @return name of branch to checkout */
     String getName();
     
+    void setName(String name);
+    
     BranchCheckoutRequest withName(String name);
 
     /** @return name of a commit at which to start the new branch. If <code>null</code> the HEAD will be used */
     String getStartPoint();
+    
+    void setStartPoint(String startPoint);
     
     BranchCheckoutRequest withStartPoint(String startPoint);
 
@@ -43,6 +47,8 @@ public interface BranchCheckoutRequest extends GitRequest {
      *         will be thrown
      */
     boolean isCreateNew();
+    
+    void setCreateNew(boolean isCreateNew);
     
     BranchCheckoutRequest withCreateNew(boolean isCreateNew);
 }

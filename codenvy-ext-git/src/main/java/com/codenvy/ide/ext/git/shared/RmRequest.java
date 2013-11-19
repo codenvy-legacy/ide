@@ -32,10 +32,14 @@ public interface RmRequest extends GitRequest {
     /** @return files to remove */
     List<String> getFiles();
     
+    void setFiles(List<String> files);
+    
     RmRequest withFiles(List<String> files);
 
     /** @return is RmRequest represents remove from index only */
     boolean isCached();
+    
+    void setCached(boolean isCached);
     
     RmRequest withCached(boolean cached);
 }

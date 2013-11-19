@@ -30,5 +30,7 @@ public interface MergeRequest extends GitRequest {
     /** @return commit to merge */
     String getCommit();
     
+    void setCommit(String commit);
+    
     MergeRequest withCommit(String commit);
 }

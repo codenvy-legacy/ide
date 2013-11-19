@@ -34,12 +34,12 @@ public interface InitRequest extends GitRequest {
     
     void setWorkingDir(String workingDir);
     
- //   InitRequest withWorkingDir(String workingDir);
+    InitRequest withWorkingDir(String workingDir);
     
     /** @return <code>true</code> then bare repository created */
     boolean isBare();
     
     void setBare(boolean bare);
     
-  //  InitRequest withBare(boolean bare);
+    InitRequest withBare(boolean bare);
 }

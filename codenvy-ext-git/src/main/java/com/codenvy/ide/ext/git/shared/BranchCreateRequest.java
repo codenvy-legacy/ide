@@ -30,10 +30,14 @@ public interface BranchCreateRequest extends GitRequest {
     /** @return name of branch to be created */
     String getName();
     
+    void setName(String name);
+    
     BranchCreateRequest withName(String name);
 
     /** @return name of a commit at which to start the new branch. If <code>null</code> the HEAD will be used */
     String getStartPoint();
+    
+    void setStartPoint(String startPoint);
     
     BranchCreateRequest withStartPoint(String startPoint);
 }

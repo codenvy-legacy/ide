@@ -67,7 +67,7 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
      */
     @Inject
     public RemotePresenter(RemoteView view, GitClientService service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
-                           AddRemoteRepositoryPresenter addRemoteRepositoryPresenter, NotificationManager notificationManager) {
+                           AddRemoteRepositoryPresenter addRemoteRepositoryPresenter, NotificationManager notificationManager, DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
@@ -75,6 +75,7 @@ public class RemotePresenter implements RemoteView.ActionDelegate {
         this.constant = constant;
         this.addRemoteRepositoryPresenter = addRemoteRepositoryPresenter;
         this.notificationManager = notificationManager;
+        this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */

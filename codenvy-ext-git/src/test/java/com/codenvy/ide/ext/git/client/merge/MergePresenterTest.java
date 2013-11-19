@@ -163,6 +163,7 @@ public class MergePresenterTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void testOnMergeClickedWhenMergeRequestIsSuccessful() throws Exception {
         final MergeResult mergeResult = mock(MergeResult.class);
         when(mergeResult.getMergeStatus()).thenReturn(ALREADY_UP_TO_DATE);

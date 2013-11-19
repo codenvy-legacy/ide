@@ -38,6 +38,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -249,6 +250,7 @@ public class ImportPresenterTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void testOnFinishClickedWhenCloneRepositoryWSIsSuccessful() throws Exception {
         when(view.getProjectName()).thenReturn(PROJECT_NAME);
         when(selectedRepository.getRepositoryUrl()).thenReturn(REMOTE_URI);
@@ -339,6 +341,7 @@ public class ImportPresenterTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void testOnFinishClickedWhenCloneRepositoryIsSuccessful() throws Exception {
         final RepoInfo repoInfo = mock(RepoInfo.class);
         when(repoInfo.getRemoteUri()).thenReturn(REMOTE_URI);

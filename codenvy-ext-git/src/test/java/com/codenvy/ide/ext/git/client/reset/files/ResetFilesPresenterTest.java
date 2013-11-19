@@ -69,6 +69,7 @@ public class ResetFilesPresenterTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void testShowDialogWhenStatusRequestIsSuccessful() throws Exception {
         final Status status = mock(Status.class);
         List<String> changes = new ArrayList<String>();
@@ -129,6 +130,7 @@ public class ResetFilesPresenterTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void testOnResetClickedWhenNothingToReset() throws Exception {
         final Status status = mock(Status.class);
         List<String> changes = new ArrayList<String>();

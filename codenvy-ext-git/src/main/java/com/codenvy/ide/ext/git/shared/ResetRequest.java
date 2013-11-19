@@ -59,6 +59,8 @@ public interface ResetRequest extends GitRequest {
     /** @return commit to which current head should be reset */
     String getCommit();
     
+    void setCommit(String commit);
+    
     ResetRequest withCommit(String commit);
 
     /** @return type of reset. */

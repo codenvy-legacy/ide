@@ -68,30 +68,42 @@ public interface DiffRequest extends GitRequest {
     /** @return filter of file to show diff. It may be either list of file names or name of directory to show all files under them */
     List<String> getFileFilter();
     
+    void setFileFilter(List<String> fileFilter);
+    
     DiffRequest withFileFilter(List<String> fileFilter);
 
     /** @return type of diff output */
     DiffType getType();
+    
+    void setType(DiffType type);
     
     DiffRequest withType(DiffType type);
 
     /** @return <code>true</code> if renames must not be showing in diff result */
     boolean isNoRenames();
     
+    void setNoRenames(boolean isNoRenames);
+    
     DiffRequest withNoRenames(boolean noRenames);
 
     /** @return limit of showing renames in diff output. This attribute has sense if {@link #noRenames} is <code>false</code> */
     int getRenameLimit();
+    
+    void setRenameLimit(int renameLimit);
     
     DiffRequest withRenameLimit(int renameLimit);
 
     /** @return first commit to view changes */
     String getCommitA();
     
+    void setCommitA(String commitA);
+    
     DiffRequest withCommitA(String commitA);
 
     /** @return second commit to view changes */
     String getCommitB();
+    
+    void setCommitB(String commitB);
     
     DiffRequest withCommitB(String commitB);
 
@@ -100,6 +112,8 @@ public interface DiffRequest extends GitRequest {
      *         and index
      */
     boolean isCached();
+    
+    void setCached(boolean isCached);
     
     DiffRequest withCached(boolean isCached);
 }

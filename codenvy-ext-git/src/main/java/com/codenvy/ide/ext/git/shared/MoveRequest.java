@@ -29,7 +29,11 @@ import com.codenvy.dto.shared.DTO;
 public interface MoveRequest extends GitRequest {
     /** @return source */
     String getSource();
+    
+    void setSource(String source);
 
     /** @return target */
     String getTarget();
+    
+    void setTarget(String target);
 }

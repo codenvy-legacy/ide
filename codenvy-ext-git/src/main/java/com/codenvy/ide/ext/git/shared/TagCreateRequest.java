@@ -29,13 +29,21 @@ import com.codenvy.dto.shared.DTO;
 public interface TagCreateRequest extends GitRequest {
     /** @return name of tag to create */
     String getName();
+    
+    void setName(String name);
 
     /** @return commit to make tag. If <code>null</code> then HEAD is used */
     String getCommit();
+    
+    void setCommit(String commit);
 
     /** @return message for tag */
     String getMessage();
+    
+    void setMessage(String message);
 
     /** @return force create tag operation */
     boolean isForce();
+    
+    void setForce(boolean isForce);
 }

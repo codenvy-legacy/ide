@@ -48,11 +48,6 @@
 			<artifactId>codenvy-ide-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>com.codenvy.ide</groupId>
-			<artifactId>codenvy-ext-git</artifactId>
-			<version>${project.version}</version>
-		</dependency> -->
 		<dependency>
 			<groupId>com.codenvy.ide</groupId>
 			<artifactId>codenvy-ide-security</artifactId>

@@ -30,6 +30,8 @@ public interface RemoteListRequest extends GitRequest {
     /** @return if <code>true</code> show remote url and name otherwise show remote name only */
     boolean isVerbose();
     
+    void setVerbose(boolean isVerbose);
+    
     RemoteListRequest withVerbose(boolean verbose);
 
     /** @return remote name */
