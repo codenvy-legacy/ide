@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.git.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.shared.GitHubRepository;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -28,7 +28,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 
 import java.util.Set;
 
@@ -40,7 +39,13 @@ import java.util.Set;
 public class AllRepositoriesUnmarshaller implements Unmarshallable<JsonStringMap<JsonArray<GitHubRepository>>> {
     /** Repositories list. */
     private JsonStringMap<JsonArray<GitHubRepository>> repositories;
-
+    
+    private DtoFactory dtoFactory;
+    
+    public AllRepositoriesUnmarshaller(DtoFactory dtoFactory) {
+        this.dtoFactory = dtoFactory;
+    }
+    
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
@@ -54,14 +59,8 @@ public class AllRepositoriesUnmarshaller implements Unmarshallable<JsonStringMap
         repositories = JsonCollections.createStringMap();
 
         for (String key : keys) {
-            JsonArray<GitHubRepository> repos = JsonCollections.createArray();
             JSONArray jsonArray = jsonObj.get(key).isArray();
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JSONValue value = jsonArray.get(i);
-                String payload = value.isObject().toString();
-                DtoClientImpls.GitHubRepositoryImpl repository = DtoClientImpls.GitHubRepositoryImpl.deserialize(payload);
-                repos.add(repository);
-            }
+            JsonArray<GitHubRepository> repos = dtoFactory.createListDtoFromJson(jsonArray.toString(), GitHubRepository.class);
             repositories.put(key, repos);
         }
     }

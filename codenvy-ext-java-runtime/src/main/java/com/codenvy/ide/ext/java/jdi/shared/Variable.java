@@ -18,7 +18,8 @@
 package com.codenvy.ide.ext.java.jdi.shared;
 
 import com.codenvy.ide.dto.DTO;
-import com.codenvy.ide.json.JsonArray;
+
+import java.util.List;
 
 /** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
 @DTO
@@ -31,7 +32,19 @@ public interface Variable {
 
     VariablePath getVariablePath();
 
-    boolean primitive();
+    void setType(String type);
 
-    JsonArray<Variable> getVariables();
+    void setName(String name);
+
+    void setValue(String value);
+
+    void setVariablePath(VariablePath variablePath);
+
+    void setPrimitive(boolean primitive);
+
+    boolean isPrimitive();
+
+    List<Variable> getVariables();
+
+    void setVariables(List<Variable> variables);
 }

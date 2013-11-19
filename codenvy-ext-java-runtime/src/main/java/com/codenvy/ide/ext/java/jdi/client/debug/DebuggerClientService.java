@@ -36,7 +36,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void connect(@NotNull String host, int port, @NotNull AsyncRequestCallback<DebuggerInfo> callback) throws RequestException;
+    void connect(@NotNull String host, int port, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Disconnects to application.
@@ -55,7 +55,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void addBreakPoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<BreakPoint> callback)
+    void addBreakPoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<String> callback)
             throws RequestException;
 
     /**
@@ -66,7 +66,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void deleteBreakPoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<BreakPoint> callback)
+    void deleteBreakPoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<Void> callback)
             throws RequestException;
 
     /**
@@ -76,7 +76,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void getBreakPoints(@NotNull String id, @NotNull AsyncRequestCallback<BreakPointList> callback) throws RequestException;
+    void getBreakPoints(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Checks event.
@@ -85,7 +85,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void checkEvents(@NotNull String id, @NotNull AsyncRequestCallback<DebuggerEventList> callback) throws RequestException;
+    void checkEvents(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Creates dump.
@@ -94,7 +94,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void dump(@NotNull String id, @NotNull AsyncRequestCallback<StackFrameDump> callback) throws RequestException;
+    void dump(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Resume process.
@@ -113,7 +113,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void getValue(@NotNull String id, @NotNull Variable var, @NotNull AsyncRequestCallback<Value> callback) throws RequestException;
+    void getValue(@NotNull String id, @NotNull Variable var, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Sets field's value.

@@ -22,12 +22,12 @@
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
     <component>
-        <type>org.exoplatform.ide.extension.ssh.server.KeyApplication</type>
+        <type>com.codenvy.ide.ext.ssh.server.KeyApplication</type>
     </component>
 
     <component>
-        <key>org.exoplatform.ide.extension.ssh.server.SshKeyStore</key>
-        <type>org.exoplatform.ide.extension.ssh.server.UserProfileSshKeyStore</type>
+        <key>com.codenvy.ide.ext.ssh.server.SshKeyStore</key>
+        <type>com.codenvy.ide.ext.ssh.server.UserProfileSshKeyStore</type>
     </component>
 
 </configuration>

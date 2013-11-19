@@ -21,6 +21,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.model.Project;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.GwtModule;
@@ -72,6 +73,9 @@ public abstract class BaseTest extends GwtTestWithMockito {
     protected SelectionAgent          selectionAgent;
     @Mock
     protected NotificationManager     notificationManager;
+    
+    @Mock
+    protected DtoFactory              dtoFactory;
 
     @Before
     public void disarm() {

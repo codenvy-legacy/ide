@@ -29,6 +29,7 @@ import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.api.runner.internal.dto.RunRequest;
 import com.codenvy.runner.docker.json.ContainerConfig;
 import com.codenvy.runner.docker.json.ContainerCreated;
+import com.codenvy.runner.docker.json.HostConfig;
 import com.codenvy.runner.docker.json.Image;
 import com.google.common.hash.Hashing;
 import com.google.common.io.CharStreams;
@@ -42,11 +43,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Runner implementation that use Docker remote API for running applications.
- *
- * @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a>
- */
+/** @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a> */
 public class DockerRunner extends Runner {
     private static final Logger LOG = LoggerFactory.getLogger(DockerRunner.class);
 
@@ -87,8 +84,7 @@ public class DockerRunner extends Runner {
 
     @Override
     protected ApplicationProcess newApplicationProcess(DeploymentSources toDeploy,
-                                                       RunnerConfiguration runnerCfg,
-                                                       ApplicationProcess.Callback callback) throws RunnerException {
+                                                       RunnerConfiguration runnerCfg) throws RunnerException {
         try {
             final java.io.File applicationFile = toDeploy.getFile();
             final java.io.File dockerFile = new java.io.File(applicationFile.getParentFile(), "Dockerfile");
@@ -103,8 +99,8 @@ public class DockerRunner extends Runner {
             final DockerConnector connector = DockerConnector.getInstance();
             final ImageUsage imageUsage = createImageIfNeed(connector, dockerRepoName, fileHash, dockerFile, applicationFile);
             final ContainerConfig dockerCfg =
-                    new ContainerConfig().withImage(imageUsage.image).withMemory(runnerCfg.getMemory() * 1024 * 1024);
-            final DockerProcess docker = new DockerProcess(connector, dockerCfg, callback);
+                    new ContainerConfig().withImage(imageUsage.image).withMemory(runnerCfg.getMemory() * 1024 * 1024).withCpuShares(1);
+            final DockerProcess docker = new DockerProcess(connector, dockerCfg, null); // TODO: host config
             imageUsage.inc();
             registerDisposer(docker, new Disposer() {
                 @Override
@@ -162,7 +158,7 @@ public class DockerRunner extends Runner {
         return imageUsage;
     }
 
-    private synchronized void maybeDeleteImage(DockerConnector connector, ImageUsage imageUsage) throws IOException {
+    private void maybeDeleteImage(DockerConnector connector, ImageUsage imageUsage) throws IOException {
         if (imageUsage.dec() == 0) {
             connector.removeImage(imageUsage.image);
             LOG.info("Remove docker image: {}", imageUsage.image); // TODO: debug
@@ -219,33 +215,56 @@ public class DockerRunner extends Runner {
 
     private static class DockerProcess extends ApplicationProcess {
         final DockerConnector connector;
-        final ContainerConfig dockerCfg;
+        final ContainerConfig containerCfg;
+        final HostConfig      hostCfg;
         String       container;
         DockerLogger logger;
 
-        DockerProcess(DockerConnector connector, ContainerConfig dockerCfg, Callback callback) {
-            super(callback);
+        DockerProcess(DockerConnector connector, ContainerConfig containerCfg, HostConfig hostCfg) {
             this.connector = connector;
-            this.dockerCfg = dockerCfg;
+            this.containerCfg = containerCfg;
+            this.hostCfg = hostCfg;
         }
 
         @Override
-        protected synchronized void doStart() throws Throwable {
+        public synchronized void start() throws RunnerException {
             if (container != null) {
-                throw new IllegalStateException("Process is already started.");
+                throw new IllegalStateException("Process is already started");
             }
-            final ContainerCreated response = connector.createContainer(dockerCfg);
-            connector.startContainer(response.getId(), null); // TODO: host config
-            container = response.getId();
-            logger = new DockerLogger(connector, container);
+            try {
+                final ContainerCreated response = connector.createContainer(containerCfg);
+                connector.startContainer(response.getId(), hostCfg);
+                container = response.getId();
+                logger = new DockerLogger(connector, container);
+            } catch (IOException e) {
+                throw new RunnerException(e);
+            }
         }
 
         @Override
-        protected synchronized void doStop() throws Throwable {
+        public synchronized void stop() throws RunnerException {
             if (container == null) {
-                throw new IllegalStateException("Process is not started yet.");
+                throw new IllegalStateException("Process is not started yet");
             }
-            connector.stopContainer(container, 5, TimeUnit.SECONDS);
+            try {
+                connector.stopContainer(container, 5, TimeUnit.SECONDS);
+            } catch (IOException e) {
+                throw new RunnerException(e);
+            }
+        }
+
+        @Override
+        public int waitFor() throws RunnerException {
+            synchronized (this) {
+                if (container == null) {
+                    throw new IllegalStateException("Process is not started yet");
+                }
+            }
+            try {
+                return connector.waitContainer(container).getStatusCode();
+            } catch (IOException e) {
+                throw new RunnerException(e);
+            }
         }
 
         @Override

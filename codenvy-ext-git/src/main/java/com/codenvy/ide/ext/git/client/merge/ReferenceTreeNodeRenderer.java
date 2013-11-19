@@ -21,7 +21,6 @@ import elemental.html.DivElement;
 import elemental.html.Element;
 import elemental.html.SpanElement;
 
-import com.codenvy.ide.ext.git.shared.Reference;
 import com.codenvy.ide.ui.tree.NodeRenderer;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;

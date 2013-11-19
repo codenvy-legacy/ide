@@ -20,22 +20,25 @@ package com.codenvy.ide.ext.git.client.reset.files;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.client.marshaller.StatusUnmarshaller;
-import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.IndexFile;
+import com.codenvy.ide.ext.git.shared.ResetRequest.ResetType;
 import com.codenvy.ide.ext.git.shared.Status;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import java.util.ArrayList;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
@@ -60,6 +63,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
     private NotificationManager     notificationManager;
     private Project                 project;
     private JsonArray<IndexFile>    indexedFiles;
+    private DtoFactory              dtoFactory;
 
     /**
      * Create presenter.
@@ -72,43 +76,39 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
      */
     @Inject
     public ResetFilesPresenter(ResetFilesView view, GitClientService service, ResourceProvider resourceProvider,
-                               GitLocalizationConstant constant, NotificationManager notificationManager) {
+                               GitLocalizationConstant constant, NotificationManager notificationManager, DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
         this.notificationManager = notificationManager;
+        this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */
     public void showDialog() {
         project = resourceProvider.getActiveProject();
-        StatusUnmarshaller unmarshaller = new StatusUnmarshaller();
 
         try {
-            service.status(resourceProvider.getVfsId(), project.getId(), new AsyncRequestCallback<Status>(unmarshaller) {
+            service.status(resourceProvider.getVfsId(), project.getId(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
-                protected void onSuccess(Status result) {
-                    if (result.clean()) {
+                protected void onSuccess(String result) {
+                    Status status = dtoFactory.createDtoFromJson(result, Status.class);
+                    if (status.isClean()) {
                         Window.alert(constant.indexIsEmpty());
                         return;
                     }
 
                     JsonArray<IndexFile> values = JsonCollections.createArray();
-                    JsonArray<String> valuesTmp = JsonCollections.createArray();
+                    ArrayList<String> valuesTmp = new ArrayList<String>();
 
-                    valuesTmp.addAll(result.getAdded());
-                    valuesTmp.addAll(result.getChanged());
-                    valuesTmp.addAll(result.getRemoved());
+                    valuesTmp.addAll(status.getAdded());
+                    valuesTmp.addAll(status.getChanged());
+                    valuesTmp.addAll(status.getRemoved());
 
-                    for (int i = 0; i < valuesTmp.size(); i++) {
-                        String value = valuesTmp.get(i);
-
-                        DtoClientImpls.IndexFileImpl indexFile = DtoClientImpls.IndexFileImpl.make();
-                        indexFile.setPath(value);
-                        indexFile.setIndexed(true);
-
+                    for (String value: valuesTmp) {
+                        IndexFile indexFile = dtoFactory.createDto(IndexFile.class).withPath(value).withIndexed(true);
                         values.add(indexFile);
                     }
                     view.setIndexedFiles(values);
@@ -136,7 +136,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
         JsonArray<String> files = JsonCollections.createArray();
         for (int i = 0; i < indexedFiles.size(); i++) {
             IndexFile indexFile = indexedFiles.get(i);
-            if (!indexFile.indexed()) {
+            if (!indexFile.isIndexed()) {
                 files.add(indexFile.getPath());
             }
         }
@@ -151,7 +151,7 @@ public class ResetFilesPresenter implements ResetFilesView.ActionDelegate {
         String projectId = project.getId();
 
         try {
-            service.reset(resourceProvider.getVfsId(), projectId, "HEAD", null, new AsyncRequestCallback<String>() {
+            service.reset(resourceProvider.getVfsId(), projectId, "HEAD", ResetType.MIXED, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {

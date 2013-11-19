@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * GitHub repository, taken from API v3.
@@ -81,7 +81,7 @@ public interface GitHubRepository {
      *
      * @return {@link Boolean} private state of the repository
      */
-    boolean isPrivate();
+    boolean isPrivateRepo();
 
     /**
      * Get repository's size.
@@ -130,7 +130,7 @@ public interface GitHubRepository {
      *
      * @return {@link Boolean} <code> true</code> - has wiki
      */
-    boolean hasWiki();
+    boolean isHasWiki();
 
     /**
      * Get clone URL.
@@ -172,12 +172,12 @@ public interface GitHubRepository {
      *
      * @return {@link Boolean} <code> true</code> - has downloads
      */
-    boolean hasDownloads();
+    boolean isHasDownloads();
 
     /**
      * Get whether repository has issues.
      *
      * @return {@link Boolean} <code> true</code> - has issues
      */
-    boolean hasIssues();
+    boolean isHasIssues();
 }
