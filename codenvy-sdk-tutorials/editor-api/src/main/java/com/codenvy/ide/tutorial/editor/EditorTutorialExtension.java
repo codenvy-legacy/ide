@@ -16,7 +16,7 @@ import com.google.inject.Singleton;
 import static com.codenvy.ide.api.ui.workspace.PartStackType.EDITING;
 import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
 
-/** Extension used to demonstrate the Notification feature. */
+/** Extension used to demonstrate the Editor API. */
 @Singleton
 @Extension(title = "Editor API tutorial", version = "1.0.0")
 public class EditorTutorialExtension {
@@ -30,13 +30,14 @@ public class EditorTutorialExtension {
                                    GroovyEditorProvider groovyEditorProvider,
                                    EditorTutorialResource editorTutorialResource,
                                    NewResourceAgent newResourceAgent,
-                                   NewGroovyFileProvider newGroovyFileProvider) {
+                                   NewGroovyFileProvider newGroovyFileProvider,
+                                   EditorTutorialResource resource) {
         editorTutorialResource.groovyCSS().ensureInjected();
         ScriptInjector.fromString(editorTutorialResource.groovyParserJS().getText()).setWindow(TOP_WINDOW).inject();
 
         workspaceAgent.openPart(howToPresenter, EDITING);
 
-        FileType groovyFile = new FileType(null, GROOVY_MIME_TYPE, "groovy");
+        FileType groovyFile = new FileType(resource.groovyFile(), GROOVY_MIME_TYPE, "groovy");
         resourceProvider.registerFileType(groovyFile);
 
         editorRegistry.register(groovyFile, groovyEditorProvider);

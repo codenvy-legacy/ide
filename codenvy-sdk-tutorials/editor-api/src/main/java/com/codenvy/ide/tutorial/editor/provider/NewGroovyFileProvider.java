@@ -23,6 +23,7 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.tutorial.editor.EditorTutorialResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
@@ -34,61 +35,19 @@ import static com.codenvy.ide.tutorial.editor.EditorTutorialExtension.GROOVY_MIM
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class NewGroovyFileProvider extends NewResourceProvider {
+    private EditorTutorialResource resource;
 
     @Inject
-    public NewGroovyFileProvider() {
-        super("Groovy file", "Groovy file", null, "groovy");
+    public NewGroovyFileProvider(EditorTutorialResource resource) {
+        super("Groovy file", "Groovy file", resource.groovyFile(), "groovy");
+        this.resource = resource;
     }
 
     /** {@inheritDoc} */
     @Override
     public void create(@NotNull String name, @NotNull final Folder parent, @NotNull final Project project,
                        @NotNull final AsyncCallback<Resource> callback) {
-        String content = "//Pattern for groovy script\n" +
-                         "def p = ~/.*\\.groovy/\n" +
-                         "new File( 'd:\\\\scripts' ).eachFileMatch(p) {f ->\n" +
-                         "  // imports list\n" +
-                         "  def imports = []\n" +
-                         "  f.eachLine {\n" +
-                         "    // condition to detect an import instruction\n" +
-                         "    ln -> if ( ln =~ '^import .*' ) {\n" +
-                         "      imports << \"${ln - 'import '}\"\n" +
-                         "    }\n" +
-                         "  }\n" +
-                         "  // print thmen\n" +
-                         "  if ( ! imports.empty ) {\n" +
-                         "    println f\n" +
-                         "    imports.each{ println \"   $it\" }\n" +
-                         "  }\n" +
-                         "}\n" +
-                         "\n" +
-                         "/* Coin changer demo code from http://groovy.codehaus.org */\n" +
-                         "\n" +
-                         "enum UsCoin {\n" +
-                         "  quarter(25), dime(10), nickel(5), penny(1)\n" +
-                         "  UsCoin(v) { value = v }\n" +
-                         "  final value\n" +
-                         "}\n" +
-                         "\n" +
-                         "enum OzzieCoin {\n" +
-                         "  fifty(50), twenty(20), ten(10), five(5)\n" +
-                         "  OzzieCoin(v) { value = v }\n" +
-                         "  final value\n" +
-                         "}\n" +
-                         "\n" +
-                         "def plural(word, count) {\n" +
-                         "  if (count == 1) return word\n" +
-                         "  word[-1] == 'y' ? word[0..-2] + \"ies\" : word + \"s\"\n" +
-                         "}\n" +
-                         "\n" +
-                         "def change(currency, amount) {\n" +
-                         "  currency.values().inject([]){ list, coin ->\n" +
-                         "     int count = amount / coin.value\n" +
-                         "     amount = amount % coin.value\n" +
-                         "     list += \"$count ${plural(coin.toString(), count)}\"\n" +
-                         "  }\n" +
-                         "}\n";
-
+        String content = resource.contentFile().getText();
         project.createFile(parent, name + '.' + getExtension(), content, GROOVY_MIME_TYPE, new AsyncCallback<File>() {
             @Override
             public void onSuccess(File file) {

@@ -56,12 +56,14 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
+        // TODO need to add an image
         return null;
     }
 
     /** {@inheritDoc} */
     @Override
     public String getTitleToolTip() {
+        // TODO need to add a tooltip
         return null;
     }
 

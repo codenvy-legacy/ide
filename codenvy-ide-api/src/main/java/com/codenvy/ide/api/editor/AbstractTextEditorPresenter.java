@@ -89,6 +89,6 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
     /** {@inheritDoc} */
     @Override
     public void doSaveAs() {
-        // do nothing
+        // TODO not implemented. need to add save as dialog and etc
     }
 }

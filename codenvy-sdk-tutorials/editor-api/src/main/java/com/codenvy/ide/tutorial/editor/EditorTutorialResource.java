@@ -19,6 +19,7 @@ package com.codenvy.ide.tutorial.editor;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
 
 /**
@@ -33,4 +34,10 @@ public interface EditorTutorialResource extends ClientBundle {
 
     @Source("groovy.js")
     TextResource groovyParserJS();
+
+    @Source("content.txt")
+    TextResource contentFile();
+
+    @Source("groovy.png")
+    ImageResource groovyFile();
 }

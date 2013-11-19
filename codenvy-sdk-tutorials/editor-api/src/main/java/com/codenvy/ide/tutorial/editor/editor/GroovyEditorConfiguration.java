@@ -17,10 +17,8 @@
  */
 package com.codenvy.ide.tutorial.editor.editor;
 
-import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.parser.BasicTokenFactory;
 import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
@@ -49,14 +47,5 @@ public class GroovyEditorConfiguration extends TextEditorConfiguration {
         CmParser parser = getParserForMime(GROOVY_MIME_TYPE);
         parser.setNameAndFactory("groovy", new BasicTokenFactory());
         return parser;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view) {
-//        JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
-//        map.put(EditorTutorialExtension.GROOVY_MIME_TYPE, new CssCodeAssistantProcessor(resourcess));
-//        return map;
-        return null;
     }
 }
