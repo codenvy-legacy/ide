@@ -42,6 +42,12 @@ public class ProjectLockedPresenter implements ResourceLockedView.ActionDelegate
     
     private final FileOperationNotification.Operation operation;
 
+    /**
+     * Creates instance of this {@link ProjectLockedPresenter}
+     * 
+     * @param project
+     * @param operation
+     */
     public ProjectLockedPresenter(ProjectModel project, FileOperationNotification.Operation operation) {
         this.project = project;
         this.operation = operation;
@@ -56,12 +62,18 @@ public class ProjectLockedPresenter implements ResourceLockedView.ActionDelegate
         ChatExtension.get().getProjectUserListeners().add(this);
     }
 
+    /**
+     * @see com.codenvy.ide.collaboration.ResourceLockedView.ActionDelegate#onClose()
+     */
     @Override
     public void onClose() {
         IDE.getInstance().closeView(view.getId());
         ChatExtension.get().getProjectUserListeners().remove(this);
     }
 
+    /**
+     * @see com.codenvy.ide.collaboration.ResourceLockedView.ActionDelegate#onNotify()
+     */
     @Override
     public void onNotify() {
         DtoClientImpls.ProjectOperationNotificationImpl notification = DtoClientImpls.ProjectOperationNotificationImpl.make();
@@ -71,10 +83,16 @@ public class ProjectLockedPresenter implements ResourceLockedView.ActionDelegate
         VfsWatcherExtension.get().collaborationApi.PROJECT_NOTIFICATION.send(notification);
     }
 
+    /**
+     * @see com.codenvy.ide.collaboration.chat.client.ProjectUsersListener#onUserOpenProject()
+     */
     @Override
     public void onUserOpenProject() {
     }
 
+    /**
+     * @see com.codenvy.ide.collaboration.chat.client.ProjectUsersListener#onUserCloseProject()
+     */
     @Override
     public void onUserCloseProject() {
         if (ChatExtension.get().getCurrentProjectParticipants().size() <= 1) {

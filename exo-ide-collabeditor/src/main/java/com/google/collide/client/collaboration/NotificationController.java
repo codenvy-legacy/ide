@@ -48,6 +48,16 @@ public class NotificationController {
 
     private UsersModel usersModel;
 
+    /**
+     * Creates new instance of this {@link NotificationController}
+     * 
+     * @param manager
+     * @param collaborationManager
+     * @param messageFilter
+     * @param usersModel
+     * @param eventBus
+     * @param css
+     */
     public NotificationController(NotificationManager manager, CollaborationManager collaborationManager,
                                   MessageFilter messageFilter, UsersModel usersModel, HandlerManager eventBus, Css css) {
         this.usersModel = usersModel;
@@ -55,6 +65,11 @@ public class NotificationController {
         messageFilter.registerMessageRecipient(RoutingTypes.FILEOPERATIONNOTIFICATION, fileOperationNotificationRecipient);
     }
 
+    /**
+     * Displays notification
+     * 
+     * @param notification
+     */
     private void showFileOperationNotification(FileOperationNotification notification) {
         Participant user = usersModel.getParticipant(usersModel.getUserIdByClientId(notification.getUserId()));
         String targetPath = notification.getTarget();
@@ -65,6 +80,12 @@ public class NotificationController {
                 notification.getOperation()) + " " + targetPath + " and asks you to close file " + fileName, -1));
     }
 
+    /**
+     * Returns name of operation as string.
+     * 
+     * @param operation
+     * @return
+     */
     private String getOperationName(Operation operation) {
         switch (operation) {
             case RENAME:
