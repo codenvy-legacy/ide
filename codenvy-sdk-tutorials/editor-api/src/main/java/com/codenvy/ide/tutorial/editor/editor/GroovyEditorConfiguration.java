@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.tutorial.editor.editor;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.parser.BasicTokenFactory;
@@ -36,14 +37,9 @@ public class GroovyEditorConfiguration extends TextEditorConfiguration {
         super();
     }
 
-    private static native CmParser getParserForMime(String mime) /*-{
-        conf = $wnd.CodeMirror.defaults;
-        return $wnd.CodeMirror.getMode(conf, mime);
-    }-*/;
-
     /** {@inheritDoc} */
     @Override
-    public Parser getParser(TextEditorPartView view) {
+    public Parser getParser(@NotNull TextEditorPartView view) {
         CmParser parser = getParserForMime(GROOVY_MIME_TYPE);
         parser.setNameAndFactory("groovy", new BasicTokenFactory());
         return parser;

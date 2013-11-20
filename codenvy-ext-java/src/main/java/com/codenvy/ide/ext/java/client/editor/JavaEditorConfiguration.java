@@ -17,18 +17,13 @@
  */
 package com.codenvy.ide.ext.java.client.editor;
 
+import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.ext.java.client.JavaPartitions;
 import com.codenvy.ide.ext.java.client.editor.outline.JavaNodeRenderer;
 import com.codenvy.ide.ext.java.client.editor.outline.OutlineModelUpdater;
-import com.codenvy.ide.ext.java.client.internal.ui.text.BracketInserter;
-import com.codenvy.ide.ext.java.client.internal.ui.text.JavaAutoEditStrategy;
-import com.codenvy.ide.ext.java.client.internal.ui.text.JavaDocAutoIndentStrategy;
-import com.codenvy.ide.ext.java.client.internal.ui.text.JavaStringAutoIndentStrategy;
-import com.codenvy.ide.ext.java.client.internal.ui.text.SmartSemicolonAutoEditStrategy;
+import com.codenvy.ide.ext.java.client.internal.ui.text.*;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
-
-import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.text.Document;
@@ -72,11 +67,6 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
         outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
         reconcilerStrategy = new JavaReconcilerStrategy(javaEditor);
     }
-
-    private static native CmParser getParserForMime(String mime) /*-{
-        conf = $wnd.CodeMirror.defaults;
-        return $wnd.CodeMirror.getMode(conf, mime);
-    }-*/;
 
     /** {@inheritDoc} */
     @Override

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.extension.css.editor;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.text.Document;
@@ -27,28 +28,22 @@ import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
 
 /**
+ * The css file type editor configuration.
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
  */
 public class CssEditorConfiguration extends TextEditorConfiguration {
 
-    private CssResources resourcess;
+    private CssResources resources;
 
-    /** @param resourcess */
-    public CssEditorConfiguration(CssResources resourcess) {
+    public CssEditorConfiguration(CssResources resources) {
         super();
-        this.resourcess = resourcess;
+        this.resources = resources;
     }
-
-    private static native CmParser getParserForMime(String mime) /*-{
-        conf = $wnd.CodeMirror.defaults;
-        return $wnd.CodeMirror.getMode(conf, mime);
-    }-*/;
-
 
     /** {@inheritDoc} */
     @Override
-    public Parser getParser(TextEditorPartView view) {
+    public Parser getParser(@NotNull TextEditorPartView view) {
         CmParser parser = getParserForMime("text/css");
         parser.setNameAndFactory("css", new CssTokenFactory());
         return parser;
@@ -56,9 +51,9 @@ public class CssEditorConfiguration extends TextEditorConfiguration {
 
     /** {@inheritDoc} */
     @Override
-    public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view) {
+    public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(@NotNull TextEditorPartView view) {
         JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
-        map.put(Document.DEFAULT_CONTENT_TYPE, new CssCodeAssistantProcessor(resourcess));
+        map.put(Document.DEFAULT_CONTENT_TYPE, new CssCodeAssistantProcessor(resources));
         return map;
     }
 }
