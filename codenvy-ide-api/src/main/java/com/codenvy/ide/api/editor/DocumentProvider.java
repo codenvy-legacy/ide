@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.api.editor;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -45,7 +47,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface DocumentProvider {
     /** Callback for document */
     public interface DocumentCallback {
-        void onDocument(Document document);
+        void onDocument(@NotNull Document document);
     }
 
     /**
@@ -59,7 +61,7 @@ public interface DocumentProvider {
      * @param callback
      *         the document callback
      */
-    void getDocument(EditorInput input, DocumentCallback callback);
+    void getDocument(@Nullable EditorInput input, @NotNull DocumentCallback callback);
 
     /**
      * Saves the given document provided for the given input.
@@ -74,7 +76,8 @@ public interface DocumentProvider {
      * @param callback
      *         the callback for save operation
      */
-    void saveDocument(EditorInput input, Document document, boolean overwrite, AsyncCallback<EditorInput> callback);
+    void saveDocument(@Nullable EditorInput input, @NotNull Document document, boolean overwrite,
+                      @NotNull AsyncCallback<EditorInput> callback);
 
     /**
      * Saves the given document as new resource, provided for the given input.
@@ -87,7 +90,7 @@ public interface DocumentProvider {
      *         indicates whether overwrite should be performed
      *         while saving the given element if necessary
      */
-    void saveDocumentAs(EditorInput input, Document document, boolean overwrite);
+    void saveDocumentAs(@Nullable EditorInput input, @NotNull Document document, boolean overwrite);
 
     /**
      * Returns the annotation model for the given input.
@@ -96,5 +99,6 @@ public interface DocumentProvider {
      *         the input, or <code>null</code>
      * @return the annotation model, or <code>null</code> if none
      */
-    AnnotationModel getAnnotationModel(EditorInput input);
+    @Nullable
+    AnnotationModel getAnnotationModel(@Nullable EditorInput input);
 }

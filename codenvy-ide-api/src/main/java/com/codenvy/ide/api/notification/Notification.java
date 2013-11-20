@@ -42,7 +42,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.*;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class Notification {
+public final class Notification {
     /** Required for delegating open function in notification. */
     public interface OpenNotificationHandler {
         /** Performs some actions in response to a user's opening a notification */

@@ -5,7 +5,7 @@
     <groupId>com.codenvy.ide</groupId>
     <version>3.0.0-M3-SNAPSHOT</version>
     <artifactId>wizard-api-tutorial</artifactId>
-    <name>Codenvy Extension :: Wizard API</name>
+    <name>Codenvy Tutorial :: Wizard API</name>
     <packaging>jar</packaging>
 
     <distributionManagement>

@@ -5,7 +5,7 @@
     <groupId>com.codenvy.ide</groupId>
     <version>3.0.0-M3-SNAPSHOT</version>
     <artifactId>notification-api-tutorial</artifactId>
-    <name>Codenvy Extension :: Notification API</name>
+    <name>Codenvy Tutorial :: Notification API</name>
     <packaging>jar</packaging>
 
     <distributionManagement>

@@ -64,7 +64,7 @@ public class JavaEditorProvider implements EditorProvider {
         this.notificationManager = notificationManager;
     }
 
-    /** @see com.codenvy.ide.api.editor.EditorProvider#getEditor() */
+    /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {
 

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.api.parts.base;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStack;
 
@@ -24,10 +25,8 @@ import com.codenvy.ide.api.ui.workspace.PartStack;
  * Base presenter for parts that support minimizing by part toolbar button.
  *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
  */
 public abstract class BasePresenter extends AbstractPartPresenter implements BaseActionDelegate {
-
     protected PartStack partStack;
 
     protected BasePresenter() {
@@ -45,7 +44,7 @@ public abstract class BasePresenter extends AbstractPartPresenter implements Bas
      *
      * @param partStack
      */
-    public void setPartStack(PartStack partStack) {
+    public void setPartStack(@NotNull PartStack partStack) {
         this.partStack = partStack;
     }
 }

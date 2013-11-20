@@ -1,0 +1,138 @@
+    /*
+     * CODENVY CONFIDENTIAL
+     * __________________
+     *
+     * [2012] - [2013] Codenvy, S.A.
+     * All Rights Reserved.
+     *
+     * NOTICE:  All information contained herein is, and remains
+     * the property of Codenvy S.A. and its suppliers,
+     * if any.  The intellectual and technical concepts contained
+     * herein are proprietary to Codenvy S.A.
+     * and its suppliers and may be covered by U.S. and Foreign Patents,
+     * patents in process, and are protected by trade secret or copyright law.
+     * Dissemination of this information or reproduction of this material
+     * is strictly forbidden unless prior written permission is obtained
+     * from Codenvy S.A..
+     */
+
+    @external groovy-keyword, groovy-atom, groovy-number, groovy-def, groovy-variable, groovy-variable-2, groovy-variable-3;
+    @external groovy-property, groovy-operator, groovy-comment, groovy-meta, groovy-string, groovy-string-2, groovy-qualifier;
+    @external groovy-builtin, groovy-bracket, groovy-tag, groovy-attribute, groovy-header, groovy-quote, groovy-hr, groovy-link;
+    @external groovy-negative, groovy-positive, groovy-header, groovy-strong, groovy-em, groovy-link, groovy-error, groovy-invalidchar;
+
+    .groovy-keyword {
+        color: #708;
+    }
+
+    .groovy-atom {
+        color: #219;
+    }
+
+    .groovy-number {
+        color: #164;
+    }
+
+    .groovy-def {
+        color: #00f;
+    }
+
+    .groovy-variable {
+        color: black;
+    }
+
+    .groovy-variable-2 {
+        color: #05a;
+    }
+
+    .groovy-variable-3 {
+        color: #085;
+    }
+
+    .groovy-property {
+        color: black;
+    }
+
+    .groovy-operator {
+        color: black;
+    }
+
+    .groovy-comment {
+        color: #a50;
+    }
+
+    .groovy-string {
+        color: #a11;
+    }
+
+    .groovy-string-2 {
+        color: #f50;
+    }
+
+    .groovy-meta {
+        color: #555;
+    }
+
+    .groovy-qualifier {
+        color: #555;
+    }
+
+    .groovy-builtin {
+        color: #30a;
+    }
+
+    .groovy-bracket {
+        color: #997;
+    }
+
+    .groovy-tag {
+        color: #170;
+    }
+
+    .groovy-attribute {
+        color: #00c;
+    }
+
+    .groovy-header {
+        color: blue;
+    }
+
+    .groovy-quote {
+        color: #090;
+    }
+
+    .groovy-hr {
+        color: #999;
+    }
+
+    .groovy-link {
+        color: #00c;
+    }
+
+    .groovy-negative {
+        color: #d44;
+    }
+
+    .groovy-positive {
+        color: #292;
+    }
+
+    .groovy-header, .groovy-strong {
+        font-weight: bold;
+    }
+
+    .groovy-em {
+        font-style: italic;
+    }
+
+    .groovy-link {
+        text-decoration: underline;
+    }
+
+    .groovy-error {
+        color: #f00;
+    }
+
+    .groovy-invalidchar {
+        color: #f00;
+    }
