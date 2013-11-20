@@ -18,8 +18,6 @@
 package org.exoplatform.ide.git.client.github.gitimport;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -61,8 +59,7 @@ import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteEvent;
-import org.exoplatform.ide.git.client.clone.GitURLParser;
+import org.exoplatform.ide.git.client.clone.RepositoryClonedEvent;
 import org.exoplatform.ide.git.client.github.collaborators.GitHubClientService;
 import org.exoplatform.ide.git.client.marshaller.OrganizationsUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
@@ -782,19 +779,10 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
      * @param folder
      *         {@link FolderModel} in which repository was cloned
      */
-    private void onRepositoryCloned(final RepoInfo gitRepositoryInfo, final FolderModel folder) {
+    private void onRepositoryCloned(RepoInfo gitRepositoryInfo, final FolderModel folder) {
         IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(gitRepositoryInfo.getRemoteUri()), OutputMessage.Type.GIT));
         IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), null));
-
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                String[] userRepo = GitURLParser.parseGitHubUrl(gitRepositoryInfo.getRemoteUri());
-                if (userRepo != null) {
-                    IDE.fireEvent(new CloneRepositoryCompleteEvent(userRepo[0], userRepo[1]));
-                }
-            }
-        });
+        IDE.fireEvent(new RepositoryClonedEvent(gitRepositoryInfo.getRemoteUri()));
     }
 
     /** {@inheritDoc} */

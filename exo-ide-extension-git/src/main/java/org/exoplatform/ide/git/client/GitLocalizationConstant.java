@@ -743,6 +743,9 @@ public interface GitLocalizationConstant extends Messages {
     @Key("authorize.need.body.ssh")
     String authorizeSSHBody(String vendorName);
 
+    @Key("authorize.need.body.collaborators")
+    String authorizeCollaboratorsBody(String vendorName);
+
     @Key("authorize.not.supported")
     String authorizeNotSupported();
 }
