@@ -23,6 +23,7 @@ import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.ext.java.client.JavaPartitions;
 import com.codenvy.ide.text.DocumentFactory;
@@ -41,6 +42,8 @@ public class JavaEditorProvider implements EditorProvider {
     private final UserActivityManager         activityManager;
     private final NotificationManager         notificationManager;
     private       Provider<CodenvyTextEditor> editorProvider;
+    private       ResourceProvider            resourceProvider;
+    private JavaParserWorker worker;
 
     /**
      * @param resources
@@ -49,10 +52,13 @@ public class JavaEditorProvider implements EditorProvider {
     @Inject
     public JavaEditorProvider(Resources resources, UserActivityManager activityManager,
                               Provider<CodenvyTextEditor> editorProvider, DocumentFactory documentFactory,
-                              NotificationManager notificationManager) {
+                              NotificationManager notificationManager, ResourceProvider resourceProvider,
+                              JavaParserWorker worker) {
         super();
         this.activityManager = activityManager;
         this.editorProvider = editorProvider;
+        this.resourceProvider = resourceProvider;
+        this.worker = worker;
         this.documentProvider =
                 new CompilationUnitDocumentProvider(resources.workspaceEditorCss(), JavaClientBundle.INSTANCE.css(), documentFactory);
         this.notificationManager = notificationManager;
@@ -61,11 +67,14 @@ public class JavaEditorProvider implements EditorProvider {
     /** @see com.codenvy.ide.api.editor.EditorProvider#getEditor() */
     @Override
     public EditorPartPresenter getEditor() {
+
         CodenvyTextEditor textEditor = editorProvider.get();
         JavaEditorConfiguration configuration =
-                new JavaEditorConfiguration(activityManager, JavaClientBundle.INSTANCE, textEditor, JavaPartitions.JAVA_PARTITIONING);
+                new JavaEditorConfiguration(activityManager, JavaClientBundle.INSTANCE, textEditor, JavaPartitions.JAVA_PARTITIONING,
+                                            resourceProvider, worker);
 
         textEditor.initialize(configuration, documentProvider, notificationManager);
         return textEditor;
     }
+
 }
