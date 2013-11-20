@@ -566,7 +566,7 @@
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${org.exoplatform.ide.version}.war"
                                       tofile="${tomcat.output.dir}/webapps/git.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${project.version}.war"
-                                      tofile="${tomcat.output.dir}/tomcat-ide/webapps/site.war" overwrite="true"/>
+                                      tofile="${tomcat.output.dir}/webapps/site.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${org.exoplatform.ide.version}.war"
                                       tofile="${tomcat.output.dir}/webapps/builder.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war"
