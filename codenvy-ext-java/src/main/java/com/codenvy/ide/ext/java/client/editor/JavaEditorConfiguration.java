@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.java.client.editor;
 
+import com.codenvy.ide.api.editor.TextEditorPartPresenter;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.ext.java.client.JavaPartitions;
 import com.codenvy.ide.ext.java.client.editor.outline.JavaNodeRenderer;
@@ -27,8 +29,6 @@ import com.codenvy.ide.ext.java.client.internal.ui.text.JavaDocAutoIndentStrateg
 import com.codenvy.ide.ext.java.client.internal.ui.text.JavaStringAutoIndentStrategy;
 import com.codenvy.ide.ext.java.client.internal.ui.text.SmartSemicolonAutoEditStrategy;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
-
-import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.text.Document;
