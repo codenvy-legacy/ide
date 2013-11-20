@@ -18,16 +18,12 @@
 package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
-import com.codenvy.ide.ext.java.client.NameEnvironment;
-import com.codenvy.ide.ext.java.client.TypeInfoStorage;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.java.client.core.IProblemRequestor;
 import com.codenvy.ide.ext.java.client.core.compiler.IProblem;
-import com.codenvy.ide.ext.java.client.core.dom.AST;
-import com.codenvy.ide.ext.java.client.core.dom.ASTNode;
-import com.codenvy.ide.ext.java.client.core.dom.ASTParser;
 import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
@@ -46,29 +42,27 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider {
+public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider, JavaParserWorker.JavaParserCallback {
 
-    private Document document;
-
-    private INameEnvironment nameEnvironment;
-
-    private final TextEditorPartPresenter editor;
-
-    private File file;
-
+    private static JavaReconcilerStrategy  instance;
+    private final  TextEditorPartPresenter editor;
+    private        Document                document;
+    private        INameEnvironment        nameEnvironment;
+    private        ResourceProvider        resourceProvider;
+    private JavaParserWorker worker;
+    private File                         file;
     private ListenerManager<AstListener> astListeners;
 
-    private static JavaReconcilerStrategy instance;
+    public JavaReconcilerStrategy(TextEditorPartPresenter editor, ResourceProvider resourceProvider, JavaParserWorker worker) {
+        this.editor = editor;
+        this.resourceProvider = resourceProvider;
+        this.worker = worker;
+        instance = this;
+        astListeners = ListenerManager.create();
+    }
 
     public static JavaReconcilerStrategy get() {
         return instance;
-    }
-
-    /** @param editor */
-    public JavaReconcilerStrategy(TextEditorPartPresenter editor) {
-        this.editor = editor;
-        instance = this;
-        astListeners = ListenerManager.create();
     }
 
     /** {@inheritDoc} */
@@ -76,9 +70,10 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider 
     public void setDocument(Document document) {
         this.document = document;
         file = editor.getEditorInput().getFile();
-        nameEnvironment =
-                new NameEnvironment(file.getProject().getId(), "/ide/rest");
-        TypeInfoStorage.get().setPackages(file.getProject().getId(), JsonCollections.createStringSet());
+//        nameEnvironment =
+//                new NameEnvironment(file.getProject().getId(), "/ide/rest");
+//        TypeInfoStorage.get().setPackages(file.getProject().getId(), JsonCollections.createStringSet());
+
     }
 
     /** {@inheritDoc} */
@@ -91,42 +86,8 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider 
      *
      */
     private void parse() {
-        AnnotationModel annotationModel = editor.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
-        if (annotationModel == null)
-            return;
-        IProblemRequestor problemRequestor = null;
-        if (annotationModel instanceof IProblemRequestor) {
-            problemRequestor = (IProblemRequestor)annotationModel;
-            problemRequestor.beginReporting();
-        }
-        try {
-            ASTParser parser = ASTParser.newParser(AST.JLS3);
-            parser.setSource(document.get());
-            parser.setKind(ASTParser.K_COMPILATION_UNIT);
-            parser.setUnitName(file.getName().substring(0, file.getName().lastIndexOf('.')));
-            parser.setResolveBindings(true);
-            parser.setNameEnvironment(nameEnvironment);
-            ASTNode ast = parser.createAST();
-            CompilationUnit unit = (CompilationUnit)ast;
-            sheduleAstChanged(unit);
-            IProblem[] problems = unit.getProblems();
-            for (IProblem p : problems) {
-                problemRequestor.acceptProblem(p);
-            }
-            IProblem[] tasks = (IProblem[])unit.getProperty("tasks");
-            if (tasks != null) {
-                for (IProblem p : tasks) {
-                    problemRequestor.acceptProblem(p);
-                }
-            }
-        } catch (Exception e) {
-            Log.error(getClass(), e);
-        } finally {
-            if (problemRequestor != null)
-                problemRequestor.endReporting();
-        }
+        worker.parse(document.get(),file.getName(), this);
     }
-
 
     private void sheduleAstChanged(final CompilationUnit unit) {
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -164,4 +125,24 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider 
         return astListeners.add(listener);
     }
 
+    @Override
+    public void onProblems(JsonArray<IProblem> problems) {
+        AnnotationModel annotationModel = editor.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
+        if (annotationModel == null)
+            return;
+        IProblemRequestor problemRequestor;
+        if (annotationModel instanceof IProblemRequestor) {
+            problemRequestor = (IProblemRequestor)annotationModel;
+            problemRequestor.beginReporting();
+        } else return;
+        try {
+            for(IProblem problem : problems.asIterable()){
+                problemRequestor.acceptProblem(problem);
+            }
+        } catch (Exception e) {
+            Log.error(getClass(), e);
+        } finally {
+            problemRequestor.endReporting();
+        }
+    }
 }

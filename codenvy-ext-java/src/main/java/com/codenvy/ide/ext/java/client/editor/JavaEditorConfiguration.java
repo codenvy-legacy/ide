@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client.editor;
 
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.ext.java.client.JavaPartitions;
 import com.codenvy.ide.ext.java.client.editor.outline.JavaNodeRenderer;
@@ -64,13 +65,13 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
 
 
     public JavaEditorConfiguration(UserActivityManager manager, JavaClientBundle resources, TextEditorPartPresenter javaEditor,
-                                   String documentPartitioning) {
+                                   String documentPartitioning, ResourceProvider resourceProvider, JavaParserWorker worker) {
         super();
         this.manager = manager;
         this.javaEditor = javaEditor;
         this.documentPartitioning = documentPartitioning;
         outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
-        reconcilerStrategy = new JavaReconcilerStrategy(javaEditor);
+        reconcilerStrategy = new JavaReconcilerStrategy(javaEditor, resourceProvider, worker);
     }
 
     private static native CmParser getParserForMime(String mime) /*-{

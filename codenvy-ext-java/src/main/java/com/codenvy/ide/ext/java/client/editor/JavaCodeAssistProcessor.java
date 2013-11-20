@@ -107,44 +107,9 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
                                                                  "dev-monit");
         CompletionEngine e = new CompletionEngine(nameEnvironment, collector, JavaCore.getOptions());
         try {
-            e.complete(new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(view.getDocument().get()
-                                                                                          .toCharArray(), currentFile.getName().substring(0,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                                                                                                          currentFile
-                                                                                                                                                  .getName()
-                                                                                                                                                  .lastIndexOf(
-                                                                                                                                                          '.')),
-                                                                                      "UTF-8"),
-                       offset, 0);
+            e.complete(new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(
+                    view.getDocument().get().toCharArray(),
+                    currentFile.getName().substring(0, currentFile.getName().lastIndexOf('.')), "UTF-8"), offset, 0);
 
             JavaCompletionProposal[] javaCompletionProposals = collector.getJavaCompletionProposals();
             List<JavaCompletionProposal> types =
