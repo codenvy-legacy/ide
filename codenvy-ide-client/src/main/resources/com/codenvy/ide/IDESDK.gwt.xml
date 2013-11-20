@@ -42,13 +42,6 @@
     <inherits name='com.codenvy.ide.ext.java.jdi.JavaRuntimeExtension'/>
     <inherits name='com.codenvy.ide.extension.demo.Demo'/>
     <inherits name='com.codenvy.ide.extension.css.Css'/>
-    <inherits name='com.codenvy.ide.extension.cloudfoundry.CloudFoundry'/>
-    <inherits name='com.codenvy.ide.ext.appfog.AppFog'/>
-    <inherits name='com.codenvy.ide.ext.cloudbees.CloudBees'/>
-    <inherits name='com.codenvy.ide.ext.openshift.OpenShift'/>
-    <inherits name='com.codenvy.ide.ext.gae.GAE'/>
-    <inherits name='com.codenvy.ide.ext.aws.AWS'/>
-    <inherits name='com.codenvy.ide.ext.jenkins.Jenkins'/>
     <inherits name='com.codenvy.ide.extension.maven.Maven'/>
     <inherits name='com.codenvy.ide.ext.git.Git'/>
     <inherits name='com.codenvy.ide.ext.ssh.Ssh'/>

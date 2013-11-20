@@ -18,7 +18,8 @@
     from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -73,6 +74,12 @@
             <artifactId>codenvy-organization-packaging-api-war</artifactId>
             <type>war</type>
             <version>${com.codenvy.organization.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-site-war</artifactId>
+            <type>war</type>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -162,19 +169,6 @@
             </exclusions>
             <version>${org.exoplatform.ide.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-aws</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>httpclient</artifactId>
-                    <groupId>org.apache.httpcomponents</groupId>
-                </exclusion>
-            </exclusions>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-java-runtime</artifactId>
@@ -198,43 +192,6 @@
             </exclusions>
             <version>${org.exoplatform.ide.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-jenkins</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-ui</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-commons</artifactId>
-                </exclusion>
-            </exclusions>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-googleappengine</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-ui</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>gwt-user</artifactId>
-                    <groupId>com.google.gwt</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>httpclient</artifactId>
-                    <groupId>org.apache.httpcomponents</groupId>
-                </exclusion>
-            </exclusions>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-git</artifactId>
@@ -266,91 +223,6 @@
             </exclusions>
             <version>${org.exoplatform.ide.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-openshift</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-ui</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-commons</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>gwt-user</artifactId>
-                    <groupId>com.google.gwt</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>gwt-elemental</artifactId>
-                    <groupId>com.google.gwt</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>slf4j-log4j12</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-cloudbees</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-ui</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-commons</artifactId>
-                </exclusion>
-            </exclusions>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-cloudfoundry</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-ui</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-commons</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>gwt-user</artifactId>
-                    <groupId>com.google.gwt</groupId>
-                </exclusion>
-            </exclusions>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-appfog</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-ui</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-commons</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>gwt-user</artifactId>
-                    <groupId>com.google.gwt</groupId>
-                </exclusion>
-            </exclusions>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-logreader</artifactId>
@@ -416,6 +288,48 @@
             <type>zip</type>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>action-api-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>dto-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>new-project-wizard-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>new-resource-wizard-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>notification-api-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>parts-api-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>wizard-api-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- GIT Server -->
         <dependency>
@@ -432,20 +346,6 @@
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>${jsch.version}</version>
-        </dependency>
-
-        <!-- Google App Engine SDK -->
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-java-sdk</artifactId>
-            <type>zip</type>
-            <version>${appengine.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-python-sdk</artifactId>
-            <type>zip</type>
-            <version>${appengine.version}</version>
         </dependency>
     </dependencies>
 
@@ -488,25 +388,75 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>copy-appengine-zip</id>
+                        <id>copy-tutorials</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>copy</goal>
                         </goals>
                         <configuration>
-                            <stripVersion>true</stripVersion>
-                            <silent>true</silent>
-                            <outputDirectory>${project.build.directory}/packager-conf/appengine</outputDirectory>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>com.google.appengine</groupId>
-                                    <artifactId>appengine-java-sdk</artifactId>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>action-api-tutorial</artifactId>
                                     <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>action-api-tutorial.zip</destFileName>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>com.google.appengine</groupId>
-                                    <artifactId>appengine-python-sdk</artifactId>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>dto-tutorial</artifactId>
                                     <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>dto-tutorial.zip</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>new-project-wizard-tutorial</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>new-project-wizard-tutorial.zip</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>new-resource-wizard-tutorial</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>new-resource-wizard-tutorial.zip</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>notification-api-tutorial</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>notification-api-tutorial.zip</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>parts-api-tutorial</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>parts-api-tutorial.zip</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>wizard-api-tutorial</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>wizard-api-tutorial.zip</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -568,79 +518,65 @@
                         <id>Prepare Tomcat</id>
                         <phase>prepare-package</phase>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <unzip src="${project.build.directory}/packager-conf/zip/tomcat.zip" dest="${project.build.directory}">
                                     <patternset>
-                                        <exclude name="**/ROOT/**" />
-                                        <exclude name="**/docs/**" />
-                                        <exclude name="**/examples/**" />
-                                        <exclude name="**/manager/**" />
-                                        <exclude name="**/host-manager/**" />
+                                        <exclude name="**/ROOT/**"/>
+                                        <exclude name="**/docs/**"/>
+                                        <exclude name="**/examples/**"/>
+                                        <exclude name="**/manager/**"/>
+                                        <exclude name="**/host-manager/**"/>
                                     </patternset>
                                 </unzip>
-                                <move file="${project.build.directory}/apache-tomcat-${tomcat.version}" tofile="${tomcat.output.dir}" />
+                                <move file="${project.build.directory}/apache-tomcat-${tomcat.version}" tofile="${tomcat.output.dir}"/>
                                 <copy todir="${tomcat.output.dir}" overwrite="true">
-                                    <fileset dir="${basedir}/src/main/resources/tomcat" />
+                                    <fileset dir="${basedir}/src/main/resources/tomcat"/>
                                 </copy>
-                                <chmod dir="${tomcat.output.dir}/bin" perm="+x" includes="**/*.sh" />
-                                <move file="${tomcat.output.dir}/lib/log4j-over-slf4j-${org.slf4j.version}.jar" tofile="${tomcat.output.dir}/lib/log4j-over-slf4j.jar" />
-                                <move file="${tomcat.output.dir}/lib/logback-core-${ch.qos.logback.version}.jar" tofile="${tomcat.output.dir}/lib/logback-core.jar" />
-                                <move file="${tomcat.output.dir}/lib/logback-classic-${ch.qos.logback.version}.jar" tofile="${tomcat.output.dir}/lib/logback-classic.jar" />
-                                <move file="${tomcat.output.dir}/lib/slf4j-api-${org.slf4j.version}.jar" tofile="${tomcat.output.dir}/lib/slf4j-api.jar" />
-                                <move file="${tomcat.output.dir}/lib/jul-to-slf4j-${org.slf4j.version}.jar" tofile="${tomcat.output.dir}/lib/jul-to-slf4j.jar" />
+                                <chmod dir="${tomcat.output.dir}/bin" perm="+x" includes="**/*.sh"/>
+                                <move file="${tomcat.output.dir}/lib/log4j-over-slf4j-${org.slf4j.version}.jar"
+                                      tofile="${tomcat.output.dir}/lib/log4j-over-slf4j.jar"/>
+                                <move file="${tomcat.output.dir}/lib/logback-core-${ch.qos.logback.version}.jar"
+                                      tofile="${tomcat.output.dir}/lib/logback-core.jar"/>
+                                <move file="${tomcat.output.dir}/lib/logback-classic-${ch.qos.logback.version}.jar"
+                                      tofile="${tomcat.output.dir}/lib/logback-classic.jar"/>
+                                <move file="${tomcat.output.dir}/lib/slf4j-api-${org.slf4j.version}.jar"
+                                      tofile="${tomcat.output.dir}/lib/slf4j-api.jar"/>
+                                <move file="${tomcat.output.dir}/lib/jul-to-slf4j-${org.slf4j.version}.jar"
+                                      tofile="${tomcat.output.dir}/lib/jul-to-slf4j.jar"/>
 
-                                <unwar src="${project.build.directory}/packager-conf/war/codenvy-sdk-application-war-${project.version}.war" dest="${project.build.directory}/packager-conf/war/ide">
+                                <unwar src="${project.build.directory}/packager-conf/war/codenvy-sdk-application-war-${project.version}.war"
+                                       dest="${project.build.directory}/packager-conf/war/ide">
                                     <patternset>
-                                        <exclude name="**/lib/**" />
+                                        <exclude name="**/lib/**"/>
                                     </patternset>
                                 </unwar>
 
                                 <move todir="${project.build.directory}/packager-conf/war/ide/_app">
-                                    <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/" />
+                                    <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/"/>
+                                </move>
+
+                                <move todir="${tomcat.output.dir}/tutorials">
+                                    <fileset dir="${project.build.directory}/packager-conf/zip/tutorials"/>
                                 </move>
 
                                 <war destfile="${tomcat.output.dir}/webapps/ide.war" needxmlfile="false">
-                                    <fileset dir="${project.build.directory}/packager-conf/war/ide" />
+                                    <fileset dir="${project.build.directory}/packager-conf/war/ide"/>
                                 </war>
 
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${org.exoplatform.ide.version}.war" tofile="${tomcat.output.dir}/webapps/git.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${org.exoplatform.ide.version}.war" tofile="${tomcat.output.dir}/webapps/builder.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war" tofile="${tomcat.output.dir}/webapps/codeassistant-storage.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war" tofile="${tomcat.output.dir}/webapps/userdb.war" overwrite="true" />
-                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${tomcat.output.dir}" />
-                                <unzip src="${project.build.directory}/repo.zip" dest="${tomcat.output.dir}" />
-                                <chmod dir="${tomcat.output.dir}" perm="+x" includes="install.sh" />
-                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${tomcat.output.dir}">
-                                    <patternset>
-                                        <exclude name="**/bin/**" />
-                                        <exclude name="**/demos/**" />
-                                        <exclude name="**/src/**" />
-                                        <exclude name="**/docs/javadoc/**" />
-                                        <exclude name="**/docs/remoteapi/**" />
-                                        <exclude name="**/docs/testing/**" />
-                                        <exclude name="**/docs/tools/**" />
-                                        <exclude name="**/docs/javadoc/**" />
-                                        <exclude name="**/ABOUT" />
-                                        <exclude name="**/COPYING" />
-                                        <exclude name="**/README" />
-                                        <exclude name="**/README.ORM" />
-                                        <exclude name="**/RELEASE_NOTES" />
-                                        <exclude name="**/RELEASE_NOTES.ORM" />
-                                    </patternset>
-                                </unzip>
-                                <move file="${tomcat.output.dir}/appengine-java-sdk-${appengine.version}" tofile="${tomcat.output.dir}/appengine-java-sdk" />
-                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-python-sdk.zip" dest="${tomcat.output.dir}">
-                                    <patternset>
-                                        <exclude name="**/demos/**" />
-                                        <exclude name="**/new_project_template/**" />
-                                        <exclude name="**/BUGS" />
-                                        <exclude name="**/LICENSE" />
-                                        <exclude name="**/README" />
-                                        <exclude name="**/RELEASE_NOTES" />
-                                    </patternset>
-                                </unzip>
-                                <move file="${tomcat.output.dir}/google_appengine" tofile="${tomcat.output.dir}/appengine-python-sdk" />
-                            </tasks>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${org.exoplatform.ide.version}.war"
+                                      tofile="${tomcat.output.dir}/webapps/git.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${project.version}.war"
+                                      tofile="${tomcat.output.dir}/webapps/site.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${org.exoplatform.ide.version}.war"
+                                      tofile="${tomcat.output.dir}/webapps/builder.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war"
+                                      tofile="${tomcat.output.dir}/webapps/codeassistant-storage.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war"
+                                      tofile="${tomcat.output.dir}/webapps/userdb.war" overwrite="true"/>
+                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${tomcat.output.dir}"/>
+                                <unzip src="${project.build.directory}/repo.zip" dest="${tomcat.output.dir}"/>
+                                <chmod dir="${tomcat.output.dir}" perm="+x" includes="install.sh"/>
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>
@@ -670,5 +606,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

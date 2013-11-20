@@ -172,4 +172,8 @@
         <role-name>developer</role-name>
     </security-role>
 
+    <session-config>
+        <session-timeout>240</session-timeout>
+    </session-config>
+
 </web-app>

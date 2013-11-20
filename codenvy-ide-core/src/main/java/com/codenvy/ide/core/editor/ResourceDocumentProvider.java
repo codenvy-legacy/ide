@@ -17,15 +17,21 @@
  */
 package com.codenvy.ide.core.editor;
 
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentFactory;
+import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.annotation.AnnotationModel;
+import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -38,6 +44,8 @@ public class ResourceDocumentProvider implements DocumentProvider {
 
     private DocumentFactory documentFactory;
 
+    private Map<File, Document> cache = new HashMap<File, Document>();
+
     @Inject
     public ResourceDocumentProvider(DocumentFactory documentFactory) {
         this.documentFactory = documentFactory;
@@ -47,6 +55,7 @@ public class ResourceDocumentProvider implements DocumentProvider {
      * {@inheritDoc}
      * This implementation return null
      */
+    @Nullable
     @Override
     public AnnotationModel getAnnotationModel(EditorInput input) {
         return null;
@@ -55,13 +64,22 @@ public class ResourceDocumentProvider implements DocumentProvider {
     /** {@inheritDoc} */
     @Override
     public void getDocument(EditorInput input, final DocumentCallback callback) {
-        File file = input.getFile();
+        /* TODO This is not good solution. It is a temporary solution. We will find something better than this. This needs when editor
+        is not initialized but some code wants to use it. In this case we returned a new instance of document. */
+        final File file = input.getFile();
+        if (cache.containsKey(file)) {
+            Document document = cache.get(file);
+            for (Line line = ((DocumentImpl)document).getTextStore().getFirstLine(); line != null; line = line.getNextLine()) {
+                line.clearTags();
+            }
+            callback.onDocument(document);
+            return;
+        }
 
         file.getProject().getContent(file, new AsyncCallback<File>() {
-
             @Override
             public void onSuccess(File result) {
-                contentReceived(result.getContent(), callback);
+                contentReceived(result, callback);
             }
 
             @Override
@@ -69,17 +87,17 @@ public class ResourceDocumentProvider implements DocumentProvider {
                 Log.error(ResourceDocumentProvider.class, caught);
             }
         });
-
     }
 
     /**
-     * @param content
+     * @param file
      * @param callback
      */
-    private void contentReceived(String content, DocumentCallback callback) {
-        callback.onDocument(documentFactory.get(content));
+    private void contentReceived(File file, DocumentCallback callback) {
+        Document document = documentFactory.get(file.getContent());
+        cache.put(file, document);
+        callback.onDocument(document);
     }
-
 
     /** {@inheritDoc} */
     @Override
@@ -100,26 +118,20 @@ public class ResourceDocumentProvider implements DocumentProvider {
         });
     }
 
-    /**
-     * @see com.codenvy.ide.api.editor.DocumentProvider#saveDocumentAs(com.codenvy.ide.api.editor.EditorInput,
-     *      com.codenvy.ide.text.Document,
-     *      boolean)
-     */
+    /** {@inheritDoc} */
     @Override
     public void saveDocumentAs(EditorInput input, Document document, boolean overwrite) {
         File file = input.getFile();
-        file.getProject().createFile(file.getParent(), file.getName(), file.getContent(), file.getMimeType(),
-                                     new AsyncCallback<File>() {
+        file.getProject().createFile(file.getParent(), file.getName(), file.getContent(), file.getMimeType(), new AsyncCallback<File>() {
+            @Override
+            public void onSuccess(File result) {
+                //TODO
+            }
 
-                                         @Override
-                                         public void onSuccess(File result) {
-                                             //TODO
-                                         }
-
-                                         @Override
-                                         public void onFailure(Throwable caught) {
-                                             Log.error(ResourceDocumentProvider.class, caught);
-                                         }
-                                     });
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(ResourceDocumentProvider.class, caught);
+            }
+        });
     }
 }

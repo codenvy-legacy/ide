@@ -75,7 +75,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
     protected void initializeEditor() {
         editor.configure(configuration);
 
-        // Postpone setting a document to give the time for a editor (TextEditorViewImpl) to fully construct itself.
+        // Postpone setting a document to give the time for editor (TextEditorViewImpl) to fully construct itself.
         // Otherwise, the editor may not be ready to render the document.
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
@@ -91,7 +91,6 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
                 });
             }
         });
-
     }
 
     /** @see com.codenvy.ide.api.editor.TextEditorPartPresenter#close(boolean) */
