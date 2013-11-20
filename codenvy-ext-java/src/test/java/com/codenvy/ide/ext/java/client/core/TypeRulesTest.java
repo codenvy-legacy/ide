@@ -56,7 +56,7 @@ public class TypeRulesTest extends BaseTest {
         options.put(JavaCore.COMPILER_PB_UNNECESSARY_TYPE_CHECK, JavaCore.IGNORE);
         options.put(JavaCore.COMPILER_PB_UNUSED_LOCAL, JavaCore.IGNORE);
         options.put(JavaCore.COMPILER_PB_UNCHECKED_TYPE_OPERATION, JavaCore.IGNORE);
-        new JavaReconcilerStrategy(null);
+        new JavaReconcilerStrategy(null, null);
         GwtReflectionUtils.setPrivateFieldValue(JavaReconcilerStrategy.get(), "nameEnvironment", new FileSystem(
                 new String[]{System.getProperty("java.home") + "/lib/rt.jar"}, null, "UTF-8"));
 //      JdtExtension.get().getOptions().putAll(options);
