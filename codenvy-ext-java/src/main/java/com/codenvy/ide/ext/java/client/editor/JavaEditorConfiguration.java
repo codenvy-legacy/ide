@@ -64,13 +64,13 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
 
 
     public JavaEditorConfiguration(UserActivityManager manager, JavaClientBundle resources, TextEditorPartPresenter javaEditor,
-                                   String documentPartitioning) {
+                                   String documentPartitioning, ResourceProvider resourceProvider, JavaParserWorker worker) {
         super();
         this.manager = manager;
         this.javaEditor = javaEditor;
         this.documentPartitioning = documentPartitioning;
-//        outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
-//        reconcilerStrategy = new JavaReconcilerStrategy(javaEditor);
+        outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
+        reconcilerStrategy = new JavaReconcilerStrategy(javaEditor, resourceProvider, worker);
     }
 
     private static native CmParser getParserForMime(String mime) /*-{
@@ -86,14 +86,14 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
         return parser;
     }
 
-//    /** {@inheritDoc} */
-//    @Override
-//    public Reconciler getReconciler(TextEditorPartView view) {
-//        BasicIncrementalScheduler scheduler = new BasicIncrementalScheduler(manager, 50, 100);
-//        ReconcilerImpl reconciler = new ReconcilerImpl(Document.DEFAULT_PARTITIONING, scheduler);
-//        reconciler.addReconcilingStrategy(Document.DEFAULT_CONTENT_TYPE, reconcilerStrategy);
-//        return reconciler;
-//    }
+    /** {@inheritDoc} */
+    @Override
+    public Reconciler getReconciler(TextEditorPartView view) {
+        BasicIncrementalScheduler scheduler = new BasicIncrementalScheduler(manager, 50, 100);
+        ReconcilerImpl reconciler = new ReconcilerImpl(Document.DEFAULT_PARTITIONING, scheduler);
+        reconciler.addReconcilingStrategy(Document.DEFAULT_CONTENT_TYPE, reconcilerStrategy);
+        return reconciler;
+    }
 
     private JavaCodeAssistProcessor getOrCreateCodeAssistProcessor() {
         if (codeAssistProcessor == null) {
@@ -104,31 +104,31 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
         return codeAssistProcessor;
     }
 
-//    /** {@inheritDoc} */
-//    @Override
-//    public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view) {
-//
-//        JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
-//        map.put(Document.DEFAULT_CONTENT_TYPE, getOrCreateCodeAssistProcessor());
-//        return map;
-//    }
-//
-//    /** {@inheritDoc} */
-//    @Override
-//    public QuickAssistProcessor getQuickAssistAssistant(TextEditorPartView view) {
-//        JavaCorrectionAssistant assistant = new JavaCorrectionAssistant(javaEditor, reconcilerStrategy);
-//        assistant.install(view);
-//        ((TextEditorViewImpl)view).setQuickAssistAssistant(assistant);
-//        return null;
-//    }
-//
-//    /** {@inheritDoc} */
-//    @Override
-//    public OutlineModel getOutline(TextEditorPartView view) {
-//        new OutlineModelUpdater(outlineModel, reconcilerStrategy);
-//        return outlineModel;
-////        return super.getOutline(view);
-//    }
+    /** {@inheritDoc} */
+    @Override
+    public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view) {
+
+        JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
+        map.put(Document.DEFAULT_CONTENT_TYPE, getOrCreateCodeAssistProcessor());
+        return map;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public QuickAssistProcessor getQuickAssistAssistant(TextEditorPartView view) {
+        JavaCorrectionAssistant assistant = new JavaCorrectionAssistant(javaEditor, reconcilerStrategy);
+        assistant.install(view);
+        ((TextEditorViewImpl)view).setQuickAssistAssistant(assistant);
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public OutlineModel getOutline(TextEditorPartView view) {
+        new OutlineModelUpdater(outlineModel, reconcilerStrategy);
+        return outlineModel;
+//        return super.getOutline(view);
+    }
 
     @Override
     public String[] getConfiguredContentTypes(TextEditorPartView view) {
