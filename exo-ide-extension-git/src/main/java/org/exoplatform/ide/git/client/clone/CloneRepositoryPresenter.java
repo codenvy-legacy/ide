@@ -18,8 +18,6 @@
 package org.exoplatform.ide.git.client.clone;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -28,7 +26,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -414,19 +411,10 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
      * @param folder
      *         {@link FolderModel} to clone
      */
-    private void onCloneSuccess(final RepoInfo gitRepositoryInfo, final FolderModel folder) {
+    private void onCloneSuccess(RepoInfo gitRepositoryInfo, final FolderModel folder) {
         IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(gitRepositoryInfo.getRemoteUri()), Type.GIT));
         IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), null));
-
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                String[] userRepo = GitURLParser.parseGitHubUrl(gitRepositoryInfo.getRemoteUri());
-                if (userRepo != null) {
-                    IDE.fireEvent(new CloneRepositoryCompleteEvent(userRepo[0], userRepo[1]));
-                }
-            }
-        });
+        IDE.fireEvent(new RepositoryClonedEvent(gitRepositoryInfo.getRemoteUri()));
     }
 
     /** {@inheritDoc} */
