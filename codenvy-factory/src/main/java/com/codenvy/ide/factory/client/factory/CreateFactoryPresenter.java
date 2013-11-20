@@ -511,7 +511,7 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
                 if (factoryJSON != null) {
                     display.nextPage();
                 } else {                    
-                    createFactory();
+                    initFactorySSO();
                 }
             }
         });
@@ -694,7 +694,53 @@ public class CreateFactoryPresenter implements GetCodeNowButtonHandler, ViewClos
         
         previewDefaultButton(jsURL, style, "none", 111, 51);
     }
-
+    
+    /**
+     * Returns URL to SSO initialize service.
+     * 
+     * @return
+     */
+    private static native String getSSOInitURL() /*-{
+        if ($wnd.ssoInitURL == null || $wnd.ssoInitURL == undefined) {
+            return null
+        } else {
+            return $wnd.ssoInitURL;
+        }
+    }-*/;
+    
+    /**
+     * Initializes SSO and creates a Factory.
+     */
+    private void initFactorySSO() {
+        String ssoInitURL = getSSOInitURL();
+        if (ssoInitURL == null) {
+            createFactory();
+            return;
+        }
+        
+        while (ssoInitURL.startsWith("/")) {
+            ssoInitURL = ssoInitURL.substring(1);
+        }
+        
+        String url = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+            .setPath(ssoInitURL).buildString();
+        try {
+            AsyncRequestCallback<String> callback = new AsyncRequestCallback<String>() {
+                @Override
+                protected void onSuccess(String result) {
+                    createFactory();
+                }
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new ExceptionThrownEvent("Can not initialize Factory SSO"));
+                }
+            };
+            AsyncRequest.build(RequestBuilder.GET, url).send(callback);            
+        } catch (Exception e) {
+            IDE.fireEvent(new ExceptionThrownEvent("Can not initialize Factory SSO"));
+        }
+    }
+    
     /**
      * Creates new Factory.
      */
