@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -135,10 +135,7 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
                 if (result.isEmpty()) {
                     IDE.getInstance().closeView(display.asView().getId());
                 } else {
-                    if (result.startsWith("<pre>") && result.endsWith("</pre>")) {
-                        result.substring(5, (result.length() - 6));
-                    }
-                    IDE.fireEvent(new ExceptionThrownEvent(result));
+                    Dialogs.getInstance().showInfo(result);
                 }
             }
         });
