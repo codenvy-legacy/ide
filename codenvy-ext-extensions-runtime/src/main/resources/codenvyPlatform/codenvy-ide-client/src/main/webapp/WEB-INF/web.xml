@@ -47,7 +47,7 @@
     </filter>
     <filter>
         <filter-name>SetEnvironmentContextFilter</filter-name>
-        <filter-class>com.codenvy.ide.SetEnvironmentContextFilter</filter-class>
+        <filter-class>com.codenvy.ide.server.SetEnvironmentContextFilter</filter-class>
     </filter>
 
     <filter-mapping>
@@ -97,7 +97,7 @@
         <servlet-class>org.eclipse.jgit.http.server.GitServlet</servlet-class>
         <init-param>
             <param-name>base-path</param-name>
-            <param-value>${com.codenvy.vfs.rootdir}/</param-value>
+            <param-value>${org.exoplatform.ide.server.fs-root-path}/</param-value>
         </init-param>
         <init-param>
             <param-name>export-all</param-name>

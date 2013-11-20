@@ -24,7 +24,9 @@ import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentFactory;
+import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.annotation.AnnotationModel;
+import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -65,9 +67,14 @@ public class ResourceDocumentProvider implements DocumentProvider {
         is not initialized but some code wants to use it. In this case we returned a new instance of document. */
         final File file = input.getFile();
         if (cache.containsKey(file)) {
-            callback.onDocument(cache.get(file));
+            Document document = cache.get(file);
+            for (Line line = ((DocumentImpl)document).getTextStore().getFirstLine(); line != null; line = line.getNextLine()) {
+                line.clearTags();
+            }
+            callback.onDocument(document);
             return;
         }
+
         file.getProject().getContent(file, new AsyncCallback<File>() {
             @Override
             public void onSuccess(File result) {

@@ -91,7 +91,6 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
                 });
             }
         });
-
     }
 
     /** {@inheritDoc} */
