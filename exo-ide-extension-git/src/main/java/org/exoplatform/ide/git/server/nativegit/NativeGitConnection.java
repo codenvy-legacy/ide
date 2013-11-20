@@ -533,7 +533,17 @@ public class NativeGitConnection implements GitConnection {
                 }
             } else if (e.getMessage().toLowerCase().contains("please make sure you have the correct access rights")) {
                 //in case that user tries to clone repository via ssh and he doesn't have ssh key
-                throw new GitException("SSH key not found or you have not rights to access this repository.");
+                String operation = "This";
+                if (command instanceof CloneCommand) {
+                    operation = "Cloning";
+                } else if (command instanceof FetchCommand) {
+                    operation = "Fetching";
+                } else if (command instanceof PullCommand) {
+                    operation = "Pulling";
+                } else if (command instanceof PushCommand) {
+                    operation = "Pushing";
+                }
+                throw new GitException(operation + " operation need access authorization to the repository");
             } else {
                 throw e;
             }
