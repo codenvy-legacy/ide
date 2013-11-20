@@ -142,14 +142,6 @@
         </init-params>
     </component>
 
-    <component>
-        <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineClient</type>
-    </component>
-
-    <component>
-        <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
-    </component>
-
     <!--
     ***************************************************************************************
     ********************************** OAuth Support **************************************
