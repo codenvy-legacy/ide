@@ -42,34 +42,24 @@ import com.google.gwt.json.client.JSONValue;
  * Recursively traverses the JSON Response to build Java project model
  *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
  */
 public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
 
     private static final String CHILDREN = "children";
-
-    private static final String TYPE = "itemType";
-
-    private static final String ITEM = "item";
-
-    private static final String ID = "id";
-
-    private static final String PATH = "path";
-
-    private static final String NAME = "name";
-
-    private JavaProject project;
-
+    private static final String TYPE     = "itemType";
+    private static final String ITEM     = "item";
+    private static final String ID       = "id";
+    private static final String PATH     = "path";
+    private static final String NAME     = "name";
+    private JavaProject   project;
     private JsonStringSet sourceFolders;
-
-    private String projectPath;
-
-    private Folder root;
+    private String        projectPath;
+    private Folder        root;
 
     public JavaModelUnmarshaller(Folder root, JavaProject project) {
         super();
         this.root = root;
-        this.root.setChildren(JsonCollections.<Resource>createArray());
+        this.root.getChildren().clear();
         this.project = project;
 
         sourceFolders = JsonCollections.createStringSet();
@@ -139,6 +129,7 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder> {
                 if (existingFolder != null && existingFolder instanceof Folder) {
                     // use existing folder instance as
                     folder = (Folder)existingFolder;
+                    folder.getChildren().clear();
                     if (folder instanceof Package) {
                         parseProjectStructure(itemObject.get(CHILDREN), folder.getParent(), folder, project);
                     } else {
