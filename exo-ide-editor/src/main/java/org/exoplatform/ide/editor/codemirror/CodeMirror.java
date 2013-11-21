@@ -1868,7 +1868,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
             @Override
             public void execute() {
                 boolean found = searchNative(query, caseSensitive);
-                isBeginSearch = found ? false : true;
+                isBeginSearch = !found;
                 searchCompleteCallback.onSearchComplete(found);
             }
         });
