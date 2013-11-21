@@ -57,11 +57,11 @@
             <artifactId>codenvy-ext-maven</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-java-runtime</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.codenvy.ide</groupId>-->
+            <!--<artifactId>codenvy-ext-java-runtime</artifactId>-->
+            <!--<version>${project.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-core</artifactId>
@@ -82,13 +82,11 @@
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
-            <scope>runtime</scope>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-vfs-fs</artifactId>
-            <scope>runtime</scope>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -173,7 +171,7 @@
                         <configuration>
                             <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                             <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.ext.extruntime.shared,com.codenvy.ide.extension.builder.shared</argument>
+                                <argument>--dto_packages=com.codenvy.ide.ext.extruntime.shared,com.codenvy.ide.extension.maven.shared</argument>
                                 <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/ext/extruntime/dto/server/DtoServerImpls.java</argument>
                                 <argument>--impl=server</argument>
                                 <argument>--package_base=${generated.sources.directory}/</argument>

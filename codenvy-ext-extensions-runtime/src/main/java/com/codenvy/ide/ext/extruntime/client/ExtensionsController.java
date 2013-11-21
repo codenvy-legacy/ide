@@ -130,6 +130,32 @@ public class ExtensionsController {
         return launchedApp != null;
     }
 
+    public void run() {
+        currentProject = resourceProvider.getActiveProject();
+
+        try {
+            service.run(currentProject.getName(),
+                         new AsyncRequestCallback<String>() {
+                             @Override
+                             protected void onSuccess(String result) {
+                                 console.print(result);
+                             }
+
+                             @Override
+                             protected void onFailure(Throwable exception) {
+//                                 String message = constant.stopApplicationFailed(currentProject.getName());
+//                                 if (exception != null && exception.getMessage() != null) {
+//                                     message += ": " + exception.getMessage();
+//                                 }
+                                 console.print(exception.getMessage());
+                             }
+                         });
+        } catch (RequestException e) {
+            console.print(e.getMessage());
+        }
+
+    }
+
     /** Launch Codenvy extension inside Codenvy Platform. */
     public void buildAndLaunch() {
         if (isLaunchingInProgress) {

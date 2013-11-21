@@ -18,7 +18,8 @@
     from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -33,7 +34,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
-        <gwt.module>com.codenvy.ide.IDE</gwt.module>
+        <ide.module>com.codenvy.ide.IDE</ide.module>
     </properties>
 
     <dependencies>
@@ -137,11 +138,11 @@
             <artifactId>codenvy-ext-css</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+      <!--  <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-git</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-maven</artifactId>
@@ -160,6 +161,11 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-builder-maven</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-extensions-runtime</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -250,20 +256,39 @@
                     <execution>
                         <configuration>
                             <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
+                            <modules>
+                                <module>${ide.module}</module>
+                                <module>com.codenvy.ide.ext.java.JavaParserWorker</module>
+                            </modules>
+                            <logLevel>INFO</logLevel>
                         </configuration>
                         <goals>
                             <goal>compile</goal>
-                            <goal>test</goal>
+                            <!--<goal>test</goal>-->
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <module>${gwt.module}</module>
-                    <logLevel>INFO</logLevel>
-                    <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
-                </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unwar-ide</id>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <tasks>
+                                <move todir="${project.build.directory}/${project.artifactId}-${project.version}/_app/javaParserWorker">
+                                   <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/javaParserWorker" />
+                                </move>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -305,7 +330,7 @@
         <profile>
             <id>dev</id>
             <properties>
-                <gwt.module>com.codenvy.ide.IDE_dev</gwt.module>
+                <ide.module>com.codenvy.ide.IDE_dev</ide.module>
             </properties>
         </profile>
     </profiles>

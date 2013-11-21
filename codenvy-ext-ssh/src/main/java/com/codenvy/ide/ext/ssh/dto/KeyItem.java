@@ -28,13 +28,19 @@ import com.codenvy.dto.shared.DTO;
 public interface KeyItem {
     String getHost();
     
+    void setHost(String host);
+    
     KeyItem withHost(String host);
 
     String getPublicKeyUrl();
     
+    void setPublicKeyUrl(String publicKey);
+    
     KeyItem withPublicKeyUrl(String publicKeyUrl);
 
     String getRemoteKeyUrl();
+    
+    void setRemoteKeyUrl(String remoteKeyUrl);
     
     KeyItem withRemoteKeyUrl(String remoteKeyURL);
 }
