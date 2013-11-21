@@ -19,10 +19,12 @@ package com.codenvy.api.bootstrap.servlet;
 
 import com.codenvy.api.builder.BuildQueue;
 import com.codenvy.api.builder.internal.Builder;
+import com.codenvy.api.builder.internal.BuilderRegistrationPlugin;
 import com.codenvy.api.builder.internal.BuilderRegistry;
 import com.codenvy.api.core.util.ComponentLoader;
 import com.codenvy.api.runner.RunQueue;
 import com.codenvy.api.runner.internal.Runner;
+import com.codenvy.api.runner.internal.RunnerRegistrationPlugin;
 import com.codenvy.api.runner.internal.RunnerRegistry;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
@@ -36,36 +38,55 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
-public final class BuildersBootstrap implements ServletContextListener {
+/**
+ * Simple starter for platform API components. For local usage only, should not be used in production.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ */
+public final class ApiBootstrap implements ServletContextListener {
     // Wrap Lifecycle components with WeakReference.
     // Don't want prevent GC to remove objects if they are not used any more by corresponded services.
     private final List<WeakReference<com.codenvy.api.core.Lifecycle>> lifeCycles;
 
-    public BuildersBootstrap() {
+    public ApiBootstrap() {
         lifeCycles = new ArrayList<>();
     }
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         final ServletContext servletContext = sce.getServletContext();
-
         final BuilderRegistry builders = new BuilderRegistry();
+        final RunnerRegistry runners = new RunnerRegistry();
         for (Builder builder : ComponentLoader.all(Builder.class)) {
-            builder.start();
             builders.add(builder);
+        }
+
+        for (BuilderRegistrationPlugin plugin : ComponentLoader.all(BuilderRegistrationPlugin.class)) {
+            plugin.registerTo(builders);
+        }
+
+        for (Builder builder : builders.getAll()) {
+            builder.start();
             lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(builder));
         }
-        final BuildQueue queue = new BuildQueue();
-        queue.start();
-        lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(queue));
 
-        final RunnerRegistry runners = new RunnerRegistry();
         for (Runner runner : ComponentLoader.all(Runner.class)) {
-            runner.start();
             runners.add(runner);
+        }
+
+        for (RunnerRegistrationPlugin plugin : ComponentLoader.all(RunnerRegistrationPlugin.class)) {
+            plugin.registerTo(runners);
+        }
+
+        for (Runner runner : runners.getAll()) {
+            runner.start();
             lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(runner));
         }
+
+        final BuildQueue buildQueue = new BuildQueue();
+        buildQueue.start();
+        lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(buildQueue));
+
         final RunQueue runQueue = new RunQueue();
         runQueue.start();
         lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(runQueue));
@@ -81,7 +102,7 @@ public final class BuildersBootstrap implements ServletContextListener {
         }
         servletContext.setAttribute(VirtualFileSystemRegistry.class.getName(), vfsRegistry);
         servletContext.setAttribute(BuilderRegistry.class.getName(), builders);
-        servletContext.setAttribute(BuildQueue.class.getName(), queue);
+        servletContext.setAttribute(BuildQueue.class.getName(), buildQueue);
         servletContext.setAttribute(RunnerRegistry.class.getName(), runners);
         servletContext.setAttribute(RunQueue.class.getName(), runQueue);
     }
