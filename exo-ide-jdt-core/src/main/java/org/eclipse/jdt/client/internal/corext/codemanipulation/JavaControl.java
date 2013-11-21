@@ -51,14 +51,15 @@ public class JavaControl extends SimpleControl implements IDEControl, EditorActi
         if (event.getEditor() == null) {
             setEnabled(false);
             setVisible(false);
+            return;
+        }
+        
+        if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA)) {
+            setEnabled(true);
+            setVisible(true);
         } else {
-            if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA)) {
-                setEnabled(true);
-                setVisible(true);
-            } else {
-                setEnabled(false);
-                setVisible(false);
-            }
+            setEnabled(false);
+            setVisible(false);
         }
     }
 
