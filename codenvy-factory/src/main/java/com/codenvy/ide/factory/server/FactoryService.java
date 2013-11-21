@@ -470,6 +470,7 @@ public class FactoryService {
                                 .singleton(VirtualFileSystemInfo.BasicPermissions.ALL.value()));
                 vfs.updateACL(projectId, Arrays.asList(ace), true, null);
             }
+            workspaceManager.updateWorkspace(workspace);
         } catch (OrganizationServiceException e) {
             LOG.error("It is not possible to get workspace", e);
         } catch (VirtualFileSystemException e) {
