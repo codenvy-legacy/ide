@@ -24,7 +24,6 @@ import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.ext.git.client.action.*;
 import com.codenvy.ide.ext.git.client.welcome.CloneProjectAction;
-import com.codenvy.ide.ext.git.client.welcome.ImportProjectAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -53,8 +52,7 @@ public class GitExtension {
                         ShowBranchesAction showBranchesAction, ShowMergeAction showMergeAction, ResetFilesAction resetFilesAction,
                         ShowStatusAction showStatusAction, ShowGitUrlAction showGitUrlAction, ShowRemoteAction showRemoteAction,
                         PushAction pushAction, FetchAction fetchAction, PullAction pullAction, GitLocalizationConstant constant,
-                        HistoryAction historyAction, WelcomePart welcomePart, ImportProjectAction importProjectAction,
-                        CloneProjectAction cloneProjectAction) {
+                        HistoryAction historyAction, WelcomePart welcomePart, CloneProjectAction cloneProjectAction) {
         resources.gitCSS().ensureInjected();
 
         DefaultActionGroup mainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
@@ -120,7 +118,6 @@ public class GitExtension {
         actionManager.registerAction("GitRemote", showRemoteAction);
         remoteGroup.add(showRemoteAction);
 
-        welcomePart.addItem(importProjectAction);
         welcomePart.addItem(cloneProjectAction);
     }
 }

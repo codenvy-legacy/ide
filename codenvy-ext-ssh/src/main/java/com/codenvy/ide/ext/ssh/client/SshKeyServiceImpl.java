@@ -31,6 +31,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -64,11 +65,10 @@ public class SshKeyServiceImpl implements SshKeyService {
 
     /** {@inheritDoc} */
     @Override
-    public void getAllKeys(@NotNull JsonpAsyncCallback<JavaScriptObject> callback) {
+    public void getAllKeys(@NotNull AsyncCallback<JavaScriptObject> callback) {
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
         loader.setMessage("Getting SSH keys....");
         loader.show();
-        callback.setLoader(loader);
         jsonp.requestObject(restContext + wsName + "/ssh-keys/all", callback);
     }
 
@@ -86,21 +86,19 @@ public class SshKeyServiceImpl implements SshKeyService {
 
     /** {@inheritDoc} */
     @Override
-    public void getPublicKey(@NotNull KeyItem keyItem, @NotNull JsonpAsyncCallback<JavaScriptObject> callback) {
+    public void getPublicKey(@NotNull KeyItem keyItem, @NotNull AsyncCallback<JavaScriptObject> callback) {
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
         loader.setMessage("Getting public SSH key for " + keyItem.getHost());
         loader.show();
-        callback.setLoader(loader);
         jsonp.requestObject(keyItem.getPublicKeyUrl(), callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void deleteKey(@NotNull KeyItem keyItem, @NotNull JsonpAsyncCallback<Void> callback) {
+    public void deleteKey(@NotNull KeyItem keyItem, @NotNull AsyncCallback<Void> callback) {
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
         loader.setMessage("Deleting SSH keys for " + keyItem.getHost());
         loader.show();
-        callback.setLoader(loader);
         jsonp.send(keyItem.getRemoteKeyUrl(), callback);
     }
 }

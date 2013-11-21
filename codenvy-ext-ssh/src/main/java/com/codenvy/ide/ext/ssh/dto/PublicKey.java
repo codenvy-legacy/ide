@@ -25,9 +25,13 @@ import com.codenvy.dto.shared.DTO;
 public interface PublicKey {
     String getHost();
     
+    void setHost(String host);
+    
     PublicKey withHost(String host);
     
     String getKey();
+    
+    void setKey(String key);
     
     PublicKey withKey(String key);
 }

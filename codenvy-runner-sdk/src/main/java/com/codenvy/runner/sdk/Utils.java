@@ -15,15 +15,12 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.extruntime.server;
+package com.codenvy.runner.sdk;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.Plugin;
-import org.apache.maven.model.PluginExecution;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.IOException;
@@ -33,7 +30,6 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.FileVisitResult.CONTINUE;
@@ -60,7 +56,7 @@ public class Utils {
      * @param path
      *         pom.xml path
      * @return a project object model
-     * @throws IOException
+     * @throws java.io.IOException
      *         error occurred while reading content of file
      */
     public static Model readPom(Path path) throws IOException {
@@ -73,7 +69,7 @@ public class Utils {
      * @param stream
      *         input stream that represents a pom.xml
      * @return a project object model
-     * @throws IOException
+     * @throws java.io.IOException
      *         error occurred while reading content of file
      */
     public static Model readPom(InputStream stream) throws IOException {
@@ -91,7 +87,7 @@ public class Utils {
      *         a project object model
      * @param path
      *         path to pom.xml
-     * @throws IOException
+     * @throws java.io.IOException
      *         error occurred while writing content of file
      */
     public static void writePom(Model pom, Path path) throws IOException {
@@ -105,7 +101,7 @@ public class Utils {
      *         pom.xml path
      * @param pom
      *         POM of artifact to add as dependency
-     * @throws IOException
+     * @throws java.io.IOException
      *         error occurred while reading or writing content of file
      */
     public static void addDependencyToPom(Path path, Model pom) throws IOException {
@@ -123,7 +119,7 @@ public class Utils {
      *         artifactId
      * @param version
      *         artifact version
-     * @throws IOException
+     * @throws java.io.IOException
      *         error occurred while reading or writing content of file
      */
     static void addDependencyToPom(Path path, String groupId, String artifactId, String version) throws IOException {
@@ -145,7 +141,7 @@ public class Utils {
      *         pom.xml path
      * @param moduleRelativePath
      *         relative path of module to add
-     * @throws IOException
+     * @throws java.io.IOException
      *         error occurred while reading or writing content of file
      */
     static void addModuleToReactorPom(Path path, String moduleRelativePath) throws IOException {
@@ -162,7 +158,7 @@ public class Utils {
      *         relative path of module to add
      * @param moduleAfter
      *         relative path of module that should be after the inserted module
-     * @throws IOException
+     * @throws java.io.IOException
      *         error occurred while reading or writing content of file
      */
     static void addModuleToReactorPom(Path path, String moduleRelativePath, String moduleAfter) throws IOException {
@@ -190,7 +186,7 @@ public class Utils {
      *         GWT module descriptor
      * @param inheritableModuleLogicalName
      *         logical name of the GWT module to inherit
-     * @throws IOException
+     * @throws java.io.IOException
      *         error occurred while reading or writing content of file
      */
     public static void inheritGwtModule(Path path, String inheritableModuleLogicalName) throws IOException {
@@ -214,7 +210,7 @@ public class Utils {
      * @param folder
      *         path to folder that contains project sources
      * @return GWT module logical name
-     * @throws IOException
+     * @throws java.io.IOException
      *         if an I/O error is thrown while finding GWT module descriptor
      * @throws IllegalArgumentException
      *         if GWT module descriptor not found
@@ -274,7 +270,7 @@ public class Utils {
             return CONTINUE;
         }
 
-        /** Returns the first matched {@link Path}. */
+        /** Returns the first matched {@link java.nio.file.Path}. */
         Path getFirstMatchedFile() {
             return firstMatchedFile;
         }

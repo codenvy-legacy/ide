@@ -135,4 +135,6 @@ public interface ExtRuntimeClientService {
      * @throws RequestException
      */
     public void stop(String appId, AsyncRequestCallback<Void> callback) throws RequestException;
+
+    public void run(String projectName, AsyncRequestCallback<String> callback) throws RequestException;
 }
