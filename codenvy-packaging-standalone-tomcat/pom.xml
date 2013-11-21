@@ -119,17 +119,17 @@
             <artifactId>codenvy-ext-ant</artifactId>
             <version>${project.version}</version>
         </dependency>
-	<dependency>
+        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-git</artifactId>
             <version>${project.version}</version>
         </dependency>
-	<dependency>
+        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-ssh</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <!--<dependency>
 <groupId>com.codenvy.ide</groupId>
 <artifactId>codenvy-ext-tutorials</artifactId>
@@ -299,28 +299,28 @@
                         </configuration>
                     </execution>
                     <!--<execution>-->
-                        <!--<id>copy-appengine-zip</id>-->
-                        <!--<phase>process-resources</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>copy</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<stripVersion>true</stripVersion>-->
-                            <!--<silent>true</silent>-->
-                            <!--<outputDirectory>${project.build.directory}/packager-conf/appengine</outputDirectory>-->
-                            <!--<artifactItems>-->
-                                <!--<artifactItem>-->
-                                    <!--<groupId>com.google.appengine</groupId>-->
-                                    <!--<artifactId>appengine-java-sdk</artifactId>-->
-                                    <!--<type>zip</type>-->
-                                <!--</artifactItem>-->
-                                <!--<artifactItem>-->
-                                    <!--<groupId>com.google.appengine</groupId>-->
-                                    <!--<artifactId>appengine-python-sdk</artifactId>-->
-                                    <!--<type>zip</type>-->
-                                <!--</artifactItem>-->
-                            <!--</artifactItems>-->
-                        <!--</configuration>-->
+                    <!--<id>copy-appengine-zip</id>-->
+                    <!--<phase>process-resources</phase>-->
+                    <!--<goals>-->
+                    <!--<goal>copy</goal>-->
+                    <!--</goals>-->
+                    <!--<configuration>-->
+                    <!--<stripVersion>true</stripVersion>-->
+                    <!--<silent>true</silent>-->
+                    <!--<outputDirectory>${project.build.directory}/packager-conf/appengine</outputDirectory>-->
+                    <!--<artifactItems>-->
+                    <!--<artifactItem>-->
+                    <!--<groupId>com.google.appengine</groupId>-->
+                    <!--<artifactId>appengine-java-sdk</artifactId>-->
+                    <!--<type>zip</type>-->
+                    <!--</artifactItem>-->
+                    <!--<artifactItem>-->
+                    <!--<groupId>com.google.appengine</groupId>-->
+                    <!--<artifactId>appengine-python-sdk</artifactId>-->
+                    <!--<type>zip</type>-->
+                    <!--</artifactItem>-->
+                    <!--</artifactItems>-->
+                    <!--</configuration>-->
                     <!--</execution>-->
                     <execution>
                         <id>copy-tutorials</id>
@@ -418,22 +418,22 @@
                         </configuration>
                     </execution>
                     <!--<execution>-->
-                        <!--<id>copy-lucene-autocomplite-index</id>-->
-                        <!--<phase>process-resources</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>copy</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<stripVersion>true</stripVersion>-->
-                            <!--<artifactItems>-->
-                                <!--<artifactItem>-->
-                                    <!--<groupId>org.exoplatform.ide</groupId>-->
-                                    <!--<artifactId>ide-codeassistant-lucene-index</artifactId>-->
-                                    <!--<type>zip</type>-->
-                                <!--</artifactItem>-->
-                            <!--</artifactItems>-->
-                            <!--<outputDirectory>${project.build.directory}</outputDirectory>-->
-                        <!--</configuration>-->
+                    <!--<id>copy-lucene-autocomplite-index</id>-->
+                    <!--<phase>process-resources</phase>-->
+                    <!--<goals>-->
+                    <!--<goal>copy</goal>-->
+                    <!--</goals>-->
+                    <!--<configuration>-->
+                    <!--<stripVersion>true</stripVersion>-->
+                    <!--<artifactItems>-->
+                    <!--<artifactItem>-->
+                    <!--<groupId>org.exoplatform.ide</groupId>-->
+                    <!--<artifactId>ide-codeassistant-lucene-index</artifactId>-->
+                    <!--<type>zip</type>-->
+                    <!--</artifactItem>-->
+                    <!--</artifactItems>-->
+                    <!--<outputDirectory>${project.build.directory}</outputDirectory>-->
+                    <!--</configuration>-->
                     <!--</execution>-->
                     <!--<execution>
 <id>copy-private-dependencies-for-sdk</id>
@@ -501,9 +501,9 @@
                                     <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/"/>
                                 </move>
 
-                                <move todir="${project.build.directory}/tomcat-ide/tutorials">
-                                    <fileset dir="${project.build.directory}/packager-conf/zip/tutorials"/>
-                                </move>
+                                <!--<move todir="${project.build.directory}/tomcat-ide/tutorials">-->
+                                <!--<fileset dir="${project.build.directory}/packager-conf/zip/tutorials"/>-->
+                                <!--</move>-->
 
                                 <war destfile="${project.build.directory}/tomcat-ide/webapps/ide.war" needxmlfile="false">
                                     <fileset dir="${project.build.directory}/packager-conf/war/ide"/>
@@ -516,49 +516,49 @@
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-api-war-${project.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/api.war" overwrite="true"/>
                                 <!--<copy file="${project.build.directory}/packager-conf/war/exo-ide-builder-${org.exoplatform.ide.version}.war"-->
-                                      <!--tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true"/>-->
+                                <!--tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true"/>-->
                                 <!--<copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war"-->
-                                      <!--tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>-->
+                                <!--tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>-->
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
                                 <!--<unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"-->
-                                       <!--dest="${project.build.directory}/tomcat-ide"/>-->
+                                <!--dest="${project.build.directory}/tomcat-ide"/>-->
                                 <!--<unzip src="${project.build.directory}/repo.zip" dest="${project.build.directory}/tomcat-ide"/>
 <chmod dir="${project.build.directory}/tomcat-ide" perm="+x" includes="install.sh" />-->
                                 <!--<unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip"-->
-                                       <!--dest="${project.build.directory}/tomcat-ide">-->
-                                    <!--<patternset>-->
-                                        <!--<exclude name="**/bin/**"/>-->
-                                        <!--<exclude name="**/demos/**"/>-->
-                                        <!--<exclude name="**/src/**"/>-->
-                                        <!--<exclude name="**/docs/javadoc/**"/>-->
-                                        <!--<exclude name="**/docs/remoteapi/**"/>-->
-                                        <!--<exclude name="**/docs/testing/**"/>-->
-                                        <!--<exclude name="**/docs/tools/**"/>-->
-                                        <!--<exclude name="**/docs/javadoc/**"/>-->
-                                        <!--<exclude name="**/ABOUT"/>-->
-                                        <!--<exclude name="**/COPYING"/>-->
-                                        <!--<exclude name="**/README"/>-->
-                                        <!--<exclude name="**/README.ORM"/>-->
-                                        <!--<exclude name="**/RELEASE_NOTES"/>-->
-                                        <!--<exclude name="**/RELEASE_NOTES.ORM"/>-->
-                                    <!--</patternset>-->
+                                <!--dest="${project.build.directory}/tomcat-ide">-->
+                                <!--<patternset>-->
+                                <!--<exclude name="**/bin/**"/>-->
+                                <!--<exclude name="**/demos/**"/>-->
+                                <!--<exclude name="**/src/**"/>-->
+                                <!--<exclude name="**/docs/javadoc/**"/>-->
+                                <!--<exclude name="**/docs/remoteapi/**"/>-->
+                                <!--<exclude name="**/docs/testing/**"/>-->
+                                <!--<exclude name="**/docs/tools/**"/>-->
+                                <!--<exclude name="**/docs/javadoc/**"/>-->
+                                <!--<exclude name="**/ABOUT"/>-->
+                                <!--<exclude name="**/COPYING"/>-->
+                                <!--<exclude name="**/README"/>-->
+                                <!--<exclude name="**/README.ORM"/>-->
+                                <!--<exclude name="**/RELEASE_NOTES"/>-->
+                                <!--<exclude name="**/RELEASE_NOTES.ORM"/>-->
+                                <!--</patternset>-->
                                 <!--</unzip>-->
                                 <!--<move file="${project.build.directory}/tomcat-ide/appengine-java-sdk-${appengine.version}"-->
-                                      <!--tofile="${project.build.directory}/tomcat-ide/appengine-java-sdk"/>-->
+                                <!--tofile="${project.build.directory}/tomcat-ide/appengine-java-sdk"/>-->
                                 <!--<unzip src="${project.build.directory}/packager-conf/appengine/appengine-python-sdk.zip"-->
-                                       <!--dest="${project.build.directory}/tomcat-ide">-->
-                                    <!--<patternset>-->
-                                        <!--<exclude name="**/demos/**"/>-->
-                                        <!--<exclude name="**/new_project_template/**"/>-->
-                                        <!--<exclude name="**/BUGS"/>-->
-                                        <!--<exclude name="**/LICENSE"/>-->
-                                        <!--<exclude name="**/README"/>-->
-                                        <!--<exclude name="**/RELEASE_NOTES"/>-->
-                                    <!--</patternset>-->
+                                <!--dest="${project.build.directory}/tomcat-ide">-->
+                                <!--<patternset>-->
+                                <!--<exclude name="**/demos/**"/>-->
+                                <!--<exclude name="**/new_project_template/**"/>-->
+                                <!--<exclude name="**/BUGS"/>-->
+                                <!--<exclude name="**/LICENSE"/>-->
+                                <!--<exclude name="**/README"/>-->
+                                <!--<exclude name="**/RELEASE_NOTES"/>-->
+                                <!--</patternset>-->
                                 <!--</unzip>-->
                                 <!--<move file="${project.build.directory}/tomcat-ide/google_appengine"-->
-                                      <!--tofile="${project.build.directory}/tomcat-ide/appengine-python-sdk"/>-->
+                                <!--tofile="${project.build.directory}/tomcat-ide/appengine-python-sdk"/>-->
                             </tasks>
                         </configuration>
                         <goals>
