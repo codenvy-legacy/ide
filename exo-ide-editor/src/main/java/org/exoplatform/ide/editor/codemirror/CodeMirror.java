@@ -104,6 +104,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
     private FlowPanel lineHighlighter;
 
+    /** The beginning of the search. */
     private boolean isBeginSearch = true;
 
     private boolean needUpdateTokenList = true; // update token list only after the "initCallback" handler has been called
@@ -1867,7 +1868,9 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {
+                //Search a string(query) in content. If a string is found then found variable is true.
                 boolean found = searchNative(query, caseSensitive);
+                //If a string not found, then search is finished.
                 isBeginSearch = !found;
                 searchCompleteCallback.onSearchComplete(found);
             }
