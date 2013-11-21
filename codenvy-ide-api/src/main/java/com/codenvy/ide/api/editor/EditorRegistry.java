@@ -17,24 +17,23 @@
  */
 package com.codenvy.ide.api.editor;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.FileType;
 
 
 /**
- * Editor Registry allows to registed new Editor for given FileType.
- * This editor will be used as default to open such kind of Files.
+ * Editor Registry allows to registed new Editor for given FileType. This editor will be used as default to open such kind of Files.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public interface EditorRegistry {
-
     /**
      * Register editor provider for file type.
      *
      * @param fileType
      * @param provider
      */
-    public void register(FileType fileType, EditorProvider provider);
+    void register(@NotNull FileType fileType, @NotNull EditorProvider provider);
 
     /**
      * Get default editor provide assigned for file type;
@@ -43,6 +42,6 @@ public interface EditorRegistry {
      *         resource file type
      * @return editor provider
      */
-    public EditorProvider getDefaultEditor(FileType fileType);
-
+    @NotNull
+    EditorProvider getDefaultEditor(@NotNull FileType fileType);
 }

@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.extension.maven.client.build;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
@@ -229,7 +231,7 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
      * @param force
      *         if <code>true</code> - a project will build even if it doesn't changed from last build.
      */
-    public void buildProject(Project project, boolean publish, boolean force) {
+    public void buildProject(@Nullable Project project, boolean publish, boolean force) {
         if (isBuildInProgress) {
             String message = constant.buildInProgress(projectToBuild.getPath().substring(1));
             Notification notification = new Notification(message, ERROR);
@@ -298,7 +300,7 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
      * @param buildId
      *         id of the build job to check status
      */
-    private void startCheckingStatus(String buildId) {
+    private void startCheckingStatus(@NotNull String buildId) {
         try {
             buildStatusChannel = BuilderExtension.BUILD_STATUS_CHANNEL + buildId;
             messageBus.subscribe(buildStatusChannel, buildStatusHandler);
@@ -397,7 +399,7 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
      *         current project
      * @return <code>true</code> if the project is changed, and <code>true</code> otherwise.
      */
-    private boolean isProjectChangedAfterLastBuild(Project item) {
+    private boolean isProjectChangedAfterLastBuild(@NotNull Project item) {
         long buildTime = 0;
         long lastUpdateTime = 0;
         Property buildTimeProperty = item.getProperty(LAST_SUCCESS_BUILD);
@@ -477,7 +479,7 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
      * @param buildStatus
      *         status of build job
      */
-    private void afterBuildFinished(BuildStatus buildStatus) {
+    private void afterBuildFinished(@NotNull BuildStatus buildStatus) {
         try {
             messageBus.unsubscribe(buildStatusChannel, buildStatusHandler);
         } catch (Exception e) {
@@ -559,7 +561,7 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
      * @param buildStatus
      *         build status
      */
-    private void writeBuildInfo(BuildStatus buildStatus) {
+    private void writeBuildInfo(@NotNull BuildStatus buildStatus) {
         projectToBuild.getProperties().add(new Property(LAST_SUCCESS_BUILD, buildStatus.getTime()));
         projectToBuild.getProperties().add(new Property(ARTIFACT_DOWNLOAD_URL, buildStatus.getDownloadUrl()));
 
@@ -602,7 +604,7 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
      * @param message
      *         message for output
      */
-    private void showBuildMessage(String message) {
+    private void showBuildMessage(@NotNull String message) {
         view.setClearOutputButtonEnabled(true);
         view.showMessageInOutput(message);
     }
@@ -621,8 +623,7 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
      *         dependency string in xml format
      * @return formatted xml
      */
-    private String formatDependencyXml(String dependency) {
-
+    private String formatDependencyXml(@NotNull String dependency) {
         String formatStr = SafeHtmlUtils.htmlEscape(dependency)//
                 .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;")//
                 .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;")//

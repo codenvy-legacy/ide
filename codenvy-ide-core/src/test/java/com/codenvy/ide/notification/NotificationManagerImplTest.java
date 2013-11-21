@@ -33,6 +33,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.notification.NotificationContainer.HEIGHT;
 import static com.codenvy.ide.notification.NotificationContainer.WIDTH;
 import static com.codenvy.ide.notification.NotificationManagerView.Status.*;
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -82,7 +83,7 @@ public class NotificationManagerImplTest extends GwtTestWithMockito {
 
     @Test
     public void testShowNotification() throws Exception {
-        Notification notification = mock(Notification.class);
+        Notification notification = new Notification("test message", INFO);
         manager.showNotification(notification);
 
         verify(notificationContainer).addNotification(eq(notification));
@@ -93,7 +94,7 @@ public class NotificationManagerImplTest extends GwtTestWithMockito {
 
     @Test
     public void testRemoveNotification() throws Exception {
-        Notification notification = mock(Notification.class);
+        Notification notification = new Notification("test message", INFO);
         manager.removeNotification(notification);
 
         verify(notificationContainer).removeNotification(eq(notification));
@@ -105,26 +106,26 @@ public class NotificationManagerImplTest extends GwtTestWithMockito {
     @Test
     public void testOnOpenMessageClicked() throws Exception {
         Notification.OpenNotificationHandler openNotificationHandler = mock(Notification.OpenNotificationHandler.class);
-        Notification notification = mock(Notification.class);
-        when(notification.getOpenHandler()).thenReturn(openNotificationHandler);
+        Notification notification = new Notification("test message", INFO, openNotificationHandler);
+
+        assertEquals(notification.isRead(), false);
 
         manager.onOpenMessageClicked(notification);
 
-        verify(notification).setState(eq(READ));
-        verify(notification).getOpenHandler();
+        assertEquals(notification.isRead(), true);
         verify(openNotificationHandler).onOpenClicked();
     }
 
     @Test
     public void testOnOpenItemClicked() throws Exception {
         Notification.OpenNotificationHandler openNotificationHandler = mock(Notification.OpenNotificationHandler.class);
-        Notification notification = mock(Notification.class);
-        when(notification.getOpenHandler()).thenReturn(openNotificationHandler);
+        Notification notification = new Notification("test message", INFO, openNotificationHandler);
+
+        assertEquals(notification.isRead(), false);
 
         manager.onOpenItemClicked(notification);
 
-        verify(notification).setState(eq(READ));
-        verify(notification).getOpenHandler();
+        assertEquals(notification.isRead(), true);
         verify(openNotificationHandler).onOpenClicked();
     }
 

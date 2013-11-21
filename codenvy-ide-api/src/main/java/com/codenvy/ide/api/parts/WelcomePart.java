@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.api.parts;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 
 /**
@@ -31,5 +32,5 @@ public interface WelcomePart extends PartPresenter {
      * @param action
      *         action what need to execute when current item is clicked
      */
-    void addItem(WelcomeItemAction action);
+    void addItem(@NotNull WelcomeItemAction action);
 }

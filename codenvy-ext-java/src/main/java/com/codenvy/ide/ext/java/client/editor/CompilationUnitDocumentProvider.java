@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.java.client.editor;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
@@ -78,7 +80,7 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
 
     /** {@inheritDoc} */
     @Override
-    public AnnotationModel getAnnotationModel(EditorInput input) {
+    public AnnotationModel getAnnotationModel(@Nullable EditorInput input) {
         if (annotationModel == null) {
             annotationModel = new JavaAnnotationModel();
         }
@@ -86,7 +88,7 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
     }
 
     @Override
-    public void getDocument(EditorInput input, final DocumentCallback callback) {
+    public void getDocument(@Nullable EditorInput input, @NotNull final DocumentCallback callback) {
         super.getDocument(input, new DocumentCallback() {
             @Override
             public void onDocument(Document document) {
