@@ -23,26 +23,21 @@ import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.*;
 import com.codenvy.api.runner.internal.dto.RunRequest;
-import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.google.common.io.CharStreams;
 
-import org.apache.maven.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-import static com.codenvy.ide.commons.FileUtils.createTempDirectory;
 import static com.codenvy.ide.commons.ZipUtils.unzip;
-import static com.codenvy.runner.sdk.Utils.*;
 
 /**
  * Runner implementation to testing Codenvy plug-ins by launching
@@ -86,15 +81,8 @@ public class SDKRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
-                int memSizeMb = 0;
-                final String strMemSize = request.getOptions().get(Constants.MEMORY);
-                if (!(strMemSize == null || strMemSize.isEmpty())) {
-                    try {
-                        memSizeMb = Integer.parseInt(strMemSize);
-                    } catch (NumberFormatException ignored) {
-                    }
-                }
-                return new ApplicationServerRunnerConfiguration(portService.acquire(), memSizeMb, 0, request);
+                return new ApplicationServerRunnerConfiguration(portService.acquire(), request.getMemorySize(), 0,
+                                                                request);
             }
         };
     }
