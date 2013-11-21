@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.extruntime.server.builder;
 
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -32,11 +32,11 @@ class MavenBuilderClient {
     /** Base URL of Maven build server. */
     private final String buildServerBaseURL;
     /** Relative path to start a new build. */
-    private final String BUILD_PATH        = "/builder/builder/build";
+    private final String BUILD_PATH        = "/build";
     /** Relative path to deploy project. */
-    private final String DEPLOY_PATH       = "/builder/builder/deploy";
+    private final String DEPLOY_PATH       = "/deploy";
     /** Relative path to check status of a build task. */
-    private final String CHECK_STATUS_PATH = "/builder/builder/status";
+    private final String CHECK_STATUS_PATH = "/status";
 
     /**
      * Creates new {@link MavenBuilderClient} instance.

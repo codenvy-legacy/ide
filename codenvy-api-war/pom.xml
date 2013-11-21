@@ -37,6 +37,11 @@
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-runner</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
             <version>${project.version}</version>
@@ -59,7 +64,17 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-runner-sdk</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-vfs-fs</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-runner-docker</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

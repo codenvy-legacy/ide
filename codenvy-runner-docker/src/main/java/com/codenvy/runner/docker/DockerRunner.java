@@ -70,14 +70,7 @@ public class DockerRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
-                final int mem;
-                final String memStr = request.getOptions().get(Constants.MEMORY);
-                if (memStr != null) {
-                    mem = Integer.parseInt(memStr);
-                } else {
-                    mem = DEFAULT_MEMORY_SIZE;
-                }
-                return new DockerRunnerConfiguration(mem, 0, request);
+                return new DockerRunnerConfiguration(request.getMemorySize(), 0, request);
             }
         };
     }

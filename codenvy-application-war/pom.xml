@@ -138,11 +138,11 @@
             <artifactId>codenvy-ext-css</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+      <!--  <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-git</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-maven</artifactId>
@@ -161,6 +161,11 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-builder-maven</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-extensions-runtime</artifactId>
             <version>${project.version}</version>
         </dependency>
 

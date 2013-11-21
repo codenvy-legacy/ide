@@ -25,7 +25,6 @@ import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.ext.ssh.client.JsonpAsyncCallback;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
 import com.codenvy.ide.ext.ssh.client.SshResources;
@@ -46,7 +45,9 @@ import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -70,7 +71,6 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     private SshLocalizationConstant constant;
     private EventBus                eventBus;
     private UserClientService       userService;
-  //TODO  private GitHubClientService     gitHubClientService;
     private Loader                  loader;
     private String                  restContext;
     private SshKeyPresenter         sshKeyPresenter;
@@ -93,8 +93,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
      */
     @Inject
     public SshKeyManagerPresenter(SshKeyManagerView view, SshKeyService service, SshResources resources, SshLocalizationConstant constant,
-                                  EventBus eventBus, UserClientService userService, /* TODO GitHubClientService gitHubClientService,*/
-                                  @Named("restContext") String restContext, SshKeyPresenter sshKeyPresenter,
+                                  EventBus eventBus, Loader loader, UserClientService userService, @Named("restContext") String restContext, SshKeyPresenter sshKeyPresenter,
                                   UploadSshKeyPresenter uploadSshKeyPresenter, NotificationManager notificationManager, DtoFactory dtoFactory) {
         super(constant.sshManagerTitle(), resources.sshKeyManager());
 
@@ -104,8 +103,8 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         this.constant = constant;
         this.eventBus = eventBus;
         this.userService = userService;
-     //TODO   this.gitHubClientService = gitHubClientService;
         this.restContext = restContext;
+        this.loader = loader;
         this.sshKeyPresenter = sshKeyPresenter;
         this.uploadSshKeyPresenter = uploadSshKeyPresenter;
         this.notificationManager = notificationManager;
@@ -121,18 +120,18 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     /** {@inheritDoc} */
     @Override
     public void onDeleteClicked(@NotNull KeyItem key) {
-        boolean needToDelete = Window.confirm("Do you want to delete ssh keys for <b>" + key.getHost() + "</b> host?");
+        boolean needToDelete = Window.confirm(constant.deleteSshKeyQuestion(key.getHost()));
         if (needToDelete) {
-            service.deleteKey(key, new JsonpAsyncCallback<Void>() {
+            service.deleteKey(key, new AsyncCallback<Void>() {
                 @Override
                 public void onSuccess(Void result) {
-                    getLoader().hide();
+                    loader.hide();
                     refreshKeys();
                 }
 
                 @Override
                 public void onFailure(Throwable exception) {
-                    getLoader().hide();
+                    loader.hide();
                     Notification notification = new Notification(exception.getMessage(), ERROR);
                     notificationManager.showNotification(notification);
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
@@ -144,7 +143,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     /** {@inheritDoc} */
     @Override
     public void onGenerateClicked() {
-        String host = Window.prompt("Host name (w/o port): ", "");
+        String host = Window.prompt(constant.hostNameField(), "");
         if (!host.isEmpty()) {
             try {
                 service.generateKey(host, new AsyncRequestCallback<GenKeyRequest>() {
@@ -177,17 +176,17 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     /** {@inheritDoc} */
     @Override
     public void onGenerateGithubKeyClicked() {
-        service.getAllKeys(new JsonpAsyncCallback<JavaScriptObject>() {
+        service.getAllKeys(new AsyncCallback<JavaScriptObject>() {
             @Override
             public void onSuccess(JavaScriptObject result) {
                 boolean githubKeyExists = false;
-                loader = getLoader();
-                JsonArray<KeyItem> keys = dtoFactory.createListDtoFromJson(result.toString(), KeyItem.class);
+                JsonArray<KeyItem> keys = dtoFactory.createListDtoFromJson(new JSONArray(result).toString(), KeyItem.class);
 
                 for (int i = 0; i < keys.size(); i++) {
                     KeyItem key = keys.get(i);
                     if (key.getHost().contains("github.com")) {
                         githubKeyExists = true;
+                        break;
                     }
                 }
 
@@ -222,7 +221,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
 
             @Override
             public void onFailure(Throwable caught) {
-                getLoader().hide();
+                loader.hide();
                 Notification notification = new Notification("Getting ssh keys failed.", ERROR);
                 notificationManager.showNotification(notification);
             }
@@ -300,10 +299,9 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
 
     /** Need to remove failed uploaded keys from local storage if they can't be uploaded to github */
     private void getFailedKey() {
-        service.getAllKeys(new JsonpAsyncCallback<JavaScriptObject>() {
+        service.getAllKeys(new AsyncCallback<JavaScriptObject>() {
             @Override
             public void onSuccess(JavaScriptObject result) {
-                getLoader().hide();
                 JsonArray<KeyItem> keys = dtoFactory.createListDtoFromJson(result.toString(), KeyItem.class);
                 for (int i = 0; i < keys.size(); i++) {
                     KeyItem key = keys.get(i);
@@ -317,7 +315,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
 
             @Override
             public void onFailure(Throwable exception) {
-                getLoader().hide();
+                loader.hide();
                 refreshKeys();
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
@@ -333,7 +331,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
      *         failed key
      */
     private void removeFailedKey(@NotNull KeyItem key) {
-        service.deleteKey(key, new JsonpAsyncCallback<Void>() {
+        service.deleteKey(key, new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
                 Notification notification = new Notification("Failed to delete invalid ssh key.", ERROR);
@@ -393,17 +391,17 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
 
     /** Refresh ssh keys. */
     private void refreshKeys() {
-        service.getAllKeys(new JsonpAsyncCallback<JavaScriptObject>() {
+        service.getAllKeys(new AsyncCallback<JavaScriptObject>() {
             @Override
             public void onSuccess(JavaScriptObject result) {
-                getLoader().hide();
-                JsonArray<KeyItem> keys = dtoFactory.createListDtoFromJson(result.toString(), KeyItem.class);
+                loader.hide();
+                JsonArray<KeyItem> keys = dtoFactory.createListDtoFromJson(new JSONArray(result).toString(), KeyItem.class);
                 view.setKeys(keys);
             }
 
             @Override
             public void onFailure(Throwable exception) {
-                getLoader().hide();
+                loader.hide();
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
                 eventBus.fireEvent(new ExceptionThrownEvent(exception));

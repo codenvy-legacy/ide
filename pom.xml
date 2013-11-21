@@ -125,14 +125,15 @@
         <module>codenvy-builder-maven</module>
         <module>codenvy-builder-ant</module>
         <module>codenvy-runner-docker</module>
+        <module>codenvy-runner-sdk</module>
         <module>codenvy-ext-builder</module>
         <module>codenvy-ext-runner</module>
         <module>codenvy-api-war</module>
         <module>codenvy-ext-demo</module>
         <module>codenvy-ext-css</module>
         <module>codenvy-ext-java</module>
-        <!--module>codenvy-ext-java-runtime</module-->
-        <!--module>codenvy-ext-cloudfoundry</module>
+        <!--module>codenvy-ext-java-runtime</module
+        module>codenvy-ext-cloudfoundry</module>
         <module>codenvy-ext-cloudbees</module>
         <module>codenvy-ext-appfog</module>
         <module>codenvy-ext-openshift</module>
@@ -143,8 +144,8 @@
         <module>codenvy-ext-maven</module>
         <module>codenvy-ext-ant</module>
         <module>codenvy-ext-ssh</module>
-        <!--<module>codenvy-ext-extensions-runtime</module>
-        <module>codenvy-ext-tutorials</module>-->
+        <module>codenvy-ext-extensions-runtime</module>
+        <!--<module>codenvy-ext-tutorials</module>-->
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
         <module>codenvy-sdk-tutorials/action-api</module>
