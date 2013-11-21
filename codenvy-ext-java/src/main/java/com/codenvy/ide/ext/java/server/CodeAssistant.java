@@ -128,20 +128,20 @@ public abstract class CodeAssistant {
         Set<String> set = new HashSet<String>();
         //add rt.jar as dependency
         set.add("java:rt:1.6:jar");
-        if (project.hasProperty("exoide:classpath")) {
-            String classpath = (String)project.getPropertyValue("exoide:classpath");
-            JsonParser parser = new JsonParser();
-            try {
-                parser.parse(new ByteArrayInputStream(classpath.getBytes()));
-                Dependency[] dependencys =
-                        (Dependency[])ObjectBuilder.createArray(Dependency[].class, parser.getJsonObject());
-                for (Dependency d : dependencys)
-                    set.add(d.toString());
-            } catch (JsonException e) {
-
-                throw new CodeAssistantException(500, "Can't parse dependencys for project: " + project.getPath());
-            }
-        }
+//        if (project.hasProperty("exoide:classpath")) {
+//            String classpath = (String)project.getPropertyValue("exoide:classpath");
+//            JsonParser parser = new JsonParser();
+//            try {
+//                parser.parse(new ByteArrayInputStream(classpath.getBytes()));
+//                Dependency[] dependencys =
+//                        (Dependency[])ObjectBuilder.createArray(Dependency[].class, parser.getJsonObject());
+//                for (Dependency d : dependencys)
+//                    set.add(d.toString());
+//            } catch (JsonException e) {
+//
+//                throw new CodeAssistantException(500, "Can't parse dependencys for project: " + project.getPath());
+//            }
+//        }
         return set;
     }
 
@@ -175,7 +175,7 @@ public abstract class CodeAssistant {
      *         of current project
      * @param vfsId
      *         Id of VirtualFileSystem
-     * @return {@link TypeInfoBean}
+     * @return {@link TypeInfo}
      * @throws CodeAssistantException
      */
     public TypeInfo getClassByFQN(String fqn, String projectId, String vfsId) throws CodeAssistantException,
@@ -433,10 +433,6 @@ public abstract class CodeAssistant {
     /**
      * Return sets of Strings, associated with the package names
      *
-     * @param projectId
-     *         Id of current project
-     * @param vfsId
-     *         Id of current project
      * @return {@link List} of package names
      * @throws CodeAssistantException
      * @throws VirtualFileSystemException
@@ -481,8 +477,6 @@ public abstract class CodeAssistant {
      *
      * @param project
      *         current project
-     * @param vfs
-     *         current virtual file system
      * @return {@link List} of package names
      * @throws VirtualFileSystemException
      * @throws CodeAssistantException
@@ -548,7 +542,7 @@ public abstract class CodeAssistant {
      *         of current project
      * @param vfsId
      *         Id of VirtualFileSystem
-     * @return {@link TypeInfoBean} of null if JavaType not found.
+     * @return {@link TypeInfo} of null if JavaType not found.
      */
     protected abstract TypeInfo getClassByFqnFromProject(String fqn, String projectId, String vfsId)
             throws VirtualFileSystemException, CodeAssistantException;

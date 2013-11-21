@@ -85,22 +85,22 @@ public class JavaTypeToTypeInfoConverter {
     }
 
     public TypeInfo convert(JavaClass clazz) {
-        TypeInfo type = new TypeInfoBean();
-        type.setName(clazz.getFullyQualifiedName());
-        type.setType(getType(clazz).name());
-        if (clazz.getSuperJavaClass() != null)
-            type.setSuperClass(clazz.getSuperJavaClass().getFullyQualifiedName());
-        else
-            type.setSuperClass("java.lang.Object");
-
-        type.setModifiers(typeModifierToInt(clazz));
-        type.setInterfaces(toListFqn(clazz.getImplements()));
-        type.setFields(toFieldInfo(clazz));
-        JavaMethod[] methods = clazz.getMethods();
-        type.setMethods(toMethods(clazz, methods));
-        type.setSignature(createTypeSignature(clazz));
-        type.setNestedTypes(getNestedTypes(clazz));
-        return type;
+//        TypeInfo type = new TypeInfoBean();
+//        type.setName(clazz.getFullyQualifiedName());
+//        type.setType(getType(clazz).name());
+//        if (clazz.getSuperJavaClass() != null)
+//            type.setSuperClass(clazz.getSuperJavaClass().getFullyQualifiedName());
+//        else
+//            type.setSuperClass("java.lang.Object");
+//
+//        type.setModifiers(typeModifierToInt(clazz));
+//        type.setInterfaces(toListFqn(clazz.getImplements()));
+//        type.setFields(toFieldInfo(clazz));
+//        JavaMethod[] methods = clazz.getMethods();
+//        type.setMethods(toMethods(clazz, methods));
+//        type.setSignature(createTypeSignature(clazz));
+//        type.setNestedTypes(getNestedTypes(clazz));
+        return null;//type;
     }
 
     /**
@@ -108,13 +108,13 @@ public class JavaTypeToTypeInfoConverter {
      * @return
      */
     private List<Member> getNestedTypes(JavaClass clazz) {
-        if (clazz.getNestedClasses().length != 0) {
-            List<Member> members = new ArrayList<Member>();
-            for (JavaClass nested : clazz.getNestedClasses()) {
-                members.add(new MemberBean(nested.getFullyQualifiedName(), typeModifierToInt(nested)));
-            }
-            return members;
-        }
+//        if (clazz.getNestedClasses().length != 0) {
+//            List<Member> members = new ArrayList<Member>();
+//            for (JavaClass nested : clazz.getNestedClasses()) {
+//                members.add(new MemberBean(nested.getFullyQualifiedName(), typeModifierToInt(nested)));
+//            }
+//            return members;
+//        }
 
         return null;
     }
@@ -150,7 +150,6 @@ public class JavaTypeToTypeInfoConverter {
 
     /**
      * @param typeVariables
-     * @param signature
      */
     private String createTypeParameters(TypeVariable[] typeVariables) {
         StringBuilder signature = new StringBuilder("<");
@@ -213,7 +212,6 @@ public class JavaTypeToTypeInfoConverter {
     }
 
     /**
-     * @param t
      * @return
      */
     private static String createSignatureForType(Type type) {
@@ -271,7 +269,6 @@ public class JavaTypeToTypeInfoConverter {
     }
 
     /**
-     * @param t
      * @return
      */
     private static char getWildcards(WildcardType wildcardType) {
@@ -307,37 +304,37 @@ public class JavaTypeToTypeInfoConverter {
      */
     private List<MethodInfo> toMethods(JavaClass clazz, JavaMethod[] methods) {
         List<MethodInfo> con = new ArrayList<MethodInfo>();
-        boolean hasConstructor = false;
-        for (JavaMethod m : methods) {
-            MethodInfo info = new MethodInfoBean();
-            info.setExceptionTypes(toListFqn(m.getExceptions()));
-            info.setModifiers(clazz.isInterface() ? Modifier.ABSTRACT.value() : modifiersToInteger(m.getModifiers()));
-            Type[] parameterTypes = m.getParameterTypes(true);
-            info.setParameterTypes(toParameters(parameterTypes));
-            info.setParameterNames(toParametersName(m.getParameters()));
-            info.setName(m.getName());
-            info.setDeclaringClass(m.getParentClass().getFullyQualifiedName());
-            info.setDescriptor(SignatureCreator.createMethodSignature(m));
-            info.setSignature(createMethodSignature(m, clazz));
-            if (!m.isConstructor()) {
-                String returnType = m.getReturnType().getFullyQualifiedName();
-                info.setReturnType(returnType);
-                info.setConstructor(false);
-            } else {
-                info.setConstructor(true);
-                hasConstructor = true;
-            }
-            con.add(info);
-        }
-        // if class don't has a constructor - add default
-        if (!hasConstructor && !clazz.isInterface()) {
-            MethodInfo defaultConstructor = new MethodInfoBean();
-            defaultConstructor.setDeclaringClass(clazz.getFullyQualifiedName());
-            defaultConstructor.setDescriptor("()V;");
-            defaultConstructor.setModifiers(Modifier.PUBLIC.value());
-            defaultConstructor.setConstructor(true);
-            con.add(defaultConstructor);
-        }
+//        boolean hasConstructor = false;
+//        for (JavaMethod m : methods) {
+//            MethodInfo info = new MethodInfoBean();
+//            info.setExceptionTypes(toListFqn(m.getExceptions()));
+//            info.setModifiers(clazz.isInterface() ? Modifier.ABSTRACT.value() : modifiersToInteger(m.getModifiers()));
+//            Type[] parameterTypes = m.getParameterTypes(true);
+//            info.setParameterTypes(toParameters(parameterTypes));
+//            info.setParameterNames(toParametersName(m.getParameters()));
+//            info.setName(m.getName());
+//            info.setDeclaringClass(m.getParentClass().getFullyQualifiedName());
+//            info.setDescriptor(SignatureCreator.createMethodSignature(m));
+//            info.setSignature(createMethodSignature(m, clazz));
+//            if (!m.isConstructor()) {
+//                String returnType = m.getReturnType().getFullyQualifiedName();
+//                info.setReturnType(returnType);
+//                info.setConstructor(false);
+//            } else {
+//                info.setConstructor(true);
+//                hasConstructor = true;
+//            }
+//            con.add(info);
+//        }
+//        // if class don't has a constructor - add default
+//        if (!hasConstructor && !clazz.isInterface()) {
+//            MethodInfo defaultConstructor = new MethodInfoBean();
+//            defaultConstructor.setDeclaringClass(clazz.getFullyQualifiedName());
+//            defaultConstructor.setDescriptor("()V;");
+//            defaultConstructor.setModifiers(Modifier.PUBLIC.value());
+//            defaultConstructor.setConstructor(true);
+//            con.add(defaultConstructor);
+//        }
         return con;
     }
 
@@ -397,42 +394,41 @@ public class JavaTypeToTypeInfoConverter {
     }
 
     /**
-     * @param fields
      * @return
      */
     private static List<FieldInfo> toFieldInfo(JavaClass clazz) {
         JavaField[] fields = clazz.getFields();
         List<FieldInfo> fi = new ArrayList<FieldInfo>();
-        boolean isGeneric = false;
-        Set<String> parameters = null;
-        if (clazz.getTypeParameters().length != 0) {
-            isGeneric = true;
-            parameters = new HashSet<String>(clazz.getTypeParameters().length);
-            for (TypeVariable v : clazz.getTypeParameters())
-                parameters.add(v.getName());
-        }
-        for (int i = 0; i < fields.length; i++) {
-            FieldInfo info = new FieldInfoBean();
-            JavaField f = fields[i];
-            info.setDeclaringClass(f.getParentClass().getFullyQualifiedName());
-            info.setType(f.getType().getValue());
-            info.setName(f.getName());
-            info.setModifiers(modifiersToInteger(f.getModifiers()));
-            info.setDescriptor(SignatureCreator.createTypeSignature(f).replaceAll("\\.", "/"));
-            if (f.getType().isPrimitive())
-                info.setValue(f.getInitializationExpression());
-
-            if (isGeneric && parameters.contains(f.getType().getFullyQualifiedName())) {
-                StringBuilder signature = new StringBuilder();
-                if (f.getType().isArray())
-                    signature.append('[');
-                signature.append('T').append(f.getType().getFullyQualifiedName()).append(';');
-                info.setSignature(signature.toString());
-            } else if (f.getType().getActualTypeArguments() != null) {
-                info.setSignature(createSignatureForType(f.getType()));
-            }
-            fi.add(info);
-        }
+//        boolean isGeneric = false;
+//        Set<String> parameters = null;
+//        if (clazz.getTypeParameters().length != 0) {
+//            isGeneric = true;
+//            parameters = new HashSet<String>(clazz.getTypeParameters().length);
+//            for (TypeVariable v : clazz.getTypeParameters())
+//                parameters.add(v.getName());
+//        }
+//        for (int i = 0; i < fields.length; i++) {
+//            FieldInfo info = new FieldInfoBean();
+//            JavaField f = fields[i];
+//            info.setDeclaringClass(f.getParentClass().getFullyQualifiedName());
+//            info.setType(f.getType().getValue());
+//            info.setName(f.getName());
+//            info.setModifiers(modifiersToInteger(f.getModifiers()));
+//            info.setDescriptor(SignatureCreator.createTypeSignature(f).replaceAll("\\.", "/"));
+//            if (f.getType().isPrimitive())
+//                info.setValue(f.getInitializationExpression());
+//
+//            if (isGeneric && parameters.contains(f.getType().getFullyQualifiedName())) {
+//                StringBuilder signature = new StringBuilder();
+//                if (f.getType().isArray())
+//                    signature.append('[');
+//                signature.append('T').append(f.getType().getFullyQualifiedName()).append(';');
+//                info.setSignature(signature.toString());
+//            } else if (f.getType().getActualTypeArguments() != null) {
+//                info.setSignature(createSignatureForType(f.getType()));
+//            }
+//            fi.add(info);
+//        }
 
         return fi;
     }
@@ -452,7 +448,6 @@ public class JavaTypeToTypeInfoConverter {
     }
 
     /**
-     * @param modifiers
      * @return
      */
     private static Integer typeModifierToInt(JavaClass type) {
@@ -481,12 +476,12 @@ public class JavaTypeToTypeInfoConverter {
      * @return
      */
     public ShortTypeInfo toShortTypeInfo(JavaClass clazz) {
-        ShortTypeInfo info = new ShortTypeInfoBean();
-        info.setModifiers(typeModifierToInt(clazz));
-        info.setName(clazz.getFullyQualifiedName());
-        info.setType(getType(clazz).name());
-        info.setSignature(createTypeSignature(clazz));
-        return info;
+//        ShortTypeInfo info = new ShortTypeInfoBean();
+//        info.setModifiers(typeModifierToInt(clazz));
+//        info.setName(clazz.getFullyQualifiedName());
+//        info.setType(getType(clazz).name());
+//        info.setSignature(createTypeSignature(clazz));
+        return null;//info;
     }
 
     /**

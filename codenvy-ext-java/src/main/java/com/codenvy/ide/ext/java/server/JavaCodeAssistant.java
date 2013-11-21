@@ -142,17 +142,13 @@ public class JavaCodeAssistant extends CodeAssistant {
         for (Item i : children.getItems()) {
             if (i.getName().endsWith(".java")) {
                 if (!file.getId().equals(i.getId())) {
-                    classes.add(new ShortTypeInfoBean(getClassNameOnFileName(i.getName()), 0, "CLASS", null));
+                    //classes.add(new ShortTypeInfoBean(getClassNameOnFileName(i.getName()), 0, "CLASS", null));
                 }
             }
         }
         return classes;
     }
 
-    /**
-     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getClassByFqnFromProject(java.lang.String, java.lang.String,
-     *      java.lang.String)
-     */
     @Override
     protected TypeInfo getClassByFqnFromProject(String fqn, String projectId,
                                                 String vfsId) throws VirtualFileSystemException, CodeAssistantException {
@@ -183,10 +179,6 @@ public class JavaCodeAssistant extends CodeAssistant {
         return new JavaTypeToTypeInfoConverter(storage, getProjectDependencys(projectId, vfsId)).convert(clazz);
     }
 
-    /**
-     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getTypesByNamePrefixFromProject(java.lang.String, java.lang.String,
-     *      java.lang.String)
-     */
     @Override
     protected List<ShortTypeInfo> getTypesByNamePrefixFromProject(String className, String projectId,
                                                                   String vfsId) throws CodeAssistantException, VirtualFileSystemException {
@@ -202,10 +194,6 @@ public class JavaCodeAssistant extends CodeAssistant {
         return types;
     }
 
-    /**
-     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getTypesByFqnPrefixInProject(java.lang.String, java.lang.String,
-     *      java.lang.String)
-     */
     @Override
     protected List<ShortTypeInfo> getTypesByFqnPrefixInProject(String prefix, String projectId,
                                                                String vfsId) throws CodeAssistantException, VirtualFileSystemException {
@@ -221,10 +209,6 @@ public class JavaCodeAssistant extends CodeAssistant {
         return types;
     }
 
-    /**
-     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getByTypeFromProject(org.exoplatform.ide.codeassistant.jvm.shared.JavaType,
-     *      java.lang.String, java.lang.String, java.lang.String)
-     */
     @Override
     protected List<ShortTypeInfo> getByTypeFromProject(JavaType type, String prefix, String projectId,
                                                        String vfsId) throws CodeAssistantException, VirtualFileSystemException {
@@ -248,10 +232,6 @@ public class JavaCodeAssistant extends CodeAssistant {
         return types;
     }
 
-    /**
-     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getClassesFromProject(java.lang.String, java.lang.String,
-     *      java.lang.String)
-     */
     @Override
     public List<ShortTypeInfo> getClassesFromProject(String fileId, String projectId,
                                                      String vfsId) throws VirtualFileSystemException, CodeAssistantException {
@@ -276,10 +256,6 @@ public class JavaCodeAssistant extends CodeAssistant {
         return classNames;
     }
 
-    /**
-     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getMemberJavaDocFromProject(java.lang.String, java.lang.String,
-     *      java.lang.String)
-     */
     @Override
     protected String getMemberJavaDocFromProject(String fqn, String projectId,
                                                  String vfsId) throws CodeAssistantException, VirtualFileSystemException {
@@ -321,10 +297,6 @@ public class JavaCodeAssistant extends CodeAssistant {
                 entity.getTags());
     }
 
-    /**
-     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getTypeInfoByNamePrefixFromProject(java.lang.String,
-     *      java.lang.String, java.lang.String)
-     */
     @Override
     protected List<TypeInfo> getTypeInfoByNamePrefixFromProject(String namePrefix, String projectId,
                                                                 String vfsId) throws VirtualFileSystemException, CodeAssistantException {
@@ -340,12 +312,6 @@ public class JavaCodeAssistant extends CodeAssistant {
         return typeInfos;
     }
 
-    /**
-     * @throws VirtualFileSystemException
-     * @throws CodeAssistantException
-     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getPackagesByPrefixFromProject(java.lang.String, java.lang.String,
-     *      java.lang.String)
-     */
     @Override
     protected List<String> getPackagesByPrefixFromProject(String prefix, String projectId,
                                                           String vfsId) throws VirtualFileSystemException, CodeAssistantException {
@@ -385,11 +351,6 @@ public class JavaCodeAssistant extends CodeAssistant {
         return pakages;
     }
 
-    /**
-     * @throws VirtualFileSystemException
-     * @throws CodeAssistantException
-     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getAllPackagesFromProject(java.lang.String, java.lang.String)
-     */
     @Override
     protected List<String> getAllPackagesFromProject(String projectId,
                                                      String vfsId) throws VirtualFileSystemException, CodeAssistantException {
