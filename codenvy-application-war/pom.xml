@@ -102,11 +102,6 @@
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.codenvy.platform-api</groupId>
-            <artifactId>codenvy-api-builder</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-websocket</artifactId>
             <exclusions>
@@ -163,11 +158,6 @@
             <artifactId>codenvy-ext-ssh</artifactId>
             <version>${project.version}</version>
         </dependency> -->
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-builder-maven</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-extensions-runtime</artifactId>
