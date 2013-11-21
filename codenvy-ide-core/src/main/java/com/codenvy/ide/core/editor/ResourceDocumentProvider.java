@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.core.editor;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorInput;
@@ -41,9 +42,7 @@ import java.util.Map;
  * @version $Id:
  */
 public class ResourceDocumentProvider implements DocumentProvider {
-
     private DocumentFactory documentFactory;
-
     private Map<File, Document> cache = new HashMap<File, Document>();
 
     @Inject
@@ -57,13 +56,13 @@ public class ResourceDocumentProvider implements DocumentProvider {
      */
     @Nullable
     @Override
-    public AnnotationModel getAnnotationModel(EditorInput input) {
+    public AnnotationModel getAnnotationModel(@Nullable EditorInput input) {
         return null;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getDocument(EditorInput input, final DocumentCallback callback) {
+    public void getDocument(@Nullable EditorInput input, @NotNull final DocumentCallback callback) {
         /* TODO This is not good solution. It is a temporary solution. We will find something better than this. This needs when editor
         is not initialized but some code wants to use it. In this case we returned a new instance of document. */
         final File file = input.getFile();
@@ -93,7 +92,7 @@ public class ResourceDocumentProvider implements DocumentProvider {
      * @param file
      * @param callback
      */
-    private void contentReceived(File file, DocumentCallback callback) {
+    private void contentReceived(@NotNull File file, @NotNull DocumentCallback callback) {
         Document document = documentFactory.get(file.getContent());
         cache.put(file, document);
         callback.onDocument(document);
@@ -101,11 +100,11 @@ public class ResourceDocumentProvider implements DocumentProvider {
 
     /** {@inheritDoc} */
     @Override
-    public void saveDocument(final EditorInput input, Document document, boolean overwrite, final AsyncCallback<EditorInput> callback) {
+    public void saveDocument(@Nullable final EditorInput input, @NotNull Document document, boolean overwrite,
+                             @NotNull final AsyncCallback<EditorInput> callback) {
         File file = input.getFile();
         file.setContent(document.get());
         file.getProject().updateContent(file, new AsyncCallback<File>() {
-
             @Override
             public void onSuccess(File result) {
                 callback.onSuccess(input);
@@ -120,12 +119,12 @@ public class ResourceDocumentProvider implements DocumentProvider {
 
     /** {@inheritDoc} */
     @Override
-    public void saveDocumentAs(EditorInput input, Document document, boolean overwrite) {
+    public void saveDocumentAs(@Nullable EditorInput input, @NotNull Document document, boolean overwrite) {
         File file = input.getFile();
         file.getProject().createFile(file.getParent(), file.getName(), file.getContent(), file.getMimeType(), new AsyncCallback<File>() {
             @Override
             public void onSuccess(File result) {
-                //TODO
+                //do nothing
             }
 
             @Override

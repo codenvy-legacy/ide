@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-CODENVY CONFIDENTIAL
-__________________
+    CODENVY CONFIDENTIAL
+    __________________
 
-[2012] - [2013] Codenvy, S.A.
-All Rights Reserved.
+     [2012] - [2013] Codenvy, S.A.
+     All Rights Reserved.
 
-NOTICE: All information contained herein is, and remains
-the property of Codenvy S.A. and its suppliers,
-if any. The intellectual and technical concepts contained
-herein are proprietary to Codenvy S.A.
-and its suppliers and may be covered by U.S. and Foreign Patents,
-patents in process, and are protected by trade secret or copyright law.
-Dissemination of this information or reproduction of this material
-is strictly forbidden unless prior written permission is obtained
-from Codenvy S.A..
+    NOTICE:  All information contained herein is, and remains
+    the property of Codenvy S.A. and its suppliers,
+    if any.  The intellectual and technical concepts contained
+    herein are proprietary to Codenvy S.A.
+    and its suppliers and may be covered by U.S. and Foreign Patents,
+    patents in process, and are protected by trade secret or copyright law.
+    Dissemination of this information or reproduction of this material
+    is strictly forbidden unless prior written permission is obtained
+    from Codenvy S.A..
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -148,6 +148,43 @@ from Codenvy S.A..
 <type>zip</type>
 <version>${project.version}</version>
 </dependency>-->
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>parts-api-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>wizard-api-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>editor-api-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-core</artifactId>
+            <type>jar</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-maven</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.kernel</groupId>
+                    <artifactId>exo.kernel.container</artifactId>
+                </exclusion>
+            </exclusions>
+            <type>jar</type>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-git-server</artifactId>
@@ -286,6 +323,89 @@ from Codenvy S.A..
                         <!--</configuration>-->
                     <!--</execution>-->
                     <execution>
+                        <id>copy-tutorials</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>action-api-tutorial</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>action-api-tutorial.zip</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>dto-tutorial</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>dto-tutorial.zip</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>new-project-wizard-tutorial</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>new-project-wizard-tutorial.zip</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>new-resource-wizard-tutorial</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>new-resource-wizard-tutorial.zip</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>notification-api-tutorial</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>notification-api-tutorial.zip</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>parts-api-tutorial</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>parts-api-tutorial.zip</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>wizard-api-tutorial</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>wizard-api-tutorial.zip</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>editor-api-tutorial</artifactId>
+                                    <type>zip</type>
+                                    <version>${project.version}</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip/tutorials</outputDirectory>
+                                    <destFileName>editor-api-tutorial.zip</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>copy-dependencies-jar</id>
                         <phase>process-resources</phase>
                         <goals>
@@ -381,9 +501,9 @@ from Codenvy S.A..
                                     <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/"/>
                                 </move>
 
-                                <!--<move todir="${project.build.directory}/tomcat-ide/tutorials">-->
-                                    <!--<fileset dir="${project.build.directory}/packager-conf/zip/tutorials"/>-->
-                                <!--</move>-->
+                                <move todir="${project.build.directory}/tomcat-ide/tutorials">
+                                    <fileset dir="${project.build.directory}/packager-conf/zip/tutorials"/>
+                                </move>
 
                                 <war destfile="${project.build.directory}/tomcat-ide/webapps/ide.war" needxmlfile="false">
                                     <fileset dir="${project.build.directory}/packager-conf/war/ide"/>

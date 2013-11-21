@@ -5,7 +5,7 @@
     <groupId>com.codenvy.ide</groupId>
     <version>3.0.0-M3-SNAPSHOT</version>
     <artifactId>new-resource-wizard-tutorial</artifactId>
-    <name>Codenvy Extension :: New Resource Wizard API</name>
+    <name>Codenvy Tutorial :: New Resource Wizard API</name>
     <packaging>jar</packaging>
 
     <distributionManagement>

@@ -29,7 +29,6 @@ import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.client.editor.AstProvider.AstListener;
 import com.codenvy.ide.ext.java.client.internal.codeassist.CompletionEngine;
 import com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment;
-
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.runtime.AssertionFailedException;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;

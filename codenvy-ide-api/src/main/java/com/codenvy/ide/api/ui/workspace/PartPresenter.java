@@ -17,10 +17,11 @@
  */
 package com.codenvy.ide.api.ui.workspace;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.selection.Selection;
 import com.google.gwt.resources.client.ImageResource;
-
 
 /**
  * Part is a main UI block of the IDE.
@@ -28,46 +29,37 @@ import com.google.gwt.resources.client.ImageResource;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public interface PartPresenter extends Presenter {
-    /**
-     * The property id for <code>getTitle</code>, <code>getTitleImage</code>
-     * and <code>getTitleToolTip</code>.
-     */
-    static final int TITLE_PROPERTY = 0x001;
-
+    /** The property id for <code>getTitle</code>, <code>getTitleImage</code> and <code>getTitleToolTip</code>. */
+    int TITLE_PROPERTY     = 0x001;
     /** The property id for <code>getSelection</code>. */
-    static final int SELECTION_PROPERTY = 0x002;
+    int SELECTION_PROPERTY = 0x002;
 
-    /**
-     * Title of the Part
-     *
-     * @return
-     */
+    /** @return Title of the Part */
+    @NotNull
     String getTitle();
 
     /**
-     * Returns the title image of this part.  If this value changes
-     * the part must fire a property listener event with
+     * Returns the title image of this part.  If this value changes the part must fire a property listener event with
      * <code>PROP_TITLE</code>.
      * <p/>
-     * The title image is usually used to populate the title bar of this part's
-     * visual container.
+     * The title image is usually used to populate the title bar of this part's visual container.
      *
      * @return the title image
      */
+    @Nullable
     ImageResource getTitleImage();
 
     /**
      * Returns the title tool tip text of this part.
      * An empty string result indicates no tool tip.
-     * If this value changes the part must fire a property listener event with
-     * <code>PROP_TITLE</code>.
+     * If this value changes the part must fire a property listener event with <code>PROP_TITLE</code>.
      * <p>
-     * The tool tip text is used to populate the title bar of this part's
-     * visual container.
+     * The tool tip text is used to populate the title bar of this part's visual container.
      * </p>
      *
      * @return the part title tool tip (not <code>null</code>)
      */
+    @Nullable
     String getTitleToolTip();
 
     /**
@@ -79,38 +71,35 @@ public interface PartPresenter extends Presenter {
 
     /**
      * This method is called when Part is opened.
-     * Note: this method is NOT called when part gets focused. It is called when new tab in
-     * PartStack created.
+     * Note: this method is NOT called when part gets focused. It is called when new tab in PartStack created.
      */
     void onOpen();
 
     /**
-     * This method is called when part is going to be closed. Part itself can deny
-     * blocking, by returning false, i.e. when document is being edited and accidently
-     * close button pressed.
+     * This method is called when part is going to be closed. Part itself can deny blocking, by returning false, i.e. when document is
+     * being edited and accidentally close button pressed.
      *
      * @return allow close
      */
     boolean onClose();
 
     /**
-     * Adds a listener for changes to properties of this part.
-     * Has no effect if an identical listener is already registered.
+     * Adds a listener for changes to properties of this part. Has no effect if an identical listener is already registered.
      *
      * @param listener
      *         a property listener
      */
-    void addPropertyListener(PropertyListener listener);
+    void addPropertyListener(@NotNull PropertyListener listener);
 
     /** @return The {@link Selection} of this Part. */
+    @NotNull
     Selection<?> getSelection();
 
     /**
-     * Removes the given property listener from this part.
-     * Has no effect if an identical listener is not registered.
+     * Removes the given property listener from this part. Has no effect if an identical listener is not registered.
      *
      * @param listener
      *         a property listener
      */
-    void removePropertyListener(PropertyListener listener);
+    void removePropertyListener(@NotNull PropertyListener listener);
 }

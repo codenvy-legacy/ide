@@ -17,61 +17,60 @@
  */
 package com.codenvy.ide.texteditor.api;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.outline.OutlineModel;
+import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
 import com.codenvy.ide.texteditor.api.quickassist.QuickAssistProcessor;
 import com.codenvy.ide.texteditor.api.reconciler.Reconciler;
 
 /**
- * This class bundles the configuration space of a editor view. Instances of
- * this class are passed to the <code>configure</code> method of
+ * This class bundles the configuration space of a editor view. Instances of this class are passed to the <code>configure</code> method of
  * <code>TextEditorPartView</code>.
  * <p>
- * Each method in this class get as argument the source viewer for which it
- * should provide a particular configuration setting such as a presentation
- * reconciler. Based on its specific knowledge about the returned object, the
- * configuration might share such objects or compute them according to some
- * rules.</p>
+ * Each method in this class get as argument the source viewer for which it should provide a particular configuration setting such as a
+ * presentation reconciler. Based on its specific knowledge about the returned object, the configuration might share such objects or
+ * compute them according to some rules.</p>
  * <p>
- * Clients should subclass and override just those methods which must be
- * specific to their needs.</p>
+ * Clients should subclass and override just those methods which must be specific to their needs.</p>
  *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
  */
 public class TextEditorConfiguration {
 
-    /**
-     *
-     */
     public TextEditorConfiguration() {
     }
 
+    protected static native CmParser getParserForMime(String mime) /*-{
+        conf = $wnd.CodeMirror.defaults;
+        return $wnd.CodeMirror.getMode(conf, mime);
+    }-*/;
+
     /**
-     * Returns the visual width of the tab character. This implementation always
-     * returns 3.
+     * Returns the visual width of the tab character. This implementation always returns 3.
      *
      * @param view
      *         the view to be configured by this configuration
      * @return the tab width
      */
-    public int getTabWidth(TextEditorPartView view) {
+    public int getTabWidth(@NotNull TextEditorPartView view) {
         return 3;
     }
 
     /**
-     * Returns the undo manager for the given text view. This implementation
-     * always returns a new instance of <code>DefaultUndoManager</code> whose
-     * history length is set to 25.
+     * Returns the undo manager for the given text view. This implementation always returns a new instance of
+     * <code>DefaultUndoManager</code> whose history length is set to 25.
      *
      * @param view
      *         the text view to be configured by this configuration
      * @return an undo manager or <code>null</code> if no undo/redo should not be supported
      */
-    public UndoManager getUndoManager(TextEditorPartView view) {
+    @Nullable
+    public UndoManager getUndoManager(@NotNull TextEditorPartView view) {
         return new UndoManager(25);
     }
 
@@ -83,7 +82,8 @@ public class TextEditorConfiguration {
      *         the source viewer to be configured by this configuration
      * @return a content formatter or <code>null</code> if formatting should not be supported
      */
-    public ContentFormatter getContentFormatter(TextEditorPartView view) {
+    @Nullable
+    public ContentFormatter getContentFormatter(@NotNull TextEditorPartView view) {
         return null;
     }
 
@@ -95,26 +95,26 @@ public class TextEditorConfiguration {
      *         the source viewer to be configured by this configuration
      * @return a content assistant or <code>null</code> if content assist should not be supported
      */
-    public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view) {
+    @Nullable
+    public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(@NotNull TextEditorPartView view) {
         return null;
     }
 
     /**
-     * Returns the quick assist assistant ready to be used with the given
-     * source viewer.
+     * Returns the quick assist assistant ready to be used with the given source viewer.
      * This implementation always returns <code>null</code>.
      *
      * @param view
      *         that ext view to be configured by this configuration
      * @return a quick assist assistant or <code>null</code> if quick assist should not be supported
      */
-    public QuickAssistProcessor getQuickAssistAssistant(TextEditorPartView view) {
+    @Nullable
+    public QuickAssistProcessor getQuickAssistAssistant(@NotNull TextEditorPartView view) {
         return null;
     }
 
     /**
-     * Returns the auto edit strategies ready to be used with the given text view
-     * when manipulating text of the given content type.
+     * Returns the auto edit strategies ready to be used with the given text view when manipulating text of the given content type.
      *
      * @param view
      *         the source viewer to be configured by this configuration
@@ -122,36 +122,36 @@ public class TextEditorConfiguration {
      *         the content type for which the strategies are applicable
      * @return the auto edit strategies or <code>null</code> if automatic editing is not to be enabled
      */
-    public AutoEditStrategy[] getAutoEditStrategies(TextEditorPartView view, String contentType) {
+    @Nullable
+    public AutoEditStrategy[] getAutoEditStrategies(@NotNull TextEditorPartView view, @NotNull String contentType) {
         return new AutoEditStrategy[]{new DefaultIndentLineAutoEditStrategy()};
     }
 
     /**
-     * Returns all configured content types for the given text view. This list
-     * tells the caller which content types must be configured for the given text view,
-     * i.e. for which content types the given view functionalities
-     * must be specified. This implementation always returns <code>
-     * new String[] { Document.DEFAULT_CONTENT_TYPE }</code>.
+     * Returns all configured content types for the given text view. This list tells the caller which content types must be configured for
+     * the given text view, i.e. for which content types the given view functionalities must be specified. This implementation always
+     * returns <code>new String[] { Document.DEFAULT_CONTENT_TYPE }</code>.
      *
      * @param view
      *         the source viewer to be configured by this configuration
      * @return the configured content types for the given viewer
      */
-    public String[] getConfiguredContentTypes(TextEditorPartView view) {
+    @NotNull
+    public String[] getConfiguredContentTypes(@NotNull TextEditorPartView view) {
         return new String[]{Document.DEFAULT_CONTENT_TYPE};
     }
 
     /**
-     * Returns the configured partitioning for the given source viewer. The partitioning is
-     * used when the querying content types from the source viewer's input document.  This
-     * implementation always returns <code>IDocumentExtension3.DEFAULT_PARTITIONING</code>.
+     * Returns the configured partitioning for the given source viewer. The partitioning is used when the querying content types from the
+     * source viewer's input document.  This implementation always returns <code>IDocumentExtension3.DEFAULT_PARTITIONING</code>.
      *
      * @param view
      *         the source viewer to be configured by this configuration
      * @return the configured partitioning
      * @see #getConfiguredContentTypes(TextEditorPartView)
      */
-    public String getConfiguredDocumentPartitioning(TextEditorPartView view) {
+    @NotNull
+    public String getConfiguredDocumentPartitioning(@NotNull TextEditorPartView view) {
         return Document.DEFAULT_PARTITIONING;
     }
 
@@ -163,7 +163,8 @@ public class TextEditorConfiguration {
      *         the source viewer to be configured by this configuration
      * @return the Parser
      */
-    public Parser getParser(TextEditorPartView view) {
+    @Nullable
+    public Parser getParser(@NotNull TextEditorPartView view) {
         return null;
     }
 
@@ -175,7 +176,8 @@ public class TextEditorConfiguration {
      *         the source view to be configured by this configuration
      * @return a reconciler or <code>null</code> if reconciling should not be supported
      */
-    public Reconciler getReconciler(TextEditorPartView view) {
+    @Nullable
+    public Reconciler getReconciler(@NotNull TextEditorPartView view) {
         return null;
     }
 
@@ -187,8 +189,8 @@ public class TextEditorConfiguration {
      *         the source view to be configured by this configuration.
      * @return a model that used to build outline tree.
      */
-    public OutlineModel getOutline(TextEditorPartView view) {
+    @Nullable
+    public OutlineModel getOutline(@NotNull TextEditorPartView view) {
         return null;
     }
-
 }

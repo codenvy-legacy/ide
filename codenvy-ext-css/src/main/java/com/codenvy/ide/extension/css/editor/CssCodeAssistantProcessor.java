@@ -39,15 +39,13 @@ import com.codenvy.ide.util.loging.Log;
 public class CssCodeAssistantProcessor implements CodeAssistProcessor {
 
     private static final AbstractTrie<CssCompletionProposal> cssTrie = CssTrie.createTrie();
-
     private CssCompletionQuery completionQuery;
+    private CssResources       resources;
 
-    private CssResources resourcess;
-
-    /** @param resourcess */
-    public CssCodeAssistantProcessor(CssResources resourcess) {
+    /** @param resources */
+    public CssCodeAssistantProcessor(CssResources resources) {
         super();
-        this.resourcess = resourcess;
+        this.resources = resources;
     }
 
     /**
@@ -163,11 +161,7 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor {
         }
     }
 
-    /**
-     * @see com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor#computeCompletionProposals(com.codenvy.ide.texteditor.api
-     * .TextEditorPartView,
-     *      int)
-     */
+    /** {@inheritDoc} */
     @Override
     public CompletionProposal[] computeCompletionProposals(TextEditorPartView view, int offset) {
         if (view.getSelection().hasSelection()) {
@@ -185,7 +179,7 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor {
         if (triggeringString == null) {
             return null;
         }
-        InvocationContext context = new InvocationContext(triggeringString, offset, resourcess, view);
+        InvocationContext context = new InvocationContext(triggeringString, offset, resources, view);
         switch (completionQuery.getCompletionType()) {
             case PROPERTY:
                 JsonArray<CssCompletionProposal> autocompletions = CssTrie.findAndFilterAutocompletions(cssTrie,
@@ -222,16 +216,15 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor {
         return proposals;
     }
 
-    /** @see com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor#getCompletionProposalAutoActivationCharacters() */
+    /** {@inheritDoc} */
     @Override
     public char[] getCompletionProposalAutoActivationCharacters() {
         return new char[]{':'};
     }
 
-    /** @see com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor#getErrorMessage() */
+    /** {@inheritDoc} */
     @Override
     public String getErrorMessage() {
         return null;
     }
-
 }

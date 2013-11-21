@@ -17,36 +17,38 @@
  */
 package com.codenvy.ide.api.editor;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.resources.model.File;
 
 /**
- * Editor Agent manages Editors, it allows to open a new editor with given file,
- * retrieve current active editor and find all the opened editors.
+ * Editor Agent manages Editors, it allows to open a new editor with given file, retrieve current active editor and find all the opened
+ * editors.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public interface EditorAgent {
-
     /**
      * Open editor with given file
      *
      * @param file
      */
-    public void openEditor(final File file);
+    void openEditor(@NotNull final File file);
 
     /**
      * Get all opened editors
      *
      * @return map with all opened editors
      */
-    public JsonStringMap<EditorPartPresenter> getOpenedEditors();
+    @NotNull
+    JsonStringMap<EditorPartPresenter> getOpenedEditors();
 
     /**
      * Current active editor
      *
      * @return the current active editor
      */
-    public EditorPartPresenter getActiveEditor();
-
+    @Nullable
+    EditorPartPresenter getActiveEditor();
 }
