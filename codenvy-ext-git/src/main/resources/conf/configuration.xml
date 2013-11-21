@@ -22,21 +22,7 @@
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
     <component>
-        <type>com.codenvy.ide.ext.git.server.rest.GitHubServiceApplication</type>
-    </component>
-
-    <component>
         <type>com.codenvy.ide.ext.git.server.nativegit.CredentialsLoader</type>
-    </component>
-    
-    <component>
-        <type>com.codenvy.ide.ext.git.server.github.GitHub</type>
-        <init-params>
-            <value-param>
-                <name>github-user</name>
-                <value>eXoIDE</value>
-            </value-param>
-        </init-params>
     </component>
     
     <component>

@@ -59,7 +59,7 @@ public class SshKeyViewImpl extends DialogBox implements SshKeyView {
     @Inject
     protected SshKeyViewImpl(SshLocalizationConstant locale) {
         this.locale = locale;
-        this.title = "Public Ssh Key: ";
+        this.title = locale.publicSshKeyField();
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
