@@ -18,7 +18,10 @@
 package com.codenvy.ide.ext.java.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.ext.java.client.editor.JavaParserWorker;
+import com.codenvy.ide.ext.java.client.editor.JavaParserWorkerImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
+import com.google.inject.Singleton;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -30,5 +33,6 @@ public class JavaGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
+        bind(JavaParserWorker.class).to(JavaParserWorkerImpl.class).in(Singleton.class);
     }
 }

@@ -48,7 +48,7 @@ public class AdvancedQuickAssistTest extends QuickFixTest {
 
         new JavaCorrectionProcessor(new JavaCorrectionAssistant(null, astProvider), astProvider);
         new JavaExtension();
-        new JavaReconcilerStrategy(null);
+        new JavaReconcilerStrategy(null, null, null);
         GwtReflectionUtils.setPrivateFieldValue(JavaReconcilerStrategy.get(), "nameEnvironment", new FileSystem(
                 new String[]{System.getProperty("java.home") + "/lib/rt.jar"}, null, "UTF-8"));
         JavaExtension.get().getOptions().putAll(options);

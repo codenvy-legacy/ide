@@ -235,29 +235,6 @@ public class Utils {
         return filePath.replaceAll("/", ".");
     }
 
-    /** Copy all DtoGenerator invocations from one pom.xml to another. */
-    public static void copyDtoGeneratorInvocations(Model sourcePom, Path destPomPath) throws IOException {
-        final String dtoGeneratorClassName = "DtoGenerator";
-
-        Model destPom = readPom(destPomPath);
-        Map<String, Plugin> destPomPlugins = destPom.getBuild().getPluginsAsMap();
-        Plugin destPomExecPlugin = destPomPlugins.get("org.codehaus.mojo:exec-builder-plugin");
-
-        Map<String, Plugin> plugins = sourcePom.getBuild().getPluginsAsMap();
-        Plugin execPlugin = plugins.get("org.codehaus.mojo:exec-builder-plugin");
-        if (execPlugin == null) {
-            return;
-        }
-
-        for (PluginExecution pluginExecution : execPlugin.getExecutions()) {
-            Xpp3Dom pluginConfiguration = (Xpp3Dom)pluginExecution.getConfiguration();
-            if (pluginConfiguration.getChild("mainClass").getValue().endsWith(dtoGeneratorClassName)) {
-                destPomExecPlugin.addExecution(pluginExecution);
-                writePom(destPom, destPomPath);
-            }
-        }
-    }
-
     /** Returns URL to get Tomcat binary distribution. */
     public static URL getTomcatBinaryDistribution() throws IOException {
         URL tomcatDistributionUrl = Thread.currentThread().getContextClassLoader().getResource("tomcat.zip");

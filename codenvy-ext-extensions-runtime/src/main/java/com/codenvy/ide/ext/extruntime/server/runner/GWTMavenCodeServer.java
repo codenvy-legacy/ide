@@ -43,7 +43,7 @@ import java.util.Map;
 import static org.codehaus.plexus.util.xml.Xpp3DomBuilder.build;
 
 /**
- * Implementation of {@link GWTCodeServer} interface that uses GWT Maven plug-in.
+ * Implementation of {@link GWTCodeServer} interface that uses gwt-maven-plugin to launch GWT code server.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: GWTMavenCodeServer.java Jul 26, 2013 3:15:52 PM azatsarynnyy $
@@ -63,8 +63,8 @@ public class GWTMavenCodeServer implements GWTCodeServer {
         this.configuration = configuration;
         Path pom = configuration.getWorkDir().resolve("pom.xml");
         try {
-            setCodeServerConfiguration(pom, configuration.getWorkDir(),
-                                       configuration.getBindAddress(), configuration.getPort());
+            setCodeServerConfiguration(pom, configuration.getWorkDir(), configuration.getBindAddress(),
+                                       configuration.getPort());
 
             // Add sources from custom project to allow GWT code server access it.
             fixMGWT332Bug(pom, configuration.getCustomModuleName());
@@ -76,7 +76,7 @@ public class GWTMavenCodeServer implements GWTCodeServer {
         // For details, see com.codenvy.util.IDEInjectorGenerator and com.codenvy.util.ExtensionManagerGenerator.
         final String[] command = new String[]{
                 getMavenExecCommand(), "generate-sources",
-                "gwt:run-codeserver", // org.codehaus.mojo:gwt-builder-plugin should be already described in a pom.xml
+                "gwt:run-codeserver", // org.codehaus.mojo:gwt-maven-plugin should be already described in a pom.xml
                 "-P" + ADD_SOURCES_PROFILE};
 
         ProcessBuilder processBuilder = new ProcessBuilder(command).directory(configuration.getWorkDir().toFile());
@@ -216,7 +216,7 @@ public class GWTMavenCodeServer implements GWTCodeServer {
             Model pom = Utils.readPom(pomPath);
             Build build = pom.getBuild();
             Map<String, Plugin> plugins = build.getPluginsAsMap();
-            Plugin gwtPlugin = plugins.get("org.codehaus.mojo:gwt-builder-plugin");
+            Plugin gwtPlugin = plugins.get("org.codehaus.mojo:gwt-maven-plugin");
             Xpp3Dom existingConfiguration = (Xpp3Dom)gwtPlugin.getConfiguration();
             Xpp3Dom mergedConfiguration = Xpp3DomUtils.mergeXpp3Dom(existingConfiguration, additionalConfiguration);
             gwtPlugin.setConfiguration(mergedConfiguration);

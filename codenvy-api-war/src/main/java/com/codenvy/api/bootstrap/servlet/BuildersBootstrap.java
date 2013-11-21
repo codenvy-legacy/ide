@@ -21,6 +21,9 @@ import com.codenvy.api.builder.BuildQueue;
 import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderRegistry;
 import com.codenvy.api.core.util.ComponentLoader;
+import com.codenvy.api.runner.RunQueue;
+import com.codenvy.api.runner.internal.Runner;
+import com.codenvy.api.runner.internal.RunnerRegistry;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.vfs.impl.fs.EnvironmentContextLocalFSMountStrategy;
@@ -46,16 +49,26 @@ public final class BuildersBootstrap implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         final ServletContext servletContext = sce.getServletContext();
+
         final BuilderRegistry builders = new BuilderRegistry();
         for (Builder builder : ComponentLoader.all(Builder.class)) {
             builder.start();
             builders.add(builder);
             lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(builder));
         }
-
         final BuildQueue queue = new BuildQueue();
         queue.start();
         lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(queue));
+
+        final RunnerRegistry runners = new RunnerRegistry();
+        for (Runner runner : ComponentLoader.all(Runner.class)) {
+            runner.start();
+            runners.add(runner);
+            lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(runner));
+        }
+        final RunQueue runQueue = new RunQueue();
+        runQueue.start();
+        lifeCycles.add(new WeakReference<com.codenvy.api.core.Lifecycle>(runQueue));
 
         // NOTE: Search will not work here
         final LocalFileSystemProvider vfsProvider = new LocalFileSystemProvider(EnvironmentFilter.WS_NAME,
@@ -69,6 +82,8 @@ public final class BuildersBootstrap implements ServletContextListener {
         servletContext.setAttribute(VirtualFileSystemRegistry.class.getName(), vfsRegistry);
         servletContext.setAttribute(BuilderRegistry.class.getName(), builders);
         servletContext.setAttribute(BuildQueue.class.getName(), queue);
+        servletContext.setAttribute(RunnerRegistry.class.getName(), runners);
+        servletContext.setAttribute(RunQueue.class.getName(), runQueue);
     }
 
     @Override

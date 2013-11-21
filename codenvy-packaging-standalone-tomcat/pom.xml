@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-CODENVY CONFIDENTIAL
-__________________
+    CODENVY CONFIDENTIAL
+    __________________
 
-[2012] - [2013] Codenvy, S.A.
-All Rights Reserved.
+     [2012] - [2013] Codenvy, S.A.
+     All Rights Reserved.
 
-NOTICE: All information contained herein is, and remains
-the property of Codenvy S.A. and its suppliers,
-if any. The intellectual and technical concepts contained
-herein are proprietary to Codenvy S.A.
-and its suppliers and may be covered by U.S. and Foreign Patents,
-patents in process, and are protected by trade secret or copyright law.
-Dissemination of this information or reproduction of this material
-is strictly forbidden unless prior written permission is obtained
-from Codenvy S.A..
+    NOTICE:  All information contained herein is, and remains
+    the property of Codenvy S.A. and its suppliers,
+    if any.  The intellectual and technical concepts contained
+    herein are proprietary to Codenvy S.A.
+    and its suppliers and may be covered by U.S. and Foreign Patents,
+    patents in process, and are protected by trade secret or copyright law.
+    Dissemination of this information or reproduction of this material
+    is strictly forbidden unless prior written permission is obtained
+    from Codenvy S.A..
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -69,17 +69,17 @@ from Codenvy S.A..
             <version>${org.exoplatform.ide.version}</version>
         </dependency>
         <!--<dependency>
-<groupId>org.exoplatform.ide</groupId>
-<artifactId>exo-ide-builder</artifactId>
-<type>war</type>
-<version>${org.exoplatform.ide.version}</version>
-</dependency>
-<dependency>
-<groupId>org.exoplatform.ide</groupId>
-<artifactId>exo-ide-codeassistant-storage</artifactId>
-<type>war</type>
-<version>${org.exoplatform.ide.version}</version>
-</dependency>-->
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-builder</artifactId>
+            <type>war</type>
+            <version>${org.exoplatform.ide.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-codeassistant-storage</artifactId>
+            <type>war</type>
+            <version>${org.exoplatform.ide.version}</version>
+        </dependency>-->
         <dependency>
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-packaging-api-war</artifactId>
@@ -92,15 +92,57 @@ from Codenvy S.A..
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <!--<dependency>
-<groupId>org.exoplatform.ide</groupId>
-<artifactId>exo-ide-codeassistant-asm</artifactId>
-<type>jar</type>
-<version>${org.exoplatform.ide.version}</version>
-</dependency>-->
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-codeassistant-asm</artifactId>
+            <type>jar</type>
+            <version>${org.exoplatform.ide.version}</version>
+        </dependency>-->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-site-war</artifactId>
             <type>war</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>action-api-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>dto-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>new-project-wizard-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>new-resource-wizard-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>notification-api-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>parts-api-tutorial</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>wizard-api-tutorial</artifactId>
+            <type>zip</type>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -119,35 +161,35 @@ from Codenvy S.A..
             <artifactId>codenvy-ext-ant</artifactId>
             <version>${project.version}</version>
         </dependency>
-	<dependency>
+        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-git</artifactId>
             <version>${project.version}</version>
         </dependency>
-	<dependency>
+        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-ssh</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <!--<dependency>
-<groupId>com.codenvy.ide</groupId>
-<artifactId>codenvy-ext-tutorials</artifactId>
-<type>jar</type>
-<version>${project.version}</version>
-</dependency>
-<dependency>
-<groupId>com.codenvy.ide</groupId>
-<artifactId>codenvy-ext-extensions-runtime</artifactId>
-<type>jar</type>
-<version>${project.version}</version>
-</dependency>
-<dependency>
-<groupId>com.codenvy.ide</groupId>
-<artifactId>codenvy-sdk-private-dependencies</artifactId>
-<type>zip</type>
-<version>${project.version}</version>
-</dependency>-->
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-tutorials</artifactId>
+            <type>jar</type>
+            <version>${project.version}</version>
+        </dependency>-->
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-extensions-runtime</artifactId>
+            <type>jar</type>
+            <version>${project.version}</version>
+        </dependency>
+        <!--<dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-sdk-private-dependencies</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
+        </dependency>-->
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-git-server</artifactId>
@@ -316,23 +358,23 @@ from Codenvy S.A..
                         <!--</configuration>-->
                     <!--</execution>-->
                     <!--<execution>
-<id>copy-private-dependencies-for-sdk</id>
-<phase>process-resources</phase>
-<goals>
-<goal>copy</goal>
-</goals>
-<configuration>
-<artifactItems>
-<artifactItem>
-<groupId>com.codenvy.ide</groupId>
-<artifactId>codenvy-sdk-private-dependencies</artifactId>
-<type>zip</type>
-<outputDirectory>${project.build.directory}</outputDirectory>
-<destFileName>repo.zip</destFileName>
-</artifactItem>
-</artifactItems>
-</configuration>
-</execution>-->
+                        <id>copy-private-dependencies-for-sdk</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>codenvy-sdk-private-dependencies</artifactId>
+                                    <type>zip</type>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                    <destFileName>repo.zip</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>-->
                 </executions>
             </plugin>
             <plugin>
@@ -404,7 +446,7 @@ from Codenvy S.A..
                                 <!--<unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"-->
                                        <!--dest="${project.build.directory}/tomcat-ide"/>-->
                                 <!--<unzip src="${project.build.directory}/repo.zip" dest="${project.build.directory}/tomcat-ide"/>
-<chmod dir="${project.build.directory}/tomcat-ide" perm="+x" includes="install.sh" />-->
+                                <chmod dir="${project.build.directory}/tomcat-ide" perm="+x" includes="install.sh" />-->
                                 <!--<unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip"-->
                                        <!--dest="${project.build.directory}/tomcat-ide">-->
                                     <!--<patternset>-->
