@@ -56,6 +56,11 @@
             <version>collide</version>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-vfs</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-api</artifactId>
             <version>${project.version}</version>
@@ -94,6 +99,11 @@
             <!--</exclusions>-->
             <!--<scope>runtime</scope>-->
         <!--</dependency>-->
+        <dependency>
+            <groupId>com.thoughtworks.qdox</groupId>
+            <artifactId>qdox</artifactId>
+            <version>${qdox-patched.version}</version>
+        </dependency>
 
         <!-- Testing libraries -->
         <dependency>
