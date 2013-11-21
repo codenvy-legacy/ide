@@ -54,9 +54,6 @@ import java.util.Set;
 @Path("{ws-name}/ssh-keys")
 public class KeyService {
     private final SshKeyStore keyStore;
-    
-    @PathParam("ws-name")
-    private String wsName;
 
     private long MAX_UPLOAD_SIZE = 16384L;
 
@@ -100,6 +97,12 @@ public class KeyService {
         while (iterator.hasNext() && key == null) {
             FileItem fileItem = iterator.next();
             if (!fileItem.isFormField()) {
+                if (fileItem.getSize() > MAX_UPLOAD_SIZE) {
+                    throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                                                              .entity("File is to large to proceed.")
+                                                              .header(HTTPHeader.CONTENT_TYPE, MediaType.TEXT_HTML)
+                                                              .build());
+                }
                 key = fileItem.get();
             }
         }
@@ -131,13 +134,7 @@ public class KeyService {
     @GET
     @RolesAllowed({"developer"})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getPublicKey(@Context SecurityContext security, @QueryParam("host") String host) {
-
-        /*
-         * XXX : Temporary turn-off don't work on demo site if (!security.isSecure()) { throw new
-         * WebApplicationException(Response.status(400)
-         * .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build()); }
-         */
+    public Response getPublicKey(@QueryParam("host") String host) {
         SshKey publicKey;
         try {
             publicKey = keyStore.getPublicKey(host);
@@ -149,7 +146,7 @@ public class KeyService {
         }
         if (publicKey == null) {
             throw new WebApplicationException(Response.status(404) //
-                                                      .entity("Public key for host " + host + " not found. ") //
+                                                      .entity("Public key for host " + host + " not found.") //
                                                       .type(MediaType.TEXT_PLAIN) //
                                                       .build());
         }
@@ -176,7 +173,7 @@ public class KeyService {
     @Path("all")
     @RolesAllowed({"developer"})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getKeys(@Context UriInfo uriInfo) {
+    public Response getKeys(@Context UriInfo uriInfo, @PathParam("ws-name") String wsName) {
         try {
             Set<String> all = keyStore.getAll();
             if (all.size() > 0) {
