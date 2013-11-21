@@ -37,7 +37,7 @@
     <entry-point class='com.codenvy.ide.client.IDE'/>
 
     <!-- Specify the paths for translatable code                    -->
-     <source path='builder'/>
+    <source path='builder'/>
     <source path='core'/>
 
 </module>
