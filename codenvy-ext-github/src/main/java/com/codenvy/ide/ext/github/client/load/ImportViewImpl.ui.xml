@@ -21,7 +21,7 @@
              xmlns:c='urn:import:com.codenvy.ide.ui'
              xmlns:p1='urn:import:com.google.gwt.user.cellview.client'>
     <ui:with field='locale' type='com.codenvy.ide.ext.github.client.GitHubLocalizationConstant'/>
-    <ui:with field='res' type='com.codenvy.ide.ext.git.client.GitResources'/>
+    <ui:with field='res' type='com.codenvy.ide.ext.github.client.GitHubResources'/>
     <ui:style>
         .alignRight {
             float: right;
@@ -63,15 +63,15 @@
         <g:south size="46.0">
             <g:FlowPanel addStyleNames="{style.topSpace} {style.bottomSpace}">
                 <g:Label text="{locale.projectName}"
-                         addStyleNames="{res.gitCSS.textFont} {style.alignLeft} {style.textPosition} {style.rightSpace}"/>
-                <g:TextBox width="399px" height="16px" ui:field="projectName" addStyleNames="{res.gitCSS.textFont} {style.alignLeft}"/>
+                         addStyleNames="{style.alignLeft} {style.textPosition} {style.rightSpace}"/>
+                <g:TextBox width="399px" height="16px" ui:field="projectName" addStyleNames="{style.alignLeft}"/>
             </g:FlowPanel>
         </g:south>
         <g:north size="36.0">
             <g:FlowPanel addStyleNames="{style.bottomSpace}">
                 <g:Label text="{locale.importFromGithubAccount}"
-                         addStyleNames="{res.gitCSS.textFont} {style.alignLeft} {style.textPosition} {style.rightSpace}"/>
-                <g:ListBox width="393px" ui:field="accountName" addStyleNames="{res.gitCSS.textFont} {style.alignLeft}"/>
+                         addStyleNames="{style.alignLeft} {style.textPosition} {style.rightSpace}"/>
+                <g:ListBox width="393px" ui:field="accountName" addStyleNames="{style.alignLeft}"/>
             </g:FlowPanel>
         </g:north>
         <g:center>
