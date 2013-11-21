@@ -34,7 +34,7 @@
         <listener-class>org.everrest.core.servlet.EverrestInitializedListener</listener-class>
     </listener>
     <listener>
-        <listener-class>com.codenvy.api.bootstrap.servlet.BuildersBootstrap</listener-class>
+        <listener-class>com.codenvy.api.bootstrap.servlet.ApiBootstrap</listener-class>
     </listener>
     <filter-mapping>
         <filter-name>env</filter-name>

@@ -26,7 +26,11 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-/** @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a> */
+/**
+ * Docker runner registration plugin.
+ *
+ * @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a>
+ */
 public class DockerRunnerRegistrationPlugin implements RunnerRegistrationPlugin {
     @Override
     public void registerTo(RunnerRegistry registry) {
@@ -54,8 +58,6 @@ public class DockerRunnerRegistrationPlugin implements RunnerRegistrationPlugin 
                 }
             }
         }
-        DockerRunner docker = new DockerRunner(dockerFileTemplates);
-        docker.start(); // TODO
-        registry.add(docker);
+        registry.add(new DockerRunner(dockerFileTemplates));
     }
 }
