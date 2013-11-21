@@ -111,7 +111,7 @@ import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageView;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageViewImpl;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageView;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageViewImpl;
-import com.codenvy.ide.wizard.newresource.NewResource;
+import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
 import com.codenvy.ide.wizard.newresource.NewResourceWizardProvider;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageView;
 import com.codenvy.ide.wizard.newresource.page.NewResourcePageViewImpl;
@@ -187,7 +187,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
 
         bind(EditorRegistry.class).to(EditorRegistryImpl.class).in(Singleton.class);
-        bind(EditorProvider.class).annotatedWith(Names.named("defaulEditor")).to(DefaultEditorProvider.class);
+        bind(EditorProvider.class).annotatedWith(Names.named("defaultEditor")).to(DefaultEditorProvider.class);
         bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
         bind(UserActivityManager.class).in(Singleton.class);
         bind(OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);

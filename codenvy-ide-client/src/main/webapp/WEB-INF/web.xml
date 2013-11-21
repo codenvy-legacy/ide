@@ -47,7 +47,7 @@
     </filter>
     <filter>
         <filter-name>SetEnvironmentContextFilter</filter-name>
-        <filter-class>com.codenvy.ide.SetEnvironmentContextFilter</filter-class>
+        <filter-class>com.codenvy.ide.server.SetEnvironmentContextFilter</filter-class>
     </filter>
 
     <filter-mapping>
@@ -171,5 +171,9 @@
         <description>the user role</description>
         <role-name>developer</role-name>
     </security-role>
+
+    <session-config>
+        <session-timeout>240</session-timeout>
+    </session-config>
 
 </web-app>

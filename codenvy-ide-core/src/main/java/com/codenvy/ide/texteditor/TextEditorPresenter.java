@@ -75,7 +75,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
     protected void initializeEditor() {
         editor.configure(configuration);
 
-        // Postpone setting a document to give the time for a editor (TextEditorViewImpl) to fully construct itself.
+        // Postpone setting a document to give the time for editor (TextEditorViewImpl) to fully construct itself.
         // Otherwise, the editor may not be ready to render the document.
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
@@ -91,34 +91,29 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
                 });
             }
         });
-
     }
 
-    /** @see com.codenvy.ide.api.editor.TextEditorPartPresenter#close(boolean) */
+    /** {@inheritDoc} */
     @Override
     public void close(boolean save) {
-        // TODO Auto-generated method stub
-
+        // do nothing
     }
 
-    /** @see com.codenvy.ide.api.editor.TextEditorPartPresenter#isEditable() */
+    /** {@inheritDoc} */
     @Override
     public boolean isEditable() {
-        // TODO Auto-generated method stub
         return false;
     }
 
-    /** @see com.codenvy.ide.api.editor.TextEditorPartPresenter#doRevertToSaved() */
+    /** {@inheritDoc} */
     @Override
     public void doRevertToSaved() {
-        // TODO Auto-generated method stub
-
+        // do nothing
     }
 
-    /** @see com.codenvy.ide.api.editor.TextEditorPartPresenter#getSelectionProvider() */
+    /** {@inheritDoc} */
     @Override
     public SelectionProvider getSelectionProvider() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -137,6 +132,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
         }
     }
 
+    @NotNull
     protected Widget getWidget() {
         HTML h = new HTML();
         h.getElement().appendChild(editor.getElement());
@@ -149,13 +145,13 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
         container.setWidget(getWidget());
     }
 
-    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#getTitleToolTip() */
+    /** {@inheritDoc} */
     @Override
     public String getTitleToolTip() {
-        // TODO Auto-generated method stub
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void initialize(@NotNull TextEditorConfiguration configuration, @NotNull DocumentProvider documentProvider,
                            @NotNull NotificationManager notificationManager) {

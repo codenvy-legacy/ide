@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.api.editor;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 
 /**
@@ -33,16 +34,15 @@ import com.codenvy.ide.api.ui.workspace.PartPresenter;
  * @version $Id:
  */
 public interface EditorPartPresenter extends PartPresenter {
-
     public interface EditorPartCloseHandler {
-        public void onClose(EditorPartPresenter editor);
+        void onClose(EditorPartPresenter editor);
     }
 
     /** The property id for <code>isDirty</code>. */
-    public static final int PROP_DIRTY = 0x101;
+    int PROP_DIRTY = 0x101;
 
     /** The property id for editor input changed. */
-    public static final int PROP_INPUT = 0x102;
+    int PROP_INPUT = 0x102;
 
     /**
      * Initializes this editor with the given input.
@@ -60,7 +60,7 @@ public interface EditorPartPresenter extends PartPresenter {
      * @throws EditorInitException
      *         if this editor was not initialized successfully
      */
-    public void init(EditorInput input) throws EditorInitException;
+    void init(@NotNull EditorInput input) throws EditorInitException;
 
     /**
      * Returns the input for this editor.  If this value changes the part must
@@ -68,13 +68,14 @@ public interface EditorPartPresenter extends PartPresenter {
      *
      * @return the editor input
      */
-    public EditorInput getEditorInput();
+    @NotNull
+    EditorInput getEditorInput();
 
     /** Saves the contents of this editor. */
-    public void doSave();
+    void doSave();
 
     /** Saves the contents of this part to another object. */
-    public void doSaveAs();
+    void doSaveAs();
 
     /**
      * Returns whether the contents of this part have changed since the last save
@@ -84,7 +85,7 @@ public interface EditorPartPresenter extends PartPresenter {
      *         saving, and <code>false</code> if they have not changed since the last
      *         save
      */
-    public boolean isDirty();
+    boolean isDirty();
 
     /**
      * Add EditorPart close handler.
@@ -92,11 +93,8 @@ public interface EditorPartPresenter extends PartPresenter {
      * @param closeHandler
      *         the instance of CloseHandler
      */
-    public void addCloseHandler(EditorPartCloseHandler closeHandler);
+    void addCloseHandler(@NotNull EditorPartCloseHandler closeHandler);
 
-
-    /**
-     * Call this method then editor became visible
-     */
-    public void activate();
+    /** Call this method then editor became visible */
+    void activate();
 }

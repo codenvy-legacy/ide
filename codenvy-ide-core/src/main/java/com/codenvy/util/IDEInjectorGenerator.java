@@ -42,7 +42,7 @@ public class IDEInjectorGenerator {
 
     /**
      * Path of the output class, it definitely should already exits. To ensure proper config.
-     * File content will be overriden.
+     * File content will be overridden.
      */
     protected static final String IDE_INJECTOR_PATH =
             "com/codenvy/ide/client/inject/IDEInjector.java";
@@ -109,7 +109,7 @@ public class IDEInjectorGenerator {
 
         // declare class Javadoc
         builder.append("/**\n");
-        builder.append(" * THIS CLASS WILL BE OVERRIDEN BY MAVEN BUILD. DON'T EDIT CLASS, IT WILL HAVE NO EFFECT.\n");
+        builder.append(" * THIS CLASS WILL BE OVERRIDDEN BY MAVEN BUILD. DON'T EDIT CLASS, IT WILL HAVE NO EFFECT.\n");
         builder.append(" * \n");
         builder.append(" * Interface for GIN Injector, that provides access to the top level\n");
         builder.append(" * application components. Implementation of Injector is generated\n");

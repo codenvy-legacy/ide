@@ -72,6 +72,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.commons</groupId>
+            <artifactId>codenvy-commons-env</artifactId>
+            <version>${com.codenvy.commons.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-api</artifactId>
             <version>${project.version}</version>
@@ -270,6 +275,9 @@
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${generated.sources.directory}</directory>
             </resource>
         </resources>
         <testSourceDirectory>src/test/java</testSourceDirectory>

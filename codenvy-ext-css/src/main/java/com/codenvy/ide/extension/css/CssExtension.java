@@ -45,7 +45,7 @@ public class CssExtension {
     }
 
     /**
-     * CSS Extension adds CSS Support to IDE Applicaiton. It provides syntax highlighting and code completion features
+     * CSS Extension adds CSS Support to IDE Application. It provides syntax highlighting and code completion features
      * for CSS files to IDE
      */
     @Inject

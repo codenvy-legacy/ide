@@ -47,7 +47,7 @@ public class DefaultEditorProvider implements EditorProvider {
         this.configuration = new TextEditorConfiguration();
     }
 
-    /** @see com.codenvy.ide.api.editor.EditorProvider#getEditor() */
+    /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {
         CodenvyTextEditor editor = editorProvider.get();

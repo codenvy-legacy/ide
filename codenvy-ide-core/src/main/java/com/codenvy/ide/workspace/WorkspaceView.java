@@ -23,11 +23,17 @@ import com.google.gwt.user.client.ui.FlowPanel;
 
 
 /**
- * Workspace view interface.
+ * The view of {@link WorkspacePresenter}.
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
+    /** Required for delegating functions in the view. */
+    public interface ActionDelegate {
+        /** Performs any actions appropriate in response to the user having pressed the Login button */
+        void onLoginClicked();
+    }
+
     /** @return central panel */
     AcceptsOneWidget getPerspectivePanel();
 
@@ -40,7 +46,19 @@ public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
     /** @return status panel */
     FlowPanel getStatusPanel();
 
-    /** Needs for delegate some function into Workspace view. */
-    public interface ActionDelegate {
-    }
+    /**
+     * Sets whether Login button is visible.
+     *
+     * @param visible
+     *         <code>true</code> to visible the button, <code>false</code> to disable it
+     */
+    void setVisibleLoginButton(boolean visible);
+
+    /**
+     * Sets whether Logout button is visible.
+     *
+     * @param visible
+     *         <code>true</code> to visible the button, <code>false</code> to disable it
+     */
+    void setVisibleLogoutButton(boolean visible);
 }

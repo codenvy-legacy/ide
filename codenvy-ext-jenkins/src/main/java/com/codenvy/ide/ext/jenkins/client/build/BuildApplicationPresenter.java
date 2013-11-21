@@ -17,10 +17,11 @@
  */
 package com.codenvy.ide.ext.jenkins.client.build;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
@@ -77,7 +78,6 @@ public class BuildApplicationPresenter extends BasePresenter
     private ResourceProvider     resourceProvider;
     private JenkinsService       service;
     private EventBus             eventBus;
-    private ConsolePart          console;
     private WorkspaceAgent       workspaceAgent;
     private MessageBus           messageBus;
     private UserClientService    userClientService;
@@ -108,7 +108,6 @@ public class BuildApplicationPresenter extends BasePresenter
      * @param resourceProvider
      * @param service
      * @param eventBus
-     * @param console
      * @param workspaceAgent
      * @param messageBus
      * @param userClientService
@@ -119,7 +118,7 @@ public class BuildApplicationPresenter extends BasePresenter
      */
     @Inject
     protected BuildApplicationPresenter(BuildApplicationView view, ResourceProvider resourceProvider, JenkinsService service,
-                                        EventBus eventBus, ConsolePart console, WorkspaceAgent workspaceAgent, MessageBus messageBus,
+                                        EventBus eventBus, WorkspaceAgent workspaceAgent, MessageBus messageBus,
                                         UserClientService userClientService, JenkinsResources resources, GitClientService gitClientService,
                                         GitLocalizationConstant gitConstant, NotificationManager notificationManager) {
         this.view = view;
@@ -128,7 +127,6 @@ public class BuildApplicationPresenter extends BasePresenter
         this.resourceProvider = resourceProvider;
         this.service = service;
         this.eventBus = eventBus;
-        this.console = console;
         this.workspaceAgent = workspaceAgent;
         this.messageBus = messageBus;
         this.userClientService = userClientService;
@@ -207,7 +205,7 @@ public class BuildApplicationPresenter extends BasePresenter
      *
      * @param status
      */
-    private void updateJobStatus(JobStatus status) {
+    private void updateJobStatus(@NotNull JobStatus status) {
         if (status.getStatus() == JobStatus.Status.QUEUE && prevStatus != JobStatus.Status.QUEUE) {
             setBuildStatusQueue(status);
             return;
@@ -229,7 +227,7 @@ public class BuildApplicationPresenter extends BasePresenter
      *
      * @param status
      */
-    private void setBuildStatusQueue(JobStatus status) {
+    private void setBuildStatusQueue(@NotNull JobStatus status) {
         prevStatus = JobStatus.Status.QUEUE;
         showBuildMessage("Status: " + status.getStatus().getValue());
     }
@@ -239,7 +237,7 @@ public class BuildApplicationPresenter extends BasePresenter
      *
      * @param status
      */
-    private void setBuildStatusBuilding(JobStatus status) {
+    private void setBuildStatusBuilding(@NotNull JobStatus status) {
         prevStatus = JobStatus.Status.BUILD;
         showBuildMessage("Status: " + status.getStatus().getValue());
     }
@@ -249,7 +247,7 @@ public class BuildApplicationPresenter extends BasePresenter
      *
      * @param status
      */
-    private void setBuildStatusFinished(JobStatus status) {
+    private void setBuildStatusFinished(@NotNull JobStatus status) {
         buildInProgress = false;
         prevStatus = JobStatus.Status.END;
 
@@ -269,7 +267,7 @@ public class BuildApplicationPresenter extends BasePresenter
      * @param status
      *         build job status
      */
-    private void onJobFinished(final JobStatus status) {
+    private void onJobFinished(@NotNull final JobStatus status) {
         try {
             messageBus.unsubscribe(jobStatusChannel, jobStatusHandler);
         } catch (WebSocketException e) {
@@ -299,7 +297,7 @@ public class BuildApplicationPresenter extends BasePresenter
         }
     }
 
-    public void build(Project project, AsyncCallback<JobStatus> callback) {
+    public void build(@Nullable Project project, @NotNull AsyncCallback<JobStatus> callback) {
         this.project = project;
         this.buildApplicationCallback = callback;
         if (buildInProgress) {
@@ -348,7 +346,7 @@ public class BuildApplicationPresenter extends BasePresenter
     }
 
     /** Initialize of the Git-repository by sending request over WebSocket or HTTP. */
-    private void initRepository(final Project project) {
+    private void initRepository(@NotNull final Project project) {
         try {
             gitClientService.initWS(resourceProvider.getVfsId(), project.getId(), project.getName(), false, new RequestCallback<String>() {
                 @Override
@@ -367,7 +365,7 @@ public class BuildApplicationPresenter extends BasePresenter
     }
 
     /** Initialize Git repository (sends request over HTTP). */
-    private void initRepositoryREST(final Project project) {
+    private void initRepositoryREST(@NotNull final Project project) {
         try {
             gitClientService
                     .init(resourceProvider.getVfsId(), project.getId(), project.getName(), false, new AsyncRequestCallback<String>() {
@@ -411,7 +409,7 @@ public class BuildApplicationPresenter extends BasePresenter
      *
      * @param e
      */
-    private void handleError(Throwable e) {
+    private void handleError(@NotNull Throwable e) {
         String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : gitConstant.initFailed();
         Notification notification = new Notification(errorMessage, ERROR);
         notificationManager.showNotification(notification);
@@ -454,6 +452,7 @@ public class BuildApplicationPresenter extends BasePresenter
      *
      * @return project name
      */
+    @NotNull
     private String getProjectName() {
         String projectName = project.getPath();
         if (projectName.endsWith("/")) {
@@ -469,7 +468,7 @@ public class BuildApplicationPresenter extends BasePresenter
      * @param jobName
      *         name of Jenkins job
      */
-    private void build(final String jobName) {
+    private void build(@NotNull final String jobName) {
         try {
             service.buildJob(resourceProvider.getVfsId(), project.getId(), jobName, new AsyncRequestCallback<Object>() {
                 @Override
@@ -503,7 +502,7 @@ public class BuildApplicationPresenter extends BasePresenter
      * @param message
      *         message for output
      */
-    private void showBuildMessage(String message) {
+    private void showBuildMessage(@NotNull String message) {
         view.showMessageInOutput(message);
     }
 
@@ -513,7 +512,7 @@ public class BuildApplicationPresenter extends BasePresenter
      * @param jobName
      *         name of the job to check status
      */
-    private void startCheckingStatus(String jobName) {
+    private void startCheckingStatus(@NotNull String jobName) {
         try {
             jobStatusChannel = JenkinsExtension.JOB_STATUS_CHANNEL + jobName;
             messageBus.subscribe(jobStatusChannel, jobStatusHandler);

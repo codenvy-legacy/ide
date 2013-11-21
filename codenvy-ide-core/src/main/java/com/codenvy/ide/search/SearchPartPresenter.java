@@ -30,10 +30,8 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class SearchPartPresenter extends BasePresenter implements SearchPart, SearchPartView.ActionDelegate {
-
     private static final String TITLE = "Search";
     private SearchPartView view;
-
 
     @Inject
     public SearchPartPresenter(SearchPartView view) {

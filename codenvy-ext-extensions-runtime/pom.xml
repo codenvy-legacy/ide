@@ -355,6 +355,9 @@
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
+            <resource>
+                <directory>${generated.sources.directory}</directory>
+            </resource>
         </resources>
         <sourceDirectory>src/main/java</sourceDirectory>
         <testResources>

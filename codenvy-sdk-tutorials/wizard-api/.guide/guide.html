@@ -1,0 +1,153 @@
+<div>
+
+<ul>
+<li><a href="#create-factory">Create Default Wizard Factory</a></li><ul>
+<li><a href="#declare-interface">Create a Factory and Declare an Interface</a></li>
+<li><a href="#annotation">Create Annotation</a></li>
+<li><a href="#bind">Bind Together</a></li></ul>
+<li><a href="#add-pages">Add Pages</a></li><ul>
+<li><a href="#wizard-instance">Get a Wizard Instance</a></li>
+<li><a href="#page-add">Add Pages</a></li>
+<li><a href="#create-pages">Create Pages</a></li></ul>
+<li><a href="#logic">Create Logic</a></li><ul>
+<li><a href="#choose-next">Parameter in context – Choose Next Page</a></li>
+<li><a href="#skip-page">Parameter in context – Skip Page</a></li></ul>
+</ul>
+
+<h1 id="create-factory">Create Default Wizard Factory</h1>
+
+<h2 id="declare-interface">Create a Factory and Declare an Interface</h2>
+Let's start with creation of a Wizard Factory:
+
+<pre>
+...
+@Inject public SimpleWizardProvider(DefaultWizardFactory wizardFactory)
+...
+</pre>
+
+In simple words, we use <strong>SimpleWizardProvider</strong> to create an instance of a Wizard when initializing extension. <strong>DefaultWizardFactory</strong> that was previously created by a container is injected to <strong>SimpleWizardProvider</strong>.
+
+In the above line of code we have declared an interface to use Default wizard constructor. Next, a title was set as well as a provider in which a wizard is created:
+<pre>return wizardFactory.create("Wizard");</pre>
+
+Full code is available in
+
+<pre>com.codenvy.ide.tutorial.wizard.inject.SimpleWizardProvider</pre>
+<h2 id="annotation">Create Annotation</h2>
+To use a required instance of a Wizard from other classes/extensions an annotation should be created:
+
+<pre>
+public @interface SimpleWizard
+</pre>
+
+Browse full code at
+<pre>package com.codenvy.ide.tutorial.wizard.inject.SimpleWizardProvider</pre>
+
+And this is an example how to get it:
+
+<pre>@Inject public WizardTutorialExtension(@SimpleWizard DefaultWizard simpleWizard,..)</pre>
+
+Browse full code -
+<pre>com.codenvy.ide.tutorial.wizard.WizardTutorialExtension</pre>
+
+<h2 id="bind">Bind Together</h2>
+Now, it's time to bring all pieces together using GIN (this where the magic takes place):
+
+<pre>bind(DefaultWizard.class).annotatedWith(SimpleWizard.class).toProvider(SimpleWizardProvider.class).in(Singleton.class);</pre>
+
+Full code is available in
+<pre>com.codenvy.ide.tutorial.wizard.inject.WizardTutorialGinModule</pre>
+
+A few words on what's happening here:
+If GIN finds a particular class (DefaultWizard.class) with a particular annotation (SimpleWizard.class), it uses a particular provider (SimpleWizardProvider.class) with an instance which is created as Singleton - i.e. this provider will be used only once, i.e. when created, and then we will use the instance it has created.
+
+<h1 id="add-pages">Add Pages</h1>
+Now, that we have created the wizard, let's add a few pages to it.
+
+<h2 id="wizard-instance">Get a Wizard Instance</h2>
+First off, one should get <strong>an instance</strong> of the freshly created wizard
+
+<pre>
+@Inject public WizardTutorialExtension(@SimpleWizard DefaultWizard simpleWizard,
+                                       Provider<Page1Presenter> page1,
+                                       Provider<Page2Presenter> page2,
+                                       Provider<Page3Presenter> page3,
+                                       Provider<Page4Presenter> page4,
+                                       ...)
+</pre>
+
+and <strong>providers </strong> to all the listed pages. Why providers? Default wizards interacts with providers not pages. We have some good reasons to justify such an approach. If we get a page, not its provider, we will then create an object. GWT.create is rather resource-intensive so this can be a problem if many wizards are created (thus, many objects). Providers make it possible to create objects only when a wizard (i.e.its pages) is actually used.
+
+<h2 id="page-add">Add Pages</h2>
+
+Here we add pages to the Wizard:
+
+<pre>
+...
+        simpleWizard.addPage(page1);
+        simpleWizard.addPage(page2);
+        simpleWizard.addPage(page3);
+        simpleWizard.addPage(page4);
+...
+</pre>
+
+Browse full code -
+<pre>com.codenvy.ide.tutorial.wizard.WizardTutorialExtension</pre>
+
+<h1 id="create-pages">Create Pages</h1>
+
+To create a view without implementing all the methods, we’ll use the following  <strong>Abstract Wizard Page</strong> (provided in our API; examples of how to create pages can be found here: <em>com.codenvy.ide.tutorial.wizard.pages</em>)
+
+<pre>public class Page1Presenter extends AbstractWizardPage</pre>
+
+However, you can do it on your own:
+<pre>public class Page1Presenter implements WizardPage</pre>
+
+<h1 id="logic">Create Logic</h1>
+
+The wizard uses own unique Wizard context. If a page is added to a wizard, it will use this context. By adding parameters to pages, we can specify logic/behavior of the wizard. Here’s an example of how to show PAGE2 after PAGE1
+
+<pre>wizardContext.putData(PAGE2_NEXT, true);</pre>
+
+Browse full code in
+<pre>com.codenvy.ide.tutorial.wizard.pages.page1.Page1Presenter</pre>
+
+Here we initialize a key that will be used in a Wizard context to handle parameters:
+<pre>
+public static final WizardContext.Key<Boolean> PAGE2_NEXT = new WizardContext.Key<Boolean>("Page 2 next"); (WizardTutorialExtension)
+</pre>
+
+Full code is available in
+<pre>com.codenvy.ide.tutorial.wizard.WizardTutorialExtension</pre>
+
+<h2 id="choose-next">Parameter in context - Choose Next Page</h2>
+
+When adding a new page, we ‘ask’ it if or not it is in the context. Below is an example for  <strong>PAGE2</strong> - the default wizard asks a page if or not it is in context. In the following example PAGE2 is in context.
+
+<pre>
+@Override
+public boolean inContext() {
+    Boolean data = wizardContext.getData(PAGE2_NEXT);
+    return data != null && data;
+}
+</pre>
+
+Full code is available in
+<pre>com.codenvy.ide.tutorial.wizard.pages.page2.Page2Presenter</pre>
+
+<h2 id="skip-page">Parameter in context - Skip Page</h2>
+
+When we skip a page, it is not shown, but the page will still perform the task assigned to it (for instance, we may choose not to show a page with one template of a project, but the template will be still chosen). In the below example, a Wizard is asking if or not a page is in context, and if it is, it can be skipped. If it can be skipped, the wizard does not show the page.
+
+<pre>
+@Override
+public boolean canSkip() {
+    Boolean skip = wizardContext.getData(PAGE4_SKIP);
+    return skip != null && skip;
+}
+</pre>
+
+View full source code in 
+<pre>com.codenvy.ide.tutorial.wizard.pages.page4.Page4Presenter</pre>
+
+</div>

@@ -29,7 +29,6 @@ import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.client.editor.AstProvider.AstListener;
 import com.codenvy.ide.ext.java.client.internal.codeassist.CompletionEngine;
 import com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment;
-
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.runtime.AssertionFailedException;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
@@ -107,44 +106,9 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
                                                                  "dev-monit");
         CompletionEngine e = new CompletionEngine(nameEnvironment, collector, JavaCore.getOptions());
         try {
-            e.complete(new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(view.getDocument().get()
-                                                                                          .toCharArray(), currentFile.getName().substring(0,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                                                                                                          currentFile
-                                                                                                                                                  .getName()
-                                                                                                                                                  .lastIndexOf(
-                                                                                                                                                          '.')),
-                                                                                      "UTF-8"),
-                       offset, 0);
+            e.complete(new com.codenvy.ide.ext.java.client.compiler.batch.CompilationUnit(
+                    view.getDocument().get().toCharArray(),
+                    currentFile.getName().substring(0, currentFile.getName().lastIndexOf('.')), "UTF-8"), offset, 0);
 
             JavaCompletionProposal[] javaCompletionProposals = collector.getJavaCompletionProposals();
             List<JavaCompletionProposal> types =

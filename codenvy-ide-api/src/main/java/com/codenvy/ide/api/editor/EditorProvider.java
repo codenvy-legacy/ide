@@ -17,19 +17,19 @@
  */
 package com.codenvy.ide.api.editor;
 
+import com.codenvy.ide.annotations.NotNull;
+
 /**
  * Provider interface for creating new instance of {@link EditorPartPresenter}.
  *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
  */
 public interface EditorProvider {
-
     /**
      * Every call this method should return new instance.
      *
      * @return new instance of {@link EditorPartPresenter}
      */
+    @NotNull
     EditorPartPresenter getEditor();
-
 }
