@@ -254,7 +254,7 @@ var Editor = (function () {
     // indicating whether anything was found, and can be called again to
     // skip to the next find. Use the select and replace methods to
     // actually do something with the found locations.
-    function SearchCursor(editor, string, from, caseFold) {
+    function SearchCursor(editor, string, from, isBeginSearch, caseFold) {
         this.editor = editor;
         this.history = editor.history;
         this.history.commit();
@@ -273,7 +273,7 @@ var Editor = (function () {
             var pos = {node: from.line, offset: from.character};
             this.pos = {from: pos, to: pos};
         }
-        else if (from) {
+        else if (from && !isBeginSearch) {
             this.pos = {from: select.cursorPos(editor.container, true) || topPos,
                 to: select.cursorPos(editor.container, false) || topPos};
         }
@@ -765,8 +765,8 @@ var Editor = (function () {
                 offset: lastLine.length};
         },
 
-        getSearchCursor: function (string, fromCursor, caseFold) {
-            return new SearchCursor(this, string, fromCursor, caseFold);
+        getSearchCursor: function (string, fromCursor, isBeginSearch, caseFold) {
+            return new SearchCursor(this, string, fromCursor, isBeginSearch, caseFold);
         },
 
         // Re-indent the whole buffer

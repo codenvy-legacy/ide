@@ -104,6 +104,8 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
     private FlowPanel lineHighlighter;
 
+    /** The beginning of the search. */
+    private boolean isBeginSearch = true;
 
     private boolean needUpdateTokenList = true; // update token list only after the "initCallback" handler has been called
 
@@ -1866,7 +1868,10 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {
+                //Search a string(query) in content. If a string is found then found variable is true.
                 boolean found = searchNative(query, caseSensitive);
+                //If a string not found, then search is finished.
+                isBeginSearch = !found;
                 searchCompleteCallback.onSearchComplete(found);
             }
         });
@@ -1874,12 +1879,13 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
     private native boolean searchNative(String query, boolean caseSensitive) /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+       var isBegin = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::isBeginSearch;
        if (editor == null) {
            return;
        }
-
+       var flag;
        var found = false;
-       var cursor = editor.getSearchCursor(query, true, !caseSensitive); // getSearchCursor(string, atCursor, caseFold) -> cursor
+       var cursor = editor.getSearchCursor(query, true, isBegin, !caseSensitive); // getSearchCursor(string, atCursor, isBegin, caseFold) -> cursor
        if (found = cursor.findNext()) {
            cursor.select();
        }
