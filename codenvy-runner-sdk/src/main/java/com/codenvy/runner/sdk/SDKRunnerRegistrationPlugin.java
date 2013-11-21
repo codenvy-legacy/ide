@@ -21,15 +21,13 @@ import com.codenvy.api.runner.internal.RunnerRegistrationPlugin;
 import com.codenvy.api.runner.internal.RunnerRegistry;
 
 /**
- * Helps to register Codenvy plug-ins Runner in runner registry.
+ * Codenvy plug-ins runner registration plugin.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
 public class SDKRunnerRegistrationPlugin implements RunnerRegistrationPlugin {
     @Override
     public void registerTo(RunnerRegistry registry) {
-        SDKRunner runner = new SDKRunner();
-        runner.start();
-        registry.add(runner);
+        registry.add(new SDKRunner());
     }
 }
