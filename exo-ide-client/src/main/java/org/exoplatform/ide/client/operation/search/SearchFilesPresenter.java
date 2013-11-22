@@ -175,7 +175,7 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
     }
 
     private void fillMimeTypes() {
-        String[] mimeTypes = new String[10];
+        String[] mimeTypes = new String[12];
         mimeTypes[0] = MimeType.TEXT_HTML;
         mimeTypes[1] = MimeType.TEXT_CSS;
         mimeTypes[2] = MimeType.TEXT_PLAIN;
@@ -183,9 +183,11 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
         mimeTypes[4] = MimeType.APPLICATION_JAVASCRIPT;
         mimeTypes[5] = MimeType.TEXT_JAVASCRIPT;
         mimeTypes[6] = MimeType.TEXT_XML;
-        mimeTypes[7] = MimeType.GROOVY_SERVICE;
-        mimeTypes[8] = MimeType.APPLICATION_GROOVY;
-        mimeTypes[9] = MimeType.GOOGLE_GADGET;
+        mimeTypes[7] = MimeType.APPLICATION_JAVA;
+        mimeTypes[8] = MimeType.APPLICATION_JSP;
+        mimeTypes[9] = MimeType.APPLICATION_PHP;
+        mimeTypes[10] = MimeType.APPLICATION_RUBY;
+        mimeTypes[11] = MimeType.TEXT_X_PYTHON;
         display.setMimeTypeValues(mimeTypes);
     }
 
