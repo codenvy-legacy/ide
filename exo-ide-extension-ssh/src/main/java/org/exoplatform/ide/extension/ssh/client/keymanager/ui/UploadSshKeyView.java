@@ -86,48 +86,49 @@ public class UploadSshKeyView extends ViewImpl implements Display {
         add(uiBinder.createAndBindUi(this));
     }
 
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getHostField() */
+    /** {@inheritDoc} */
     @Override
     public HasValue<String> getHostField() {
         return hostField;
     }
 
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getCancelButon() */
+    /** {@inheritDoc} */
     @Override
-    public HasClickHandlers getCancelButon() {
+    public HasClickHandlers getCancelButton() {
         return cancelButton;
     }
 
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getFileNameField() */
+    /** {@inheritDoc} */
     @Override
     public HasValue<String> getFileNameField() {
         return fileNameField;
     }
 
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#setMessage(java.lang.String) */
+    /** {@inheritDoc} */
     @Override
     public void setMessage(String message) {
         messageLabel.setText(message);
     }
 
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getUploadButton() */
+    /** {@inheritDoc} */
     @Override
     public HasClickHandlers getUploadButton() {
         return uploadButton;
     }
 
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getFormPanel() */
+    /** {@inheritDoc} */
     @Override
     public FormPanel getFormPanel() {
         return formPanel;
     }
 
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#setUploadButtonEnabled() */
+    /** {@inheritDoc} */
     @Override
     public void setUploadButtonEnabled() {
         uploadButton.setEnabled(true);
     }
 
+    /** {@inheritDoc} */
     @Override
     public HasFileSelectedHandler getFileUploadInput() {
         return fileField;

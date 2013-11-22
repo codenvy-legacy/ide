@@ -22,30 +22,28 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: ShowPublicSshKeyEvent May 19, 2011 12:23:55 PM evgen $
+ * Event to show Public key part.
  */
-public class ShowPublicSshKeyEvent extends GwtEvent<ShowPublicSshKeyHandler> {
+public class ShowPublicKeyEvent extends GwtEvent<ShowPublicKeyHandler> {
 
-    public static final GwtEvent.Type<ShowPublicSshKeyHandler> TYPE = new Type<ShowPublicSshKeyHandler>();
+    public static final GwtEvent.Type<ShowPublicKeyHandler> TYPE = new Type<ShowPublicKeyHandler>();
 
     private KeyItem keyItem;
 
-    /** @param keyItem */
-    public ShowPublicSshKeyEvent(KeyItem keyItem) {
+    public ShowPublicKeyEvent(KeyItem keyItem) {
         super();
         this.keyItem = keyItem;
     }
 
-    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    /** {@inheritDoc} */
     @Override
-    public com.google.gwt.event.shared.GwtEvent.Type<ShowPublicSshKeyHandler> getAssociatedType() {
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowPublicKeyHandler> getAssociatedType() {
         return TYPE;
     }
 
-    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    /** {@inheritDoc} */
     @Override
-    protected void dispatch(ShowPublicSshKeyHandler handler) {
+    protected void dispatch(ShowPublicKeyHandler handler) {
         handler.onShowPublicSshKey(this);
     }
 

@@ -15,16 +15,36 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package org.exoplatform.ide.extension.ssh.client.keymanager.event;
-
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.extension.ssh.shared;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: ShowPublicSshKeyHandler May 19, 2011 12:24:16 PM evgen $
+ * See {@link org.exoplatform.ide.extension.ssh.shared.PublicKey}.
  */
-public interface ShowPublicSshKeyHandler extends EventHandler {
+public class PublicKeyImpl implements PublicKey {
+    /** Host name. */
+    private String host;
 
-    void onShowPublicSshKey(ShowPublicSshKeyEvent event);
+    /** SSH key as text. */
+    private String key;
 
+    public PublicKeyImpl(String host, String key) {
+        this.host = host;
+        this.key = key;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

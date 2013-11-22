@@ -15,30 +15,15 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package org.exoplatform.ide.extension.ssh.client;
+package org.exoplatform.ide.extension.ssh.client.keymanager.event;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
-import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
-import org.exoplatform.gwtframework.commons.loader.Loader;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @param <T>
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: $
+ * Event handler for event showing management keys.
  */
-public abstract class JsonpAsyncCallback<T> implements AsyncCallback<T> {
+public interface ShowKeyManagerHandler extends EventHandler {
 
-    private Loader loader;
-
-    public void setLoader(Loader loader) {
-        this.loader = loader;
-    }
-
-    public Loader getLoader() {
-        if (loader == null)
-            new EmptyLoader();
-        return loader;
-    }
+    void onShowSshKeyManager(ShowKeyManagerEvent event);
 
 }

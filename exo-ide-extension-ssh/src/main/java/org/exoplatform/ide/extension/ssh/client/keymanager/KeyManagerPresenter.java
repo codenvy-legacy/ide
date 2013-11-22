@@ -18,52 +18,36 @@
 package org.exoplatform.ide.extension.ssh.client.keymanager;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
-import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.preference.PreferencePerformer;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.ssh.client.JsonpAsyncCallback;
+import org.exoplatform.ide.extension.ssh.client.SshKeyExtension;
 import org.exoplatform.ide.extension.ssh.client.SshKeyService;
-import org.exoplatform.ide.extension.ssh.client.keymanager.event.GenerateGitHubKeyEvent;
-import org.exoplatform.ide.extension.ssh.client.keymanager.event.RefreshKeysEvent;
-import org.exoplatform.ide.extension.ssh.client.keymanager.event.RefreshKeysHandler;
-import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyEvent;
-import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerEvent;
-import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerHandler;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.*;
 import org.exoplatform.ide.extension.ssh.client.keymanager.ui.HasSshGrid;
-import org.exoplatform.ide.extension.ssh.client.marshaller.SshKeysUnmarshaller;
-import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
+import org.exoplatform.ide.extension.ssh.shared.ListKeyItem;
 
-/**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: SshKeyManagerPresenter May 18, 2011 10:16:44 AM evgen $
- */
-public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClosedHandler,
-                                   ConfigurationReceivedSuccessfullyHandler, PreferencePerformer, RefreshKeysHandler {
+/** Manage user keys. */
+public class KeyManagerPresenter implements ShowKeyManagerHandler, ViewClosedHandler, PreferencePerformer, RefreshKeysHandler {
     public interface Display extends IsView {
-        String ID = "ideSshKeyManagerView";
-
         HasSshGrid<KeyItem> getKeyItemGrid();
 
         HasClickHandlers getGenerateButton();
@@ -71,30 +55,19 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
         HasClickHandlers getUploadButton();
 
         HasClickHandlers getGenerateGithubKeyButton();
-
     }
 
-    private Display          display;
+    private Display display;
 
-    private IDEConfiguration configuration;
-
-    /**
-     *
-     */
-    public SshKeyManagerPresenter() {
-        IDE.addHandler(ShowSshKeyManagerEvent.TYPE, this);
-        IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-        // add hendler to handle Upload ssh key form closing, and refresh list of ssh keys
+    public KeyManagerPresenter() {
+        IDE.addHandler(ShowKeyManagerEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
         IDE.addHandler(RefreshKeysEvent.TYPE, this);
     }
 
-    /**
-     * @see org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerHandler#onShowSshKeyManager(org.exoplatform.ide
-     *      .extension.ssh.client.keymanager.event.ShowSshKeyManagerEvent)
-     */
+    /** {@inheritDoc} */
     @Override
-    public void onShowSshKeyManager(ShowSshKeyManagerEvent event) {
+    public void onShowSshKeyManager(ShowKeyManagerEvent event) {
         if (display != null) {
             return;
         }
@@ -106,42 +79,36 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
         refreshKeys();
     }
 
-    /**
-     *
-     */
+    /** Refresh list of keys */
     private void refreshKeys() {
-        SshKeyService.get().getAllKeys(new JsonpAsyncCallback<JavaScriptObject>() {
+        AutoBean<ListKeyItem> keyItemList = SshKeyExtension.AUTO_BEAN_FACTORY.keyItems();
+        AutoBeanUnmarshaller<ListKeyItem> unmarshaller = new AutoBeanUnmarshaller<ListKeyItem>(keyItemList);
 
-            @Override
-            public void onSuccess(JavaScriptObject result) {
-                Loader loader =  getLoader();
-                if (loader != null) loader.hide();
-                try {
-                    display.getKeyItemGrid().setValue(SshKeysUnmarshaller.unmarshal(result));
-                } catch (UnmarshallerException e) {
-                    IDE.fireEvent(new ExceptionThrownEvent(e));
+        try {
+            SshKeyService.get().getAllKeys(new AsyncRequestCallback<ListKeyItem>(unmarshaller) {
+                @Override
+                protected void onSuccess(ListKeyItem result) {
+                    display.getKeyItemGrid().setValue(result.getKeys());
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable exception) {
-                Loader loader =  getLoader();
-                if (loader != null) loader.hide();
-                IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-        });
+                @Override
+                protected void onFailure(Throwable e) {
+                    GWT.log(e.getLocalizedMessage());
+                    Dialogs.getInstance().showError(e.getLocalizedMessage());
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
     }
 
-    /**
-     *
-     */
+    /** Components binding */
     private void bindDisplay() {
         display.getKeyItemGrid().addViewButtonSelectionHandler(new SelectionHandler<KeyItem>() {
-
             @Override
             public void onSelection(SelectionEvent<KeyItem> event) {
-                if (event.getSelectedItem().getPublicKeyURL() != null) {
-                    IDE.fireEvent(new ShowPublicSshKeyEvent(event.getSelectedItem()));
+                if (event.getSelectedItem().isHasPublicKey()) {
+                    IDE.fireEvent(new ShowPublicKeyEvent(event.getSelectedItem()));
                 }
             }
         });
@@ -172,10 +139,9 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
         });
 
         display.getUploadButton().addClickHandler(new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
-                new UploadSshKeyPresenter();
+                IDE.fireEvent(new ShowUploadFormEvent());
             }
         });
 
@@ -187,7 +153,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
         });
     }
 
-    /** @param keyItem */
+    /** Ask user to delete key item. */
     private void deleteSshPublicKey(final KeyItem keyItem) {
         Dialogs.getInstance().ask("IDE", "Do you want to delete ssh keys for <b>" + keyItem.getHost() + "</b> host?",
                                   new BooleanValueReceivedHandler() {
@@ -200,28 +166,31 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
                                   });
     }
 
-    /** @param keyItem */
+    /** Delete key item. */
     private void doDeleteKey(KeyItem keyItem) {
-        SshKeyService.get().deleteKey(keyItem, new JsonpAsyncCallback<Void>() {
-            @Override
-            public void onSuccess(Void result) {
-                getLoader().hide();
-                refreshKeys();
-            }
+        try {
+            SshKeyService.get().deleteKey(keyItem, new AsyncRequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    refreshKeys();
+                }
 
-            @Override
-            public void onFailure(Throwable exception) {
-                getLoader().hide();
-                IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-        });
+                @Override
+                protected void onFailure(Throwable e) {
+                    Dialogs.getInstance().showError(e.getLocalizedMessage());
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
     }
 
+    /** Generate key pair for specific host. */
     private void generateKey(String host) {
         try {
-            SshKeyService.get().generateKey(host, new AsyncRequestCallback<GenKeyRequest>() {
+            SshKeyService.get().generateKey(host, new AsyncRequestCallback<Void>() {
                 @Override
-                protected void onSuccess(GenKeyRequest result) {
+                protected void onSuccess(Void result) {
                     refreshKeys();
                 }
 
@@ -235,10 +204,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
         }
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     *      .event.ViewClosedEvent)
-     */
+    /** {@inheritDoc} */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -249,17 +215,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
         }
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.configuration.event
-     *      .ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration
-     *      .event.ConfigurationReceivedSuccessfullyEvent)
-     */
-    @Override
-    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event) {
-        configuration = event.getConfiguration();
-    }
-
-    /** @see org.exoplatform.ide.client.framework.preference.PreferencePerformer#getPreference() */
+    /** {@inheritDoc} */
     @Override
     public View getPreference() {
         if (display == null) {
@@ -270,6 +226,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
         return display.asView();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onRefreshKeys(RefreshKeysEvent event) {
         if (display != null) {

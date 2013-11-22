@@ -18,87 +18,83 @@
 package org.exoplatform.ide.extension.ssh.client.keymanager;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.ssh.client.JsonpAsyncCallback;
+import org.exoplatform.ide.extension.ssh.client.SshKeyExtension;
 import org.exoplatform.ide.extension.ssh.client.SshKeyService;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicKeyEvent;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicKeyHandler;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
+import org.exoplatform.ide.extension.ssh.shared.PublicKey;
 
-/**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: SshPublicKeyPresenter May 19, 2011 12:32:14 PM evgen $
- */
-public class SshPublicKeyPresenter implements ViewClosedHandler {
+/** Showing to user public key contents. */
+public class SshPublicKeyPresenter implements ViewClosedHandler, ShowPublicKeyHandler {
 
     public interface Display extends IsView {
-
         HasClickHandlers getCloseButton();
 
         HasValue<String> getKeyField();
 
         void addHostToTitle(String host);
-
     }
-
-    private KeyItem keyItem;
-
-    private HandlerRegistration viewClosedHandler;
 
     private Display display;
 
-    /**
-     *
-     */
-    public SshPublicKeyPresenter(KeyItem keyItem) {
-        this.keyItem = keyItem;
-        viewClosedHandler = IDE.addHandler(ViewClosedEvent.TYPE, this);
+    public SshPublicKeyPresenter() {
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(ShowPublicKeyEvent.TYPE, this);
+    }
 
-        display = GWT.create(Display.class);
+    @Override
+    public void onShowPublicSshKey(ShowPublicKeyEvent event) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+        }
 
         bind();
 
-        display.addHostToTitle(keyItem.getHost());
-
-        IDE.getInstance().openView(display.asView());
-
-        showPublicKey();
+        showPublicKey(event.getKeyItem());
     }
 
-    /**
-     *
-     */
-    private void showPublicKey() {
-        SshKeyService.get().getPublicKey(keyItem, new JsonpAsyncCallback<JavaScriptObject>() {
+    /** Show public key content. */
+    private void showPublicKey(KeyItem keyItem) {
+        AutoBean<PublicKey> autoBean = SshKeyExtension.AUTO_BEAN_FACTORY.publicKey();
+        AutoBeanUnmarshaller<PublicKey> unmarshaller = new AutoBeanUnmarshaller<PublicKey>(autoBean);
 
-            @Override
-            public void onSuccess(JavaScriptObject result) {
-                getLoader().hide();
-                JSONObject key = new JSONObject(result);
-                display.getKeyField().setValue(key.get("key").isString().stringValue());
-            }
+        try {
+            SshKeyService.get().getPublicKey(keyItem, new AsyncRequestCallback<PublicKey>(unmarshaller) {
+                @Override
+                protected void onSuccess(PublicKey result) {
+                    display.addHostToTitle(result.getHost());
+                    display.getKeyField().setValue(result.getKey());
 
-            @Override
-            public void onFailure(Throwable exception) {
-                getLoader().hide();
-                IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-        });
+                    IDE.getInstance().openView(display.asView());
+                }
+
+                @Override
+                protected void onFailure(Throwable e) {
+                    Dialogs.getInstance().showError(e.getLocalizedMessage());
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
     }
 
-    /**
-     *
-     */
+    /** Binding components. */
     private void bind() {
         display.getCloseButton().addClickHandler(new ClickHandler() {
             @Override
@@ -108,13 +104,11 @@ public class SshPublicKeyPresenter implements ViewClosedHandler {
         });
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /** {@inheritDoc} */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
             display = null;
-            viewClosedHandler.removeHandler();
         }
     }
 

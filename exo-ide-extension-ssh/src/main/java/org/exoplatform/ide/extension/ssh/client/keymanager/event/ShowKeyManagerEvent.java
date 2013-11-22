@@ -17,14 +17,25 @@
  */
 package org.exoplatform.ide.extension.ssh.client.keymanager.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: ShowSshKeyManagerHandler May 18, 2011 9:53:01 AM evgen $
+ * Event to show user management keys window.
  */
-public interface ShowSshKeyManagerHandler extends EventHandler {
+public class ShowKeyManagerEvent extends GwtEvent<ShowKeyManagerHandler> {
 
-    void onShowSshKeyManager(ShowSshKeyManagerEvent event);
+    public static final GwtEvent.Type<ShowKeyManagerHandler> TYPE = new Type<ShowKeyManagerHandler>();
+
+    /** {@inheritDoc} */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowKeyManagerHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void dispatch(ShowKeyManagerHandler handler) {
+        handler.onShowSshKeyManager(this);
+    }
 
 }

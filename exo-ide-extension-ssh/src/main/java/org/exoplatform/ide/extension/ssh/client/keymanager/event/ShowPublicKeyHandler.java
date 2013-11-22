@@ -15,17 +15,15 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package org.exoplatform.ide.extension.ssh.shared;
+package org.exoplatform.ide.extension.ssh.client.keymanager.event;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * POJO model for SSH key item.
+ * Handler for event showing public key part.
  */
-public interface KeyItem {
-    String getHost();
+public interface ShowPublicKeyHandler extends EventHandler {
 
-    void setHost(String host);
+    void onShowPublicSshKey(ShowPublicKeyEvent event);
 
-    boolean isHasPublicKey();
-
-    void setHasPublicKey(boolean hasPublicKey);
 }
