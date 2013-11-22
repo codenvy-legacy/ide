@@ -49,6 +49,12 @@
             <artifactId>exo.kernel.container</artifactId>
             <version>${org.exoplatform.kernel.version}</version>
         </dependency>
+        <!-- Declare this dependency directly since it required by google-api-client. -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
