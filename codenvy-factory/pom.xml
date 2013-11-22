@@ -67,6 +67,10 @@
                     <artifactId>xstream</artifactId>
                     <groupId>xstream</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>xpp3</artifactId>
+                    <groupId>xpp3</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
