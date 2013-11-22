@@ -38,6 +38,8 @@ import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -171,34 +173,60 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
 
     /** Check, is work directory contains <code>pom.xml</code> file. */
     private void isBuildApplication() {
-//      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
         final ProjectModel project = getSelectedProject();
 
+        if (project.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(project.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      project.setLinks(result.getItem().getLinks());
+                                                      getProjectContent(project);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            getProjectContent(project);
+        }
+    }
+    
+    private void getProjectContent(final ProjectModel project) {
         try {
-            VirtualFileSystem.getInstance().getChildren(project,
-                                                        new AsyncRequestCallback<List<Item>>(
-                                                                new ChildrenUnmarshaller(new ArrayList<Item>())) {
+            VirtualFileSystem.getInstance()
+                             .getChildren(project,
+                                          new AsyncRequestCallback<List<Item>>(
+                                                                               new ChildrenUnmarshaller(new ArrayList<Item>())) {
 
-                                                            @Override
-                                                            protected void onSuccess(List<Item> result) {
-                                                                for (Item item : result) {
-                                                                    if ("pom.xml".equals(item.getName())) {
-                                                                        buildApplication();
-                                                                        return;
-                                                                    }
-                                                                }
-                                                                warUrl = null;
-                                                                updateApplication();
-                                                            }
+                                              @Override
+                                              protected void onSuccess(List<Item> result) {
+                                                  for (Item item : result) {
+                                                      if ("pom.xml".equals(item.getName())) {
+                                                          buildApplication();
+                                                          return;
+                                                      }
+                                                  }
+                                                  warUrl = null;
+                                                  updateApplication();
+                                              }
 
-                                                            @Override
-                                                            protected void onFailure(Throwable exception) {
-                                                                String msg =
-                                                                        CloudFoundryExtension.LOCALIZATION_CONSTANT
-                                                                                             .updateApplicationForbidden(project.getName());
-                                                                IDE.fireEvent(new ExceptionThrownEvent(msg));
-                                                            }
-                                                        });
+                                              @Override
+                                              protected void onFailure(Throwable exception) {
+                                                  String msg =
+                                                               CloudFoundryExtension.LOCALIZATION_CONSTANT
+                                                                                                          .updateApplicationForbidden(project.getName());
+                                                  IDE.fireEvent(new ExceptionThrownEvent(msg));
+                                              }
+                                          });
         } catch (RequestException ignored) {
         }
     }

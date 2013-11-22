@@ -171,6 +171,9 @@ public class TemplatesRestService {
                 } else {
                     groupId = host;
                 }
+                
+                groupId += "." + vfsId;
+                
                 String newContent = PATTERN_GROUP_ID.matcher(content).replaceFirst("<groupId>" + groupId + "</groupId>");
                 newContent = PATTERN_GROUP_ID.matcher(newContent).replaceFirst("<groupId>" + groupId + "</groupId>");
                 newContent = PATTERN_ARTIFACT_ID.matcher(newContent).replaceFirst("<artifactId>" + name + "</artifactId>");

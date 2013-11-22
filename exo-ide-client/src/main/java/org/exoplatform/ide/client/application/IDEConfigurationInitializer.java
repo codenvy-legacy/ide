@@ -18,9 +18,10 @@
 package org.exoplatform.ide.client.application;
 
 import com.codenvy.ide.client.util.logging.Log;
-import com.codenvy.ide.factory.client.FactorySpec10;
-import com.codenvy.ide.factory.client.copy.CopySpec10;
 import com.codenvy.ide.factory.client.receive.StartWithInitParamsEvent;
+import com.codenvy.ide.factory.shared.AdvancedFactorySpec;
+import com.codenvy.ide.factory.shared.CopySpec10;
+import com.codenvy.ide.factory.shared.FactorySpec10;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -28,7 +29,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -106,84 +106,65 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
     }
 
     public void loadConfiguration() {
-        new IDEConfigurationLoader(IDE.eventBus(), IDELoader.get())
-                                                                   .loadConfiguration(new AsyncRequestCallback<IDEInitialConfiguration>(
-                                                                                                                                        new IDEConfigurationUnmarshaller(
-                                                                                                                                                                         new IDEInitialConfiguration(),
-                                                                                                                                                                         new JSONObject(
-                                                                                                                                                                                        IDEConfigurationLoader.getAppConfig()))) {
-                                                                       @Override
-                                                                       protected void onSuccess(IDEInitialConfiguration result) {
-                                                                           try {
-                                                                               applicationConfiguration = result.getIdeConfiguration();
-                                                                               applicationSettings = result.getSettings();
-                                                                               IDE.user = result.getUserInfo();
-                                                                               IDE.currentWorkspace = result.getCurrentWorkspace();
+        new IDEConfigurationLoader(IDE.eventBus(), IDELoader.get()).loadConfiguration(new AsyncRequestCallback<IDEInitialConfiguration>(
+                new IDEConfigurationUnmarshaller(new IDEInitialConfiguration(), new JSONObject(IDEConfigurationLoader.getAppConfig()))) {
+                           @Override
+                           protected void onSuccess(IDEInitialConfiguration result) {
+                               try {
+                                   applicationConfiguration = result.getIdeConfiguration();
+                                   applicationSettings = result.getSettings();
+                                   IDE.user = result.getUserInfo();
+                                   IDE.currentWorkspace = result.getCurrentWorkspace();
 
-                                                                               // TODO: small hack need because currently user on client
-                                                                               // must have it least one role
-                                                                               if (result.getUserInfo().getRoles() == null
-                                                                                   || result.getUserInfo().getRoles().size() == 0)
-                                                                                   result.getUserInfo()
-                                                                                         .setRoles(Arrays.asList("not-in-role"));
+                                   // TODO: small hack need because currently user on client
+                                   // must have it least one role
+                                   if (result.getUserInfo().getRoles() == null || result.getUserInfo().getRoles().size() == 0) {
+                                       result.getUserInfo().setRoles(Arrays.asList("not-in-role"));
+                                   }
 
+                                   controls.initControls(result.getUserInfo().getRoles(), result.getCurrentWorkspace());
 
-                                                                               controls.initControls(result.getUserInfo().getRoles(),
-                                                                                                     result.getCurrentWorkspace());
+                                   new SettingsServiceImpl(IDE.eventBus(), result.getUserInfo().getUserId(), IDELoader.get());
+                                   SettingsService.getInstance().restoreFromCookies(applicationSettings);
 
+                                   initialOpenedProject = applicationSettings.getValueAsString("opened-project");
+                                   initialActiveFile = applicationSettings.getValueAsString("active-file");
 
-                                                                               new SettingsServiceImpl(IDE.eventBus(), result.getUserInfo()
-                                                                                                                             .getName(),
-                                                                                                       IDELoader.get());
-                                                                               SettingsService.getInstance()
-                                                                                              .restoreFromCookies(applicationSettings);
+                                   initialOpenedFiles = new ArrayList<String>();
+                                   List<String> openedFiles = applicationSettings.getValueAsList("opened-files");
+                                   if (openedFiles != null) {
+                                       initialOpenedFiles.addAll(openedFiles);
+                                   }
 
-                                                                               initialOpenedProject =
-                                                                                                      applicationSettings.getValueAsString("opened-project");
-                                                                               initialActiveFile =
-                                                                                                   applicationSettings.getValueAsString("active-file");
+                                   String hiddenFilesParameter = applicationConfiguration.getHiddenFiles();
+                                   if (hiddenFilesParameter == null) {
+                                       throw new Exception(org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("hiddenFiles"));
+                                   }
+                                   
+                                   DirectoryFilter.get().setPattern(hiddenFilesParameter);
 
-                                                                               initialOpenedFiles = new ArrayList<String>();
-                                                                               List<String> openedFiles =
-                                                                                                          applicationSettings.getValueAsList("opened-files");
-                                                                               if (openedFiles != null) {
-                                                                                   initialOpenedFiles.addAll(openedFiles);
-                                                                               }
+                                   IDE.fireEvent(new InitialConfigurationReceivedEvent(result));
 
+                                   IDE.fireEvent(new ConfigurationReceivedSuccessfullyEvent(applicationConfiguration));
+                                   IDE.fireEvent(new ApplicationSettingsReceivedEvent(result.getSettings()));
+                                   IDE.fireEvent(new UserInfoReceivedEvent(result.getUserInfo()));
+                                   
+                                   Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                                       @Override
+                                       public void execute() {
+                                           checkEntryPoint();
+                                       }
+                                   });
+                               } catch (Exception e) {
+                                   IDE.fireEvent(new ExceptionThrownEvent(e));
+                               }
+                           }
 
-                                                                               String hiddenFilesParameter =
-                                                                                                             applicationConfiguration.getHiddenFiles();
-                                                                               if (hiddenFilesParameter == null) {
-                                                                                   throw new Exception(
-                                                                                                       org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES
-                                                                                                                                                               .confMissingVariable("hiddenFiles"));
-                                                                               }
-                                                                               DirectoryFilter.get().setPattern(hiddenFilesParameter);
-
-                                                                               IDE.fireEvent(new InitialConfigurationReceivedEvent(result));
-
-                                                                               IDE.fireEvent(new ConfigurationReceivedSuccessfullyEvent(
-                                                                                                                                        applicationConfiguration));
-                                                                               IDE.fireEvent(new ApplicationSettingsReceivedEvent(
-                                                                                                                                  result.getSettings()));
-                                                                               IDE.fireEvent(new UserInfoReceivedEvent(result.getUserInfo()));
-                                                                               
-                                                                               Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                                                                                   @Override
-                                                                                   public void execute() {
-                                                                                       checkEntryPoint();
-                                                                                   }
-                                                                               });
-                                                                           } catch (Exception e) {
-                                                                               IDE.fireEvent(new ExceptionThrownEvent(e));
-                                                                           }
-                                                                       }
-
-                                                                       @Override
-                                                                       protected void onFailure(Throwable exception) {
-                                                                           IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                                       }
-                                                                   });
+                           @Override
+                           protected void onFailure(Throwable exception) {
+                               IDE.fireEvent(new ExceptionThrownEvent(exception));
+                           }
+                       });
     }
 
     private void checkEntryPoint() {
@@ -254,8 +235,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
         } else {
             Map<String, List<String>> parameterMap = buildListParamMap(Utils.getStartUpParams());
-            if (parameterMap != null && parameterMap.get(FactorySpec10.VERSION_PARAMETER) != null
-                && parameterMap.get(FactorySpec10.VERSION_PARAMETER).get(0).equals(FactorySpec10.CURRENT_VERSION)) {
+            if (parameterMap != null && (parameterMap.get(FactorySpec10.FACTORY_VERSION) != null || parameterMap.get(AdvancedFactorySpec.ID) != null)) {
                 IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
             } else if (parameterMap != null && parameterMap.get(CopySpec10.DOWNLOAD_URL) != null
                        && parameterMap.get(CopySpec10.PROJECT_ID) != null) {

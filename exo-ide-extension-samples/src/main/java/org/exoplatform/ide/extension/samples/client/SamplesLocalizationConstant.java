@@ -18,7 +18,6 @@
 package org.exoplatform.ide.extension.samples.client;
 
 import com.google.gwt.i18n.client.Messages;
-import com.google.gwt.i18n.client.LocalizableResource.Key;
 
 /**
  * Interface to represent the constants contained in resource bundle: 'IdeSamplesLocalizationConstant.properties'.
@@ -120,18 +119,6 @@ public interface SamplesLocalizationConstant extends Messages {
     String invitationText();
 
     /*
-     * SamplesListGrid
-     */
-    @Key("samplesListGrid.column.name")
-    String samplesListRepositoryColumn();
-
-    @Key("samplesListGrid.column.description")
-    String samplesListDescriptionColumn();
-
-    @Key("samplesListGrid.column.type")
-    String samplesListTypeColumn();
-
-    /*
      * ShowSamplesPresenter
      */
     @Key("showSamples.error.selectRepo")
@@ -182,24 +169,6 @@ public interface SamplesLocalizationConstant extends Messages {
     /*
      * Controls
      */
-    @Key("control.importFromGithub.id")
-    String importFromGithubControlId();
-
-    @Key("control.importFromGithub.title")
-    String importFromGithubControlTitle();
-
-    @Key("control.importFromGithub.prompt")
-    String importFromGithubControlPrompt();
-
-    @Key("control.loadSamples.id")
-    String loadSamplesControlId();
-
-    @Key("control.loadSamples.title")
-    String loadSamplesControlTitle();
-
-    @Key("control.loadSamples.prompt")
-    String loadSamplesControlPrompt();
-
     @Key("control.welcome.id")
     String welcomeControlId();
     
@@ -224,11 +193,12 @@ public interface SamplesLocalizationConstant extends Messages {
     /*
      * ImportFromGitHub
      */
-    @Key("import.github.title")
-    String importFromGithubTitle();
 
     @Key("import.github.account")
     String importFromGithubAccount();
+    
+    @Key("import.github.explanation.label")
+    String importFromGitHubExplanationLabel();
 
     @Key("import.github.selectProjectType")
     String importFromGithubSelectProjectType();
@@ -242,8 +212,7 @@ public interface SamplesLocalizationConstant extends Messages {
     @Key("git.read.only")
     String gitReadOnly();
 
-    @Key("user.not.found")
-    String userNotFound();
+
 
     @Key("login.oauth.title")
     String loginOAuthTitle();

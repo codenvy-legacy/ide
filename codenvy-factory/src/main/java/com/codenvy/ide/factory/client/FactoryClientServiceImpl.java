@@ -17,6 +17,12 @@
  */
 package com.codenvy.ide.factory.client;
 
+import com.codenvy.api.factory.AdvancedFactoryUrl;
+import com.codenvy.api.factory.SimpleFactoryUrl;
+import com.codenvy.ide.factory.shared.CopySpec10;
+import com.codenvy.ide.factory.client.marshaller.SimpleFactoryUrlMarshaller;
+import com.codenvy.ide.json.client.Jso;
+import com.codenvy.ide.json.client.JsoArray;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 
@@ -25,58 +31,128 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
+import org.exoplatform.ide.git.client.clone.CloneRequestStatusHandler;
 
-/**
- * Implementation of {@link FactoryClientService}.
- * 
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: FactoryClientServiceImpl.java Jun 25, 2013 11:33:15 PM azatsarynnyy $
- */
-public class FactoryClientServiceImpl extends FactoryClientService {
+import java.util.List;
+
+import static com.google.gwt.http.client.URL.encodeQueryString;
+
+/** Implementation of {@link FactoryClientService}. */
+public class FactoryClientServiceImpl extends FactoryClientService implements CopySpec10 {
 
     /** Base url. */
     private static final String BASE_URL = Utils.getWorkspaceName() + "/factory";
 
-    private static final String SHARE    = BASE_URL + "/share";
-
-    private static final String FACTORY_CREATED    = BASE_URL + "/log-factory-created";
+    private static final String SHARE       = BASE_URL + "/share";
+    private static final String CLONE       = BASE_URL + "/clone";
+    private static final String COPY        = Utils.getWorkspaceName() + "/copy/projects";
+    private static final String GET_FACTORY = "/api/factory";
 
     /** REST-service context. */
-    private String              restServiceContext;
+    private String restServiceContext;
+
+    /** WebSocket eventbus. */
+    private MessageBus eventBus;
 
     /** Loader to be displayed. */
-    private Loader              loader;
+    private Loader loader;
 
     /**
      * Construct a new {@link FactoryClientServiceImpl}.
-     * 
-     * @param restContext REST-service context
-     * @param loader loader to show on server request
+     *
+     * @param loader
+     *         loader to show on server request
      */
     public FactoryClientServiceImpl(Loader loader) {
         this.loader = loader;
         this.restServiceContext = Utils.getRestContext();
+        this.eventBus = IDE.messageBus();
     }
 
-    /**
-     * Sends e-mail message to share Factory URL.
-     * 
-     * @throws RequestException
-     */
-    public void share(String recipient, String message, AsyncRequestCallback<Object> callback)
-                                                                                                     throws RequestException {
-        final String requesrUrl = restServiceContext + SHARE;
-
-        String params = "recipient=" + recipient + "&message=" + message;
-        AsyncRequest.build(RequestBuilder.POST, requesrUrl + "?" + params)
-                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
-    }
-
+    /** {@inheritDoc} */
     @Override
-    public void logFactoryCreated(String vfsId, String projectId, String factoryUrl, AsyncRequestCallback<StringBuilder> callback) throws RequestException{
-        String url = restServiceContext + FACTORY_CREATED;
-        url += "?vfsid=" + vfsId + "&projectid=" + projectId + "&factoryurl=" + factoryUrl;
-        AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+    public void share(String recipient, String message, AsyncRequestCallback<Object> callback)
+            throws RequestException {
+        final String uri = restServiceContext + SHARE;
+        final String params = "recipient=" + recipient + "&message=" + encodeQueryString(message);
+
+        AsyncRequest.build(RequestBuilder.POST, uri)
+                    .loader(loader)
+                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_FORM_URLENCODED)
+                    .data(params)
+                    .send(callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void getFactory(String factoryId, AsyncRequestCallback<AdvancedFactoryUrl> callback)
+            throws RequestException {
+        final String url = GET_FACTORY + "/" + factoryId;
+
+        AsyncRequest.build(RequestBuilder.GET, url)
+                    .loader(loader)
+                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                    .send(callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void cloneProjectWS(String vfsId, String projectId, SimpleFactoryUrl factoryUrl, RequestCallback<StringBuilder> callback)
+            throws WebSocketException {
+
+        final String uri = CLONE;
+        final String params = "vfsid=" + vfsId + "&projectid=" + projectId;
+
+        SimpleFactoryUrlMarshaller marshaller = new SimpleFactoryUrlMarshaller(factoryUrl);
+
+        callback.setStatusHandler(new CloneRequestStatusHandler(factoryUrl.getProjectattributes().get("pname"), factoryUrl.getVcsurl()));
+
+        RequestMessage message = RequestMessageBuilder.build(RequestBuilder.POST, uri + "?" + params)
+                                                      .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                                                      .data(marshaller.marshal())
+                                                      .getRequestMessage();
+
+        eventBus.send(message, callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void cloneProject(String vfsId, String projectId, SimpleFactoryUrl factoryUrl, AsyncRequestCallback<StringBuilder> callback)
+            throws RequestException {
+        final String uri = restServiceContext + CLONE;
+        final String params = "vfsid=" + vfsId + "&projectid=" + projectId;
+
+        SimpleFactoryUrlMarshaller marshaller = new SimpleFactoryUrlMarshaller(factoryUrl);
+
+        AsyncRequest.build(RequestBuilder.POST, uri + "?" + params)
+                    .loader(loader)
+                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                    .data(marshaller.marshal())
+                    .requestStatusHandler(new CloneRequestStatusHandler(factoryUrl.getProjectattributes().get("pname"),
+                                                                        factoryUrl.getVcsurl()))
+                    .send(callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void copyProjects(String downloadUrl, List<String> projects, RequestCallback<Void> callback) throws WebSocketException {
+        final String uri = COPY;
+        final String params = DOWNLOAD_URL + "=" + downloadUrl;
+
+        JsoArray<String> jso = JsoArray.from(projects);
+
+        RequestMessage message = RequestMessageBuilder.build(RequestBuilder.POST, uri + "?" + params)
+                                                      .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                                                      .data(Jso.serialize(jso))
+                                                      .getRequestMessage();
+
+        eventBus.send(message, callback);
     }
 }

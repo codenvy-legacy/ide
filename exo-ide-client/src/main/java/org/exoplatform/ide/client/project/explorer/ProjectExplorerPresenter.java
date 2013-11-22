@@ -458,7 +458,9 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
      */
     @Override
     public void onRemoveItemTreeIcon(RemoveItemTreeIconEvent event) {
-        display.removeItemIcons(event.getIconsToRemove());
+        if (display != null && openedProject != null) {
+            display.removeItemIcons(event.getIconsToRemove());
+        }        
     }
 
     /**
@@ -467,22 +469,15 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
      */
     @Override
     public void onAddItemTreeIcon(AddItemTreeIconEvent event) {
-        display.addItemsIcons(event.getTreeItemIcons());
+        if (display != null && openedProject != null) {
+            display.addItemsIcons(event.getTreeItemIcons());
+        }        
     }
 
     @Override
     public void onViewActivated(ViewActivatedEvent event) {
         if (event.getView() instanceof ProjectExplorerDisplay) {
             treeItemSelected();
-
-//            if (linkingWithEditor && editorActiveFile != null) {
-//                Item selectedItem = display.getSelectedItem();
-//                if (selectedItem == null || !selectedItem.getId().equals(editorActiveFile.getId())) {
-//                    display.selectItem(editorActiveFile);                    
-//                }
-//            } else {
-//                treeItemSelected();
-//            }
         }
     }
 
@@ -600,7 +595,11 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
             if (event.getItemToSelect() != null) {
                 display.selectItem(event.getItemToSelect());
             }
-
+            
+            if (openedProject.getId().equals(event.getFolder().getId())) {
+                display.asView().setTitle(openedProject.getName());
+            }
+            
             Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                 @Override
                 public void execute() {

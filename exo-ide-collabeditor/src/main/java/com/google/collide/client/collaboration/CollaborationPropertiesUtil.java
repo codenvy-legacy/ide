@@ -20,8 +20,11 @@ package com.google.collide.client.collaboration;
 import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Property;
@@ -48,19 +51,47 @@ public final class CollaborationPropertiesUtil {
         return Boolean.valueOf(value);
     }
 
-    public static void updateCollaboration(ProjectModel project, boolean isEnabled){
+    public static void updateCollaboration(final ProjectModel project, boolean isEnabled) {
         Property property = project.getProperty(COLLABORATION_MODE);
-        if(property == null){
+        if (property == null) {
             property = new PropertyImpl(COLLABORATION_MODE, "");
             project.getProperties().add(property);
         }
 
         property.setValue(Collections.singletonList(String.valueOf(isEnabled)));
+
+        if (project.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(project.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      project.setLinks(result.getItem().getLinks());
+                                                      updateProjectProperties(project);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+
+        } else {
+            updateProjectProperties(project);
+        }
+    }
+    
+    private static void updateProjectProperties(ProjectModel project) {
         try {
             VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
                 @Override
                 protected void onSuccess(ItemWrapper result) {
-                    //ignore
+                    // ignore
                 }
 
                 @Override

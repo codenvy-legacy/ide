@@ -195,7 +195,34 @@ public class CutCopyPasteItemsCommandHandler extends ItemsOperationPresenter
             return;
         }
 
-        String destination = folderToPaste.getId();
+        final String destination = folderToPaste.getId();
+
+        if (item.getLinks().size() > 0) {
+            copy(item, destination);
+        } else {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(item.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(item))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      item.setLinks(result.getItem().getLinks());
+                                                      copy(item, destination);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        }
+    }
+    
+    private void copy(final Item item, String destination) {
         try {
             VirtualFileSystem.getInstance().copy(item, destination,
                                                  new AsyncRequestCallback<StringBuilder>(new LocationUnmarshaller(new StringBuilder())) {
@@ -211,18 +238,20 @@ public class CutCopyPasteItemsCommandHandler extends ItemsOperationPresenter
 
                                                      @Override
                                                      protected void onFailure(Throwable exception) {
-                                                         IDE.fireEvent(new ExceptionThrownEvent(exception,
-                                                                                                "Service is not deployed.<br>Destination " +
-                                                                                                "path does not exist.<br>Folder already " +
-                                                                                                "has item with same name."));
+                                                         IDE.fireEvent(new ExceptionThrownEvent(
+                                                                                                exception,
+                                                                                                "Service is not deployed.<br>Destination "
+                                                                                                    +
+                                                                                                    "path does not exist.<br>Folder already "
+                                                                                                    +
+                                                                                                    "has item with same name."));
                                                      }
                                                  });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e,
                                                    "Service is not deployed.<br>Destination path does not exist.<br>Folder already has " +
-                                                   "item with same name."));
+                                                       "item with same name."));
         }
-
     }
 
     private void copyComleted() {
@@ -295,16 +324,41 @@ public class CutCopyPasteItemsCommandHandler extends ItemsOperationPresenter
             Dialogs.getInstance().showError(IDE.ERRORS_CONSTANT.pasteItemsCantMoveToTheSameFolder());
             return;
         }
+        
+        if (item.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(item.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(item))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      itemsToCut.set(0, result.getItem());
+                                                      cut(result.getItem());
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            cut(item);
+        }
+    }
+
+    private void cut(final Item item){
         try {
             VirtualFileSystem.getInstance().move(item, folderToPaste.getId(), lockTokens.get(item.getId()),
                                                  new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {
 
                                                      @Override
                                                      protected void onSuccess(ItemWrapper result) {
-                                                         // TODO
                                                          moveComplete(result.getItem().getId(), item);
-                                                         // eventBus.fireEvent(new MoveCompleteEvent(result.getItem(),
-                                                         // result.getOldHref()));
                                                      }
 
                                                      @Override
@@ -316,7 +370,7 @@ public class CutCopyPasteItemsCommandHandler extends ItemsOperationPresenter
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
-
+    
     private void cutCompleted() {
         IDE.fireEvent(new PasteItemsCompleteEvent());
 

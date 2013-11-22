@@ -20,17 +20,39 @@ package com.codenvy.ide.factory.client.copy;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * Copy projects from temporary workspace into permanent event.
  */
 public class CopyProjectEvent extends GwtEvent<CopyProjectHandler> {
+    private boolean createAction = false;
+
+    public CopyProjectEvent(boolean createAction) {
+        this.createAction = createAction;
+    }
+
+    public CopyProjectEvent() {
+        this.createAction = false;
+    }
+
     public static Type<CopyProjectHandler> TYPE = new Type<CopyProjectHandler>();
 
+    /** {@inheritDoc} */
+    @Override
     public Type<CopyProjectHandler> getAssociatedType() {
         return TYPE;
     }
 
+    /** {@inheritDoc} */
+    @Override
     protected void dispatch(CopyProjectHandler handler) {
         handler.onCopyProject(this);
+    }
+
+    /**
+     * If event was generated from create new account button.
+     *
+     * @return true if create account performed.
+     */
+    public boolean isCreateAction() {
+        return createAction;
     }
 }

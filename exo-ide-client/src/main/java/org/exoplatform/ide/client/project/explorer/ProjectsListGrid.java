@@ -19,6 +19,7 @@ package org.exoplatform.ide.client.project.explorer;
 
 import com.google.gwt.cell.client.ImageResourceCell;
 import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.cellview.client.Column;
 
@@ -53,9 +54,28 @@ public class ProjectsListGrid extends ListGrid<ProjectModel> {
         getCellTable().addColumn(iconColumn);
         getCellTable().setColumnWidth(iconColumn, "20px");
 
-        nameColumn.setCellStyleNames("default-cursor");
+        nameColumn.setCellStyleNames("cursor-default");
         getCellTable().addColumn(nameColumn);
         setListGridId("ideProjectExplorerProjectsListGrid");
+        
+        /*
+         * Remove browser's selection in project explorer tree after mouse clicking. 
+         */
+        setStypeProperty(getElement().getStyle(), "-webkit-user-select", "none");
+        setStypeProperty(getElement().getStyle(), "-moz-user-select", "none");
+        setStypeProperty(getElement().getStyle(), "-ms-user-select", "none");
     }
+    
+    /*
+     * Helps to set style property with name in non camelCase format.
+     * 
+     * Use
+     *      setStypeProperty(widget.getElement().getStyle(), "property-name", "property-value")
+     * instead
+     *      widget.getElement().getStyle().setProperty("property-name", "property-value")
+     */
+    private native void setStypeProperty(JavaScriptObject style, String property, String value) /*-{
+        style[property] = value;
+    }-*/;    
 
 }

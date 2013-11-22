@@ -139,8 +139,11 @@ public class RunStopApplicationManager implements RunApplicationHandler, StopApp
                                                        protected void onSuccess(ApplicationInstance result) {
                                                            runnedApplication = result;
                                                            IDE.fireEvent(new ApplicationStartedEvent(runnedApplication));
-                                                           final String url = Window.Location.getProtocol() + "//"
-                                                                              + Window.Location.getHost()
+                                                           String appUrl =  (runnedApplication.getApplicationUrl() != null)
+                                                                           ? runnedApplication.getApplicationUrl()
+                                                                           : Window.Location.getProtocol() + "//"
+                                                                             + Window.Location.getHost();
+                                                           final String url = appUrl
                                                                               + "/ide/" + Utils.getWorkspaceName() + "/"
                                                                               + APP_RUNNER_PATH
                                                                               + runnedApplication.getName() + "/";

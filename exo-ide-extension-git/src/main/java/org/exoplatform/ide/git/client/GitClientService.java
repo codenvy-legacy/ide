@@ -23,15 +23,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
-import org.exoplatform.ide.git.shared.Branch;
-import org.exoplatform.ide.git.shared.Commiters;
+import org.exoplatform.ide.git.shared.*;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
-import org.exoplatform.ide.git.shared.MergeResult;
-import org.exoplatform.ide.git.shared.Remote;
-import org.exoplatform.ide.git.shared.RepoInfo;
-import org.exoplatform.ide.git.shared.ResetRequest;
-import org.exoplatform.ide.git.shared.Revision;
-import org.exoplatform.ide.git.shared.Status;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -613,5 +606,7 @@ public abstract class GitClientService {
                                       AsyncRequestCallback<Commiters> callback) throws RequestException;
 
     public abstract void deleteRepository(String vfsId, String projectid, AsyncRequestCallback<Void> callback) throws RequestException;
+
+    public abstract void getUrlVendorInfo(String vcsUrl, AsyncRequestCallback<GitUrlVendorInfo> callback) throws RequestException;
 
 }

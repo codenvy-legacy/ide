@@ -20,6 +20,9 @@
 <module>
     <inherits name='com.google.gwt.user.User'/>
     <inherits name="org.exoplatform.ide.client.framework.IDEClientFramework"/>
+    <inherits name="org.exoplatform.ide.git.GitExtension"/>
+    <inherits name="org.exoplatform.ide.extension.ssh.SshExtension"/>
+
     <replace-with class="org.exoplatform.ide.git.client.clone.CloneRepositoryView">
         <when-type-is class="org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display"/>
     </replace-with>
@@ -80,8 +83,12 @@
         <when-type-is class="org.exoplatform.ide.git.client.init.ShowProjectGitReadOnlyUrlPresenter.Display"/>
     </replace-with>
 
-    <replace-with class="org.exoplatform.ide.git.client.github.CollaboratorsViewer">
-        <when-type-is class="org.exoplatform.ide.git.client.github.GitHubCollaboratorsHandler.Display"/>
+    <replace-with class="org.exoplatform.ide.git.client.github.collaborators.CollaboratorsViewer">
+        <when-type-is class="org.exoplatform.ide.git.client.github.collaborators.GitHubCollaboratorsHandler.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.git.client.github.gitimport.ImportFromGithubView">
+        <when-type-is class="org.exoplatform.ide.git.client.github.gitimport.ImportFromGithubPresenter.Display"/>
     </replace-with>
    
 </module>

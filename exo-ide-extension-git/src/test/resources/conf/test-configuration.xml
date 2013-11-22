@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    CODENVY CONFIDENTIAL
+    __________________
+
+    [2012] - [2013] Codenvy, S.A.
+    All Rights Reserved.
+
+    NOTICE:  All information contained herein is, and remains
+    the property of Codenvy S.A. and its suppliers,
+    if any.  The intellectual and technical concepts contained
+    herein are proprietary to Codenvy S.A.
+    and its suppliers and may be covered by U.S. and Foreign Patents,
+    patents in process, and are protected by trade secret or copyright law.
+    Dissemination of this information or reproduction of this material
+    is strictly forbidden unless prior written permission is obtained
+    from Codenvy S.A..
+
+-->
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+               xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+
+    <component>
+        <type>org.exoplatform.ide.git.server.provider.rest.ProviderApplication</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.git.server.provider.github.GitHub</type>
+        <init-params>
+            <value-param>
+                <name>vendorName</name>
+                <value>github</value>
+            </value-param>
+            <value-param>
+                <name>vendorBaseHost</name>
+                <value>github.com</value>
+            </value-param>
+            <value-param>
+                <name>vendorUrlPattern</name>
+                <value>.*github\.com.*</value>
+            </value-param>
+            <value-param>
+                <name>vendorSupportOAuth2</name>
+                <value>true</value>
+            </value-param>
+            <values-param>
+                <name>vendorOAuthScopes</name>
+                <value>repo</value>
+                <value>user</value>
+            </values-param>
+        </init-params>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.git.server.provider.bitbucket.BitBucket</type>
+        <init-params>
+            <value-param>
+                <name>vendorName</name>
+                <value>bitbucket</value>
+            </value-param>
+            <value-param>
+                <name>vendorBaseHost</name>
+                <value>bitbucket.org</value>
+            </value-param>
+            <value-param>
+                <name>vendorUrlPattern</name>
+                <value>.*bitbucket\.org.*</value>
+            </value-param>
+            <values-param>
+                <name>vendorOAuthScopes</name>
+            </values-param>
+        </init-params>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.git.server.provider.wso2.WSO2</type>
+        <init-params>
+            <value-param>
+                <name>vendorName</name>
+                <value>wso2</value>
+            </value-param>
+            <value-param>
+                <name>vendorBaseHost</name>
+                <value>git.cloudpreview.wso2.com</value>
+            </value-param>
+            <value-param>
+                <name>vendorUrlPattern</name>
+                <value>.*git\.cloudpreview\.wso2\.com.*</value>
+            </value-param>
+            <value-param>
+                <name>vendorSupportOAuth2</name>
+                <value>true</value>
+            </value-param>
+            <values-param>
+                <name>vendorOAuthScopes</name>
+            </values-param>
+        </init-params>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.git.server.provider.GitVendorServiceProvider</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.commons.security.oauth.OAuthAuthenticatorTokenProvider</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.git.server.nativegit.OAuthCredentialsProvider</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.git.server.nativegit.CredentialsLoader</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.security.oauth.ExoOAuthAuthenticatorProvider</type>
+    </component>
+
+    <component>
+        <key>org.exoplatform.ide.extension.ssh.server.SshKeyStore</key>
+        <type>org.exoplatform.ide.extension.ssh.server.DummySshKeyStore</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.git.server.nativegit.SshKeysManager</type>
+    </component>
+
+    <component>
+        <key>org.exoplatform.ide.git.server.GitConnectionFactory</key>
+        <type>org.exoplatform.ide.git.server.nativegit.NativeGitConnectionFactory</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.git.server.GitIgnoreConfigChecker</type>
+    </component>
+
+</configuration>

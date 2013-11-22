@@ -116,5 +116,5 @@
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.DevMode"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-noserver -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -logLevel INFO -codeServerPort 9997 org.exoplatform.ide.DevMode -startupUrl IDE/Shell.html org.exoplatform.ide.Shell org.exoplatform.ide.Application org.exoplatform.ide.DevMode"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="exo-ide-dev-mode"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx2048m -XX:MaxPermSize=512m -Dorg.exoplatform.ide.server.fs-root-path=target/git -Dorg.exoplatform.ide.git.server=git -Dorg.exoplatform.mimetypes=conf/mimetypes.properties"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx2048m -XX:MaxPermSize=512m -Dcom.codenvy.vfs.rootdir=target/git -Dorg.exoplatform.ide.git.server=git -Dorg.exoplatform.mimetypes=conf/mimetypes.properties"/>
 </launchConfiguration>

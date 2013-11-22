@@ -55,16 +55,7 @@ import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean.Status;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
-import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.PropertyImpl;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -158,8 +149,8 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     private void createJob() {
         // dummy check that user name is e-mail.
         // Jenkins create git tag on build. Marks user as author of tag.
-        String mail = userInfo.getName().contains("@") ? userInfo.getName() : userInfo.getName() + "@exoplatform.local";
-        String uName = userInfo.getName().split("@")[0];// Jenkins don't allows in job name '@' character
+        String mail = userInfo.getUserId().contains("@") ? userInfo.getUserId() : userInfo.getUserId() + "@exoplatform.local";
+        String uName = userInfo.getUserId().split("@")[0];// Jenkins don't allows in job name '@' character
         try {
             AutoBean<Job> job = JenkinsExtension.AUTO_BEAN_FACTORY.create(Job.class);
             AutoBeanUnmarshaller<Job> marshaller = new AutoBeanUnmarshaller<Job>(job);

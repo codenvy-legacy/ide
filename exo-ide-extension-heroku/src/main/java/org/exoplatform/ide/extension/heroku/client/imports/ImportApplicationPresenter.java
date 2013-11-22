@@ -288,6 +288,32 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
         project.getProperties().add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
         project.getProperties().add(new PropertyImpl("vfs:projectType", ProjectResolver.RAILS));
 
+        if (project.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(project.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      project.setLinks(result.getItem().getLinks());
+                                                      updateProjectProperties();
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            updateProjectProperties();
+        }
+    }
+    
+    private void updateProjectProperties(){
         try {
             VirtualFileSystem.getInstance().updateItem(project, null,
                                                        new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {

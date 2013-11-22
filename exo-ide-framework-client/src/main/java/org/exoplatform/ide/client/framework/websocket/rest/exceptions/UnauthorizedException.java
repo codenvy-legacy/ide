@@ -30,6 +30,7 @@ public class UnauthorizedException extends Exception {
     private ResponseMessage response;
 
     public UnauthorizedException(ResponseMessage response) {
+        super(response.getBody());
         this.response = response;
     }
 

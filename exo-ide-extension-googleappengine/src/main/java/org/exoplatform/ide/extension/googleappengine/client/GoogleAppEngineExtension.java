@@ -109,6 +109,10 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
     }
 
     public static boolean isAppEngineProject(ProjectModel project) {
+        if (project == null)
+        {
+            return false;
+        }
         List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
 
         return ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType())

@@ -18,7 +18,13 @@
 package org.eclipse.jdt.client.create;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
@@ -44,8 +50,10 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -247,13 +255,42 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
         final String packageName = p;
         final FolderModel newFolder = new FolderModel(packageName, resourceDirectoryFolder);
 
+        if (resourceDirectoryFolder.getLinks().isEmpty()) {
+            try {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(resourceDirectoryFolder.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(
+                                                                                    new ItemUnmarshaller(
+                                                                                                         new ItemWrapper(
+                                                                                                                         resourceDirectoryFolder))) {
+
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      resourceDirectoryFolder.setLinks(result.getItem().getLinks());
+                                                      createFolder(resourceDirectoryFolder, newFolder);
+                                                  }
+
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        } else {
+            createFolder(resourceDirectoryFolder, newFolder);
+        }
+    }
+    
+    private void createFolder(final FolderModel parent, final FolderModel newFolder) {
         try {
-            vfs.createFolder(resourceDirectoryFolder, new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(newFolder)) {
+            vfs.createFolder(parent, new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(newFolder)) {
                 @Override
                 protected void onSuccess(FolderModel result) {
                     IDE.getInstance().closeView(display.asView().getId());
-                    IDE.fireEvent(new RefreshBrowserEvent(resourceDirectoryFolder, newFolder));
-                    IDE.fireEvent(new PackageCreatedEvent(packageName, resourceDirectoryFolder));
+                    IDE.fireEvent(new RefreshBrowserEvent(parent, newFolder));
+                    IDE.fireEvent(new PackageCreatedEvent(result.getName(), parent));
                 }
 
                 @Override

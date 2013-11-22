@@ -19,70 +19,95 @@ package org.exoplatform.ide.client.framework.ui;
 
 import com.google.gwt.user.client.Window;
 
-/**
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: JsPopUpWindow.java Sep 4, 2012
- */
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.util.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/** Pop-up authorization window to allow user make authorization via OAuth on third-party service. */
 public class JsPopUpOAuthWindow {
 
-    public interface JsPopUpOAuthWindowCallback {
+    public interface Callback {
         public void oAuthFinished(int authenticationStatus);
     }
 
-    private String authUrl;
+    private String   oauthProvider;
+    private Callback callback;
+    private String   authorizationMode;
 
-    private String errorPageUrl;
+    private List<String> scopes            = new ArrayList<String>();
+    private int          popupWindowWidth  = 980;
+    private int          popupWindowHeight = 500;
 
-    // 0 means that auth not performed, 1 means that auth failed, 2 means that auth successful
-    private int authenticationStatus = 0;
 
-    private int popupWindowWidth;
+    public JsPopUpOAuthWindow() {
+    }
 
-    private int popupWindowHeight;
+    public JsPopUpOAuthWindow withOauthProvider(String oauthProvider) {
+        this.oauthProvider = oauthProvider;
+        return this;
+    }
 
-    private int clientWidth;
+    public JsPopUpOAuthWindow withScopes(List<String> scopes) {
+        this.scopes = scopes;
+        return this;
+    }
 
-    private int clientHeight;
+    public JsPopUpOAuthWindow withScope(String scope) {
+        scopes.add(scope);
+        return this;
+    }
 
-    private JsPopUpOAuthWindowCallback callback;
+    public JsPopUpOAuthWindow withWindowWidth(int width) {
+        this.popupWindowWidth = width;
+        return this;
+    }
 
-    public JsPopUpOAuthWindow(String authUrl,
-                              String errorPageUrl,
-                              int popupWindowWidth,
-                              int popupWindowHeight,
-                              int clientWidth,
-                              int clientHeight,
-                              JsPopUpOAuthWindowCallback callback) {
-        this.authUrl = authUrl;
-        this.errorPageUrl = errorPageUrl;
-        this.popupWindowWidth = popupWindowWidth;
-        this.popupWindowHeight = popupWindowHeight;
-        this.clientWidth = clientWidth;
-        this.clientHeight = clientHeight;
+    public JsPopUpOAuthWindow withWindowHeight(int height) {
+        this.popupWindowHeight = height;
+        return this;
+    }
+
+    public JsPopUpOAuthWindow withCallback(Callback callback) {
         this.callback = callback;
+        return this;
     }
 
-    public int getAuthenticationStatus() {
-        return authenticationStatus;
+    public JsPopUpOAuthWindow withAuthMode(String authorizationMode) {
+        this.authorizationMode = authorizationMode;
+        return this;
     }
 
-    public void setAuthenticationStatus(int authenticationStatus) {
-        this.authenticationStatus = authenticationStatus;
-        if (this.callback != null) {
-            this.callback.oAuthFinished(this.authenticationStatus);
+    public void login() {
+        StringBuilder urlBuilder = new StringBuilder(Utils.getAuthorizationContext());
+        urlBuilder.append("/ide/oauth/authenticate").append('?');
+        urlBuilder.append("oauth_provider=").append(oauthProvider);
+        urlBuilder.append("&userId=").append(IDE.user.getUserId());
+        urlBuilder.append("&redirect_after_login=").append("/ide/").append(Utils.getWorkspaceName());
+
+        if (scopes != null) {
+            for (String scope : scopes) {
+                urlBuilder.append("&scope=").append(scope);
+            }
         }
+
+        if (authorizationMode != null) {
+            urlBuilder.append("&mode=").append(authorizationMode);
+        }
+
+        loginWithOAuth(urlBuilder.toString(),
+                       Utils.getAuthorizationErrorPageURL(),
+                       popupWindowWidth,
+                       popupWindowHeight,
+                       Window.getClientWidth(),
+                       Window.getClientHeight());
     }
 
-    public JsPopUpOAuthWindow(String authUrl,
-                              String errorPageUrl,
-                              int popupWindowWidth,
-                              int popupWindowHeight,
-                              JsPopUpOAuthWindowCallback callback) {
-        this(authUrl, errorPageUrl, popupWindowWidth, popupWindowHeight, Window.getClientWidth(), Window.getClientHeight(), callback);
-    }
-
-    public void loginWithOAuth() {
-        this.loginWithOAuth(authUrl, errorPageUrl, popupWindowWidth, popupWindowHeight, clientWidth, clientHeight);
+    private void setAuthenticationStatus(int authenticationStatus) {
+        if (this.callback != null) {
+            this.callback.oAuthFinished(authenticationStatus);
+        }
     }
 
     // @formatter:off
@@ -123,7 +148,7 @@ public class JsPopUpOAuthWindow {
                                 window.clearInterval(popupCloseHandlerIntervalId);
                                 console.log("stop interval " + popupCloseHandlerIntervalId);
                             }
-                        } else if (path.match("j_security_check$")) {
+                        } else if (path.match("j_security_check$") || path == "/site/login") {
                             instance.@org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow::setAuthenticationStatus(I)(1);
                             console.log("login failed");
                             if (!errorFlag) {

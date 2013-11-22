@@ -1,41 +1,40 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.exoplatform.ide</groupId>
-		<artifactId>exo-ide-parent</artifactId>
-		<version>2.8.2-SNAPSHOT</version>
-	</parent>
-	<groupId>org.exoplatform.ide</groupId>
-	<artifactId>exo-ide-dev-resources</artifactId>
-	<name>Codenvy IDE :: Dev Resources</name>
-	<description>Development Resources for Codenvy IDE</description>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>id</id>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<phase>compile</phase>
-						<configuration>
-							<tasks>
-								<copy file="${basedir}/src/main/resources/eclipse/codenvy-dev-mode.launch_" tofile="${project.build.directory}/codenvy-dev-mode-${user.name}.launch" />
-								<replace file="${project.build.directory}/codenvy-dev-mode-${user.name}.launch" token="M2_REPO" value="${settings.localRepository}" />
-								<replace file="${project.build.directory}/codenvy-dev-mode-${user.name}.launch" token="PARENT_PROJECT" value="${project.parent.basedir}" />
-								
-								<copy file="${basedir}/src/main/resources/eclipse/codenvy-dev-mode-noserver.launch_" tofile="${project.build.directory}/codenvy-dev-mode-noserver-${user.name}.launch" />
-								<replace file="${project.build.directory}/codenvy-dev-mode-noserver-${user.name}.launch" token="M2_REPO" value="${settings.localRepository}" />
-								<replace file="${project.build.directory}/codenvy-dev-mode-noserver-${user.name}.launch" token="PARENT_PROJECT" value="${project.parent.basedir}" />
-							</tasks>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
+        <version>2.9.0-SNAPSHOT</version>
+    </parent>
+    <groupId>org.exoplatform.ide</groupId>
+    <artifactId>exo-ide-dev-resources</artifactId>
+    <name>Codenvy IDE :: Dev Resources</name>
+    <description>Development Resources for Codenvy IDE</description>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>id</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy file="${basedir}/src/main/resources/eclipse/codenvy-dev-mode.launch_" tofile="${project.build.directory}/codenvy-dev-mode-${user.name}.launch" />
+                                <replace file="${project.build.directory}/codenvy-dev-mode-${user.name}.launch" token="M2_REPO" value="${settings.localRepository}" />
+                                <replace file="${project.build.directory}/codenvy-dev-mode-${user.name}.launch" token="PARENT_PROJECT" value="${project.parent.basedir}" />
+                                <copy file="${basedir}/src/main/resources/eclipse/codenvy-dev-mode-noserver.launch_" tofile="${project.build.directory}/codenvy-dev-mode-noserver-${user.name}.launch" />
+                                <replace file="${project.build.directory}/codenvy-dev-mode-noserver-${user.name}.launch" token="M2_REPO" value="${settings.localRepository}" />
+                                <replace file="${project.build.directory}/codenvy-dev-mode-noserver-${user.name}.launch" token="PARENT_PROJECT" value="${project.parent.basedir}" />
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

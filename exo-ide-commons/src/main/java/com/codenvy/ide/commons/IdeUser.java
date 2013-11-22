@@ -24,7 +24,12 @@ import java.util.Collection;
  * @version $Id: $
  */
 public class IdeUser {
+    
     private String userId;
+    
+    private String firstName;
+    
+    private String lastName;
 
     private Collection<String> roles;
 
@@ -46,8 +51,10 @@ public class IdeUser {
      *         the roles to set
      * @param clientId
      */
-    public IdeUser(String userId, Collection<String> roles, String clientId, Collection<IDEWorkspace> workspaces, boolean temporary) {
+    public IdeUser(String userId, String firstName, String lastName, Collection<String> roles, String clientId, Collection<IDEWorkspace> workspaces, boolean temporary) {
         this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.roles = roles;
         this.clientId = clientId;
         this.workspaces = workspaces;
@@ -65,6 +72,42 @@ public class IdeUser {
      */
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+    
+    /**
+     * Returns first name.
+     * 
+     * @return first name
+     */
+    public String getFirstName() {
+        return firstName;
+    }
+
+    /**
+     * Sets new value of first name.
+     * 
+     * @param firstName new value of first name
+     */
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    
+    /**
+     * Returns last name.
+     * 
+     * @return last name
+     */
+    public String getLastName() {
+        return lastName;
+    }
+
+    /**
+     * Sets new value of last name.
+     * 
+     * @param lastName new value of last name
+     */
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     /** @return the roles */

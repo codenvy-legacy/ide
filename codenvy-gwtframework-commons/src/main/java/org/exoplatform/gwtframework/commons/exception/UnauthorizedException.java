@@ -34,6 +34,7 @@ public class UnauthorizedException extends Exception {
     private AsyncRequest request;
 
     public UnauthorizedException(Response response, AsyncRequest request) {
+        super(response.getText());
         this.response = response;
         this.request = request;
     }

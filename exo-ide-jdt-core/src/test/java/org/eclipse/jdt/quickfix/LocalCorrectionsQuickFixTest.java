@@ -58,7 +58,7 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
         new JdtExtension();
         JavaCodeController.NAME_ENVIRONMENT =
                 new FileSystem(new String[]{System.getProperty("java.home") + "/lib/rt.jar"}, null, "UTF-8");
-        new JavaCodeController(null, null, new SupportedProjectResolver() {
+        new JavaCodeController(null, null, null, new SupportedProjectResolver() {
 
             @Override
             public boolean isProjectSupported(String projectType) {

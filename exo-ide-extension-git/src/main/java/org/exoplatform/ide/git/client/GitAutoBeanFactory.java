@@ -46,5 +46,18 @@ public interface GitAutoBeanFactory extends AutoBeanFactory {
     AutoBean<Collaborators> collaborators();
 
     AutoBean<Status> status();
-
+    
+    /**
+     * Factory method for GitHub user bean.
+     * 
+     * @return {@link AutoBean} of type {@link GitHubUser}
+     */
+    AutoBean<GitHubUser> gitHubUser();
+    
+    /**
+     * Factory method for GitHub repositories list bean.
+     * 
+     * @return {@link AutoBean} of type {@link GitHubRepositoryList}
+     */
+    AutoBean<GitHubRepositoryList> gitHubRepositoryList();
 }

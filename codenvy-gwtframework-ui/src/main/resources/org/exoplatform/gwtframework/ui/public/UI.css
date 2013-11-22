@@ -24,3 +24,23 @@
     width: 230px;
     height: 90px;
 }
+
+.cursor-default {
+	cursor: default!important;
+}
+
+.cursor-pointer {
+	cursor: pointer!important;
+}
+
+.cursor-progress {
+	cursor: progress!important;
+}
+
+.cursor-text {
+	cursor: text!important;
+}
+
+.cursor-wait {
+	cursor: wait!important;
+}

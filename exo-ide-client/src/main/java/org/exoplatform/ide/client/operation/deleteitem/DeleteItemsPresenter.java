@@ -57,9 +57,11 @@ import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -335,29 +337,62 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
             }
 
         }
-        if (lockTokens.containsKey(item.getId())) {
+        
+        if (item.getLinks().isEmpty()) {
             try {
-                VirtualFileSystem.getInstance().unlock((FileModel)item, lockTokens.get(item.getId()),
-                                                       new AsyncRequestCallback<Object>() {
+                VirtualFileSystem.getInstance()
+                                 .getItemById(item.getId(),
+                                              new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(item))) {
 
-                                                           @Override
-                                                           protected void onSuccess(Object result) {
-                                                               IDE.fireEvent(new ItemUnlockedEvent(item));
-                                                               deleteItem(item);
-                                                           }
+                                                  @Override
+                                                  protected void onSuccess(ItemWrapper result) {
+                                                      item.setLinks(result.getItem().getLinks());
+                                                      if (lockTokens.containsKey(item.getId())) {
+                                                          unlockItem(item);
+                                                      } else {
+                                                          deleteItem(item);
+                                                      }
+                                                  }
 
-                                                           @Override
-                                                           protected void onFailure(Throwable exception) {
-                                                               IDE.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));
-                                                           }
-                                                       });
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                  }
+                                              });
             } catch (RequestException e) {
-                IDE.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG));
+                IDE.fireEvent(new ExceptionThrownEvent(e));
             }
         } else {
-            deleteItem(item);
+            if (lockTokens.containsKey(item.getId())) {
+                unlockItem(item);
+            } else {
+                deleteItem(item);
+            }
         }
     }
+    
+    private void unlockItem(final Item item){
+        try {
+            VirtualFileSystem.getInstance().unlock((FileModel)item, lockTokens.get(item.getId()),
+                                                   new AsyncRequestCallback<Object>() {
+
+                                                       @Override
+                                                       protected void onSuccess(Object result) {
+                                                           IDE.fireEvent(new ItemUnlockedEvent(item));
+                                                           deleteItem(item);
+                                                       }
+
+                                                       @Override
+                                                       protected void onFailure(Throwable exception) {
+                                                           IDE.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));
+                                                       }
+                                                   });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG));
+        }
+    }
+    
+    
 
     /**
      * Delete item.

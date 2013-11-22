@@ -64,6 +64,8 @@ public class JavaScriptExternalParser implements ExternalParser {
         TokenBeenImpl token = null;
         if ("VariableDeclaration".equals(jsToken.getType())) {
             token = new TokenBeenImpl(jsToken.getName(), TokenType.VARIABLE, jsToken.getLineNumber(), APPLICATION_JAVASCRIPT);
+        } else if ("VariableDeclarator".equals(jsToken.getType())) {
+            token = new TokenBeenImpl(jsToken.getName(), TokenType.VARIABLE, jsToken.getLineNumber(), APPLICATION_JAVASCRIPT);
         } else if ("Property".equals(jsToken.getType())) {
             token = new TokenBeenImpl(jsToken.getName(), TokenType.PROPERTY, jsToken.getLineNumber(), APPLICATION_JAVASCRIPT);
         } else if ("FunctionDeclaration".equals(jsToken.getType())) {
@@ -85,7 +87,12 @@ public class JavaScriptExternalParser implements ExternalParser {
             for (JsToken childJsToken : subTokens.asIterable()) {
                 TokenBeenImpl childToken = convertToken(childJsToken);
                 if (childToken != null) {
-                    token.addSubToken(childToken);
+                    if ((childToken.getType() == TokenType.VARIABLE) && (childToken.getSubTokenList() != null) &&
+                        (childToken.getSubTokenList().size() > 1)) {
+                        token.setSubTokenList(childToken.getSubTokenList());
+                    } else {
+                        token.addSubToken(childToken);
+                    }
                 }
             }
         }

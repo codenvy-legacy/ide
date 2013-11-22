@@ -1,21 +1,25 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>exo-ide-parent</artifactId>
         <groupId>org.exoplatform.ide</groupId>
-        <version>2.8.2-SNAPSHOT</version>
+        <version>2.9.0-SNAPSHOT</version>
     </parent>
     <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
     <packaging>jar</packaging>
     <name>Codenvy IDE :: Code Assitant Lucene Storage</name>
-
     <dependencies>
+        <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-core</artifactId>
+            <version>${everrest.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-asm</artifactId>
@@ -24,723 +28,52 @@
         <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.container</artifactId>
+            <version>${org.exoplatform.kernel.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.thoughtworks.qdox</groupId>
-            <artifactId>qdox</artifactId>
-            <version>1.12</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
-            <version>2.9.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>0.9.20</version>
-            <!--scope>test</scope -->
+            <version>${lucene.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.easytesting</groupId>
-            <artifactId>fest-assert</artifactId>
-            <version>1.4</version>
-            <scope>test</scope>
+            <groupId>com.thoughtworks.qdox</groupId>
+            <artifactId>qdox</artifactId>
+            <version>${qdox.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-assert</artifactId>
+            <version>${fest-assert.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${ch.qos.logback.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>libs/</classpathPrefix>
-                            <useUniqueVersions>false</useUniqueVersions>
-                            <mainClass>org.exoplatform.ide.codeassistant.storage.lucene.CodeAssistantStorageGenerator</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-
-            <!-- <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-dependency-plugin</artifactId>
-               <executions>
-                  <execution>
-                     <id>copy-dependencies-jar</id>
-                     <phase>install</phase>
-                     <goals>
-                        <goal>copy-dependencies</goal>
-                     </goals>
-                     <configuration>
-                        <outputDirectory>target/libs</outputDirectory>
-                     </configuration>
-                  </execution>
-                  <execution>
-                     <id>copy-dependencies-source</id>
-                     <phase>process-resources</phase>
-                     <goals>
-                        <goal>copy</goal>
-                     </goals>
-                     <configuration>
-                        <outputDirectory>target/sources</outputDirectory>
-                        <artifactItems>
-                           <artifactItem>
-                              <groupId>javax.jcr</groupId>
-                              <artifactId>jcr</artifactId>
-                              <version>${jcr.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.chromattic</groupId>
-                              <artifactId>chromattic.apt</artifactId>
-                              <version>${chromattic.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.chromattic</groupId>
-                              <artifactId>chromattic.api</artifactId>
-                              <version>${chromattic.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.chromattic</groupId>
-                              <artifactId>chromattic.spi</artifactId>
-                              <version>${chromattic.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.chromattic</groupId>
-                              <artifactId>chromattic.core</artifactId>
-                              <version>${chromattic.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.chromattic</groupId>
-                              <artifactId>chromattic.ext</artifactId>
-                              <version>${chromattic.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>javax.annotation</groupId>
-                              <artifactId>jsr250-api</artifactId>
-                              <version>${javax.annotation.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>javax.ws.rs</groupId>
-                              <artifactId>jsr311-api</artifactId>
-                              <version>${javax.ws.rs.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.ws</groupId>
-                              <artifactId>exo.ws.commons</artifactId>
-                              <version>${org.exoplatform.ws.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.ws</groupId>
-                              <artifactId>exo.ws.frameworks.json</artifactId>
-                              <version>${org.exoplatform.ws.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.ws</groupId>
-                              <artifactId>exo.ws.rest.core</artifactId>
-                              <version>${org.exoplatform.ws.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.ws</groupId>
-                              <artifactId>exo.ws.rest.ext</artifactId>
-                              <version>${org.exoplatform.ws.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.kernel</groupId>
-                              <artifactId>exo.kernel.commons</artifactId>
-                              <version>${org.exoplatform.kernel.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.kernel</groupId>
-                              <artifactId>exo.kernel.component.command</artifactId>
-                              <version>${org.exoplatform.kernel.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.kernel</groupId>
-                              <artifactId>exo.kernel.component.common</artifactId>
-                              <version>${org.exoplatform.kernel.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.kernel</groupId>
-                              <artifactId>exo.kernel.container</artifactId>
-                              <version>${org.exoplatform.kernel.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.core</groupId>
-                              <artifactId>exo.core.component.database</artifactId>
-                              <version>${org.exoplatform.core.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.core</groupId>
-                              <artifactId>exo.core.component.document</artifactId>
-                              <version>${org.exoplatform.core.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.core</groupId>
-                              <artifactId>exo.core.component.organization.api</artifactId>
-                              <version>${org.exoplatform.core.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.core</groupId>
-                              <artifactId>exo.core.component.script.groovy</artifactId>
-                              <version>${org.exoplatform.core.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.core</groupId>
-                              <artifactId>exo.core.component.security.core</artifactId>
-                              <version>${org.exoplatform.core.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.core</groupId>
-                              <artifactId>exo.core.component.xml-processing</artifactId>
-                              <version>${org.exoplatform.core.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.jcr</groupId>
-                              <artifactId> exo.jcr.component.core</artifactId>
-                              <version>${org.exoplatform.jcr.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.jcr</groupId>
-                              <artifactId>exo.jcr.component.ext</artifactId>
-                              <version>${org.exoplatform.jcr.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.jcr</groupId>
-                              <artifactId>exo.jcr.component.webdav</artifactId>
-                              <version>${org.exoplatform.jcr.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.jcr</groupId>
-                              <artifactId>exo.jcr.framework.command</artifactId>
-                              <version>${org.exoplatform.jcr.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.jcr</groupId>
-                              <artifactId>exo.jcr.framework.web</artifactId>
-                              <version>${org.exoplatform.jcr.version}</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>aopalliance</groupId>
-                              <artifactId>aopalliance</artifactId>
-                              <version>1.0</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>javax.servlet</groupId>
-                              <artifactId>servlet-api</artifactId>
-                              <version>3.0-alpha-1</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-aop</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-asm</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-beans</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-context</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-context-support</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-core</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-expression</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-web</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-webmvc</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           GAE API
-                           <artifactItem>
-                              <groupId>org.datanucleus</groupId>
-                              <artifactId>datanucleus-core</artifactId>
-                              <version>1.1.5</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.datanucleus</groupId>
-                              <artifactId>datanucleus-jpa</artifactId>
-                              <version>1.1.5</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>javax.jdo</groupId>
-                              <artifactId>jdo2-api</artifactId>
-                              <version>2.3-eb</version>
-                              <type>java-source</type>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>com.google.gwt</groupId>
-                              <artifactId>gwt-user</artifactId>
-                              <version>2.4.0</version>
-                              <type>java-source</type>
-                           </artifactItem>
-                        </artifactItems>
-                     </configuration>
-                  </execution>
-                  <execution>
-                     <id>copy-dependencies</id>
-                     <phase>process-resources</phase>
-                     <goals>
-                        <goal>copy</goal>
-                     </goals>
-                     <configuration>
-                        <outputDirectory>target/jars</outputDirectory>
-                        <artifactItems>
-                           <artifactItem>
-                              <groupId>javax.jcr</groupId>
-                              <artifactId>jcr</artifactId>
-                              <version>${jcr.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.chromattic</groupId>
-                              <artifactId>chromattic.apt</artifactId>
-                              <version>${chromattic.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.chromattic</groupId>
-                              <artifactId>chromattic.api</artifactId>
-                              <version>${chromattic.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.chromattic</groupId>
-                              <artifactId>chromattic.spi</artifactId>
-                              <version>${chromattic.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.chromattic</groupId>
-                              <artifactId>chromattic.core</artifactId>
-                              <version>${chromattic.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.chromattic</groupId>
-                              <artifactId>chromattic.ext</artifactId>
-                              <version>${chromattic.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>javax.annotation</groupId>
-                              <artifactId>jsr250-api</artifactId>
-                              <version>${javax.annotation.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>javax.ws.rs</groupId>
-                              <artifactId>jsr311-api</artifactId>
-                              <version>${javax.ws.rs.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.ws</groupId>
-                              <artifactId>exo.ws.commons</artifactId>
-                              <version>${org.exoplatform.ws.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.ws</groupId>
-                              <artifactId>exo.ws.frameworks.json</artifactId>
-                              <version>${org.exoplatform.ws.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.ws</groupId>
-                              <artifactId>exo.ws.rest.core</artifactId>
-                              <version>${org.exoplatform.ws.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.ws</groupId>
-                              <artifactId>exo.ws.rest.ext</artifactId>
-                              <version>${org.exoplatform.ws.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.kernel</groupId>
-                              <artifactId>exo.kernel.commons</artifactId>
-                              <version>${org.exoplatform.kernel.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.kernel</groupId>
-                              <artifactId>exo.kernel.component.command</artifactId>
-                              <version>${org.exoplatform.kernel.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.kernel</groupId>
-                              <artifactId>exo.kernel.component.common</artifactId>
-                              <version>${org.exoplatform.kernel.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.kernel</groupId>
-                              <artifactId>exo.kernel.container</artifactId>
-                              <version>${org.exoplatform.kernel.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.core</groupId>
-                              <artifactId>exo.core.component.database</artifactId>
-                              <version>${org.exoplatform.core.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.core</groupId>
-                              <artifactId>exo.core.component.document</artifactId>
-                              <version>${org.exoplatform.core.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.core</groupId>
-                              <artifactId>exo.core.component.organization.api</artifactId>
-                              <version>${org.exoplatform.core.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.core</groupId>
-                              <artifactId>exo.core.component.script.groovy</artifactId>
-                              <version>${org.exoplatform.core.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.core</groupId>
-                              <artifactId>exo.core.component.security.core</artifactId>
-                              <version>${org.exoplatform.core.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.core</groupId>
-                              <artifactId>exo.core.component.xml-processing</artifactId>
-                              <version>${org.exoplatform.core.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.jcr</groupId>
-                              <artifactId> exo.jcr.component.core</artifactId>
-                              <version>${org.exoplatform.jcr.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.jcr</groupId>
-                              <artifactId>exo.jcr.component.ext</artifactId>
-                              <version>${org.exoplatform.jcr.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.jcr</groupId>
-                              <artifactId>exo.jcr.component.webdav</artifactId>
-                              <version>${org.exoplatform.jcr.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.jcr</groupId>
-                              <artifactId>exo.jcr.framework.command</artifactId>
-                              <version>${org.exoplatform.jcr.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.exoplatform.jcr</groupId>
-                              <artifactId>exo.jcr.framework.web</artifactId>
-                              <version>${org.exoplatform.jcr.version}</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>aopalliance</groupId>
-                              <artifactId>aopalliance</artifactId>
-                              <version>1.0</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>javax.servlet</groupId>
-                              <artifactId>servlet-api</artifactId>
-                              <version>3.0-alpha-1</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-aop</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-asm</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-beans</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-context</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-context-support</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-core</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-expression</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-web</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.springframework</groupId>
-                              <artifactId>spring-webmvc</artifactId>
-                              <version>3.0.5.RELEASE</version>
-                           </artifactItem>
-
-                           GAE API
-                           <artifactItem>
-                              <groupId>com.google.appengine</groupId>
-                              <artifactId>appengine-api-1.0-sdk</artifactId>
-                              <version>1.6.5</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>com.google.appengine</groupId>
-                              <artifactId>appengine-api-labs</artifactId>
-                              <version>1.6.5</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>com.google.appengine</groupId>
-                              <artifactId>appengine-jsr107cache</artifactId>
-                              <version>1.6.5</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>com.google.appengine</groupId>
-                              <artifactId>appengine-tools-sdk</artifactId>
-                              <version>1.6.5</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>com.google.appengine.orm</groupId>
-                              <artifactId>datanucleus-appengine</artifactId>
-                              <version>1.0.10</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.datanucleus</groupId>
-                              <artifactId>datanucleus-core</artifactId>
-                              <version>1.1.5</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.datanucleus</groupId>
-                              <artifactId>datanucleus-jpa</artifactId>
-                              <version>1.1.5</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>javax.el</groupId>
-                              <artifactId>el-api</artifactId>
-                              <version>2.2</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.apache.geronimo.specs</groupId>
-                              <artifactId>geronimo-jpa_3.0_spec</artifactId>
-                              <version>1.1.1</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.apache.geronimo.specs</groupId>
-                              <artifactId>geronimo-jta_1.1_spec</artifactId>
-                              <version>1.1.1</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>javax.jdo</groupId>
-                              <artifactId>jdo2-api</artifactId>
-                              <version>2.3-eb</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>org.apache.tomcat</groupId>
-                              <artifactId>jsp-api</artifactId>
-                              <version>6.0.35</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>net.sf.jsr107cache</groupId>
-                              <artifactId>jsr107cache</artifactId>
-                              <version>1.1</version>
-                           </artifactItem>
-
-                           <artifactItem>
-                              <groupId>com.google.gwt</groupId>
-                              <artifactId>gwt-user</artifactId>
-                              <version>2.4.0</version>
-                           </artifactItem>
-                        </artifactItems>
-                     </configuration>
-                  </execution>
-               </executions>
-            </plugin> -->
-
-        </plugins>
-    </build>
-
 </project>

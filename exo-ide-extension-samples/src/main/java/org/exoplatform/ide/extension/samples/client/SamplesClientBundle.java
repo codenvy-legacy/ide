@@ -158,21 +158,6 @@ public interface SamplesClientBundle extends ClientBundle {
     @Source("org/exoplatform/ide/extension/samples/client/images/welcome/invitation.png")
     ImageResource invitation();
 
-    /*
-     * Controls
-     */
-    @Source("org/exoplatform/ide/extension/samples/client/images/import-from-github.png")
-    ImageResource importFromGithubControl();
-
-    @Source("org/exoplatform/ide/extension/samples/client/images/import-from-github_Disabled.png")
-    ImageResource importFromGithubDisabledControl();
-
-    @Source("org/exoplatform/ide/extension/samples/client/images/import-samples.png")
-    ImageResource importSamplesControl();
-
-    @Source("org/exoplatform/ide/extension/samples/client/images/import-samples_Disabled.png")
-    ImageResource importSamplesDisabledControl();
-
     /**
      * Technology images
      */

@@ -543,7 +543,6 @@ public abstract class LocalFileSystemTest extends TestCase {
         List<Item> items = ((ItemList<Item>)response.getEntity()).getItems();
         List<Object> all = new ArrayList<Object>(expected.size());
         for (Item i : items) {
-            validateLinks(i);
             all.add(m.invoke(i));
         }
         assertEquals(all, expected);

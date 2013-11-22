@@ -17,46 +17,63 @@
  */
 package com.codenvy.ide.factory.server;
 
-import com.codenvy.commons.env.EnvironmentContext;
-import com.codenvy.commons.security.oauth.OAuthTokenProvider;
+import com.codenvy.api.factory.SimpleFactoryUrl;
+import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.ide.commons.shared.ProjectType;
+import com.codenvy.ide.factory.shared.FactorySpec10;
+import com.codenvy.organization.client.UserManager;
+import com.codenvy.organization.client.WorkspaceManager;
+import com.codenvy.organization.exception.OrganizationServiceException;
+import com.codenvy.organization.model.User;
+import com.codenvy.organization.model.Workspace;
 
 import org.apache.commons.io.IOUtils;
 import org.codenvy.mail.MailSenderClient;
-import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.everrest.websockets.WSConnectionContext;
 import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
-import org.exoplatform.ide.git.shared.*;
+import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
+import org.exoplatform.ide.git.shared.BranchListRequest;
+import org.exoplatform.ide.git.shared.CloneRequest;
+import org.exoplatform.ide.git.shared.GitUser;
+import org.exoplatform.ide.project.ProjectPrepare;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Project;
-import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
-import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.ide.vfs.shared.*;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -70,28 +87,30 @@ import java.util.regex.Pattern;
 public class FactoryService {
     private static final Log LOG = ExoLogger.getLogger(FactoryService.class);
 
-    private final MailSenderClient          mailSenderClient;
-    private       VirtualFileSystemRegistry vfsRegistry;
-    private       LocalPathResolver         localPathResolver;
-
     @Inject
-    private OAuthTokenProvider oauthTokenProvider;
+    private MailSenderClient          mailSenderClient;
+    @Inject
+    private GitConnectionFactory      gitConnectionFactory;
+    @Inject
+    private VirtualFileSystemRegistry vfsRegistry;
+    @Inject
+    private LocalPathResolver         localPathResolver;
+    @Inject
+    private UserManager               userManager;
+    @Inject
+    private WorkspaceManager          workspaceManager;
+    @PathParam("ws-name")
+    private String                    workspaceName;
 
     private static final Pattern PATTERN        = Pattern.compile("public static final String PROJECT_ID = .*");
     private static final Pattern PATTERN_NUMBER = Pattern.compile("public static final String PROJECT_NUMBER = .*");
 
-    /**
-     * Constructs a new {@link FactoryService}.
-     *
-     * @param mailSenderClient
-     *         client for sending messages over e-mail
-     */
-    public FactoryService(MailSenderClient mailSenderClient, VirtualFileSystemRegistry vfsRegistry,
-                          LocalPathResolver localPathResolver) {
-        this.mailSenderClient = mailSenderClient;
-        this.vfsRegistry = vfsRegistry;
-        this.localPathResolver = localPathResolver;
-    }
+    private static final String BRANCH_NOT_FOUND    = "Branch <b>%s</b> doesn't exist. Switching to default branch.";
+    private static final String SWITCHING_TO_BRANCH = "Switching to <b>%s</b> branch.";
+    private static final String COMMIT_NOT_FOUND    = "Commit <b>%s</b> doesn't exist. Switching to default branch.";
+
+    private static final Pattern COMMIT_NOT_FOUND_PATTERN = Pattern.compile("(.*fatal: reference is not a tree:.*)|" +
+                                                                            "(.*fatal: Cannot update paths and switch to branch 'temp'.*)");
 
     /**
      * Sends e-mail message to share Factory URL.
@@ -104,111 +123,92 @@ public class FactoryService {
      */
     @POST
     @Path("share")
-    public Response share(@QueryParam("recipient") String recipient, //
-                          @QueryParam("message") String message) {
-        final String sender = "Codenvy <noreply@codenvy.com>";
-        final String subject = "Check out my Codenvy project";
-        final String mimeType = "text/html; charset=utf-8";
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @RolesAllowed("developer")
+    public Response share(@FormParam("recipient") String recipient,
+                          @FormParam("message") String message) {
         try {
-            mailSenderClient.sendMail(sender, recipient, null, subject, mimeType, message);
+            mailSenderClient.sendMail("Codenvy <noreply@codenvy.com>",
+                                      recipient,
+                                      null,
+                                      "Check out my Codenvy project",
+                                      "text/plain; charset=utf-8",
+                                      URLDecoder.decode(message, "UTF-8"));
             return Response.ok().build();
         } catch (MessagingException | IOException e) {
+            LOG.warn(e.getLocalizedMessage(), e);
             throw new WebApplicationException(e);
         }
     }
 
     /**
-     * Logs event generated during factory URL creation.
+     * Clone specified git repository and perform converting it into IDE project.
      *
-     * @param vfsId
-     * @param projectId
-     * @param action
      * @param factoryUrl
-     * @param idCommit
-     * @param vcs
-     * @param vcsUrl
+     *         gitConnectionFactory object
+     * @return cloned project
+     * @throws VirtualFileSystemException
+     * @throws GitException
+     * @throws URISyntaxException
+     * @throws IOException
      */
-    @Path("log-factory-created")
-    @GET
-    public void logFactoryCreated(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-                                  @QueryParam("action") StringBuilder action,
-                                  @QueryParam("factoryurl") StringBuilder factoryUrl,
-                                  @QueryParam("idcommit") String idCommit, @QueryParam("vcs") String vcs,
-                                  @QueryParam("vcsurl") String vcsUrl) throws VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        String workspace = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString();
-        Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
-        String user = ConversationState.getCurrent().getIdentity().getUserId();
-        factoryUrl.append("&pname=").append(project.getName()).append("&wname=").append(workspace).append("&vcs=")
-                  .append(vcs).append("&vcsurl=").append(vcsUrl).append("&idcommit=").append(idCommit)
-                  .append("&action=").append(action).append("&ptype=").append(project.getProjectType());
-        LOG.info("EVENT#factory-created# WS#" + workspace + "# USER#" + user + "# PROJECT#" + project.getName() +
-                 "# TYPE#" + project.getProjectType() + "# REPO-URL#" + vcsUrl + "# FACTORY-URL#" + factoryUrl + "#");
-    }
-
     @POST
     @Path("clone")
     @Produces(MediaType.APPLICATION_JSON)
-    public Item cloneProject(@QueryParam("vfsid") String vfsId,
-                             @QueryParam("projectid") String projectId,
-                             @QueryParam("remoteuri") String remoteUri,
-                             @QueryParam("idcommit") String idCommit,
-                             @QueryParam("ptype") String projectType,
-                             @QueryParam("action") String action,
-                             @QueryParam("keepvcsinfo") boolean keepVcsInfo,
-                             @QueryParam("gitbranch") String gitBranch)
-            throws VirtualFileSystemException, GitException,
-                   URISyntaxException, IOException {
-        GitConnection gitConnection = getGitConnection(projectId, vfsId);
+    @Consumes(MediaType.APPLICATION_JSON)
+    //@RolesAllowed("developer")
+    public Item cloneProject(SimpleFactoryUrl factoryUrl,
+                             @QueryParam("vfsid") String vfsId,
+                             @QueryParam("projectid") String projectId) throws VirtualFileSystemException, GitException,
+                                                                               URISyntaxException, IOException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
 
+        GitConnection gitConnection = getGitConnection(vfs, projectId);
         try {
-            gitConnection.clone(new CloneRequest(remoteUri, null));
+            gitConnection.clone(new CloneRequest(factoryUrl.getVcsurl(), null));
 
-            if (idCommit != null && !idCommit.trim().isEmpty()) {
-                gitConnection.branchCheckout(new BranchCheckoutRequest("temp", idCommit, true));
-            } else if (gitBranch != null && !gitBranch.trim().isEmpty()) {
+            //check and set type of cloned repository
+            setPrivateRepositoryPermissions(factoryUrl.getVcsurl(), vfs, projectId);
+
+            if (factoryUrl.getCommitid() != null && !factoryUrl.getCommitid().trim().isEmpty()) {
+                //Try to checkout to new branch "temp" with HEAD of setted commit ID
+                gitConnection.branchCheckout(new BranchCheckoutRequest("temp", factoryUrl.getCommitid(), true));
+            } else if (factoryUrl.getVcsbranch() != null && !factoryUrl.getVcsbranch().trim().isEmpty()) {
+                //Try to checkout to specified branch. For first we need to list all cloned local branches to
+                //find if specified branch already exist, if its true, we check if this this branch is active
                 List<Branch> branches = gitConnection.branchList(new BranchListRequest(null));
-                boolean doCheckout = true;
+
+                Branch chkBranch = null;
+
                 for (Branch branch : branches) {
-                    if (branch.getDisplayName().equals(gitBranch) && branch.isActive()) {
-                        doCheckout = !doCheckout;
+                    if (branch.getDisplayName().equals(factoryUrl.getVcsbranch())) {
+                        chkBranch = branch;
                         break;
                     }
                 }
-                if (doCheckout) {
-                    gitConnection.branchCheckout(new BranchCheckoutRequest(gitBranch, "origin/" + gitBranch, doCheckout));
+
+                if (chkBranch == null) {
+                    publishWebsocketMessage(String.format(BRANCH_NOT_FOUND, factoryUrl.getVcsbranch()));
+                } else {
+                    publishWebsocketMessage(String.format(SWITCHING_TO_BRANCH, factoryUrl.getVcsbranch()));
                 }
             }
-
-            if (!keepVcsInfo)
-                deleteRepository(vfsId, projectId);
-        } catch (JGitInternalException e) {
-            //if commit id doesn't exist, jgit produce exception like "Missing unknown <hashOfCommit>"
-            if (e.getMessage().contains("Missing unknown")) {
-                publishWebsocketMessage("Commit <b>" + idCommit + "</b> doesn't exist. Switching to default branch.");
-
-                if (!keepVcsInfo)
-                    deleteRepository(vfsId, projectId);
+        } catch (GitException e) {
+            if (COMMIT_NOT_FOUND_PATTERN.matcher(e.getLocalizedMessage()).find()) {
+                publishWebsocketMessage(String.format(COMMIT_NOT_FOUND, factoryUrl.getCommitid()));
             } else {
-                deleteRepository(vfsId, projectId);
-                throw new GitException(e);
+                deleteRepository(vfs, projectId);
+                LOG.warn(e.getLocalizedMessage(), e);
+                throw e;
             }
-        } catch (IllegalArgumentException e) {
-            if (e.getMessage().matches("Ref .* can not be resolved")) {
-                if (idCommit != null && !idCommit.trim().isEmpty()) {
-                    publishWebsocketMessage("Commit <b>" + idCommit + "</b> doesn't exist. Switching to default branch.");
-                } else if (gitBranch != null && !gitBranch.trim().isEmpty()) {
-                    publishWebsocketMessage("Branch <b>" + gitBranch + "</b> doesn't exist. Switching to default branch.");
-                }
-
-                if (!keepVcsInfo)
-                    deleteRepository(vfsId, projectId);
-            } else {
-                throw new IllegalArgumentException(e);
+        } finally {
+            //Finally if we found parameter vcsinfo we check that we should delete git repository after cloning.
+            if (!factoryUrl.getVcsinfo()) {
+                deleteRepository(vfs, projectId);
             }
         }
 
-        return convertToProject(vfsId, projectId, remoteUri, projectType, action, keepVcsInfo);
+        return convertToProject(factoryUrl, vfsId, projectId);
     }
 
     /**
@@ -230,87 +230,251 @@ public class FactoryService {
         }
     }
 
-    private Item convertToProject(String vfsId, String projectId, String remoteUri, String projectType, String action, boolean keepVcsInfo)
+    /**
+     * Perform converting cloned directory into project.
+     *
+     * @param factoryUrl
+     *         gitConnectionFactory object
+     * @return {@link ProjectModel} instance
+     * @throws VirtualFileSystemException
+     * @throws IOException
+     */
+    private Item convertToProject(SimpleFactoryUrl factoryUrl, String vfsId, String projectId)
             throws VirtualFileSystemException, IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         Item itemToUpdate = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
+
+        ProjectType projectType = ProjectType.DEFAULT;
         try {
-            Item item = vfs.getItemByPath(itemToUpdate.getPath() + "/.project", null, false, null);
-            vfs.delete(item.getId(), null);
-        } catch (ItemNotFoundException ignore) {
-            // ignore
+            String decodedPtype = URLDecoder.decode(factoryUrl.getProjectattributes().get("ptype"), "UTF-8");
+            projectType = ProjectType.fromValue(decodedPtype);
+        } catch (IllegalArgumentException | NullPointerException e) {//
         }
-        if (projectType != null && !projectType.isEmpty()) {
-            List<Property> props = new ArrayList<Property>();
+
+        List<Property> props = new ArrayList<>();
+
+        if (projectType == ProjectType.DEFAULT || projectType == ProjectType.MULTI_MODULE) {
+            try {
+                new ProjectPrepare(vfs).doPrepare(projectId);
+                itemToUpdate = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
+                projectType = ProjectType.fromValue(((Project)itemToUpdate).getProjectType());
+            } catch (Exception e) {
+                itemToUpdate = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
+                props.addAll(itemToUpdate.getProperties());
+                props.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+                props.add(new PropertyImpl("vfs:projectType", projectType.toString()));
+            }
+        } else {
             props.addAll(itemToUpdate.getProperties());
             props.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-            props.add(new PropertyImpl("vfs:projectType", projectType));
-            props.add(new PropertyImpl("codenow", remoteUri));
-            if (keepVcsInfo)
-                props.add(new PropertyImpl("isGitRepository", "true"));
-            itemToUpdate = vfs.updateItem(itemToUpdate.getId(), props, null);
-            if (ProjectType.GOOGLE_MBS_ANDROID.toString().equals(projectType)) {
-                File constJava = (File)vfs
-                        .getItemByPath(itemToUpdate.getPath() + "/src/com/google/cloud/backend/android/Consts.java", null, false,
-                                       PropertyFilter.NONE_FILTER);
-                String content = IOUtils.toString(vfs.getContent(constJava.getId()).getStream());
-
-                String[] actionParams = action.replaceAll("'", "").split(";");
-                String prjNum = null;
-                String prjID = null;
-
-                for (String param : actionParams) {
-                    if (param.startsWith("projectNumber")) {
-                        prjNum = param.split("=")[1];
-                    }
-                    if (param.startsWith("projectID")) {
-                        prjID = param.split("=")[1];
-                    }
-                }
-
-                String newContent = PATTERN.matcher(content).replaceFirst("public static final String PROJECT_ID = \"" + prjID + "\";");
-                newContent =
-                        PATTERN_NUMBER.matcher(newContent).replaceFirst("public static final String PROJECT_NUMBER = \"" + prjNum + "\";");
-                vfs.updateContent(constJava.getId(), MediaType.valueOf(constJava.getMimeType()),
-                                  new ByteArrayInputStream(newContent.getBytes()), null);
-            }
+            props.add(new PropertyImpl("vfs:projectType", projectType.toString()));
         }
+
+        props.add(new PropertyImpl("codenow", factoryUrl.getVcsurl()));
+        if (factoryUrl.getVcsinfo()) {
+            props.add(new PropertyImpl("isGitRepository", "true"));
+        }
+
+        itemToUpdate = vfs.updateItem(itemToUpdate.getId(), props, null);
+
+        if (ProjectType.GOOGLE_MBS_ANDROID == projectType) {
+            prepareAndroidProject(factoryUrl, vfs, itemToUpdate);
+        }
+
         return itemToUpdate;
     }
 
-    protected void deleteRepository(String vfsId, String projectId) throws VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        Item project = getGitProject(vfs, projectId);
-        String path2gitFolder = project.getPath() + "/.git";
-        Item gitItem = vfs.getItemByPath(path2gitFolder, null, false, PropertyFilter.NONE_FILTER);
-        vfs.delete(gitItem.getId(), null);
+    /**
+     * Prepare Consts.java file for Android projects.
+     *
+     * @param factoryUrl
+     *         gitConnectionFactory instance
+     * @param vfs
+     *         virtual file system
+     * @param item
+     *         {@link ProjectModel} instance
+     * @throws VirtualFileSystemException
+     * @throws IOException
+     */
+    private void prepareAndroidProject(SimpleFactoryUrl factoryUrl, VirtualFileSystem vfs, Item item)
+            throws VirtualFileSystemException, IOException {
+        File constJava =
+                (File)vfs.getItemByPath(item.getPath() + "/src/com/google/cloud/backend/android/Consts.java", null,
+                                        false,
+                                        PropertyFilter.NONE_FILTER);
+        String content = IoUtil.readStream(vfs.getContent(constJava.getId()).getStream());
+
+        String[] actionParams = factoryUrl.getAction().replaceAll("'", "").split(";");
+        String prjNum = null;
+        String prjID = null;
+
+        for (String param : actionParams) {
+            if (param.startsWith("projectNumber")) {
+                prjNum = param.split("=")[1];
+            }
+            if (param.startsWith("projectID")) {
+                prjID = param.split("=")[1];
+            }
+        }
+
+        String newContent =
+                PATTERN.matcher(content).replaceFirst("public static final String PROJECT_ID = \"" + prjID + "\";");
+        newContent = PATTERN_NUMBER.matcher(newContent)
+                                   .replaceFirst("public static final String PROJECT_NUMBER = \"" + prjNum + "\";");
+        vfs.updateContent(constJava.getId(), MediaType.valueOf(constJava.getMimeType()),
+                          new ByteArrayInputStream(newContent.getBytes()),
+                          null);
     }
 
-    protected GitConnection getGitConnection(String projectId, String vfsId)
+    /**
+     * Perform deleting git repository.
+     *
+     * @throws VirtualFileSystemException
+     */
+    private void deleteRepository(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
+        try {
+            Item project = getGitProject(vfs, projectId);
+            String path2gitFolder = project.getPath() + "/.git";
+            Item gitItem = vfs.getItemByPath(path2gitFolder, null, false, PropertyFilter.NONE_FILTER);
+            vfs.delete(gitItem.getId(), null);
+        } catch (ItemNotFoundException e) {
+            LOG.warn(e.getLocalizedMessage(), e);
+        }
+    }
+
+    /**
+     * Retrieve git connection instance.
+     *
+     * @return {@link GitConnection} instance
+     * @throws GitException
+     * @throws VirtualFileSystemException
+     */
+    private GitConnection getGitConnection(VirtualFileSystem vfs, String projectId)
             throws GitException, VirtualFileSystemException {
         GitUser gituser = null;
-        ConversationState user = ConversationState.getCurrent();
-        if (user != null) {
-            gituser = new GitUser(user.getIdentity().getUserId());
+        ConversationState userState = ConversationState.getCurrent();
+        try {
+            if (userState != null) {
+                User user = userManager.getUserByAlias(userState.getIdentity().getUserId());
+                String firstName = user.getProfile().getAttribute("firstName");
+                String lastName = user.getProfile().getAttribute("lastName");
+                String username = "";
+                if (firstName != null && firstName.length() != 0) {
+                    username += firstName.concat(" ");
+                }
+                if (lastName != null && lastName.length() != 0) {
+                    username += lastName;
+                }
+                if (username.length() != 0) {
+                    gituser = new GitUser(username, userState.getIdentity().getUserId());
+                } else {
+                    gituser = new GitUser(userState.getIdentity().getUserId());
+                }
+            }
+        } catch (OrganizationServiceException e) {
+            LOG.error("It is not possible to get user", e);
+            throw new GitException("User not found");
         }
-        return GitConnectionFactory.getInstance().getConnection(resolveLocalPath(projectId, vfsId), gituser);
+        return gitConnectionFactory.getConnection(localPathResolver.resolve(vfs, getGitProject(vfs, projectId).getId()), gituser);
     }
 
-    protected String resolveLocalPath(String projectId, String vfsId) throws VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        if (vfs == null) {
-            throw new VirtualFileSystemException(
-                    "Can't resolve path on the Local File System : Virtual file system not initialized");
-        }
-        Item gitProject = getGitProject(vfs, projectId);
-        return localPathResolver.resolve(vfs, gitProject.getId());
-    }
-
+    /**
+     * Get item of cloned project.
+     *
+     * @return {@link ProjectModel} instance
+     * @throws VirtualFileSystemException
+     */
     private Item getGitProject(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
         Item project = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         Item parent = vfs.getItem(project.getParentId(), false, PropertyFilter.ALL_FILTER);
         if (parent.getItemType().equals(ItemType.PROJECT)) // MultiModule project
             return parent;
         return project;
+    }
+
+    /**
+     * Check repository public or not.
+     * First of all if url is SSH, it will be converted to https,
+     * we trying to get stream, not successful result means that
+     * git provider doesn't provide stream for this url, so /info/refs/service=git-upload-pack
+     * should be appended to url, after this we are going to take stream one more time if url
+     * gives us stream, we read content and check it,
+     * if it contains "git repository not found", then it is private repository
+     * or it is not exists, else repository is public
+     *
+     * @param gitUrl
+     *         repository url
+     * @return <code>true</code> when repository is public
+     */
+    private boolean isRepositoryPublic(String gitUrl) {
+        //check if url is ssh convert it to https
+        if (gitUrl.matches("((((git|ssh)://)(([^\\\\/@:]+@)??)" +
+                           "[^\\\\/@:]+)|([^\\\\/@:]+@[^\\\\/@:]+)" +
+                           ")(:|/)[^\\\\@:]+")) {
+            int separatorPos;
+            if ((separatorPos = gitUrl.indexOf("://")) != -1) {
+                gitUrl = gitUrl.substring(separatorPos + 3);
+            }
+            if ((separatorPos = gitUrl.indexOf('@')) != -1) {
+                gitUrl = gitUrl.substring(separatorPos + 1);
+            }
+            gitUrl = gitUrl.replace(":", "/");
+            gitUrl = "https://".concat(gitUrl);
+        }
+        //make double open stream, try to get url stream, if not successful try to append url information
+        //and get stream again
+        try {
+            URL url = new URL(gitUrl);
+            url.openStream().close();
+            return true;
+        } catch (IOException e) {
+            BufferedReader reader = null;
+            try {
+                //append git information to the url
+                URL url = new URL(gitUrl.concat("/info/refs?service=git-upload-pack"));
+                reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                StringBuilder sb = new StringBuilder();
+                String readerLine;
+                while ((readerLine = reader.readLine()) != null) {
+                    sb.append(readerLine);
+                }
+                if (sb.toString().toLowerCase().indexOf("git repository not found") != -1) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } catch (IOException io) {
+                LOG.error("It is not possible to get stream to " + gitUrl, io);
+                return false;
+            } finally {
+                try {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                } catch (IOException io) {
+                    LOG.error("Can't close stream", io);
+                }
+            }
+        }
+    }
+
+    private void setPrivateRepositoryPermissions(String vcsUrl, VirtualFileSystem vfs, String projectId) {
+        try {
+            Workspace workspace = workspaceManager.getWorkspaceByName(workspaceName);
+            if (isRepositoryPublic(vcsUrl)) {
+                workspace.setAttribute("is_private", "false");
+            } else {
+                workspace.setAttribute("is_private", "true");
+                AccessControlEntry ace =
+                        new AccessControlEntryImpl(new PrincipalImpl("workspace/developer", Principal.Type.GROUP), Collections
+                                .singleton(VirtualFileSystemInfo.BasicPermissions.ALL.value()));
+                vfs.updateACL(projectId, Arrays.asList(ace), true, null);
+            }
+            workspaceManager.updateWorkspace(workspace);
+        } catch (OrganizationServiceException e) {
+            LOG.error("It is not possible to get workspace", e);
+        } catch (VirtualFileSystemException e) {
+            LOG.error("Can't set permissions for private project");
+        }
     }
 }

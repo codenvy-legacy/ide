@@ -217,8 +217,8 @@ var CodeMirror = (function () {
         replaceChars: function (text, start, end) {
             this.editor.replaceChars(text, start, end);
         },
-        getSearchCursor: function (string, fromCursor, caseFold) {
-            return this.editor.getSearchCursor(string, fromCursor, caseFold);
+        getSearchCursor: function (string, fromCursor, isBeginSearch, caseFold) {
+            return this.editor.getSearchCursor(string, fromCursor, isBeginSearch, caseFold);
         },
 
         undo: function () {

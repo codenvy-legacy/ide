@@ -36,14 +36,14 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 @RolesAllowed("developer")
-public class DebugAppControl extends SimpleControl implements IDEControl,
-                                                  // ProjectClosedHandler, ProjectOpenedHandler,
-                                                  AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler {
-    public static final String  ID     = DebuggerExtension.LOCALIZATION_CONSTANT.debugAppControlId();
+public class DebugAppControl extends SimpleControl implements IDEControl, AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler {
+    public static final String  ID                = DebuggerExtension.LOCALIZATION_CONSTANT.debugAppControlId();
 
-    private static final String TITLE  = "Debug Application";
+    private static final String TITLE             = "Debug Application";
 
-    private static final String PROMPT = "Launch Debug";
+    private static final String PROMPT            = "Launch Debug";
+
+    private ProjectModel        currentProject    = null;
 
     public DebugAppControl() {
         super(ID);
@@ -90,13 +90,14 @@ public class DebugAppControl extends SimpleControl implements IDEControl,
     // }
 
     /** @param event */
-    private void updateState(String projectType) {
-        boolean isJavaProject = ProjectResolver.SPRING.equals(projectType)
-                                || ProjectResolver.SERVLET_JSP.equals(projectType)
-                                || ProjectResolver.APP_ENGINE_JAVA.equals(projectType)
-                                || ProjectType.JAVA.value().equals(projectType)
-                                || ProjectType.WAR.value().equals(projectType)
-                                || ProjectType.JSP.value().equals(projectType);
+    private void updateState() {
+        String projectType = (currentProject != null) ? currentProject.getProjectType() : null;
+        boolean isJavaProject = projectType != null && (ProjectResolver.SPRING.equals(projectType)
+                                                        || ProjectResolver.SERVLET_JSP.equals(projectType)
+                                                        || ProjectResolver.APP_ENGINE_JAVA.equals(projectType)
+                                                        || ProjectType.JAVA.value().equals(projectType)
+                                                        || ProjectType.WAR.value().equals(projectType)
+                                                        || ProjectType.JSP.value().equals(projectType));
         // setVisible(isJavaProject);
         setEnabled(isJavaProject);
         setShowInContextMenu(isJavaProject);
@@ -121,18 +122,19 @@ public class DebugAppControl extends SimpleControl implements IDEControl,
             setVisible(true);
             Item selectedItem = event.getSelectedItems().get(0);
 
-            ProjectModel project = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem
-                : ((ItemContext)selectedItem).getProject();
-            if (ProjectType.MultiModule.value().equals(project.getProjectType())
-                || ProjectType.JAR.value().equals(project.getProjectType())
-                || ProjectType.JAVASCRIPT.value().equals(project.getProjectType())
-                || ProjectType.RUBY_ON_RAILS.value().equals(project.getProjectType())
-                || ProjectType.PYTHON.value().equals(project.getProjectType())
-                || ProjectType.PHP.value().equals(project.getProjectType())
-                || ProjectType.NODE_JS.value().equals(project.getProjectType())) {
+            currentProject = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem
+                                                                  : ((ItemContext)selectedItem).getProject();
+            if (currentProject == null || currentProject.getProjectType() == null
+                || ProjectType.MultiModule.value().equals(currentProject.getProjectType())
+                || ProjectType.JAR.value().equals(currentProject.getProjectType())
+                || ProjectType.JAVASCRIPT.value().equals(currentProject.getProjectType())
+                || ProjectType.RUBY_ON_RAILS.value().equals(currentProject.getProjectType())
+                || ProjectType.PYTHON.value().equals(currentProject.getProjectType())
+                || ProjectType.PHP.value().equals(currentProject.getProjectType())
+                || ProjectType.NODE_JS.value().equals(currentProject.getProjectType())) {
                 setVisible(false);
             }
-            updateState(project.getProjectType());
+            updateState();
         }
     }
 

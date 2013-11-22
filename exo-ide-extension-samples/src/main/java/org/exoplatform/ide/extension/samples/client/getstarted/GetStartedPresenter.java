@@ -25,7 +25,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 
@@ -52,11 +51,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
@@ -142,13 +138,18 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
 
     final Loader                                 loader                    = new GWTLoader();
 
+    /**
+     * Creates the new instance of this {@link GetStartedPresenter}
+     */
     public GetStartedPresenter() {
         IDE.addHandler(GetStartedEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
         IDE.addHandler(VfsChangedEvent.TYPE, this);
     }
 
-    // ------------------------------------------------
+    /**
+     * Binds display.
+     */
     public void bindDisplay() {
         display.getNextButton().addClickHandler(new ClickHandler() {
             @Override
@@ -193,14 +194,11 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
                 IDE.getInstance().closeView(display.asView().getId());
             }
         });
-
-        /*
-         * display.getProjectName().addValueChangeHandler(new ValueChangeHandler<String>() {
-         * @Override public void onValueChange(ValueChangeEvent<String> event) { if (!event.getValue().matches("[a-zA-Z0-9]{1,100}")) {
-         * display.setErrorVisible(true); } else { display.setErrorVisible(false); } } });
-         */
     }
 
+    /**
+     * @see org.exoplatform.ide.client.framework.paas.DeployResultHandler#onDeployFinished(boolean)
+     */
     @Override
     public void onDeployFinished(boolean success) {
         loader.hide();
@@ -210,6 +208,9 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         IDE.fireEvent(new RefreshBrowserEvent());
     }
 
+    /**
+     * @see org.exoplatform.ide.client.framework.paas.DeployResultHandler#onProjectCreated(org.exoplatform.ide.vfs.client.model.ProjectModel)
+     */
     @Override
     public void onProjectCreated(ProjectModel project) {
         loader.hide();
@@ -221,6 +222,9 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         }
     }
 
+    /**
+     * @see org.exoplatform.ide.extension.samples.client.getstarted.GetStartedHandler#onGetStarted(org.exoplatform.ide.extension.samples.client.getstarted.GetStartedEvent)
+     */
     @Override
     public void onGetStarted(GetStartedEvent event) {
         if (this.display == null) {
@@ -238,12 +242,17 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
     }
 
     /**
-     * @return
+     * Determines write permissions on current workspace.
+     * 
+     * @return <b>true</b> if user can write, <b>false</b> otherwise
      */
     public boolean isRoUser() {
         return !IDE.user.getRoles().contains("developer") && !IDE.user.getRoles().contains("admin");
     }
 
+    /**
+     * Displays first step.
+     */
     private void showChooseNameStep() {
         display.showChooseNameStep();
         display.setCurrentStepPagination("1/3");
@@ -253,6 +262,9 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         display.setProjectNameFocus();
     }
 
+    /**
+     * Displays next step.
+     */
     private void showChooseTechnologyStep() {
         if (!isNameValid()) {
             if (display.getProjectName().getValue().startsWith("_")) {
@@ -271,9 +283,13 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
 
         currentStep = WizardStep.TECHNOLOGY;
         display.setNextButtonEnable(false);
-        setProjectTypes();
+        
+        loadTemplates();
     }
 
+    /**
+     * Displays step to select PAAS.
+     */
     private void showChoosePaaSStep() {
         display.showChoosePaaSStep();
         display.setCurrentStepPagination("3/3");
@@ -291,14 +307,20 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         display.setNextButtonEnable(false);
     }
 
+    /**
+     * Validates the project name.
+     * 
+     * @return <b>true</b> if project name is correct, <b>false</b> otherwise
+     */
     private boolean isNameValid() {
         RegExp regExp = RegExp.compile("(^[-.a-zA-Z0-9])([-._a-zA-Z0-9])*$");
         return regExp.test(display.getProjectName().getValue());
     }
 
+    /**
+     * Creates and deploys the project.
+     */
     private void createAndDeploy() {
-        // loader.setMessage("Loading...");
-        // loader.show();
         if (currentPaaS instanceof NoneTarget) {
             createProjectFromTemplate(currentProjectTemplate, this);
         } else {
@@ -306,35 +328,40 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         }
     }
 
-    private void setProjectTypes() {
+    /**
+     * Loads list of templates from the server.
+     */
+    private void loadTemplates() {
         try {
-            TemplateService.getInstance()
-                           .getProjectTemplateList(
-                                                   new AsyncRequestCallback<List<ProjectTemplate>>(
-                                                                                                   new ProjectTemplateListUnmarshaller(
-                                                                                                                                       new ArrayList<ProjectTemplate>())) {
-
-                                                       @Override
-                                                       protected void onSuccess(List<ProjectTemplate> result) {
-                                                           availableProjectTemplates = result;
-                                                           availableProjectTypes = getProjectTypesFromTemplates(availableProjectTemplates);
-                                                           Collections.sort(availableProjectTypes, PROJECT_TYPES_COMPARATOR);
-                                                           display.setProjectTypes(availableProjectTypes);
-                                                           setProjectTypesButtonsHandlers();
-                                                       }
-
-                                                       @Override
-                                                       protected void onFailure(Throwable exception) {
-                                                           Dialogs.getInstance().showError("Something wrong.");
-                                                       }
-                                                   });
+            TemplateService.getInstance().getProjectTemplateList(
+                new AsyncRequestCallback<List<ProjectTemplate>>(new ProjectTemplateListUnmarshaller(new ArrayList<ProjectTemplate>())) {
+                   @Override
+                   protected void onSuccess(List<ProjectTemplate> result) {
+                       availableProjectTemplates = result;
+                       showTemplates();
+                   }
+                   @Override
+                   protected void onFailure(Throwable exception) {
+                       Dialogs.getInstance().showError("Project list can not be loaded.");
+                   }
+               });
         } catch (RequestException e) {
-            Dialogs.getInstance().showError("Something wrong while taking request.");
+            Dialogs.getInstance().showError("Project list can not be loaded.");
         }
+    }
+    
+    /**
+     * Shows templates.
+     */
+    private void showTemplates() {
+        availableProjectTypes = getProjectTypesFromTemplates(availableProjectTemplates);
+        Collections.sort(availableProjectTypes, PROJECT_TYPES_COMPARATOR);
+        display.setProjectTypes(availableProjectTypes);
+        setProjectTypesButtonsHandlers();        
     }
 
     /**
-     * Prepare project type list to be displayed.
+     * Prepares project type list to be displayed.
      * 
      * @param projectTemplates available project templates
      * @return {@link List}
@@ -350,6 +377,9 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         return projectTypes;
     }
 
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -357,14 +387,17 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         }
     }
 
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+     */
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
         this.vfsInfo = event.getVfsInfo();
     }
 
-    // ------------------------------------------------
-
-    /** Need to set for project types buttons handlers that will allow to use one of programming technology */
+    /**
+     * Adds handlers to project types buttons.
+     */
     private void setProjectTypesButtonsHandlers() {
         for (final ProjectTypeToggleButton toggleButton : display.getProjectTypeButtonsList()) {
             toggleButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
@@ -383,7 +416,9 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         }
     }
 
-    /** Need to set for paas buttons handlers that will allow to use one of paas */
+    /**
+     * Adds handlers to PAAS buttons.
+     */
     private void setPaaSButtonsHandlers() {
         for (final PaaSToggleButton toggleButton : display.getPaaSToggleButtonsList()) {
             if (!(toggleButton.getPaaS() instanceof NoneTarget) &&
@@ -408,6 +443,12 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         }
     }
 
+    /**
+     * Creates project from template.
+     * 
+     * @param projectTemplate project template
+     * @param deployResultHandler handler to perform operations after creation complete.
+     */
     private void createProjectFromTemplate(ProjectTemplate projectTemplate, final DeployResultHandler deployResultHandler) {
         if (vfsInfo == null || vfsInfo.getRoot() == null) {
             Dialogs.getInstance().showError("Vfs error"); // TODO
@@ -450,30 +491,11 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
     }
 
     /**
-     * Writes 'jrebel' property to the project properties.
+     * Selects active project template after mouse clicking. 
      * 
-     * @param project {@link ProjectModel}
+     * @param paaS PAAS
+     * @return selected project template
      */
-    private void writeUseJRebelProperty(ProjectModel project) {
-        project.getProperties().add(new PropertyImpl(JREBEL, String.valueOf(!IDE.user.isTemporary())));
-        try {
-            VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
-
-                @Override
-                protected void onSuccess(ItemWrapper result) {
-                    // nothing to do
-                }
-
-                @Override
-                protected void onFailure(Throwable ignore) {
-                    // ignore this exception
-                }
-            });
-        } catch (RequestException e) {
-            // ignore this exception
-        }
-    }
-
     private ProjectTemplate selectProjectTemplate(PaaS paaS) {
         String startWithName;
 
@@ -495,11 +517,14 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         return null;
     }
 
-    // TODO fill image
+    /**
+     * Dummy implementation of PASS. It allows the user to create the project without selecting deployment. 
+     */
     private class NoneTarget extends PaaS {
         public NoneTarget() {
             super("none", "None", new Image(SamplesClientBundle.INSTANCE.gitHub()),
                   new Image(SamplesClientBundle.INSTANCE.gitHubDisabled()), new ArrayList<ProjectType>());
         }
     }
+    
 }
