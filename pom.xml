@@ -118,6 +118,7 @@
         <gwt.test.skip>true</gwt.test.skip>
         <gwt.version>2.5.0</gwt.version>
         <gwt.xmx>-Xmx2048m</gwt.xmx>
+        <hamcrest.version>1.2.1</hamcrest.version>
         <jackson.version>1.9.4</jackson.version>
         <javax.annotation.version>1.0</javax.annotation.version>
         <javax.inject.version>1</javax.inject.version>
@@ -131,7 +132,8 @@
         <junit.version>4.10</junit.version>
         <lucene.version>2.9.4</lucene.version>
         <maven-invoker.version>2.1.1</maven-invoker.version>
-        <mockito.version>1.9.0</mockito.version>
+        <mockito.version>1.9.5</mockito.version>
+        <mockitong.version>0.3</mockitong.version>
         <openid4java.version>0.9.6</openid4java.version>
         <openshift-java-client.version>2.3.0.Final</openshift-java-client.version>
         <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
