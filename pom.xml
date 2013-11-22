@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.codenvy</groupId>
         <artifactId>maven-parent-pom</artifactId>
+        <groupId>com.codenvy</groupId>
         <version>2.0.1</version>
     </parent>
     <groupId>org.exoplatform.ide</groupId>
@@ -12,95 +11,6 @@
     <version>2.9.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Codenvy IDE :: Parent</name>
-    <scm>
-        <connection>scm:git:git@github.com:codenvy/ide.git</connection>
-        <developerConnection>scm:git:git@github.com:codenvy/ide.git</developerConnection>
-        <url>http://fisheye.exoplatform.org/browse/projects-internal/ide/trunk</url>
-        <tag>HEAD</tag>
-    </scm>
-    <properties>
-        <!-- Codenvy -->
-        <codenvy.commons.version>0.10.0-SNAPSHOT</codenvy.commons.version>
-        <codenvy.organization.version>0.9.0-SNAPSHOT</codenvy.organization.version>
-        <codenvy.odyssey.version>0.9.0-SNAPSHOT</codenvy.odyssey.version>
-        <codenvy.ide-codeassistant-index.version>20120627</codenvy.ide-codeassistant-index.version>
-        <codenvy.factory.version>0.3.0-SNAPSHOT</codenvy.factory.version>
-        <codenvy.platform-api.version>1.0.0-SNAPSHOT</codenvy.platform-api.version>
-        <everrest.version>1.1.3</everrest.version>
-        <everrest.assured>0.11</everrest.assured>
-
-        <!-- eXo Modules -->
-        <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
-        <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
-
-
-        <!-- Third parties -->
-        <junit.version>4.10</junit.version>
-        <testng.version>6.3.1</testng.version>
-
-        <shindig.version>2.5.0-beta2</shindig.version>
-        <chromattic.version>1.1.0-beta6</chromattic.version>
-        <org.slf4j.version>1.6.1</org.slf4j.version>
-        <apache.commons-compress.version>1.0</apache.commons-compress.version>
-        <commons-fileupload.version>1.2.1</commons-fileupload.version>
-        <commons-io.version>1.3.2</commons-io.version>
-        <commons-codec.version>1.6</commons-codec.version>
-        <commons-lang.version>2.6</commons-lang.version>
-        <commons-configuration.version>1.8</commons-configuration.version>
-        <groovy.version>1.8.1</groovy.version>
-        <version.failsafe.plugin>2.6</version.failsafe.plugin>
-        <tomcat.version>7.0.42</tomcat.version>
-
-        <jgit.version>2.3.1.201302201838-r</jgit.version>
-        <jsch.version>0.1.44-1</jsch.version>
-        <appengine.version>1.7.7</appengine.version>
-        <ch.qos.logback.version>1.0.0</ch.qos.logback.version>
-        <crash.version>1.0.0-beta21</crash.version>
-        <guava.version>12.0.1</guava.version>
-        <gson.version>2.1</gson.version>
-        <lucene.version>2.9.4</lucene.version>
-        <google.api-client.version>1.9.0-beta</google.api-client.version>
-        <openid4java.version>0.9.6</openid4java.version>
-        <gdata.version>1.47.1</gdata.version>
-        <asm.version>3.3.1</asm.version>
-        <fest-assert.version>1.4</fest-assert.version>
-        <mockito.version>1.9.0</mockito.version>
-        <qdox.version>1.12</qdox.version>
-        <qdox-patched.version>1.12-eXo01</qdox-patched.version>
-        <protobuf-java.version>2.4.1</protobuf-java.version>
-        <easymock.version>3.1</easymock.version>
-        <picocontainer.version>1.1</picocontainer.version>
-
-        <antlr.version>3.3</antlr.version>
-        <openshift-java-client.version>2.3.0.Final</openshift-java-client.version>
-        <aws-java-sdk.version>1.3.17</aws-java-sdk.version>
-        <jackson.version>1.9.4</jackson.version>
-        <cloudbees-api-client.version>1.5.4</cloudbees-api-client.version>
-        <jna.version>3.5.2</jna.version>
-        <maven-invoker.version>2.1.1</maven-invoker.version>
-        <gin.version>1.5.0</gin.version>
-
-        <gwt.version>2.5.0</gwt.version>
-        <gwt-gadgets.version>1.2.1</gwt-gadgets.version>
-        <gwt-log.version>3.0.4</gwt-log.version>
-        <gwt-test-utils.version>0.38</gwt-test-utils.version>
-
-
-        <!-- javax -->
-        <javax.annotation.version>1.0</javax.annotation.version>
-        <javax.ws.version>1.0</javax.ws.version>
-        <javax.ws.rs.version>1.0</javax.ws.rs.version>
-        <javax.mail.version>1.4.2</javax.mail.version>
-        <javax.inject.version>1</javax.inject.version>
-        <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
-
-       <!-- GWT compiler options -->
-       <gwt.xmx>-Xmx2048m</gwt.xmx>
-       <gwt.compiler.additional.options>OBF</gwt.compiler.additional.options>
-       <gwt.test.skip>true</gwt.test.skip>
-
-    </properties>
-
     <modules>
         <module>exo-ide-commons</module>
         <module>codenvy-gwtframework-commons</module>
@@ -164,4 +74,76 @@
         <module>exo-ide-jrebel-remote</module>
         <module>exo-ide-dev-resources</module>
     </modules>
+    <scm>
+        <connection>scm:git:git@github.com:codenvy/ide.git</connection>
+        <developerConnection>scm:git:git@github.com:codenvy/ide.git</developerConnection>
+        <tag>HEAD</tag>
+        <url>http://fisheye.exoplatform.org/browse/projects-internal/ide/trunk</url>
+    </scm>
+    <properties>
+        <antlr.version>3.3</antlr.version>
+        <apache.commons-compress.version>1.0</apache.commons-compress.version>
+        <appengine.version>1.7.7</appengine.version>
+        <asm.version>3.3.1</asm.version>
+        <aws-java-sdk.version>1.3.17</aws-java-sdk.version>
+        <ch.qos.logback.version>1.0.0</ch.qos.logback.version>
+        <chromattic.version>1.1.0-beta6</chromattic.version>
+        <cloudbees-api-client.version>1.5.4</cloudbees-api-client.version>
+        <codenvy.commons.version>0.10.0-SNAPSHOT</codenvy.commons.version>
+        <codenvy.factory.version>0.3.0-SNAPSHOT</codenvy.factory.version>
+        <codenvy.ide-codeassistant-index.version>20120627</codenvy.ide-codeassistant-index.version>
+        <codenvy.odyssey.version>0.9.0-SNAPSHOT</codenvy.odyssey.version>
+        <codenvy.organization.version>0.9.0-SNAPSHOT</codenvy.organization.version>
+        <codenvy.platform-api.version>1.0.0-SNAPSHOT</codenvy.platform-api.version>
+        <commons-codec.version>1.6</commons-codec.version>
+        <commons-configuration.version>1.8</commons-configuration.version>
+        <commons-fileupload.version>1.2.1</commons-fileupload.version>
+        <commons-io.version>1.3.2</commons-io.version>
+        <commons-lang.version>2.6</commons-lang.version>
+        <crash.version>1.0.0-beta21</crash.version>
+        <easymock.version>3.1</easymock.version>
+        <everrest.assured>0.11</everrest.assured>
+        <everrest.version>1.1.3</everrest.version>
+        <fest-assert.version>1.4</fest-assert.version>
+        <gdata.version>1.47.1</gdata.version>
+        <gin.version>1.5.0</gin.version>
+        <google.api-client.version>1.9.0-beta</google.api-client.version>
+        <groovy.version>1.8.1</groovy.version>
+        <gson.version>2.1</gson.version>
+        <guava.version>12.0.1</guava.version>
+        <gwt-gadgets.version>1.2.1</gwt-gadgets.version>
+        <gwt-log.version>3.0.4</gwt-log.version>
+        <gwt-test-utils.version>0.38</gwt-test-utils.version>
+        <gwt.compiler.additional.options>OBF</gwt.compiler.additional.options>
+        <gwt.test.skip>true</gwt.test.skip>
+        <gwt.version>2.5.0</gwt.version>
+        <gwt.xmx>-Xmx2048m</gwt.xmx>
+        <jackson.version>1.9.4</jackson.version>
+        <javax.annotation.version>1.0</javax.annotation.version>
+        <javax.inject.version>1</javax.inject.version>
+        <javax.mail.version>1.4.2</javax.mail.version>
+        <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
+        <javax.ws.rs.version>1.0</javax.ws.rs.version>
+        <javax.ws.version>1.0</javax.ws.version>
+        <jgit.version>2.3.1.201302201838-r</jgit.version>
+        <jna.version>3.5.2</jna.version>
+        <jsch.version>0.1.44-1</jsch.version>
+        <junit.version>4.10</junit.version>
+        <lucene.version>2.9.4</lucene.version>
+        <maven-invoker.version>2.1.1</maven-invoker.version>
+        <mockito.version>1.9.0</mockito.version>
+        <openid4java.version>0.9.6</openid4java.version>
+        <openshift-java-client.version>2.3.0.Final</openshift-java-client.version>
+        <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
+        <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
+        <org.slf4j.version>1.6.1</org.slf4j.version>
+        <picocontainer.version>1.1</picocontainer.version>
+        <protobuf-java.version>2.4.1</protobuf-java.version>
+        <qdox-patched.version>1.12-eXo01</qdox-patched.version>
+        <qdox.version>1.12</qdox.version>
+        <shindig.version>2.5.0-beta2</shindig.version>
+        <testng.version>6.3.1</testng.version>
+        <tomcat.version>7.0.42</tomcat.version>
+        <version.failsafe.plugin>2.6</version.failsafe.plugin>
+    </properties>
 </project>

@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
     <artifactId>exo-ide-git-server</artifactId>
     <packaging>war</packaging>
     <name>Codenvy IDE :: GIT :: Server</name>
-
     <dependencies>
         <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit.http.server</artifactId>
-            <version>${jgit.version}</version>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>${jsch.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
@@ -23,9 +21,9 @@
             <version>${jgit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>${jsch.version}</version>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit.http.server</artifactId>
+            <version>${jgit.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -35,4 +33,3 @@
         </dependency>
     </dependencies>
 </project>
-

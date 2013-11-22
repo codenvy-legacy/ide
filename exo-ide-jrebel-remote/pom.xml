@@ -6,11 +6,9 @@
         <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
-
     <artifactId>exo-ide-jrebel-remote</artifactId>
-    <name>Codenvy IDE :: JREBEL-REMOTE</name>
     <packaging>war</packaging>
-
+    <name>Codenvy IDE :: JREBEL-REMOTE</name>
     <dependencies>
         <dependency>
             <groupId>javax.servlet</groupId>

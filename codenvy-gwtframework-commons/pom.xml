@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
 
     CODENVY CONFIDENTIAL
@@ -19,16 +18,13 @@
     from Codenvy S.A..
 
 -->
-
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
-
     <groupId>org.exoplatform.gwt</groupId>
     <artifactId>codenvy-gwtframework-commons</artifactId>
     <packaging>jar</packaging>
@@ -36,25 +32,22 @@
     <dependencies>
         <dependency>
             <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
             <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-dev</artifactId>
             <version>${gwt.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -80,7 +73,6 @@
                 <directory>src/test/resources</directory>
             </testResource>
         </testResources>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

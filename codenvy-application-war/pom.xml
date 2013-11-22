@@ -1,87 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
     <groupId>org.exoplatform.ide</groupId>
     <artifactId>codenvy-application-war</artifactId>
     <packaging>war</packaging>
     <name>Codenvy IDE :: Packaging :: Application</name>
-
     <dependencies>
         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-servlet</artifactId>
-            <version>${gwt.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-client</artifactId>
+            <artifactId>codenvy-extension-android</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!-- EDITOR EXTENSIONS -->
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-collabeditor</artifactId>
+            <artifactId>codenvy-extension-html-runtime</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-jsp</artifactId>
+            <artifactId>codenvy-factory</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-ruby</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-php</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-python</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-yaml</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- EXTENSIONS -->
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>codenvy-ide-collaboration</artifactId>
@@ -89,7 +34,68 @@
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-jdt-core</artifactId>
+            <artifactId>eclipse-jdt-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-codeassistant-asm</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- EDITOR EXTENSIONS -->
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-collabeditor</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-jsp</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-php</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-python</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-ruby</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-yaml</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-appfog</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-aws</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-cloudbees</artifactId>
             <version>${project.version}</version>
             <exclusions>
                 <exclusion>
@@ -98,14 +104,27 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>eclipse-jdt-core</artifactId>
+            <artifactId>exo-ide-extension-cloudfoundry</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-googleappengine</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>httpclient</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-heroku</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-java</artifactId>
@@ -125,7 +144,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-java-runtime</artifactId>
@@ -137,16 +155,49 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-logreader</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-maven</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-nodejs-runtime</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-openshift</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-php-runtime</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-python-runtime</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-cloudbees</artifactId>
+            <artifactId>exo-ide-extension-ruby</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-samples</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-jdt-core</artifactId>
             <version>${project.version}</version>
             <exclusions>
                 <exclusion>
@@ -155,117 +206,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-nodejs-runtime</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-php-runtime</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>codenvy-extension-html-runtime</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-cloudfoundry</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-appfog</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-heroku</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-openshift</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-maven</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-ruby</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-logreader</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-googleappengine</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>httpclient</artifactId>
-                    <groupId>org.apache.httpcomponents</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-aws</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-codeassistant-asm</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>codenvy-extension-android</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-commons</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-shell</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-websocket</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-server</artifactId>
@@ -281,25 +221,26 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-shell</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs-fs</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>${javax.inject.version}</version>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-websocket</artifactId>
+            <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
@@ -307,28 +248,29 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${org.slf4j.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-samples</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>codenvy-factory</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <version>${gwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>${jsch.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit.http.server</artifactId>
+            <version>${jgit.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -336,40 +278,36 @@
             <version>${guava.version}</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>${javax.servlet-api.version}</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit.http.server</artifactId>
-            <version>${jgit.version}</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>${jsch.version}</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
-
-
         <plugins>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
-                <configuration>
-                    <timestampFormat>{0, date, yyyy-MM-dd HH:mm:ss}</timestampFormat>
-                    <doCheck>false</doCheck>
-                    <doUpdate>false</doUpdate>
-                    <shortRevisionLength>8</shortRevisionLength>
-                </configuration>
                 <executions>
                     <execution>
                         <phase>validate</phase>
@@ -378,58 +316,56 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <timestampFormat>{0, date, yyyy-MM-dd HH:mm:ss}</timestampFormat>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                    <shortRevisionLength>8</shortRevisionLength>
+                </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
-
                     <execution>
                         <id>unwar-ide</id>
                         <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                         <configuration>
                             <tasks>
                                 <!--  <unjar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar"
                                         dest="${project.build.directory}/share"/> -->
-                                <unwar src="${project.build.directory}/dependency/exo-ide-packaging-shell-war-${project.version}.war"
-                                       dest="${project.build.directory}/unwar/shell">
+                                <unwar dest="${project.build.directory}/unwar/shell" src="${project.build.directory}/dependency/exo-ide-packaging-shell-war-${project.version}.war">
                                     <patternset>
-                                        <exclude name="**/META-INF/**"/>
-                                        <exclude name="**/WEB-INF/**"/>
-                                        <exclude name="**/index.html"/>
+                                        <exclude name="**/META-INF/**" />
+                                        <exclude name="**/WEB-INF/**" />
+                                        <exclude name="**/index.html" />
                                     </patternset>
                                 </unwar>
                                 <copy todir="${project.build.directory}/${project.artifactId}-${project.version}/_app">
-                                    <fileset dir="${project.build.directory}/unwar/shell"/>
+                                    <fileset dir="${project.build.directory}/unwar/shell" />
                                 </copy>
                             </tasks>
                         </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
                     </execution>
-
                     <execution>
                         <id>buildnumber</id>
+                        <phase>compile</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
-                        <phase>compile</phase>
                         <configuration>
                             <tasks>
-                                <echo file="${project.build.directory}/classes/org/exoplatform/ide/client/BuildNumber.properties"
-                                      append="false">
-                                    buildNumber = ${buildNumber}
+                                <echo append="false" file="${project.build.directory}/classes/org/exoplatform/ide/client/BuildNumber.properties">buildNumber = ${buildNumber}
                                     buildTime = ${timestamp}
-                                    version = ${project.version}
-                                </echo>
+                                    version = ${project.version}</echo>
                             </tasks>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -453,11 +389,18 @@
                     </execution>
                 </executions>
             </plugin>
-
             <!-- configure the GWT-Maven plugin -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <module>org.exoplatform.ide.Application</module>
                     <runTarget>org.exoplatform.ide.Application/Application.html</runTarget>
@@ -468,16 +411,7 @@
                     <extra>${project.build.directory}/extra</extra>
                     <style>${gwt.compiler.additional.options}</style>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -544,13 +478,11 @@
                                 **/lib/guice-2.0.jar,
                                 **/lib/antlr-2.*,
                                 **/lib/xstream-1.0.2.jar,
-                                **/lib/xml-apis*
-                            </packagingExcludes>
+                                **/lib/xml-apis*</packagingExcludes>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -562,7 +494,6 @@
                     </excludes>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 </project>

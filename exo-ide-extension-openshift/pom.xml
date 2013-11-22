@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>exo-ide-parent</artifactId>
@@ -11,75 +10,61 @@
     <artifactId>exo-ide-extension-openshift</artifactId>
     <name>Codenvy IDE :: Extension :: OpenShift</name>
     <dependencies>
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-git</artifactId>
             <version>${project.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>org.exoplatform.tool</groupId>
                     <artifactId>exo.tool.framework.junit</artifactId>
+                    <groupId>org.exoplatform.tool</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
-
         <dependency>
-            <groupId>com.openshift</groupId>
-            <artifactId>openshift-java-client</artifactId>
-            <version>${openshift-java-client.version}</version>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-jdt-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-server</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
             <version>${javax.ws.rs.version}</version>
         </dependency>
-
-        <!-- CLIENT SIDE -->
         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
+            <groupId>com.openshift</groupId>
+            <artifactId>openshift-java-client</artifactId>
+            <version>${openshift-java-client.version}</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-commons</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-
-
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-ui</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-framework-client</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-
-
+        <!-- CLIENT SIDE -->
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-jdt-core</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>

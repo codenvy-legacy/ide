@@ -1,93 +1,19 @@
-<?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
     <artifactId>exo-ide-extension-java-runtime</artifactId>
     <name>Codenvy IDE :: Extension :: Java :: Runtime</name>
-
     <dependencies>
-        <!-- Client side dependencies -->
-
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-jdt-core</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr</artifactId>
+            <version>${antlr.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-api</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-collabeditor</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-java</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-framework-client</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-cloudfoundry</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.gwt</groupId>
-            <artifactId>codenvy-gwtframework-commons</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.gwt</groupId>
-            <artifactId>codenvy-gwtframework-ui</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-servlet</artifactId>
-            <version>${gwt.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- End client-side dependencies -->
         <dependency>
             <groupId>org.everrest</groupId>
@@ -106,14 +32,19 @@
             <version>${everrest.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-cloudfoundry</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.commons</artifactId>
             <version>${org.exoplatform.kernel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
@@ -121,16 +52,64 @@
             <version>${javax.inject.version}</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${org.slf4j.version}</version>
-            <scope>runtime</scope>
+            <groupId>org.exoplatform.gwt</groupId>
+            <artifactId>codenvy-gwtframework-commons</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.gwt</groupId>
+            <artifactId>codenvy-gwtframework-ui</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-collabeditor</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-java</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-framework-client</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Client side dependencies -->
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-jdt-core</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-vfs</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>sun.jdt</groupId>
@@ -140,17 +119,35 @@
             <systemPath>${java.home}/../lib/tools.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr</artifactId>
-            <version>${antlr.version}</version>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <version>${gwt.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-commons</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
-
+    <build>
+        <!-- DO NOT REMOVE NEED FOR GWT BUILD-->
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+    </build>
     <profiles>
         <profile>
             <id>std</id>
@@ -160,9 +157,7 @@
             <build>
                 <!-- Generate compiled stuff in the folder used for developing mode -->
                 <!-- outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory -->
-
                 <plugins>
-
                     <!-- GWT Maven Plugin -->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
@@ -185,7 +180,6 @@
                             <i18nMessagesBundle>org.exoplatform.ide.extension.java.jdi.client.DebugLocalizationConstant</i18nMessagesBundle>
                         </configuration>
                     </plugin>
-
                     <!-- Copy static web files before executing gwt:run -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -206,15 +200,4 @@
             </build>
         </profile>
     </profiles>
-    <build>
-        <!-- DO NOT REMOVE NEED FOR GWT BUILD-->
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
-    </build>
 </project>

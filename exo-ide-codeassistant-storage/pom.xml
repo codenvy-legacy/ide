@@ -6,16 +6,14 @@
         <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
-
     <artifactId>exo-ide-codeassistant-storage</artifactId>
-    <name>Codenvy IDE :: Codeassitant Storage</name>
     <packaging>war</packaging>
-
+    <name>Codenvy IDE :: Codeassitant Storage</name>
     <dependencies>
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-codeassistant-asm</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-core</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -23,10 +21,15 @@
             <version>${project.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>org.exoplatform.ide</groupId>
                     <artifactId>exo-ide-vfs</artifactId>
+                    <groupId>org.exoplatform.ide</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-codeassistant-asm</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -40,20 +43,14 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
-        </dependency>
-        <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>${javax.inject.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${javax.servlet-api.version}</version>
-            <scope>provided</scope>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -61,9 +58,10 @@
             <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-core</artifactId>
-            <version>${everrest.version}</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet-api.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>

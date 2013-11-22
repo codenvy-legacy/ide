@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
     <artifactId>exo-ide-extension-java</artifactId>
@@ -12,20 +11,43 @@
     <name>Codenvy IDE :: Extension :: Java</name>
     <dependencies>
         <dependency>
+            <groupId>com.codenvy.commons</groupId>
+            <artifactId>codenvy-commons-json</artifactId>
+            <version>${codenvy.commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>eclipse-jdt-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-core</artifactId>
+            <version>${everrest.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>exo-ide-codeassistant-asm</artifactId>
+                    <groupId>org.exoplatform.ide</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>logback-classic</artifactId>
+                    <groupId>ch.qos.logback</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>eclipse-jdt-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -34,13 +56,18 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.exoplatform.core</groupId>
+            <artifactId>exo.core.component.security.core</artifactId>
+            <version>${org.exoplatform.core.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.commons</artifactId>
             <version>${org.exoplatform.kernel.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>org.exoplatform.tool</groupId>
                     <artifactId>exo.tool.framework.junit</artifactId>
+                    <groupId>org.exoplatform.tool</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -50,19 +77,42 @@
             <version>${org.exoplatform.kernel.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>org.exoplatform.tool</groupId>
                     <artifactId>exo.tool.framework.junit</artifactId>
+                    <groupId>org.exoplatform.tool</groupId>
                 </exclusion>
                 <exclusion>
-                    <groupId>xstream</groupId>
                     <artifactId>xstream</artifactId>
+                    <groupId>xstream</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.exoplatform.core</groupId>
-            <artifactId>exo.core.component.security.core</artifactId>
-            <version>${org.exoplatform.core.version}</version>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.thoughtworks.qdox</groupId>
+            <artifactId>qdox</artifactId>
+            <version>${qdox-patched.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.gwt</groupId>
+            <artifactId>codenvy-gwtframework-commons</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-framework-client</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -71,58 +121,14 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${org.slf4j.version}</version>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-integration-exo</artifactId>
+            <version>${everrest.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.gwt</groupId>
-            <artifactId>codenvy-gwtframework-commons</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-framework-client</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-test</artifactId>
-            <version>${everrest.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-core</artifactId>
-            <version>${everrest.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-integration-exo</artifactId>
             <version>${everrest.version}</version>
             <scope>test</scope>
         </dependency>
@@ -133,14 +139,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.thoughtworks.qdox</groupId>
-            <artifactId>qdox</artifactId>
-            <version>${qdox-patched.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.easytesting</groupId>
             <artifactId>fest-assert</artifactId>
             <version>${fest-assert.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -150,24 +157,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.ide</groupId>
-                    <artifactId>exo-ide-codeassistant-asm</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.commons</groupId>
-            <artifactId>codenvy-commons-json</artifactId>
-            <version>${codenvy.commons.version}</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
@@ -227,8 +220,7 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
-                                       dest="${project.build.directory}"/>
+                                <unzip dest="${project.build.directory}" src="${project.build.directory}/ide-codeassistant-lucene-index.zip" />
                             </tasks>
                         </configuration>
                     </execution>

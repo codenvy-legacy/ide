@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
     <artifactId>exo-ide-vfs</artifactId>
@@ -21,36 +21,6 @@
             <version>${codenvy.commons.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-commons</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.kernel</groupId>
-            <artifactId>exo.kernel.commons</artifactId>
-            <version>${org.exoplatform.kernel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.core</groupId>
-            <artifactId>exo.core.component.security.core</artifactId>
-            <version>${org.exoplatform.core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>jsr250-api</artifactId>
-            <version>${javax.annotation.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>${javax.inject.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
-        </dependency>
-        <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>${commons-fileupload.version}</version>
@@ -61,16 +31,39 @@
             <version>${commons-io.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${org.slf4j.version}</version>
-            <scope>test</scope>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-core</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.core</groupId>
+            <artifactId>exo.core.component.security.core</artifactId>
+            <version>${org.exoplatform.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.kernel</groupId>
+            <artifactId>exo.kernel.commons</artifactId>
+            <version>${org.exoplatform.kernel.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>jsr250-api</artifactId>
+            <version>${javax.annotation.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
@@ -85,24 +78,30 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-test</artifactId>
+            <version>${everrest.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-dev</artifactId>
             <version>${gwt.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-core</artifactId>
-            <version>${everrest.version}</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-test</artifactId>
-            <version>${everrest.version}</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <!-- DO NOT REMOVE NEED FOR GWT BUILD-->
         <resources>

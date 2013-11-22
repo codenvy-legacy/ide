@@ -1,111 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
     <artifactId>exo-ide-security</artifactId>
     <name>Codenvy IDE :: Extension :: Security</name>
-
     <dependencies>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-commons</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-lang</artifactId>
             <version>${codenvy.commons.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-security</artifactId>
             <version>${codenvy.commons.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>org.exoplatform.kernel</groupId>
-            <artifactId>exo.kernel.commons</artifactId>
-            <version>${org.exoplatform.kernel.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.core</groupId>
-            <artifactId>exo.core.component.security.core</artifactId>
-            <version>${org.exoplatform.core.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.api-client</groupId>
-            <artifactId>google-api-client</artifactId>
-            <version>${google.api-client.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>${javax.inject.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${javax.servlet-api.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${org.slf4j.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-core</artifactId>
-            <version>${everrest.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openid4java</groupId>
-            <artifactId>openid4java-consumer</artifactId>
-            <type>pom</type>
-            <version>${openid4java.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>xerces</groupId>
-                    <artifactId>xercesImpl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>net.sourceforge.nekohtml</groupId>
-                    <artifactId>nekohtml</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.code.guice</groupId>
-                    <artifactId>guice</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>com.codenvy.organization</groupId>
+            <artifactId>codenvy-organization-api</artifactId>
+            <version>${codenvy.organization.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.organization</groupId>
@@ -113,9 +30,77 @@
             <version>${codenvy.organization.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.codenvy.organization</groupId>
-            <artifactId>codenvy-organization-api</artifactId>
-            <version>${codenvy.organization.version}</version>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-core</artifactId>
+            <version>${everrest.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.core</groupId>
+            <artifactId>exo.core.component.security.core</artifactId>
+            <version>${org.exoplatform.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.kernel</groupId>
+            <artifactId>exo.kernel.commons</artifactId>
+            <version>${org.exoplatform.kernel.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>${google.api-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openid4java</groupId>
+            <artifactId>openid4java-consumer</artifactId>
+            <version>${openid4java.version}</version>
+            <type>pom</type>
+            <exclusions>
+                <exclusion>
+                    <artifactId>xercesImpl</artifactId>
+                    <groupId>xerces</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>nekohtml</artifactId>
+                    <groupId>net.sourceforge.nekohtml</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>guice</artifactId>
+                    <groupId>com.google.code.guice</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

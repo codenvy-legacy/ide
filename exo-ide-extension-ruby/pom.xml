@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
     <groupId>org.exoplatform.ide</groupId>
@@ -13,14 +12,14 @@
     <name>Codenvy IDE :: Extension :: Ruby</name>
     <dependencies>
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-core</artifactId>
+            <version>${everrest.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>jsr250-api</artifactId>
-            <version>${javax.annotation.version}</version>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-server</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.kernel</groupId>
@@ -28,8 +27,8 @@
             <version>${org.exoplatform.kernel.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>org.exoplatform.tool</groupId>
                     <artifactId>exo.tool.framework.junit</artifactId>
+                    <groupId>org.exoplatform.tool</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -39,10 +38,45 @@
             <version>${org.exoplatform.kernel.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>org.exoplatform.tool</groupId>
                     <artifactId>exo.tool.framework.junit</artifactId>
+                    <groupId>org.exoplatform.tool</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>jsr250-api</artifactId>
+            <version>${javax.annotation.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.gwt</groupId>
+            <artifactId>codenvy-gwtframework-commons</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.gwt</groupId>
+            <artifactId>codenvy-gwtframework-ui</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-framework-client</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- CLIENT SIDE -->
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -51,31 +85,11 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${org.slf4j.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-server</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-core</artifactId>
-            <version>${everrest.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-integration-exo</artifactId>
             <version>${everrest.version}</version>
             <scope>test</scope>
         </dependency>
-
-
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-test</artifactId>
@@ -88,42 +102,13 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- CLIENT SIDE -->
         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
+            <scope>test</scope>
         </dependency>
-
-
-        <dependency>
-            <groupId>org.exoplatform.gwt</groupId>
-            <artifactId>codenvy-gwtframework-commons</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.exoplatform.gwt</groupId>
-            <artifactId>codenvy-gwtframework-ui</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-framework-client</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-
         <!-- CLIENT SIDE END -->
-
     </dependencies>
     <build>
         <!-- DO NOT REMOVE NEED FOR GWT BUILD-->
@@ -136,5 +121,4 @@
             </resource>
         </resources>
     </build>
-
 </project>

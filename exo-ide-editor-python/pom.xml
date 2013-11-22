@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
     <groupId>org.exoplatform.ide</groupId>
@@ -12,39 +11,31 @@
     <packaging>jar</packaging>
     <name>Codenvy IDE :: Editor :: Python</name>
     <dependencies>
-
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-framework-client</artifactId>
+            <artifactId>exo-ide-collabeditor</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-collabeditor</artifactId>
+            <artifactId>exo-ide-framework-client</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>
@@ -58,5 +49,4 @@
             </resource>
         </resources>
     </build>
-
 </project>

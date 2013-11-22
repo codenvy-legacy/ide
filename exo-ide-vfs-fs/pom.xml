@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
     <artifactId>exo-ide-vfs-fs</artifactId>
@@ -11,14 +11,9 @@
     <name>Codenvy IDE :: Virtual File System :: FS</name>
     <dependencies>
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-             <artifactId>exo-ide-vfs</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-commons</artifactId>
-            <version>${project.version}</version>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${commons-codec.version}</version>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
@@ -26,10 +21,19 @@
             <version>${everrest.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-test</artifactId>
-            <version>${everrest.version}</version>
-            <scope>test</scope>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-vfs</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>${lucene.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -38,9 +42,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${org.slf4j.version}</version>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-test</artifactId>
+            <version>${everrest.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -50,14 +54,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>${commons-codec.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-core</artifactId>
-            <version>${lucene.version}</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

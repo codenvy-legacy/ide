@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
     <groupId>org.exoplatform.ide</groupId>
@@ -12,43 +11,36 @@
     <packaging>jar</packaging>
     <name>Codenvy IDE :: Extension :: LogReader</name>
     <dependencies>
-        <!-- CLIENT SIDE -->
+        <!-- CLIENT SIDE END -->
         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
+            <groupId>com.codenvy.commons</groupId>
+            <artifactId>codenvy-commons-log-reader</artifactId>
+            <version>${codenvy.commons.version}</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-commons</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-
-
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-ui</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-framework-client</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- CLIENT SIDE END -->
+        <!-- CLIENT SIDE -->
         <dependency>
-            <groupId>com.codenvy.commons</groupId>
-            <artifactId>codenvy-commons-log-reader</artifactId>
-            <version>${codenvy.commons.version}</version>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>
@@ -62,5 +54,4 @@
             </resource>
         </resources>
     </build>
-
 </project>

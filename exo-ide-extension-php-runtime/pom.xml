@@ -1,15 +1,13 @@
-<?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
     <artifactId>exo-ide-extension-php-runtime</artifactId>
     <name>Codenvy IDE :: Extension :: PHP :: Runtime</name>
-
     <dependencies>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -18,19 +16,13 @@
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-cloudfoundry</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-vfs</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
@@ -38,18 +30,34 @@
             <version>${javax.inject.version}</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${org.slf4j.version}</version>
-            <scope>runtime</scope>
+            <groupId>org.exoplatform.gwt</groupId>
+            <artifactId>codenvy-gwtframework-commons</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.exoplatform.gwt</groupId>
+            <artifactId>codenvy-gwtframework-ui</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-framework-client</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- CLIENT SIDE -->
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -57,42 +65,19 @@
             <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
-
-
         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-servlet</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
+            <scope>runtime</scope>
         </dependency>
-
-
         <dependency>
-            <groupId>org.exoplatform.gwt</groupId>
-            <artifactId>codenvy-gwtframework-commons</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
-
-
-        <dependency>
-            <groupId>org.exoplatform.gwt</groupId>
-            <artifactId>codenvy-gwtframework-ui</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-framework-client</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-
     </dependencies>
-
     <build>
         <!-- DO NOT REMOVE NEED FOR GWT BUILD-->
         <resources>

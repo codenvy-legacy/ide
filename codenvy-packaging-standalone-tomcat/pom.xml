@@ -18,19 +18,23 @@
     from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
-
     <artifactId>codenvy-packaging-standalone-tomcat</artifactId>
     <packaging>pom</packaging>
     <name>Codenvy IDE :: Assemblies Tomcat</name>
     <dependencies>
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-java-sdk</artifactId>
+            <version>${appengine.version}</version>
+            <type>zip</type>
+        </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>codenvy-application-war</artifactId>
@@ -38,8 +42,20 @@
             <type>war</type>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.factory</groupId>
+            <artifactId>codenvy-factory-packaging-war</artifactId>
+            <version>${codenvy.factory.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.organization</groupId>
+            <artifactId>codenvy-organization-packaging-api-war</artifactId>
+            <version>${codenvy.organization.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-maven</artifactId>
+            <artifactId>codenvy-packaging-platform-api-war</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
@@ -50,33 +66,20 @@
             <type>war</type>
         </dependency>
         <dependency>
-            <groupId>com.codenvy.organization</groupId>
-            <artifactId>codenvy-organization-packaging-api-war</artifactId>
-            <version>${codenvy.organization.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.factory</groupId>
-            <artifactId>codenvy-factory-packaging-war</artifactId>
-            <type>war</type>
-            <version>${codenvy.factory.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>codenvy-packaging-platform-api-war</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-git-server</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
-
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-maven</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
+            <artifactId>jcl-over-slf4j</artifactId>
             <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
@@ -86,7 +89,7 @@
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
+            <artifactId>log4j-over-slf4j</artifactId>
             <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
@@ -99,13 +102,6 @@
             <artifactId>logback-core</artifactId>
             <version>${ch.qos.logback.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-java-sdk</artifactId>
-            <version>${appengine.version}</version>
-            <type>zip</type>
-        </dependency>
-
     </dependencies>
     <build>
         <plugins>
@@ -205,76 +201,60 @@
                     <execution>
                         <id>Prepare Tomcat</id>
                         <phase>prepare-package</phase>
-                        <configuration>
-                            <tasks>
-                                <unwar src="${project.build.directory}/packager-conf/zip/tomcat.zip"
-                                       dest="${project.build.directory}/packager-conf/zip/tomcat-ide">
-                                    <patternset>
-                                        <exclude name="**/ROOT/**"/>
-                                        <exclude name="**/docs/**"/>
-                                        <exclude name="**/examples/**"/>
-                                        <exclude name="**/host-manager/**"/>
-                                        <exclude name="**/manager/**"/>
-                                    </patternset>
-                                </unwar>
-                                <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
-                                    <fileset dir="${project.build.directory}/packager-conf/zip/tomcat-ide/apache-tomcat-${tomcat.version}"/>
-                                </copy>
-                                <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
-                                    <fileset dir="${basedir}/src/main/resources/tomcat"/>
-                                </copy>
-                                <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh"/>
-                                <move file="${project.build.directory}/packager-conf/jar/log4j-over-slf4j.jar"
-                                      tofile="${project.build.directory}/tomcat-ide/lib/log4j-over-slf4j.jar"/>
-                                <move file="${project.build.directory}/packager-conf/jar/logback-core.jar"
-                                      tofile="${project.build.directory}/tomcat-ide/lib/logback-core.jar"/>
-                                <move file="${project.build.directory}/packager-conf/jar/logback-classic.jar"
-                                      tofile="${project.build.directory}/tomcat-ide/lib/logback-classic.jar"/>
-                                <move file="${project.build.directory}/packager-conf/jar/slf4j-api.jar"
-                                      tofile="${project.build.directory}/tomcat-ide/lib/slf4j-api.jar"/>
-                                <move file="${project.build.directory}/packager-conf/jar/jul-to-slf4j.jar"
-                                      tofile="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j.jar"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-packaging-platform-api-war-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/api.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/builder.war"
-                                      overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${codenvy.organization.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-factory-packaging-war-${codenvy.factory.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/factory.war" overwrite="true" />
-                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
-                                       dest="${project.build.directory}/tomcat-ide"/>
-                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip"
-                                       dest="${project.build.directory}/tomcat-ide">
-                                    <patternset>
-                                        <exclude name="**/bin/**"/>
-                                        <exclude name="**/demos/**"/>
-                                        <exclude name="**/src/**"/>
-                                        <exclude name="**/docs/javadoc/**"/>
-                                        <exclude name="**/docs/remoteapi/**"/>
-                                        <exclude name="**/docs/testing/**"/>
-                                        <exclude name="**/docs/tools/**"/>
-                                        <exclude name="**/docs/javadoc/**"/>
-                                        <exclude name="**/ABOUT"/>
-                                        <exclude name="**/COPYING"/>
-                                        <exclude name="**/README"/>
-                                        <exclude name="**/README.ORM"/>
-                                        <exclude name="**/RELEASE_NOTES"/>
-                                        <exclude name="**/RELEASE_NOTES.ORM"/>
-                                    </patternset>
-                                </unzip>
-                                <move file="${project.build.directory}/tomcat-ide/appengine-java-sdk-${appengine.version}"
-                                      tofile="${project.build.directory}/tomcat-ide/appengine-java-sdk"/>
-                            </tasks>
-                        </configuration>
                         <goals>
                             <goal>run</goal>
                         </goals>
+                        <configuration>
+                            <tasks>
+                                <unwar dest="${project.build.directory}/packager-conf/zip/tomcat-ide" src="${project.build.directory}/packager-conf/zip/tomcat.zip">
+                                    <patternset>
+                                        <exclude name="**/ROOT/**" />
+                                        <exclude name="**/docs/**" />
+                                        <exclude name="**/examples/**" />
+                                        <exclude name="**/host-manager/**" />
+                                        <exclude name="**/manager/**" />
+                                    </patternset>
+                                </unwar>
+                                <copy overwrite="true" todir="${project.build.directory}/tomcat-ide">
+                                    <fileset dir="${project.build.directory}/packager-conf/zip/tomcat-ide/apache-tomcat-${tomcat.version}" />
+                                </copy>
+                                <copy overwrite="true" todir="${project.build.directory}/tomcat-ide">
+                                    <fileset dir="${basedir}/src/main/resources/tomcat" />
+                                </copy>
+                                <chmod dir="${project.build.directory}/tomcat-ide/bin" includes="**/*.sh" perm="+x" />
+                                <move file="${project.build.directory}/packager-conf/jar/log4j-over-slf4j.jar" tofile="${project.build.directory}/tomcat-ide/lib/log4j-over-slf4j.jar" />
+                                <move file="${project.build.directory}/packager-conf/jar/logback-core.jar" tofile="${project.build.directory}/tomcat-ide/lib/logback-core.jar" />
+                                <move file="${project.build.directory}/packager-conf/jar/logback-classic.jar" tofile="${project.build.directory}/tomcat-ide/lib/logback-classic.jar" />
+                                <move file="${project.build.directory}/packager-conf/jar/slf4j-api.jar" tofile="${project.build.directory}/tomcat-ide/lib/slf4j-api.jar" />
+                                <move file="${project.build.directory}/packager-conf/jar/jul-to-slf4j.jar" tofile="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j.jar" />
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/git.war" />
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-packaging-platform-api-war-${project.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/api.war" />
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" />
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" />
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${codenvy.organization.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" />
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-factory-packaging-war-${codenvy.factory.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/factory.war" />
+                                <unzip dest="${project.build.directory}/tomcat-ide" src="${project.build.directory}/ide-codeassistant-lucene-index.zip" />
+                                <unzip dest="${project.build.directory}/tomcat-ide" src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip">
+                                    <patternset>
+                                        <exclude name="**/bin/**" />
+                                        <exclude name="**/demos/**" />
+                                        <exclude name="**/src/**" />
+                                        <exclude name="**/docs/javadoc/**" />
+                                        <exclude name="**/docs/remoteapi/**" />
+                                        <exclude name="**/docs/testing/**" />
+                                        <exclude name="**/docs/tools/**" />
+                                        <exclude name="**/docs/javadoc/**" />
+                                        <exclude name="**/ABOUT" />
+                                        <exclude name="**/COPYING" />
+                                        <exclude name="**/README" />
+                                        <exclude name="**/README.ORM" />
+                                        <exclude name="**/RELEASE_NOTES" />
+                                        <exclude name="**/RELEASE_NOTES.ORM" />
+                                    </patternset>
+                                </unzip>
+                                <move file="${project.build.directory}/tomcat-ide/appengine-java-sdk-${appengine.version}" tofile="${project.build.directory}/tomcat-ide/appengine-java-sdk" />
+                            </tasks>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -308,26 +288,23 @@
             </activation>
             <build>
                 <plugins>
-
                     <plugin>
                         <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
                             <execution>
                                 <id>Prepare IDE WAR</id>
                                 <phase>prepare-package</phase>
-                                <configuration>
-                                    <tasks>
-                                        <unwar src="${project.build.directory}/packager-conf/war/codenvy-application-war-${project.version}.war"
-                                               dest="${project.build.directory}/packager-conf/war/ide">
-                                        </unwar>
-                                        <war destfile="${project.build.directory}/tomcat-ide/webapps/ide.war" needxmlfile="false">
-                                            <fileset dir="${project.build.directory}/packager-conf/war/ide"/>
-                                        </war>
-                                    </tasks>
-                                </configuration>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
+                                <configuration>
+                                    <tasks>
+                                        <unwar dest="${project.build.directory}/packager-conf/war/ide" src="${project.build.directory}/packager-conf/war/codenvy-application-war-${project.version}.war" />
+                                        <war destfile="${project.build.directory}/tomcat-ide/webapps/ide.war" needxmlfile="false">
+                                            <fileset dir="${project.build.directory}/packager-conf/war/ide" />
+                                        </war>
+                                    </tasks>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -347,30 +324,24 @@
                             <execution>
                                 <id>Prepare IDE WAR dev-mode</id>
                                 <phase>prepare-package</phase>
-                                <configuration>
-                                    <tasks>
-                                        <unwar src="${project.build.directory}/packager-conf/war/codenvy-application-war-${project.version}.war"
-                                               dest="${project.build.directory}/packager-conf/war/ide">
-                                        </unwar>
-                                        <move todir="${project.build.directory}/packager-conf/war/ide/">
-                                            <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/"/>
-                                        </move>
-                                        <copy file="${project.basedir}/src/main/resources/devmode/web.xml"
-                                              tofile="${project.build.directory}/packager-conf/war/ide/WEB-INF/web.xml" overwrite="true"/>
-                                        <copy file="${project.basedir}/src/main/resources/devmode/DevMode.html"
-                                              tofile="${project.build.directory}/packager-conf/war/ide/DevMode.html" overwrite="true"/>
-                                        <copy file="${project.basedir}/src/main/resources/devmode/login.html"
-                                              tofile="${project.build.directory}/packager-conf/war/ide/login.html" overwrite="true"/>
-                                        <copy file="${project.basedir}/src/main/resources/devmode/logout.jsp"
-                                              tofile="${project.build.directory}/packager-conf/war/ide/logout.jsp" overwrite="true"/>
-                                        <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
-                                            <fileset dir="${project.build.directory}/packager-conf/war/ide"/>
-                                        </war>
-                                    </tasks>
-                                </configuration>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
+                                <configuration>
+                                    <tasks>
+                                        <unwar dest="${project.build.directory}/packager-conf/war/ide" src="${project.build.directory}/packager-conf/war/codenvy-application-war-${project.version}.war" />
+                                        <move todir="${project.build.directory}/packager-conf/war/ide/">
+                                            <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/" />
+                                        </move>
+                                        <copy file="${project.basedir}/src/main/resources/devmode/web.xml" overwrite="true" tofile="${project.build.directory}/packager-conf/war/ide/WEB-INF/web.xml" />
+                                        <copy file="${project.basedir}/src/main/resources/devmode/DevMode.html" overwrite="true" tofile="${project.build.directory}/packager-conf/war/ide/DevMode.html" />
+                                        <copy file="${project.basedir}/src/main/resources/devmode/login.html" overwrite="true" tofile="${project.build.directory}/packager-conf/war/ide/login.html" />
+                                        <copy file="${project.basedir}/src/main/resources/devmode/logout.jsp" overwrite="true" tofile="${project.build.directory}/packager-conf/war/ide/logout.jsp" />
+                                        <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
+                                            <fileset dir="${project.build.directory}/packager-conf/war/ide" />
+                                        </war>
+                                    </tasks>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>

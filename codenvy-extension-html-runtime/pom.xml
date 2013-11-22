@@ -1,15 +1,13 @@
-<?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-extension-html-runtime</artifactId>
     <name>Codenvy IDE :: Extension :: HTML/JS/CSS :: Runtime</name>
-
     <dependencies>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -17,35 +15,32 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
-        </dependency>
-        <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>${javax.inject.version}</version>
         </dependency>
-
-        <!-- CLIENT SIDE -->
-      <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-user</artifactId>
-         <version>${gwt.version}</version>
-         <scope>provided</scope>
-      </dependency>
-
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-framework-client</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-
-
+        <!-- CLIENT SIDE -->
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
-
     <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <outputDirectory>target/classes</outputDirectory>
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -54,7 +49,5 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <outputDirectory>target/classes</outputDirectory>
     </build>
 </project>

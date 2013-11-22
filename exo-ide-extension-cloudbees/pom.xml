@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>exo-ide-parent</artifactId>
@@ -11,104 +10,83 @@
     <artifactId>exo-ide-extension-cloudbees</artifactId>
     <name>Codenvy IDE :: Extension :: CloudBees</name>
     <dependencies>
-
-
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-commons</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.cloudbees</groupId>
+            <artifactId>cloudbees-api-client</artifactId>
+            <version>${cloudbees-api-client.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-commons</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${commons-codec.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-git</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-jenkins</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-vfs</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.core</groupId>
+            <artifactId>exo.core.component.security.core</artifactId>
+            <version>${org.exoplatform.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.kernel</groupId>
+            <artifactId>exo.kernel.container</artifactId>
+            <version>${org.exoplatform.kernel.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>${javax.mail.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-framework-client</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-jenkins</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.kernel</groupId>
-            <artifactId>exo.kernel.container</artifactId>
-            <version>${org.exoplatform.kernel.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.core</groupId>
-            <artifactId>exo.core.component.security.core</artifactId>
-            <version>${org.exoplatform.core.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
             <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
-
-
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>${commons-codec.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.cloudbees</groupId>
-            <artifactId>cloudbees-api-client</artifactId>
-            <version>${cloudbees-api-client.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>${javax.inject.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>${javax.mail.version}</version>
-        </dependency>
-
-
     </dependencies>
     <build>
         <!-- DO NOT REMOVE NEED FOR GWT BUILD-->

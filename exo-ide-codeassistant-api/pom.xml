@@ -2,46 +2,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
         <version>2.9.0-SNAPSHOT</version>
     </parent>
     <artifactId>exo-ide-codeassistant-api</artifactId>
     <packaging>jar</packaging>
     <name>Codenvy IDE :: Code Assitant API</name>
     <dependencies>
-      <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-user</artifactId>
-         <version>${gwt.version}</version>
-         <scope>provided</scope>
-      </dependency>
-
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs</artifactId>
-            <version>${project.version}</version>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-core</artifactId>
             <version>${everrest.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.exoplatform.kernel</groupId>
-            <artifactId>exo.kernel.container</artifactId>
-            <version>${org.exoplatform.kernel.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.tool</groupId>
-                    <artifactId>exo.tool.framework.junit</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>xstream</groupId>
-                    <artifactId>xstream</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-vfs</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.kernel</groupId>
@@ -49,11 +31,26 @@
             <version>${org.exoplatform.kernel.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
+            <groupId>org.exoplatform.kernel</groupId>
+            <artifactId>exo.kernel.container</artifactId>
+            <version>${org.exoplatform.kernel.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>exo.tool.framework.junit</artifactId>
+                    <groupId>org.exoplatform.tool</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>xstream</artifactId>
+                    <groupId>xstream</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
-
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
