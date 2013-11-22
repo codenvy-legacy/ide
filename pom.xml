@@ -49,7 +49,7 @@
         <!-- Codenvy -->
         <com.codenvy.commons.version>0.9.1</com.codenvy.commons.version>
         <com.codenvy.organization.version>0.8.1</com.codenvy.organization.version>
-        <com.codenvy.platform-api.version>1.0.0-beta2</com.codenvy.platform-api.version>
+        <com.codenvy.platform-api.version>0.4.0-SNAPSHOT</com.codenvy.platform-api.version>
 
         <!-- eXo -->
         <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
