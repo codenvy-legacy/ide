@@ -102,8 +102,8 @@
         <commons-lang.version>2.6</commons-lang.version>
         <crash.version>1.0.0-beta21</crash.version>
         <easymock.version>3.1</easymock.version>
-        <everrest.assured>0.11</everrest.assured>
-        <everrest.version>1.1.3</everrest.version>
+        <everrest.assured>0.14</everrest.assured>
+        <everrest.version>1.1.5</everrest.version>
         <fest-assert.version>1.4</fest-assert.version>
         <gdata.version>1.47.1</gdata.version>
         <gin.version>1.5.0</gin.version>
@@ -142,7 +142,7 @@
         <qdox-patched.version>1.12-eXo01</qdox-patched.version>
         <qdox.version>1.12</qdox.version>
         <shindig.version>2.5.0-beta2</shindig.version>
-        <testng.version>6.3.1</testng.version>
+        <testng.version>6.8</testng.version>
         <tomcat.version>7.0.42</tomcat.version>
         <version.failsafe.plugin>2.6</version.failsafe.plugin>
     </properties>
