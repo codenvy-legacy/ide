@@ -104,7 +104,7 @@
         <everrest.version>1.1.5</everrest.version>
         <fest-assert.version>1.4</fest-assert.version>
         <gdata.version>1.47.1</gdata.version>
-        <gin.version>1.5.0</gin.version>
+        <gin.version>2.1.1</gin.version>
         <google.api-client.version>1.9.0-beta</google.api-client.version>
         <groovy.version>1.8.1</groovy.version>
         <gson.version>2.1</gson.version>
@@ -129,8 +129,8 @@
         <jna.version>3.5.2</jna.version>
         <jsch.version>0.1.44-1</jsch.version>
         <junit.version>4.10</junit.version>
-        <lucene.version>2.9.4</lucene.version>
         <logback.version>1.0.0</logback.version>
+        <lucene.version>2.9.4</lucene.version>
         <maven-invoker.version>2.1.1</maven-invoker.version>
         <mockito.version>1.9.5</mockito.version>
         <mockitong.version>0.3</mockitong.version>
