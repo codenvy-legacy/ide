@@ -93,6 +93,7 @@
             <artifactId>codenvy-ide-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <!-- Server-side VFS -->
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
@@ -107,6 +108,18 @@
                 <exclusion>
                     <groupId>ch.qos.logback</groupId>
                     <artifactId>logback-classic</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>httpclient</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.ide</groupId>
+                    <artifactId>exo-ide-server</artifactId>
                 </exclusion>
             </exclusions>
             <version>${org.exoplatform.ide.version}</version>
@@ -157,6 +170,11 @@
             <artifactId>codenvy-ext-extensions-runtime</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!--<dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-tutorials</artifactId>
+            <version>${project.version}</version>
+        </dependency>-->
 
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
