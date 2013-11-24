@@ -76,11 +76,11 @@ public class BuilderClientServiceImpl implements BuilderClientService {
     @Override
     public void build(String projectName,AsyncRequestCallback<String> callback)
             throws RequestException {
-        final String requesrUrl = restServiceContext + BUILD;
+        final String requestUrl = restServiceContext + BUILD;
 
         String params = "project=" + projectName;
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-        AsyncRequest.build(RequestBuilder.POST, requesrUrl + "?" + params)
+        AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params)
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
