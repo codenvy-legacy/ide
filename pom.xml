@@ -155,10 +155,9 @@
         <module>codenvy-sdk-tutorials/new-project-wizard</module>
         <module>codenvy-sdk-tutorials/new-resource-wizard</module>
         <module>codenvy-sdk-tutorials/editor-api</module>
-        <module>codenvy-sdk-private-dependencies</module>
         <module>codenvy-application-war</module>
         <module>codenvy-ide-site-war</module>
-        <!--<module>codenvy-sdk-private-dependencies</module>-->
+        <module>codenvy-sdk-private-dependencies</module>
         <module>codenvy-packaging-standalone-tomcat</module>
     </modules>
 </project>
