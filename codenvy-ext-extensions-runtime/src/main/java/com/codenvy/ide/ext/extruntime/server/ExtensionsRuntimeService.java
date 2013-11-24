@@ -74,8 +74,6 @@ public class ExtensionsRuntimeService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
-     * @param rootId
-     *         identifier of parent folder for new project
      * @param properties
      *         properties to set to project
      * @throws VirtualFileSystemException
@@ -87,10 +85,9 @@ public class ExtensionsRuntimeService {
     @POST
     public void createEmptyCodenvyExtensionProject(@QueryParam("vfsid") String vfsId,
                                                    @QueryParam("name") String name,
-                                                   @QueryParam("rootid") String rootId,
                                                    List<Property> properties) throws VirtualFileSystemException,
                                                                                      IOException {
-        createProject(vfsId, name, rootId, properties, "templates/EmptyExtension.zip");
+        createProject(vfsId, name, properties, "templates/EmptyExtension.zip");
     }
 
     /**
@@ -100,8 +97,6 @@ public class ExtensionsRuntimeService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
-     * @param rootId
-     *         identifier of parent folder for new project
      * @param properties
      *         properties to set to project
      * @param groupId
@@ -119,13 +114,12 @@ public class ExtensionsRuntimeService {
     @POST
     public void createSampleCodenvyExtensionProject(@QueryParam("vfsid") String vfsId,
                                                     @QueryParam("name") String name,
-                                                    @QueryParam("rootid") String rootId,
                                                     List<Property> properties,
                                                     @QueryParam("groupid") String groupId,
                                                     @QueryParam("artifactid") String artifactId,
                                                     @QueryParam("version") String version)
             throws VirtualFileSystemException, IOException {
-        createProject(vfsId, name, rootId, properties, "templates/GistExtensionSample.zip");
+        createProject(vfsId, name, properties, "templates/GistExtensionSample.zip");
 
         MavenXpp3Reader pomReader = new MavenXpp3Reader();
         MavenXpp3Writer pomWriter = new MavenXpp3Writer();
@@ -236,7 +230,7 @@ public class ExtensionsRuntimeService {
         runner.stopApp(appId);
     }
 
-    private void createProject(String vfsId, String name, String rootId,
+    private void createProject(String vfsId, String name,
                                List<Property> properties, String templatePath) throws VirtualFileSystemException,
                                                                                       IOException {
         if (templatePath == null || templatePath.isEmpty()) {
@@ -252,10 +246,10 @@ public class ExtensionsRuntimeService {
             throw new InvalidArgumentException("Can't find " + templatePath);
         }
         projectFolder.unzip(templateStream, true);
-        updateProperties(name, properties, projectFolder);
+        updateProperties(properties, projectFolder);
     }
 
-    private void updateProperties(String name, List<Property> properties, VirtualFile projectFolder)
+    private void updateProperties(List<Property> properties, VirtualFile projectFolder)
             throws VirtualFileSystemException {
         List<Property> propertyList = projectFolder.getProperties(PropertyFilter.ALL_FILTER);
         propertyList.addAll(properties);

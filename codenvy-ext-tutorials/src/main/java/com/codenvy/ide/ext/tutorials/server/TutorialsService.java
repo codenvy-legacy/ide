@@ -55,8 +55,6 @@ public class TutorialsService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
-     * @param rootId
-     *         identifier of parent folder for the new project
      * @param properties
      *         properties to set to project
      * @throws VirtualFileSystemException
@@ -67,7 +65,7 @@ public class TutorialsService {
     @Path("dto")
     @POST
     public void createDTOTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-                                         @QueryParam("rootid") String rootId, List<Property> properties)
+                                         List<Property> properties)
             throws VirtualFileSystemException, IOException {
         createProject(vfsId, BASE_URL + "/dto-tutorial.zip", name, properties);
     }
@@ -79,8 +77,6 @@ public class TutorialsService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
-     * @param rootId
-     *         identifier of parent folder for the new project
      * @param properties
      *         properties to set to project
      * @throws VirtualFileSystemException
@@ -91,7 +87,7 @@ public class TutorialsService {
     @Path("notification")
     @POST
     public void createNotificationTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-                                                  @QueryParam("rootid") String rootId, List<Property> properties)
+                                                  List<Property> properties)
             throws VirtualFileSystemException, IOException {
         createProject(vfsId, BASE_URL + "/notification-api-tutorial.zip", name, properties);
     }
@@ -103,8 +99,6 @@ public class TutorialsService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
-     * @param rootId
-     *         identifier of parent folder for the new project
      * @param properties
      *         properties to set to project
      * @throws VirtualFileSystemException
@@ -115,7 +109,7 @@ public class TutorialsService {
     @Path("action")
     @POST
     public void createActionTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-                                            @QueryParam("rootid") String rootId, List<Property> properties)
+                                            List<Property> properties)
             throws VirtualFileSystemException, IOException {
         createProject(vfsId, BASE_URL + "/action-api-tutorial.zip", name, properties);
     }
@@ -127,8 +121,6 @@ public class TutorialsService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
-     * @param rootId
-     *         identifier of parent folder for the new project
      * @param properties
      *         properties to set to project
      * @throws VirtualFileSystemException
@@ -139,7 +131,7 @@ public class TutorialsService {
     @Path("wizard")
     @POST
     public void createWizardTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-                                            @QueryParam("rootid") String rootId, List<Property> properties)
+                                            List<Property> properties)
             throws VirtualFileSystemException, IOException {
         createProject(vfsId, BASE_URL + "/wizard-api-tutorial.zip", name, properties);
     }
@@ -151,8 +143,6 @@ public class TutorialsService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
-     * @param rootId
-     *         identifier of parent folder for the new project
      * @param properties
      *         properties to set to project
      * @throws VirtualFileSystemException
@@ -162,8 +152,9 @@ public class TutorialsService {
      */
     @Path("newproject")
     @POST
-    public void createNewProjectWizardTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-                                                      @QueryParam("rootid") String rootId, List<Property> properties)
+    public void createNewProjectWizardTutorialProject(@QueryParam("vfsid") String vfsId,
+                                                      @QueryParam("name") String name,
+                                                      List<Property> properties)
             throws VirtualFileSystemException, IOException {
         createProject(vfsId, BASE_URL + "/new-project-wizard-tutorial.zip", name, properties);
     }
@@ -175,8 +166,6 @@ public class TutorialsService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
-     * @param rootId
-     *         identifier of parent folder for the new project
      * @param properties
      *         properties to set to project
      * @throws VirtualFileSystemException
@@ -186,8 +175,9 @@ public class TutorialsService {
      */
     @Path("newresource")
     @POST
-    public void createNewResourceWizardTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-                                                       @QueryParam("rootid") String rootId, List<Property> properties)
+    public void createNewResourceWizardTutorialProject(@QueryParam("vfsid") String vfsId,
+                                                       @QueryParam("name") String name,
+                                                       List<Property> properties)
             throws VirtualFileSystemException, IOException {
         createProject(vfsId, BASE_URL + "/new-resource-wizard-tutorial.zip", name, properties);
     }
@@ -199,8 +189,6 @@ public class TutorialsService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
-     * @param rootId
-     *         identifier of parent folder for the new project
      * @param properties
      *         properties to set to project
      * @throws VirtualFileSystemException
@@ -211,7 +199,7 @@ public class TutorialsService {
     @Path("parts")
     @POST
     public void createPartsTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-                                           @QueryParam("rootid") String rootId, List<Property> properties)
+                                           List<Property> properties)
             throws VirtualFileSystemException, IOException {
         createProject(vfsId, BASE_URL + "/parts-api-tutorial.zip", name, properties);
     }
@@ -223,8 +211,6 @@ public class TutorialsService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
-     * @param rootId
-     *         identifier of parent folder for the new project
      * @param properties
      *         properties to set to project
      * @throws VirtualFileSystemException
@@ -235,7 +221,7 @@ public class TutorialsService {
     @Path("editor")
     @POST
     public void createEditorTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-                                            @QueryParam("rootid") String rootId, List<Property> properties)
+                                            List<Property> properties)
             throws VirtualFileSystemException, IOException {
         createProject(vfsId, BASE_URL + "/editor-api-tutorial.zip", name, properties);
     }

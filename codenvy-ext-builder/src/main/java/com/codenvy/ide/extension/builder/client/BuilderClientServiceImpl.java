@@ -47,12 +47,8 @@ public class BuilderClientServiceImpl implements BuilderClientService {
     private static final String DEPLOY   = BASE_URL + "/deploy";
     /** Cancel building project method's path. */
     private static final String CANCEL   = BASE_URL + "/cancel";
-    /** Get status of build method's path. */
-    private static final String STATUS   = BASE_URL + "/status";
     /** Get result of build method's path. */
     private static final String RESULT   = BASE_URL + "/result";
-    /** Get build log method's path. */
-    private static final String LOG      = BASE_URL + "/log";
     /** REST-service context. */
     private String restServiceContext;
     /** Loader to be displayed. */
@@ -61,13 +57,11 @@ public class BuilderClientServiceImpl implements BuilderClientService {
     /**
      * Create service.
      *
-     * @param restContext
-     *         REST-service context
      * @param loader
      *         loader to show on server request
      */
     @Inject
-    public BuilderClientServiceImpl(@Named("restContext") String restContext, Loader loader) {
+    public BuilderClientServiceImpl(Loader loader) {
         this.loader = loader;
         this.restServiceContext = "/api/";
     }

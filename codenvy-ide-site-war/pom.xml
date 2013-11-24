@@ -28,7 +28,7 @@
     </parent>
     <artifactId>codenvy-ide-site-war</artifactId>
     <packaging>war</packaging>
-    <name>Codenvy IDE :: Site Web Application</name>
+    <name>Codenvy :: Site Web Application</name>
 
     <dependencies>
         <dependency>
