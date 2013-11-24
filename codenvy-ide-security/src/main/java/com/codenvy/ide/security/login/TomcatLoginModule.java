@@ -45,24 +45,15 @@ import java.util.Set;
 public class TomcatLoginModule implements LoginModule {
 
     /** The name of the option to use in order to specify the name of the realm */
-    private static final String OPTION_REALM_NAME = "realmName";
-
-    private static final Logger LOG = LoggerFactory.getLogger(TomcatLoginModule.class);
-
+    private static final String OPTION_REALM_NAME  = "realmName";
+    private static final Logger LOG                = LoggerFactory.getLogger(TomcatLoginModule.class);
     private static final String DEFAULT_REALM_NAME = new String("exo-domain");
-
-    private Subject subject;
-
+    private Subject         subject;
     private CallbackHandler callbackHandler;
-
-    private Map<String, ?> sharedState;
-
-    private Map<String, ?> options;
-
-    private Object realmName;
-
-    private Identity identity;
-
+    private Map<String, ?>  sharedState;
+    private Map<String, ?>  options;
+    private Object          realmName;
+    private Identity        identity;
 
     /** {@inheritDoc} */
     @Override
@@ -91,7 +82,6 @@ public class TomcatLoginModule implements LoginModule {
         this.realmName = getRealmName(options);
     }
 
-    @SuppressWarnings("unchecked")
     private String getRealmName(Map options) {
         if (options != null) {
             String optionValue = (String)options.get(OPTION_REALM_NAME);
