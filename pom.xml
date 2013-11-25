@@ -49,7 +49,7 @@
         <!-- Codenvy -->
         <com.codenvy.commons.version>0.9.1</com.codenvy.commons.version>
         <com.codenvy.organization.version>0.8.1</com.codenvy.organization.version>
-        <com.codenvy.platform-api.version>1.0.0-beta2</com.codenvy.platform-api.version>
+        <com.codenvy.platform-api.version>0.4.0-SNAPSHOT</com.codenvy.platform-api.version>
 
         <!-- eXo -->
         <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
@@ -145,7 +145,7 @@
         <module>codenvy-ext-ant</module>
         <module>codenvy-ext-ssh</module>
         <module>codenvy-ext-extensions-runtime</module>
-        <!--<module>codenvy-ext-tutorials</module>-->
+        <module>codenvy-ext-tutorials</module>
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
         <module>codenvy-sdk-tutorials/action-api</module>
@@ -156,10 +156,9 @@
         <module>codenvy-sdk-tutorials/new-project-wizard</module>
         <module>codenvy-sdk-tutorials/new-resource-wizard</module>
         <module>codenvy-sdk-tutorials/editor-api</module>
-        <module>codenvy-sdk-private-dependencies</module>
         <module>codenvy-application-war</module>
         <module>codenvy-ide-site-war</module>
-        <!--<module>codenvy-sdk-private-dependencies</module>-->
+        <module>codenvy-sdk-private-dependencies</module>
         <module>codenvy-packaging-standalone-tomcat</module>
     </modules>
 </project>

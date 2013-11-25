@@ -51,7 +51,7 @@ public class CreateProjectService {
     @Path("project/java")
     @POST
     @Produces(APPLICATION_JSON)
-    public void createJavaProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, @QueryParam("rootId") String rootId,
+    public void createJavaProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
                                   List<Property> properties) throws VirtualFileSystemException {
         createProject(vfsId, name, properties, "conf/Simple_jar.zip");
     }
@@ -59,7 +59,7 @@ public class CreateProjectService {
     @Path("project/war")
     @POST
     @Produces(APPLICATION_JSON)
-    public void createWarProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, @QueryParam("rootId") String rootId,
+    public void createWarProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
                                  List<Property> properties) throws VirtualFileSystemException {
 
         createProject(vfsId, name, properties, "conf/Simple_war.zip");
@@ -68,7 +68,7 @@ public class CreateProjectService {
     @Path("project/spring")
     @POST
     @Produces(APPLICATION_JSON)
-    public void createSpringProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, @QueryParam("rootId") String rootId,
+    public void createSpringProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
                                     List<Property> properties) throws VirtualFileSystemException {
         createProject(vfsId, name, properties, "conf/Simple_spring.zip");
     }
@@ -76,7 +76,7 @@ public class CreateProjectService {
     @Path("project/empty")
     @POST
     @Produces(APPLICATION_JSON)
-    public void createEmptyProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, @QueryParam("rootId") String rootId,
+    public void createEmptyProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
                                    List<Property> properties) throws VirtualFileSystemException {
 
         createProject(vfsId, name, properties, "conf/Simple_empty.zip");
@@ -93,13 +93,13 @@ public class CreateProjectService {
         }
         try {
             projectFolder.unzip(templateStream, true);
-            updateProperties(name, properties, projectFolder);
+            updateProperties(properties, projectFolder);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void updateProperties(String name, List<Property> properties, VirtualFile projectFolder)
+    private void updateProperties(List<Property> properties, VirtualFile projectFolder)
             throws VirtualFileSystemException {
         List<Property> propertyList = projectFolder.getProperties(PropertyFilter.ALL_FILTER);
         propertyList.addAll(properties);

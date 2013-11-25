@@ -155,7 +155,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                                   BuildTaskDescriptor btd = dtoFactory.createDtoFromJson(result, BuildTaskDescriptor.class);
                                   startCheckingStatus(btd);
                                   setBuildInProgress(true);
-                                  String message = constant.buildInProgress(projectToBuild.getName());
+                                  String message = constant.buildStarted(projectToBuild.getName());
                                   notification = new Notification(message, PROGRESS, BuildProjectPresenter.this);
                                   notificationManager.showNotification(notification);
                               }

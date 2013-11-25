@@ -122,7 +122,7 @@ public class Utils {
      * @throws java.io.IOException
      *         error occurred while reading or writing content of file
      */
-    static void addDependencyToPom(Path path, String groupId, String artifactId, String version) throws IOException {
+    public static void addDependencyToPom(Path path, String groupId, String artifactId, String version) throws IOException {
         Dependency dep = new Dependency();
         dep.setGroupId(groupId);
         dep.setArtifactId(artifactId);
