@@ -135,8 +135,8 @@ public class GitHub {
         final String method = "GET";
         GitHubRepositoryList gitHubRepositoryList = DtoFactory.getInstance().createDto(GitHubRepositoryList.class);
         String response = doJsonRequest(url, method, 200, gitHubRepositoryList);
-        List<GitHubRepository> repositories = DtoFactory.getInstance().createListDtoFromJson(response, GitHubRepository.class);
-        gitHubRepositoryList.setRepositories(repositories);
+        GitHubRepository[] repositories = parseJsonResponse(response, GitHubRepository[].class, null);
+        gitHubRepositoryList.setRepositories(Arrays.asList(repositories));
         return gitHubRepositoryList;
     }
 
@@ -157,8 +157,8 @@ public class GitHub {
         final String method = "GET";
         GitHubRepositoryList gitHubRepositoryList = DtoFactory.getInstance().createDto(GitHubRepositoryList.class);
         final String response = doJsonRequest(url, method, 200, gitHubRepositoryList);
-        List<GitHubRepository> repositories = DtoFactory.getInstance().createListDtoFromJson(response, GitHubRepository.class);
-        gitHubRepositoryList.setRepositories(repositories);
+        GitHubRepository[] repositories = parseJsonResponse(response, GitHubRepository[].class, null);
+        gitHubRepositoryList.setRepositories(Arrays.asList(repositories));
         return gitHubRepositoryList;
     }
 
@@ -179,8 +179,8 @@ public class GitHub {
         url += "&access_token=" + oauthToken;
         GitHubRepositoryList gitHubRepositoryList = DtoFactory.getInstance().createDto(GitHubRepositoryList.class);
         final String response = doJsonRequest(url, method, 200, gitHubRepositoryList);
-        List<GitHubRepository> repositories = DtoFactory.getInstance().createListDtoFromJson(response, GitHubRepository.class);
-        gitHubRepositoryList.setRepositories(repositories);
+        GitHubRepository[] repositories = parseJsonResponse(response, GitHubRepository[].class, null);
+        gitHubRepositoryList.setRepositories(Arrays.asList(repositories));
         return gitHubRepositoryList;
     }
 
@@ -198,8 +198,8 @@ public class GitHub {
         final String method = "GET";
         GitHubRepositoryList gitHubRepositoryList = DtoFactory.getInstance().createDto(GitHubRepositoryList.class);
         final String response = doJsonRequest(url, method, 200, gitHubRepositoryList);
-        List<GitHubRepository> repositories = DtoFactory.getInstance().createListDtoFromJson(response, GitHubRepository.class);
-        gitHubRepositoryList.setRepositories(repositories);
+        GitHubRepository[] repositories = parseJsonResponse(response, GitHubRepository[].class, null);
+        gitHubRepositoryList.setRepositories(Arrays.asList(repositories));
         return gitHubRepositoryList;
     }
 
@@ -263,7 +263,7 @@ public class GitHub {
         final String url = "https://api.github.com/user?access_token=" + oauthToken;
         final String method = "GET";
         final String response = doJsonRequest(url, method, 200);
-        GitHubUser gitHubUser = DtoFactory.getInstance().createDtoFromJson(response, GitHubUser.class);
+        GitHubUser gitHubUser = parseJsonResponse(response, GitHubUser.class, null);
         return gitHubUser;
     }
 
@@ -279,11 +279,11 @@ public class GitHub {
             String response = doJsonRequest(url, method, 200);
             // It seems that collaborators response does not contains all required fields.
             // Iterate over list and request more info about each user.
-            List<GitHubUser> collaborators = DtoFactory.getInstance().createListDtoFromJson(response, GitHubUser.class);
+            final GitHubUser[] collaborators = parseJsonResponse(response, GitHubUser[].class, null);
             final String userId = getUserId();
             for (GitHubUser collaborator : collaborators) {
                 response = doJsonRequest(collaborator.getUrl() + "?access_token=" + oauthToken, method, 200);
-                GitHubUser gitHubUser = DtoFactory.getInstance().createDtoFromJson(response, GitHubUser.class);
+                GitHubUser gitHubUser = parseJsonResponse(response, GitHubUser.class, null);
                 String email = gitHubUser.getEmail();
                 if (!(email == null || email.isEmpty() || email.equals(userId) || isAlreadyInvited(email))) {
                     myCollaborators.getCollaborators().add(gitHubUser);
@@ -419,8 +419,6 @@ public class GitHub {
             String result;
             try {
                 result = readBody(input, http.getContentLength());
-                System.out.println("GitHub.doJsonRequest()URL=" + url);
-                System.out.println("GitHub.doJsonRequest()!!!!!!!!!!!!!!!!!!!" + http.getHeaderField(HEADER_LINK));
                 
                 if (gitHubRepositoryList != null) {
                     parseLinkHeader(gitHubRepositoryList, http.getHeaderField(HEADER_LINK));
@@ -435,7 +433,22 @@ public class GitHub {
             }
         }
     }
-
+    
+    /**
+     * @param json json to parse
+     * @param clazz class described in JSON
+     * @param type 
+     * @return
+     * @throws ParsingResponseException
+     */
+    private <O> O parseJsonResponse(String json, Class<O> clazz, Type type) throws ParsingResponseException {
+        try {
+            return JsonHelper.fromJson(json, clazz, type, JsonNameConventions.CAMEL_UNDERSCORE);
+        } catch (JsonParseException e) {
+            throw new ParsingResponseException(e.getMessage(), e);
+        }
+    }
+    
     /**
      * Parse Link header to retrieve page location. Example of link header:
      * <code><https://api.github.com/organizations/259384/repos?page=3&access_token=123>; rel="next",

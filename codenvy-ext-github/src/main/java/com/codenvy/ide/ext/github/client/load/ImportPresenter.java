@@ -30,6 +30,7 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.RepoInfo;
 import com.codenvy.ide.ext.github.client.GitHubClientService;
 import com.codenvy.ide.ext.github.client.GitHubLocalizationConstant;
+import com.codenvy.ide.ext.github.client.GitHubSshKeyProvider;
 import com.codenvy.ide.ext.github.client.marshaller.AllRepositoriesUnmarshaller;
 import com.codenvy.ide.ext.github.shared.GitHubRepository;
 import com.codenvy.ide.json.JsonArray;
@@ -38,13 +39,7 @@ import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
-import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.security.oauth.JsOAuthWindow;
-import com.codenvy.ide.security.oauth.OAuthCallback;
-import com.codenvy.ide.security.oauth.OAuthStatus;
-import com.codenvy.ide.ui.loader.EmptyLoader;
-import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
@@ -59,8 +54,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.security.oauth.OAuthStatus.LOGGED_IN;
-import static com.google.gwt.http.client.RequestBuilder.POST;
 
 /**
  * Presenter for importing user's GitHub project to IDE.
@@ -69,20 +62,19 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  * @version $Id: ImportFromGithubPresenter.java Dec 7, 2011 3:37:11 PM vereshchaka $
  */
 @Singleton
-public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback {
+public class ImportPresenter implements ImportView.ActionDelegate {
     private ImportView                                 view;
     private GitHubClientService                        service;
     private GitClientService                           gitService;
     private EventBus                                   eventBus;
     private JsonStringMap<JsonArray<GitHubRepository>> repositories;
     private ProjectData                                selectedRepository;
-    private String                                     restContext;
     private GitHubLocalizationConstant                    constant;
     private GitLocalizationConstant                    gitConstant;
     private ResourceProvider                           resourceProvider;
-    private ConsolePart                                console;
     private NotificationManager                        notificationManager;
     private Notification                               notification;
+    private GitHubSshKeyProvider                       gitHubSshKeyProvider;
     private DtoFactory                                 dtoFactory;
 
 
@@ -102,24 +94,34 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
     @Inject
     public ImportPresenter(ImportView view, GitHubClientService service,GitClientService gitService, EventBus eventBus, @Named("restContext") String restContext,
                            GitHubLocalizationConstant constant, GitLocalizationConstant gitConstant, ResourceProvider resourceProvider, ConsolePart console,
-                           NotificationManager notificationManager, DtoFactory dtoFactory) {
+                           NotificationManager notificationManager, GitHubSshKeyProvider gitHubSshKeyProvider, DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.gitService = gitService;
         this.eventBus = eventBus;
-        this.restContext = restContext;
         this.constant = constant;
         this.gitConstant = gitConstant;
         this.resourceProvider = resourceProvider;
-        this.console = console;
         this.notificationManager = notificationManager;
+        this.gitHubSshKeyProvider = gitHubSshKeyProvider;
         this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */
     public void showDialog(User user) {
-        getToken(user.getUserId());
+        AsyncRequestCallback<Void> callback = new AsyncRequestCallback<Void>() {
+            @Override
+            protected void onSuccess(Void result) {
+                getUserRepos();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(ImportPresenter.class, "Can't generate ssh key", exception);
+            }
+        };
+        gitHubSshKeyProvider.generateKey(user.getUserId(), callback);
     }
 
     /** Get the list of all authorized user's repositories. */
@@ -191,62 +193,11 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
      * @param user
      *         user which need token
      */
-    private void getToken(final String user) {
-        try {
-            service.getUserToken(user, new AsyncRequestCallback<String>(new com.codenvy.ide.rest.StringUnmarshaller()) {
-                @Override
-                protected void onSuccess(String result) {
-                    if (result == null || result.isEmpty()) {
-                        oAuthLoginStart(user);
-                    } else {
-                        getUserRepos();
-                    }
-                }
+   
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    oAuthLoginStart(user);
-                }
-            });
-        } catch (RequestException e) {
-            eventBus.fireEvent(new ExceptionThrownEvent(e));
-            Notification notification = new Notification(e.getMessage(), ERROR);
-            notificationManager.showNotification(notification);
-        }
-    }
+   
 
-    /** Log in  github */
-    private void oAuthLoginStart(@NotNull String user) {
-        boolean permitToRedirect = Window.confirm(constant.loginOAuthLabel());
-        if (permitToRedirect) {
-            String authUrl = "rest/ide/oauth/authenticate?oauth_provider=github"
-                             + "&scope=user&userId=" + user + "&scope=repo&redirect_after_login=/ide/" + Utils.getWorkspaceName();
-            JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, this);
-            authWindow.loginWithOAuth();
-        }
-    }
-
-    /** Generate github key. */
-    public void generateGitHubKey() {
-        try {
-            AsyncRequestCallback<Void> callback = new AsyncRequestCallback<Void>() {
-                @Override
-                protected void onSuccess(Void result) {
-                    getUserRepos();
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    Log.error(ImportPresenter.class, "Can't generate ssh key", exception);
-                }
-            };
-
-            String url = restContext + '/' + Utils.getWorkspaceName() + "/github/ssh/generate";
-            AsyncRequest.build(POST, url).loader(new EmptyLoader()).send(callback);
-        } catch (RequestException e) {
-            Window.alert("Upload key to github failed.");
-        }
-    }
+    
 
     /** {@inheritDoc} */
     @Override
@@ -428,11 +379,5 @@ public class ImportPresenter implements ImportView.ActionDelegate, OAuthCallback
         refreshProjectList();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onAuthenticated(OAuthStatus authStatus) {
-        if (LOGGED_IN.equals(authStatus)) {
-            generateGitHubKey();
-        }
-    }
+   
 }

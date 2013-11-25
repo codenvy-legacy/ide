@@ -21,6 +21,8 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
@@ -48,6 +50,7 @@ public class SshKeyServiceImpl implements SshKeyService {
     private final Loader loader;
     private final String wsName;
     private final DtoFactory dtoFactory;
+    private JsonStringMap<SshKeyProvider> sshKeyProviders;
 
     /**
      * Create service.
@@ -61,6 +64,7 @@ public class SshKeyServiceImpl implements SshKeyService {
         this.loader = loader;
         this.wsName = '/' + Utils.getWorkspaceName();
         this.dtoFactory = dtoFactory;
+        this.sshKeyProviders = JsonCollections.createStringMap();
     }
 
     /** {@inheritDoc} */
@@ -100,5 +104,17 @@ public class SshKeyServiceImpl implements SshKeyService {
         loader.setMessage("Deleting SSH keys for " + keyItem.getHost());
         loader.show();
         jsonp.send(keyItem.getRemoteKeyUrl(), callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public JsonStringMap<SshKeyProvider> getSshKeyProviders() {
+        return sshKeyProviders;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void registerSshKeyProvider(@NotNull String host, @NotNull SshKeyProvider sshKeyProvider) {
+        sshKeyProviders.put(host, sshKeyProvider);
     }
 }

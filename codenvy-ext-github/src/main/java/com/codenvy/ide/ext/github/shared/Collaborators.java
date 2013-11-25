@@ -28,4 +28,6 @@ import java.util.List;
 @DTO
 public interface Collaborators {
     List<GitHubUser> getCollaborators();
+    
+    void setCollaborators(List<GitHubUser> collaborators);
 }

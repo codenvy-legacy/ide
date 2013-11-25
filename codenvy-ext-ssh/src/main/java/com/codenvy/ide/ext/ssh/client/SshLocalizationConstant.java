@@ -63,7 +63,13 @@ public interface SshLocalizationConstant extends Messages {
     
     @Key("delete.sshkey.question")
     String deleteSshKeyQuestion(String host);
-
+    
+    @Key("delete.sshkey.failed")
+    String deleteSshKeyFailed();
+    
+    @Key("get.sshkey.failed")
+    String getSshKeyFailed();
+    
     @Key("login.oauth.title")
     String loginOAuthTitle();
 
@@ -75,4 +81,8 @@ public interface SshLocalizationConstant extends Messages {
 
     @Key("github.sshkey.label")
     String githubSshKeyLabel();
+    
+    @Key("sshkeys.provider.not.found")
+    String sshKeysProviderNotFound(String host);
+    
 }

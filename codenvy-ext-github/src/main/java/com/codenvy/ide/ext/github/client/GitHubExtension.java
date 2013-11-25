@@ -21,11 +21,12 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.ext.github.client.welcome.ImportProjectAction;
+import com.codenvy.ide.ext.ssh.client.SshKeyService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Extension add Git support to the IDE Application.
+ * Extension adds GitHub support to the IDE Application.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -33,10 +34,13 @@ import com.google.inject.Singleton;
 @Extension(title = "GitHub Support.", version = "3.0.0")
 public class GitHubExtension {
 
+    public static final String GITHUB_HOST        = "github.com";
+    
     @Inject
     public GitHubExtension(GitHubResources resources, ActionManager actionManager,                    
-                         GitHubLocalizationConstant constant, WelcomePart welcomePart, ImportProjectAction importProjectAction) {
+                         GitHubLocalizationConstant constant, WelcomePart welcomePart, ImportProjectAction importProjectAction, SshKeyService sshKeyService, GitHubSshKeyProvider gitHubSshKeyProvider) {
 
+        sshKeyService.registerSshKeyProvider(GITHUB_HOST, gitHubSshKeyProvider);
         
         welcomePart.addItem(importProjectAction);
     }
