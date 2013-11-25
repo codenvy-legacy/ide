@@ -267,4 +267,28 @@ public class TutorialsService {
             throws VirtualFileSystemException, IOException {
         createProject(vfsId, BASE_URL + "/editor-api-tutorial.zip", name, rootId, properties);
     }
+
+    /**
+     * Create 'GIN tutorial' project.
+     *
+     * @param vfsId
+     *         identifier of virtual file system
+     * @param name
+     *         name of the newly created project
+     * @param rootId
+     *         identifier of parent folder for the new project
+     * @param properties
+     *         properties to set to project
+     * @throws VirtualFileSystemException
+     *         if any error occurred in VFS
+     * @throws IOException
+     *         if any error occurred while input-output operations
+     */
+    @Path("gin")
+    @POST
+    public void createGinTutorialProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
+                                         @QueryParam("rootid") String rootId, List<Property> properties)
+            throws VirtualFileSystemException, IOException {
+        createProject(vfsId, BASE_URL + "/gin-tutorial.zip", name, rootId, properties);
+    }
 }

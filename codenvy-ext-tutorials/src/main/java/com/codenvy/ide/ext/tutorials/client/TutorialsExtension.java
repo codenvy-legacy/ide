@@ -54,6 +54,7 @@ public class TutorialsExtension {
     public static final String NEW_RESOURCE_WIZARD_TUTORIAL_ID = "NewResourceWizardTutorial";
     public static final String PARTS_TUTORIAL_ID               = "PartsTutorial";
     public static final String EDITOR_TUTORIAL_ID              = "EditorTutorial";
+    public static final String GIN_TUTORIAL_ID                 = "GinTutorial";
 
     @Inject
     public TutorialsExtension(TemplateAgent templateAgent,
@@ -65,6 +66,7 @@ public class TutorialsExtension {
                               Provider<CreateNewResourceWizardTutorialPage> createNewResourceWizardTutorialPageProvider,
                               Provider<CreatePartsTutorialPage> createPartsTutorialPageProvider,
                               Provider<CreateEditorTutorialPage> createEditorTutorialPageProvider,
+                              Provider<CreateGinTutorialPage> createGinTutorialPageProvider,
                               ProjectTypeAgent projectTypeAgent,
                               TutorialsResources resources,
                               TutorialsLocalizationConstant localizationConstants,
@@ -136,5 +138,11 @@ public class TutorialsExtension {
                                PRIMARY_NATURE,
                                JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
                                JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createEditorTutorialPageProvider));
+        templateAgent.register(GIN_TUTORIAL_ID,
+                               "Tutorial project that illustrates examples of using GIN (GWT Injection).",
+                               resources.codenvyTutorialTemplate(),
+                               PRIMARY_NATURE,
+                               JsonCollections.createArray(TUTORIAL_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createGinTutorialPageProvider));
     }
 }
