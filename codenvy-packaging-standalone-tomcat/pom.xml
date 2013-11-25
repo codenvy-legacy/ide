@@ -69,6 +69,12 @@
             <type>war</type>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-git-server</artifactId>
+            <type>war</type>
+            <version>${org.exoplatform.ide.version}</version>
+        </dependency>
 
         <!-- Tutorials -->
         <dependency>
@@ -114,30 +120,19 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!--<dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-tutorials</artifactId>
-            <type>jar</type>
-            <version>${project.version}</version>
-        </dependency>-->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-sdk-private-dependencies</artifactId>
             <type>zip</type>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-git-server</artifactId>
-            <type>war</type>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-vfs-fs</artifactId>
             <scope>runtime</scope>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
@@ -162,23 +157,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
             <version>${ch.qos.logback.version}</version>
-        </dependency>
-
-        <!-- GIT Server -->
-        <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit.http.server</artifactId>
-            <version>${jgit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit</artifactId>
-            <version>${jgit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>${jsch.version}</version>
         </dependency>
     </dependencies>
 
@@ -367,7 +345,7 @@
                             <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                     </execution>-->
-                    <!--<execution>
+                    <execution>
                         <id>copy-private-dependencies-for-sdk</id>
                         <phase>process-resources</phase>
                         <goals>
@@ -384,7 +362,7 @@
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
-                    </execution>-->
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -439,6 +417,8 @@
                                       tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
                                 <!--<unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"-->
                                        <!--dest="${project.build.directory}/tomcat-ide"/>-->
+                                <unzip src="${project.build.directory}/repo.zip" dest="${project.build.directory}/tomcat-ide"/>
+                                <chmod dir="${project.build.directory}/tomcat-ide" perm="+x" includes="install.sh" />
                             </target>
                         </configuration>
                         <goals>
