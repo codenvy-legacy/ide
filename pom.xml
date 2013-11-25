@@ -58,7 +58,7 @@
         <org.exoplatform.ide.version>2.8.1</org.exoplatform.ide.version>
 
         <!-- CodeAssistant DataBase -->
-        <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
+        <codenvy.ide-codeassistant-index.version>20120627</codenvy.ide-codeassistant-index.version>
 
         <!-- EverREST -->
         <everrest.version>1.1.3</everrest.version>

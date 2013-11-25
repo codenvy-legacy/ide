@@ -228,6 +228,13 @@
             <scope>runtime</scope>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-codeassistant-storage</artifactId>
+            <version>${org.exoplatform.ide.version}</version>
+            <type>war</type>
+        </dependency>
         <!--GIT Server -->
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
@@ -393,6 +400,7 @@
                                 <artifactItem>
                                     <groupId>org.exoplatform.ide</groupId>
                                     <artifactId>ide-codeassistant-lucene-index</artifactId>
+                                    <version>${codenvy.ide-codeassistant-index.version}</version>
                                     <type>zip</type>
                                 </artifactItem>
                             </artifactItems>
@@ -458,8 +466,6 @@
                                       tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${project.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${org.exoplatform.ide.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war"
