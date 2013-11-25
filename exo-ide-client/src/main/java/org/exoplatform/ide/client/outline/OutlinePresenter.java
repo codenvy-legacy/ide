@@ -109,8 +109,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
     private Editor activeEditor;
 
-    private List<String> ignoredMimeTypes = new ArrayList<String>();
-
     /** Outline selection must be processed or not. */
     private boolean processSelection = true;
 
@@ -151,8 +149,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
         IDE.addHandler(EditorCursorActivityEvent.TYPE, this);
 
         IDE.getInstance().addControl(new ShowOutlineControl(), Docking.TOOLBAR);
-
-        ignoredMimeTypes.add(MimeType.APPLICATION_JAVA);
     }
 
     @Override
@@ -178,7 +174,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
     @Override
     public void onShowOutline(ShowOutlineEvent event) {
-        applicationSettings.setValue("outline", Boolean.valueOf(event.isShow()), Store.COOKIES);
+        applicationSettings.setValue("outline", event.isShow(), Store.COOKIES);
         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
         if (event.isShow() && display == null) {
             // TODO temporary solution not to open Outline for Java files, but save settings:
@@ -196,17 +192,12 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
             }
         }
     }
-
+    
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
             display = null;
         }
-
-//      if (event.getView() instanceof OutlineDisplay)
-//      {
-//         isOutlineViewOpened = false;
-//      }
     }
 
     public void bindDisplay() {
@@ -226,7 +217,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
         currentRow = 0;
 
-        if (canShowOutline()) {
+        if (activeEditor != null && activeEditor.isCapable(EditorCapability.OUTLINE)) {
             display.setOutlineAvailable(true);
             refreshOutlineTree();
         } else {
@@ -294,7 +285,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
     @Override
     public void onEditorContentChanged(EditorContentChangedEvent event) {
-        if (display == null || !canShowOutline()) {
+        if (display == null) {
             return;
         }
 
@@ -302,48 +293,30 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
         refreshOutlineTimer.schedule(2000);
     }
 
-    private boolean canShowOutline() {
-        if (activeEditor == null || activeFile == null || activeFile.getMimeType() == null) {
-            refreshOutlineTimer.cancel();
-            selectOutlineTimer.cancel();
-            return false;
-        }
-
-        return activeEditor.isCapable(EditorCapability.OUTLINE);
-    }
-
     @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         activeFile = event.getFile();
         activeEditor = event.getEditor();
 
-        if (display == null) {
-            return;
-        }
-
-        if (activeFile == null) {
-            display.setOutlineAvailable(false);
-            return;
-        }
-
-        // TODO temporary solution to close Outline for Java files
-        if (activeFile != null && ignoredMimeTypes.contains(activeFile.getMimeType())) {
+        refreshOutlineTimer.cancel();
+        
+        if (activeFile != null && !MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType())) {
+            boolean showOutline = applicationSettings.getValueAsBoolean("outline");
+            if (showOutline) {
+                if (display == null) {
+                    display = GWT.create(Display.class);
+                    IDE.getInstance().openView(display.asView());
+                    bindDisplay();
+                }
+                
+                refreshOutlineTree();
+            }
+        } else {
             if (display != null) {
                 IDE.getInstance().closeView(display.asView().getId());
             }
-            return;
         }
-
-        refreshOutlineTimer.cancel();
-
-        if (canShowOutline()) {
-            display.setOutlineAvailable(true);
-            display.setValue(null);
-            refreshOutlineTree();
-        } else {
-            tokens = null;
-            display.setOutlineAvailable(false);
-        }
+        
     }
 
     private void selectToken(TokenBeenImpl token) {
