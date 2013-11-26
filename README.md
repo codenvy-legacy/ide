@@ -1,8 +1,33 @@
 # Codenvy IDE 3.0
 
-##How to run Codenvy IDE 3 demo application?
-1. Build all IDE3 modules from the root of the project: ```mvn clean install```
-2. Go to **codenvy-packaging-standalone-tomcat/target/tomcat-ide** and start Tomcat
-3. Go to **codenvy-ide-client** and type ```mvn clean gwt:run -Dgwt.noserver=true```
-4. Wait until button **Launch Default Browser** appears in the top panel of the window.
-Open in browser http://127.0.0.1:8080/IDE/IDE.html?gwt.codesvr=127.0.0.1:9997
+How to run Codenvy IDE 3 demo application:
+
+1) Build all IDE 3 modules from the root of the project:
+```mvn clean install```
+
+2) Go to **codenvy-packaging-standalone-tomcat/target/tomcat-ide** and start Tomcat
+
+3) Open in browser **http://localhost:8080**
+
+Running in DevMode:
+
+1) Build all IDE 3 modules from the root of the project:
+```mvn clean install```
+
+2) Go to **codenvy-packaging-standalone-tomcat/target/tomcat-ide** and start Tomcat
+
+3) In Inteliji Idea open **Run Configuration -> GWT Configuration**
+
+4) In pop-up select:
+
+      Module: **codenvy-ide-client**
+      
+      GWT Module Onload: **com.codenvy.ide.client**
+      
+      VM Options: **-Xmx1024m**
+      
+      Dev Mode Parameters:  **-noserver -port 8080**
+      
+      Start Page: **ide/_app/IDE.html**
+
+Open in browser * http://127.0.0.1:8080/ide/_app/IDE.html?gwt.codesvr=127.0.0.1:9997
