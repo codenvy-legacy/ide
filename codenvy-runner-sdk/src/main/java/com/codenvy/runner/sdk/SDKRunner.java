@@ -19,6 +19,7 @@ package com.codenvy.runner.sdk;
 
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.CustomPortService;
+import com.codenvy.api.core.util.LineConsumer;
 import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.*;
@@ -101,7 +102,7 @@ public class SDKRunner extends Runner {
             final Path webappsPath = tomcatPath.resolve("webapps");
             final File warFile = build(toDeploy.getFile()).toFile();
             ZipUtils.unzip(warFile, webappsPath.resolve("ide").toFile());
-            genServerXml(tomcatPath.toFile(), sdkRunnerCfg);
+            generateServerXml(tomcatPath.toFile(), sdkRunnerCfg);
         } catch (IOException e) {
             throw new RunnerException(e);
         }
@@ -124,10 +125,9 @@ public class SDKRunner extends Runner {
         registerDisposer(process, new Disposer() {
             @Override
             public void dispose() {
-                if (!ProcessUtil.isAlive(process.pid)) {
-                    throw new IllegalStateException("Process is not started yet.");
+                if (ProcessUtil.isAlive(process.pid)) {
+                    ProcessUtil.kill(process.pid);
                 }
-                ProcessUtil.kill(process.pid);
 
                 portService.release(process.httpPort);
                 if (process.debugPort > 0) {
@@ -141,9 +141,9 @@ public class SDKRunner extends Runner {
     }
 
     private Path build(File jarFile) throws RunnerException {
-        Path warPath = null;
+        Path warPath;
         try {
-            // get Codenvy Platform sources
+            // prepare Codenvy Platform sources
             final Path appDirPath =
                     Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
             ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), appDirPath.toFile());
@@ -164,7 +164,6 @@ public class SDKRunner extends Runner {
         } catch (IOException e) {
             throw new RunnerException(e);
         }
-
         return warPath;
     }
 
@@ -174,11 +173,13 @@ public class SDKRunner extends Runner {
 
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(command).directory(appDirPath.toFile());
-//        processBuilder.redirectOutput(configuration.getWorkDir().resolve("code-server.log").toFile());
             Process process = processBuilder.start();
-            // TODO get messages
+            ProcessLineConsumer consumer = new ProcessLineConsumer(new StringBuilder());
+            ProcessUtil.process(process, consumer, consumer);
             process.waitFor();
-
+            if (process.exitValue() != 0) {
+                throw new RunnerException(consumer.getOutput().toString());
+            }
             path = Utils.findFile("*.war", appDirPath.resolve("target"));
         } catch (IOException e) {
             throw new RunnerException(e);
@@ -188,7 +189,7 @@ public class SDKRunner extends Runner {
         return path;
     }
 
-    private void genServerXml(File tomcatDir, ApplicationServerRunnerConfiguration runnerConfiguration)
+    private void generateServerXml(File tomcatDir, ApplicationServerRunnerConfiguration runnerConfiguration)
             throws RunnerException {
         String cfg = SERVER_XML.replace("${PORT}", Integer.toString(runnerConfiguration.getHttpPort()));
         final File serverXmlFile = new File(new File(tomcatDir, "conf"), "server.xml");
@@ -199,8 +200,7 @@ public class SDKRunner extends Runner {
         }
     }
 
-    private File genStartUpScriptUnix(File appDir,
-                                      ApplicationServerRunnerConfiguration runnerConfiguration)
+    private File genStartUpScriptUnix(File appDir, ApplicationServerRunnerConfiguration runnerConfiguration)
             throws RunnerException {
         final String startupScript = "#!/bin/sh\n" +
                                      exportEnvVariablesUnix(runnerConfiguration) +
@@ -225,7 +225,6 @@ public class SDKRunner extends Runner {
     private String exportEnvVariablesUnix(ApplicationServerRunnerConfiguration runnerConfiguration) {
         int memory = runnerConfiguration.getMemory();
         if (memory <= 0) {
-            //memory = getDefaultMemSize();
             memory = 256;
         }
         final String catalinaOpts = String.format("export CATALINA_OPTS=\"-Xms%dm -Xmx%dm\"%n", memory, memory);
@@ -235,13 +234,6 @@ public class SDKRunner extends Runner {
         }
         final StringBuilder export = new StringBuilder();
         export.append(catalinaOpts);
-        /*
-        From catalina.sh:
-        -agentlib:jdwp=transport=$JPDA_TRANSPORT,address=$JPDA_ADDRESS,server=y,suspend=$JPDA_SUSPEND
-         */
-        export.append(String.format("export JPDA_ADDRESS=%d%n", debugPort));
-//        export.append(String.format("export JPDA_TRANSPORT=%s%n", runnerConfiguration.getDebugTransport()));
-//        export.append(String.format("export JPDA_SUSPEND=%s%n", runnerConfiguration.isDebugSuspend() ? "y" : "n"));
         return export.toString();
     }
 
@@ -267,15 +259,15 @@ public class SDKRunner extends Runner {
     }
 
     private static class TomcatProcess extends ApplicationProcess {
-        final int             httpPort;
-        final List<File>      logFiles;
-        final int             debugPort;
-        final ExecutorService pidTaskExecutor;
-        int               pid;
-        TomcatLogger      logger;
-        File              startUpScriptFile;
-        File              workDir;
-        CustomPortService portService;
+        final int               httpPort;
+        final List<File>        logFiles;
+        final int               debugPort;
+        final ExecutorService   pidTaskExecutor;
+        final File              startUpScriptFile;
+        final File              workDir;
+        final CustomPortService portService;
+        int          pid;
+        TomcatLogger logger;
 
         TomcatProcess(int httpPort, List<File> logFiles, int debugPort, File startUpScriptFile, File workDir,
                       CustomPortService portService) {
@@ -398,6 +390,28 @@ public class SDKRunner extends Runner {
             @Override
             public void close() throws IOException {
             }
+        }
+    }
+
+    private static class ProcessLineConsumer implements LineConsumer {
+        final StringBuilder output;
+
+        ProcessLineConsumer(StringBuilder output) {
+            this.output = output;
+        }
+
+        @Override
+        public void writeLine(String line) throws IOException {
+            this.output.append(line).append("\n");
+        }
+
+        @Override
+        public void close() throws IOException {
+            //nothing to close
+        }
+
+        StringBuilder getOutput() {
+            return output;
         }
     }
 }
