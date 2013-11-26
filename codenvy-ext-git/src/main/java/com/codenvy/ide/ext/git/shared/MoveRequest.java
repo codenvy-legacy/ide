@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Request to move or rename a file or directory.
@@ -29,7 +29,11 @@ import com.codenvy.ide.dto.DTO;
 public interface MoveRequest extends GitRequest {
     /** @return source */
     String getSource();
+    
+    void setSource(String source);
 
     /** @return target */
     String getTarget();
+    
+    void setTarget(String target);
 }

@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
@@ -26,4 +26,6 @@ import com.codenvy.ide.dto.DTO;
 @DTO
 public interface RepoInfo {
     String getRemoteUri();
+    
+    RepoInfo withRemoteUri(String remoteUri);
 }

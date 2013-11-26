@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Request to get list of available tags.
@@ -29,4 +29,6 @@ import com.codenvy.ide.dto.DTO;
 public interface TagListRequest extends GitRequest {
     /** @return tag's names pattern */
     String getPattern();
+    
+    void setPattern(String pattern);
 }

@@ -43,7 +43,7 @@ import java.util.Map;
 import static org.codehaus.plexus.util.xml.Xpp3DomBuilder.build;
 
 /**
- * Implementation of {@link GWTCodeServer} interface that uses GWT Maven plug-in.
+ * Implementation of {@link GWTCodeServer} interface that uses gwt-maven-plugin to launch GWT code server.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: GWTMavenCodeServer.java Jul 26, 2013 3:15:52 PM azatsarynnyy $
@@ -63,8 +63,8 @@ public class GWTMavenCodeServer implements GWTCodeServer {
         this.configuration = configuration;
         Path pom = configuration.getWorkDir().resolve("pom.xml");
         try {
-            setCodeServerConfiguration(pom, configuration.getWorkDir(),
-                                       configuration.getBindAddress(), configuration.getPort());
+            setCodeServerConfiguration(pom, configuration.getWorkDir(), configuration.getBindAddress(),
+                                       configuration.getPort());
 
             // Add sources from custom project to allow GWT code server access it.
             fixMGWT332Bug(pom, configuration.getCustomModuleName());
@@ -165,7 +165,7 @@ public class GWTMavenCodeServer implements GWTCodeServer {
         }
 
         Map<String, Plugin> plugins = profile.getBuild().getPluginsAsMap();
-        Plugin buildHelperPlugin = plugins.get("org.codehaus.mojo:build-helper-maven-plugin");
+        Plugin buildHelperPlugin = plugins.get("org.codehaus.mojo:build-helper-builder-plugin");
         PluginExecution execution = buildHelperPlugin.getExecutionsAsMap().get("add-extension-sources");
 
         final String confString = String.format("<configuration>" +

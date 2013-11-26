@@ -20,6 +20,8 @@ package com.codenvy.ide.extension.maven.client.template;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
+import com.codenvy.ide.extension.maven.client.MavenExtension;
+import com.codenvy.ide.extension.maven.client.MavenExtension;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
@@ -33,8 +35,8 @@ import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
-import static com.codenvy.ide.extension.maven.client.BuilderExtension.SPRING_APPLICATION_PROJECT_TYPE;
-import static com.codenvy.ide.extension.maven.client.BuilderExtension.SPRING_PROJECT_ID;
+import static com.codenvy.ide.extension.maven.client.MavenExtension.SPRING_APPLICATION_PROJECT_TYPE;
+import static com.codenvy.ide.extension.maven.client.MavenExtension.SPRING_PROJECT_ID;
 import static com.codenvy.ide.json.JsonCollections.createArray;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
@@ -58,7 +60,7 @@ public class CreateSpringProjectPage extends AbstractTemplatePage {
      */
     @Inject
     public CreateSpringProjectPage(CreateProjectClientService service, ResourceProvider resourceProvider) {
-        super(null, null, SPRING_PROJECT_ID);
+        super(null, null, MavenExtension.SPRING_PROJECT_ID);
         this.service = service;
         this.resourceProvider = resourceProvider;
     }
@@ -67,7 +69,7 @@ public class CreateSpringProjectPage extends AbstractTemplatePage {
     @Override
     public void commit(final WizardPage.CommitCallback callback) {
         JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
-                                                     new Property(PROPERTY_MIXIN_NATURES, SPRING_APPLICATION_PROJECT_TYPE),
+                                                     new Property(PROPERTY_MIXIN_NATURES, MavenExtension.SPRING_APPLICATION_PROJECT_TYPE),
                                                      new Property(PROPERTY_SOURCE_FOLDERS, createArray("src/main/java")));
         final String projectName = wizardContext.getData(PROJECT_NAME);
         try {

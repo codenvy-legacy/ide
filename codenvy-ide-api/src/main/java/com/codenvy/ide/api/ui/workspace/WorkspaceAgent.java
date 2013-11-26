@@ -35,7 +35,7 @@ public interface WorkspaceAgent {
      *
      * @param part
      */
-    public void setActivePart(PartPresenter part);
+    void setActivePart(PartPresenter part);
 
     /**
      * Opens given Part
@@ -43,19 +43,19 @@ public interface WorkspaceAgent {
      * @param part
      * @param type
      */
-    public void openPart(PartPresenter part, PartStackType type);
+    void openPart(PartPresenter part, PartStackType type);
 
     /**
      * Hides given Part
      *
      * @param part
      */
-    public void hidePart(PartPresenter part);
+    void hidePart(PartPresenter part);
 
     /**
      * Remove given Part
      *
      * @param part
      */
-    public void removePart(PartPresenter part);
+    void removePart(PartPresenter part);
 }

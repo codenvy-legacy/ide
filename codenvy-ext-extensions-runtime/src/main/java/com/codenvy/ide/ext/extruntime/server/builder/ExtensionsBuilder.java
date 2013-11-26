@@ -17,16 +17,14 @@
  */
 package com.codenvy.ide.ext.extruntime.server.builder;
 
-import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls;
+import com.codenvy.api.vfs.server.MountPoint;
+import com.codenvy.api.vfs.server.VirtualFile;
+import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+//import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls;
 import com.codenvy.ide.extension.maven.shared.BuildStatus;
 
 import org.apache.maven.model.Model;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.Project;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -78,8 +76,8 @@ public class ExtensionsBuilder {
      * Otherwise, if <code>tomcatBundle</code> is <code>true</code>, returns an URL for Tomcat bundle that contains
      * pre-deployed Codenvy web application.
      *
-     * @param vfs
-     *         virtual file system
+     * @param vfsMountPoint
+     *         virtual file system mount point
      * @param projectId
      *         identifier of a project we want to run
      * @param tomcatBundle
@@ -87,19 +85,19 @@ public class ExtensionsBuilder {
      * @return URL to download the WAR or Tomcat bundle
      *         URL for the unbundled Codenvy web application (WAR file). May be deployed to an existing app server
      *         environment.
-     * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
+     * @throws com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException
      *         if any error in VFS
      * @throws BuilderException
      *         if an error occurs while building Codenvy app
      */
-    public String build(VirtualFileSystem vfs, String projectId, boolean tomcatBundle)
+    public String build(MountPoint vfsMountPoint, String projectId, boolean tomcatBundle)
             throws VirtualFileSystemException, BuilderException {
         if (projectId == null || projectId.isEmpty()) {
             throw new IllegalArgumentException("Project id required.");
         }
 
         try {
-            final String warUrl = buildWar(vfs, projectId);
+            final String warUrl = buildWar(vfsMountPoint, projectId);
             if (!tomcatBundle) {
                 return warUrl;
             } else {
@@ -111,9 +109,9 @@ public class ExtensionsBuilder {
         }
     }
 
-    private String buildWar(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException,
-                                                                            BuilderException, IOException {
-        Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.NONE_FILTER);
+    private String buildWar(MountPoint vfsMountPoint, String projectId) throws VirtualFileSystemException,
+                                                                               BuilderException, IOException {
+        VirtualFile project = vfsMountPoint.getVirtualFileById(projectId);
         File tempDir = null;
         try {
             tempDir = createTempDirectory("sdk-war-");
@@ -121,8 +119,8 @@ public class ExtensionsBuilder {
             final Path clientModuleDirPath = buildDirPath.resolve(CLIENT_MODULE_DIR_NAME);
             final Path clientModulePomPath = clientModuleDirPath.resolve("pom.xml");
 
-            Item pomFile = vfs.getItemByPath(project.getName() + "/pom.xml", null, false, PropertyFilter.NONE_FILTER);
-            InputStream extPomContent = vfs.getContent(pomFile.getId()).getStream();
+            VirtualFile pomFile = vfsMountPoint.getVirtualFile(project.getName() + "/pom.xml");
+            InputStream extPomContent = pomFile.getContent().getStream();
             Model extensionPom = readPom(extPomContent);
 
             if (extensionPom.getGroupId() == null || extensionPom.getArtifactId() == null ||
@@ -135,12 +133,9 @@ public class ExtensionsBuilder {
             InputStream codenvyPlatformDistribution = getCodenvyPlatformBinaryDistribution().openStream();
             unzip(codenvyPlatformDistribution, buildDirPath.toFile());
             final Path customModulePath = buildDirPath.resolve(extensionPom.getArtifactId());
-            unzip(vfs.exportZip(projectId).getStream(), customModulePath.toFile());
+            unzip(project.zip().getStream(), customModulePath.toFile());
 
             addDependencyToPom(clientModulePomPath, extensionPom);
-
-            // Detect DTO usage and add an appropriate sections to the codenvy-ide-client/pom.xml.
-            copyDtoGeneratorInvocations(extensionPom, clientModulePomPath);
 
             // Inherit custom GWT module.
             Path mainGwtModuleDescriptor = clientModuleDirPath.resolve(MAIN_GWT_MODULE_DESCRIPTOR_REL_PATH);
@@ -152,26 +147,27 @@ public class ExtensionsBuilder {
             File zippedExtensionProjectFile = tempDir.toPath().resolve("extension-project.zip").toFile();
             zipDir(customModulePath.toString(), customModulePath.toFile(), zippedExtensionProjectFile, ANY_FILTER);
             final String deployId = builderClient.deploy(zippedExtensionProjectFile);
-            DtoServerImpls.BuildStatusImpl deployStatus =
-                    DtoServerImpls.BuildStatusImpl.fromJsonString(builderClient.checkStatus(deployId));
-
-            if (deployStatus.getStatus() != BuildStatus.Status.SUCCESSFUL) {
-                LOG.error("Unable to deploy Maven artifact: " + deployStatus.getError());
-                throw new BuilderException(deployStatus.getError());
-            }
-
-            // Build Codenvy platform + custom project.
-            File zippedProjectFile = tempDir.toPath().resolve("project.zip").toFile();
-            zipDir(clientModuleDirPath.toString(), clientModuleDirPath.toFile(), zippedProjectFile, ANY_FILTER);
-            final String buildId = builderClient.build(zippedProjectFile);
-            DtoServerImpls.BuildStatusImpl buildStatus =
-                    DtoServerImpls.BuildStatusImpl.fromJsonString(builderClient.checkStatus(buildId));
-            if (buildStatus.getStatus() != BuildStatus.Status.SUCCESSFUL) {
-                LOG.error("Unable to build project: " + buildStatus.getError());
-                throw new BuilderException(buildStatus.getError());
-            }
-
-            return buildStatus.getDownloadUrl();
+//            DtoServerImpls.BuildStatusImpl deployStatus =
+//                    DtoServerImpls.BuildStatusImpl.fromJsonString(builderClient.checkStatus(deployId));
+//
+//            if (deployStatus.getStatus() != BuildStatus.Status.SUCCESSFUL) {
+//                LOG.error("Unable to deploy Maven artifact: " + deployStatus.getError());
+//                throw new BuilderException(deployStatus.getError());
+//            }
+//
+//            // Build Codenvy Platform + custom extension.
+//            File zippedProjectFile = tempDir.toPath().resolve("project.zip").toFile();
+//            zipDir(clientModuleDirPath.toString(), clientModuleDirPath.toFile(), zippedProjectFile, ANY_FILTER);
+//            final String buildId = builderClient.build(zippedProjectFile);
+//            DtoServerImpls.BuildStatusImpl buildStatus =
+//                    DtoServerImpls.BuildStatusImpl.fromJsonString(builderClient.checkStatus(buildId));
+//            if (buildStatus.getStatus() != BuildStatus.Status.SUCCESSFUL) {
+//                LOG.error("Unable to build project: " + buildStatus.getError());
+//                throw new BuilderException(buildStatus.getError());
+//            }
+//
+//            return buildStatus.getDownloadUrl();
+            return null;
         } finally {
             if (tempDir != null && tempDir.exists()) {
                 deleteRecursive(tempDir, false);

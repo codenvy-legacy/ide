@@ -97,7 +97,7 @@ public class ExtRuntimeExtension {
                                JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createEmptyCodenvyExtensionPage));
 
         templateAgent.register(SAMPLE_EXTENSION_ID,
-                               "Sample Codenvy extension project. Illustrates simple example that uses Codenvy API.",
+                               "Gist extension project.",
                                resources.codenvyExtensionTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),

@@ -22,8 +22,6 @@ import elemental.html.DragEvent;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitResources;
-import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
-import com.codenvy.ide.ext.git.shared.Reference;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.ui.tree.Tree;
@@ -42,8 +40,8 @@ import com.google.inject.Singleton;
 
 import static com.codenvy.ide.ext.git.client.merge.MergePresenter.LOCAL_BRANCHES_TITLE;
 import static com.codenvy.ide.ext.git.client.merge.MergePresenter.REMOTE_BRANCHES_TITLE;
-import static com.codenvy.ide.ext.git.shared.Reference.RefType.LOCAL_BRANCH;
-import static com.codenvy.ide.ext.git.shared.Reference.RefType.REMOTE_BRANCH;
+import static com.codenvy.ide.ext.git.client.merge.Reference.RefType.LOCAL_BRANCH;
+import static com.codenvy.ide.ext.git.client.merge.Reference.RefType.REMOTE_BRANCH;
 
 /**
  * The implementation of {@link MergeView}.
@@ -69,9 +67,9 @@ public class MergeViewImpl extends DialogBox implements MergeView {
     final         GitLocalizationConstant      locale;
     private       Tree<Reference>              references;
     private       ActionDelegate               delegate;
-    private final DtoClientImpls.ReferenceImpl localBranches;
-    private final DtoClientImpls.ReferenceImpl remoteBranches;
-
+    private final Reference              localBranch;
+    private final Reference              remoteBranch;
+    
     /**
      * Create view.
      *
@@ -138,40 +136,31 @@ public class MergeViewImpl extends DialogBox implements MergeView {
         });
         this.referencesPanel.add(references.asWidget());
 
-        DtoClientImpls.ReferenceImpl root = (DtoClientImpls.ReferenceImpl)references.getModel().getRoot();
+        Reference root = references.getModel().getRoot();
         if (root == null) {
-            root = DtoClientImpls.ReferenceImpl.make();
+            root = new Reference("", "", null);
             references.getModel().setRoot(root);
         }
 
-        localBranches = DtoClientImpls.ReferenceImpl.make();
-        localBranches.setDisplayName(LOCAL_BRANCHES_TITLE);
-        localBranches.setFullName(LOCAL_BRANCHES_TITLE);
-        localBranches.setRefType(LOCAL_BRANCH);
+        localBranch = new Reference(LOCAL_BRANCHES_TITLE, LOCAL_BRANCHES_TITLE, LOCAL_BRANCH);
 
-        remoteBranches = DtoClientImpls.ReferenceImpl.make();
-        remoteBranches.setDisplayName(REMOTE_BRANCHES_TITLE);
-        remoteBranches.setFullName(REMOTE_BRANCHES_TITLE);
-        remoteBranches.setRefType(REMOTE_BRANCH);
+        remoteBranch = new Reference(REMOTE_BRANCHES_TITLE, REMOTE_BRANCHES_TITLE, REMOTE_BRANCH);
 
-        JsonArray<Reference> branches = JsonCollections.createArray();
-        branches.add(localBranches);
-        branches.add(remoteBranches);
-
+        JsonArray<Reference> branches = JsonCollections.createArray(localBranch, remoteBranch);
         root.setBranches(branches);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setLocalBranches(@NotNull JsonArray<Reference> references) {
-        localBranches.setBranches(references);
+        localBranch.setBranches(references);
         this.references.renderTree(0);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setRemoteBranches(@NotNull JsonArray<Reference> references) {
-        remoteBranches.setBranches(references);
+        remoteBranch.setBranches(references);
         this.references.renderTree(0);
     }
 

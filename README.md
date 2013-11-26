@@ -1,3 +1,5 @@
+# Codenvy IDE 3.0
+
 How to run Codenvy IDE 3 demo application:
 
 1) Build all IDE 3 modules from the root of the project:

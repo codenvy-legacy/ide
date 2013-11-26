@@ -37,6 +37,14 @@ public interface ConsolePart extends PartPresenter {
      */
     void print(@NotNull String message);
 
+    /**
+     * Print message on console in @pre tag. Useful for format plain text.
+     * Don't use it for HTML content.
+     *
+     * @param message message that need to be shown
+     */
+    void printf(@NotNull String message);
+
     /** Clear console. Remove all messages. */
     void clear();
 }

@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Git branch description.
@@ -31,11 +31,19 @@ public interface Branch {
     String getName();
 
     /** @return <code>true</code> if branch is checked out and false otherwise */
-    boolean active();
+    boolean isActive();
 
     /** @return display name of branch, e.g. 'refs/heads/master' -> 'master' */
     String getDisplayName();
 
     /** @return <code>true</code> if branch is a remote branch */
-    boolean remote();
+    boolean isRemote();
+    
+    Branch withName(String name);
+    
+    Branch withDisplayName(String displayName);
+
+    Branch withActive(boolean isActive);
+    
+    Branch withRemote(boolean isRemote);
 }

@@ -21,14 +21,15 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.client.marshaller.LogResponseUnmarshaller;
 import com.codenvy.ide.ext.git.shared.LogResponse;
 import com.codenvy.ide.ext.git.shared.ResetRequest;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -53,6 +54,7 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
     private GitLocalizationConstant constant;
     private NotificationManager     notificationManager;
     private String                  projectId;
+    private DtoFactory              dtoFactory;
 
     /**
      * Create presenter.
@@ -65,26 +67,27 @@ public class ResetToCommitPresenter implements ResetToCommitView.ActionDelegate 
      */
     @Inject
     public ResetToCommitPresenter(ResetToCommitView view, GitClientService service, ResourceProvider resourceProvider,
-                                  GitLocalizationConstant constant, NotificationManager notificationManager) {
+                                  GitLocalizationConstant constant, NotificationManager notificationManager, DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
         this.notificationManager = notificationManager;
+        this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */
     public void showDialog() {
         projectId = resourceProvider.getActiveProject().getId();
-        LogResponseUnmarshaller unmarshaller = new LogResponseUnmarshaller();
 
         try {
-            service.log(resourceProvider.getVfsId(), projectId, false, new AsyncRequestCallback<LogResponse>(unmarshaller) {
+            service.log(resourceProvider.getVfsId(), projectId, false, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
-                protected void onSuccess(LogResponse result) {
+                protected void onSuccess(String result) {
                     selectedRevision = null;
-                    view.setRevisions(result.getCommits());
+                    LogResponse logResponse = dtoFactory.createDtoFromJson(result, LogResponse.class);
+                    view.setRevisions(logResponse.getCommits());
                     view.setMixMode(true);
                     view.setEnableResetButton(false);
                     view.showDialog();

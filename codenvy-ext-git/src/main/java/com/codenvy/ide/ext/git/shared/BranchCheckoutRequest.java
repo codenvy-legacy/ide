@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Request to checkout a branch to the working tree.
@@ -29,14 +29,26 @@ import com.codenvy.ide.dto.DTO;
 public interface BranchCheckoutRequest extends GitRequest {
     /** @return name of branch to checkout */
     String getName();
+    
+    void setName(String name);
+    
+    BranchCheckoutRequest withName(String name);
 
     /** @return name of a commit at which to start the new branch. If <code>null</code> the HEAD will be used */
     String getStartPoint();
+    
+    void setStartPoint(String startPoint);
+    
+    BranchCheckoutRequest withStartPoint(String startPoint);
 
     /**
      * @return if <code>true</code> then create a new branch named {@link #name} and start it at {@link #startPoint} or to the HEAD if
      *         {@link #startPoint} is not set. If <code>false</code> and there is no branch with name {@link #name} corresponding exception
      *         will be thrown
      */
-    boolean createNew();
+    boolean isCreateNew();
+    
+    void setCreateNew(boolean isCreateNew);
+    
+    BranchCheckoutRequest withCreateNew(boolean isCreateNew);
 }

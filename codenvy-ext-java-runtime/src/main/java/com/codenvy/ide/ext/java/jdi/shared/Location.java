@@ -25,4 +25,8 @@ public interface Location {
     String getClassName();
 
     int getLineNumber();
+
+    void setClassName(String className);
+
+    void setLineNumber(int lineNumber);
 }

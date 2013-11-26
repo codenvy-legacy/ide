@@ -18,9 +18,11 @@
 package com.codenvy.ide.ext.ssh.client;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.ssh.dto.client.DtoClientImpls;
-import com.codenvy.ide.ext.ssh.shared.GenKeyRequest;
-import com.codenvy.ide.ext.ssh.shared.KeyItem;
+import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
+import com.codenvy.ide.ext.ssh.dto.KeyItem;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
@@ -31,6 +33,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -46,6 +49,8 @@ public class SshKeyServiceImpl implements SshKeyService {
     private final String restContext;
     private final Loader loader;
     private final String wsName;
+    private final DtoFactory dtoFactory;
+    private JsonStringMap<SshKeyProvider> sshKeyProviders;
 
     /**
      * Create service.
@@ -54,19 +59,20 @@ public class SshKeyServiceImpl implements SshKeyService {
      * @param loader
      */
     @Inject
-    protected SshKeyServiceImpl(@Named("restContext") String restContext, Loader loader) {
+    protected SshKeyServiceImpl(@Named("restContext") String restContext, Loader loader, DtoFactory dtoFactory) {
         this.restContext = restContext;
         this.loader = loader;
         this.wsName = '/' + Utils.getWorkspaceName();
+        this.dtoFactory = dtoFactory;
+        this.sshKeyProviders = JsonCollections.createStringMap();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getAllKeys(@NotNull JsonpAsyncCallback<JavaScriptObject> callback) {
+    public void getAllKeys(@NotNull AsyncCallback<JavaScriptObject> callback) {
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
         loader.setMessage("Getting SSH keys....");
         loader.show();
-        callback.setLoader(loader);
         jsonp.requestObject(restContext + wsName + "/ssh-keys/all", callback);
     }
 
@@ -75,33 +81,40 @@ public class SshKeyServiceImpl implements SshKeyService {
     public void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<GenKeyRequest> callback) throws RequestException {
         String url = restContext + wsName + "/ssh-keys/gen";
 
-        DtoClientImpls.GenKeyRequestImpl keyRequest = DtoClientImpls.GenKeyRequestImpl.make();
-        keyRequest.setHost(host);
-
-        String data = keyRequest.serialize();
+        GenKeyRequest keyRequest = dtoFactory.createDto(GenKeyRequest.class).withHost(host);
 
         loader.setMessage("Generate keys for " + host);
-        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(data)
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(dtoFactory.toJson(keyRequest))
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getPublicKey(@NotNull KeyItem keyItem, @NotNull JsonpAsyncCallback<JavaScriptObject> callback) {
+    public void getPublicKey(@NotNull KeyItem keyItem, @NotNull AsyncCallback<JavaScriptObject> callback) {
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
         loader.setMessage("Getting public SSH key for " + keyItem.getHost());
         loader.show();
-        callback.setLoader(loader);
-        jsonp.requestObject(keyItem.getPublicKeyURL(), callback);
+        jsonp.requestObject(keyItem.getPublicKeyUrl(), callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void deleteKey(@NotNull KeyItem keyItem, @NotNull JsonpAsyncCallback<Void> callback) {
+    public void deleteKey(@NotNull KeyItem keyItem, @NotNull AsyncCallback<Void> callback) {
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
         loader.setMessage("Deleting SSH keys for " + keyItem.getHost());
         loader.show();
-        callback.setLoader(loader);
-        jsonp.send(keyItem.getRemoveKeyURL(), callback);
+        jsonp.send(keyItem.getRemoteKeyUrl(), callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public JsonStringMap<SshKeyProvider> getSshKeyProviders() {
+        return sshKeyProviders;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void registerSshKeyProvider(@NotNull String host, @NotNull SshKeyProvider sshKeyProvider) {
+        sshKeyProviders.put(host, sshKeyProvider);
     }
 }
