@@ -151,7 +151,7 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
     /** {@inheritDoc} */
     @Override
     public void getStatus(Link link, AsyncRequestCallback<String> callback) throws RequestException {
-        AsyncRequest.build(RequestBuilder.GET, link.getHref()).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.GET, link.getHref()).send(callback);
     }
 
     /** {@inheritDoc} */
