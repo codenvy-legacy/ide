@@ -35,12 +35,9 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
-
-import static com.codenvy.runner.sdk.Utils.*;
 
 /**
  * Runner implementation to testing Codenvy plug-ins by launching
@@ -94,7 +91,7 @@ public class SDKRunner extends Runner {
     protected ApplicationProcess newApplicationProcess(DeploymentSources toDeploy,
                                                        RunnerConfiguration runnerCfg) throws RunnerException {
         final ApplicationServerRunnerConfiguration sdkRunnerCfg = (ApplicationServerRunnerConfiguration)runnerCfg;
-        final java.io.File appDir;
+        final File appDir;
         try {
             appDir = Files.createTempDirectory(getDeployDirectory().toPath(), ("app_" + getName() + '_')).toFile();
 
@@ -102,24 +99,24 @@ public class SDKRunner extends Runner {
             ZipUtils.unzip(Utils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
 
             final Path webappsPath = tomcatPath.resolve("webapps");
-            final File warFile = buildWar(toDeploy.getFile()).toFile();
+            final File warFile = build(toDeploy.getFile()).toFile();
             ZipUtils.unzip(warFile, webappsPath.resolve("ide").toFile());
             genServerXml(tomcatPath.toFile(), sdkRunnerCfg);
         } catch (IOException e) {
             throw new RunnerException(e);
         }
 
-        java.io.File startUpScriptFile = genStartUpScriptUnix(appDir, sdkRunnerCfg);
+        File startUpScriptFile = genStartUpScriptUnix(appDir, sdkRunnerCfg);
         if (!startUpScriptFile.setExecutable(true, false)) {
             throw new RunnerException("Unable update attributes of the startup script");
         }
-        final java.io.File logsDir = new java.io.File(appDir, "logs");
+        final File logsDir = new File(appDir, "logs");
         if (!logsDir.mkdir()) {
             throw new RunnerException("Unable create logs directory");
         }
-        final List<java.io.File> logFiles = new ArrayList<>(2);
-        logFiles.add(new java.io.File(logsDir, "stdout.log"));
-        logFiles.add(new java.io.File(logsDir, "stderr.log"));
+        final List<File> logFiles = new ArrayList<>(2);
+        logFiles.add(new File(logsDir, "stdout.log"));
+        logFiles.add(new File(logsDir, "stderr.log"));
 
         final TomcatProcess process =
                 new TomcatProcess(sdkRunnerCfg.getHttpPort(), logFiles, sdkRunnerCfg.getDebugPort(), startUpScriptFile,
@@ -143,39 +140,27 @@ public class SDKRunner extends Runner {
         return process;
     }
 
-    private Path buildWar(File jarFile) throws RunnerException {
+    private Path build(File jarFile) throws RunnerException {
         Path warPath = null;
         try {
-            //****************************************************************************
             // get Codenvy Platform sources
-            //****************************************************************************
             final Path appDirPath =
                     Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
             ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), appDirPath.toFile());
 
-            //****************************************************************************
-            // read jarFile
-            //****************************************************************************
-            final Path jarFileUnzipped =
-                    Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
-            ZipUtils.unzip(jarFile, jarFileUnzipped.toFile());
-            final Path pomXmlExt = Utils.detectPomXml(jarFileUnzipped);
+            // add extension to Codenvy Platform
+            final Path jarUnzipped =
+                    Files.createTempDirectory(getDeployDirectory().toPath(), ("jar_" + getName() + '_'));
+            ZipUtils.unzip(jarFile, jarUnzipped.toFile());
+            final Path pomXmlExt = Utils.findFile("pom.xml", jarUnzipped);
             Model pomExt = Utils.readPom(pomXmlExt);
 
-            //****************************************************************************
-            // add dependency
-            //****************************************************************************
-            final Path codenvyPlatformPomPath = appDirPath.resolve("pom.xml");
-            addDependencyToPom(codenvyPlatformPomPath, pomExt);
+            Utils.addDependencyToPom(appDirPath.resolve("pom.xml"), pomExt);
+            final Path mainGwtModuleDescriptor = Utils.findFile("*.gwt.xml", appDirPath);
+            Utils.inheritGwtModule(mainGwtModuleDescriptor, Utils.detectGwtModuleLogicalName(jarUnzipped));
 
-            final Path mainGwtModuleDescriptor =
-                    appDirPath.resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
-            inheritGwtModule(mainGwtModuleDescriptor, detectGwtModuleLogicalName(jarFileUnzipped));
-
-            //****************************************************************************
-            // build WAR
-            //****************************************************************************
-            warPath = buildMaven(appDirPath);
+            // build WAR by invoking Maven directly
+            warPath = buildWar(appDirPath);
         } catch (IOException e) {
             throw new RunnerException(e);
         }
@@ -183,48 +168,30 @@ public class SDKRunner extends Runner {
         return warPath;
     }
 
-    private Path buildMaven(Path appDirPath) throws RunnerException {
-        final String[] command = new String[]{getMavenExecCommand(), "package"};
+    private Path buildWar(Path appDirPath) throws RunnerException {
+        final String[] command = new String[]{Utils.getMavenExecCommand(), "package"};
+        Path path = null;
 
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(command).directory(appDirPath.toFile());
 //        processBuilder.redirectOutput(configuration.getWorkDir().resolve("code-server.log").toFile());
             Process process = processBuilder.start();
-            process.waitFor();
             // TODO get messages
+            process.waitFor();
+
+            path = Utils.findFile("*.war", appDirPath.resolve("target"));
         } catch (IOException e) {
             throw new RunnerException(e);
         } catch (InterruptedException e) {
             Thread.interrupted();
         }
-
-        // TODO
-        return Paths.get(appDirPath.toString()).resolve("target/codenvy-ide-client-3.0.0-M4-SNAPSHOT.war");
-    }
-
-    private String getMavenExecCommand() {
-        final File mvnHome = getMavenHome();
-        if (mvnHome != null) {
-            final String mvn = "bin" + File.separatorChar + "mvn";
-            return new File(mvnHome, mvn).getAbsolutePath(); // use Maven home directory if it's set
-        } else {
-            return "mvn"; // otherwise 'mvn' should be in PATH variable
-        }
-    }
-
-    private File getMavenHome() {
-        final String m2HomeEnv = System.getenv("M2_HOME");
-        if (m2HomeEnv == null) {
-            return null;
-        }
-        final File m2Home = new File(m2HomeEnv);
-        return m2Home.exists() ? m2Home : null;
+        return path;
     }
 
     private void genServerXml(File tomcatDir, ApplicationServerRunnerConfiguration runnerConfiguration)
             throws RunnerException {
         String cfg = SERVER_XML.replace("${PORT}", Integer.toString(runnerConfiguration.getHttpPort()));
-        final java.io.File serverXmlFile = new java.io.File(new java.io.File(tomcatDir, "conf"), "server.xml");
+        final File serverXmlFile = new File(new File(tomcatDir, "conf"), "server.xml");
         try {
             Files.write(serverXmlFile.toPath(), cfg.getBytes());
         } catch (IOException e) {
@@ -232,7 +199,8 @@ public class SDKRunner extends Runner {
         }
     }
 
-    private java.io.File genStartUpScriptUnix(File appDir, ApplicationServerRunnerConfiguration runnerConfiguration)
+    private File genStartUpScriptUnix(File appDir,
+                                      ApplicationServerRunnerConfiguration runnerConfiguration)
             throws RunnerException {
         final String startupScript = "#!/bin/sh\n" +
                                      exportEnvVariablesUnix(runnerConfiguration) +
@@ -242,7 +210,7 @@ public class SDKRunner extends Runner {
                                      "PID=$!\n" +
                                      "echo \"$PID\" >> ../run.pid\n" +
                                      "wait $PID";
-        final java.io.File startUpScriptFile = new java.io.File(appDir, "startup.sh");
+        final File startUpScriptFile = new File(appDir, "startup.sh");
         try {
             Files.write(startUpScriptFile.toPath(), startupScript.getBytes());
         } catch (IOException e) {
@@ -305,8 +273,8 @@ public class SDKRunner extends Runner {
         final ExecutorService pidTaskExecutor;
         int               pid;
         TomcatLogger      logger;
-        java.io.File      startUpScriptFile;
-        java.io.File      workDir;
+        File              startUpScriptFile;
+        File              workDir;
         CustomPortService portService;
 
         TomcatProcess(int httpPort, List<File> logFiles, int debugPort, File startUpScriptFile, File workDir,
@@ -333,7 +301,7 @@ public class SDKRunner extends Runner {
                 pid = pidTaskExecutor.submit(new Callable<Integer>() {
                     @Override
                     public Integer call() throws Exception {
-                        final java.io.File pidFile = new java.io.File(workDir, "run.pid");
+                        final File pidFile = new File(workDir, "run.pid");
                         final Path pidPath = pidFile.toPath();
                         synchronized (this) {
                             while (!Files.isReadable(pidPath)) {
