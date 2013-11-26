@@ -196,7 +196,8 @@ public class SDKRunner extends Runner {
             Thread.interrupted();
         }
 
-        return Paths.get(appDirPath.toString()).resolve("target/codenvy-ide-client-3.0.0-M3.war");
+        // TODO
+        return Paths.get(appDirPath.toString()).resolve("target/codenvy-ide-client-3.0.0-M4-SNAPSHOT.war");
     }
 
     private String getMavenExecCommand() {

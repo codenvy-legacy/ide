@@ -26,6 +26,7 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -51,7 +52,8 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * @version $Id: ExtensionsController.java Jul 3, 2013 3:07:52 PM azatsarynnyy $
  */
 @Singleton
-public class ExtensionsController {
+public class ExtensionsController implements Notification.OpenNotificationHandler {
+    private WorkspaceAgent                 workspaceAgent;
     private ResourceProvider               resourceProvider;
     private ConsolePart                    console;
     private ExtRuntimeClientService        service;
@@ -70,6 +72,8 @@ public class ExtensionsController {
      *
      * @param resourceProvider
      *         {@link ResourceProvider}
+     * @param workspaceAgent
+     *         {@link WorkspaceAgent}
      * @param eventBus
      *         {@link EventBus}
      * @param console
@@ -84,10 +88,12 @@ public class ExtensionsController {
      *         {@link DtoFactory}
      */
     @Inject
-    protected ExtensionsController(ResourceProvider resourceProvider, EventBus eventBus, final ConsolePart console,
-                                   ExtRuntimeClientService service, ExtRuntimeLocalizationConstant constant,
-                                   NotificationManager notificationManager, DtoFactory dtoFactory) {
+    protected ExtensionsController(ResourceProvider resourceProvider, EventBus eventBus, WorkspaceAgent workspaceAgent,
+                                   final ConsolePart console, ExtRuntimeClientService service,
+                                   ExtRuntimeLocalizationConstant constant, NotificationManager notificationManager,
+                                   DtoFactory dtoFactory) {
         this.resourceProvider = resourceProvider;
+        this.workspaceAgent = workspaceAgent;
         this.console = console;
         this.service = service;
         this.constant = constant;
@@ -142,7 +148,7 @@ public class ExtensionsController {
         }
 
         isLaunchingInProgress = true;
-        notification = new Notification(constant.applicationStarting(currentProject.getName()), PROGRESS);
+        notification = new Notification(constant.applicationStarting(currentProject.getName()), PROGRESS, this);
         notificationManager.showNotification(notification);
 
         try {
@@ -180,7 +186,7 @@ public class ExtensionsController {
             service.getLogs(viewLogsLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
-                    console.printf(result);
+                    console.print(result);
                 }
 
                 @Override
@@ -269,7 +275,7 @@ public class ExtensionsController {
 //                                  .setPath("ide" + '/' + Utils.getWorkspaceName())
 //                                  .setParameter("h", launchedApp.getCodeServerHost())
 //                                  .setParameter("p", String.valueOf(launchedApp.getCodeServerPort())).buildString();
-        final String uri = "http://127.0.0.1:8080" /*applicationProcessDescriptor.getUrl()*/;
+        final String uri = "http://127.0.0.1:49152" /*applicationProcessDescriptor.getUrl()*/;
         console.print(constant.applicationStartedOnUrls(currentProject.getName(),
                                                         "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
         notification.setStatus(FINISHED);
@@ -340,6 +346,11 @@ public class ExtensionsController {
                 linkToReturn = link;
         }
         return linkToReturn;
+    }
+
+    @Override
+    public void onOpenClicked() {
+        workspaceAgent.setActivePart(console);
     }
 
     /** Enum of known runner links with its rels. */
