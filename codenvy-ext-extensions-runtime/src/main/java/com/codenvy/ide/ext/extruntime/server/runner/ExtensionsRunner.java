@@ -22,7 +22,7 @@ import com.codenvy.api.core.util.Pair;
 import com.codenvy.api.vfs.server.MountPoint;
 import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls.ApplicationInstanceImpl;
+//import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls.ApplicationInstanceImpl;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 
 import org.apache.maven.model.Model;
@@ -233,7 +233,8 @@ public class ExtensionsRunner implements Startable {
             applications.put(appId, new Application(appId, expirationTime, tomcatServer, codeServer, tempDir));
 
             LOG.debug("Start Codenvy extension {}", appId);
-            return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort).setCodeServerPort(codeServerPort);
+//            return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort).setCodeServerPort(codeServerPort);
+            return null;
         } catch (Exception e) {
             LOG.warn("Codenvy extension {} failed to start, cause: {}", appId, e);
             // ensure that ports are released

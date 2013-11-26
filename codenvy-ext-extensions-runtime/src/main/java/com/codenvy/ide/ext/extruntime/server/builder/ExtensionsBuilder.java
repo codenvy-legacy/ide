@@ -20,7 +20,7 @@ package com.codenvy.ide.ext.extruntime.server.builder;
 import com.codenvy.api.vfs.server.MountPoint;
 import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls;
+//import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls;
 import com.codenvy.ide.extension.maven.shared.BuildStatus;
 
 import org.apache.maven.model.Model;
@@ -147,26 +147,27 @@ public class ExtensionsBuilder {
             File zippedExtensionProjectFile = tempDir.toPath().resolve("extension-project.zip").toFile();
             zipDir(customModulePath.toString(), customModulePath.toFile(), zippedExtensionProjectFile, ANY_FILTER);
             final String deployId = builderClient.deploy(zippedExtensionProjectFile);
-            DtoServerImpls.BuildStatusImpl deployStatus =
-                    DtoServerImpls.BuildStatusImpl.fromJsonString(builderClient.checkStatus(deployId));
-
-            if (deployStatus.getStatus() != BuildStatus.Status.SUCCESSFUL) {
-                LOG.error("Unable to deploy Maven artifact: " + deployStatus.getError());
-                throw new BuilderException(deployStatus.getError());
-            }
-
-            // Build Codenvy Platform + custom extension.
-            File zippedProjectFile = tempDir.toPath().resolve("project.zip").toFile();
-            zipDir(clientModuleDirPath.toString(), clientModuleDirPath.toFile(), zippedProjectFile, ANY_FILTER);
-            final String buildId = builderClient.build(zippedProjectFile);
-            DtoServerImpls.BuildStatusImpl buildStatus =
-                    DtoServerImpls.BuildStatusImpl.fromJsonString(builderClient.checkStatus(buildId));
-            if (buildStatus.getStatus() != BuildStatus.Status.SUCCESSFUL) {
-                LOG.error("Unable to build project: " + buildStatus.getError());
-                throw new BuilderException(buildStatus.getError());
-            }
-
-            return buildStatus.getDownloadUrl();
+//            DtoServerImpls.BuildStatusImpl deployStatus =
+//                    DtoServerImpls.BuildStatusImpl.fromJsonString(builderClient.checkStatus(deployId));
+//
+//            if (deployStatus.getStatus() != BuildStatus.Status.SUCCESSFUL) {
+//                LOG.error("Unable to deploy Maven artifact: " + deployStatus.getError());
+//                throw new BuilderException(deployStatus.getError());
+//            }
+//
+//            // Build Codenvy Platform + custom extension.
+//            File zippedProjectFile = tempDir.toPath().resolve("project.zip").toFile();
+//            zipDir(clientModuleDirPath.toString(), clientModuleDirPath.toFile(), zippedProjectFile, ANY_FILTER);
+//            final String buildId = builderClient.build(zippedProjectFile);
+//            DtoServerImpls.BuildStatusImpl buildStatus =
+//                    DtoServerImpls.BuildStatusImpl.fromJsonString(builderClient.checkStatus(buildId));
+//            if (buildStatus.getStatus() != BuildStatus.Status.SUCCESSFUL) {
+//                LOG.error("Unable to build project: " + buildStatus.getError());
+//                throw new BuilderException(buildStatus.getError());
+//            }
+//
+//            return buildStatus.getDownloadUrl();
+            return null;
         } finally {
             if (tempDir != null && tempDir.exists()) {
                 deleteRecursive(tempDir, false);

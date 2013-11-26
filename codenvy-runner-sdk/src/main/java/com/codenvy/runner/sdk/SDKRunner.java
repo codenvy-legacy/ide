@@ -23,9 +23,9 @@ import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.*;
 import com.codenvy.api.runner.internal.dto.RunRequest;
-import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.NamedThreadFactory;
+import com.codenvy.ide.commons.ZipUtils;
 import com.google.common.io.CharStreams;
 
 import org.apache.maven.model.Model;
@@ -36,12 +36,11 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-import static com.codenvy.ide.commons.FileUtils.downloadFile;
-import static com.codenvy.ide.commons.ZipUtils.unzip;
 import static com.codenvy.runner.sdk.Utils.*;
 
 /**
@@ -100,26 +99,12 @@ public class SDKRunner extends Runner {
         try {
             appDir = Files.createTempDirectory(getDeployDirectory().toPath(), ("app_" + getName() + '_')).toFile();
 
-            final java.io.File myTomcatHome = new java.io.File("/home/artem/__temp__/apache-tomcat-7.0.42");
-            if (myTomcatHome == null) {
-                throw new RunnerException("Tomcat home directory is not set");
-            }
-//            validate(toDeploy);
-
             final Path tomcatPath = Files.createDirectory(appDir.toPath().resolve("tomcat"));
-            IoUtil.copy(myTomcatHome, tomcatPath.toFile(), null);
-            final Path webappsPath = Files.createDirectory(tomcatPath.resolve("webapps"));
-            final Path rootPath = Files.createDirectory(webappsPath.resolve("ROOT"));
+            ZipUtils.unzip(Utils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
 
-
-            final URL warUrl = buildWar(toDeploy.getFile());
-            downloadFile(rootPath.toFile(), "app-", ".war", warUrl);
-
-//            if (toDeploy.isArchive()) {
-//                unzip(toDeploy.getFile(), rootPath.toFile());
-//            } else {
-//                IoUtil.copy(toDeploy.getFile(), rootPath.toFile(), null);
-//            }
+            final Path webappsPath = tomcatPath.resolve("webapps");
+            final File warFile = buildWar(toDeploy.getFile()).toFile();
+            ZipUtils.unzip(warFile, webappsPath.resolve("ide").toFile());
             genServerXml(tomcatPath.toFile(), sdkRunnerCfg);
         } catch (IOException e) {
             throw new RunnerException(e);
@@ -143,53 +128,97 @@ public class SDKRunner extends Runner {
         registerDisposer(process, new Disposer() {
             @Override
             public void dispose() {
-                portService.release(sdkRunnerCfg.getHttpPort());
-                final int debugPort = sdkRunnerCfg.getDebugPort();
-                if (debugPort > 0) {
-                    portService.release(debugPort);
+                if (!ProcessUtil.isAlive(process.pid)) {
+                    throw new IllegalStateException("Process is not started yet.");
                 }
+                ProcessUtil.kill(process.pid);
+
+                portService.release(process.httpPort);
+                if (process.debugPort > 0) {
+                    portService.release(process.debugPort);
+                }
+                IoUtil.deleteRecursive(process.workDir);
+                LOG.debug("stop tomcat at port {}, application {}", process.httpPort, process.workDir);
             }
         });
         return process;
     }
 
-    private URL buildWar(File jarFile) throws RunnerException {
-        URL warUrl = null;
+    private Path buildWar(File jarFile) throws RunnerException {
+        Path warPath = null;
         try {
+            //****************************************************************************
             // get Codenvy Platform sources
+            //****************************************************************************
+            final Path appDirPath = Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
+            ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), appDirPath.toFile());
 
-            File appDir = Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_')).toFile();
+            //****************************************************************************
+            // read jarFile
+            //****************************************************************************
+            final Path jarFileUnzipped = Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
+            ZipUtils.unzip(jarFile, jarFileUnzipped.toFile());
+            final Path pomXmlExt = Utils.detectPomXml(jarFileUnzipped);
+            Model pomExt = Utils.readPom(pomXmlExt);
 
-            final java.io.File myCodenvyIdeHome = new java.io.File("/home/artem/__temp__/codenvy-ide");
-            if (myCodenvyIdeHome == null) {
-                throw new RunnerException("Codenvy Platform home directory is not set");
-            }
-
-            final Path codenvyPlatformPath = Files.createDirectory(appDir.toPath().resolve("war"));
-            IoUtil.copy(myCodenvyIdeHome, codenvyPlatformPath.toFile(), null);
-
-
+            //****************************************************************************
             // add dependency
+            //****************************************************************************
+            final Path codenvyPlatformPomPath = appDirPath.resolve("pom.xml");
+            addDependencyToPom(codenvyPlatformPomPath, pomExt.getGroupId(), pomExt.getArtifactId(), pomExt.getVersion());
 
-            final Path codenvyPlatformPomPath = codenvyPlatformPath.resolve("pom.xml");
-            addDependencyToPom(codenvyPlatformPomPath, "plugin_group_id", "plugin_artifact_id", "plugin_version");
+            final Path mainGwtModuleDescriptor = appDirPath.resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
+            inheritGwtModule(mainGwtModuleDescriptor, detectGwtModuleLogicalName(jarFileUnzipped));
 
-            final Path pluginGwtModulePath = null;
-            final Path mainGwtModuleDescriptor = codenvyPlatformPath.resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
-            inheritGwtModule(mainGwtModuleDescriptor, detectGwtModuleLogicalName(pluginGwtModulePath));
-
-
+            //****************************************************************************
             // build WAR
-            // warUrl = buildMaven(codenvyPlatformPath)
+            //****************************************************************************
+            warPath = buildMaven(appDirPath);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RunnerException(e);
         }
 
-        return warUrl;
+        return warPath;
     }
 
-    private void genServerXml(java.io.File tomcatDir,
-                              ApplicationServerRunnerConfiguration runnerConfiguration)
+    private Path buildMaven(Path appDirPath) throws RunnerException {
+        final String[] command = new String[]{getMavenExecCommand(), "package"};
+
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder(command).directory(appDirPath.toFile());
+//        processBuilder.redirectOutput(configuration.getWorkDir().resolve("code-server.log").toFile());
+            Process process = processBuilder.start();
+            process.waitFor();
+            // TODO get messages
+        } catch (IOException e) {
+            throw new RunnerException(e);
+        } catch (InterruptedException e) {
+            Thread.interrupted();
+        }
+
+        return Paths.get(appDirPath.toString()).resolve("target/codenvy-ide-client-3.0.0-M3.war");
+    }
+
+    private String getMavenExecCommand() {
+        final File mvnHome = getMavenHome();
+        if (mvnHome != null) {
+            final String mvn = "bin" + File.separatorChar + "mvn";
+            return new File(mvnHome, mvn).getAbsolutePath(); // use Maven home directory if it's set
+        } else {
+            return "mvn"; // otherwise 'mvn' should be in PATH variable
+        }
+    }
+
+    private File getMavenHome() {
+        final String m2HomeEnv = System.getenv("M2_HOME");
+        if (m2HomeEnv == null) {
+            return null;
+        }
+        final File m2Home = new File(m2HomeEnv);
+        return m2Home.exists() ? m2Home : null;
+    }
+
+    private void genServerXml(File tomcatDir, ApplicationServerRunnerConfiguration runnerConfiguration)
             throws RunnerException {
         String cfg = SERVER_XML.replace("${PORT}", Integer.toString(runnerConfiguration.getHttpPort()));
         final java.io.File serverXmlFile = new java.io.File(new java.io.File(tomcatDir, "conf"), "server.xml");
@@ -200,8 +229,7 @@ public class SDKRunner extends Runner {
         }
     }
 
-    private java.io.File genStartUpScriptUnix(java.io.File appDir,
-                                              ApplicationServerRunnerConfiguration runnerConfiguration)
+    private java.io.File genStartUpScriptUnix(File appDir, ApplicationServerRunnerConfiguration runnerConfiguration)
             throws RunnerException {
         final String startupScript = "#!/bin/sh\n" +
                                      exportEnvVariablesUnix(runnerConfiguration) +
