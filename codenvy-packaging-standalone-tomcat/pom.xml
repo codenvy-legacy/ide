@@ -47,30 +47,6 @@
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-websocket</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>httpclient</artifactId>
-                    <groupId>org.apache.httpcomponents</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>servlet-api</artifactId>
-                    <groupId>javax.servlet</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.ide</groupId>
-                    <artifactId>exo-ide-server</artifactId>
-                </exclusion>
-            </exclusions>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-security</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-storage</artifactId>
             <type>war</type>
             <version>${org.exoplatform.ide.version}</version>
@@ -93,11 +69,18 @@
             <type>war</type>
             <version>${org.exoplatform.ide.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>ide-codeassistant-lucene-index</artifactId>
             <type>zip</type>
             <version>${codenvy.ide-codeassistant-index.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-sdk-private-dependencies</artifactId>
+            <type>zip</type>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Tutorials -->
@@ -143,50 +126,15 @@
             <type>zip</type>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-core</artifactId>
-            <type>jar</type>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-maven</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-ant</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-git</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-	    <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-github</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-ssh</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-sdk-private-dependencies</artifactId>
-            <type>zip</type>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-vfs-fs</artifactId>
             <scope>runtime</scope>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- Logging libs -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
@@ -218,24 +166,6 @@
             <scope>runtime</scope>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
-        <!--GIT Server -->
-        <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit.http.server</artifactId>
-            <version>${jgit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit</artifactId>
-            <version>${jgit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>${jsch.version}</version>
-        </dependency>
-
-        
     </dependencies>
 
     <build>
@@ -466,7 +396,6 @@
                                     <fileset dir="${basedir}/src/main/resources/tomcat"/>
                                 </copy>
                                 <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh"/>
-
 
                                 <unwar src="${project.build.directory}/packager-conf/war/codenvy-application-war-${project.version}.war"
                                        dest="${project.build.directory}/packager-conf/war/ide">
