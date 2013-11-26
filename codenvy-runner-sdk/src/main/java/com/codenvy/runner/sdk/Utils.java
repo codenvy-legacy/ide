@@ -36,12 +36,12 @@ import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.TERMINATE;
 
 /**
- * A collection of utility methods.
+ * Collection of utility methods.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: Utils.java Jul 31, 2013 11:30:14 AM azatsarynnyy $
  */
-public class Utils {
+class Utils {
     /** Maven POM reader. */
     private static MavenXpp3Reader pomReader = new MavenXpp3Reader();
     /** Maven POM writer. */
@@ -59,7 +59,7 @@ public class Utils {
      * @throws java.io.IOException
      *         error occurred while reading content of file
      */
-    public static Model readPom(Path path) throws IOException {
+    static Model readPom(Path path) throws IOException {
         return readPom(Files.newInputStream(path));
     }
 
@@ -72,7 +72,7 @@ public class Utils {
      * @throws java.io.IOException
      *         error occurred while reading content of file
      */
-    public static Model readPom(InputStream stream) throws IOException {
+    static Model readPom(InputStream stream) throws IOException {
         try {
             return pomReader.read(stream, true);
         } catch (XmlPullParserException e) {
@@ -90,7 +90,7 @@ public class Utils {
      * @throws java.io.IOException
      *         error occurred while writing content of file
      */
-    public static void writePom(Model pom, Path path) throws IOException {
+    static void writePom(Model pom, Path path) throws IOException {
         pomWriter.write(Files.newOutputStream(path), pom);
     }
 
@@ -104,7 +104,7 @@ public class Utils {
      * @throws java.io.IOException
      *         error occurred while reading or writing content of file
      */
-    public static void addDependencyToPom(Path path, Model pom) throws IOException {
+    static void addDependencyToPom(Path path, Model pom) throws IOException {
         addDependencyToPom(path, pom.getGroupId(), pom.getArtifactId(), pom.getVersion());
     }
 
@@ -122,7 +122,7 @@ public class Utils {
      * @throws java.io.IOException
      *         error occurred while reading or writing content of file
      */
-    public static void addDependencyToPom(Path path, String groupId, String artifactId, String version) throws IOException {
+    static void addDependencyToPom(Path path, String groupId, String artifactId, String version) throws IOException {
         Dependency dep = new Dependency();
         dep.setGroupId(groupId);
         dep.setArtifactId(artifactId);
@@ -189,7 +189,7 @@ public class Utils {
      * @throws java.io.IOException
      *         error occurred while reading or writing content of file
      */
-    public static void inheritGwtModule(Path path, String inheritableModuleLogicalName) throws IOException {
+    static void inheritGwtModule(Path path, String inheritableModuleLogicalName) throws IOException {
         final String inheritsString = "    <inherits name='" + inheritableModuleLogicalName + "'/>";
         List<String> content = Files.readAllLines(path, UTF_8);
         // insert custom module as last 'inherits' entry
@@ -215,9 +215,9 @@ public class Utils {
      * @throws IllegalArgumentException
      *         if GWT module descriptor not found
      */
-    public static String detectGwtModuleLogicalName(Path folder) throws IOException {
+    static String detectGwtModuleLogicalName(Path folder) throws IOException {
         final String fileExtension = ".gwt.xml";
-        final String resourcesDir = "/src/main/resources";
+        final String resourcesDir = folder.toString();
 
         Finder finder = new Finder("*" + fileExtension);
         Files.walkFileTree(folder, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, finder);
@@ -231,8 +231,17 @@ public class Utils {
         return filePath.replaceAll("/", ".");
     }
 
+    static Path detectPomXml(Path folder) throws IOException {
+        Finder finder = new Finder("pom.xml");
+        Files.walkFileTree(folder, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, finder);
+        if (finder.getFirstMatchedFile() == null) {
+            throw new IllegalArgumentException("Pom.xml not found.");
+        }
+        return finder.getFirstMatchedFile();
+    }
+
     /** Returns URL to get Tomcat binary distribution. */
-    public static URL getTomcatBinaryDistribution() throws IOException {
+    static URL getTomcatBinaryDistribution() throws IOException {
         URL tomcatDistributionUrl = Thread.currentThread().getContextClassLoader().getResource("tomcat.zip");
         if (tomcatDistributionUrl == null) {
             throw new IOException("Unable to get Tomcat binary distribution.");
@@ -241,7 +250,7 @@ public class Utils {
     }
 
     /** Returns URL to get Codenvy Platform binary distribution. */
-    public static URL getCodenvyPlatformBinaryDistribution() throws IOException {
+    static URL getCodenvyPlatformBinaryDistribution() throws IOException {
         URL codenvyPlatformDistributionUrl =
                 Thread.currentThread().getContextClassLoader().getResource("CodenvyPlatform.zip");
         if (codenvyPlatformDistributionUrl == null) {

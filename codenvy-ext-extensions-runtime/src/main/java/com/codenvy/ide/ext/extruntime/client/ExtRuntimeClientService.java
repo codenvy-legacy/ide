@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.extruntime.client;
 
+import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Property;
@@ -111,30 +112,29 @@ public interface ExtRuntimeClientService {
      *         callback
      * @throws WebSocketException
      */
-    public void launch(String warUrl, boolean enableHotUpdate, String vfsId, String projectId,
-                       RequestCallback<ApplicationInstance> callback) throws WebSocketException;
+    public void run(String projectName, AsyncRequestCallback<String> callback) throws RequestException;
+//    public void launch(String warUrl, boolean enableHotUpdate, String vfsId, String projectId,
+//                       RequestCallback<ApplicationInstance> callback) throws WebSocketException;
+
+    public void getStatus(Link link, AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Get logs of launched Codenvy application.
      *
-     * @param appId
-     *         identifier of launched Codenvy application to get its logs
+     * @param link
      * @param callback
      *         callback
      * @throws RequestException
      */
-    public void getLogs(String appId, AsyncRequestCallback<String> callback) throws RequestException;
+    public void getLogs(Link link, AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Stop Codenvy application.
      *
-     * @param appId
-     *         identifier of Codenvy application to stop
+     * @param link
      * @param callback
      *         callback
      * @throws RequestException
      */
-    public void stop(String appId, AsyncRequestCallback<Void> callback) throws RequestException;
-
-    public void run(String projectName, AsyncRequestCallback<String> callback) throws RequestException;
+    public void stop(Link link, AsyncRequestCallback<String> callback) throws RequestException;
 }

@@ -20,10 +20,9 @@
 <module rename-to='_app'>
     <!-- Inherit the core Web Toolkit stuff.                        -->
     <inherits name='com.google.gwt.user.User'/>
+    <inherits name="com.google.gwt.inject.Inject"/>
     <inherits name="com.google.gwt.json.JSON"/>
 
-    <!-- We need the JUnit module in the main module,               -->
-    <!-- otherwise eclipse complains (Google plugin bug?)           -->
     <!-- Inherit the default GWT style sheet.  You can change       -->
     <!-- the theme of your GWT application by uncommenting          -->
     <!-- any one of the following lines.                            -->
@@ -31,14 +30,27 @@
     <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
     <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
     <!-- Other module inherits                                      -->
+    <inherits name='com.codenvy.ide.Api'/>
+    <inherits name="com.codenvy.ide.Core"/>
+    <inherits name='com.codenvy.ide.ext.java.Java'/>
+    <inherits name='com.codenvy.ide.extension.css.Css'/>
+    <inherits name='com.codenvy.ide.extension.maven.Maven'/>
+    <inherits name='com.codenvy.ide.ext.git.Git'/>
+    <inherits name='com.codenvy.ide.ext.ssh.Ssh'/>
 
+    <stylesheet src="IDE.css"/>
 
     <!-- Specify the app entry point class.                         -->
     <entry-point class='com.codenvy.ide.client.IDE'/>
 
+    <!-- Enable Super Dev Mode support.                             -->
+    <add-linker name='xsiframe'/>
+    <set-configuration-property name='devModeRedirectEnabled' value='true'/>
+    <!-- Enable SourceMaps support.                                 -->
+    <set-property name='compiler.useSourceMaps' value='true'/>
+
     <!-- Specify the paths for translatable code                    -->
-    <source path='builder'/>
-    <source path='runner'/>
-    <source path='core'/>
+    <source path='client'/>
+    <source path='shared'/>
 
 </module>

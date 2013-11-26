@@ -185,8 +185,6 @@
                     -->
                 </dependencies>
             </plugin>
-
-
         </plugins>
 
         <resources>
@@ -197,7 +195,7 @@
                 <directory>src/main/resources</directory>
             </resource>
             <resource>
-                <directory>${project.build.directory}/generated-sources/dto/</directory>
+                <directory>${dto-generator-out-directory}</directory>
             </resource>
         </resources>
         <sourceDirectory>src/main/java</sourceDirectory>

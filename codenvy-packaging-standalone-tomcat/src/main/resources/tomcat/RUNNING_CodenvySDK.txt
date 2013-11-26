@@ -100,8 +100,8 @@ Building Tomcat bundle with your own Codenvy plugin
       chmod +x bin/*.sh
 
 5. You can start/stop Tomcat bundle by executing an appropriate command:
-      ./catalina start
-      ./catalina stop
+      ./catalina.sh start
+      ./catalina.sh stop
 
 
 ===============================
