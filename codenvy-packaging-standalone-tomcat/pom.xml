@@ -502,6 +502,8 @@
                                       tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
                                 <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
                                        dest="${project.build.directory}/tomcat-ide"/>
+                                <unzip src="${project.build.directory}/repo.zip" dest="${project.build.directory}/tomcat-ide"/>
+                                <chmod dir="${project.build.directory}/tomcat-ide" perm="+x" includes="install.sh" />
                             </target>
                         </configuration>
                         <goals>

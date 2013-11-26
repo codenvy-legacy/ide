@@ -23,7 +23,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-client</artifactId>
-    <version>3.0.0-M3</version>
+    <version>3.0.0-M4-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Codenvy :: Client</name>
 

@@ -18,7 +18,8 @@
     from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -197,137 +198,6 @@
                         <version>${com.codenvy.platform-api.version}</version>
                     </dependency>
                 </dependencies>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>prepare-clean-tomcat</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.apache.tomcat</groupId>
-                                    <artifactId>tomcat</artifactId>
-                                    <type>zip</type>
-                                    <version>${tomcat.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                                    <destFileName>tomcat.zip</destFileName>
-                                </artifactItem>
-
-                                <artifactItem>
-                                    <groupId>org.exoplatform.ide</groupId>
-                                    <artifactId>exo-ide-codeassistant-storage</artifactId>
-                                    <type>war</type>
-                                    <version>${org.exoplatform.ide.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps</outputDirectory>
-                                    <destFileName>codeassistant-storage.war</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.exoplatform.ide</groupId>
-                                    <artifactId>exo-ide-maven</artifactId>
-                                    <type>war</type>
-                                    <version>${org.exoplatform.ide.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps</outputDirectory>
-                                    <destFileName>builder.war</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.codenvy.organization</groupId>
-                                    <artifactId>codenvy-organization-packaging-api-war</artifactId>
-                                    <type>war</type>
-                                    <version>${com.codenvy.organization.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps</outputDirectory>
-                                    <destFileName>userdb.war</destFileName>
-                                </artifactItem>
-
-                                <artifactItem>
-                                    <groupId>org.slf4j</groupId>
-                                    <artifactId>slf4j-api</artifactId>
-                                    <version>${org.slf4j.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
-                                    <destFileName>slf4j-api.jar</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.slf4j</groupId>
-                                    <artifactId>jul-to-slf4j</artifactId>
-                                    <version>${org.slf4j.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
-                                    <destFileName>jul-to-slf4j.jar</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>ch.qos.logback</groupId>
-                                    <artifactId>logback-core</artifactId>
-                                    <version>${ch.qos.logback.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
-                                    <destFileName>logback-core.jar</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>ch.qos.logback</groupId>
-                                    <artifactId>logback-classic</artifactId>
-                                    <version>${ch.qos.logback.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
-                                    <destFileName>logback-classic.jar</destFileName>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>prepare-tomcat-bundle</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <!-- Unzip Tomcat package -->
-                                <unzip src="${project.build.directory}/classes/tomcat.zip" dest="${project.build.directory}/classes">
-                                    <patternset>
-                                        <exclude name="**/ROOT/**" />
-                                        <exclude name="**/docs/**" />
-                                        <exclude name="**/examples/**" />
-                                        <exclude name="**/manager/**" />
-                                        <exclude name="**/host-manager/**" />
-                                    </patternset>
-                                </unzip>
-                                <move todir="${project.build.directory}/classes/tomcat-bundle">
-                                    <fileset dir="${project.build.directory}/classes/apache-tomcat-${tomcat.version}" />
-                                </move>
-                                <delete file="${project.build.directory}/classes/tomcat.zip" />
-
-                                <!-- Move additional libraries and WAR's -->
-                                <move todir="${project.build.directory}/classes/tomcat-bundle">
-                                    <fileset dir="${project.build.directory}/classes/tomcat-resources" />
-                                </move>
-
-                                <!-- Copy pre-configured sh-scripts and configuration files -->
-                                <copy todir="${project.build.directory}/classes/tomcat-bundle" overwrite="true">
-                                    <fileset dir="${project.build.directory}/classes/tomcat">
-                                        <exclude name="**/server.xml" />
-                                    </fileset>
-                                </copy>
-
-                                <!-- Zip prepared Tomcat binary distribution and remove temporary directory -->
-                                <zip basedir="${project.build.directory}/classes/tomcat-bundle" destfile="${project.build.directory}/classes/tomcat.zip" />
-                                <delete dir="${project.build.directory}/classes/tomcat-bundle" />
-
-                                <!-- Prepare Codenvy Platform sources -->
-                                <zip basedir="${project.build.directory}/classes/codenvyPlatform" destfile="${project.build.directory}/classes/CodenvyPlatform.zip" />
-                            </tasks>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
 
