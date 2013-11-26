@@ -17,9 +17,13 @@ Running in DevMode:
 3) In Inteliji Idea open **Run Configuration -> GWT Configuration**
 4) In pop-up select:
       Module: **codenvy-ide-client**
+      
       GWT Module Onload: **com.codenvy.ide.client**
+      
       VM Options: **-Xmx1024m**
+      
       Dev Mode Parameters:  **-noserver -port 8080**
+      
       Start Page: **ide/_app/IDE.html**
 
 Open in browser * http://127.0.0.1:8080/ide/_app/IDE.html?gwt.codesvr=127.0.0.1:9997
