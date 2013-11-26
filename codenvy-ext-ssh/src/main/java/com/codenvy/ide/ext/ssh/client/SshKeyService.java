@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.ssh.client;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
@@ -32,6 +33,22 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * @version $Id: SshService May 18, 2011 4:49:49 PM evgen $
  */
 public interface SshKeyService {
+    
+     /**
+      * Get the list of SSH keys providers.
+      * 
+     * @return {@link JsonStringMap}
+     */
+    JsonStringMap<SshKeyProvider> getSshKeyProviders();
+     
+     /**
+      * Register SSH key provider
+      * 
+     * @param host host, for which to provide keys
+     * @param sshKeyProvider keys provider
+     */
+    void registerSshKeyProvider(@NotNull String host, @NotNull SshKeyProvider sshKeyProvider);
+    
     /**
      * Receive all ssh key, stored on server
      *

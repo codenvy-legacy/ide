@@ -15,19 +15,19 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.builder.server;
+package com.codenvy.ide.ext.github.shared;
 
-import javax.ws.rs.core.Application;
-import java.util.HashSet;
-import java.util.Set;
+import com.codenvy.dto.shared.DTO;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
-public class CreateProjectApplication extends Application {
-    /** {@inheritDoc} */
-    @Override
-    public Set<Class<?>> getClasses() {
-        Set<Class<?>> classes = new HashSet<Class<?>>();
-        classes.add(CreateProjectService.class);
-        return classes;
-    }
+import java.util.List;
+
+/**
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: ICollaborators.java Aug 6, 2012
+ */
+@DTO
+public interface Collaborators {
+    List<GitHubUser> getCollaborators();
+    
+    void setCollaborators(List<GitHubUser> collaborators);
 }

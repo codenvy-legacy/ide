@@ -68,7 +68,7 @@ public class CreateProjectClientServiceImpl implements CreateProjectClientServic
             throws RequestException {
         String requestUrl = restContext + CREATE_WAR_PROJECT;
 
-        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootId=" + resourceProvider.getRootId();
+        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName;
         String url = requestUrl + param;
 
         loader.setMessage("Creating new project...");
@@ -84,7 +84,7 @@ public class CreateProjectClientServiceImpl implements CreateProjectClientServic
             throws RequestException {
         String requestUrl = restContext + CREATE_SPRING_PROJECT;
 
-        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootId=" + resourceProvider.getRootId();
+        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName;
         String url = requestUrl + param;
 
         loader.setMessage("Creating new project...");
@@ -99,7 +99,7 @@ public class CreateProjectClientServiceImpl implements CreateProjectClientServic
     public void createJavaProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
             throws RequestException {
         String requestUrl = restContext + CREATE_JAVA_PROJECT;
-        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootId=" + resourceProvider.getRootId();
+        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName;
         String url = requestUrl + param;
 
         loader.setMessage("Creating new project...");

@@ -22,7 +22,16 @@
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
     <component>
-        <type>com.codenvy.ide.extension.builder.server.CreateProjectApplication</type>
+        <type>com.codenvy.ide.ext.github.server.rest.GitHubServiceApplication</type>
     </component>
 
+    <component>
+        <type>com.codenvy.ide.ext.github.server.GitHub</type>
+        <init-params>
+            <value-param>
+                <name>github-user</name>
+                <value>eXoIDE</value>
+            </value-param>
+        </init-params>
+    </component>
 </configuration>

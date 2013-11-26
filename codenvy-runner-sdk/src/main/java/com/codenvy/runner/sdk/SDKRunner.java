@@ -23,21 +23,26 @@ import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.*;
 import com.codenvy.api.runner.internal.dto.RunRequest;
+import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.lang.NamedThreadFactory;
 import com.google.common.io.CharStreams;
 
+import org.apache.maven.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
+import static com.codenvy.ide.commons.FileUtils.downloadFile;
 import static com.codenvy.ide.commons.ZipUtils.unzip;
+import static com.codenvy.runner.sdk.Utils.*;
 
 /**
  * Runner implementation to testing Codenvy plug-ins by launching
@@ -105,11 +110,16 @@ public class SDKRunner extends Runner {
             IoUtil.copy(myTomcatHome, tomcatPath.toFile(), null);
             final Path webappsPath = Files.createDirectory(tomcatPath.resolve("webapps"));
             final Path rootPath = Files.createDirectory(webappsPath.resolve("ROOT"));
-            if (toDeploy.isArchive()) {
-                unzip(toDeploy.getFile(), rootPath.toFile());
-            } else {
-                IoUtil.copy(toDeploy.getFile(), rootPath.toFile(), null);
-            }
+
+
+            final URL warUrl = buildWar(toDeploy.getFile());
+            downloadFile(rootPath.toFile(), "app-", ".war", warUrl);
+
+//            if (toDeploy.isArchive()) {
+//                unzip(toDeploy.getFile(), rootPath.toFile());
+//            } else {
+//                IoUtil.copy(toDeploy.getFile(), rootPath.toFile(), null);
+//            }
             genServerXml(tomcatPath.toFile(), sdkRunnerCfg);
         } catch (IOException e) {
             throw new RunnerException(e);
@@ -143,37 +153,40 @@ public class SDKRunner extends Runner {
         return process;
     }
 
-//    private static URL buildWar(File jarFile) throws RunnerException {
-//        try {
-//            File appFileUnzipped = Files.createTempDirectory("sdk-war-").toFile();
-//            unzip(jarFile, appFileUnzipped);
-//
-//            addDependencyToPom(clientModulePomPath, extensionPom);
-//
-//            // Inherit custom GWT module.
-//            Path mainGwtModuleDescriptor = clientModuleDirPath.resolve(MAIN_GWT_MODULE_DESCRIPTOR_REL_PATH);
-//            inheritGwtModule(mainGwtModuleDescriptor, detectGwtModuleLogicalName(customModulePath));
-//
-//            File tempDir = Files.createTempDirectory("sdk-war-").toFile();
-//
-//            final Path buildDirPath = createTempDirectory(tempDir, "build-").toPath();
-//            final Path clientModuleDirPath = buildDirPath.resolve("codenvy-ide-client");
-//            final Path clientModulePomPath = clientModuleDirPath.resolve("pom.xml");
-//
-//            VirtualFile pomFile = vfsMountPoint.getVirtualFile(project.getName() + "/pom.xml");
-//            InputStream extPomContent = pomFile.getContent().getStream();
-//            Model extensionPom = readPom(extPomContent);
-//
-//            if (extensionPom.getGroupId() == null || extensionPom.getArtifactId() == null ||
-//                extensionPom.getVersion() == null) {
-//                throw new RunnerException("Missing Maven artifact coordinates.");
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return null;
-//    }
+    private URL buildWar(File jarFile) throws RunnerException {
+        URL warUrl = null;
+        try {
+            // get Codenvy Platform sources
+
+            File appDir = Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_')).toFile();
+
+            final java.io.File myCodenvyIdeHome = new java.io.File("/home/artem/__temp__/codenvy-ide");
+            if (myCodenvyIdeHome == null) {
+                throw new RunnerException("Codenvy Platform home directory is not set");
+            }
+
+            final Path codenvyPlatformPath = Files.createDirectory(appDir.toPath().resolve("war"));
+            IoUtil.copy(myCodenvyIdeHome, codenvyPlatformPath.toFile(), null);
+
+
+            // add dependency
+
+            final Path codenvyPlatformPomPath = codenvyPlatformPath.resolve("pom.xml");
+            addDependencyToPom(codenvyPlatformPomPath, "plugin_group_id", "plugin_artifact_id", "plugin_version");
+
+            final Path pluginGwtModulePath = null;
+            final Path mainGwtModuleDescriptor = codenvyPlatformPath.resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
+            inheritGwtModule(mainGwtModuleDescriptor, detectGwtModuleLogicalName(pluginGwtModulePath));
+
+
+            // build WAR
+            // warUrl = buildMaven(codenvyPlatformPath)
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return warUrl;
+    }
 
     private void genServerXml(java.io.File tomcatDir,
                               ApplicationServerRunnerConfiguration runnerConfiguration)

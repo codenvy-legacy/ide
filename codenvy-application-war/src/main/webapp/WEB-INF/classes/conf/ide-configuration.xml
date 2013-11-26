@@ -77,21 +77,7 @@
     
     <!-- Git -->
     <component>
-        <type>com.codenvy.ide.ext.git.server.rest.GitHubServiceApplication</type>
-    </component>
-
-    <component>
         <type>com.codenvy.ide.ext.git.server.nativegit.CredentialsLoader</type>
-    </component>
-    
-    <component>
-        <type>com.codenvy.ide.ext.git.server.github.GitHub</type>
-        <init-params>
-            <value-param>
-                <name>github-user</name>
-                <value>eXoIDE</value>
-            </value-param>
-        </init-params>
     </component>
     
     <component>
@@ -113,6 +99,20 @@
 
     <component>
         <type>com.codenvy.ide.ext.git.server.GitIgnoreConfigChecker</type>
+    </component>
+    
+    <component>
+        <type>com.codenvy.ide.ext.github.server.rest.GitHubServiceApplication</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.ide.ext.github.server.GitHub</type>
+        <init-params>
+            <value-param>
+                <name>github-user</name>
+                <value>eXoIDE</value>
+            </value-param>
+        </init-params>
     </component>
     
     <!-- End Git -->

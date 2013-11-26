@@ -18,18 +18,14 @@
 package com.codenvy.ide.extension.builder.client;
 
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.extension.builder.client.actions.BuildAction;
-import com.codenvy.ide.extension.builder.client.actions.BuildAndPublishAction;
 import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
-import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
-import static com.codenvy.ide.json.JsonCollections.createArray;
 
 /**
  * Maven builder extension entry point.

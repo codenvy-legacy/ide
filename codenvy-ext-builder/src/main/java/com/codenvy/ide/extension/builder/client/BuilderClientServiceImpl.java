@@ -47,12 +47,8 @@ public class BuilderClientServiceImpl implements BuilderClientService {
     private static final String DEPLOY   = BASE_URL + "/deploy";
     /** Cancel building project method's path. */
     private static final String CANCEL   = BASE_URL + "/cancel";
-    /** Get status of build method's path. */
-    private static final String STATUS   = BASE_URL + "/status";
     /** Get result of build method's path. */
     private static final String RESULT   = BASE_URL + "/result";
-    /** Get build log method's path. */
-    private static final String LOG      = BASE_URL + "/log";
     /** REST-service context. */
     private String restServiceContext;
     /** Loader to be displayed. */
@@ -61,13 +57,11 @@ public class BuilderClientServiceImpl implements BuilderClientService {
     /**
      * Create service.
      *
-     * @param restContext
-     *         REST-service context
      * @param loader
      *         loader to show on server request
      */
     @Inject
-    public BuilderClientServiceImpl(@Named("restContext") String restContext, Loader loader) {
+    public BuilderClientServiceImpl(Loader loader) {
         this.loader = loader;
         this.restServiceContext = "/api/";
     }
@@ -76,11 +70,11 @@ public class BuilderClientServiceImpl implements BuilderClientService {
     @Override
     public void build(String projectName,AsyncRequestCallback<String> callback)
             throws RequestException {
-        final String requesrUrl = restServiceContext + BUILD;
+        final String requestUrl = restServiceContext + BUILD;
 
         String params = "project=" + projectName;
         callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-        AsyncRequest.build(RequestBuilder.POST, requesrUrl + "?" + params)
+        AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params)
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
