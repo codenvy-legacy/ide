@@ -15,7 +15,9 @@ Running in DevMode:
 2) Go to **codenvy-packaging-standalone-tomcat/target/tomcat-ide** and start Tomcat
 
 3) In Inteliji Idea open **Run Configuration -> GWT Configuration**
+
 4) In pop-up select:
+
       Module: **codenvy-ide-client**
       
       GWT Module Onload: **com.codenvy.ide.client**
