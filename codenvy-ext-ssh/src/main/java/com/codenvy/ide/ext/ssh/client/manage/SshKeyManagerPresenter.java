@@ -34,14 +34,8 @@ import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.marshal.UserUnmarshaller;
-import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.security.oauth.JsOAuthWindow;
-import com.codenvy.ide.security.oauth.OAuthCallback;
-import com.codenvy.ide.security.oauth.OAuthStatus;
-import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.ui.loader.Loader;
-import com.codenvy.ide.util.Utils;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
@@ -51,12 +45,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.security.oauth.OAuthStatus.LOGGED_IN;
-import static com.google.gwt.http.client.RequestBuilder.POST;
 
 /**
  * The presenter for managing ssh keys.
@@ -65,14 +56,15 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  * @version $Id: SshKeyManagerPresenter May 18, 2011 10:16:44 AM evgen $
  */
 @Singleton
-public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter implements SshKeyManagerView.ActionDelegate, OAuthCallback {
+public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter implements SshKeyManagerView.ActionDelegate {
+    public static final String GITHUB_HOST = "github.com";
+    
     private SshKeyManagerView       view;
     private SshKeyService           service;
     private SshLocalizationConstant constant;
     private EventBus                eventBus;
     private UserClientService       userService;
     private Loader                  loader;
-    private String                  restContext;
     private SshKeyPresenter         sshKeyPresenter;
     private UploadSshKeyPresenter   uploadSshKeyPresenter;
     private NotificationManager     notificationManager;
@@ -93,7 +85,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
      */
     @Inject
     public SshKeyManagerPresenter(SshKeyManagerView view, SshKeyService service, SshResources resources, SshLocalizationConstant constant,
-                                  EventBus eventBus, Loader loader, UserClientService userService, @Named("restContext") String restContext, SshKeyPresenter sshKeyPresenter,
+                                  EventBus eventBus, Loader loader, UserClientService userService, SshKeyPresenter sshKeyPresenter,
                                   UploadSshKeyPresenter uploadSshKeyPresenter, NotificationManager notificationManager, DtoFactory dtoFactory) {
         super(constant.sshManagerTitle(), resources.sshKeyManager());
 
@@ -103,14 +95,13 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         this.constant = constant;
         this.eventBus = eventBus;
         this.userService = userService;
-        this.restContext = restContext;
         this.loader = loader;
         this.sshKeyPresenter = sshKeyPresenter;
         this.uploadSshKeyPresenter = uploadSshKeyPresenter;
         this.notificationManager = notificationManager;
         this.dtoFactory = dtoFactory;
     }
-
+    
     /** {@inheritDoc} */
     @Override
     public void onViewClicked(@NotNull KeyItem key) {
@@ -201,7 +192,25 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                             userService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
                                 @Override
                                 protected void onSuccess(User result) {
-                                    getToken(result.getUserId());
+                                    if (service.getSshKeyProviders().containsKey(GITHUB_HOST)) {
+                                        service.getSshKeyProviders().get(GITHUB_HOST)
+                                               .generateKey(result.getUserId(), new AsyncRequestCallback<Void>() {
+                                                   @Override
+                                                   public void onSuccess(Void result) {
+                                                       loader.hide();
+                                                       refreshKeys();
+                                                   }
+
+                                                   @Override
+                                                   public void onFailure(Throwable exception) {
+                                                       loader.hide();
+                                                       getFailedKey();
+                                                   }
+                                               });
+                                    } else {
+                                        Notification notification = new Notification(constant.sshKeysProviderNotFound(GITHUB_HOST), ERROR);
+                                        notificationManager.showNotification(notification);
+                                    }
                                 }
 
                                 @Override
@@ -215,87 +224,23 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                     }
                 } else {
                     loader.hide();
-                    getUserRepos();
                 }
             }
 
             @Override
             public void onFailure(Throwable caught) {
                 loader.hide();
-                Notification notification = new Notification("Getting ssh keys failed.", ERROR);
+                Notification notification = new Notification(constant.getSshKeyFailed(), ERROR);
                 notificationManager.showNotification(notification);
             }
         });
     }
 
-    /**
-     * Return token for user.
-     *
-     * @param user
-     *         user which need token
-     */
-    private void getToken(@NotNull final String user) {
-      /* TODO StringUnmarshaller unmarshaller = new StringUnmarshaller();
+   
 
-        try {
-            gitHubClientService.getUserToken(user, new AsyncRequestCallback<String>(unmarshaller) {
-                @Override
-                protected void onSuccess(String result) {
-                    if (result == null || result.isEmpty()) {
-                        loader.hide();
-                        oAuthLoginStart(user);
-                    } else {
-                        generateGitHubKey();
-                    }
-                }
+  
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    loader.hide();
-                    oAuthLoginStart(user);
-                }
-            });
-        } catch (RequestException e) {
-            loader.hide();
-        }*/
-    }
-
-    /** Log in  github */
-    private void oAuthLoginStart(@NotNull String user) {
-        boolean permitToRedirect = Window.confirm(constant.loginOAuthLabel());
-        if (permitToRedirect) {
-            String authUrl = "rest/ide/oauth/authenticate?oauth_provider=github"
-                             + "&scope=user&userId=" + user + "&scope=repo&redirect_after_login=/ide/" + Utils.getWorkspaceName();
-            JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, this);
-            authWindow.loginWithOAuth();
-        }
-    }
-
-    /** Generate github key. */
-    private void generateGitHubKey() {
-        try {
-            AsyncRequestCallback<Void> callback = new AsyncRequestCallback<Void>() {
-                @Override
-                protected void onSuccess(Void result) {
-                    loader.hide();
-                    refreshKeys();
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    loader.hide();
-                    getFailedKey();
-                }
-            };
-
-            String url = restContext + '/' + Utils.getWorkspaceName() + "/github/ssh/generate";
-            AsyncRequest.build(POST, url).loader(new EmptyLoader()).send(callback);
-        } catch (RequestException e) {
-            loader.hide();
-            Notification notification = new Notification("Upload key to github failed.", ERROR);
-            notificationManager.showNotification(notification);
-        }
-    }
+ 
 
     /** Need to remove failed uploaded keys from local storage if they can't be uploaded to github */
     private void getFailedKey() {
@@ -334,7 +279,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         service.deleteKey(key, new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
-                Notification notification = new Notification("Failed to delete invalid ssh key.", ERROR);
+                Notification notification = new Notification(constant.deleteSshKeyFailed(), ERROR);
                 notificationManager.showNotification(notification);
                 refreshKeys();
             }
@@ -346,29 +291,6 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         });
     }
 
-    /** Get the list of all authorized user's repositories. */
-    private void getUserRepos() {
-      /* TODO try {
-            AllRepositoriesUnmarshaller unmarshaller = new AllRepositoriesUnmarshaller();
-            gitHubClientService.getAllRepositories(new AsyncRequestCallback<JsonStringMap<JsonArray<GitHubRepository>>>(unmarshaller) {
-                @Override
-                protected void onSuccess(JsonStringMap<JsonArray<GitHubRepository>> result) {
-                    // do nothing
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                    Notification notification = new Notification(exception.getMessage(), ERROR);
-                    notificationManager.showNotification(notification);
-                }
-            });
-        } catch (RequestException e) {
-            eventBus.fireEvent(new ExceptionThrownEvent(e));
-            Notification notification = new Notification(e.getMessage(), ERROR);
-            notificationManager.showNotification(notification);
-        }*/
-    }
 
     /** {@inheritDoc} */
     @Override
@@ -407,13 +329,5 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                 eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
         });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onAuthenticated(@NotNull OAuthStatus authStatus) {
-        if (LOGGED_IN.equals(authStatus)) {
-            generateGitHubKey();
-        }
     }
 }

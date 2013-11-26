@@ -75,6 +75,19 @@
         <type>com.codenvy.ide.security.oauth.server.LabOAuthAuthenticatorProvider</type>
     </component>
     
+    <!-- Git -->
+    <component>
+        <type>com.codenvy.ide.ext.git.server.nativegit.CredentialsLoader</type>
+    </component>
+    
+    <component>
+        <type>com.codenvy.ide.ext.git.server.nativegit.OAuthCredentialsProvider</type>
+    </component>
+    
+    <component>
+        <type>com.codenvy.ide.ext.git.server.nativegit.SshKeysManager</type>
+    </component>
+    
     <component>
         <key>com.codenvy.ide.ext.git.server.GitConnectionFactory</key>
         <type>com.codenvy.ide.ext.git.server.nativegit.NativeGitConnectionFactory</type>
@@ -86,6 +99,20 @@
 
     <component>
         <type>com.codenvy.ide.ext.git.server.GitIgnoreConfigChecker</type>
+    </component>
+    
+    <component>
+        <type>com.codenvy.ide.ext.github.server.rest.GitHubServiceApplication</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.ide.ext.github.server.GitHub</type>
+        <init-params>
+            <value-param>
+                <name>github-user</name>
+                <value>eXoIDE</value>
+            </value-param>
+        </init-params>
     </component>
     
     <!-- End Git -->
