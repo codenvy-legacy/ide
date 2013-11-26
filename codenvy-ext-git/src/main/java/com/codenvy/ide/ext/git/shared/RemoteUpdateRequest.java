@@ -17,8 +17,9 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.dto.shared.DTO;
+
+import java.util.List;
 
 /**
  * Request to update tracked repositories.
@@ -30,25 +31,39 @@ import com.codenvy.ide.json.JsonArray;
 public interface RemoteUpdateRequest extends GitRequest {
     /** @return remote name */
     String getName();
+    
+    void setName(String name);
 
     /** @return list tracked branches */
-    JsonArray<String> getBranches();
+    List<String> getBranches();
 
+    void setBranches(List<String> branches);
+    
     /**
      * @return if <code>true</code> then {@link #branches} instead of replacing the list of currently tracked branches,
      *         added to that list
      */
-    boolean addBranches();
+    boolean isAddBranches();
+    
+    void setAddBranches(boolean isAddBranches);
 
     /** @return remote URLs to be added */
-    JsonArray<String> getAddUrl();
+    List<String> getAddUrl();
+    
+    void setAddUrl(List<String> addUrl);
 
     /** @return remote URLs to be removed */
-    JsonArray<String> getRemoveUrl();
+    List<String> getRemoveUrl();
 
+    void setRemoveUrl(List<String> removeUrl);
+    
     /** @return remote push URLs to be added */
-    JsonArray<String> getAddPushUrl();
+    List<String> getAddPushUrl();
+    
+    void setAddPushUrl(List<String> addPushUrl);
 
     /** @return remote push URLs to be removed */
-    JsonArray<String> getRemovePushUrl();
+    List<String> getRemovePushUrl();
+    
+    void setRemovePushUrl(List<String> removePushUrl);
 }

@@ -17,22 +17,25 @@
  */
 package com.codenvy.ide.ext.extruntime.server;
 
+import com.codenvy.api.vfs.server.MountPoint;
+import com.codenvy.api.vfs.server.VirtualFile;
+import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
+import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
+import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
+import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+import com.codenvy.api.vfs.shared.PropertyFilter;
+import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.ide.ext.extruntime.server.builder.BuilderException;
 import com.codenvy.ide.ext.extruntime.server.builder.ExtensionsBuilder;
 import com.codenvy.ide.ext.extruntime.server.runner.ExtensionsRunner;
 import com.codenvy.ide.ext.extruntime.server.runner.RunnerException;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
+import com.codenvy.vfs.impl.fs.LocalFSMountStrategy;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.exoplatform.ide.vfs.impl.fs.LocalFSMountStrategy;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.*;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -44,8 +47,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-
-import static org.exoplatform.ide.vfs.shared.PropertyFilter.ALL_FILTER;
 
 /**
  * RESTful front-end for {@link com.codenvy.ide.ext.extruntime.server.builder.ExtensionsBuilder} and {@link
@@ -73,8 +74,6 @@ public class ExtensionsRuntimeService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
-     * @param rootId
-     *         identifier of parent folder for new project
      * @param properties
      *         properties to set to project
      * @throws VirtualFileSystemException
@@ -86,13 +85,9 @@ public class ExtensionsRuntimeService {
     @POST
     public void createEmptyCodenvyExtensionProject(@QueryParam("vfsid") String vfsId,
                                                    @QueryParam("name") String name,
-                                                   @QueryParam("rootid") String rootId,
                                                    List<Property> properties) throws VirtualFileSystemException,
                                                                                      IOException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(
-                "templates/EmptyExtension.zip");
-        createProject(vfs, name, rootId, templateStream, properties);
+        createProject(vfsId, name, properties, "templates/EmptyExtension.zip");
     }
 
     /**
@@ -102,8 +97,6 @@ public class ExtensionsRuntimeService {
      *         identifier of virtual file system
      * @param name
      *         name of the newly created project
-     * @param rootId
-     *         identifier of parent folder for new project
      * @param properties
      *         properties to set to project
      * @param groupId
@@ -121,23 +114,21 @@ public class ExtensionsRuntimeService {
     @POST
     public void createSampleCodenvyExtensionProject(@QueryParam("vfsid") String vfsId,
                                                     @QueryParam("name") String name,
-                                                    @QueryParam("rootid") String rootId,
                                                     List<Property> properties,
                                                     @QueryParam("groupid") String groupId,
                                                     @QueryParam("artifactid") String artifactId,
                                                     @QueryParam("version") String version)
-            throws VirtualFileSystemException,
-                   IOException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(
-                "templates/GistExtensionSample.zip");
-        createProject(vfs, name, rootId, templateStream, properties);
+            throws VirtualFileSystemException, IOException {
+        createProject(vfsId, name, properties, "templates/GistExtensionSample.zip");
 
         MavenXpp3Reader pomReader = new MavenXpp3Reader();
         MavenXpp3Writer pomWriter = new MavenXpp3Writer();
 
-        File pomFile = (File)vfs.getItemByPath(name + "/pom.xml", null, false, PropertyFilter.NONE_FILTER);
-        InputStream pomContent = vfs.getContent(pomFile.getId()).getStream();
+        VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(vfsId);
+        MountPoint mountPoint = vfsProvider.getMountPoint(false);
+        VirtualFile pomFile = mountPoint.getVirtualFile(name + "/pom.xml");
+        InputStream pomContent = pomFile.getContent().getStream();
+
         try {
             Model pom = pomReader.read(pomContent, false);
             pom.setGroupId(groupId);
@@ -145,11 +136,9 @@ public class ExtensionsRuntimeService {
             pom.setVersion(version);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             pomWriter.write(stream, pom);
-            vfs.updateContent(pomFile.getId(), MediaType.valueOf(pomFile.getMimeType()),
-                              new ByteArrayInputStream(stream.toByteArray()),
-                              null);
+            pomFile.updateContent(pomFile.getMediaType(), new ByteArrayInputStream(stream.toByteArray()), null);
         } catch (XmlPullParserException e) {
-            LOG.warn("Error occurred while setting maven project coordinates.", e);
+            LOG.warn("Error occurred while setting project coordinates.", e);
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
@@ -163,8 +152,7 @@ public class ExtensionsRuntimeService {
      *         identifier of project we want to build
      * @param tomcatBundle
      *         whether to create Tomcat bundle or not
-     * @return
-     *         WAR download URL
+     * @return WAR download URL
      * @throws VirtualFileSystemException
      *         if an error occurs in VFS
      * @throws BuilderException
@@ -176,8 +164,8 @@ public class ExtensionsRuntimeService {
     public String build(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
                         @QueryParam("bundle") boolean tomcatBundle)
             throws VirtualFileSystemException, BuilderException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        return builder.build(vfs, projectId, tomcatBundle);
+        VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(vfsId);
+        return builder.build(vfsProvider.getMountPoint(false), projectId, tomcatBundle);
     }
 
     /**
@@ -207,8 +195,9 @@ public class ExtensionsRuntimeService {
                                       @QueryParam("vfsid") String vfsId,
                                       @QueryParam("projectid") String projectId) throws VirtualFileSystemException,
                                                                                         RunnerException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        return runner.run(warUrl, enableHotUpdate, vfs, projectId, fsMountStrategy.getMountPath().getPath());
+        VirtualFileSystemProvider provider = vfsRegistry.getProvider(vfsId);
+        return runner.run(warUrl, enableHotUpdate, provider.getMountPoint(false), projectId,
+                          fsMountStrategy.getMountPath().getPath());
     }
 
     /**
@@ -241,26 +230,30 @@ public class ExtensionsRuntimeService {
         runner.stopApp(appId);
     }
 
-    private void createProject(VirtualFileSystem vfs, String name, String rootId, InputStream template,
-                               List<Property> properties) throws VirtualFileSystemException, IOException {
-        if (template == null) {
+    private void createProject(String vfsId, String name,
+                               List<Property> properties, String templatePath) throws VirtualFileSystemException,
+                                                                                      IOException {
+        if (templatePath == null || templatePath.isEmpty()) {
             throw new InvalidArgumentException("Can't find project template.");
         }
 
-        Folder projectFolder = vfs.createFolder(rootId, name);
-
-        vfs.importZip(projectFolder.getId(), template, true);
-        updateProperties(name, properties, vfs, projectFolder);
-    }
-
-    private void updateProperties(String name, List<Property> properties, VirtualFileSystem vfs, Folder projectFolder)
-            throws VirtualFileSystemException {
-        Item projectItem = vfs.getItem(projectFolder.getId(), false, ALL_FILTER);
-        if (projectItem instanceof ProjectImpl) {
-            Project project = (Project)projectItem;
-            vfs.updateItem(project.getId(), properties, null);
-        } else {
-            throw new IllegalStateException("Something other than project was created on " + name);
+        VirtualFileSystemProvider provider = vfsRegistry.getProvider(vfsId);
+        MountPoint mountPoint = provider.getMountPoint(false);
+        VirtualFile root = mountPoint.getRoot();
+        VirtualFile projectFolder = root.createFolder(name);
+        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(templatePath);
+        if (templateStream == null) {
+            throw new InvalidArgumentException("Can't find " + templatePath);
         }
+        projectFolder.unzip(templateStream, true);
+        updateProperties(properties, projectFolder);
     }
+
+    private void updateProperties(List<Property> properties, VirtualFile projectFolder)
+            throws VirtualFileSystemException {
+        List<Property> propertyList = projectFolder.getProperties(PropertyFilter.ALL_FILTER);
+        propertyList.addAll(properties);
+        projectFolder.updateProperties(propertyList, null);
+    }
+
 }

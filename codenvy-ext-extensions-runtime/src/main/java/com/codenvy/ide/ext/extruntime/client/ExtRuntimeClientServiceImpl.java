@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.extruntime.client;
 
+import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 import com.codenvy.ide.json.JsonArray;
@@ -139,33 +140,31 @@ public class ExtRuntimeClientServiceImpl implements ExtRuntimeClientService {
         wsMessageBus.send(message, callback);
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void launch(String warUrl, boolean enableHotUpdate, String vfsId, String projectId,
-                       RequestCallback<ApplicationInstance> callback)
-            throws WebSocketException {
-        final String params =
-                "?warUrl=" + warUrl + "&hotupdate=" + enableHotUpdate + "&vfsid=" + vfsId + "&projectid=" + projectId;
-        MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, BASE_URL + LAUNCH + params);
-        builder.header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON);
-        Message message = builder.build();
-        wsMessageBus.send(message, callback);
+    public void run(String projectName, AsyncRequestCallback<String> callback) throws RequestException {
+        final String requestUrl = "/api/" + Utils.getWorkspaceName() + "/runner/run";
+
+        String params = "project=" + projectName;
+        AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getLogs(String appId, AsyncRequestCallback<String> callback) throws RequestException {
-        final String url = restContext + BASE_URL + LOGS + "/" + appId;
+    public void getStatus(Link link, AsyncRequestCallback<String> callback) throws RequestException {
+        AsyncRequest.build(RequestBuilder.GET, link.getHref()).loader(loader).send(callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void getLogs(Link link, AsyncRequestCallback<String> callback) throws RequestException {
         loader.setMessage("Retrieving logs...");
-        AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN).loader(loader).send(
-                callback);
+        AsyncRequest.build(RequestBuilder.GET, link.getHref()).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void stop(String appId, AsyncRequestCallback<Void> callback) throws RequestException {
-        final String url = restContext + BASE_URL + STOP + "/" + appId;
+    public void stop(Link link, AsyncRequestCallback<String> callback) throws RequestException {
         loader.setMessage("Stopping an application...");
-        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.POST, link.getHref()).loader(loader).send(callback);
     }
 }

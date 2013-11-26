@@ -23,4 +23,6 @@ import com.codenvy.ide.dto.DTO;
 @DTO
 public interface StepEvent extends DebuggerEvent {
     Location getLocation();
+
+    void setLocation(Location location);
 }

@@ -167,9 +167,6 @@ public interface GitResources extends ClientBundle {
     @Source("controls/repository.png")
     ImageResource projectReadOnlyGitUrl();
 
-    @Source("welcome/import-from-github.png")
-    ImageResource importFromGithub();
-
     @Source("welcome/clone-git-repository.png")
     ImageResource welcomeClone();
 

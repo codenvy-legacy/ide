@@ -53,7 +53,7 @@ public class LaunchAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        controller.buildAndLaunch();
+        controller.launch();
     }
 
     /** {@inheritDoc} */

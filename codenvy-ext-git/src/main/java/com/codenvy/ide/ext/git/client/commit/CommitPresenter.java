@@ -22,10 +22,10 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.client.marshaller.RevisionUnmarshaller;
-import com.codenvy.ide.ext.git.client.marshaller.RevisionUnmarshallerWS;
+import com.codenvy.ide.ext.git.client.marshaller.StringUnmarshaller;
 import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -59,6 +59,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
     private Project                 project;
     private EventBus                eventBus;
     private NotificationManager     notificationManager;
+    private DtoFactory              dtoFactory;
 
     /**
      * Create presenter.
@@ -72,7 +73,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
      */
     @Inject
     public CommitPresenter(CommitView view, GitClientService service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
-                           EventBus eventBus, NotificationManager notificationManager) {
+                           EventBus eventBus, NotificationManager notificationManager, DtoFactory dtoFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
@@ -80,6 +81,7 @@ public class CommitPresenter implements CommitView.ActionDelegate {
         this.constant = constant;
         this.eventBus = eventBus;
         this.notificationManager = notificationManager;
+        this.dtoFactory = dtoFactory;
     }
 
     /** Show dialog. */
@@ -99,16 +101,16 @@ public class CommitPresenter implements CommitView.ActionDelegate {
         String message = view.getMessage();
         boolean all = view.isAllFilesInclued();
         boolean amend = view.isAmend();
-        RevisionUnmarshallerWS unmarshaller = new RevisionUnmarshallerWS();
 
         try {
-            service.commitWS(resourceProvider.getVfsId(), project, message, all, amend, new RequestCallback<Revision>(unmarshaller) {
+            service.commitWS(resourceProvider.getVfsId(), project, message, all, amend, new RequestCallback<String>(new StringUnmarshaller()) {
                 @Override
-                protected void onSuccess(Revision result) {
-                    if (!result.fake()) {
-                        onCommitSuccess(result);
+                protected void onSuccess(String result) {
+                    Revision revision = dtoFactory.createDtoFromJson(result, Revision.class);
+                    if (!revision.isFake()) {
+                        onCommitSuccess(revision);
                     } else {
-                        Notification notification = new Notification(result.getMessage(), ERROR);
+                        Notification notification = new Notification(revision.getMessage(), ERROR);
                         notificationManager.showNotification(notification);
                     }
                 }
@@ -126,17 +128,17 @@ public class CommitPresenter implements CommitView.ActionDelegate {
 
     /** Perform the commit to repository and process the response (sends request over HTTP). */
     private void doCommitREST(@NotNull Project project, @NotNull String message, boolean all, boolean amend) {
-        RevisionUnmarshaller unmarshaller = new RevisionUnmarshaller();
 
         try {
             service.commit(resourceProvider.getVfsId(), project, message, all, amend,
-                           new AsyncRequestCallback<Revision>(unmarshaller) {
+                           new AsyncRequestCallback<String>(new com.codenvy.ide.rest.StringUnmarshaller()) {
                                @Override
-                               protected void onSuccess(Revision result) {
-                                   if (!result.fake()) {
-                                       onCommitSuccess(result);
+                               protected void onSuccess(String result) {
+                                   Revision revision = dtoFactory.createDtoFromJson(result, Revision.class);
+                                   if (!revision.isFake()) {
+                                       onCommitSuccess(revision);
                                    } else {
-                                       Notification notification = new Notification(result.getMessage(), ERROR);
+                                       Notification notification = new Notification(revision.getMessage(), ERROR);
                                        notificationManager.showNotification(notification);
                                    }
                                }

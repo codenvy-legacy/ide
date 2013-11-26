@@ -2,8 +2,8 @@
  * CODENVY CONFIDENTIAL
  * __________________
  *
- *  [2012] - [2013] Codenvy, S.A.
- *  All Rights Reserved.
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
@@ -20,7 +20,6 @@ package com.codenvy.ide.server;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.organization.client.WorkspaceManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
-import com.codenvy.organization.model.Workspace;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +31,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/** @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a> */
+
+/**
+ * @author <a href="mailto:vparfonov@codenvy.com">Vitaly Parfonov</a>
+ * @version $Id:
+ */
 public class SetEnvironmentContextFilter implements Filter {
     private Map<String, Object> env;
     private WorkspaceManager    workspaceManager;
@@ -51,7 +54,7 @@ public class SetEnvironmentContextFilter implements Filter {
                 }
                 if (workspaceManager != null) {
                     try {
-                        Workspace workspace = workspaceManager.getWorkspaceByName(ws);
+                        workspaceManager.getWorkspaceByName(ws);//check ws on existing
                         EnvironmentContext environment = EnvironmentContext.getCurrent();
                         for (Map.Entry<String, Object> entry : env.entrySet()) {
                             environment.setVariable(entry.getKey(), entry.getValue());

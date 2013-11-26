@@ -20,11 +20,12 @@ package com.codenvy.ide.ext.java.jdi.client.debug.relaunch;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
-import com.codenvy.ide.ext.java.jdi.client.marshaller.DebuggerInfoUnmarshaller;
 import com.codenvy.ide.ext.java.jdi.shared.ApplicationInstance;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -40,7 +41,8 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class ReLaunchDebuggerPresenter implements ReLaunchDebuggerView.ActionDelegate {
-    private ReLaunchDebuggerView        view;
+    private ReLaunchDebuggerView view;
+    private DtoFactory dtoFactory;
     private DebuggerClientService       service;
     private ApplicationInstance         instance;
     private NotificationManager         notificationManager;
@@ -61,8 +63,12 @@ public class ReLaunchDebuggerPresenter implements ReLaunchDebuggerView.ActionDel
      * @param notificationManager
      */
     @Inject
-    protected ReLaunchDebuggerPresenter(ReLaunchDebuggerView view, DebuggerClientService service, NotificationManager notificationManager) {
+    protected ReLaunchDebuggerPresenter(ReLaunchDebuggerView view,
+                                        DebuggerClientService service,
+                                        NotificationManager notificationManager,
+                                        DtoFactory dtoFactory) {
         this.view = view;
+        this.dtoFactory = dtoFactory;
         this.view.setDelegate(this);
         this.service = service;
         this.notificationManager = notificationManager;
@@ -85,15 +91,14 @@ public class ReLaunchDebuggerPresenter implements ReLaunchDebuggerView.ActionDel
 
     /** Connect to debugger. */
     protected void connectDebugger() {
-        DebuggerInfoUnmarshaller unmarshaller = new DebuggerInfoUnmarshaller();
 
         try {
-            service.connect(instance.getDebugHost(), instance.getDebugPort(), new AsyncRequestCallback<DebuggerInfo>(unmarshaller) {
+            service.connect(instance.getDebugHost(), instance.getDebugPort(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
-                public void onSuccess(DebuggerInfo result) {
+                public void onSuccess(String result) {
                     tryConnectDebugger.cancel();
                     view.close();
-                    callback.onSuccess(result);
+                    callback.onSuccess(dtoFactory.createDtoFromJson(result, DebuggerInfo.class));
                 }
 
                 @Override

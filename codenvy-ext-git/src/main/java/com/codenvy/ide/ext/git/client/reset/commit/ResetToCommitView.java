@@ -20,7 +20,8 @@ package com.codenvy.ide.ext.git.client.reset.commit;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.ext.git.shared.Revision;
-import com.codenvy.ide.json.JsonArray;
+
+import java.util.List;
 
 /**
  * The view of {@link ResetToCommitPresenter}.
@@ -51,7 +52,7 @@ public interface ResetToCommitView extends View<ResetToCommitView.ActionDelegate
      * @param revisions
      *         git revisions
      */
-    void setRevisions(@NotNull JsonArray<Revision> revisions);
+    void setRevisions(@NotNull List<Revision> revisions);
 
     /** @return <code>true</code> if soft mode is chosen, and <code>false</code> otherwise */
     boolean isSoftMode();

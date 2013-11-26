@@ -29,21 +29,21 @@ public interface PartStack extends Presenter {
 
     /** {@inheritDoc} */
     @Override
-    public void go(AcceptsOneWidget container);
+    void go(AcceptsOneWidget container);
 
     /**
      * Change the focused state of the PartStack to desired value
      *
      * @param focused
      */
-    public void setFocus(boolean focused);
+    void setFocus(boolean focused);
 
     /**
      * Add part to the PartStack. To immediately show part, you must call <code>setActivePart()</code>.
      *
      * @param part
      */
-    public void addPart(PartPresenter part);
+    void addPart(PartPresenter part);
 
     /**
      * Ask if PartStack contains given Part.
@@ -51,21 +51,21 @@ public interface PartStack extends Presenter {
      * @param part
      * @return
      */
-    public boolean containsPart(PartPresenter part);
+    boolean containsPart(PartPresenter part);
 
     /**
      * Number of parts in the PartStack
      *
      * @return
      */
-    public int getNumberOfParts();
+    int getNumberOfParts();
 
     /**
      * Get active Part. Active is the part that is currently displayed on the screen
      *
      * @return
      */
-    public PartPresenter getActivePart();
+    PartPresenter getActivePart();
 
     /**
      * Activate given part (force show it on the screen). If part wasn't previously added
@@ -73,20 +73,20 @@ public interface PartStack extends Presenter {
      *
      * @param part
      */
-    public void setActivePart(PartPresenter part);
+    void setActivePart(PartPresenter part);
 
     /**
      * Hide given part (remove from the screen). If part not active part that method has no effect.
      *
      * @param part
      */
-    public void hidePart(PartPresenter part);
+    void hidePart(PartPresenter part);
 
     /**
      * Remove given part from PartStack.
      *
      * @param part
      */
-    public void removePart(PartPresenter part);
+    void removePart(PartPresenter part);
 
 }

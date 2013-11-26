@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Request to delete branch.
@@ -29,7 +29,15 @@ import com.codenvy.ide.dto.DTO;
 public interface BranchDeleteRequest extends GitRequest {
     /** @return name of branch to delete */
     String getName();
+    
+    void setName(String name);
+    
+    BranchDeleteRequest withName(String name);
 
     /** @return if <code>true</code> then delete branch {@link #name} even if it is not fully merged */
-    boolean force();
+    boolean isForce();
+    
+    void setForce(boolean isForce);
+    
+    BranchDeleteRequest withForce(boolean force);
 }

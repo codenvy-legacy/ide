@@ -23,4 +23,6 @@ import com.codenvy.ide.dto.DTO;
 @DTO
 public interface BreakPointEvent extends DebuggerEvent {
     BreakPoint getBreakPoint();
+
+    void setBreakPoint(BreakPoint breakPoint);
 }

@@ -22,8 +22,9 @@ import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.job.Job;
 import com.codenvy.ide.job.JobChangeEvent;
 import com.codenvy.ide.job.RequestStatusHandlerBase;
-import com.codenvy.ide.json.JsonArray;
 import com.google.web.bindery.event.shared.EventBus;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -42,7 +43,7 @@ public class PushRequestHandler extends RequestStatusHandlerBase {
      * @param eventBus
      * @param constant
      */
-    public PushRequestHandler(@NotNull String projectName, @NotNull JsonArray<String> refSpec, @NotNull EventBus eventBus,
+    public PushRequestHandler(@NotNull String projectName, @NotNull List<String> refSpec, @NotNull EventBus eventBus,
                               @NotNull GitLocalizationConstant constant) {
         super(projectName, eventBus);
         String[] split = refSpec.get(0).split(":");

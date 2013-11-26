@@ -32,7 +32,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.*;
-import static com.codenvy.ide.extension.maven.client.BuilderExtension.SPRING_APPLICATION_PROJECT_TYPE;
 import static com.codenvy.ide.rest.MimeType.APPLICATION_JAVA;
 
 /**
@@ -86,7 +85,7 @@ public class JavaRuntimeExtension {
 
         contextMenuGroup.add(runContextGroup);
 
-        debuggerManager.registeredDebugger(SPRING_APPLICATION_PROJECT_TYPE, debuggerPresenter);
+        debuggerManager.registeredDebugger("SPRING_APPLICATION_PROJECT_TYPE", debuggerPresenter);
 
         resolverFactory.addResolver(APPLICATION_JAVA, javaFqnResolver);
     }

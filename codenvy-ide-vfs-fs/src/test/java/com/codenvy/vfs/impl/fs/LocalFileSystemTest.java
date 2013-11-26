@@ -167,7 +167,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         env.setVariable(EnvironmentContext.WORKSPACE_NAME, MY_WORKSPACE_ID);
     }
 
-    // Directory "fs-root" in "target" folder of maven project.
+    // Directory "fs-root" in "target" folder of builder project.
     // It is root where all (but we have only one at the in test) virtual filesystems are bound.
     private java.io.File createRootDirectory() throws Exception {
         java.io.File root = new java.io.File(

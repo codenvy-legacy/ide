@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.git.client.reset.files;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.git.shared.IndexFile;
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.cell.client.CheckboxCell;
@@ -99,7 +98,7 @@ public class ResetFilesViewImpl extends DialogBox implements ResetFilesView {
         Column<IndexFile, Boolean> checkColumn = new Column<IndexFile, Boolean>(new CheckboxCell(false, true)) {
             @Override
             public Boolean getValue(IndexFile file) {
-                return !file.indexed();
+                return !file.isIndexed();
             }
         };
 
@@ -107,7 +106,7 @@ public class ResetFilesViewImpl extends DialogBox implements ResetFilesView {
         FieldUpdater<IndexFile, Boolean> checkFieldUpdater = new FieldUpdater<IndexFile, Boolean>() {
             @Override
             public void update(int index, IndexFile file, Boolean value) {
-                ((DtoClientImpls.IndexFileImpl)file).setIndexed(!value);
+                file.setIndexed(!value);
             }
         };
 

@@ -37,10 +37,10 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs-fs</artifactId>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-vfs-fs</artifactId>
             <scope>runtime</scope>
-            <version>${org.exoplatform.ide.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -100,7 +100,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <!-- IMPORTANT!
                  Specify version explicitly because addParentPoms parameter works with 2.8 or higher.
-                 Version 2.6 is defined in com.codenvy:maven-parent-pom. -->
+                 Version 2.6 is defined in com.codenvy:builder-parent-pom. -->
                 <version>2.8</version>
                 <executions>
                     <execution>

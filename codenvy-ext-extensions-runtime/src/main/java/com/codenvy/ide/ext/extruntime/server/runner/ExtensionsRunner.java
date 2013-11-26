@@ -19,16 +19,14 @@ package com.codenvy.ide.ext.extruntime.server.runner;
 
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.core.util.Pair;
-import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls.ApplicationInstanceImpl;
+import com.codenvy.api.vfs.server.MountPoint;
+import com.codenvy.api.vfs.server.VirtualFile;
+import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+//import com.codenvy.ide.ext.extruntime.dto.server.DtoServerImpls.ApplicationInstanceImpl;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 
 import org.apache.maven.model.Model;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.Project;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
@@ -105,6 +103,36 @@ public class ExtensionsRunner implements Startable {
         this.applicationTerminator.scheduleAtFixedRate(new TerminateApplicationTask(), 1, 1, TimeUnit.MINUTES);
     }
 
+    private static int parseApplicationLifeTime(String lifeTime) {
+        if (lifeTime != null) {
+            return Integer.parseInt(lifeTime);
+        }
+        return DEFAULT_APPLICATION_LIFETIME;
+    }
+
+    private static Pair<Integer, Integer> parsePortRanges(String portRange) {
+        Pair<Integer, Integer> portRangePair;
+        try {
+            final int hyphenIndex = portRange.indexOf('-');
+            int firstPortNumber;
+            int lastPortNumber;
+            if (hyphenIndex != -1) {
+                firstPortNumber = parseInt(portRange.substring(0, hyphenIndex));
+                lastPortNumber = parseInt(portRange.substring(hyphenIndex + 1));
+                if (firstPortNumber >= lastPortNumber) {
+                    throw new IllegalArgumentException("Port range is incorrect.");
+                }
+            } else {
+                firstPortNumber = parseInt(portRange);
+                lastPortNumber = parseInt(portRange);
+            }
+            portRangePair = Pair.of(firstPortNumber, lastPortNumber);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+        return portRangePair;
+    }
+
     /**
      * Launch Codenvy with a custom extension. This need some preparatory operations, such as: </p>
      * <ul>
@@ -117,10 +145,10 @@ public class ExtensionsRunner implements Startable {
      *         WAR URL
      * @param enableHotUpdate
      *         whether to enable the ability hot update or not
-     * @param vfs
-     *         virtual file system (makes sense only when hot update is enabled)
+     * @param vfsMountPoint
+     *         virtual file system (required only when hot update is enabled)
      * @param projectId
-     *         identifier of a project we want to run (makes sense only when hot update is enabled)
+     *         identifier of a project we want to run (required only when hot update is enabled)
      * @param wsMountPath
      *         mount path for the user's workspace
      * @return description of a launched application
@@ -129,7 +157,7 @@ public class ExtensionsRunner implements Startable {
      * @throws RunnerException
      *         if an error occurs while launching app
      */
-    public ApplicationInstance run(String warUrl, boolean enableHotUpdate, VirtualFileSystem vfs, String projectId,
+    public ApplicationInstance run(String warUrl, boolean enableHotUpdate, MountPoint vfsMountPoint, String projectId,
                                    String wsMountPath) throws VirtualFileSystemException, RunnerException {
         if (projectId == null || projectId.isEmpty()) {
             throw new IllegalArgumentException("Project id required.");
@@ -144,7 +172,7 @@ public class ExtensionsRunner implements Startable {
                     "Not enough resources to run new application. Max number of applications was reached.");
         }
 
-        Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.NONE_FILTER);
+        VirtualFile project = vfsMountPoint.getVirtualFile(projectId);
         File tempDir = null;
         final String appId = generate("app-", 16);
         try {
@@ -153,8 +181,8 @@ public class ExtensionsRunner implements Startable {
             final Path clientModuleDirPath = codeServerDirPath.resolve(CLIENT_MODULE_DIR_NAME);
             final Path clientModulePomPath = clientModuleDirPath.resolve("pom.xml");
 
-            Item pomFile = vfs.getItemByPath(project.getName() + "/pom.xml", null, false, PropertyFilter.NONE_FILTER);
-            InputStream extPomContent = vfs.getContent(pomFile.getId()).getStream();
+            VirtualFile pomFile = vfsMountPoint.getVirtualFile(project.getName() + "/pom.xml");
+            InputStream extPomContent = pomFile.getContent().getStream();
             Model extensionPom = readPom(extPomContent);
 
             if (extensionPom.getGroupId() == null || extensionPom.getArtifactId() == null ||
@@ -162,17 +190,14 @@ public class ExtensionsRunner implements Startable {
                 throw new Exception("Missing Maven artifact coordinates.");
             }
 
-            /*********************************** Preparing ******************************************/
+            /************************** Preparing to launch GWT code server **************************/
 
             InputStream codenvyClientSourcesStream = getCodenvyPlatformBinaryDistribution().openStream();
             unzip(codenvyClientSourcesStream, codeServerDirPath.toFile());
-            Path customModulePath = codeServerDirPath.resolve(extensionPom.getArtifactId());
-            unzip(vfs.exportZip(projectId).getStream(), customModulePath.toFile());
+            final Path customModulePath = codeServerDirPath.resolve(extensionPom.getArtifactId());
+            unzip(project.zip().getStream(), customModulePath.toFile());
 
             addDependencyToPom(clientModulePomPath, extensionPom);
-
-            // Detect DTO usage and add an appropriate sections to the codenvy-ide-client/pom.xml.
-            copyDtoGeneratorInvocations(extensionPom, clientModulePomPath);
 
             // Inherit custom GWT module.
             Path mainGwtModuleDescriptor = clientModuleDirPath.resolve(MAIN_GWT_MODULE_DESCRIPTOR_REL_PATH);
@@ -208,7 +233,8 @@ public class ExtensionsRunner implements Startable {
             applications.put(appId, new Application(appId, expirationTime, tomcatServer, codeServer, tempDir));
 
             LOG.debug("Start Codenvy extension {}", appId);
-            return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort).setCodeServerPort(codeServerPort);
+//            return ApplicationInstanceImpl.make().setId(appId).setPort(httpPort).setCodeServerPort(codeServerPort);
+            return null;
         } catch (Exception e) {
             LOG.warn("Codenvy extension {} failed to start, cause: {}", appId, e);
             // ensure that ports are released
@@ -300,36 +326,6 @@ public class ExtensionsRunner implements Startable {
                 LOG.error("Failed to stop Codenvy with extension {}.", appId, e);
             }
         }
-    }
-
-    private static int parseApplicationLifeTime(String lifeTime) {
-        if (lifeTime != null) {
-            return Integer.parseInt(lifeTime);
-        }
-        return DEFAULT_APPLICATION_LIFETIME;
-    }
-
-    private static Pair<Integer, Integer> parsePortRanges(String portRange) {
-        Pair<Integer, Integer> portRangePair;
-        try {
-            final int hyphenIndex = portRange.indexOf('-');
-            int firstPortNumber;
-            int lastPortNumber;
-            if (hyphenIndex != -1) {
-                firstPortNumber = parseInt(portRange.substring(0, hyphenIndex));
-                lastPortNumber = parseInt(portRange.substring(hyphenIndex + 1));
-                if (firstPortNumber >= lastPortNumber) {
-                    throw new IllegalArgumentException("Port range is incorrect.");
-                }
-            } else {
-                firstPortNumber = parseInt(portRange);
-                lastPortNumber = parseInt(portRange);
-            }
-            portRangePair = Pair.of(firstPortNumber, lastPortNumber);
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
-        return portRangePair;
     }
 
     private class TerminateApplicationTask implements Runnable {

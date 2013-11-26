@@ -31,4 +31,10 @@ public interface BreakPoint {
     boolean isEnabled();
 
     String getCondition();
+
+    void setEnabled(boolean enabled);
+
+    void setExpression(String expression);
+
+    void setLocation(Location location);
 }

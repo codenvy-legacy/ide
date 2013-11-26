@@ -55,15 +55,9 @@
 
         <!-- Server libraries -->
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-maven</artifactId>
-            <scope>runtime</scope>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-vfs</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
         </dependency>
 
         <!-- Testing libraries -->
@@ -142,7 +136,7 @@
                         <configuration>
                             <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                             <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.extension.maven.shared</argument>
+                                <argument>--dto_packages=com.codenvy.ide.extension.builder.shared</argument>
                                 <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/extension/maven/dto/client/DtoClientImpls.java</argument>
                                 <argument>--impl=client</argument>
                                 <argument>--package_base=${generated.sources.directory}/</argument>

@@ -35,4 +35,14 @@ public interface DebuggerInfo {
     String getVmName();
 
     String getVmVersion();
+
+    void setHost(String host);
+
+    void setId(String id);
+
+    void setPort(int port);
+
+    void setVmName(String vmName);
+
+    void setVmVersion(String vmVersion);
 }

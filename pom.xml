@@ -39,7 +39,7 @@
     <!--
         IMPORTANT!
         Make sure that the same properties in files
-        codenvy-ext-extensions-runtime/src/main/resource/codenvyPlatform/codenvy-ide-client/pom.xml
+        codenvy-runner-sdk/src/main/resource/codenvyPlatform/pom.xml
         codenvy-sdk-tutorials/*/pom.xml
         have the same values.
     -->
@@ -49,7 +49,7 @@
         <!-- Codenvy -->
         <com.codenvy.commons.version>0.9.1</com.codenvy.commons.version>
         <com.codenvy.organization.version>0.8.1</com.codenvy.organization.version>
-        <com.codenvy.platform-api.version>1.0.0-beta2</com.codenvy.platform-api.version>
+        <com.codenvy.platform-api.version>0.4.0-SNAPSHOT</com.codenvy.platform-api.version>
 
         <!-- eXo -->
         <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
@@ -58,7 +58,7 @@
         <org.exoplatform.ide.version>2.8.1</org.exoplatform.ide.version>
 
         <!-- CodeAssistant DataBase -->
-        <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
+        <codenvy.ide-codeassistant-index.version>20120627</codenvy.ide-codeassistant-index.version>
 
         <!-- EverREST -->
         <everrest.version>1.1.3</everrest.version>
@@ -91,12 +91,16 @@
         <commons-fileupload.version>1.2.1</commons-fileupload.version>
         <commons-io.version>2.4</commons-io.version>
         <commons-codec.version>1.6</commons-codec.version>
+        <commons.compress.version>1.6</commons.compress.version>
         <jgit.version>2.3.1.201302201838-r</jgit.version>
         <jsch.version>0.1.44-1</jsch.version>
+        <servlet-api.version>3.0.1</servlet-api.version>
         <org.apache.lucene.version>2.9.4</org.apache.lucene.version>
         <gin.version>2.1.1</gin.version>
         <guava.version>12.0.1</guava.version>
         <gson.version>2.1</gson.version>
+        <antlr.version>3.3</antlr.version>
+        <qdox-patched.version>1.12-eXo01</qdox-patched.version>
         <reflections.version>0.9.9-RC1</reflections.version>
         <tomcat.version>7.0.37</tomcat.version>
         <maven-model.version>3.0.5</maven-model.version>
@@ -117,24 +121,33 @@
         <module>codenvy-ide-api</module>
         <module>codenvy-ide-vfs-fs</module>
         <module>codenvy-ide-core</module>
+        <module>codenvy-builder-maven</module>
+        <module>codenvy-builder-ant</module>
+        <module>codenvy-runner-docker</module>
+        <module>codenvy-runner-sdk</module>
+        <module>codenvy-ext-builder</module>
+        <module>codenvy-ext-runner</module>
+        <module>codenvy-api-war</module>
         <module>codenvy-ext-demo</module>
         <module>codenvy-ext-css</module>
         <module>codenvy-ext-java</module>
-        <module>codenvy-ext-java-runtime</module>
-        <module>codenvy-ext-cloudfoundry</module>
+        <!--module>codenvy-ext-java-runtime</module
+        module>codenvy-ext-cloudfoundry</module>
         <module>codenvy-ext-cloudbees</module>
         <module>codenvy-ext-appfog</module>
         <module>codenvy-ext-openshift</module>
         <module>codenvy-ext-googleappengine</module>
         <module>codenvy-ext-aws</module>
-        <module>codenvy-ext-jenkins</module>
+        <module>codenvy-ext-jenkins</module-->
         <module>codenvy-ext-git</module>
+    	<module>codenvy-ext-github</module>
         <module>codenvy-ext-maven</module>
+        <module>codenvy-ext-ant</module>
         <module>codenvy-ext-ssh</module>
+        <module>codenvy-ext-extensions-runtime</module>
+        <module>codenvy-ext-tutorials</module>
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
-        <module>codenvy-ext-tutorials</module>
-        <module>codenvy-ext-extensions-runtime</module>
         <module>codenvy-sdk-tutorials/action-api</module>
         <module>codenvy-sdk-tutorials/dto</module>
         <module>codenvy-sdk-tutorials/wizard-api</module>
@@ -143,41 +156,9 @@
         <module>codenvy-sdk-tutorials/new-project-wizard</module>
         <module>codenvy-sdk-tutorials/new-resource-wizard</module>
         <module>codenvy-sdk-tutorials/editor-api</module>
-        <module>codenvy-sdk-application-war</module>
+        <module>codenvy-application-war</module>
+        <module>codenvy-ide-site-war</module>
         <module>codenvy-sdk-private-dependencies</module>
-        <module>codenvy-sdk-packaging-standalone-tomcat</module>
+        <module>codenvy-packaging-standalone-tomcat</module>
     </modules>
-
-    <profiles>
-        <profile>
-            <!-- Used to build default-version (non-SDK) of Codenvy -->
-            <id>default-version</id>
-            <activation>
-                <property>
-                    <name>!sdk</name>
-                </property>
-            </activation>
-            <modules>
-                <module>codenvy-ide-site-war</module>
-                <module>codenvy-application-war</module>
-                <module>codenvy-packaging-standalone-tomcat</module>
-            </modules>
-        </profile>
-        <profile>
-            <!-- Used to build Codenvy Platform SDK -->
-            <id>sdk-version</id>
-            <activation>
-                <property>
-                    <name>sdk</name>
-                </property>
-            </activation>
-            <modules>
-                <module>codenvy-ext-tutorials</module>
-                <module>codenvy-ext-extensions-runtime</module>
-                <module>codenvy-sdk-application-war</module>
-                <module>codenvy-sdk-private-dependencies</module>
-                <module>codenvy-sdk-packaging-standalone-tomcat</module>
-            </modules>
-        </profile>
-    </profiles>
 </project>
