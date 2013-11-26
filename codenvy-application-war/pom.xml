@@ -172,7 +172,7 @@
         </dependency> -->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-extensions-runtime</artifactId>
+            <artifactId>codenvy-ext-extensions</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -199,11 +199,9 @@
             <scope>compile</scope>
             <version>${reflections.version}</version>
         </dependency>
-
     </dependencies>
 
     <build>
-
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

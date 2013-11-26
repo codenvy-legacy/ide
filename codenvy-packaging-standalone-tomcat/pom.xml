@@ -164,7 +164,7 @@
             <artifactId>codenvy-ext-git</artifactId>
             <version>${project.version}</version>
         </dependency>
-	<dependency>
+	    <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-github</artifactId>
             <version>${project.version}</version>
@@ -175,12 +175,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-extensions-runtime</artifactId>
-            <type>jar</type>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-sdk-private-dependencies</artifactId>

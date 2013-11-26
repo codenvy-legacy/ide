@@ -312,7 +312,7 @@
         </plugins>
     </build>
     <!--
-    This profile is required for launching Codenvy extensions in 'codenvy-ext-extensions-runtime' module.
+    This profile is required for launching Codenvy extensions in 'codenvy-ext-extensions' module.
     See com.codenvy.ide.ext.extruntime.server.codeserver.GWTMavenCodeServer.fixMGWT332Bug() method.
     It's a recommended (https://groups.google.com/d/msg/codehaus-mojo-gwt-maven-plugin-users/zvJ0IlGN7Fw/RbyteSEKXtoJ)
     workaround of a known bug of Maven GWT Plugin (https://jira.codehaus.org/browse/MGWT-332).

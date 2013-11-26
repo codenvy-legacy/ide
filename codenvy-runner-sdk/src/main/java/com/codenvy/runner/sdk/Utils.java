@@ -135,51 +135,6 @@ class Utils {
     }
 
     /**
-     * Add the provided module to the specified reactor pom.xml.
-     *
-     * @param path
-     *         pom.xml path
-     * @param moduleRelativePath
-     *         relative path of module to add
-     * @throws java.io.IOException
-     *         error occurred while reading or writing content of file
-     */
-    static void addModuleToReactorPom(Path path, String moduleRelativePath) throws IOException {
-        addModuleToReactorPom(path, moduleRelativePath, null);
-    }
-
-    /**
-     * Add the provided module to the specified reactor pom.xml. If <code>moduleAfter</code> isn't null - new module
-     * will be inserted before the <code>moduleAfter</code>.
-     *
-     * @param path
-     *         pom.xml path
-     * @param moduleRelativePath
-     *         relative path of module to add
-     * @param moduleAfter
-     *         relative path of module that should be after the inserted module
-     * @throws java.io.IOException
-     *         error occurred while reading or writing content of file
-     */
-    static void addModuleToReactorPom(Path path, String moduleRelativePath, String moduleAfter) throws IOException {
-        Model pom = readPom(path);
-        List<String> modulesList = pom.getModules();
-        if (moduleAfter == null) {
-            modulesList.add(moduleRelativePath);
-        } else {
-            int n = 0;
-            for (String module : modulesList) {
-                if (moduleAfter.equals(module)) {
-                    pom.getModules().add(n, moduleRelativePath);
-                    break;
-                }
-                n++;
-            }
-        }
-        writePom(pom, path);
-    }
-
-    /**
      * Add the specified module name as a dependency to the provided GWT module descriptor.
      *
      * @param path
@@ -231,11 +186,22 @@ class Utils {
         return filePath.replaceAll("/", ".");
     }
 
+    /**
+     * Detects and returns path to pom.xml file.
+     *
+     * @param folder
+     *         path to folder that contains project sources
+     * @return pom.xml path
+     * @throws java.io.IOException
+     *         if an I/O error is thrown while finding pom.xml
+     * @throws IllegalArgumentException
+     *         if pom.xml not found
+     */
     static Path detectPomXml(Path folder) throws IOException {
         Finder finder = new Finder("pom.xml");
         Files.walkFileTree(folder, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, finder);
         if (finder.getFirstMatchedFile() == null) {
-            throw new IllegalArgumentException("Pom.xml not found.");
+            throw new IllegalArgumentException("pom.xml not found.");
         }
         return finder.getFirstMatchedFile();
     }

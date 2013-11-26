@@ -33,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -150,13 +149,15 @@ public class SDKRunner extends Runner {
             //****************************************************************************
             // get Codenvy Platform sources
             //****************************************************************************
-            final Path appDirPath = Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
+            final Path appDirPath =
+                    Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
             ZipUtils.unzip(Utils.getCodenvyPlatformBinaryDistribution().openStream(), appDirPath.toFile());
 
             //****************************************************************************
             // read jarFile
             //****************************************************************************
-            final Path jarFileUnzipped = Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
+            final Path jarFileUnzipped =
+                    Files.createTempDirectory(getDeployDirectory().toPath(), ("war_" + getName() + '_'));
             ZipUtils.unzip(jarFile, jarFileUnzipped.toFile());
             final Path pomXmlExt = Utils.detectPomXml(jarFileUnzipped);
             Model pomExt = Utils.readPom(pomXmlExt);
@@ -165,9 +166,11 @@ public class SDKRunner extends Runner {
             // add dependency
             //****************************************************************************
             final Path codenvyPlatformPomPath = appDirPath.resolve("pom.xml");
-            addDependencyToPom(codenvyPlatformPomPath, pomExt.getGroupId(), pomExt.getArtifactId(), pomExt.getVersion());
+            addDependencyToPom(codenvyPlatformPomPath, pomExt);
 
-            final Path mainGwtModuleDescriptor = appDirPath.resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
+
+            final Path mainGwtModuleDescriptor =
+                    appDirPath.resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
             inheritGwtModule(mainGwtModuleDescriptor, detectGwtModuleLogicalName(jarFileUnzipped));
 
             //****************************************************************************

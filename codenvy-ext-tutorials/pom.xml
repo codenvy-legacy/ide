@@ -55,7 +55,7 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-extensions-runtime</artifactId>
+            <artifactId>codenvy-ext-extensions</artifactId>
             <version>${project.version}</version>
         </dependency>
 
