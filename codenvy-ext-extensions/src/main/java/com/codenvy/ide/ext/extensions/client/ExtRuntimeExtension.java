@@ -22,7 +22,6 @@ import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.ext.extensions.client.actions.BuildBundleAction;
 import com.codenvy.ide.ext.extensions.client.actions.GetLogsAction;
 import com.codenvy.ide.ext.extensions.client.actions.LaunchAction;
 import com.codenvy.ide.ext.extensions.client.actions.StopAction;
@@ -34,7 +33,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_MAIN_MENU;
 import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
 
@@ -45,7 +43,7 @@ import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_N
  * @version $Id: ExtRuntimeExtension.java Jul 2, 2013 4:14:56 PM azatsarynnyy $
  */
 @Singleton
-@Extension(title = "Codenvy extensions runtime support.", version = "3.0.0")
+@Extension(title = "Codenvy extensions support.", version = "3.0.0")
 public class ExtRuntimeExtension {
     public static final String CODENVY_EXTENSION_PROJECT_TYPE = "CodenvyExtension";
     public static final String EMPTY_EXTENSION_ID             = "EmptyCodenvyExtension";
@@ -61,8 +59,7 @@ public class ExtRuntimeExtension {
                                ActionManager actionManager,
                                LaunchAction launchAction,
                                GetLogsAction getLogsAction,
-                               StopAction stopAction,
-                               BuildBundleAction buildBundleAction) {
+                               StopAction stopAction) {
         // register actions
         DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
 
@@ -74,12 +71,6 @@ public class ExtRuntimeExtension {
 
         actionManager.registerAction(localizationConstants.stopExtensionActionId(), stopAction);
         runMenuActionGroup.add(stopAction);
-
-        DefaultActionGroup projectMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_PROJECT);
-
-        actionManager.registerAction(localizationConstants.buildBundleActionId(), buildBundleAction);
-        projectMenuActionGroup.addSeparator();
-        projectMenuActionGroup.add(buildBundleAction);
 
         // register project type
         projectTypeAgent.register(CODENVY_EXTENSION_PROJECT_TYPE,
@@ -94,13 +85,15 @@ public class ExtRuntimeExtension {
                                resources.codenvyExtensionTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createEmptyCodenvyExtensionPage));
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(
+                                       createEmptyCodenvyExtensionPage));
 
         templateAgent.register(SAMPLE_EXTENSION_ID,
                                "Gist extension project.",
                                resources.codenvyExtensionTemplate(),
                                PRIMARY_NATURE,
                                JsonCollections.createArray(CODENVY_EXTENSION_PROJECT_TYPE),
-                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createSampleCodenvyExtensionPage));
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(
+                                       createSampleCodenvyExtensionPage));
     }
 }

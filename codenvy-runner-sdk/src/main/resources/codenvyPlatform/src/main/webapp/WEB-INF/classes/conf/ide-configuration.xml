@@ -35,11 +35,6 @@
         <type>com.codenvy.ide.server.IdeUserApplication</type>
     </component>
 
-    <component>
-        <key>org.exoplatform.ide.extension.ssh.server.SshKeyStore</key>
-        <type>org.exoplatform.ide.extension.ssh.server.DummySshKeyStore</type>
-    </component>
-
     <!-- VirtualFileSystem -->
     <component>
         <type>org.exoplatform.ide.vfs.impl.fs.LocalFileSystemInitializer</type>
@@ -60,62 +55,6 @@
         <type>com.codenvy.logreader.SystemLogPathProvider</type>
     </component>
     <!-- End LogReader -->
-
-    <!--
-    ***************************************************************************************
-    ********************** Language & Technology Supporting *******************************
-    ***************************************************************************************
-    -->
-
-    <!--  Java  Support-->
-    <component>
-        <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
-    </component>
-
-    <component>
-        <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant</type>
-    </component>
-
-    <component>
-        <type>org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient</type>
-        <init-params>
-            <value-param>
-                <name>codeassistant-storage-base-url</name>
-                <value>http://localhost:8080/codeassistant-storage</value>
-            </value-param>
-        </init-params>
-    </component>
-    <!-- End Java Support -->
-
-    <!--
-    ***************************************************************************************
-    **************************** Builder System Supporting ********************************
-    ***************************************************************************************
-    -->
-
-    <component>
-        <type>org.exoplatform.ide.extension.maven.server.BuilderApplication</type>
-    </component>
-
-    <component>
-        <type>org.exoplatform.ide.extension.maven.server.BuilderClient</type>
-        <init-params>
-            <value-param>
-                <name>build-server-base-url</name>
-                <value>http://localhost:8080/builder</value>
-            </value-param>
-        </init-params>
-    </component>
-
-    <!--
-    ***************************************************************************************
-    ******************************* GitIgnoreConfigChecker ********************************
-    ***************************************************************************************
-    -->
-
-    <component>
-        <type>org.exoplatform.ide.git.server.GitIgnoreConfigChecker</type>
-    </component>
 
     <!--
     ***************************************************************************************

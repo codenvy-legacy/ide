@@ -224,51 +224,8 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
         }
     }
 
-    /** Create Tomcat bundle with Codenvy application that will contains activated custom extension. */
-    public void pack() {
-//        currentProject = resourceProvider.getActiveProject();
-//        if (currentProject == null) {
-//            Window.alert("Project is not opened.");
-//            return;
-//        }
-//
-//        final Notification packNotification =
-//                new Notification(constant.applicationBuilding(currentProject.getName()), PROGRESS);
-//        notificationManager.showNotification(packNotification);
-//        try {
-//            service.build(resourceProvider.getVfsId(), currentProject.getId(), true,
-//                          new RequestCallback<String>(new StringUnmarshaller()) {
-//                              protected void onSuccess(String url) {
-//                                  packNotification.setStatus(FINISHED);
-//                                  packNotification.setMessage(constant.applicationBuilt(currentProject.getName()));
-//                                  console.print(constant.getBundle(url));
-//                              }
-//
-//                              @Override
-//                              protected void onFailure(Throwable exception) {
-//                                  String message = constant.buildApplicationFailed(currentProject.getName());
-//                                  if (exception != null && exception.getMessage() != null) {
-//                                      message += ": " + exception.getMessage();
-//                                  }
-//                                  packNotification.setStatus(FINISHED);
-//                                  packNotification.setType(ERROR);
-//                                  console.print(message);
-//                              }
-//                          });
-//        } catch (WebSocketException e) {
-//            packNotification.setStatus(FINISHED);
-//            packNotification.setType(ERROR);
-//            packNotification.setMessage(e.getMessage());
-//        }
-    }
-
-    /**
-     * Performs actions after application was successfully launched.
-     *
-     * @param applicationProcessDescriptor
-     */
-    private void afterApplicationLaunched(ApplicationProcessDescriptor applicationProcessDescriptor) {
-        this.applicationProcessDescriptor = applicationProcessDescriptor;
+    private void afterApplicationLaunched(ApplicationProcessDescriptor appDescriptor) {
+        this.applicationProcessDescriptor = appDescriptor;
 //        UrlBuilder builder = new UrlBuilder();
 //        final String uri = builder.setProtocol("http:").setHost(launchedApp.getHost())
 //                                  .setPort(launchedApp.getPort())
@@ -294,23 +251,23 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
         }
     }
 
-    private void startCheckingStatus(final ApplicationProcessDescriptor app) {
+    private void startCheckingStatus(final ApplicationProcessDescriptor appDescriptor) {
         new Timer() {
             @Override
             public void run() {
                 try {
                     service.getStatus(
-                            getAppLink(app, LinkRel.STATUS),
+                            getAppLink(appDescriptor, LinkRel.STATUS),
                             new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                 @Override
                                 protected void onSuccess(String response) {
-                                    ApplicationProcessDescriptor newDescriptor =
+                                    ApplicationProcessDescriptor newAppDescriptor =
                                             dtoFactory.createDtoFromJson(response,
                                                                          ApplicationProcessDescriptor.class);
 
-                                    ApplicationStatus status = newDescriptor.getStatus();
+                                    ApplicationStatus status = newAppDescriptor.getStatus();
                                     if (status == ApplicationStatus.RUNNING) {
-                                        afterApplicationLaunched(newDescriptor);
+                                        afterApplicationLaunched(newAppDescriptor);
                                     } else if (status == ApplicationStatus.STOPPED || status == ApplicationStatus.NEW) {
                                         schedule(3000);
                                     } else if (status == ApplicationStatus.CANCELLED) {
@@ -337,9 +294,9 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
         }.run();
     }
 
-    private Link getAppLink(ApplicationProcessDescriptor app, LinkRel linkRel) {
+    private Link getAppLink(ApplicationProcessDescriptor appDescriptor, LinkRel linkRel) {
         Link linkToReturn = null;
-        List<Link> links = app.getLinks();
+        List<Link> links = appDescriptor.getLinks();
         for (int i = 0; i < links.size(); i++) {
             Link link = links.get(i);
             if (link.getRel().equalsIgnoreCase(linkRel.getValue()))

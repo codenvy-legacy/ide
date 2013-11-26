@@ -168,7 +168,6 @@ public class SDKRunner extends Runner {
             final Path codenvyPlatformPomPath = appDirPath.resolve("pom.xml");
             addDependencyToPom(codenvyPlatformPomPath, pomExt);
 
-
             final Path mainGwtModuleDescriptor =
                     appDirPath.resolve("src/main/resources/com/codenvy/ide/IDEPlatform.gwt.xml");
             inheritGwtModule(mainGwtModuleDescriptor, detectGwtModuleLogicalName(jarFileUnzipped));
