@@ -119,7 +119,7 @@
             <type>zip</type>
             <version>${project.version}</version>
         </dependency>
-<<<<<<< HEAD
+
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
