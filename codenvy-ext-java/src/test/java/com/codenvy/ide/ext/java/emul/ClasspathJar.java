@@ -12,9 +12,9 @@ package com.codenvy.ide.ext.java.emul;
 
 import com.codenvy.ide.ext.java.emul.clasfmt.ClassFileReader;
 
-import com.codenvy.ide.ext.java.client.core.compiler.CharOperation;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.NameEnvironmentAnswer;
-import com.codenvy.ide.ext.java.client.internal.compiler.util.Util;
+import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.NameEnvironmentAnswer;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.util.Util;
 
 
 import java.io.File;

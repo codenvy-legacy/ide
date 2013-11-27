@@ -17,16 +17,16 @@
  */
 package com.codenvy.ide.ext.java.client.core.outline;
 
-import com.codenvy.ide.ext.java.client.core.dom.AST;
-import com.codenvy.ide.ext.java.client.core.dom.ASTParser;
-import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTParser;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
 
 import com.codenvy.ide.ext.java.client.BaseTest;
 import com.codenvy.ide.ext.java.client.editor.AstProvider;
 import com.codenvy.ide.ext.java.client.editor.outline.BlockTypes;
 import com.codenvy.ide.ext.java.client.editor.outline.JavaCodeBlock;
 import com.codenvy.ide.ext.java.client.editor.outline.OutlineModelUpdater;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.ext.java.emul.FileSystem;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.texteditor.api.outline.CodeBlock;

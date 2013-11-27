@@ -23,9 +23,9 @@ import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Position;
 import com.codenvy.ide.text.Region;
+import com.codenvy.ide.texteditor.api.CodeAssistCallback;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
-import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.util.AbstractTrie;
 import com.codenvy.ide.util.loging.Log;
 
@@ -163,21 +163,24 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor {
 
     /** {@inheritDoc} */
     @Override
-    public CompletionProposal[] computeCompletionProposals(TextEditorPartView view, int offset) {
+    public void computeCompletionProposals(TextEditorPartView view, int offset, CodeAssistCallback callback) {
         if (view.getSelection().hasSelection()) {
             // Doesn't make much sense to autocomplete CSS when something is selected.
-            return null;
+            callback.proposalCoputtaded(null);
+            return;
         }
 
         completionQuery = updateOrCreateQuery(completionQuery, view.getSelection().getCursorPosition(),
                                               view.getDocument());
         if (completionQuery == null) {
-            return null;
+            callback.proposalCoputtaded(null);
+            return;
         }
 
         String triggeringString = completionQuery.getTriggeringString();
         if (triggeringString == null) {
-            return null;
+            callback.proposalCoputtaded(null);
+            return;
         }
         InvocationContext context = new InvocationContext(triggeringString, offset, resources, view);
         switch (completionQuery.getCompletionType()) {
@@ -185,21 +188,24 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor {
                 JsonArray<CssCompletionProposal> autocompletions = CssTrie.findAndFilterAutocompletions(cssTrie,
                                                                                                         triggeringString, completionQuery
                         .getCompletedProperties());
-                return jsToArray(autocompletions, context);
+                callback.proposalCoputtaded(jsToArray(autocompletions, context));
+                return;
 
             case VALUE:
                 JsoArray<CssCompletionProposal> jsoArray = CssPartialParser.getInstance().getAutocompletions(
                         completionQuery.getProperty(), completionQuery.getValuesBefore(), triggeringString,
                         completionQuery.getValuesAfter());
-                return jsToArray(jsoArray, context);
+                callback.proposalCoputtaded(jsToArray(jsoArray, context));
+                return;
 
             case CLASS:
                 // TODO: Implement css-class autocompletions (pseudoclasses
                 //               and HTML elements).
-                return null;
+                callback.proposalCoputtaded(null);
+                return;
 
             default:
-                return null;
+                callback.proposalCoputtaded(null);
         }
     }
 

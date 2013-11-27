@@ -20,14 +20,14 @@ package com.codenvy.ide.ext.java.client.editor;
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
-import com.codenvy.ide.ext.java.client.JavaPartitions;
+import com.codenvy.ide.ext.java.jdt.JavaPartitions;
 import com.codenvy.ide.ext.java.client.editor.outline.JavaNodeRenderer;
 import com.codenvy.ide.ext.java.client.editor.outline.OutlineModelUpdater;
-import com.codenvy.ide.ext.java.client.internal.ui.text.BracketInserter;
-import com.codenvy.ide.ext.java.client.internal.ui.text.JavaAutoEditStrategy;
-import com.codenvy.ide.ext.java.client.internal.ui.text.JavaDocAutoIndentStrategy;
-import com.codenvy.ide.ext.java.client.internal.ui.text.JavaStringAutoIndentStrategy;
-import com.codenvy.ide.ext.java.client.internal.ui.text.SmartSemicolonAutoEditStrategy;
+import com.codenvy.ide.ext.java.jdt.internal.ui.text.BracketInserter;
+import com.codenvy.ide.ext.java.jdt.internal.ui.text.JavaAutoEditStrategy;
+import com.codenvy.ide.ext.java.jdt.internal.ui.text.JavaDocAutoIndentStrategy;
+import com.codenvy.ide.ext.java.jdt.internal.ui.text.JavaStringAutoIndentStrategy;
+import com.codenvy.ide.ext.java.jdt.internal.ui.text.SmartSemicolonAutoEditStrategy;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
@@ -60,7 +60,8 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
     private JavaReconcilerStrategy  reconcilerStrategy;
     private OutlineModel            outlineModel;
     private String                  documentPartitioning;
-    private JavaProject             project;
+    private JavaParserWorker worker;
+    private JavaProject project;
 
 
     public JavaEditorConfiguration(UserActivityManager manager, JavaClientBundle resources, TextEditorPartPresenter javaEditor,
@@ -69,6 +70,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
         this.manager = manager;
         this.javaEditor = javaEditor;
         this.documentPartitioning = documentPartitioning;
+        this.worker = worker;
         outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
         reconcilerStrategy = new JavaReconcilerStrategy(javaEditor, resourceProvider, worker);
     }
@@ -94,7 +96,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
         if (codeAssistProcessor == null) {
             codeAssistProcessor = new JavaCodeAssistProcessor(
                     //TODO configure doc context
-                    "rest/ide/code-assistant/java/class-doc?fqn=", reconcilerStrategy);
+                    "rest/ide/code-assistant/java/class-doc?fqn=", worker);
         }
         return codeAssistProcessor;
     }
@@ -111,7 +113,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
     /** {@inheritDoc} */
     @Override
     public QuickAssistProcessor getQuickAssistAssistant(TextEditorPartView view) {
-        JavaCorrectionAssistant assistant = new JavaCorrectionAssistant(javaEditor, reconcilerStrategy);
+        JavaCorrectionAssistant assistant = new JavaCorrectionAssistant(javaEditor, worker);
         assistant.install(view);
         ((TextEditorViewImpl)view).setQuickAssistAssistant(assistant);
         return null;

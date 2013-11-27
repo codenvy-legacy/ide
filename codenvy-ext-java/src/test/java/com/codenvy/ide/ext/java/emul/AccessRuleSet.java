@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.emul;
 
-import com.codenvy.ide.ext.java.client.internal.compiler.env.AccessRestriction;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.AccessRule;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.AccessRestriction;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.AccessRule;
 
 import org.eclipse.jdt.core.compiler.CharOperation;
 import org.eclipse.jdt.core.compiler.IProblem;

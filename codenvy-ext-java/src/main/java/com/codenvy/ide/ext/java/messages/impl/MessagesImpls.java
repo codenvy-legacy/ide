@@ -27,7 +27,7 @@ public class MessagesImpls {
 
   private  MessagesImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "c07134267e9ca1a38b4f62f1201245bf77236619";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "f2b4f3965f6987850619132ce963260f76e91ddb";
 
 
   public static class ConfigMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.ConfigMessage {
@@ -76,6 +76,20 @@ public class MessagesImpls {
     }-*/;
 
     @Override
+    public final native java.lang.String projectName() /*-{
+      return this["projectName"];
+    }-*/;
+
+    public final native ConfigMessageImpl setProjectName(java.lang.String projectName) /*-{
+      this["projectName"] = projectName;
+      return this;
+    }-*/;
+
+    public final native boolean hasProjectName() /*-{
+      return this.hasOwnProperty("projectName");
+    }-*/;
+
+    @Override
     public final native java.lang.String projectId() /*-{
       return this["projectId"];
     }-*/;
@@ -98,6 +112,20 @@ public class MessagesImpls {
 
   public static class ParseMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.ParseMessage {
     protected ParseMessageImpl() {}
+
+    @Override
+    public final native java.lang.String packageName() /*-{
+      return this["packageName"];
+    }-*/;
+
+    public final native ParseMessageImpl setPackageName(java.lang.String packageName) /*-{
+      this["packageName"] = packageName;
+      return this;
+    }-*/;
+
+    public final native boolean hasPackageName() /*-{
+      return this.hasOwnProperty("packageName");
+    }-*/;
 
     @Override
     public final native java.lang.String source() /*-{

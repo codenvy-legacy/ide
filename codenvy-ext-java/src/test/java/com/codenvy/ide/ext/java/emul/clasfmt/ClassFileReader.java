@@ -14,10 +14,10 @@ import com.codenvy.ide.ext.java.emul.ClassFormatException;
 import com.codenvy.ide.ext.java.emul.TagBits;
 import com.codenvy.ide.ext.java.emul.Util;
 
-import com.codenvy.ide.ext.java.client.core.compiler.CharOperation;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.*;
-import com.codenvy.ide.ext.java.client.internal.compiler.impl.Constant;
-import com.codenvy.ide.ext.java.client.internal.compiler.lookup.TypeIds;
+import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.*;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.Constant;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeIds;
 
 
 import java.io.File;

@@ -17,20 +17,39 @@
  */
 package com.codenvy.ide.ext.java.worker;
 
+import com.codenvy.ide.ext.java.jdt.CUVariables;
+import com.codenvy.ide.ext.java.jdt.codeassistant.ContentAssistHistory;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
+import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTParser;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.internal.codeassist.impl.AssistOptions;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.CompilerOptions;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.DefaultProblem;
+import com.codenvy.ide.ext.java.jdt.templates.CodeTemplateContextType;
+import com.codenvy.ide.ext.java.jdt.templates.ContextTypeRegistry;
+import com.codenvy.ide.ext.java.jdt.templates.ElementTypeResolver;
+import com.codenvy.ide.ext.java.jdt.templates.ExceptionVariableNameResolver;
+import com.codenvy.ide.ext.java.jdt.templates.FieldResolver;
+import com.codenvy.ide.ext.java.jdt.templates.ImportsResolver;
+import com.codenvy.ide.ext.java.jdt.templates.JavaContextType;
+import com.codenvy.ide.ext.java.jdt.templates.JavaDocContextType;
+import com.codenvy.ide.ext.java.jdt.templates.LinkResolver;
+import com.codenvy.ide.ext.java.jdt.templates.LocalVarResolver;
+import com.codenvy.ide.ext.java.jdt.templates.NameResolver;
+import com.codenvy.ide.ext.java.jdt.templates.StaticImportResolver;
+import com.codenvy.ide.ext.java.jdt.templates.TemplateStore;
+import com.codenvy.ide.ext.java.jdt.templates.TypeResolver;
+import com.codenvy.ide.ext.java.jdt.templates.TypeVariableResolver;
+import com.codenvy.ide.ext.java.jdt.templates.VarResolver;
 import com.codenvy.ide.ext.java.messages.ConfigMessage;
 import com.codenvy.ide.ext.java.messages.ParseMessage;
 import com.codenvy.ide.ext.java.messages.Problem;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
 import com.codenvy.ide.ext.java.messages.impl.MessagesImpls;
-import com.codenvy.ide.ext.java.worker.core.JavaCore;
-import com.codenvy.ide.ext.java.worker.core.compiler.IProblem;
-import com.codenvy.ide.ext.java.worker.core.dom.AST;
-import com.codenvy.ide.ext.java.worker.core.dom.ASTNode;
-import com.codenvy.ide.ext.java.worker.core.dom.ASTParser;
-import com.codenvy.ide.ext.java.worker.core.dom.CompilationUnit;
-import com.codenvy.ide.ext.java.worker.internal.codeassist.impl.AssistOptions;
-import com.codenvy.ide.ext.java.worker.internal.compiler.impl.CompilerOptions;
-import com.codenvy.ide.ext.java.worker.internal.compiler.problem.DefaultProblem;
 import com.codenvy.ide.json.js.JsoArray;
 import com.google.gwt.webworker.client.MessageEvent;
 import com.google.gwt.webworker.client.MessageHandler;
@@ -45,11 +64,16 @@ import java.util.HashMap;
  */
 public class WorkerMessageHandler implements MessageHandler, MessageFilter.MessageRecipient<ParseMessage> {
 
-    private static WorkerMessageHandler                          instance;
-    private        WorkerNameEnvironment                         nameEnvironment;
+    private static WorkerMessageHandler  instance;
+    private        INameEnvironment nameEnvironment;
     private HashMap<String, String> options = new HashMap<String, String>();
-    private MessageFilter    messageFilter;
-    private JavaParserWorker worker;
+    private MessageFilter        messageFilter;
+    private JavaParserWorker     worker;
+    private ContentAssistHistory contentAssistHistory;
+    private ContextTypeRegistry  fCodeTemplateContextTypeRegistry;
+    private TemplateStore        templateStore;
+    private String               projectName;
+    private CUVariables cuVar;
 
 
     public WorkerMessageHandler(JavaParserWorker worker) {
@@ -62,6 +86,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
             public void onMessageReceived(ConfigMessage config) {
                 nameEnvironment =
                         new WorkerNameEnvironment(config.projectId(), config.restContext(), config.vfsId(), config.wsName());
+                projectName = config.projectName();
             }
         };
         messageFilter.registerMessageRecipient(RoutingTypes.CONFIG, configMessageRecipient);
@@ -102,6 +127,8 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
 
     @Override
     public void onMessageReceived(ParseMessage message) {
+        cuVar = new CUVariables(message.fileName(), message.packageName(), projectName);
+
         ASTParser parser = ASTParser.newParser(AST.JLS3);
         parser.setSource(message.source());
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
@@ -144,6 +171,83 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
         return problem;
     }
 
+    public ContentAssistHistory getContentAssistHistory() {
+        if (contentAssistHistory == null) {
+            Preferences preferences = new Preferences();
+            // TODO use user name
+            contentAssistHistory =
+                    ContentAssistHistory.load(preferences, Preferences.CODEASSIST_LRU_HISTORY +"change me" /*userInfo.getName()*/);
+
+            if (contentAssistHistory == null)
+                contentAssistHistory = new ContentAssistHistory();
+        }
+
+        return contentAssistHistory;
+    }
+
+    /** @return  */
+    public ContextTypeRegistry getTemplateContextRegistry() {
+        if (fCodeTemplateContextTypeRegistry == null) {
+            fCodeTemplateContextTypeRegistry = new ContextTypeRegistry();
+
+            CodeTemplateContextType.registerContextTypes(fCodeTemplateContextTypeRegistry);
+            JavaContextType contextTypeAll = new JavaContextType(JavaContextType.ID_ALL);
+
+            contextTypeAll.initializeContextTypeResolvers();
+
+            FieldResolver fieldResolver = new FieldResolver();
+            fieldResolver.setType("field");
+            contextTypeAll.addResolver(fieldResolver);
+
+            LocalVarResolver localVarResolver = new LocalVarResolver();
+            localVarResolver.setType("localVar");
+            contextTypeAll.addResolver(localVarResolver);
+            VarResolver varResolver = new VarResolver();
+            varResolver.setType("var");
+            contextTypeAll.addResolver(varResolver);
+            NameResolver nameResolver = new NameResolver();
+            nameResolver.setType("newName");
+            contextTypeAll.addResolver(nameResolver);
+            TypeResolver typeResolver = new TypeResolver();
+            typeResolver.setType("newType");
+            contextTypeAll.addResolver(typeResolver);
+            ElementTypeResolver elementTypeResolver = new ElementTypeResolver();
+            elementTypeResolver.setType("elemType");
+            contextTypeAll.addResolver(elementTypeResolver);
+            TypeVariableResolver typeVariableResolver = new TypeVariableResolver();
+            typeVariableResolver.setType("argType");
+            contextTypeAll.addResolver(typeVariableResolver);
+            LinkResolver linkResolver = new LinkResolver();
+            linkResolver.setType("link");
+            contextTypeAll.addResolver(linkResolver);
+            ImportsResolver importsResolver = new ImportsResolver();
+            importsResolver.setType("import");
+            StaticImportResolver staticImportResolver = new StaticImportResolver();
+            staticImportResolver.setType("importStatic");
+            contextTypeAll.addResolver(staticImportResolver);
+            ExceptionVariableNameResolver exceptionVariableNameResolver = new ExceptionVariableNameResolver();
+            exceptionVariableNameResolver.setType("exception_variable_name");
+            contextTypeAll.addResolver(exceptionVariableNameResolver);
+            fCodeTemplateContextTypeRegistry.addContextType(contextTypeAll);
+            fCodeTemplateContextTypeRegistry.addContextType(new JavaDocContextType());
+            JavaContextType contextTypeMembers = new JavaContextType(JavaContextType.ID_MEMBERS);
+            JavaContextType contextTypeStatements = new JavaContextType(JavaContextType.ID_STATEMENTS);
+            contextTypeMembers.initializeResolvers(contextTypeAll);
+            contextTypeStatements.initializeResolvers(contextTypeAll);
+            fCodeTemplateContextTypeRegistry.addContextType(contextTypeMembers);
+            fCodeTemplateContextTypeRegistry.addContextType(contextTypeStatements);
+        }
+
+        return fCodeTemplateContextTypeRegistry;
+    }
+
+    /** @return  */
+    public TemplateStore getTemplateStore() {
+        if (templateStore == null)
+            templateStore = new TemplateStore();
+        return templateStore;
+    }
+
     /** Creates a JsoArray from a Java array. */
     public static <M> JsoArray<M> from(M... array) {
         JsoArray<M> result = JsoArray.create();
@@ -152,5 +256,13 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
               result.add(s);
         }
         return result;
+    }
+
+    public INameEnvironment getNameEnvironment() {
+        return nameEnvironment;
+    }
+
+    public CUVariables getCUVariables() {
+        return cuVar;
     }
 }

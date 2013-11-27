@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.emul.clasfmt;
 
-import com.codenvy.ide.ext.java.client.internal.compiler.lookup.TypeConstants;
-import com.codenvy.ide.ext.java.client.internal.compiler.lookup.TypeIds;
-import com.codenvy.ide.ext.java.client.internal.compiler.util.HashtableOfObject;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeConstants;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.lookup.TypeIds;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.util.HashtableOfObject;
 
 /** This type is used to store all the constant pool entries. */
 public class ConstantPool implements ClassFileConstants, TypeIds {

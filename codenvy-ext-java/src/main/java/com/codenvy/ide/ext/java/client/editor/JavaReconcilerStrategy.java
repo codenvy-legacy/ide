@@ -19,10 +19,10 @@ package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.ext.java.client.core.IProblemRequestor;
-import com.codenvy.ide.ext.java.client.core.compiler.IProblem;
-import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment;
+import com.codenvy.ide.ext.java.jdt.core.IProblemRequestor;
+import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.text.Document;
@@ -44,7 +44,6 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
  */
 public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider, JavaParserWorker.JavaParserCallback {
 
-    private static JavaReconcilerStrategy  instance;
     private final  TextEditorPartPresenter editor;
     private        Document                document;
     private        INameEnvironment        nameEnvironment;
@@ -57,12 +56,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider,
         this.editor = editor;
         this.resourceProvider = resourceProvider;
         this.worker = worker;
-        instance = this;
         astListeners = ListenerManager.create();
-    }
-
-    public static JavaReconcilerStrategy get() {
-        return instance;
     }
 
     /** {@inheritDoc} */
@@ -86,7 +80,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider,
      *
      */
     private void parse() {
-        worker.parse(document.get(),file.getName(), this);
+        worker.parse(document.get(), file.getName(), file.getParent().getName(), this);
     }
 
     private void sheduleAstChanged(final CompilationUnit unit) {

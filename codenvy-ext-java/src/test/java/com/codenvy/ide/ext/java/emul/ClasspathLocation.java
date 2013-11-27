@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.emul;
 
-import com.codenvy.ide.ext.java.client.core.compiler.CharOperation;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.AccessRestriction;
-import com.codenvy.ide.ext.java.client.internal.compiler.util.SuffixConstants;
+import com.codenvy.ide.ext.java.jdt.core.compiler.CharOperation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.AccessRestriction;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.util.SuffixConstants;
 
 import java.io.File;
 

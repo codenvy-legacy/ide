@@ -20,8 +20,8 @@ package com.codenvy.ide.ext.java.client.editor;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.ext.java.client.core.compiler.IProblem;
-import com.codenvy.ide.ext.java.client.internal.compiler.problem.DefaultProblem;
+import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.problem.DefaultProblem;
 import com.codenvy.ide.ext.java.messages.Problem;
 import com.codenvy.ide.ext.java.messages.ProblemsMessage;
 import com.codenvy.ide.ext.java.messages.RoutingTypes;
@@ -63,16 +63,17 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
 
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void parse(String content, String fileName, JavaParserCallback callback) {
-        if(worker == null){
+    public void parse(String content, String fileName, String packageName, JavaParserCallback callback) {
+        if (worker == null) {
             return;
         }
 
         MessagesImpls.ParseMessageImpl parseMessage = MessagesImpls.ParseMessageImpl.make();
         String uuid = UUID.uuid();
         callbacks.put(uuid, callback);
-        parseMessage.setSource(content).setFileName(fileName).setId(uuid);
+        parseMessage.setSource(content).setFileName(fileName).setId(uuid).setPackageName(packageName);
         worker.postMessage(parseMessage.serialize());
     }
 
@@ -107,6 +108,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         config.setRestContext("/ide/rest");
         config.setVfsId(resourceProvider.getVfsId());
         config.setWsName("/" + Utils.getWorkspaceName());
+        config.setProjectName(event.getProject().getName());
         worker.postMessage(config.serialize());
     }
 

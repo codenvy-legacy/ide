@@ -34,4 +34,6 @@ public interface ConfigMessage extends Message{
     String vfsId();
 
     String wsName();
+
+    String projectName();
 }

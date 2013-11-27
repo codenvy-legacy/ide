@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.java.client.editor;
 
-import com.codenvy.ide.ext.java.client.core.compiler.IProblem;
+import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.json.JsonArray;
 
 /**
@@ -30,6 +30,6 @@ public interface JavaParserWorker {
         void onProblems(JsonArray<IProblem> problems);
     }
 
-    void parse(String content, String fileName, JavaParserCallback callback);
+    void parse(String content, String fileName, String packageName, JavaParserCallback callback);
 
 }

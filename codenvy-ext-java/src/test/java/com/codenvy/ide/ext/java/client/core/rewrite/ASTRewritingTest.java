@@ -10,16 +10,16 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.core.rewrite;
 
-import com.codenvy.ide.ext.java.client.core.JavaCore;
-import com.codenvy.ide.ext.java.client.core.dom.*;
-import com.codenvy.ide.ext.java.client.core.dom.rewrite.ASTRewrite;
-import com.codenvy.ide.ext.java.client.core.formatter.DefaultCodeFormatterConstants;
-import com.codenvy.ide.ext.java.client.core.formatter.DefaultCodeFormatterOptions;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
+import com.codenvy.ide.ext.java.jdt.core.dom.*;
+import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ASTRewrite;
+import com.codenvy.ide.ext.java.jdt.core.formatter.DefaultCodeFormatterConstants;
+import com.codenvy.ide.ext.java.jdt.core.formatter.DefaultCodeFormatterOptions;
 
 import com.codenvy.ide.ext.java.client.BaseTest;
 import com.codenvy.ide.ext.java.client.JavaExtension;
 import com.codenvy.ide.ext.java.client.core.quickfix.StringAsserts;
-import com.codenvy.ide.ext.java.client.internal.compiler.env.ICompilationUnit;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.ICompilationUnit;
 import com.codenvy.ide.ext.java.emul.FileSystem;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentImpl;

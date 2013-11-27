@@ -25,7 +25,7 @@ import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
-import com.codenvy.ide.ext.java.client.JavaPartitions;
+import com.codenvy.ide.ext.java.jdt.JavaPartitions;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.inject.Inject;

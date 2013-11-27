@@ -10,13 +10,13 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.core.rewrite;
 
-import com.codenvy.ide.ext.java.client.core.JavaCore;
-import com.codenvy.ide.ext.java.client.core.dom.AST;
-import com.codenvy.ide.ext.java.client.core.dom.ASTNode;
-import com.codenvy.ide.ext.java.client.core.dom.ASTParser;
-import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
-import com.codenvy.ide.ext.java.client.core.dom.rewrite.ImportRewrite;
-import com.codenvy.ide.ext.java.client.core.formatter.DefaultCodeFormatterConstants;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
+import com.codenvy.ide.ext.java.jdt.core.dom.AST;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTNode;
+import com.codenvy.ide.ext.java.jdt.core.dom.ASTParser;
+import com.codenvy.ide.ext.java.jdt.core.dom.CompilationUnit;
+import com.codenvy.ide.ext.java.jdt.core.dom.rewrite.ImportRewrite;
+import com.codenvy.ide.ext.java.jdt.core.formatter.DefaultCodeFormatterConstants;
 
 import com.codenvy.ide.ext.java.client.BaseTest;
 import com.codenvy.ide.ext.java.client.core.quickfix.StringAsserts;

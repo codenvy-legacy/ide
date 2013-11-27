@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.emul.clasfmt;
 
-import com.codenvy.ide.ext.java.client.internal.compiler.env.IBinaryAnnotation;
+import com.codenvy.ide.ext.java.jdt.internal.compiler.env.IBinaryAnnotation;
 
 public class MethodInfoWithAnnotations extends MethodInfo {
     protected AnnotationInfo[] annotations;
