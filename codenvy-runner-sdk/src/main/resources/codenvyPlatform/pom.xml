@@ -56,6 +56,11 @@
         <reflections.version>0.9.9-RC1</reflections.version>
     </properties>
 
+    <!--
+        IMPORTANT!
+        Make sure that the same 'private' dependencies is present in
+        codenvy-sdk-private-dependencies/pom.xml
+    -->
     <dependencies>
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -103,6 +108,7 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>${org.slf4j.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-client</artifactId>
