@@ -15,7 +15,6 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package org.exoplatform.ide.git.server;
 
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
@@ -51,7 +50,7 @@ import java.util.Set;
  *
  * @author <a href="mailto:evoevodin@codenvy.com">Eugene Voevodin</a>
  */
-public class VfsPermissionsFilter implements Filter {
+public class VFSPermissionsFilter implements Filter {
 
     private UserManager userManager;
 
@@ -95,8 +94,7 @@ public class VfsPermissionsFilter implements Filter {
                     Check if user authenticated and hasn't permissions to project, then
                     send response code 403
                 */
-                if (!user.isEmpty() && !(isUserAuthenticated(user, password)
-                    && accessAllowed(user, projectDirectory))) {
+                if (!user.isEmpty() && !(isUserAuthenticated(user, password) && accessAllowed(user, projectDirectory))) {
                     ((HttpServletResponse)response).sendError(HttpServletResponse.SC_FORBIDDEN);
                     return;
                 }
@@ -195,5 +193,9 @@ public class VfsPermissionsFilter implements Filter {
 
     @Override
     public void destroy() {
+    }
+
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
     }
 }
