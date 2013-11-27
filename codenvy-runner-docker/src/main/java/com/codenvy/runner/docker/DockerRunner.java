@@ -169,7 +169,7 @@ public class DockerRunner extends Runner {
 
     public static class DockerRunnerConfiguration extends RunnerConfiguration {
         public DockerRunnerConfiguration(int memory, int debugPort, RunRequest request) {
-            super(memory, debugPort, request);
+            super(memory, 0, debugPort, request);
         }
 
         public String getDockerfileName() {

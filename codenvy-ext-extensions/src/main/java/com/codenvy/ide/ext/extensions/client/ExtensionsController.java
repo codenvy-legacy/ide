@@ -232,7 +232,7 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
         // TODO applicationProcessDescriptor.getUrl()
         final String uri = new UrlBuilder().setProtocol(Window.Location.getProtocol())
                                            .setHost(Window.Location.getHost())
-                                           .setPort(49152).buildString();
+                                           .setPort(appDescriptor.getPort()).buildString();
         console.print(constant.applicationStartedOnUrls(currentProject.getName(),
                                                         "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
         notification.setStatus(FINISHED);
