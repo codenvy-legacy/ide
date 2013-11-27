@@ -47,8 +47,10 @@ import java.util.concurrent.*;
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  */
 public class SDKRunner extends Runner {
-    private static final Logger LOG        = LoggerFactory.getLogger(SDKRunner.class);
-    private static final String SERVER_XML =
+    private static final Logger LOG                       = LoggerFactory.getLogger(SDKRunner.class);
+    private static final String BUILDER_REGISTRATION_JSON =
+            "[{\"builderServiceLocation\":{\"url\":\"http://localhost:${PORT}/api/internal/builder\"}}]";
+    private static final String SERVER_XML                =
             "<?xml version='1.0' encoding='utf-8'?>\n" +
             "<Server port=\"-1\">\n" +
             "  <Listener className=\"org.apache.catalina.core.AprLifecycleListener\" SSLEngine=\"on\" />\n" +
@@ -82,8 +84,7 @@ public class SDKRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
-                return new RunnerConfiguration(request.getMemorySize(), portService.acquire(), 0,
-                                                                request);
+                return new RunnerConfiguration(request.getMemorySize(), portService.acquire(), 0, request);
             }
         };
     }
@@ -99,8 +100,11 @@ public class SDKRunner extends Runner {
             ZipUtils.unzip(Utils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
 
             final Path webappsPath = tomcatPath.resolve("webapps");
-            final File warFile = build(toDeploy.getFile()).toFile();
+            final File warFile = buildCodenvyWebApp(toDeploy.getFile()).toFile();
             ZipUtils.unzip(warFile, webappsPath.resolve("ide").toFile());
+
+            configureBuilderService(webappsPath, runnerCfg);
+            setEnvVariables(tomcatPath, runnerCfg);
             generateServerXml(tomcatPath.toFile(), runnerCfg);
         } catch (IOException e) {
             throw new RunnerException(e);
@@ -139,7 +143,7 @@ public class SDKRunner extends Runner {
         return process;
     }
 
-    private Path build(File jarFile) throws RunnerException {
+    private Path buildCodenvyWebApp(File jarFile) throws RunnerException {
         Path warPath;
         try {
             // prepare Codenvy Platform sources
@@ -188,6 +192,28 @@ public class SDKRunner extends Runner {
         return path;
     }
 
+    private void configureBuilderService(Path webappsPath, RunnerConfiguration runnerCfg)
+            throws RunnerException, IOException {
+        final Path apiAppPath = webappsPath.resolve("api");
+        ZipUtils.unzip(webappsPath.resolve("api.war").toFile(), apiAppPath.toFile());
+
+        String cfg = BUILDER_REGISTRATION_JSON.replace("${PORT}", Integer.toString(runnerCfg.getPort()));
+        final Path builderRegistrationJsonPath =
+                apiAppPath.resolve("WEB-INF/classes/conf/builder_service_registrations.json");
+        try {
+            Files.write(builderRegistrationJsonPath, cfg.getBytes());
+        } catch (IOException e) {
+            throw new RunnerException(e);
+        }
+    }
+
+    private void setEnvVariables(Path tomcatPath, RunnerConfiguration runnerCfg) throws IOException {
+        final Path setenvShPath = tomcatPath.resolve("bin/setenv.sh");
+        final byte[] bytes = Files.readAllBytes(setenvShPath);
+        final String setenvShContent = new String(bytes);
+        Files.write(setenvShPath, setenvShContent.replace("${PORT}", Integer.toString(runnerCfg.getPort())).getBytes());
+    }
+
     private void generateServerXml(File tomcatDir, RunnerConfiguration runnerConfiguration)
             throws RunnerException {
         String cfg = SERVER_XML.replace("${PORT}", Integer.toString(runnerConfiguration.getPort()));
@@ -199,8 +225,7 @@ public class SDKRunner extends Runner {
         }
     }
 
-    private File genStartUpScriptUnix(File appDir, RunnerConfiguration runnerConfiguration)
-            throws RunnerException {
+    private File genStartUpScriptUnix(File appDir, RunnerConfiguration runnerConfiguration) throws RunnerException {
         final String startupScript = "#!/bin/sh\n" +
                                      exportEnvVariablesUnix(runnerConfiguration) +
                                      "cd tomcat\n" +

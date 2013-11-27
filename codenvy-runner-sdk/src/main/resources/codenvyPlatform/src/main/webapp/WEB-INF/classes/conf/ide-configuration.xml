@@ -28,16 +28,12 @@
     -->
 
     <component>
-        <type>com.codenvy.ide.IDEServiceApplication</type>
-    </component>
-
-    <component>
         <type>com.codenvy.ide.server.IdeUserApplication</type>
     </component>
 
     <!-- VirtualFileSystem -->
     <component>
-        <type>org.exoplatform.ide.vfs.impl.fs.LocalFileSystemInitializer</type>
+        <type>com.codenvy.vfs.impl.fs.LocalFileSystemInitializer</type>
         <init-params>
             <values-param>
                 <name>ids</name>
@@ -47,14 +43,15 @@
         </init-params>
     </component>
 
-    <!-- End VirtualFileSystem -->
-
-    <!-- LogReader -->
     <component>
-        <key>com.codenvy.logreader.LogPathProvider</key>
-        <type>com.codenvy.logreader.SystemLogPathProvider</type>
+       <type>com.codenvy.api.vfs.server.VirtualFileSystemRegistry</type>
     </component>
-    <!-- End LogReader -->
+
+    <component>
+       <type>com.codenvy.api.vfs.server.VirtualFileSystemApplication</type>
+    </component>
+
+    <!-- End VirtualFileSystem -->
 
     <!--
     ***************************************************************************************
@@ -63,12 +60,47 @@
     -->
 
     <component>
+        <type>com.codenvy.commons.security.oauth.OAuthAuthenticationApplication</type>
+    </component>
+
+    <component>
         <key>com.codenvy.commons.security.oauth.OAuthTokenProvider</key>
         <type>com.codenvy.commons.security.oauth.OAuthAuthenticatorTokenProvider</type>
     </component>
 
     <component>
-        <type>org.exoplatform.ide.security.oauth.ExoOAuthAuthenticatorProvider</type>
+        <type>com.codenvy.ide.security.oauth.server.LabOAuthAuthenticatorProvider</type>
+    </component>
+
+    <!--
+    ***************************************************************************************
+    *********************************** Git Support ***************************************
+    ***************************************************************************************
+    -->
+
+    <component>
+        <type>com.codenvy.ide.ext.git.server.nativegit.CredentialsLoader</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.ide.ext.git.server.nativegit.OAuthCredentialsProvider</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.ide.ext.git.server.nativegit.SshKeysManager</type>
+    </component>
+
+    <component>
+        <key>com.codenvy.ide.ext.git.server.GitConnectionFactory</key>
+        <type>com.codenvy.ide.ext.git.server.nativegit.NativeGitConnectionFactory</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.ide.ext.git.server.rest.GitApplication</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.ide.ext.git.server.GitIgnoreConfigChecker</type>
     </component>
 
 </configuration>

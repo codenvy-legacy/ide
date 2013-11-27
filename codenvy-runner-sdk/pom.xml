@@ -68,6 +68,15 @@
                                 </artifactItem>
 
                                 <artifactItem>
+                                    <groupId>com.codenvy.ide</groupId>
+                                    <artifactId>codenvy-api-war</artifactId>
+                                    <type>war</type>
+                                    <version>${project.version}</version>
+                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps
+                                    </outputDirectory>
+                                    <destFileName>api.war</destFileName>
+                                </artifactItem>
+                                <artifactItem>
                                     <groupId>org.exoplatform.ide</groupId>
                                     <artifactId>exo-ide-codeassistant-storage</artifactId>
                                     <type>war</type>
