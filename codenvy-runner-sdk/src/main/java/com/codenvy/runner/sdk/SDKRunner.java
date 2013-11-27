@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 /**
- * Runner implementation to testing Codenvy plug-ins by launching
+ * Runner implementation to test Codenvy plug-ins by launching
  * a separate Codenvy web-application in Tomcat server.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
@@ -174,7 +174,7 @@ public class SDKRunner extends Runner {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(command).directory(appDirPath.toFile());
             Process process = processBuilder.start();
-            ProcessLineConsumer consumer = new ProcessLineConsumer(new StringBuilder());
+            ProcessLineConsumer consumer = new ProcessLineConsumer();
             ProcessUtil.process(process, consumer, consumer);
             process.waitFor();
             if (process.exitValue() != 0) {
@@ -266,8 +266,9 @@ public class SDKRunner extends Runner {
         final File              startUpScriptFile;
         final File              workDir;
         final CustomPortService portService;
-        int          pid;
+        int pid = -1;
         TomcatLogger logger;
+        private Process process;
 
         TomcatProcess(int httpPort, List<File> logFiles, int debugPort, File startUpScriptFile, File workDir,
                       CustomPortService portService) {
@@ -287,8 +288,9 @@ public class SDKRunner extends Runner {
             }
 
             try {
-                Runtime.getRuntime()
-                       .exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null, workDir);
+                process = Runtime.getRuntime()
+                                 .exec(new CommandLine(startUpScriptFile.getAbsolutePath()).toShellCommand(), null,
+                                       workDir);
 
                 pid = pidTaskExecutor.submit(new Callable<Integer>() {
                     @Override
@@ -323,7 +325,7 @@ public class SDKRunner extends Runner {
 
         @Override
         public synchronized void stop() throws RunnerException {
-            if (!ProcessUtil.isAlive(pid)) {
+            if (pid == -1) {
                 throw new IllegalStateException("Process is not started yet.");
             }
             ProcessUtil.kill(pid);
@@ -338,14 +340,24 @@ public class SDKRunner extends Runner {
 
         @Override
         public int waitFor() throws RunnerException {
-            // TODO
-            return 0;
+            synchronized (this) {
+                if (pid == -1) {
+                    throw new IllegalStateException("Process is not started yet");
+                }
+            }
+            try {
+                process.waitFor();
+            } catch (InterruptedException e) {
+            }
+            return process.exitValue();
         }
 
         @Override
         public synchronized int exitCode() throws RunnerException {
-            // TODO
-            return 0;
+            if (pid == -1 || ProcessUtil.isAlive(pid)) {
+                return -1;
+            }
+            return process.exitValue();
         }
 
         @Override
@@ -373,7 +385,9 @@ public class SDKRunner extends Runner {
             @Override
             public void getLogs(Appendable output) throws IOException {
                 for (File logFile : logFiles) {
+                    output.append("====> " + logFile.getName() + " <====\n");
                     CharStreams.copy(new InputStreamReader(new FileInputStream(logFile)), output);
+                    output.append("\n\n");
                 }
             }
 
@@ -394,15 +408,11 @@ public class SDKRunner extends Runner {
     }
 
     private static class ProcessLineConsumer implements LineConsumer {
-        final StringBuilder output;
-
-        ProcessLineConsumer(StringBuilder output) {
-            this.output = output;
-        }
+        final StringBuilder output = new StringBuilder();
 
         @Override
         public void writeLine(String line) throws IOException {
-            this.output.append(line).append("\n");
+            output.append('\n').append(line);
         }
 
         @Override

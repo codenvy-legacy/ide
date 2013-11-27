@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.extensions.client;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
+import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -133,7 +134,7 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
      * @return <code>true</code> if any application is launched, and <code>false</code> otherwise
      */
     public boolean isAnyAppLaunched() {
-        return applicationProcessDescriptor != null;
+        return applicationProcessDescriptor != null && !isLaunchingInProgress;
     }
 
     /** Launch Codenvy extension. */
@@ -281,7 +282,16 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
                                 protected void onFailure(Throwable exception) {
                                     isLaunchingInProgress = false;
                                     applicationProcessDescriptor = null;
-                                    onFail(constant.startApplicationFailed(currentProject.getName()), exception);
+
+                                    if (exception instanceof ServerException &&
+                                        ((ServerException)exception).getHTTPStatus() == 500) {
+                                        ServiceError e = dtoFactory
+                                                .createDtoFromJson(exception.getMessage(), ServiceError.class);
+                                        onFail(constant.startApplicationFailed(currentProject.getName()) + ": " +
+                                               e.getMessage(), null);
+                                    } else {
+                                        onFail(constant.startApplicationFailed(currentProject.getName()), exception);
+                                    }
                                 }
                             });
                 } catch (RequestException e) {
