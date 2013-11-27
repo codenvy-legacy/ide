@@ -16,7 +16,6 @@ package com.codenvy.ide.git;/*
  * from Codenvy S.A..
  */
 
-import com.codenvy.ide.git.VFSPermissionsFilter;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.Role;
@@ -29,23 +28,18 @@ import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.mockito.Mock;
 import org.mockito.testng.MockitoTestNGListener;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 
@@ -74,14 +68,14 @@ public class VFSPermissionsFilterTest {
     @Mock
     FilterChain         filterChain;
 
+
+    /** Basic setups need for tests: create workspace, create project directory, set system com.codenvy.vfs.rootdir property */
     VFSPermissionsFilterTest() throws URISyntaxException, FileNotFoundException, OrganizationServiceException {
         File workspace =
                 new File(new File(Thread.currentThread().getContextClassLoader().getResource(".").toURI()).getParentFile(), WORKSPACE);
         System.setProperty("com.codenvy.vfs.rootdir", workspace.getParentFile().getAbsolutePath());
         projectDirectory = new File(workspace, "testProject");
-
         projectDirectory.mkdirs();
-        filter.setUserManager(userManager);
     }
 
     @BeforeMethod
@@ -189,8 +183,10 @@ public class VFSPermissionsFilterTest {
     /**
      * Used with AccessControlList
      *
-     * @param principal principal that will be written to acl file
-     * @param permissions permissions that will be written to acl file with given principal
+     * @param principal
+     *         principal that will be written to acl file
+     * @param permissions
+     *         permissions that will be written to acl file with given principal
      * @return permissions map
      */
     private Map<Principal, Set<VirtualFileSystemInfo.BasicPermissions>> getPermissionsMap(Principal principal,
@@ -207,8 +203,10 @@ public class VFSPermissionsFilterTest {
     /**
      * Create project aclFile and write here given permissions
      *
-     * @param permissionsMap map with permissions
-     * @throws IOException when it is not possible to write permissions
+     * @param permissionsMap
+     *         map with permissions
+     * @throws IOException
+     *         when it is not possible to write permissions
      */
     private void createACL(Map<Principal, Set<VirtualFileSystemInfo.BasicPermissions>> permissionsMap)
             throws IOException {
