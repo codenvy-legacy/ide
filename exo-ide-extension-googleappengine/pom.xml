@@ -21,6 +21,27 @@
             <version>${commons-lang.version}</version>
         </dependency>
         <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
+        </dependency>
+        <!-- Declare this dependency directly since it required by google-api-client. -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.core</groupId>
+            <artifactId>exo.core.component.security.core</artifactId>
+            <version>${org.exoplatform.core.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-commons</artifactId>
             <version>${project.version}</version>
@@ -41,11 +62,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.exoplatform.core</groupId>
-            <artifactId>exo.core.component.security.core</artifactId>
-            <version>${org.exoplatform.core.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.container</artifactId>
             <version>${org.exoplatform.kernel.version}</version>
@@ -56,63 +72,17 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- Declare this dependency directly since it required by google-api-client. -->
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>${javax.inject.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-tools-sdk</artifactId>
-            <version>${appengine.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.gwt</groupId>
-            <artifactId>codenvy-gwtframework-commons</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.gwt</groupId>
-            <artifactId>codenvy-gwtframework-ui</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-core</artifactId>
-            <version>${everrest.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-integration-exo</artifactId>
-            <version>${everrest.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-framework-client</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
             <version>${google.api-client.version}</version>
             <!-- Set as provided. Use jarajr plugin because conflict guava. -->
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-tools-sdk</artifactId>
+            <version>${appengine.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -136,14 +106,44 @@
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
-            <artifactId>everrest-test</artifactId>
+            <artifactId>everrest-core</artifactId>
             <version>${everrest.version}</version>
-            <scope>test</scope>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-integration-exo</artifactId>
+            <version>${everrest.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.gwt</groupId>
+            <artifactId>codenvy-gwtframework-commons</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.gwt</groupId>
+            <artifactId>codenvy-gwtframework-ui</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-framework-client</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-test</artifactId>
+            <version>${everrest.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

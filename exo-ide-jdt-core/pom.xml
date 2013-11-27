@@ -11,6 +11,21 @@
     <name>Codenvy IDE :: JDT :: Core</name>
     <dependencies>
         <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt.inject</groupId>
+            <artifactId>gin</artifactId>
+            <version>${gin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.thoughtworks.qdox</groupId>
+            <artifactId>qdox</artifactId>
+            <version>${qdox-patched.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-core</artifactId>
             <version>${everrest.version}</version>
@@ -57,19 +72,9 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.google.gwt.inject</groupId>
-            <artifactId>gin</artifactId>
-            <version>${gin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.thoughtworks.qdox</groupId>
-            <artifactId>qdox</artifactId>
-            <version>${qdox-patched.version}</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -82,6 +87,12 @@
             <artifactId>guava-gwt</artifactId>
             <version>${guava.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -105,17 +116,6 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

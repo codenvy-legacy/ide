@@ -20,6 +20,27 @@
             <version>${commons-fileupload.version}</version>
         </dependency>
         <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
+        </dependency>
+        <!-- Declare this dependency directly since it required by google-api-client. -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.core</groupId>
+            <artifactId>exo.core.component.security.core</artifactId>
+            <version>${org.exoplatform.core.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-commons</artifactId>
             <version>${project.version}</version>
@@ -35,11 +56,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.exoplatform.core</groupId>
-            <artifactId>exo.core.component.security.core</artifactId>
-            <version>${org.exoplatform.core.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.commons</artifactId>
             <version>${org.exoplatform.kernel.version}</version>
@@ -49,21 +65,12 @@
             <artifactId>exo.kernel.container</artifactId>
             <version>${org.exoplatform.kernel.version}</version>
         </dependency>
-        <!-- Declare this dependency directly since it required by google-api-client. -->
+        <!-- client -->
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>${javax.inject.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
@@ -87,13 +94,6 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-framework-client</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- client -->
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -17,6 +17,13 @@
             <artifactId>codenvy-commons-log-reader</artifactId>
             <version>${codenvy.commons.version}</version>
         </dependency>
+        <!-- CLIENT SIDE -->
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>codenvy-gwtframework-commons</artifactId>
@@ -33,13 +40,6 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-framework-client</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- CLIENT SIDE -->
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

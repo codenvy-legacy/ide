@@ -10,6 +10,16 @@
     <name>Codenvy IDE :: Extension :: Java :: Runtime</name>
     <dependencies>
         <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr</artifactId>
             <version>${antlr.version}</version>
@@ -47,14 +57,10 @@
             <version>${org.exoplatform.kernel.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>${javax.inject.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
@@ -106,12 +112,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>sun.jdt</groupId>
             <artifactId>tools</artifactId>
             <version>${java.vm.version}</version>
@@ -158,6 +158,22 @@
                 <!-- Generate compiled stuff in the folder used for developing mode -->
                 <!-- outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory -->
                 <plugins>
+                    <!-- Copy static web files before executing gwt:run -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>exploded</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <webappDirectory>${webappDirectory}</webappDirectory>
+                        </configuration>
+                    </plugin>
                     <!-- GWT Maven Plugin -->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
@@ -178,22 +194,6 @@
                             <runTarget>JavaDebugExtension.html</runTarget>
                             <hostedWebapp>${webappDirectory}</hostedWebapp>
                             <i18nMessagesBundle>org.exoplatform.ide.extension.java.jdi.client.DebugLocalizationConstant</i18nMessagesBundle>
-                        </configuration>
-                    </plugin>
-                    <!-- Copy static web files before executing gwt:run -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-war-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>exploded</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <webappDirectory>${webappDirectory}</webappDirectory>
                         </configuration>
                     </plugin>
                 </plugins>

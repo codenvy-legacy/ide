@@ -4,7 +4,7 @@
     <parent>
         <artifactId>maven-parent-pom</artifactId>
         <groupId>com.codenvy</groupId>
-        <version>2.0.1</version>
+        <version>3.0.1</version>
     </parent>
     <groupId>org.exoplatform.ide</groupId>
     <artifactId>exo-ide-parent</artifactId>
@@ -132,6 +132,8 @@
         <logback.version>1.0.0</logback.version>
         <lucene.version>2.9.4</lucene.version>
         <maven-invoker.version>2.1.1</maven-invoker.version>
+        <maven.releases.repo.url>https://maven.codenvycorp.com/content/repositories/codenvy-private-releases/</maven.releases.repo.url>
+        <maven.snapshots.repo.url>https://maven.codenvycorp.com/content/repositories/codenvy-private-snapshots/</maven.snapshots.repo.url>
         <mockito.version>1.9.5</mockito.version>
         <mockitong.version>0.3</mockitong.version>
         <openid4java.version>0.9.6</openid4java.version>

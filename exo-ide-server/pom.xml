@@ -41,9 +41,39 @@
             <version>${codenvy.organization.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.github.dcarter.gdata-java-client</groupId>
+            <artifactId>gdata-client-1.0</artifactId>
+            <version>${gdata.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.dcarter.gdata-java-client</groupId>
+            <artifactId>gdata-contacts-3.0</artifactId>
+            <version>${gdata.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.dcarter.gdata-java-client</groupId>
+            <artifactId>gdata-core-1.0</artifactId>
+            <version>${gdata.version}</version>
+        </dependency>
+        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>${commons-codec.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>${commons-fileupload.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>jsr250-api</artifactId>
+            <version>${javax.annotation.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -51,9 +81,9 @@
             <version>${commons-compress.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>${commons-fileupload.version}</version>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovy.version}</version>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
@@ -81,6 +111,17 @@
             <version>${everrest.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.exoplatform.core</groupId>
+            <artifactId>exo.core.component.security.core</artifactId>
+            <version>${org.exoplatform.core.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-commons</artifactId>
             <version>${project.version}</version>
@@ -100,17 +141,6 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.core</groupId>
-            <artifactId>exo.core.component.security.core</artifactId>
-            <version>${org.exoplatform.core.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>servlet-api</artifactId>
-                    <groupId>javax.servlet</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.kernel</groupId>
@@ -135,36 +165,6 @@
                     <groupId>xstream</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.github.dcarter.gdata-java-client</groupId>
-            <artifactId>gdata-client-1.0</artifactId>
-            <version>${gdata.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.dcarter.gdata-java-client</groupId>
-            <artifactId>gdata-contacts-3.0</artifactId>
-            <version>${gdata.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.dcarter.gdata-java-client</groupId>
-            <artifactId>gdata-core-1.0</artifactId>
-            <version>${gdata.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>${groovy.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>jsr250-api</artifactId>
-            <version>${javax.annotation.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openid4java</groupId>
@@ -226,15 +226,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.everrest</groupId>
-            <artifactId>everrest-test</artifactId>
-            <version>${everrest.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-test</artifactId>
+            <version>${everrest.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

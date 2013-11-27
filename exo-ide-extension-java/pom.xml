@@ -16,14 +16,29 @@
             <version>${codenvy.commons.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>eclipse-jdt-core</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.thoughtworks.qdox</groupId>
+            <artifactId>qdox</artifactId>
+            <version>${qdox-patched.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-core</artifactId>
             <version>${everrest.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.core</groupId>
+            <artifactId>exo.core.component.security.core</artifactId>
+            <version>${org.exoplatform.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>eclipse-jdt-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -56,11 +71,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.exoplatform.core</groupId>
-            <artifactId>exo.core.component.security.core</artifactId>
-            <version>${org.exoplatform.core.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.commons</artifactId>
             <version>${org.exoplatform.kernel.version}</version>
@@ -87,14 +97,10 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.thoughtworks.qdox</groupId>
-            <artifactId>qdox</artifactId>
-            <version>${qdox-patched.version}</version>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.gwt</groupId>
@@ -109,16 +115,22 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-assert</artifactId>
+            <version>${fest-assert.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.everrest</groupId>
@@ -130,18 +142,6 @@
             <groupId>org.everrest</groupId>
             <artifactId>everrest-test</artifactId>
             <version>${everrest.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.easytesting</groupId>
-            <artifactId>fest-assert</artifactId>
-            <version>${fest-assert.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -169,14 +169,21 @@
         </resources>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <systemPropertyVariables>
-                        <java.src>${env.JAVA_HOME}${file.separator}src.zip</java.src>
-                        <jre.lib>${env.JAVA_HOME}${file.separator}jre${file.separator}lib</jre.lib>
-                    </systemPropertyVariables>
-                </configuration>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>create-index-directory</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <unzip dest="${project.build.directory}" src="${project.build.directory}/ide-codeassistant-lucene-index.zip" />
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -204,21 +211,14 @@
                 </executions>
             </plugin>
             <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>create-index-directory</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <unzip dest="${project.build.directory}" src="${project.build.directory}/ide-codeassistant-lucene-index.zip" />
-                            </tasks>
-                        </configuration>
-                    </execution>
-                </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <java.src>${env.JAVA_HOME}${file.separator}src.zip</java.src>
+                        <jre.lib>${env.JAVA_HOME}${file.separator}jre${file.separator}lib</jre.lib>
+                    </systemPropertyVariables>
+                </configuration>
             </plugin>
         </plugins>
     </build>
