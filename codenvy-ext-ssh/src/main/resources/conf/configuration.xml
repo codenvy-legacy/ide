@@ -27,7 +27,7 @@
 
     <component>
         <key>com.codenvy.ide.ext.ssh.server.SshKeyStore</key>
-        <type>com.codenvy.ide.ext.ssh.server.UserProfileSshKeyStore</type>
+        <type>com.codenvy.ide.ext.ssh.server.DummySshKeyStore</type>
     </component>
 
 </configuration>
