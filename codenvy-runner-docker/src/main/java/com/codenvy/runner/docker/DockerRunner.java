@@ -70,7 +70,7 @@ public class DockerRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
-                return new DockerRunnerConfiguration(request.getMemorySize(),0, 0, request);
+                return new DockerRunnerConfiguration(request.getMemorySize(), 0, 0, request);
             }
         };
     }
