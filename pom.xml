@@ -104,7 +104,7 @@
         <everrest.version>1.1.5</everrest.version>
         <fest-assert.version>1.4</fest-assert.version>
         <gdata.version>1.47.1</gdata.version>
-        <gin.version>2.1.1</gin.version>
+        <gin.version>2.1.2</gin.version>
         <google.api-client.version>1.9.0-beta</google.api-client.version>
         <groovy.version>1.8.1</groovy.version>
         <gson.version>2.1</gson.version>
@@ -115,7 +115,7 @@
         <gwt-test-utils.version>0.38</gwt-test-utils.version>
         <gwt.compiler.additional.options>OBF</gwt.compiler.additional.options>
         <gwt.test.skip>true</gwt.test.skip>
-        <gwt.version>2.5.0</gwt.version>
+        <gwt.version>2.5.1</gwt.version>
         <gwt.xmx>-Xmx2048m</gwt.xmx>
         <hamcrest.version>1.2.1</hamcrest.version>
         <jackson.version>1.9.4</jackson.version>
