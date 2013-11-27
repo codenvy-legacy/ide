@@ -1,4 +1,4 @@
-/*
+package com.codenvy.ide.git;/*
  * CODENVY CONFIDENTIAL
  * __________________
  *

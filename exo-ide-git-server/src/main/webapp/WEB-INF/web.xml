@@ -45,7 +45,7 @@
 
     <filter>
         <filter-name>VFSPermissionsFilter</filter-name>
-        <filter-class>VFSPermissionsFilter</filter-class>
+        <filter-class>com.codenvy.ide.git.VFSPermissionsFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>VFSPermissionsFilter</filter-name>

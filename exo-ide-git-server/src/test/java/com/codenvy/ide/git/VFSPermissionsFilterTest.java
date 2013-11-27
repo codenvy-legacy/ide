@@ -1,4 +1,4 @@
-/*
+package com.codenvy.ide.git;/*
  * CODENVY CONFIDENTIAL
  * __________________
  *
@@ -16,6 +16,7 @@
  * from Codenvy S.A..
  */
 
+import com.codenvy.ide.git.VFSPermissionsFilter;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.Role;
@@ -50,7 +51,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Test different situations of user access to projects with different permissions.
- * Test related to @link VFSPermissionsFilter class.
+ * Test related to @link com.codenvy.ide.git.VFSPermissionsFilter class.
  *
  * @author <a href="mailto:evoevodin@codenvy.com">Eugene Voevodin</a>
  */
