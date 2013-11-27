@@ -1,1 +1,1 @@
-[{"name":"vfs:mimeType","value":["text/vnd.ideproject+directory"]},{"name":"vfs:projectType","value":["CodenvyTutorial"]},{"name":"exoide:projectDescription","value":["Codenvy tutorial."]}]
+[{"name":"vfs:mimeType","value":["text/vnd.ideproject+directory"]},{"name":"vfs:projectType","value":["CodenvyTutorial"]},{"name":"exoide:projectDescription","value":["Codenvy tutorial."]},{"name":"builder_name","value":["maven"]},{"name":"builder_maven_targets","value":["clean","install"]},{"name":"runner_name","value":["sdk"]}]

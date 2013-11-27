@@ -82,7 +82,7 @@ public class SDKRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
-                return new ApplicationServerRunnerConfiguration(portService.acquire(), request.getMemorySize(), 0,
+                return new RunnerConfiguration(request.getMemorySize(), portService.acquire(), 0,
                                                                 request);
             }
         };
@@ -91,7 +91,6 @@ public class SDKRunner extends Runner {
     @Override
     protected ApplicationProcess newApplicationProcess(DeploymentSources toDeploy,
                                                        RunnerConfiguration runnerCfg) throws RunnerException {
-        final ApplicationServerRunnerConfiguration sdkRunnerCfg = (ApplicationServerRunnerConfiguration)runnerCfg;
         final File appDir;
         try {
             appDir = Files.createTempDirectory(getDeployDirectory().toPath(), ("app_" + getName() + '_')).toFile();
@@ -102,12 +101,12 @@ public class SDKRunner extends Runner {
             final Path webappsPath = tomcatPath.resolve("webapps");
             final File warFile = build(toDeploy.getFile()).toFile();
             ZipUtils.unzip(warFile, webappsPath.resolve("ide").toFile());
-            generateServerXml(tomcatPath.toFile(), sdkRunnerCfg);
+            generateServerXml(tomcatPath.toFile(), runnerCfg);
         } catch (IOException e) {
             throw new RunnerException(e);
         }
 
-        File startUpScriptFile = genStartUpScriptUnix(appDir, sdkRunnerCfg);
+        File startUpScriptFile = genStartUpScriptUnix(appDir, runnerCfg);
         if (!startUpScriptFile.setExecutable(true, false)) {
             throw new RunnerException("Unable update attributes of the startup script");
         }
@@ -120,7 +119,7 @@ public class SDKRunner extends Runner {
         logFiles.add(new File(logsDir, "stderr.log"));
 
         final TomcatProcess process =
-                new TomcatProcess(sdkRunnerCfg.getHttpPort(), logFiles, sdkRunnerCfg.getDebugPort(), startUpScriptFile,
+                new TomcatProcess(runnerCfg.getPort(), logFiles, runnerCfg.getDebugPort(), startUpScriptFile,
                                   appDir, portService);
         registerDisposer(process, new Disposer() {
             @Override
@@ -189,9 +188,9 @@ public class SDKRunner extends Runner {
         return path;
     }
 
-    private void generateServerXml(File tomcatDir, ApplicationServerRunnerConfiguration runnerConfiguration)
+    private void generateServerXml(File tomcatDir, RunnerConfiguration runnerConfiguration)
             throws RunnerException {
-        String cfg = SERVER_XML.replace("${PORT}", Integer.toString(runnerConfiguration.getHttpPort()));
+        String cfg = SERVER_XML.replace("${PORT}", Integer.toString(runnerConfiguration.getPort()));
         final File serverXmlFile = new File(new File(tomcatDir, "conf"), "server.xml");
         try {
             Files.write(serverXmlFile.toPath(), cfg.getBytes());
@@ -200,7 +199,7 @@ public class SDKRunner extends Runner {
         }
     }
 
-    private File genStartUpScriptUnix(File appDir, ApplicationServerRunnerConfiguration runnerConfiguration)
+    private File genStartUpScriptUnix(File appDir, RunnerConfiguration runnerConfiguration)
             throws RunnerException {
         final String startupScript = "#!/bin/sh\n" +
                                      exportEnvVariablesUnix(runnerConfiguration) +
@@ -222,7 +221,7 @@ public class SDKRunner extends Runner {
         return startUpScriptFile;
     }
 
-    private String exportEnvVariablesUnix(ApplicationServerRunnerConfiguration runnerConfiguration) {
+    private String exportEnvVariablesUnix(RunnerConfiguration runnerConfiguration) {
         int memory = runnerConfiguration.getMemory();
         if (memory <= 0) {
             memory = 256;
@@ -237,25 +236,12 @@ public class SDKRunner extends Runner {
         return export.toString();
     }
 
-    private String catalinaUnix(ApplicationServerRunnerConfiguration runnerConfiguration) {
+    private String catalinaUnix(RunnerConfiguration runnerConfiguration) {
         final boolean debug = runnerConfiguration.getDebugPort() > 0;
         if (debug) {
             return "./bin/catalina.sh jpda run > ../logs/stdout.log 2> ../logs/stderr.log &\n";
         }
         return "./bin/catalina.sh run > ../logs/stdout.log 2> ../logs/stderr.log &\n";
-    }
-
-    public static class ApplicationServerRunnerConfiguration extends RunnerConfiguration {
-        private final int httpPort;
-
-        public ApplicationServerRunnerConfiguration(int httpPort, int memory, int debugPort, RunRequest request) {
-            super(memory, debugPort, request);
-            this.httpPort = httpPort;
-        }
-
-        public int getHttpPort() {
-            return httpPort;
-        }
     }
 
     private static class TomcatProcess extends ApplicationProcess {
