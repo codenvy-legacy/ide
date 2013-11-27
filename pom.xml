@@ -154,4 +154,49 @@
         <module>codenvy-sdk-tools</module>
         <module>codenvy-packaging-standalone-tomcat</module>
     </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- prevent older version of maven-compiler-plugin being used, avoid issues with ubuntu maven package -->
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <!-- Used to build default-version (non-SDK) of Codenvy -->
+            <id>default-version</id>
+            <activation>
+                <property>
+                    <name>!sdk</name>
+                </property>
+            </activation>
+            <modules>
+                <module>codenvy-ide-site-war</module>
+                <module>codenvy-application-war</module>
+                <module>codenvy-packaging-standalone-tomcat</module>
+            </modules>
+        </profile>
+        <profile>
+            <!-- Used to build Codenvy Platform SDK -->
+            <id>sdk-version</id>
+            <activation>
+                <property>
+                    <name>sdk</name>
+                </property>
+            </activation>
+            <modules>
+                <module>codenvy-ext-tutorials</module>
+                <module>codenvy-ext-extensions-runtime</module>
+                <module>codenvy-sdk-application-war</module>
+                <module>codenvy-sdk-private-dependencies</module>
+                <module>codenvy-sdk-packaging-standalone-tomcat</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>
