@@ -52,82 +52,32 @@ public class JavaScriptEditorExtension extends Extension {
                         .controlNewJavascriptPrompt(), Images.JAVA_SCRIPT, MimeType.APPLICATION_JAVASCRIPT)
                         .setGroupName(GroupNames.NEW_FILE));
 
-//      final JavaScriptCodeAssistant javaScriptCodeAssistant = new JavaScriptCodeAssistant();
-
         IDE.getInstance().getFileTypeRegistry().addFileType(
                 new FileType(MimeType.APPLICATION_JAVASCRIPT, "js", RESOURCES.javaScript()),
                 new EditorCreator() {
                     @Override
                     public Editor createEditor() {
-//               return new CodeMirror(MimeType.APPLICATION_JAVASCRIPT, new CodeMirrorConfiguration()
-//               .setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']")
-//               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']")
-//               .setParser(new JavaScriptParser())
-//               .setCanBeOutlined(true)
-//               .setAutocompleteHelper(new JavaScriptAutocompleteHelper())
-//               .setCodeAssistant(javaScriptCodeAssistant));
                         return new JavaScriptEditor(MimeType.APPLICATION_JAVASCRIPT);
                     }
                 });
 
-//      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_JAVASCRIPT, MESSAGES.javaScriptEditor(), "js",
-//         new CodeMirrorConfiguration()
-//            .setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']")
-//            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']")
-//            .setParser(new JavaScriptParser())
-//            .setCanBeOutlined(true)
-//            .setAutocompleteHelper(new JavaScriptAutocompleteHelper())
-//            .setCodeAssistant(javaScriptCodeAssistant)));
-
         IDE.getInstance().getFileTypeRegistry().addFileType(
-                new FileType(MimeType.TEXT_JAVASCRIPT, "js", RESOURCES.javaScript()),
+                 new FileType(MimeType.TEXT_JAVASCRIPT, "js", RESOURCES.javaScript()),
                 new EditorCreator() {
                     @Override
                     public Editor createEditor() {
-//               return new CodeMirror(MimeType.TEXT_JAVASCRIPT, new CodeMirrorConfiguration()
-//               .setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']")
-//               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']")
-//               .setParser(new JavaScriptParser())
-//               .setCanBeOutlined(true)
-//               .setAutocompleteHelper(new JavaScriptAutocompleteHelper())
-//               .setCodeAssistant(javaScriptCodeAssistant));
                         return new JavaScriptEditor(MimeType.TEXT_JAVASCRIPT);
                     }
                 });
-
-//      IDE.getInstance().addEditor(new CodeMirror(MimeType.TEXT_JAVASCRIPT, MESSAGES.javaScriptEditor(), "js",
-//         new CodeMirrorConfiguration()
-//            .setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']")
-//            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']")
-//            .setParser(new JavaScriptParser())
-//            .setCanBeOutlined(true)
-//            .setAutocompleteHelper(new JavaScriptAutocompleteHelper())
-//            .setCodeAssistant(javaScriptCodeAssistant)));
 
         IDE.getInstance().getFileTypeRegistry().addFileType(
                 new FileType(MimeType.APPLICATION_X_JAVASCRIPT, "js", RESOURCES.javaScript()),
                 new EditorCreator() {
                     @Override
                     public Editor createEditor() {
-//               return new CodeMirror(MimeType.APPLICATION_X_JAVASCRIPT, new CodeMirrorConfiguration()
-//               .setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']")
-//               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']")
-//               .setParser(new JavaScriptParser())
-//               .setCanBeOutlined(true)
-//               .setAutocompleteHelper(new JavaScriptAutocompleteHelper())
-//               .setCodeAssistant(javaScriptCodeAssistant));
                         return new JavaScriptEditor(MimeType.APPLICATION_X_JAVASCRIPT);
                     }
                 });
-
-//      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_X_JAVASCRIPT, MESSAGES.javaScriptEditor(), "js",
-//         new CodeMirrorConfiguration()
-//            .setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']")
-//            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']")
-//            .setParser(new JavaScriptParser())
-//            .setCanBeOutlined(true)
-//            .setAutocompleteHelper(new JavaScriptAutocompleteHelper())
-//            .setCodeAssistant(javaScriptCodeAssistant)));
 
         JavaScriptOutlineItemCreator javaScriptOutlineItemCreator = new JavaScriptOutlineItemCreator();
         IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_JAVASCRIPT, javaScriptOutlineItemCreator);
@@ -142,4 +92,5 @@ public class JavaScriptEditorExtension extends Extension {
         Elements.injectJs(RESOURCES.esprima().getText() + RESOURCES.esprimaJsContentAssist().getText());
         new JavaScriptCodeController();
     }
+    
 }
