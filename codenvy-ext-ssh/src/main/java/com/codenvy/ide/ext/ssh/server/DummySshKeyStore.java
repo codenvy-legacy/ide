@@ -7,8 +7,6 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.KeyPair;
 
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.services.security.ConversationState;
 import org.picocontainer.Startable;
 import org.slf4j.Logger;
@@ -29,41 +27,27 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class DummySshKeyStore implements SshKeyStore, Startable {
 
-    private static final Logger LOG                          = LoggerFactory.getLogger(DummySshKeyStore.class);
-    private static final int    PRIVATE                      = 0;
-    private static final int    PUBLIC                       = 1;
+    private static final Logger LOG                             = LoggerFactory.getLogger(DummySshKeyStore.class);
+    private static final int    PRIVATE                         = 0;
+    private static final int    PUBLIC                          = 1;
 
-    private static final String SSHKEYS_STORE_LOCATION       = "sshkeys-store-location";
+    private static final String SSHKEYS_STORE_LOCATION_PROPERTY = "codenvy.sshkeystore.location";
 
-    private static final String DEFAULT_STORE_LOCATION_VALUE = System.getProperty("java.io.tmpdir");
+    private static final String DEFAULT_STORE_LOCATION_VALUE    = System.getProperty("java.io.tmpdir");
 
-    private static final String SSHKEYS_FILE_NAME            = "sshkeys.json";
+    private static final String SSHKEYS_FILE_NAME               = "sshkeys.json";
 
     private Map<String, SshKey> myKeys;
-    private final Lock          lock                         = new ReentrantLock();
+    private final Lock          lock                            = new ReentrantLock();
     private final JSch          genJsch;
     private final String        sshkeysLocationDir;
     private String              fullSshKeysStorageLocation;
 
-    public DummySshKeyStore(InitParams initParams) {
-        this(readValueParam(initParams, SSHKEYS_STORE_LOCATION, DEFAULT_STORE_LOCATION_VALUE));
-    }
-
-    private static String readValueParam(InitParams initParams, String paramName, String defaultValue) {
-        if (initParams != null) {
-            ValueParam vp = initParams.getValueParam(paramName);
-            if (vp != null) {
-                return vp.getValue();
-            }
-        }
-        return defaultValue;
-    }
-
-    protected DummySshKeyStore(String sshkeysLocation) {
-        if (sshkeysLocation == null || sshkeysLocation.isEmpty()) {
-            throw new IllegalArgumentException("SSH keys storage location may not be null or empty string. ");
-        }
-        this.sshkeysLocationDir = sshkeysLocation;
+    public DummySshKeyStore() {
+        String sshKeysLocationValue = System.getProperty(SSHKEYS_STORE_LOCATION_PROPERTY);
+        this.sshkeysLocationDir =
+                                  (sshKeysLocationValue != null && !sshKeysLocationValue.isEmpty()) ? sshKeysLocationValue
+                                      : DEFAULT_STORE_LOCATION_VALUE;
         this.genJsch = new JSch();
     }
 
