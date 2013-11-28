@@ -72,6 +72,8 @@ public class VFSPermissionsFilter implements Filter {
             //search for dotVFS directory
             File projectDirectory = new File(fsRootPath.concat(File.separator).concat(url));
             String auth;
+            String user = "";
+            String password = "";
             if ((auth = req.getHeader("authorization")) != null) {
                 //get encoded password phrase
                 String userAndPasswordEncoded = auth.substring(6);
@@ -80,33 +82,33 @@ public class VFSPermissionsFilter implements Filter {
                 //get username and password separator ':'
                 int betweenUserAndPassword = userAndPasswordDecoded.indexOf(':');
                 //get username - it is before first ':'
-                String user = userAndPasswordDecoded.substring(0, betweenUserAndPassword);
+                user = userAndPasswordDecoded.substring(0, betweenUserAndPassword);
                 //get password - it is after first ':'
-                String password = userAndPasswordDecoded.substring(betweenUserAndPassword + 1);
+                password = userAndPasswordDecoded.substring(betweenUserAndPassword + 1);
+            }
                 /*
                     Check if user authenticated and hasn't permissions to project, then
                     send response code 403
                 */
-                try {
-                    if (!user.isEmpty() &&
-                        !(userManager.authenticateUser(user, password) && vfsPermissionsChecker.isAccessAllowed(user, userManager
-                                .getUserMembershipRoles(user, projectDirectory.getParentFile().getName()), projectDirectory))) {
-                        ((HttpServletResponse)response).sendError(HttpServletResponse.SC_FORBIDDEN);
-                        return;
-                    }
-                } catch (OrganizationServiceException e) {
-                    throw new ServletException(e.getMessage(), e);
-                }
-                /*
+            try {
+                if (!user.isEmpty() &&
+                    !(userManager.authenticateUser(user, password) && vfsPermissionsChecker.isAccessAllowed(user, userManager
+                            .getUserMembershipRoles(user, projectDirectory.getParentFile().getName()), projectDirectory))) {
+                    ((HttpServletResponse)response).sendError(HttpServletResponse.SC_FORBIDDEN);
+
+                 /*
                     if user wasn't required check project permissions to
                     any user, if it is not READ or ALL send response code 401 and header with BASIC type
                     of authentication
                  */
-            } else if (!vfsPermissionsChecker.isAccessAllowed("", null, projectDirectory)) {
-                ((HttpServletResponse)response).addHeader("Cache-Control", "private");
-                ((HttpServletResponse)response).addHeader("WWW-Authenticate", "Basic");
-                ((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                } else if (user.isEmpty() && !vfsPermissionsChecker.isAccessAllowed(user, null, projectDirectory)) {
+                    ((HttpServletResponse)response).addHeader("Cache-Control", "private");
+                    ((HttpServletResponse)response).addHeader("WWW-Authenticate", "Basic");
+                    ((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                }
                 return;
+            } catch (OrganizationServiceException e) {
+                throw new ServletException(e.getMessage(), e);
             }
         }
         chain.doFilter(req, response);

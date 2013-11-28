@@ -149,4 +149,16 @@ public class VFSPermissionsFilterTest {
         verify(response).sendError(HttpServletResponse.SC_FORBIDDEN);
     }
 
+    @Test
+    public void testProjectWithWorkspaceDeveloperGroupAllPermissionsAndNotExistingEmptyUser()
+            throws OrganizationServiceException, IOException, ServletException {
+        //given
+        when(request.getHeader("authorization"))
+                .thenReturn("BASIC " + (Base64.encodeBase64String((":").getBytes())));
+        //when
+        filter.doFilter(request, response, filterChain);
+        //then
+        verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+    }
+
 }
