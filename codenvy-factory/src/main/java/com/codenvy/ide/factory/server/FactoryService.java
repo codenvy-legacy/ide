@@ -20,14 +20,12 @@ package com.codenvy.ide.factory.server;
 import com.codenvy.api.factory.SimpleFactoryUrl;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.ide.commons.shared.ProjectType;
-import com.codenvy.ide.factory.shared.FactorySpec10;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.client.WorkspaceManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.model.User;
 import com.codenvy.organization.model.Workspace;
 
-import org.apache.commons.io.IOUtils;
 import org.codenvy.mail.MailSenderClient;
 import org.everrest.websockets.WSConnectionContext;
 import org.everrest.websockets.message.ChannelBroadcastMessage;
@@ -46,7 +44,18 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.*;
+import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
+import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -293,37 +302,45 @@ public class FactoryService {
      *         virtual file system
      * @param item
      *         {@link ProjectModel} instance
-     * @throws VirtualFileSystemException
-     * @throws IOException
      */
-    private void prepareAndroidProject(SimpleFactoryUrl factoryUrl, VirtualFileSystem vfs, Item item)
-            throws VirtualFileSystemException, IOException {
-        File constJava =
-                (File)vfs.getItemByPath(item.getPath() + "/src/com/google/cloud/backend/android/Consts.java", null,
-                                        false,
-                                        PropertyFilter.NONE_FILTER);
-        String content = IoUtil.readStream(vfs.getContent(constJava.getId()).getStream());
+    private void prepareAndroidProject(SimpleFactoryUrl factoryUrl, VirtualFileSystem vfs, Item item) {
+        final String path = item.getPath() + "/src/com/google/cloud/backend/core/Consts.java";
 
-        String[] actionParams = factoryUrl.getAction().replaceAll("'", "").split(";");
-        String prjNum = null;
-        String prjID = null;
+        try {
+            final File constJava = (File)vfs.getItemByPath(path, null, false, PropertyFilter.NONE_FILTER);
+            final String content = IoUtil.readStream(vfs.getContent(constJava.getId()).getStream());
 
-        for (String param : actionParams) {
-            if (param.startsWith("projectNumber")) {
-                prjNum = param.split("=")[1];
+            final String action =
+                    (factoryUrl.getAction().toLowerCase().indexOf("%3d") > 0) ? URLDecoder.decode(factoryUrl.getAction(), "UTF-8")
+                                                                              : factoryUrl.getAction();
+
+            String[] actionParams = action.replaceAll("'", "").split(";");
+            String prjNum = "";
+            String prjID = "";
+
+            for (String param : actionParams) {
+                if (param.startsWith("projectNumber")) {
+                    prjNum = param.split("=")[1];
+                }
+                if (param.startsWith("projectID")) {
+                    prjID = param.split("=")[1];
+                }
             }
-            if (param.startsWith("projectID")) {
-                prjID = param.split("=")[1];
+
+            String newContent = PATTERN.matcher(content).replaceFirst("public static final String PROJECT_ID = \"" + prjID + "\";");
+            newContent = PATTERN_NUMBER.matcher(newContent).replaceFirst("public static final String PROJECT_NUMBER = \"" + prjNum + "\";");
+            vfs.updateContent(constJava.getId(), MediaType.valueOf(constJava.getMimeType()),
+                              new ByteArrayInputStream(newContent.getBytes()),
+                              null);
+        } catch (VirtualFileSystemException e) {
+            if (e instanceof ItemNotFoundException) {
+                publishWebsocketMessage("File '" + path + "' doesn't exists.");
+            } else {
+                publishWebsocketMessage("Failed to update fields in '" + path + "'.");
             }
+        } catch (IOException e) {
+            publishWebsocketMessage("Failed to read file '" + path + "'.");
         }
-
-        String newContent =
-                PATTERN.matcher(content).replaceFirst("public static final String PROJECT_ID = \"" + prjID + "\";");
-        newContent = PATTERN_NUMBER.matcher(newContent)
-                                   .replaceFirst("public static final String PROJECT_NUMBER = \"" + prjNum + "\";");
-        vfs.updateContent(constJava.getId(), MediaType.valueOf(constJava.getMimeType()),
-                          new ByteArrayInputStream(newContent.getBytes()),
-                          null);
     }
 
     /**
