@@ -81,7 +81,7 @@
             <type>war</type>
             <version>${com.codenvy.organization.version}</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-site-war</artifactId>
             <type>war</type>
@@ -145,14 +145,14 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-core</artifactId>
-            <type>jar</type>
+            <artifactId>gin-tutorial</artifactId>
+            <type>zip</type>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>gin-tutorial</artifactId>
-            <type>zip</type>
+            <artifactId>codenvy-ide-core</artifactId>
+            <type>jar</type>
             <version>${project.version}</version>
         </dependency>
 
@@ -171,7 +171,7 @@
             <artifactId>codenvy-ext-git</artifactId>
             <version>${project.version}</version>
         </dependency>
-	<dependency>
+        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-github</artifactId>
             <version>${project.version}</version>
@@ -246,7 +246,7 @@
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>${jsch.version}</version>
-        </dependency>        
+        </dependency>
     </dependencies>
 
     <build>
@@ -517,7 +517,7 @@
                                 <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
                                        dest="${project.build.directory}/tomcat-ide"/>
                                 <unzip src="${project.build.directory}/repo.zip" dest="${project.build.directory}/tomcat-ide"/>
-                                <chmod dir="${project.build.directory}/tomcat-ide" perm="+x" includes="install.sh" />
+                                <chmod dir="${project.build.directory}/tomcat-ide" perm="+x" includes="install.sh"/>
                             </target>
                         </configuration>
                         <goals>
