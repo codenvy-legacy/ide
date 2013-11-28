@@ -15,30 +15,18 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.tutorial.parts.howto;
+package com.codenvy.ide.tutorial.gin.part;
 
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
+import com.codenvy.ide.api.mvp.View;
 
 /**
- * The implementation of {@link TutorialHowToView}.
+ * The view of {@link TutorialHowToPresenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class TutorialHowToViewImpl extends Composite implements TutorialHowToView {
-    interface TutorialHowToViewImplUiBinder extends UiBinder<Widget, TutorialHowToViewImpl> {
-    }
+public interface TutorialHowToView extends View<TutorialHowToView.ActionDelegate> {
+    /** Required for delegating functions in view. */
+    public interface ActionDelegate {
 
-    @Inject
-    public TutorialHowToViewImpl(TutorialHowToViewImplUiBinder ourUiBinder) {
-        initWidget(ourUiBinder.createAndBindUi(this));
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setDelegate(ActionDelegate delegate) {
-        // do nothing
     }
 }

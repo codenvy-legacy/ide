@@ -19,6 +19,7 @@ package com.codenvy.ide.tutorial.gin;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.tutorial.gin.annotation.MyClassWithAnnotationParam;
 import com.codenvy.ide.tutorial.gin.annotation.SimpleClass;
 import com.codenvy.ide.tutorial.gin.annotation.SimpleInterface;
@@ -26,6 +27,7 @@ import com.codenvy.ide.tutorial.gin.factory.MyFactory;
 import com.codenvy.ide.tutorial.gin.factory.MyFactoryClass;
 import com.codenvy.ide.tutorial.gin.factory.assited.SomeInterface;
 import com.codenvy.ide.tutorial.gin.named.MyClassWithNamedParam;
+import com.codenvy.ide.tutorial.gin.part.TutorialHowToPresenter;
 import com.codenvy.ide.tutorial.gin.sample.MyClass;
 import com.codenvy.ide.tutorial.gin.sample.MyClassWithProvideParam;
 import com.codenvy.ide.tutorial.gin.singleton.MySingletonClass;
@@ -34,6 +36,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import static com.codenvy.ide.api.ui.workspace.PartStackType.EDITING;
 
 /** Extension used to demonstrate how to use GIN. */
 @Singleton
@@ -51,7 +55,11 @@ public class GinExtension {
                         MyClassWithNamedParam myClassWithNamedParam,
                         MyClassWithProvideParam myClassWithProvideParam,
                         MyClassWithAnnotationParam myClassWithAnnotationParam,
-                        @SimpleClass SimpleInterface simpleInterface) {
+                        @SimpleClass SimpleInterface simpleInterface,
+                        WorkspaceAgent workspaceAgent,
+                        TutorialHowToPresenter howToPresenter) {
+
+        workspaceAgent.openPart(howToPresenter, EDITING);
 
         myClass.doSomething();
         mySingletonClass.doSomething();
@@ -59,16 +67,15 @@ public class GinExtension {
         MyClass myClass1 = myClassProvider.get();
         MyClass myClass2 = myClassProvider.get();
 
-        assert !myClass1.equals(myClass2);
-        assert !myClass.equals(myClass1);
-        assert !myClass.equals(myClass2);
+        assert myClass != myClass1;
+        assert myClass != myClass2;
+        assert myClass1 != myClass2;
 
         MySingletonClass mySingletonClass1 = mySingletonClassProvider.get();
         MySingletonClass mySingletonClass2 = mySingletonClassProvider.get();
 
-        assert mySingletonClass1.equals(mySingletonClass2);
-        assert mySingletonClass.equals(mySingletonClass1);
-        assert mySingletonClass.equals(mySingletonClass2);
+        assert mySingletonClass == mySingletonClass1;
+        assert mySingletonClass == mySingletonClass2;
 
         myClassAsyncProvider.get(new AsyncCallback<MyClass>() {
             @Override
@@ -87,6 +94,7 @@ public class GinExtension {
         MyFactoryClass myFactoryClass2 = myFactory.createMyFactoryClass("my factory class 2");
         myFactoryClass2.doSomething();
 
+        assert myFactoryClass1 != myFactoryClass2;
         assert !myFactoryClass1.equals(myFactoryClass2);
 
         SomeInterface someInterface = myFactory.createSomeInterface("some interface 1");
@@ -94,6 +102,7 @@ public class GinExtension {
         SomeInterface someInterface2 = myFactory.createSomeInterface("some interface 2");
         someInterface2.doSomething();
 
+        assert someInterface != someInterface2;
         assert !someInterface.equals(someInterface2);
 
         myClassWithNamedParam.doSomething();

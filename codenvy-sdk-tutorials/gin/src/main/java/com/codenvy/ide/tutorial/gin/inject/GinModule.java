@@ -6,6 +6,8 @@ import com.codenvy.ide.tutorial.gin.annotation.*;
 import com.codenvy.ide.tutorial.gin.factory.MyFactory;
 import com.codenvy.ide.tutorial.gin.factory.assited.SomeImplementationWithAssistedParam;
 import com.codenvy.ide.tutorial.gin.factory.assited.SomeInterface;
+import com.codenvy.ide.tutorial.gin.part.TutorialHowToView;
+import com.codenvy.ide.tutorial.gin.part.TutorialHowToViewImpl;
 import com.codenvy.ide.tutorial.gin.sample.MyImplementation;
 import com.codenvy.ide.tutorial.gin.sample.MyInterface;
 import com.codenvy.ide.tutorial.gin.singleton.MySingletonImplementation;
@@ -21,6 +23,8 @@ public class GinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
+        bind(TutorialHowToView.class).to(TutorialHowToViewImpl.class);
+
         bind(MyInterface.class).to(MyImplementation.class);
         bind(MySingletonInterface.class).to(MySingletonImplementation.class).in(Singleton.class);
         install(new GinFactoryModuleBuilder().implement(SomeInterface.class, SomeImplementationWithAssistedParam.class)

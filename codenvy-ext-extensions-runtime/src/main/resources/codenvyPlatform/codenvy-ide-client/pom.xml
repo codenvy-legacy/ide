@@ -48,7 +48,7 @@
 
         <!-- Third parties -->
         <commons-io.version>2.4</commons-io.version>
-        <gin.version>2.1.1</gin.version>
+        <gin.version>2.1.2</gin.version>
         <jgit.version>2.3.1.201302201838-r</jgit.version>
         <reflections.version>0.9.9-RC1</reflections.version>
     </properties>
