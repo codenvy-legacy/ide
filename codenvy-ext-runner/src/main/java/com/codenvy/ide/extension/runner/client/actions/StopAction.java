@@ -62,7 +62,7 @@ public class StopAction extends Action {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
             e.getPresentation()
-             .setVisible(activeProject.getDescription().getNatures().contains(CODENVY_EXTENSION_PROJECT_TYPE));
+             .setVisible(!activeProject.getDescription().getNatures().contains(CODENVY_EXTENSION_PROJECT_TYPE));
             e.getPresentation().setEnabled(controller.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);
