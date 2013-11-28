@@ -17,8 +17,10 @@
  */
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.util.Pair;
 import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.LazyIterator;
+import com.codenvy.api.vfs.server.Path;
 import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileFilter;
 import com.codenvy.api.vfs.server.VirtualFileVisitor;
@@ -71,6 +73,11 @@ public class VirtualFileImpl implements VirtualFile {
     @Override
     public String getPath() throws VirtualFileSystemException {
         return path.toString();
+    }
+
+    @Override
+    public Path getVirtualFilePath() throws VirtualFileSystemException {
+        return path;
     }
 
     @Override
@@ -220,8 +227,8 @@ public class VirtualFileImpl implements VirtualFile {
     //
 
     @Override
-    public ContentStream zip() throws IOException, VirtualFileSystemException {
-        return mountPoint.zip(this);
+    public ContentStream zip(VirtualFileFilter filter) throws IOException, VirtualFileSystemException {
+        return mountPoint.zip(this, filter);
     }
 
     @Override
@@ -292,6 +299,11 @@ public class VirtualFileImpl implements VirtualFile {
     @Override
     public void accept(VirtualFileVisitor visitor) throws VirtualFileSystemException {
         visitor.visit(this);
+    }
+
+    @Override
+    public LazyIterator<Pair<String, String>> countMd5Sums() throws VirtualFileSystemException {
+        return mountPoint.countMd5Sums(this);
     }
 
     @Override
