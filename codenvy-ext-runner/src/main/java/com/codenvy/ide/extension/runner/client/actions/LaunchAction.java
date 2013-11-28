@@ -20,7 +20,6 @@ package com.codenvy.ide.extension.runner.client.actions;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.extension.runner.client.ExtRuntimeLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.ExtensionsController;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.resources.model.Project;
@@ -30,22 +29,24 @@ import com.google.inject.Singleton;
 import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
 
 /**
- * Action to stop previously launched Codenvy extension.
+ * Action to launch Codenvy application with custom extension.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: StopAction.java Jul 3, 2013 1:58:47 PM azatsarynnyy $
+ * @version $Id: LaunchAction.java Jul 3, 2013 1:58:47 PM azatsarynnyy $
  */
 @Singleton
-public class StopAction extends Action {
+public class LaunchAction extends Action {
 
     private final ResourceProvider                                             resourceProvider;
     private       ExtensionsController controller;
 
     @Inject
-    public StopAction(ExtensionsController controller, RunnerResources resources,
-                      ResourceProvider resourceProvider, ExtRuntimeLocalizationConstant localizationConstants) {
-        super(localizationConstants.stopExtensionActionText(), localizationConstants.stopExtensionActionDescription(),
-              resources.stopApp());
+    public LaunchAction(ExtensionsController controller,
+                        RunnerResources resources,
+                        ResourceProvider resourceProvider,
+                        com.codenvy.ide.extension.runner.client.ExtRuntimeLocalizationConstant localizationConstants) {
+        super(localizationConstants.launchExtensionActionText(),
+              localizationConstants.launchExtensionActionDescription(), resources.launchApp());
         this.controller = controller;
         this.resourceProvider = resourceProvider;
     }
@@ -53,7 +54,7 @@ public class StopAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        controller.stop();
+        controller.launch();
     }
 
     /** {@inheritDoc} */
@@ -63,7 +64,7 @@ public class StopAction extends Action {
         if (activeProject != null) {
             e.getPresentation()
              .setVisible(activeProject.getDescription().getNatures().contains(CODENVY_EXTENSION_PROJECT_TYPE));
-            e.getPresentation().setEnabled(controller.isAnyAppLaunched());
+            e.getPresentation().setEnabled(!controller.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

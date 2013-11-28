@@ -30,22 +30,23 @@ import com.google.inject.Singleton;
 import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
 
 /**
- * Action to stop previously launched Codenvy extension.
+ * Action to get logs of previously launched Codenvy extension.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: StopAction.java Jul 3, 2013 1:58:47 PM azatsarynnyy $
+ * @version $Id: GetLogsAction.java Jul 3, 2013 1:58:47 PM azatsarynnyy $
  */
 @Singleton
-public class StopAction extends Action {
+public class GetLogsAction extends Action {
 
-    private final ResourceProvider                                             resourceProvider;
+    private final ResourceProvider     resourceProvider;
     private       ExtensionsController controller;
 
     @Inject
-    public StopAction(ExtensionsController controller, RunnerResources resources,
-                      ResourceProvider resourceProvider, ExtRuntimeLocalizationConstant localizationConstants) {
-        super(localizationConstants.stopExtensionActionText(), localizationConstants.stopExtensionActionDescription(),
-              resources.stopApp());
+    public GetLogsAction(ExtensionsController controller,
+                         RunnerResources resources,
+                         ResourceProvider resourceProvider, ExtRuntimeLocalizationConstant localizationConstants) {
+        super(localizationConstants.getExtensionLogsActionText(),
+              localizationConstants.getExtensionLogsActionDescription(), resources.getAppLogs());
         this.controller = controller;
         this.resourceProvider = resourceProvider;
     }
@@ -53,7 +54,7 @@ public class StopAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        controller.stop();
+        controller.getLogs();
     }
 
     /** {@inheritDoc} */

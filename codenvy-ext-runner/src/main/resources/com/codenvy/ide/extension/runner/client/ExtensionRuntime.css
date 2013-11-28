@@ -1,0 +1,40 @@
+@CHARSET "UTF-8";
+
+.login .loginFont {
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    font-style: normal;
+    font-weight: normal;
+}
+
+.login .loginErrorFont {
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    font-style: normal;
+    font-weight: normal;
+    color: #d21a1a;
+}
+
+.project .labelH {
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    font-weight: bold;
+}
+
+.project .link {
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
+.project .textinput {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+}
+
+.appInfo .event {
+    background: #f1f2f5;
+}

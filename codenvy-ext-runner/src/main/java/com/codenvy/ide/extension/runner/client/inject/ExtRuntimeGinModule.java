@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
+ * 
+ *  [2012] - [2013] Codenvy, S.A. 
+ *  All Rights Reserved.
+ * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -18,17 +18,22 @@
 package com.codenvy.ide.extension.runner.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.extension.runner.client.RunnerClientService;
-import com.codenvy.ide.extension.runner.client.RunnerClientServiceImpl;
+import com.codenvy.ide.extension.runner.client.ExtRuntimeClientService;
+import com.codenvy.ide.extension.runner.client.ExtRuntimeClientServiceImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * GIN module for 'Codenvy Extensions Runtime' extension.
+ *
+ * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @version $Id: ExtRuntimeGinModule.java Jul 2, 2013 4:44:09 PM azatsarynnyy $
+ */
 @ExtensionGinModule
-public class RunnerGinModule extends AbstractGinModule {
+public class ExtRuntimeGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        bind(RunnerClientService.class).to(RunnerClientServiceImpl.class).in(Singleton.class);
+        bind(ExtRuntimeClientService.class).to(ExtRuntimeClientServiceImpl.class).in(Singleton.class);
     }
 }

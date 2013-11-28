@@ -29,7 +29,7 @@
     </parent>
     <artifactId>codenvy-ext-runner</artifactId>
     <packaging>jar</packaging>
-    <name>Codenvy Extension :: Runner</name>
+    <name>Codenvy :: Runner</name>
 
     <properties>
         <dto-generator-out-directory>${project.build.directory}/generated-sources/dto/</dto-generator-out-directory>
@@ -50,19 +50,30 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-java</artifactId>
+            <artifactId>codenvy-ext-extensions</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-runner</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
 
+        <!-- Server libraries -->
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.codenvy.platform-api</groupId>
-            <artifactId>codenvy-api-runner</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model</artifactId>
+            <version>${maven-model.version}</version>
         </dependency>
 
         <!-- Testing libraries -->
@@ -98,10 +109,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.easytesting</groupId>
-            <artifactId>fest-assert</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${ch.qos.logback.version}</version>
             <scope>test</scope>
-            <version>${org.easytesting.fest-assert.version}</version>
         </dependency>
     </dependencies>
 
@@ -112,21 +123,6 @@
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>1.8</version>
                 <executions>
-                    <execution>
-                        <id>add-resource</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>add-resource</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>${dto-generator-out-directory}/META-INF</directory>
-                                    <targetPath>META-INF</targetPath>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>add-source</id>
                         <phase>process-sources</phase>
@@ -172,7 +168,7 @@
                         <package>com.codenvy.api.core.rest.shared.dto</package>
                     </dtoPackages>
                     <outputDirectory>${dto-generator-out-directory}</outputDirectory>
-                    <genClassName>com.codenvy.ide.extension.runner.dto.DtoClientImpls</genClassName>
+                    <genClassName>com.codenvy.ide.ext.extensions.client.dto.DtoClientImpls</genClassName>
                     <impl>client</impl>
                 </configuration>
                 <dependencies>
@@ -198,7 +194,7 @@
                 <directory>src/main/resources</directory>
             </resource>
             <resource>
-                <directory>${project.build.directory}/generated-sources/dto/</directory>
+                <directory>${dto-generator-out-directory}</directory>
             </resource>
         </resources>
         <sourceDirectory>src/main/java</sourceDirectory>
@@ -213,5 +209,4 @@
         <testSourceDirectory>src/test/java</testSourceDirectory>
         <outputDirectory>target/classes</outputDirectory>
     </build>
-
 </project>
