@@ -32,7 +32,11 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-/** @author <a href="mailto:evoevodin@codenvy.com">Eugene Voevodin</a> */
+/**
+ * Used with @link VFSPermissionsFilter to check user permissions
+ *
+ * @author <a href="mailto:evoevodin@codenvy.com">Eugene Voevodin</a>
+ */
 public class VFSPermissionsChecker {
 
     /**
