@@ -415,7 +415,7 @@ public class ViewportModel
         LineInfo newTop = lineFinder.findLine(getTop(), topLineNumber);
 
 //    int targetBottomLineNumber = newTop.number() + numLinesToShow - 1;
-        int targetBottomLineNumber = buffer.getLastVisibleLineNumberFromTop(topLineNumber);
+        int targetBottomLineNumber = buffer.getLastVisibleLineNumberFromTop(topLineNumber) + 1;
 
         LineInfo newBottom =
                 lineFinder.findLine(getBottom(),
