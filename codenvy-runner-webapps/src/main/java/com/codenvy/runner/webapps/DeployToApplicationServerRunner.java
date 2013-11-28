@@ -18,6 +18,7 @@
 package com.codenvy.runner.webapps;
 
 import com.codenvy.api.core.util.ComponentLoader;
+import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.*;
 import com.codenvy.api.runner.internal.dto.RunRequest;
@@ -70,7 +71,8 @@ public class DeployToApplicationServerRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
-                return new ApplicationServerRunnerConfiguration(DEFAULT_SERVER_NAME, portService.acquire(),
+                return new ApplicationServerRunnerConfiguration(DEFAULT_SERVER_NAME,
+                                                                CustomPortService.getInstance().acquire(),
                                                                 request.getMemorySize(), 0, false,
                                                                 DEBUG_TRANSPORT_PROTOCOL, request);
             }
@@ -97,10 +99,10 @@ public class DeployToApplicationServerRunner extends Runner {
         final StopCallback stopCallback = new StopCallback() {
             @Override
             public void stopped() {
-                portService.release(webAppsRunnerCfg.getPort());
+                CustomPortService.getInstance().release(webAppsRunnerCfg.getPort());
                 final int debugPort = webAppsRunnerCfg.getDebugPort();
                 if (debugPort > 0) {
-                    portService.release(debugPort);
+                    CustomPortService.getInstance().release(debugPort);
                 }
                 IoUtil.deleteRecursive(appDir);
                 LOG.debug("stop {} at port {}, application {}",
@@ -113,10 +115,10 @@ public class DeployToApplicationServerRunner extends Runner {
         registerDisposer(process, new Disposer() {
             @Override
             public void dispose() {
-                portService.release(webAppsRunnerCfg.getPort());
+                CustomPortService.getInstance().release(webAppsRunnerCfg.getPort());
                 final int debugPort = webAppsRunnerCfg.getDebugPort();
                 if (debugPort > 0) {
-                    portService.release(debugPort);
+                    CustomPortService.getInstance().release(debugPort);
                 }
                 IoUtil.deleteRecursive(appDir);
                 LOG.debug("stop {} at port {}, application {}",

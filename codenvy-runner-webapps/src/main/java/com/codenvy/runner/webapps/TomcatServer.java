@@ -329,9 +329,9 @@ public class TomcatServer implements ApplicationServer {
             }
             ProcessUtil.kill(pid);
 
-//            portService.release(httpPort);
+//            CustomPortService.getInstance().release(httpPort);
 //            if (debugPort > 0) {
-//                portService.release(debugPort);
+//                CustomPortService.getInstance().release(debugPort);
 //            }
 
             stopCallback.stopped();
