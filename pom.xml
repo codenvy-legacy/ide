@@ -125,6 +125,7 @@
         <module>codenvy-builder-ant</module>
         <module>codenvy-runner-docker</module>
         <module>codenvy-runner-sdk</module>
+        <module>codenvy-runner-webapps</module>
         <module>codenvy-ext-builder</module>
         <module>codenvy-ext-runner</module>
         <module>codenvy-api-war</module>
