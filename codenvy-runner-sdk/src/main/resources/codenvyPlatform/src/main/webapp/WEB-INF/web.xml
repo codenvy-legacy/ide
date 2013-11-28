@@ -39,7 +39,7 @@
 
     <filter>
         <filter-name>LoginFilter</filter-name>
-        <filter-class>com.codenvy.ide.LoginFilter</filter-class>
+        <filter-class>com.codenvy.ide.server.LoginFilter</filter-class>
     </filter>
     <filter>
         <filter-name>SetIdeUserFilter</filter-name>

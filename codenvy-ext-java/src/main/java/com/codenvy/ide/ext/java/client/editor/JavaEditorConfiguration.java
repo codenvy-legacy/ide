@@ -39,6 +39,9 @@ import com.codenvy.ide.texteditor.api.parser.BasicTokenFactory;
 import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
 import com.codenvy.ide.texteditor.api.quickassist.QuickAssistProcessor;
+import com.codenvy.ide.texteditor.api.reconciler.Reconciler;
+import com.codenvy.ide.texteditor.api.reconciler.ReconcilerImpl;
+import com.codenvy.ide.util.executor.BasicIncrementalScheduler;
 import com.codenvy.ide.util.executor.UserActivityManager;
 
 
@@ -75,14 +78,14 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
         return parser;
     }
 
-//    /** {@inheritDoc} */
-//    @Override
-//    public Reconciler getReconciler(TextEditorPartView view) {
-//        BasicIncrementalScheduler scheduler = new BasicIncrementalScheduler(manager, 50, 100);
-//        ReconcilerImpl reconciler = new ReconcilerImpl(Document.DEFAULT_PARTITIONING, scheduler);
-//        reconciler.addReconcilingStrategy(Document.DEFAULT_CONTENT_TYPE, reconcilerStrategy);
-//        return reconciler;
-//    }
+    /** {@inheritDoc} */
+    @Override
+    public Reconciler getReconciler(TextEditorPartView view) {
+        BasicIncrementalScheduler scheduler = new BasicIncrementalScheduler(manager, 50, 100);
+        ReconcilerImpl reconciler = new ReconcilerImpl(Document.DEFAULT_PARTITIONING, scheduler);
+        reconciler.addReconcilingStrategy(Document.DEFAULT_CONTENT_TYPE, reconcilerStrategy);
+        return reconciler;
+    }
 
     private JavaCodeAssistProcessor getOrCreateCodeAssistProcessor() {
         if (codeAssistProcessor == null) {

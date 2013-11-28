@@ -23,6 +23,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -135,51 +136,6 @@ class Utils {
     }
 
     /**
-     * Add the provided module to the specified reactor pom.xml.
-     *
-     * @param path
-     *         pom.xml path
-     * @param moduleRelativePath
-     *         relative path of module to add
-     * @throws java.io.IOException
-     *         error occurred while reading or writing content of file
-     */
-    static void addModuleToReactorPom(Path path, String moduleRelativePath) throws IOException {
-        addModuleToReactorPom(path, moduleRelativePath, null);
-    }
-
-    /**
-     * Add the provided module to the specified reactor pom.xml. If <code>moduleAfter</code> isn't null - new module
-     * will be inserted before the <code>moduleAfter</code>.
-     *
-     * @param path
-     *         pom.xml path
-     * @param moduleRelativePath
-     *         relative path of module to add
-     * @param moduleAfter
-     *         relative path of module that should be after the inserted module
-     * @throws java.io.IOException
-     *         error occurred while reading or writing content of file
-     */
-    static void addModuleToReactorPom(Path path, String moduleRelativePath, String moduleAfter) throws IOException {
-        Model pom = readPom(path);
-        List<String> modulesList = pom.getModules();
-        if (moduleAfter == null) {
-            modulesList.add(moduleRelativePath);
-        } else {
-            int n = 0;
-            for (String module : modulesList) {
-                if (moduleAfter.equals(module)) {
-                    pom.getModules().add(n, moduleRelativePath);
-                    break;
-                }
-                n++;
-            }
-        }
-        writePom(pom, path);
-    }
-
-    /**
      * Add the specified module name as a dependency to the provided GWT module descriptor.
      *
      * @param path
@@ -231,11 +187,24 @@ class Utils {
         return filePath.replaceAll("/", ".");
     }
 
-    static Path detectPomXml(Path folder) throws IOException {
-        Finder finder = new Finder("pom.xml");
+    /**
+     * Detects and returns {@code Path} to file by name pattern.
+     *
+     * @param pattern
+     *         file name pattern
+     * @param folder
+     *         path to folder that contains project sources
+     * @return pom.xml path
+     * @throws java.io.IOException
+     *         if an I/O error is thrown while finding pom.xml
+     * @throws IllegalArgumentException
+     *         if pom.xml not found
+     */
+    static Path findFile(String pattern, Path folder) throws IOException {
+        Finder finder = new Finder(pattern);
         Files.walkFileTree(folder, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, finder);
         if (finder.getFirstMatchedFile() == null) {
-            throw new IllegalArgumentException("Pom.xml not found.");
+            throw new IllegalArgumentException("File not found.");
         }
         return finder.getFirstMatchedFile();
     }
@@ -257,6 +226,25 @@ class Utils {
             throw new IOException("Unable to get Codenvy Platform binary distribution.");
         }
         return codenvyPlatformDistributionUrl;
+    }
+
+    static String getMavenExecCommand() {
+        final File mvnHome = getMavenHome();
+        if (mvnHome != null) {
+            final String mvn = "bin" + File.separatorChar + "mvn";
+            return new File(mvnHome, mvn).getAbsolutePath(); // use Maven home directory if it's set
+        } else {
+            return "mvn"; // otherwise 'mvn' should be in PATH variable
+        }
+    }
+
+    static File getMavenHome() {
+        final String m2HomeEnv = System.getenv("M2_HOME");
+        if (m2HomeEnv == null) {
+            return null;
+        }
+        final File m2Home = new File(m2HomeEnv);
+        return m2Home.exists() ? m2Home : null;
     }
 
     /** A {@code FileVisitor} that finds first file that match the specified pattern. */

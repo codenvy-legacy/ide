@@ -69,7 +69,7 @@ public class CreateJavaProjectPage extends AbstractTemplatePage {
         JsonArray<Property> properties =
                 createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
                             new Property(PROPERTY_MIXIN_NATURES, createArray(JAVA_APPLICATION_PROJECT_TYPE)),
-                            new Property(PROPERTY_SOURCE_FOLDERS, createArray("src/main/java", "src/test/java")));
+                            new Property(PROPERTY_SOURCE_FOLDERS, createArray("src")));
         final String projectName = wizardContext.getData(PROJECT_NAME);
         try {
             service.createJavaProject(projectName, properties, new AsyncRequestCallback<Void>() {

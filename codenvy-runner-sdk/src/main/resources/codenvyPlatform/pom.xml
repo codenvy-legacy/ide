@@ -31,6 +31,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
 
+        <!-- Codenvy -->
+        <com.codenvy.platform-api.version>0.4.0-SNAPSHOT</com.codenvy.platform-api.version>
+
         <!-- eXo -->
         <org.exoplatform.ide.version>2.8.1</org.exoplatform.ide.version>
 
@@ -53,6 +56,11 @@
         <reflections.version>0.9.9-RC1</reflections.version>
     </properties>
 
+    <!--
+        IMPORTANT!
+        Make sure that the same 'private' dependencies is present in
+        codenvy-sdk-private-dependencies/pom.xml
+    -->
     <dependencies>
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -100,17 +108,24 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>${org.slf4j.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
             <version>${project.version}</version>
         </dependency>
 
+        <!-- Server-side VFS -->
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs-fs</artifactId>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-vfs</artifactId>
             <scope>runtime</scope>
-            <version>${org.exoplatform.ide.version}</version>
+            <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -120,19 +135,20 @@
                     <groupId>ch.qos.logback</groupId>
                     <artifactId>logback-classic</artifactId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>httpclient</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.ide</groupId>
+                    <artifactId>exo-ide-server</artifactId>
+                </exclusion>
             </exclusions>
             <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-logreader</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-client</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <!-- Extensions -->
@@ -153,12 +169,22 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-maven</artifactId>
+            <artifactId>codenvy-ext-ssh</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-ssh</artifactId>
+            <artifactId>codenvy-ext-builder</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-ant</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-maven</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -183,14 +209,9 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
             <resource>
-                <directory>src/main/java</directory>
-            </resource>
-            <resource>
                 <directory>src/main/resources</directory>
-                <filtering>true</filtering>
             </resource>
         </resources>
 
@@ -242,14 +263,8 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.4.3</version>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
-            </plugin>
+
+            <!-- GWT Maven Plugin -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
@@ -258,20 +273,38 @@
                     <execution>
                         <configuration>
                             <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
+                            <modules>
+                                <module>com.codenvy.ide.IDEPlatform</module>
+                                <module>com.codenvy.ide.ext.java.JavaParserWorker</module>
+                            </modules>
+                            <logLevel>INFO</logLevel>
                         </configuration>
                         <goals>
                             <goal>compile</goal>
-                            <goal>test</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <module>com.codenvy.ide.IDEPlatform</module>
-                    <logLevel>INFO</logLevel>
-                    <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
-                </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unwar-ide</id>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <tasks>
+                                <move todir="${project.build.directory}/${project.artifactId}-${project.version}/_app/javaParserWorker">
+                                   <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/javaParserWorker" />
+                                </move>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -284,10 +317,6 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
-                    <excludes>
-                        <exclude>**/ExtensionManager.java</exclude>
-                        <exclude>**/IDEInjector.java</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -312,7 +341,7 @@
         </plugins>
     </build>
     <!--
-    This profile is required for launching Codenvy extensions in 'codenvy-ext-extensions-runtime' module.
+    This profile is required for launching Codenvy extensions in 'codenvy-ext-extensions' module.
     See com.codenvy.ide.ext.extruntime.server.codeserver.GWTMavenCodeServer.fixMGWT332Bug() method.
     It's a recommended (https://groups.google.com/d/msg/codehaus-mojo-gwt-maven-plugin-users/zvJ0IlGN7Fw/RbyteSEKXtoJ)
     workaround of a known bug of Maven GWT Plugin (https://jira.codehaus.org/browse/MGWT-332).
