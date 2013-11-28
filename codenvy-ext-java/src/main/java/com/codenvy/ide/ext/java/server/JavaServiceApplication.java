@@ -31,9 +31,11 @@ public class JavaServiceApplication extends Application {
 
 
     public JavaServiceApplication() {
-        classes = new HashSet<Class<?>>(1);
+        classes = new HashSet<Class<?>>(3);
 
         classes.add(RestCodeAssistantJava.class);
+        classes.add(CreateMavenProjectService.class);
+        classes.add(CreateAntProjectService.class);
     }
 
     /** @see javax.ws.rs.core.Application#getClasses() */

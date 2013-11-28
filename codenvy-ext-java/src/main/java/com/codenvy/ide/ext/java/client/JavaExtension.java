@@ -21,7 +21,9 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
+import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.ext.java.client.codeassistant.ContentAssistHistory;
 import com.codenvy.ide.ext.java.client.core.JavaCore;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
@@ -29,6 +31,11 @@ import com.codenvy.ide.ext.java.client.internal.codeassist.impl.AssistOptions;
 import com.codenvy.ide.ext.java.client.internal.compiler.impl.CompilerOptions;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectModelProvider;
+import com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntJavaProjectPage;
+import com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntSpringProjectPage;
+import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenJavaProjectPage;
+import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenSpringProjectPage;
+import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenWarProjectPage;
 import com.codenvy.ide.ext.java.client.templates.*;
 import com.codenvy.ide.ext.java.client.wizard.*;
 import com.codenvy.ide.json.JsonCollections;
@@ -36,9 +43,13 @@ import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.rest.MimeType;
 import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.HashMap;
+
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
+import static com.codenvy.ide.json.JsonCollections.createArray;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -46,9 +57,20 @@ import java.util.HashMap;
  */
 @Extension(title = "Java Support : syntax highlighting and autocomplete.", version = "3.0.0")
 public class JavaExtension {
-    private static final String JAVA_PERSPECTIVE                  = "Java";
-    public static final  String JAVA_APPLICATION_PROJECT_TYPE     = "Jar";
-    public static final  String JAVA_WEB_APPLICATION_PROJECT_TYPE = "War";
+    private static final String JAVA_PERSPECTIVE                   = "Java";
+    public static final  String JAVA_APPLICATION_PROJECT_TYPE      = "Jar";
+    public static final  String JAVA_WEB_APPLICATION_PROJECT_TYPE  = "War";
+
+    public static final String PROJECT_BUILD_GROUP_MAIN_MENU       = "ProjectBuildGroup";
+    /** Channel for the messages containing status of the Maven build job. */
+    public static final String BUILD_STATUS_CHANNEL                = "builder:buildStatus:";
+    public static final String SPRING_APPLICATION_PROJECT_TYPE     = "Spring";
+    public static final String WAR_PROJECT_ID                      = "War";
+    public static final String SPRING_PROJECT_ID                   = "Spring";
+    public static final String JAR_PROJECT_ID                      = "Jar";
+
+    public static final String ANT_SPRING_PROJECT_ID               = "Ant_Spring";
+    public static final String ANT_JAR_PROJECT_ID                  = "Ant_Jar";
 
     private static JavaExtension instance;
 
@@ -74,7 +96,14 @@ public class JavaExtension {
                          NewEnumProvider newEnumHandler,
                          NewAnnotationProvider newAnnotationHandler,
                          NewPackageProvider newPackage,
-                         ProjectTypeAgent projectTypeAgent) {
+                         ProjectTypeAgent projectTypeAgent,
+                         TemplateAgent templateAgent,
+                         Provider<CreateMavenJavaProjectPage> createMavenJavaProjectPage,
+                         Provider<CreateMavenWarProjectPage> createMavenWarProjectPage,
+                         Provider<CreateMavenSpringProjectPage> createMavenSpringProjectPage,
+                         Provider<CreateAntJavaProjectPage> createAntJavaProjectPage,
+                         Provider<CreateAntSpringProjectPage> createAntSpringProjectPage
+        ) {
 
         this();
         FileType javaFile = new FileType(JavaClientBundle.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
@@ -83,18 +112,65 @@ public class JavaExtension {
         resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModelProvider(eventBus));
         JavaClientBundle.INSTANCE.css().ensureInjected();
 
-        projectTypeAgent.register(JavaProject.PRIMARY_NATURE, "Java application", JavaClientBundle.INSTANCE.newJavaProject(),
-                                  JavaProject.PRIMARY_NATURE, JsonCollections.<String>createArray(JAVA_APPLICATION_PROJECT_TYPE));
-        projectTypeAgent.register(JAVA_WEB_APPLICATION_PROJECT_TYPE, "Java web application",
+        projectTypeAgent.register(JavaProject.PRIMARY_NATURE,
+                                  "Java application",
                                   JavaClientBundle.INSTANCE.newJavaProject(),
-                                  JavaProject.PRIMARY_NATURE,
-                                  JsonCollections.<String>createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE));
+                                  PRIMARY_NATURE,
+                                  createArray(JAVA_APPLICATION_PROJECT_TYPE));
+
+        projectTypeAgent.register(JAVA_WEB_APPLICATION_PROJECT_TYPE,
+                                  "Java web application",
+                                  JavaClientBundle.INSTANCE.newJavaProject(),
+                                  PRIMARY_NATURE,
+                                  createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE));
+
+        projectTypeAgent.register(SPRING_APPLICATION_PROJECT_TYPE,
+                                  "Spring application",
+                                  JavaClientBundle.INSTANCE.newJavaProject(),
+                                  PRIMARY_NATURE,
+                                  createArray(SPRING_APPLICATION_PROJECT_TYPE));
 
         newResourceAgent.register(newClassHandler);
         newResourceAgent.register(newInterfaceHandler);
         newResourceAgent.register(newEnumHandler);
         newResourceAgent.register(newAnnotationHandler);
         newResourceAgent.register(newPackage);
+
+        templateAgent.register(WAR_PROJECT_ID,
+                               "War project",
+                               null,
+                               PRIMARY_NATURE,
+                               createArray(JAVA_WEB_APPLICATION_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenWarProjectPage));
+        templateAgent.register(JAR_PROJECT_ID,
+                               "Java project",
+                               JavaClientBundle.INSTANCE.javaProject(),
+                               PRIMARY_NATURE,
+                               createArray(JAVA_APPLICATION_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenJavaProjectPage));
+        templateAgent.register(SPRING_PROJECT_ID,
+                               "Spring project",
+                               JavaClientBundle.INSTANCE.javaProject(),
+                               PRIMARY_NATURE,
+                               createArray(SPRING_APPLICATION_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createMavenSpringProjectPage));
+
+        templateAgent.register(ANT_JAR_PROJECT_ID,
+                               "Ant Java project",
+                               JavaClientBundle.INSTANCE.javaProject(),
+                               PRIMARY_NATURE,
+                               createArray(JAVA_APPLICATION_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createAntJavaProjectPage));
+        templateAgent.register(ANT_SPRING_PROJECT_ID,
+                               "Ant Spring project",
+                               JavaClientBundle.INSTANCE.javaProject(),
+                               PRIMARY_NATURE,
+                               createArray(SPRING_APPLICATION_PROJECT_TYPE),
+                               JsonCollections.<Provider<? extends AbstractTemplatePage>>createArray(createAntSpringProjectPage));
+
+
+
+
     }
 
     /** For test use only. */
