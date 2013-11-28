@@ -66,6 +66,11 @@
             <version>${org.exoplatform.kernel.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
             <version>${gwt.version}</version>
@@ -76,6 +81,12 @@
             <artifactId>codenvy-gwtframework-commons</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -93,12 +104,6 @@
             <groupId>org.everrest</groupId>
             <artifactId>everrest-test</artifactId>
             <version>${everrest.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

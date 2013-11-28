@@ -167,30 +167,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.openid4java</groupId>
-            <artifactId>openid4java-consumer</artifactId>
-            <version>${openid4java.version}</version>
-            <type>pom</type>
-            <exclusions>
-                <exclusion>
-                    <artifactId>xercesImpl</artifactId>
-                    <groupId>xerces</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>nekohtml</artifactId>
-                    <groupId>net.sourceforge.nekohtml</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>guice</artifactId>
-                    <groupId>com.google.code.guice</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>httpclient</artifactId>
-                    <groupId>org.apache.httpcomponents</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
@@ -220,6 +196,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
@@ -235,12 +217,6 @@
             <groupId>org.everrest</groupId>
             <artifactId>everrest-test</artifactId>
             <version>${everrest.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
