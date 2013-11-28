@@ -48,6 +48,7 @@ import java.util.concurrent.*;
  */
 public class SDKRunner extends Runner {
     private static final Logger LOG                       = LoggerFactory.getLogger(SDKRunner.class);
+    /** String in JSON format to register builder service. */
     private static final String BUILDER_REGISTRATION_JSON =
             "[{\"builderServiceLocation\":{\"url\":\"http://localhost:${PORT}/api/internal/builder\"}}]";
     private static final String SERVER_XML                =

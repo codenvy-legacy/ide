@@ -25,7 +25,6 @@ import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.Property;
-import com.codenvy.vfs.impl.fs.LocalFSMountStrategy;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -45,6 +44,8 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
+ * Service for creating Codenvy extension projects.
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: CreateProjectService.java Jul 3, 2013 3:21:23 PM azatsarynnyy $
  */
@@ -53,8 +54,6 @@ public class CreateProjectService {
     private static final Log LOG = ExoLogger.getLogger(CreateProjectService.class);
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
-    @Inject
-    private LocalFSMountStrategy      fsMountStrategy;
 
     /**
      * Create empty Codenvy extension project.
