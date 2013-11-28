@@ -13,3 +13,4 @@ function addMenuAddition(html) {
 
  var htmlLogout = "<span id=\"logoutButton\" onClick=\"window.location = '/ide/_app/logout.jsp';\">Logout</span>";
  addMenuAddition(htmlLogout);
+ 

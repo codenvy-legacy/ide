@@ -311,42 +311,5 @@
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <id>devmode</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>Prepare IDE WAR dev-mode</id>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <tasks>
-                                        <unwar dest="${project.build.directory}/packager-conf/war/ide" src="${project.build.directory}/packager-conf/war/codenvy-application-war-${project.version}.war" />
-                                        <move todir="${project.build.directory}/packager-conf/war/ide/">
-                                            <fileset dir="${project.build.directory}/packager-conf/war/ide/_app/" />
-                                        </move>
-                                        <copy file="${project.basedir}/src/main/resources/devmode/web.xml" overwrite="true" tofile="${project.build.directory}/packager-conf/war/ide/WEB-INF/web.xml" />
-                                        <copy file="${project.basedir}/src/main/resources/devmode/DevMode.html" overwrite="true" tofile="${project.build.directory}/packager-conf/war/ide/DevMode.html" />
-                                        <copy file="${project.basedir}/src/main/resources/devmode/login.html" overwrite="true" tofile="${project.build.directory}/packager-conf/war/ide/login.html" />
-                                        <copy file="${project.basedir}/src/main/resources/devmode/logout.jsp" overwrite="true" tofile="${project.build.directory}/packager-conf/war/ide/logout.jsp" />
-                                        <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
-                                            <fileset dir="${project.build.directory}/packager-conf/war/ide" />
-                                        </war>
-                                    </tasks>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
     </profiles>
 </project>
