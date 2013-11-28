@@ -28,7 +28,7 @@ import com.google.inject.Singleton;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_PROJECT;
 
 /**
- * Maven builder extension entry point.
+ * Builder extension entry point.
  *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuilderExtension.java Feb 21, 2012 1:53:48 PM azatsarynnyy $
