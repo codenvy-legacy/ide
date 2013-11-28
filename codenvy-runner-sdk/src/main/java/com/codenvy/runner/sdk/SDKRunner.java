@@ -273,7 +273,7 @@ public class SDKRunner extends Runner {
         final File              workDir;
         int pid = -1;
         TomcatLogger logger;
-        private Process process;
+        Process process;
 
         TomcatProcess(int httpPort, List<File> logFiles, int debugPort, File startUpScriptFile, File workDir) {
             this.httpPort = httpPort;
