@@ -142,12 +142,12 @@
         <module>codenvy-ext-aws</module>
         <module>codenvy-ext-jenkins</module-->
         <module>codenvy-ext-git</module>
-    	<module>codenvy-ext-github</module>
         <module>codenvy-ext-ssh</module>
+        <module>codenvy-ext-github</module>
         <module>codenvy-ext-extensions</module>
-        <module>codenvy-ext-tutorials</module>
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
+        <module>codenvy-ext-tutorials</module>
         <module>codenvy-sdk-tutorials/action-api</module>
         <module>codenvy-sdk-tutorials/dto</module>
         <module>codenvy-sdk-tutorials/wizard-api</module>
