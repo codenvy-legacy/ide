@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.extruntime.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.extruntime.dto.client.DtoClientImpls;
+//import com.codenvy.ide.ext.extruntime.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.rest.Unmarshallable;
@@ -31,7 +31,7 @@ import com.google.gwt.user.client.Window;
  * @version $Id: ApplicationInstanceUnmarshallerWS.java Jul 31, 2013 5:13:18 PM azatsarynnyy $
  */
 public class ApplicationInstanceUnmarshallerWS implements Unmarshallable<ApplicationInstance> {
-    private DtoClientImpls.ApplicationInstanceImpl applicationInstance;
+//    private DtoClientImpls.ApplicationInstanceImpl applicationInstance;
 
     /** {@inheritDoc} */
     @Override
@@ -42,26 +42,27 @@ public class ApplicationInstanceUnmarshallerWS implements Unmarshallable<Applica
             return;
         }
 
-        applicationInstance = DtoClientImpls.ApplicationInstanceImpl.deserialize(text);
-
-        final String host = applicationInstance.getHost();
-        // If server doesn't provide host name where app was launched
-        // then assume that it was launched on the same host.
-        if (host == null || host.isEmpty()) {
-            applicationInstance.setHost(Window.Location.getHostName());
-        }
-
-        // If server doesn't provide host name where GWT code server was launched
-        // then assume that it was launched on the same host.
-        final String codeServerHost = applicationInstance.getCodeServerHost();
-        if (codeServerHost == null || codeServerHost.isEmpty()) {
-            applicationInstance.setCodeServerHost(Window.Location.getHostName());
-        }
+//        applicationInstance = DtoClientImpls.ApplicationInstanceImpl.deserialize(text);
+//
+//        final String host = applicationInstance.getHost();
+//        // If server doesn't provide host name where app was launched
+//        // then assume that it was launched on the same host.
+//        if (host == null || host.isEmpty()) {
+//            applicationInstance.setHost(Window.Location.getHostName());
+//        }
+//
+//        // If server doesn't provide host name where GWT code server was launched
+//        // then assume that it was launched on the same host.
+//        final String codeServerHost = applicationInstance.getCodeServerHost();
+//        if (codeServerHost == null || codeServerHost.isEmpty()) {
+//            applicationInstance.setCodeServerHost(Window.Location.getHostName());
+//        }
     }
 
     /** {@inheritDoc} */
     @Override
     public ApplicationInstance getPayload() {
-        return applicationInstance;
+//        return applicationInstance;
+        return null;
     }
 }

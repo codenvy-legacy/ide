@@ -26,7 +26,7 @@
         <init-params>
             <value-param>
                 <name>build-server-base-url</name>
-                <value>http://localhost:8080/builder</value>
+                <value>http://localhost:8080/api/builder</value>
             </value-param>
         </init-params>
     </component>

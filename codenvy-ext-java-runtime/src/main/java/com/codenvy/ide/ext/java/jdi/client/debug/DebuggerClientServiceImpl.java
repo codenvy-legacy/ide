@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.shared.*;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -45,6 +45,7 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
 public class DebuggerClientServiceImpl implements DebuggerClientService {
     private static String BASE_URL;
     private        Loader loader;
+    private DtoFactory dtoFactory;
 
     /**
      * Create client service.
@@ -53,14 +54,15 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
      * @param loader
      */
     @Inject
-    protected DebuggerClientServiceImpl(@Named("restContext") String restContext, Loader loader) {
+    protected DebuggerClientServiceImpl(@Named("restContext") String restContext, Loader loader, DtoFactory dtoFactory) {
+        this.dtoFactory = dtoFactory;
         BASE_URL = restContext + '/' + Utils.getWorkspaceName() + "/java/debug";
         this.loader = loader;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void connect(@NotNull String host, int port, @NotNull AsyncRequestCallback<DebuggerInfo> callback) throws RequestException {
+    public void connect(@NotNull String host, int port, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String params = "host=" + host + "&port=" + port;
         AsyncRequest.build(GET, BASE_URL + "/connect?" + params).loader(loader).send(callback);
     }
@@ -74,39 +76,38 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void addBreakPoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<BreakPoint> callback)
+    public void addBreakPoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<String> callback)
             throws RequestException {
-        DtoClientImpls.BreakPointImpl jso = (DtoClientImpls.BreakPointImpl)breakPoint;
-        String json = DtoClientImpls.BreakPointImpl.serialize(jso);
+        String json = dtoFactory.toJson(breakPoint);
         AsyncRequest.build(POST, BASE_URL + "/breakpoints/add/" + id).data(json)
                     .header("Content-Type", "application/json").loader(loader).send(callback);
     }
 
+
     /** {@inheritDoc} */
     @Override
-    public void deleteBreakPoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<BreakPoint> callback)
+    public void deleteBreakPoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<Void> callback)
             throws RequestException {
-        DtoClientImpls.BreakPointImpl jso = (DtoClientImpls.BreakPointImpl)breakPoint;
-        String json = DtoClientImpls.BreakPointImpl.serialize(jso);
+        String json = dtoFactory.toJson(breakPoint);
         AsyncRequest.build(POST, BASE_URL + "/breakpoints/delete/" + id).data(json)
                     .header("Content-Type", "application/json").loader(new EmptyLoader()).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getBreakPoints(@NotNull String id, @NotNull AsyncRequestCallback<BreakPointList> callback) throws RequestException {
+    public void getBreakPoints(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         AsyncRequest.build(GET, BASE_URL + "/breakpoints/" + id).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void checkEvents(@NotNull String id, @NotNull AsyncRequestCallback<DebuggerEventList> callback) throws RequestException {
+    public void checkEvents(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         AsyncRequest.build(GET, BASE_URL + "/events/" + id).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void dump(@NotNull String id, @NotNull AsyncRequestCallback<StackFrameDump> callback) throws RequestException {
+    public void dump(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         AsyncRequest.build(GET, BASE_URL + "/dump/" + id).loader(loader).send(callback);
     }
 
@@ -118,9 +119,8 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void getValue(@NotNull String id, @NotNull Variable var, @NotNull AsyncRequestCallback<Value> callback) throws RequestException {
-        DtoClientImpls.VariablePathImpl jso = (DtoClientImpls.VariablePathImpl)var.getVariablePath();
-        String json = DtoClientImpls.VariablePathImpl.serialize(jso);
+    public void getValue(@NotNull String id, @NotNull Variable var, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+        String json = dtoFactory.toJson(var);
         AsyncRequest.build(POST, BASE_URL + "/value/get/" + id).data(json)
                     .header("Content-Type", "application/json").loader(loader).send(callback);
     }
@@ -129,8 +129,7 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
     @Override
     public void setValue(@NotNull String id, @NotNull UpdateVariableRequest request, @NotNull AsyncRequestCallback<String> callback)
             throws RequestException {
-        DtoClientImpls.UpdateVariableRequestImpl jso = (DtoClientImpls.UpdateVariableRequestImpl)request;
-        String json = DtoClientImpls.UpdateVariableRequestImpl.serialize(jso);
+        String json = dtoFactory.toJson(request);
         AsyncRequest.build(POST, BASE_URL + "/value/set/" + id).data(json)
                     .header(CONTENT_TYPE, APPLICATION_JSON).loader(loader).send(callback);
     }

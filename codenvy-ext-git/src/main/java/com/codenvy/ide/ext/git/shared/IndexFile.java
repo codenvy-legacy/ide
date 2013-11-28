@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Git file in index. Used for work with index (remove, reset).
@@ -28,8 +28,16 @@ import com.codenvy.ide.dto.DTO;
 @DTO
 public interface IndexFile {
     /** @return the indexed if <code>true</code> file is in index */
-    boolean indexed();
+    boolean isIndexed();
+    
+    void setIndexed(boolean indexed);
+    
+    IndexFile withIndexed(boolean indexed);
 
     /** @return file path */
     String getPath();
+    
+    void setPath(String path);
+    
+    IndexFile withPath(String path);
 }

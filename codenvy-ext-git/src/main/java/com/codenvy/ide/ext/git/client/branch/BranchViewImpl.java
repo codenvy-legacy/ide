@@ -111,7 +111,7 @@ public class BranchViewImpl extends DialogBox implements BranchView {
                 sb.appendEscaped(itemData.getDisplayName());
                 sb.appendHtmlConstant("</td>");
 
-                if (itemData.active()) {
+                if (itemData.isActive()) {
                     ImageResource icon = res.currentBranch();
                     sb.appendHtmlConstant("<td><img src=\"" + icon.getSafeUri().asString() + "\"></td>");
                 }

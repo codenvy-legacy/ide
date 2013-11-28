@@ -27,11 +27,10 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.debug.Breakpoint;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
-import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.ui.Button;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.tree.Tree;
@@ -50,6 +49,8 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import java.util.List;
 
 /**
  * The implementation of {@link DebuggerView}.
@@ -93,6 +94,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
     JavaRuntimeResources            res;
     @UiField(provided = true)
     Resources                       coreRes;
+    private DtoFactory                dtoFactory;
     private TreeNodeElement<Variable> selectedVariable;
 
     /**
@@ -107,12 +109,14 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
     @Inject
     protected DebuggerViewImpl(PartStackUIResources partStackUIResources, JavaRuntimeResources resources,
                                JavaRuntimeLocalizationConstant locale, Resources coreRes,
-                               VariableTreeNodeRenderer.Resources rendererResources) {
+                               VariableTreeNodeRenderer.Resources rendererResources,
+                               DtoFactory dtoFactory) {
         super(partStackUIResources);
 
         this.locale = locale;
         this.res = resources;
         this.coreRes = coreRes;
+        this.dtoFactory = dtoFactory;
 
         container.add(ourUiBinder.createAndBindUi(this));
 
@@ -213,19 +217,19 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     /** {@inheritDoc} */
     @Override
-    public void setVariables(@NotNull JsonArray<Variable> variables) {
+    public void setVariables(@NotNull List<Variable> variables) {
         Variable root = this.variables.getModel().getRoot();
         if (root == null) {
-            root = DtoClientImpls.VariableImpl.make();
+            root = dtoFactory.createDto(Variable.class);
             this.variables.getModel().setRoot(root);
         }
-        ((DtoClientImpls.VariableImpl)root).setVariables(variables);
+        root.setVariables(variables);
         this.variables.renderTree(0);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setBreakPoints(@NotNull JsonArray<Breakpoint> breakPoints) {
+    public void setBreakPoints(@NotNull List<Breakpoint> breakPoints) {
         this.breakPoints.render(breakPoints);
     }
 
@@ -292,9 +296,9 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     /** {@inheritDoc} */
     @Override
-    public void setVariablesIntoSelectedVariable(@NotNull JsonArray<Variable> variables) {
+    public void setVariablesIntoSelectedVariable(@NotNull List<Variable> variables) {
         Variable rootVariable = selectedVariable.getData();
-        ((DtoClientImpls.VariableImpl)rootVariable).setVariables(variables);
+        rootVariable.setVariables(variables);
     }
 
     @UiHandler("btnResume")

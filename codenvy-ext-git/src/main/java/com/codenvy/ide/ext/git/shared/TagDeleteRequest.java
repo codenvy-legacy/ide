@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Request to delete named tag.
@@ -29,4 +29,6 @@ import com.codenvy.ide.dto.DTO;
 public interface TagDeleteRequest extends GitRequest {
     /** @return name of tag to delete */
     String getName();
+    
+    void setName(String name);
 }

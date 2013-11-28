@@ -18,7 +18,8 @@
     from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -31,7 +32,7 @@
     <name>Codenvy SDK :: Runtime Environment</name>
 
     <properties>
-        <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
+        <dto-generator-out-directory>${project.build.directory}/generated-sources/dto/</dto-generator-out-directory>
     </properties>
 
     <dependencies>
@@ -58,13 +59,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-java-runtime</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.codenvy.platform-api</groupId>
-            <artifactId>codenvy-api-core</artifactId>
+            <artifactId>codenvy-api-runner</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
 
@@ -80,14 +76,14 @@
             <version>1</version>
         </dependency>
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-vfs</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs-fs</artifactId>
-            <version>${org.exoplatform.ide.version}</version>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-vfs-fs</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -138,213 +134,70 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>compile-dto-interfaces</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <configuration>
-                            <source>${maven.compiler.source}</source>
-                            <target>${maven.compiler.target}</target>
-                            <includes>
-                                <include>**/shared/*</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <executions>
-                    <execution>
-                        <id>dto-server</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
-                            <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.ext.extruntime.shared,com.codenvy.ide.extension.maven.shared</argument>
-                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/ext/extruntime/dto/server/DtoServerImpls.java</argument>
-                                <argument>--impl=server</argument>
-                                <argument>--package_base=${generated.sources.directory}/</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>dto-client</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
-                            <arguments>
-                                <argument>--dto_packages=com.codenvy.ide.ext.extruntime.shared</argument>
-                                <argument>--gen_file_name=${generated.sources.directory}/com/codenvy/ide/ext/extruntime/dto/client/DtoClientImpls.java</argument>
-                                <argument>--impl=client</argument>
-                                <argument>--package_base=${generated.sources.directory}/</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>1.8</version>
                 <executions>
                     <execution>
-                        <id>add-generated-dto-source</id>
-                        <phase>generate-sources</phase>
+                        <id>add-source</id>
+                        <phase>process-sources</phase>
                         <goals>
                             <goal>add-source</goal>
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${generated.sources.directory}</source>
+                                <source>${dto-generator-out-directory}</source>
                             </sources>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
+                <artifactId>maven-compiler-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>prepare-clean-tomcat</id>
-                        <phase>process-resources</phase>
+                        <id>pre-compile</id>
+                        <phase>generate-sources</phase>
                         <goals>
-                            <goal>copy</goal>
+                            <goal>compile</goal>
                         </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.apache.tomcat</groupId>
-                                    <artifactId>tomcat</artifactId>
-                                    <type>zip</type>
-                                    <version>${tomcat.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                                    <destFileName>tomcat.zip</destFileName>
-                                </artifactItem>
-
-                                <artifactItem>
-                                    <groupId>org.exoplatform.ide</groupId>
-                                    <artifactId>exo-ide-codeassistant-storage</artifactId>
-                                    <type>war</type>
-                                    <version>${org.exoplatform.ide.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps</outputDirectory>
-                                    <destFileName>codeassistant-storage.war</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.exoplatform.ide</groupId>
-                                    <artifactId>exo-ide-maven</artifactId>
-                                    <type>war</type>
-                                    <version>${org.exoplatform.ide.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps</outputDirectory>
-                                    <destFileName>builder.war</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.codenvy.organization</groupId>
-                                    <artifactId>codenvy-organization-packaging-api-war</artifactId>
-                                    <type>war</type>
-                                    <version>${com.codenvy.organization.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/webapps</outputDirectory>
-                                    <destFileName>userdb.war</destFileName>
-                                </artifactItem>
-
-                                <artifactItem>
-                                    <groupId>org.slf4j</groupId>
-                                    <artifactId>slf4j-api</artifactId>
-                                    <version>${org.slf4j.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
-                                    <destFileName>slf4j-api.jar</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.slf4j</groupId>
-                                    <artifactId>jul-to-slf4j</artifactId>
-                                    <version>${org.slf4j.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
-                                    <destFileName>jul-to-slf4j.jar</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>ch.qos.logback</groupId>
-                                    <artifactId>logback-core</artifactId>
-                                    <version>${ch.qos.logback.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
-                                    <destFileName>logback-core.jar</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>ch.qos.logback</groupId>
-                                    <artifactId>logback-classic</artifactId>
-                                    <version>${ch.qos.logback.version}</version>
-                                    <outputDirectory>${project.build.directory}/classes/tomcat-resources/lib</outputDirectory>
-                                    <destFileName>logback-classic.jar</destFileName>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
+                <groupId>com.codenvy.platform-api</groupId>
+                <artifactId>codenvy-dto-maven-plugin</artifactId>
+                <version>${com.codenvy.platform-api.version}</version>
                 <executions>
                     <execution>
-                        <id>prepare-tomcat-bundle</id>
-                        <phase>prepare-package</phase>
+                        <phase>process-sources</phase>
                         <goals>
-                            <goal>run</goal>
+                            <goal>generate</goal>
                         </goals>
-                        <configuration>
-                            <tasks>
-                                <!-- Unzip Tomcat package -->
-                                <unzip src="${project.build.directory}/classes/tomcat.zip" dest="${project.build.directory}/classes">
-                                    <patternset>
-                                        <exclude name="**/ROOT/**" />
-                                        <exclude name="**/docs/**" />
-                                        <exclude name="**/examples/**" />
-                                        <exclude name="**/manager/**" />
-                                        <exclude name="**/host-manager/**" />
-                                    </patternset>
-                                </unzip>
-                                <move todir="${project.build.directory}/classes/tomcat-bundle">
-                                    <fileset dir="${project.build.directory}/classes/apache-tomcat-${tomcat.version}" />
-                                </move>
-                                <delete file="${project.build.directory}/classes/tomcat.zip" />
-
-                                <!-- Move additional libraries and WAR's -->
-                                <move todir="${project.build.directory}/classes/tomcat-bundle">
-                                    <fileset dir="${project.build.directory}/classes/tomcat-resources" />
-                                </move>
-
-                                <!-- Copy pre-configured sh-scripts and configuration files -->
-                                <copy todir="${project.build.directory}/classes/tomcat-bundle" overwrite="true">
-                                    <fileset dir="${project.build.directory}/classes/tomcat">
-                                        <exclude name="**/server.xml" />
-                                    </fileset>
-                                </copy>
-
-                                <!-- Zip prepared Tomcat binary distribution and remove temporary directory -->
-                                <zip basedir="${project.build.directory}/classes/tomcat-bundle" destfile="${project.build.directory}/classes/tomcat.zip" />
-                                <delete dir="${project.build.directory}/classes/tomcat-bundle" />
-
-                                <!-- Prepare Codenvy Platform sources -->
-                                <zip basedir="${project.build.directory}/classes/codenvyPlatform" destfile="${project.build.directory}/classes/CodenvyPlatform.zip" />
-                            </tasks>
-                        </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <dtoPackages>
+                        <package>com.codenvy.api.runner.dto</package>
+                        <package>com.codenvy.api.runner.internal.dto</package>
+                        <package>com.codenvy.api.core.rest.shared.dto</package>
+                    </dtoPackages>
+                    <outputDirectory>${dto-generator-out-directory}</outputDirectory>
+                    <genClassName>com.codenvy.ide.ext.extruntime.client.dto.DtoClientImpls</genClassName>
+                    <impl>client</impl>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.codenvy.platform-api</groupId>
+                        <artifactId>codenvy-api-runner</artifactId>
+                        <version>${com.codenvy.platform-api.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.codenvy.platform-api</groupId>
+                        <artifactId>codenvy-api-core</artifactId>
+                        <version>${com.codenvy.platform-api.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
 
@@ -356,7 +209,7 @@
                 <directory>src/main/resources</directory>
             </resource>
             <resource>
-                <directory>${generated.sources.directory}</directory>
+                <directory>${dto-generator-out-directory}</directory>
             </resource>
         </resources>
         <sourceDirectory>src/main/java</sourceDirectory>

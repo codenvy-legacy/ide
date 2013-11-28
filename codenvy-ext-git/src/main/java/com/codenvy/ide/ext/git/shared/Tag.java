@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Git tag description.
@@ -29,4 +29,6 @@ import com.codenvy.ide.dto.DTO;
 public interface Tag {
     /** @return tag name */
     String getName();
+    
+    Tag withName(String name);
 }

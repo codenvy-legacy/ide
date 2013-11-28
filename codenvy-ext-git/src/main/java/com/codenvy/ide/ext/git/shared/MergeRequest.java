@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Request to merge {@link #commit} with HEAD.
@@ -29,4 +29,8 @@ import com.codenvy.ide.dto.DTO;
 public interface MergeRequest extends GitRequest {
     /** @return commit to merge */
     String getCommit();
+    
+    void setCommit(String commit);
+    
+    MergeRequest withCommit(String commit);
 }

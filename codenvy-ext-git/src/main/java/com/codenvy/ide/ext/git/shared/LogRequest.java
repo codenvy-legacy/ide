@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Request to get commit logs.
@@ -27,7 +27,6 @@ import com.codenvy.ide.dto.DTO;
  */
 @DTO
 public interface LogRequest extends GitRequest {
-    // TODO
     // private List<String> fileFilter;
     // private boolean noRenames = true;
     // private int renameLimit;

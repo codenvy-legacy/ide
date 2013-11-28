@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
-import com.codenvy.ide.dto.DTO;
+import com.codenvy.dto.shared.DTO;
 
 /**
  * Request to commit current state of index in new commit.
@@ -29,10 +29,22 @@ import com.codenvy.ide.dto.DTO;
 public interface CommitRequest extends GitRequest {
     /** @return commit message */
     String getMessage();
+    
+    void setMessage(String message);
+    
+    CommitRequest withMessage(String message);
 
     /** @return <code>true</code> if need automatically stage files that have been modified and deleted */
-    boolean all();
+    boolean isAll();
+    
+    void setAll(boolean isAll);
+    
+    CommitRequest withAll(boolean all);
 
     /** @return <code>true</code> in case when commit is amending a previous commit. */
-    boolean amend();
+    boolean isAmend();
+    
+    void setAmend(boolean isAmend);
+    
+    CommitRequest withAmend(boolean amend);
 }

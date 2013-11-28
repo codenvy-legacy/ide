@@ -21,10 +21,11 @@ import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
-import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
+import com.codenvy.ide.ext.java.jdi.shared.UpdateVariableRequest;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -43,7 +44,8 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
-    private ChangeValueView                 view;
+    private ChangeValueView view;
+    private DtoFactory dtoFactory;
     /** Variable whose value need to change. */
     private Variable                        variable;
     /** Connected debugger information. */
@@ -64,9 +66,14 @@ public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
      * @param notificationManager
      */
     @Inject
-    protected ChangeValuePresenter(ChangeValueView view, DebuggerClientService service, EventBus eventBus,
-                                   JavaRuntimeLocalizationConstant constant, NotificationManager notificationManager) {
+    protected ChangeValuePresenter(ChangeValueView view,
+                                   DebuggerClientService service,
+                                   EventBus eventBus,
+                                   JavaRuntimeLocalizationConstant constant,
+                                   NotificationManager notificationManager,
+                                   DtoFactory dtoFactory) {
         this.view = view;
+        this.dtoFactory = dtoFactory;
         this.view.setDelegate(this);
         this.service = service;
         this.eventBus = eventBus;
@@ -104,12 +111,12 @@ public class ChangeValuePresenter implements ChangeValueView.ActionDelegate {
     @Override
     public void onChangeClicked() {
         final String newValue = view.getValue();
-        DtoClientImpls.UpdateVariableRequestImpl request = DtoClientImpls.UpdateVariableRequestImpl.make();
-        request.setVariablePath(variable.getVariablePath());
-        request.setExpression(newValue);
+        UpdateVariableRequest updateVariableRequest = dtoFactory.createDto(UpdateVariableRequest.class);
+        updateVariableRequest.setVariablePath(variable.getVariablePath());
+        updateVariableRequest.setExpression(newValue);
 
         try {
-            service.setValue(debuggerInfo.getId(), request, new AsyncRequestCallback<String>() {
+            service.setValue(debuggerInfo.getId(), updateVariableRequest, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     callback.onSuccess(newValue);

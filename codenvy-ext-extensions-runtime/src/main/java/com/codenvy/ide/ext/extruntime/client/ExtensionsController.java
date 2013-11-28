@@ -17,52 +17,51 @@
  */
 package com.codenvy.ide.ext.extruntime.client;
 
+import com.codenvy.api.core.rest.shared.dto.Link;
+import com.codenvy.api.runner.ApplicationStatus;
+import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.extruntime.client.marshaller.ApplicationInstanceUnmarshallerWS;
-import com.codenvy.ide.ext.extruntime.shared.ApplicationInstance;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.util.Utils;
-import com.codenvy.ide.websocket.Message;
-import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.codenvy.ide.websocket.rest.Unmarshallable;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.UrlBuilder;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
- * This class controls operations with a custom extension. Such as launching, stopping, getting logs, packaging into a bundle.
+ * This class controls operations with a custom extension. Such as launching, stopping, getting logs, packaging into a
+ * bundle.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExtensionsController.java Jul 3, 2013 3:07:52 PM azatsarynnyy $
  */
 @Singleton
 public class ExtensionsController {
-    /** Project to launch. */
-    private Project                        currentProject;
     private ResourceProvider               resourceProvider;
-    private EventBus                       eventBus;
     private ConsolePart                    console;
     private ExtRuntimeClientService        service;
     private ExtRuntimeLocalizationConstant constant;
     private NotificationManager            notificationManager;
     private Notification                   notification;
+    private DtoFactory                     dtoFactory;
+    private Project                        currentProject;
     /** Launched app. */
-    private ApplicationInstance            launchedApp;
+    private ApplicationProcessDescriptor   applicationProcessDescriptor;
     /** Is launching of any application in progress? */
     private boolean                        isLaunchingInProgress;
 
@@ -81,37 +80,36 @@ public class ExtensionsController {
      *         {@link ExtRuntimeLocalizationConstant}
      * @param notificationManager
      *         {@link NotificationManager}
+     * @param dtoFactory
+     *         {@link DtoFactory}
      */
     @Inject
-    protected ExtensionsController(ResourceProvider resourceProvider, EventBus eventBus, ConsolePart console,
+    protected ExtensionsController(ResourceProvider resourceProvider, EventBus eventBus, final ConsolePart console,
                                    ExtRuntimeClientService service, ExtRuntimeLocalizationConstant constant,
-                                   NotificationManager notificationManager) {
+                                   NotificationManager notificationManager, DtoFactory dtoFactory) {
         this.resourceProvider = resourceProvider;
-        this.eventBus = eventBus;
         this.console = console;
         this.service = service;
         this.constant = constant;
         this.notificationManager = notificationManager;
+        this.dtoFactory = dtoFactory;
 
-        init();
-    }
-
-    private void init() {
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
                 isLaunchingInProgress = false;
-                launchedApp = null;
+                applicationProcessDescriptor = null;
             }
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
                 isLaunchingInProgress = false;
-                if (currentProject != null) {
+                if (isAnyAppLaunched()) {
                     stop();
                     console.clear();
                 }
-                launchedApp = null;
+                currentProject = null;
+                applicationProcessDescriptor = null;
             }
 
             @Override
@@ -127,222 +125,236 @@ public class ExtensionsController {
      * @return <code>true</code> if any application is launched, and <code>false</code> otherwise
      */
     public boolean isAnyAppLaunched() {
-        return launchedApp != null;
+        return applicationProcessDescriptor != null;
     }
 
-    /** Launch Codenvy extension inside Codenvy Platform. */
-    public void buildAndLaunch() {
-        if (isLaunchingInProgress) {
-            Window.alert("Launching of another app is in progress now.");
-            return;
-        }
-
+    /** Launch Codenvy extension. */
+    public void launch() {
         currentProject = resourceProvider.getActiveProject();
         if (currentProject == null) {
             Window.alert("Project is not opened.");
             return;
         }
 
-        isLaunchingInProgress = true;
+        if (isLaunchingInProgress) {
+            Window.alert("Launching of another application is in progress now.");
+            return;
+        }
 
-        notification = new Notification(constant.applicationBuilding(currentProject.getName()), PROGRESS);
+        isLaunchingInProgress = true;
+        notification = new Notification(constant.applicationStarting(currentProject.getName()), PROGRESS);
         notificationManager.showNotification(notification);
 
         try {
-            service.build(resourceProvider.getVfsId(), currentProject.getId(), false,
-                          new RequestCallback<String>(new StringUnmarshaller()) {
-                              @Override
-                              protected void onSuccess(String url) {
-                                  notification.setStatus(FINISHED);
-                                  notification.setMessage(constant.applicationBuilt(currentProject.getName()));
-                                  launch(url, currentProject);
-                              }
+            service.run(currentProject.getName(),
+                        new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                            @Override
+                            protected void onSuccess(String result) {
+                                applicationProcessDescriptor =
+                                        dtoFactory.createDtoFromJson(result, ApplicationProcessDescriptor.class);
+                                startCheckingStatus(applicationProcessDescriptor);
+                            }
 
-                              @Override
-                              protected void onFailure(Throwable exception) {
-                                  isLaunchingInProgress = false;
-                                  launchedApp = null;
-                                  notification.setStatus(FINISHED);
-                                  notification.setType(ERROR);
-                                  String message = constant.buildApplicationFailed(currentProject.getName());
-                                  if (exception != null && exception.getMessage() != null) {
-                                      message += ": " + exception.getMessage();
-                                  }
-                                  console.print(message);
-                              }
-                          });
-        } catch (WebSocketException e) {
+                            @Override
+                            protected void onFailure(Throwable exception) {
+                                isLaunchingInProgress = false;
+                                applicationProcessDescriptor = null;
+                                onFail(constant.startApplicationFailed(currentProject.getName()), exception, true);
+                            }
+                        });
+        } catch (RequestException e) {
             isLaunchingInProgress = false;
-            launchedApp = null;
-            notification.setStatus(FINISHED);
-            notification.setType(ERROR);
-            notification.setMessage(e.getMessage());
-        }
-    }
-
-    private void launch(String warUrl, final Project project) {
-        ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS();
-        isLaunchingInProgress = true;
-        console.print(constant.applicationStarting(project.getName()));
-        try {
-            service.launch(warUrl, true, resourceProvider.getVfsId(), project.getId(),
-                           new RequestCallback<ApplicationInstance>(unmarshaller) {
-                               @Override
-                               protected void onSuccess(ApplicationInstance result) {
-                                   isLaunchingInProgress = false;
-                                   launchedApp = result;
-                                   afterApplicationLaunched();
-                               }
-
-                               @Override
-                               protected void onFailure(Throwable exception) {
-                                   isLaunchingInProgress = false;
-                                   launchedApp = null;
-                                   onFail(constant.startApplicationFailed(project.getName()), exception);
-                               }
-                           });
-        } catch (WebSocketException e) {
-            isLaunchingInProgress = false;
-            launchedApp = null;
-            notification.setStatus(FINISHED);
-            notification.setType(ERROR);
-            notification.setMessage(e.getMessage());
+            applicationProcessDescriptor = null;
+            onFail(constant.startApplicationFailed(currentProject.getName()), e, true);
         }
     }
 
     /** Get logs of the currently launched application. */
     public void getLogs() {
-        if (currentProject == null) {
-            Window.alert("Project is not opened.");
-            return;
+        final Link viewLogsLink = getAppLink(applicationProcessDescriptor, LinkRel.VIEW_LOGS);
+        if (viewLogsLink == null) {
+            onFail(constant.getApplicationLogsFailed(), null, false);
         }
 
         try {
-            service.getLogs(launchedApp.getId(), new AsyncRequestCallback<String>(
-                    new com.codenvy.ide.resources.marshal.StringUnmarshaller()) {
+            service.getLogs(viewLogsLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                 @Override
                 protected void onSuccess(String result) {
-                    console.print("<pre>" + result + "</pre>");
+                    console.printf(result);
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    String message = constant.getApplicationLogsFailed();
-                    if (exception != null && exception.getMessage() != null) {
-                        message += ": " + exception.getMessage();
-                    }
-                    console.print(message);
+                    onFail(constant.getApplicationLogsFailed(), exception, false);
                 }
             });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            onFail(constant.getApplicationLogsFailed(), e, false);
         }
     }
 
     /** Stop the currently launched application. */
     public void stop() {
-        if (currentProject == null) {
-            Window.alert("Project is not opened.");
-            return;
+        final Link stopLink = getAppLink(applicationProcessDescriptor, LinkRel.STOP);
+        if (stopLink == null) {
+            onFail(constant.stopApplicationFailed(currentProject.getName()), null, false);
         }
 
         try {
-            service.stop(launchedApp.getId(),
-                         new AsyncRequestCallback<Void>() {
-                             @Override
-                             protected void onSuccess(Void result) {
-                                 launchedApp = null;
-                                 console.print(constant.applicationStopped(currentProject.getName()));
-                             }
+            service.stop(stopLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                @Override
+                protected void onSuccess(String result) {
+                    applicationProcessDescriptor = null;
+                    console.print(constant.applicationStopped(currentProject.getName()));
+                }
 
-                             @Override
-                             protected void onFailure(Throwable exception) {
-                                 String message = constant.stopApplicationFailed(currentProject.getName());
-                                 if (exception != null && exception.getMessage() != null) {
-                                     message += ": " + exception.getMessage();
-                                 }
-                                 console.print(message);
-                             }
-                         });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    onFail(constant.stopApplicationFailed(currentProject.getName()), exception, false);
+                }
+            });
         } catch (RequestException e) {
-            console.print(e.getMessage());
+            onFail(constant.stopApplicationFailed(currentProject.getName()), e, false);
         }
     }
 
     /** Create Tomcat bundle with Codenvy application that will contains activated custom extension. */
     public void pack() {
-        currentProject = resourceProvider.getActiveProject();
-        if (currentProject == null) {
-            Window.alert("Project is not opened.");
-            return;
-        }
-
-        final Notification packNotification =
-                new Notification(constant.applicationBuilding(currentProject.getName()), PROGRESS);
-        notificationManager.showNotification(packNotification);
-        try {
-            service.build(resourceProvider.getVfsId(), currentProject.getId(), true,
-                          new RequestCallback<String>(new StringUnmarshaller()) {
-                              protected void onSuccess(String url) {
-                                  packNotification.setStatus(FINISHED);
-                                  packNotification.setMessage(constant.applicationBuilt(currentProject.getName()));
-                                  console.print(constant.getBundle(url));
-                              }
-
-                              @Override
-                              protected void onFailure(Throwable exception) {
-                                  String message = constant.buildApplicationFailed(currentProject.getName());
-                                  if (exception != null && exception.getMessage() != null) {
-                                      message += ": " + exception.getMessage();
-                                  }
-                                  packNotification.setStatus(FINISHED);
-                                  packNotification.setType(ERROR);
-                                  console.print(message);
-                              }
-                          });
-        } catch (WebSocketException e) {
-            packNotification.setStatus(FINISHED);
-            packNotification.setType(ERROR);
-            packNotification.setMessage(e.getMessage());
-        }
+//        currentProject = resourceProvider.getActiveProject();
+//        if (currentProject == null) {
+//            Window.alert("Project is not opened.");
+//            return;
+//        }
+//
+//        final Notification packNotification =
+//                new Notification(constant.applicationBuilding(currentProject.getName()), PROGRESS);
+//        notificationManager.showNotification(packNotification);
+//        try {
+//            service.build(resourceProvider.getVfsId(), currentProject.getId(), true,
+//                          new RequestCallback<String>(new StringUnmarshaller()) {
+//                              protected void onSuccess(String url) {
+//                                  packNotification.setStatus(FINISHED);
+//                                  packNotification.setMessage(constant.applicationBuilt(currentProject.getName()));
+//                                  console.print(constant.getBundle(url));
+//                              }
+//
+//                              @Override
+//                              protected void onFailure(Throwable exception) {
+//                                  String message = constant.buildApplicationFailed(currentProject.getName());
+//                                  if (exception != null && exception.getMessage() != null) {
+//                                      message += ": " + exception.getMessage();
+//                                  }
+//                                  packNotification.setStatus(FINISHED);
+//                                  packNotification.setType(ERROR);
+//                                  console.print(message);
+//                              }
+//                          });
+//        } catch (WebSocketException e) {
+//            packNotification.setStatus(FINISHED);
+//            packNotification.setType(ERROR);
+//            packNotification.setMessage(e.getMessage());
+//        }
     }
 
-    /** Performs actions after application was successfully launched. */
-    private void afterApplicationLaunched() {
-        UrlBuilder builder = new UrlBuilder();
-        final String uri = builder.setProtocol("http:").setHost(launchedApp.getHost())
-                                  .setPort(launchedApp.getPort())
-                                  .setPath("ide" + '/' + Utils.getWorkspaceName())
-                                  .setParameter("h", launchedApp.getCodeServerHost())
-                                  .setParameter("p", String.valueOf(launchedApp.getCodeServerPort())).buildString();
+    /**
+     * Performs actions after application was successfully launched.
+     *
+     * @param applicationProcessDescriptor
+     */
+    private void afterApplicationLaunched(ApplicationProcessDescriptor applicationProcessDescriptor) {
+        this.applicationProcessDescriptor = applicationProcessDescriptor;
+//        UrlBuilder builder = new UrlBuilder();
+//        final String uri = builder.setProtocol("http:").setHost(launchedApp.getHost())
+//                                  .setPort(launchedApp.getPort())
+//                                  .setPath("ide" + '/' + Utils.getWorkspaceName())
+//                                  .setParameter("h", launchedApp.getCodeServerHost())
+//                                  .setParameter("p", String.valueOf(launchedApp.getCodeServerPort())).buildString();
+        final String uri = "http://127.0.0.1:8080" /*applicationProcessDescriptor.getUrl()*/;
         console.print(constant.applicationStartedOnUrls(currentProject.getName(),
                                                         "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>"));
         notification.setStatus(FINISHED);
     }
 
-    private void onFail(String message, Throwable exception) {
+    private void onFail(String message, Throwable exception, boolean notify) {
         if (exception != null && exception.getMessage() != null) {
             message += ": " + exception.getMessage();
         }
-        notification.setStatus(FINISHED);
-        notification.setType(ERROR);
-        notification.setMessage(message);
-    }
-
-    private class StringUnmarshaller implements Unmarshallable<String> {
-        private String payload;
-
-        /** {@inheritDoc} */
-        @Override
-        public void unmarshal(Message response) throws UnmarshallerException {
-            payload = response.getBody();
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public String getPayload() {
-            return payload;
+        if (notify) {
+            notification.setStatus(FINISHED);
+            notification.setType(ERROR);
+            notification.setMessage(message);
+        } else {
+            console.print(message);
         }
     }
 
+    private void startCheckingStatus(final ApplicationProcessDescriptor app) {
+        new Timer() {
+            @Override
+            public void run() {
+                try {
+                    service.getStatus(
+                            getAppLink(app, LinkRel.STATUS),
+                            new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                                @Override
+                                protected void onSuccess(String response) {
+                                    ApplicationProcessDescriptor newDescriptor =
+                                            dtoFactory.createDtoFromJson(response,
+                                                                         ApplicationProcessDescriptor.class);
+
+                                    ApplicationStatus status = newDescriptor.getStatus();
+                                    if (status == ApplicationStatus.RUNNING) {
+                                        afterApplicationLaunched(newDescriptor);
+                                    } else if (status == ApplicationStatus.STOPPED || status == ApplicationStatus.NEW) {
+                                        schedule(3000);
+                                    } else if (status == ApplicationStatus.CANCELLED) {
+                                        isLaunchingInProgress = false;
+                                        applicationProcessDescriptor = null;
+                                        onFail(constant.startApplicationFailed(currentProject.getName()), null, true);
+                                    }
+                                }
+
+                                @Override
+                                protected void onFailure(Throwable exception) {
+                                    isLaunchingInProgress = false;
+                                    applicationProcessDescriptor = null;
+                                    onFail(constant.startApplicationFailed(currentProject.getName()),
+                                           exception, true);
+                                }
+                            });
+                } catch (RequestException e) {
+                    isLaunchingInProgress = false;
+                    applicationProcessDescriptor = null;
+                    onFail(constant.startApplicationFailed(currentProject.getName()), e, true);
+                }
+            }
+        }.run();
+    }
+
+    private Link getAppLink(ApplicationProcessDescriptor app, LinkRel linkRel) {
+        Link linkToReturn = null;
+        List<Link> links = app.getLinks();
+        for (int i = 0; i < links.size(); i++) {
+            Link link = links.get(i);
+            if (link.getRel().equalsIgnoreCase(linkRel.getValue()))
+                linkToReturn = link;
+        }
+        return linkToReturn;
+    }
+
+    /** Enum of known runner links with its rels. */
+    private static enum LinkRel {
+        STOP("stop"),
+        VIEW_LOGS("view logs"),
+        STATUS("get status");
+        private final String value;
+
+        private LinkRel(String rel) {
+            this.value = rel;
+        }
+
+        private String getValue() {
+            return value;
+        }
+    }
 }

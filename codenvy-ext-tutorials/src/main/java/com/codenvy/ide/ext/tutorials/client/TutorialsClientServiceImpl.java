@@ -166,7 +166,7 @@ public class TutorialsClientServiceImpl implements TutorialsClientService {
      */
     private void sendRequest(@NotNull String requestUrl, @NotNull String projectName, @NotNull JsonArray<Property> properties,
                              @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
-        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootid=" + resourceProvider.getRootId();
+        final String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName;
         loader.setMessage("Creating new project...");
         AsyncRequest.build(POST, requestUrl + param)
                     .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())

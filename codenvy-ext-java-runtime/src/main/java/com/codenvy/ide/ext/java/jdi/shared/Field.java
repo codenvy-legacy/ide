@@ -29,4 +29,12 @@ public interface Field extends Variable {
     boolean isTransient();
 
     boolean isVolatile();
+
+    void setFinal(boolean value);
+
+    void setStatic(boolean value);
+
+    void setVolatile(boolean value);
+
+    void setTransient(boolean value);
 }
