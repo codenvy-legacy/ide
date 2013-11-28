@@ -94,10 +94,10 @@ public class SSHKeyProcessor implements SSHKeyProcessorHandler, GenerateGitHubKe
                             callback.onSuccess();
                             return;
                         }
-
-                        //key not found, lets generate it
-                        generateNewKeyPair(info);
                     }
+
+                    //key not found, lets generate it
+                    generateNewKeyPair(info);
                 }
 
                 @Override
