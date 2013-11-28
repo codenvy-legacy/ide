@@ -65,7 +65,7 @@ public class CreateAntSpringProjectPage extends AbstractTemplatePage {
     @Override
     public void commit(final CommitCallback callback) {
         JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
-                                                     new Property(PROPERTY_MIXIN_NATURES, JavaExtension.ANT_SPRING_APPLICATION_PROJECT_TYPE),
+                                                     new Property(PROPERTY_MIXIN_NATURES, JavaExtension.SPRING_APPLICATION_PROJECT_TYPE),
                                                      new Property(PROPERTY_SOURCE_FOLDERS, createArray("src")));
         final String projectName = wizardContext.getData(PROJECT_NAME);
         try {
