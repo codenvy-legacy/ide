@@ -52,23 +52,23 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * bundle.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ExtensionsController.java Jul 3, 2013 3:07:52 PM azatsarynnyy $
+ * @version $Id: RunnerController.java Jul 3, 2013 3:07:52 PM azatsarynnyy $
  */
 @Singleton
-public class ExtensionsController implements Notification.OpenNotificationHandler {
-    private WorkspaceAgent                                                       workspaceAgent;
-    private ResourceProvider                                                     resourceProvider;
-    private ConsolePart                                                          console;
-    private ExtRuntimeClientService                                              service;
-    private ExtRuntimeLocalizationConstant constant;
-    private NotificationManager                                                  notificationManager;
-    private Notification                                                         notification;
-    private DtoFactory                                                           dtoFactory;
-    private Project                                                              currentProject;
+public class RunnerController implements Notification.OpenNotificationHandler {
+    private WorkspaceAgent               workspaceAgent;
+    private ResourceProvider             resourceProvider;
+    private ConsolePart                  console;
+    private RunnerClientService          service;
+    private RunnerLocalizationConstant   constant;
+    private NotificationManager          notificationManager;
+    private Notification                 notification;
+    private DtoFactory                   dtoFactory;
+    private Project                      currentProject;
     /** Launched app. */
-    private ApplicationProcessDescriptor                                         applicationProcessDescriptor;
+    private ApplicationProcessDescriptor applicationProcessDescriptor;
     /** Is launching of any application in progress? */
-    private boolean                                                              isLaunchingInProgress;
+    private boolean                      isLaunchingInProgress;
 
     /**
      * Create controller.
@@ -82,19 +82,19 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
      * @param console
      *         {@link ConsolePart}
      * @param service
-     *         {@link ExtRuntimeClientService}
+     *         {@link RunnerClientService}
      * @param constant
-     *         {@link ExtRuntimeLocalizationConstant}
+     *         {@link RunnerLocalizationConstant}
      * @param notificationManager
      *         {@link NotificationManager}
      * @param dtoFactory
      *         {@link DtoFactory}
      */
     @Inject
-    protected ExtensionsController(ResourceProvider resourceProvider, EventBus eventBus, WorkspaceAgent workspaceAgent,
-                                   final ConsolePart console, ExtRuntimeClientService service,
-                                   ExtRuntimeLocalizationConstant constant, NotificationManager notificationManager,
-                                   DtoFactory dtoFactory) {
+    protected RunnerController(ResourceProvider resourceProvider, EventBus eventBus, WorkspaceAgent workspaceAgent,
+                               final ConsolePart console, RunnerClientService service,
+                               RunnerLocalizationConstant constant, NotificationManager notificationManager,
+                               DtoFactory dtoFactory) {
         this.resourceProvider = resourceProvider;
         this.workspaceAgent = workspaceAgent;
         this.console = console;
@@ -138,7 +138,7 @@ public class ExtensionsController implements Notification.OpenNotificationHandle
     }
 
     /** Launch Codenvy extension. */
-    public void launch() {
+    public void run() {
         currentProject = resourceProvider.getActiveProject();
         if (currentProject == null) {
             Window.alert("Project is not opened.");

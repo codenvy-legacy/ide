@@ -21,62 +21,41 @@ import com.google.gwt.i18n.client.Messages;
 
 /**
  * Localization constants. Interface to represent the constants contained in resource bundle:
- * 'ExtRuntimeLocalizationConstant.properties'.
+ * 'RunnerLocalizationConstant.properties'.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ExtRuntimeLocalizationConstant.java Jul 3, 2013 12:40:17 PM azatsarynnyy $
+ * @version $Id: RunnerLocalizationConstant.java Jul 3, 2013 12:40:17 PM azatsarynnyy $
  */
-public interface ExtRuntimeLocalizationConstant extends Messages {
+public interface RunnerLocalizationConstant extends Messages {
     /* Actions */
-    @Key("control.launchExtension.id")
-    String launchExtensionActionlId();
+    @Key("control.runApp.id")
+    String launchExtensionActionId();
 
-    @Key("control.launchExtension.text")
+    @Key("control.runApp.text")
     String launchExtensionActionText();
 
-    @Key("control.launchExtension.description")
+    @Key("control.runApp.description")
     String launchExtensionActionDescription();
 
-    @Key("control.getExtensionLogs.id")
+    @Key("control.getAppLogs.id")
     String getExtensionLogsActionId();
 
-    @Key("control.getExtensionLogs.text")
+    @Key("control.getAppLogs.text")
     String getExtensionLogsActionText();
 
-    @Key("control.getExtensionLogs.description")
+    @Key("control.getAppLogs.description")
     String getExtensionLogsActionDescription();
 
-    @Key("control.stopExtension.id")
+    @Key("control.stopApp.id")
     String stopExtensionActionId();
 
-    @Key("control.stopExtension.text")
+    @Key("control.stopApp.text")
     String stopExtensionActionText();
 
-    @Key("control.stopExtension.description")
+    @Key("control.stopApp.description")
     String stopExtensionActionDescription();
 
-    @Key("control.buildBundle.id")
-    String buildBundleActionId();
-
-    @Key("control.buildBundle.text")
-    String buildBundleActionText();
-
-    @Key("control.buildBundle.description")
-    String buildBundleActionDescription();
-
     /* Messages */
-    @Key("appBuilding")
-    String applicationBuilding(String name);
-
-    @Key("appBuilt")
-    String applicationBuilt(String name);
-
-    @Key("getBundle")
-    String getBundle(String path);
-
-    @Key("buildAppFailed")
-    String buildApplicationFailed(String name);
-
     @Key("appStarting")
     String applicationStarting(String name);
 

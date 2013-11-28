@@ -20,7 +20,8 @@ package com.codenvy.ide.extension.runner.client.actions;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.extension.runner.client.ExtensionsController;
+import com.codenvy.ide.extension.runner.client.RunnerController;
+import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
@@ -29,22 +30,22 @@ import com.google.inject.Singleton;
 import static com.codenvy.ide.ext.extensions.client.ExtRuntimeExtension.CODENVY_EXTENSION_PROJECT_TYPE;
 
 /**
- * Action to launch Codenvy application with custom extension.
+ * Action to run Codenvy application with custom extension.
  *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: LaunchAction.java Jul 3, 2013 1:58:47 PM azatsarynnyy $
+ * @version $Id: RunAction.java Jul 3, 2013 1:58:47 PM azatsarynnyy $
  */
 @Singleton
-public class LaunchAction extends Action {
+public class RunAction extends Action {
 
-    private final ResourceProvider                                             resourceProvider;
-    private       ExtensionsController controller;
+    private final ResourceProvider resourceProvider;
+    private       RunnerController controller;
 
     @Inject
-    public LaunchAction(ExtensionsController controller,
-                        RunnerResources resources,
-                        ResourceProvider resourceProvider,
-                        com.codenvy.ide.extension.runner.client.ExtRuntimeLocalizationConstant localizationConstants) {
+    public RunAction(RunnerController controller,
+                     RunnerResources resources,
+                     ResourceProvider resourceProvider,
+                     RunnerLocalizationConstant localizationConstants) {
         super(localizationConstants.launchExtensionActionText(),
               localizationConstants.launchExtensionActionDescription(), resources.launchApp());
         this.controller = controller;
@@ -54,7 +55,7 @@ public class LaunchAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        controller.launch();
+        controller.run();
     }
 
     /** {@inheritDoc} */
