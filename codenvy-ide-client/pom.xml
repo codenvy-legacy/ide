@@ -143,11 +143,6 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-ssh</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-builder</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -158,12 +153,7 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-maven</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-ant</artifactId>
+            <artifactId>codenvy-ext-ssh</artifactId>
             <version>${project.version}</version>
         </dependency>
        <dependency>

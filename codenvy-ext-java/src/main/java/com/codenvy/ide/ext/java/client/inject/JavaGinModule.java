@@ -20,6 +20,12 @@ package com.codenvy.ide.ext.java.client.inject;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.ext.java.client.editor.JavaParserWorker;
 import com.codenvy.ide.ext.java.client.editor.JavaParserWorkerImpl;
+import com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntProjectClientService;
+import com.codenvy.ide.ext.java.client.projecttemplate.ant.CreateAntProjectClientServiceImpl;
+import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenProjectClientService;
+import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenProjectClientService;
+import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenProjectClientServiceImpl;
+import com.codenvy.ide.ext.java.client.projecttemplate.maven.CreateMavenProjectClientServiceImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -34,5 +40,7 @@ public class JavaGinModule extends AbstractGinModule {
     @Override
     protected void configure() {
         bind(JavaParserWorker.class).to(JavaParserWorkerImpl.class).in(Singleton.class);
+        bind(CreateMavenProjectClientService.class).to(CreateMavenProjectClientServiceImpl.class).in(Singleton.class);
+        bind(CreateAntProjectClientService.class).to(CreateAntProjectClientServiceImpl.class).in(Singleton.class);
     }
 }
