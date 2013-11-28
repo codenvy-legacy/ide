@@ -18,7 +18,8 @@
     from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -58,7 +59,6 @@
             <artifactId>codenvy-api-vfs</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
-        
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-runner</artifactId>
@@ -105,94 +105,89 @@
         </dependency>
     </dependencies>
 
-            <build>
-            <plugins>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>1.8</version>
-                    <executions>
-                        <execution>
-                            <id>add-resource</id>
-                            <phase>process-sources</phase>
-                            <goals>
-                                <goal>add-resource</goal>
-                            </goals>
-                            <configuration>
-                                <resources>
-                                    <resource>
-                                        <directory>${dto-generator-out-directory}/META-INF</directory>
-                                        <targetPath>META-INF</targetPath>
-                                    </resource>
-                                </resources>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>add-source</id>
-                            <phase>process-sources</phase>
-                            <goals>
-                                <goal>add-source</goal>
-                            </goals>
-                            <configuration>
-                                <sources>
-                                    <source>${dto-generator-out-directory}</source>
-                                </sources>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <id>pre-compile</id>
-                            <phase>generate-sources</phase>
-                            <goals>
-                                <goal>compile</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>com.codenvy.platform-api</groupId>
-                    <artifactId>codenvy-dto-maven-plugin</artifactId>
-                    <version>${com.codenvy.platform-api.version}</version>
-                    <executions>
-                        <execution>
-                            <phase>process-sources</phase>
-                            <goals>
-                                <goal>generate</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <dtoPackages>
-                            <package>com.codenvy.api.runner.dto</package>
-                            <package>com.codenvy.api.runner.internal.dto</package>
-                            <package>com.codenvy.api.core.rest.shared.dto</package>
-                        </dtoPackages>
-                        <outputDirectory>${dto-generator-out-directory}</outputDirectory>
-                        <genClassName>com.codenvy.ide.extension.runner.dto.DtoClientImpls</genClassName>
-                        <impl>client</impl>
-                    </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>com.codenvy.platform-api</groupId>
-                            <artifactId>codenvy-api-runner</artifactId>
-                            <version>${com.codenvy.platform-api.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>com.codenvy.platform-api</groupId>
-                            <artifactId>codenvy-api-core</artifactId>
-                            <version>${com.codenvy.platform-api.version}</version>
-                        </dependency>
-                        <!--
-                        Other dependencies if DTOs from current project need them.
-                        -->
-                    </dependencies>
-                </plugin>
-
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>add-resource</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${dto-generator-out-directory}/META-INF</directory>
+                                    <targetPath>META-INF</targetPath>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${dto-generator-out-directory}</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>pre-compile</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.codenvy.platform-api</groupId>
+                <artifactId>codenvy-dto-maven-plugin</artifactId>
+                <version>${com.codenvy.platform-api.version}</version>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <dtoPackages>
+                        <package>com.codenvy.api.runner.dto</package>
+                        <package>com.codenvy.api.runner.internal.dto</package>
+                        <package>com.codenvy.api.core.rest.shared.dto</package>
+                    </dtoPackages>
+                    <outputDirectory>${dto-generator-out-directory}</outputDirectory>
+                    <genClassName>com.codenvy.ide.extension.runner.dto.DtoClientImpls</genClassName>
+                    <impl>client</impl>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.codenvy.platform-api</groupId>
+                        <artifactId>codenvy-api-runner</artifactId>
+                        <version>${com.codenvy.platform-api.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.codenvy.platform-api</groupId>
+                        <artifactId>codenvy-api-core</artifactId>
+                        <version>${com.codenvy.platform-api.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
 
         <resources>
